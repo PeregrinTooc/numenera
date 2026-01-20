@@ -79,7 +79,7 @@ This project follows BDD/TDD principles:
 4. **Refactor** while keeping tests green
 5. **Commit** the working feature
 
-See [FEATURES.md](FEATURES.md) for the feature roadmap and [.cline/cline_docs.md](.cline/cline_docs.md) for detailed development guidelines.
+See [docs/FEATURES.md](docs/FEATURES.md) for the feature roadmap and [.cline/cline_docs.md](.cline/cline_docs.md) for detailed development guidelines.
 
 ## Git Hooks
 
@@ -94,7 +94,7 @@ The app is automatically deployed to GitHub Pages on push to `main`.
 
 **⚠️ First Time Setup Required**: GitHub Pages must be enabled manually in repository settings.
 
-See [DEPLOYMENT.md](DEPLOYMENT.md) for complete setup instructions.
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for complete setup instructions.
 
 Once configured, every push to `main`:
 
@@ -114,7 +114,7 @@ Once configured, every push to `main`:
 
 ## Contributing
 
-1. Check [FEATURES.md](FEATURES.md) for planned features
+1. Check [docs/FEATURES.md](docs/FEATURES.md) for planned features
 2. Create a feature branch
 3. Write tests first (BDD/TDD)
 4. Implement the feature
@@ -129,4 +129,4 @@ ISC
 
 - [Numenera RPG](https://www.montecookgames.com/store/product/numenera-discovery/)
 - [Development Guide](.cline/cline_docs.md)
-- [Feature Roadmap](FEATURES.md)
+- [Feature Roadmap](docs/FEATURES.md)

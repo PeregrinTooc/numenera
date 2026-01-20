@@ -555,7 +555,7 @@ interface NumeneraCharacter {
 
 ### Feature Roadmap Reference
 
-See `FEATURES.md` for complete roadmap.
+See `docs/FEATURES.md` for complete roadmap.
 
 **Current Phase:** MVP (Phase 1)
 
