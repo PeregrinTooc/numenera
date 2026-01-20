@@ -20,6 +20,8 @@ export default [
         HTMLElement: "readonly",
         HTMLInputElement: "readonly",
         setTimeout: "readonly",
+        window: "readonly",
+        URLSearchParams: "readonly",
         // Node globals
         process: "readonly",
         global: "readonly",
