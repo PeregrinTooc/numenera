@@ -4,5 +4,6 @@ module.exports = {
     loader: ["ts-node/esm"],
     format: ["progress", "html:test-results/cucumber-report.html"],
     formatOptions: { snippetInterface: "async-await" },
+    tags: "not @skip and not @wip",
   },
 };

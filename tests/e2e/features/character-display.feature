@@ -91,3 +91,76 @@ Feature: Single Character Display
         And I should see empty state for notes
         And I should see empty state for equipment
         And I should see empty state for abilities
+
+    @responsive @skip
+    Scenario: Display character on mobile viewport (320px width)
+        Given I am viewing on a mobile device with width "320px"
+        When I am on the character sheet page
+        Then the character sheet should be displayed in a single column layout
+        And all content should be readable without horizontal scrolling
+        And stat pools should be stacked vertically
+        And items should be displayed in a mobile-friendly format
+
+    @responsive @skip
+    Scenario: Display character on tablet viewport (768px width)
+        Given I am viewing on a tablet device with width "768px"
+        When I am on the character sheet page
+        Then the character sheet should be displayed in a responsive layout
+        And stat pools should be displayed in an optimized arrangement
+        And items should be organized efficiently for the viewport
+
+    @responsive @skip
+    Scenario: Display character on desktop viewport (1280px width)
+        Given I am viewing on a desktop device with width "1280px"
+        When I am on the character sheet page
+        Then the character sheet should be displayed in a multi-column layout
+        And stat pools should be displayed side by side
+        And items should be organized in columns for optimal readability
+
+    @storage @skip
+    Scenario: Character data persists from local storage
+        Given a character is stored in local storage
+        When I open the character sheet page
+        Then the character data should be loaded from local storage
+        And all character information should be displayed correctly
+
+    @validation @skip
+    Scenario: View character with maximum cypher limit (Tier 3)
+        Given I am on the character sheet page
+        And the character is tier "3"
+        And the character has 3 cyphers
+        Then I should see all 3 cyphers displayed
+        And the cypher limit indicator should show "3/3" or equivalent
+
+    @validation @skip
+    Scenario: View character with special characters in text fields
+        Given I am on the character sheet page
+        And the character has text fields containing special characters:
+            | Field      | Content                                   |
+            | Name       | Kael "The Swift" O'Connor                 |
+            | Background | Born in <Unknown Location> & raised alone |
+        Then the special characters should be properly displayed
+        And the text should not be corrupted or escaped incorrectly
+
+    @validation @skip
+    Scenario: View character with long text content
+        Given I am on the character sheet page
+        And the character has a background with 500+ characters
+        Then the long text should be displayed without layout issues
+        And the text should wrap properly within its container
+        And the page should remain readable
+
+    @validation @skip
+    Scenario: View all character sections in correct order
+        Given I am on the character sheet page
+        Then I should see sections in this order:
+            | Section Order |
+            | Basic Info    |
+            | Stat Pools    |
+            | Cyphers       |
+            | Artifacts     |
+            | Oddities      |
+            | Background    |
+            | Notes         |
+            | Equipment     |
+            | Abilities     |
