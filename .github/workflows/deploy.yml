@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  test:
+  build-test-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -42,37 +42,11 @@ jobs:
         run: npm run test:unit || echo "No unit tests found, skipping"
 
       - name: Install Playwright Browsers
+        if: hashFiles('tests/e2e/**/*.ts') != ''
         run: npx playwright install --with-deps
 
       - name: Run E2E tests
         run: npm run test:e2e || echo "No E2E tests found, skipping"
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: |
-            playwright-report/
-            coverage/
-          retention-days: 30
-
-  build-and-deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
 
       - name: Build
         run: npm run build

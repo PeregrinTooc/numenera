@@ -590,9 +590,10 @@ See `FEATURES.md` for complete roadmap.
 4. ✅ **Mobile First**: Design for smallest screen first
 5. ✅ **i18n Everything**: No hardcoded text
 6. ✅ **TypeScript Strict**: No `any`, explicit types
-7. ✅ **Commit Working Code**: All tests must pass
-8. ✅ **Let Hooks Work**: Pre-commit and pre-push protect quality
-9. ✅ **Document As You Go**: Update FEATURES.md
-10. ✅ **AI Collaboration**: These rules guide AI development
+7. ✅ **User Review Before Commit**: ALWAYS present changes for user review before committing (unless explicitly instructed otherwise)
+8. ✅ **Commit Working Code**: All tests must pass
+9. ✅ **Let Hooks Work**: Pre-commit and pre-push protect quality
+10. ✅ **Document As You Go**: Update FEATURES.md
+11. ✅ **AI Collaboration**: These rules guide AI development
 
 When in doubt, refer back to these rules. They exist to maintain quality, consistency, and enable effective AI-augmented development.
