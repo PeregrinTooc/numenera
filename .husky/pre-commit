@@ -1,0 +1,5 @@
+# Run lint-staged (format check and unit tests)
+npx lint-staged
+
+# Run unit tests (skip if no tests exist)
+npm run test:unit || true

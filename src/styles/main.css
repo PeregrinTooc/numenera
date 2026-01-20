@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/* Custom theme configuration */
+@theme {
+  --color-numenera-primary: #1a5490;
+  --color-numenera-secondary: #8b4513;
+  --color-numenera-accent: #d4af37;
+}
+
+/* Add your custom styles here */
