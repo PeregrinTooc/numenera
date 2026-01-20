@@ -1,6 +1,71 @@
 // Entry point for the application
 // Minimal implementation for first BDD scenario
 
+// Character data constants
+const FULL_CHARACTER = {
+  name: "Kael the Wanderer",
+  tier: 3,
+  type: "Glaive",
+  descriptor: "Strong",
+  focus: "Bears a Halo of Fire",
+  stats: {
+    might: { pool: 15, edge: 2, current: 12 },
+    speed: { pool: 12, edge: 1, current: 12 },
+    intellect: { pool: 10, edge: 0, current: 8 },
+  },
+  cyphers: [
+    {
+      name: "Detonation (Cell)",
+      level: "1d6+2",
+      effect: "Explodes in an immediate radius",
+    },
+    {
+      name: "Stim (Injector)",
+      level: "1d6",
+      effect: "Restores 1d6 + 2 points to one Pool",
+    },
+  ],
+  artifacts: [
+    {
+      name: "Lightning Rod",
+      level: "6",
+      effect: "Projects lightning bolt up to long range",
+    },
+  ],
+  oddities: [
+    "A glowing cube that hums when near water",
+    "A piece of transparent metal that's always cold",
+  ],
+  textFields: {
+    background: "Born in a remote village, discovered ancient ruins that changed everything",
+    notes: "Currently investigating the mysterious disappearances in the nearby forest",
+    equipment: "Medium armor, Broadsword, Explorer's pack, 50 feet of rope",
+    abilities: "Trained in intimidation, Specialized in heavy weapons",
+  },
+};
+
+const EMPTY_CHARACTER = {
+  name: "Kael the Wanderer",
+  tier: 3,
+  type: "Glaive",
+  descriptor: "Strong",
+  focus: "Bears a Halo of Fire",
+  stats: {
+    might: { pool: 15, edge: 2, current: 12 },
+    speed: { pool: 12, edge: 1, current: 12 },
+    intellect: { pool: 10, edge: 0, current: 8 },
+  },
+  cyphers: [],
+  artifacts: [],
+  oddities: [],
+  textFields: {
+    background: "",
+    notes: "",
+    equipment: "",
+    abilities: "",
+  },
+};
+
 // Helper functions for conditional rendering
 function renderItemList<T>(
   items: T[],
@@ -26,80 +91,12 @@ function renderTextField(
   return `<div data-testid="${testId}" class="mt-1 p-3 border rounded bg-gray-50">${content}</div>`;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+// Render the character sheet with the given character data
+function renderCharacterSheet(character: typeof FULL_CHARACTER): void {
   const app = document.getElementById("app");
-  if (app) {
-    // Check URL parameter for empty character
-    const urlParams = new URLSearchParams(window.location.search);
-    const useEmpty = urlParams.get("empty") === "true";
+  if (!app) return;
 
-    // Hard-coded test character data
-    const character = useEmpty
-      ? {
-          name: "Kael the Wanderer",
-          tier: 3,
-          type: "Glaive",
-          descriptor: "Strong",
-          focus: "Bears a Halo of Fire",
-          stats: {
-            might: { pool: 15, edge: 2, current: 12 },
-            speed: { pool: 12, edge: 1, current: 12 },
-            intellect: { pool: 10, edge: 0, current: 8 },
-          },
-          cyphers: [],
-          artifacts: [],
-          oddities: [],
-          textFields: {
-            background: "",
-            notes: "",
-            equipment: "",
-            abilities: "",
-          },
-        }
-      : {
-          name: "Kael the Wanderer",
-          tier: 3,
-          type: "Glaive",
-          descriptor: "Strong",
-          focus: "Bears a Halo of Fire",
-          stats: {
-            might: { pool: 15, edge: 2, current: 12 },
-            speed: { pool: 12, edge: 1, current: 12 },
-            intellect: { pool: 10, edge: 0, current: 8 },
-          },
-          cyphers: [
-            {
-              name: "Detonation (Cell)",
-              level: "1d6+2",
-              effect: "Explodes in an immediate radius",
-            },
-            {
-              name: "Stim (Injector)",
-              level: "1d6",
-              effect: "Restores 1d6 + 2 points to one Pool",
-            },
-          ],
-          artifacts: [
-            {
-              name: "Lightning Rod",
-              level: "6",
-              effect: "Projects lightning bolt up to long range",
-            },
-          ],
-          oddities: [
-            "A glowing cube that hums when near water",
-            "A piece of transparent metal that's always cold",
-          ],
-          textFields: {
-            background:
-              "Born in a remote village, discovered ancient ruins that changed everything",
-            notes: "Currently investigating the mysterious disappearances in the nearby forest",
-            equipment: "Medium armor, Broadsword, Explorer's pack, 50 feet of rope",
-            abilities: "Trained in intimidation, Specialized in heavy weapons",
-          },
-        };
-
-    app.innerHTML = `
+  app.innerHTML = `
             <div class="min-h-screen bg-gray-50 p-4">
                 <div class="max-w-4xl mx-auto bg-white shadow rounded-lg p-6">
                     <h1 class="text-3xl font-bold mb-6">Numenera Character Sheet</h1>
@@ -286,5 +283,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             </div>
         `;
-  }
+}
+
+// Initialize on page load
+document.addEventListener("DOMContentLoaded", () => {
+  // Check URL parameter for empty character
+  const urlParams = new URLSearchParams(window.location.search);
+  const useEmpty = urlParams.get("empty") === "true";
+
+  // Select and render initial character data
+  const initialCharacter = useEmpty ? EMPTY_CHARACTER : FULL_CHARACTER;
+  renderCharacterSheet(initialCharacter);
 });
