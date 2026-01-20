@@ -99,7 +99,15 @@ function renderCharacterSheet(character: typeof FULL_CHARACTER): void {
   app.innerHTML = `
             <div class="min-h-screen bg-gray-50 p-4">
                 <div class="max-w-4xl mx-auto bg-white shadow rounded-lg p-6">
-                    <h1 class="text-3xl font-bold mb-6">Numenera Character Sheet</h1>
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-3xl font-bold">Numenera Character Sheet</h1>
+                        <button 
+                            data-testid="clear-button" 
+                            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded shadow transition-colors"
+                        >
+                            Clear
+                        </button>
+                    </div>
                     
                     <div class="space-y-4">
                         <div>
@@ -283,6 +291,14 @@ function renderCharacterSheet(character: typeof FULL_CHARACTER): void {
                 </div>
             </div>
         `;
+
+  // Add event listener for Clear button
+  const clearButton = app.querySelector('[data-testid="clear-button"]');
+  if (clearButton) {
+    clearButton.addEventListener("click", () => {
+      renderCharacterSheet(EMPTY_CHARACTER);
+    });
+  }
 }
 
 // Initialize on page load

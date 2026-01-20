@@ -11,7 +11,6 @@ Feature: Character Storage and State Management
         Then the character "Kael the Wanderer" should be displayed
         And all character sections should show data
 
-    @wip
     Scenario: Clear character data via clear button
         Given I am on the character sheet page
         And a character is currently displayed
