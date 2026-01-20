@@ -90,11 +90,17 @@ Husky enforces code quality:
 
 ## Deployment
 
-The app is automatically deployed to GitHub Pages on push to `main`:
+The app is automatically deployed to GitHub Pages on push to `main`.
 
-1. Tests run in CI
-2. Build is created
-3. Deployed to https://[username].github.io/numenera/
+**⚠️ First Time Setup Required**: GitHub Pages must be enabled manually in repository settings.
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for complete setup instructions.
+
+Once configured, every push to `main`:
+
+1. Runs tests in CI
+2. Creates production build
+3. Deploys to https://[username].github.io/numenera/
 
 ## Technology Stack
 
