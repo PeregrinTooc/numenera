@@ -117,13 +117,6 @@ Feature: Single Character Display
         And stat pools should be displayed side by side
         And items should be organized in columns for optimal readability
 
-    @storage @skip
-    Scenario: Character data persists from local storage
-        Given a character is stored in local storage
-        When I open the character sheet page
-        Then the character data should be loaded from local storage
-        And all character information should be displayed correctly
-
     @validation @skip
     Scenario: View character with maximum cypher limit (Tier 3)
         Given I am on the character sheet page
