@@ -3,3 +3,7 @@ npx lint-staged
 
 # Run unit tests (skip if no tests exist)
 npm run test:unit || true
+
+# Run E2E tests with production build
+echo "Running E2E tests with production build..."
+npm run test:e2e:prod

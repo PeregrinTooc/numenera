@@ -1,6 +1,8 @@
 // Entry point for the application
 // Minimal implementation for first BDD scenario
 
+import { saveCharacterState, loadCharacterState } from "./storage/localStorage";
+
 // Character data constants
 const FULL_CHARACTER = {
   name: "Kael the Wanderer",
@@ -292,6 +294,9 @@ function renderCharacterSheet(character: typeof FULL_CHARACTER): void {
             </div>
         `;
 
+  // Save character state to localStorage after rendering
+  saveCharacterState(character);
+
   // Add event listener for Clear button
   const clearButton = app.querySelector('[data-testid="clear-button"]');
   if (clearButton) {
@@ -303,11 +308,24 @@ function renderCharacterSheet(character: typeof FULL_CHARACTER): void {
 
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", () => {
-  // Check URL parameter for empty character
+  // Priority: URL param > localStorage > default
+  // URL param allows explicit override for testing
   const urlParams = new URLSearchParams(window.location.search);
   const useEmpty = urlParams.get("empty") === "true";
+  const storedCharacter = loadCharacterState();
 
   // Select and render initial character data
-  const initialCharacter = useEmpty ? EMPTY_CHARACTER : FULL_CHARACTER;
+  let initialCharacter: typeof FULL_CHARACTER;
+  if (useEmpty) {
+    // URL param explicitly requests empty character
+    initialCharacter = EMPTY_CHARACTER;
+  } else if (storedCharacter) {
+    // Load from localStorage if available
+    initialCharacter = storedCharacter;
+  } else {
+    // Default to full character
+    initialCharacter = FULL_CHARACTER;
+  }
+
   renderCharacterSheet(initialCharacter);
 });

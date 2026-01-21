@@ -26,3 +26,10 @@ Feature: Character Storage and State Management
         When I reload the page
         Then the same character should still be displayed
         And all character data should be preserved
+
+    Scenario: Empty state persists across page reloads after clearing
+        Given I am on the character sheet page
+        When I click the "Clear" button
+        And I reload the page
+        Then the character sheet should show empty states
+        And all sections should display empty state messages

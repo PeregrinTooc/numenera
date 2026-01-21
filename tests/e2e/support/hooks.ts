@@ -31,6 +31,10 @@ BeforeAll(async function () {
 Before(async function (this: CustomWorld) {
   this.context = await browser.newContext();
   this.page = await this.context.newPage();
+
+  // Clear localStorage before each test to ensure clean state
+  await this.page.goto("http://localhost:3000");
+  await this.page.evaluate(() => localStorage.clear());
 });
 
 After(async function (this: CustomWorld) {

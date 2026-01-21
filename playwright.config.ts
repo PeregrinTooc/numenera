@@ -1,5 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
+// Determine if we should use production build
+const useProductionBuild = process.env.CI || process.env.TEST_PROD;
+
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: true,
@@ -8,7 +11,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: useProductionBuild ? "http://localhost:4173" : "http://localhost:3000",
     trace: "on-first-retry",
   },
   projects: [
@@ -30,8 +33,11 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev",
-    url: "http://localhost:3000",
+    command: useProductionBuild
+      ? "npm run build && npm run preview -- --port 4173"
+      : "npm run dev -- --port 3000",
+    url: useProductionBuild ? "http://localhost:4173" : "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000, // Longer timeout for production builds
   },
 });

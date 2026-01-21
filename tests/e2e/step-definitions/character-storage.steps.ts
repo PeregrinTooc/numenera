@@ -27,3 +27,8 @@ Then("all sections should display empty state messages", async function () {
   await expect(this.page.getByTestId("empty-equipment")).toBeVisible();
   await expect(this.page.getByTestId("empty-abilities")).toBeVisible();
 });
+
+// Scenario: Empty state persists across page reloads after clearing
+When("I reload the page", async function () {
+  await this.page.reload();
+});
