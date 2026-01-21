@@ -9,26 +9,10 @@ export class TextFields {
   constructor(private character: Character) {}
 
   render(): TemplateResult {
-    const background = new TextField(
-      t("textFields.background.label"),
-      this.character.textFields.background,
-      "background"
-    );
-    const notes = new TextField(
-      t("textFields.notes.label"),
-      this.character.textFields.notes,
-      "notes"
-    );
-    const equipment = new TextField(
-      t("textFields.equipment.label"),
-      this.character.textFields.equipment,
-      "equipment"
-    );
-    const abilities = new TextField(
-      t("textFields.abilities.label"),
-      this.character.textFields.abilities,
-      "abilities"
-    );
+    const background = new TextField(this.character.textFields.background, "background");
+    const notes = new TextField(this.character.textFields.notes, "notes");
+    const equipment = new TextField(this.character.textFields.equipment, "equipment");
+    const abilities = new TextField(this.character.textFields.abilities, "abilities");
 
     return html`
       <div data-testid="text-fields-section" class="mt-8">

@@ -1,5 +1,7 @@
 # Numenera Character Sheet
 
+[![Build, Test and Deploy](https://github.com/PeregrinTooc/numenera/actions/workflows/deploy.yml/badge.svg)](https://github.com/PeregrinTooc/numenera/actions/workflows/deploy.yml)
+
 A responsive web application for managing Numenera P&P RPG characters with cloud sync capabilities.
 
 ## Features

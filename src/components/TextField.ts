@@ -5,7 +5,6 @@ import { t } from "../i18n/index.js";
 
 export class TextField {
   constructor(
-    private label: string,
     private value: string,
     private fieldName: string
   ) {}
