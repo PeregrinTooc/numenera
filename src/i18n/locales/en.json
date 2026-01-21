@@ -1,0 +1,63 @@
+{
+  "app": {
+    "title": "Numenera Character Sheet"
+  },
+  "buttons": {
+    "load": "Load",
+    "clear": "Clear"
+  },
+  "character": {
+    "name": "Name",
+    "tier": "Tier",
+    "type": "Type",
+    "descriptor": "Descriptor",
+    "focus": "Focus"
+  },
+  "stats": {
+    "heading": "Stats",
+    "might": "Might",
+    "speed": "Speed",
+    "intellect": "Intellect",
+    "pool": "Pool",
+    "edge": "Edge",
+    "current": "Current"
+  },
+  "cyphers": {
+    "heading": "Cyphers",
+    "name": "Name",
+    "level": "Level",
+    "effect": "Effect",
+    "empty": "No cyphers"
+  },
+  "artifacts": {
+    "heading": "Artifacts",
+    "name": "Name",
+    "level": "Level",
+    "depletion": "Depletion",
+    "effect": "Effect",
+    "empty": "No artifacts"
+  },
+  "oddities": {
+    "heading": "Oddities",
+    "empty": "No oddities"
+  },
+  "textFields": {
+    "heading": "Character Details",
+    "background": {
+      "label": "Background",
+      "empty": "No background"
+    },
+    "notes": {
+      "label": "Notes",
+      "empty": "No notes"
+    },
+    "equipment": {
+      "label": "Equipment",
+      "empty": "No equipment"
+    },
+    "abilities": {
+      "label": "Abilities",
+      "empty": "No abilities"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "app": {
+    "title": "Numenera Charakterbogen"
+  },
+  "buttons": {
+    "load": "Laden",
+    "clear": "Löschen"
+  },
+  "character": {
+    "name": "Name",
+    "tier": "Stufe",
+    "type": "Typ",
+    "descriptor": "Eigenschaft",
+    "focus": "Fokus"
+  },
+  "stats": {
+    "heading": "Attribute",
+    "might": "Macht",
+    "speed": "Geschwindigkeit",
+    "intellect": "Intellekt",
+    "pool": "Pool",
+    "edge": "Vorteil",
+    "current": "Aktuell"
+  },
+  "cyphers": {
+    "heading": "Cypher",
+    "name": "Name",
+    "level": "Stufe",
+    "effect": "Effekt",
+    "empty": "Keine Cypher"
+  },
+  "artifacts": {
+    "heading": "Artefakte",
+    "name": "Name",
+    "level": "Stufe",
+    "depletion": "Erschöpfung",
+    "effect": "Effekt",
+    "empty": "Keine Artefakte"
+  },
+  "oddities": {
+    "heading": "Kuriositäten",
+    "empty": "Keine Kuriositäten"
+  },
+  "textFields": {
+    "heading": "Charakterdetails",
+    "background": {
+      "label": "Hintergrund",
+      "empty": "Kein Hintergrund"
+    },
+    "notes": {
+      "label": "Notizen",
+      "empty": "Keine Notizen"
+    },
+    "equipment": {
+      "label": "Ausrüstung",
+      "empty": "Keine Ausrüstung"
+    },
+    "abilities": {
+      "label": "Fähigkeiten",
+      "empty": "Keine Fähigkeiten"
+    }
+  }
+}

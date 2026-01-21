@@ -3,23 +3,38 @@
 import { html, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
 import { TextField } from "./TextField.js";
+import { t } from "../i18n/index.js";
 
 export class TextFields {
   constructor(private character: Character) {}
 
   render(): TemplateResult {
     const background = new TextField(
-      "Background",
+      t("textFields.background.label"),
       this.character.textFields.background,
       "background"
     );
-    const notes = new TextField("Notes", this.character.textFields.notes, "notes");
-    const equipment = new TextField("Equipment", this.character.textFields.equipment, "equipment");
-    const abilities = new TextField("Abilities", this.character.textFields.abilities, "abilities");
+    const notes = new TextField(
+      t("textFields.notes.label"),
+      this.character.textFields.notes,
+      "notes"
+    );
+    const equipment = new TextField(
+      t("textFields.equipment.label"),
+      this.character.textFields.equipment,
+      "equipment"
+    );
+    const abilities = new TextField(
+      t("textFields.abilities.label"),
+      this.character.textFields.abilities,
+      "abilities"
+    );
 
     return html`
       <div data-testid="text-fields-section" class="mt-8">
-        <h2 data-testid="text-fields-heading" class="text-2xl font-bold mb-4">Character Details</h2>
+        <h2 data-testid="text-fields-heading" class="text-2xl font-bold mb-4">
+          ${t("textFields.heading")}
+        </h2>
         <div class="space-y-4">
           ${background.render()} ${notes.render()} ${equipment.render()} ${abilities.render()}
         </div>

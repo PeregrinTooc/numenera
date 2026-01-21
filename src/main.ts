@@ -6,6 +6,7 @@ import { saveCharacterState, loadCharacterState } from "./storage/localStorage";
 import { Character } from "./types/character.js";
 import { FULL_CHARACTER, EMPTY_CHARACTER } from "./data/mockCharacters.js";
 import { CharacterSheet } from "./components/CharacterSheet.js";
+import { initI18n, onLanguageChanged } from "./i18n/index.js";
 
 // Render the character sheet with the given character data
 function renderCharacterSheet(character: Character): void {
@@ -25,7 +26,20 @@ function renderCharacterSheet(character: Character): void {
 }
 
 // Initialize on page load
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  // Initialize i18n first
+  await initI18n();
+
+  // Re-render on language change
+  onLanguageChanged(() => {
+    const storedCharacter = loadCharacterState();
+    if (storedCharacter) {
+      renderCharacterSheet(storedCharacter);
+    } else {
+      renderCharacterSheet(FULL_CHARACTER);
+    }
+  });
+
   // Priority: URL param > localStorage > default
   // URL param allows explicit override for testing
   const urlParams = new URLSearchParams(window.location.search);

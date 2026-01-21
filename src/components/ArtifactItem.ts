@@ -2,6 +2,7 @@
 
 import { html, TemplateResult } from "lit-html";
 import { Artifact } from "../types/character.js";
+import { t } from "../i18n/index.js";
 
 export class ArtifactItem {
   constructor(private artifact: Artifact) {}
@@ -20,7 +21,7 @@ export class ArtifactItem {
             data-testid="artifact-level-${this.artifact.name}"
             class="text-sm font-medium bg-gray-100 px-2 py-1 rounded"
           >
-            Level: ${this.artifact.level}
+            ${t("artifacts.level")}: ${this.artifact.level}
           </div>
         </div>
       </div>
