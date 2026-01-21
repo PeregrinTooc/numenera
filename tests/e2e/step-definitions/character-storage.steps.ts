@@ -57,6 +57,29 @@ Then("all character sections should show data", async function () {
   await expect(this.page.getByTestId("text-abilities")).toBeVisible();
 });
 
+// Scenario: Character state persists across page reloads (after Load)
+Then("the character should be displayed", async function () {
+  // Verify character name is visible (not empty state)
+  const nameElement = this.page.getByTestId("character-name");
+  await expect(nameElement).toBeVisible();
+  await expect(nameElement).toHaveText("Kael the Wanderer");
+});
+
+Then("the same character should still be displayed", async function () {
+  // After reload, verify character name still there
+  const nameElement = this.page.getByTestId("character-name");
+  await expect(nameElement).toHaveText("Kael the Wanderer");
+});
+
+Then("all character data should be preserved", async function () {
+  // Verify all sections still have data (not empty states)
+  await expect(this.page.getByTestId("cypher-item").first()).toBeVisible();
+  await expect(this.page.getByTestId("artifact-item").first()).toBeVisible();
+  await expect(this.page.getByTestId("oddity-item").first()).toBeVisible();
+  await expect(this.page.getByTestId("text-background")).toBeVisible();
+  await expect(this.page.getByTestId("text-notes")).toBeVisible();
+});
+
 // Scenario: Empty state persists across page reloads after clearing
 When("I reload the page", async function () {
   await this.page.reload();

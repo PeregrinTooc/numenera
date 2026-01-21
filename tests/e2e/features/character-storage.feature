@@ -17,7 +17,6 @@ Feature: Character Storage and State Management
         Then the character sheet should show empty states
         And all sections should display empty state messages
 
-    @wip
     Scenario: Character state persists across page reloads
         Given I am on the character sheet page
         When I click the "Load" button
