@@ -107,6 +107,8 @@ Once configured, every push to `main`:
 - **Framework**: TypeScript + Vite
 - **Styling**: Tailwind CSS
 - **Testing**: Vitest (unit) + Playwright (E2E) + Cucumber (BDD)
+  - DOM testing with `data-testid` attributes for stability
+  - DOMHelpers utility class for semantic test queries
 - **i18n**: i18next
 - **Storage**: localStorage (cloud adapters planned)
 - **CI/CD**: GitHub Actions

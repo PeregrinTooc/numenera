@@ -14,20 +14,64 @@ Numenera Character Sheet - A responsive web application for managing Numenera P&
 
 ## Implemented Features
 
-_(None yet - project initialization in progress)_
+### ✅ Character Storage and State Management (Complete)
+
+- **Local Storage Persistence**: Character data saved automatically in browser localStorage
+- **Load/Clear Controls**: Buttons to load full character data or clear to empty state
+- **State Priority System**: URL parameters > localStorage > default character
+- **Test Coverage**: 4/4 storage scenarios passing
+  - Load button functionality
+  - Clear button functionality
+  - Full character state persistence across page reloads
+  - Empty state persistence across page reloads
+
+### ✅ Character Display (Complete)
+
+- **Basic Information Display**: Name, tier, type, descriptor, focus
+- **Stat Pools**: Might, Speed, Intellect with pool/edge/current values
+- **Items Display**: Cyphers, artifacts, oddities with proper empty states
+- **Text Fields**: Background, notes, equipment, abilities
+- **Test Coverage**: 7/7 display scenarios passing
+
+### ✅ DOM Testing Infrastructure (Complete)
+
+- **data-testid Attributes**: Semantic test identifiers on all key UI elements
+- **DOMHelpers Utility**: Type-safe helper class for DOM queries and assertions
+  - `getByTestId()`: Locate elements by test ID
+  - `hasClass()`: Check CSS classes
+  - `isVisible()/isHidden()`: Visibility checks
+  - `count()`: Count elements by pattern
+  - `getComputedStyle()`: CSS property inspection
+- **DOM Structure Tests**: 8 scenarios verifying DOM structure
+  - Essential testid attributes
+  - Basic info field structure
+  - Stat pool DOM structure
+  - Items section structure
+  - Text field containers
+  - Empty state markers
+  - Item collections
+  - Button elements
+- **Test Coverage**: 19/19 total scenarios (109 steps) passing
+  - 7 character display scenarios
+  - 4 character storage scenarios
+  - 8 DOM structure scenarios
 
 ## Planned Features
 
 ### Phase 1: MVP (Current)
 
 - [ ] **Responsive Layout**: Mobile-first design, tablet and smartphone support
-- [ ] **Single Character Display**: View and edit one character's information
-- [ ] **Character Data Management**:
-  - [ ] Name, tier, type, descriptor, focus
-  - [ ] Stats (Might, Speed, Intellect with pool/edge/current)
-  - [ ] Background, notes, equipment, abilities
+  - [ ] Mobile viewport (320px): Vertical stacking
+  - [ ] Tablet viewport (768px): Optimized arrangement
+  - [ ] Desktop viewport (1280px): Multi-column layout
+- [x] **Single Character Display**: View character information ✅
+- [x] **Character Data Management**: ✅
+  - [x] Name, tier, type, descriptor, focus ✅
+  - [x] Stats (Might, Speed, Intellect with pool/edge/current) ✅
+  - [x] Background, notes, equipment, abilities ✅
+- [ ] **Character Editing**: Editable form fields
 - [ ] **Image Upload**: Single character portrait
-- [ ] **Local Storage**: Persist character data in browser
+- [x] **Local Storage**: Persist character data in browser ✅
 - [ ] **i18n Infrastructure**: English for development, German translation support
 - [ ] **Export/Import**: JSON format for character data
 
@@ -71,7 +115,24 @@ _(None yet - project initialization in progress)_
 
 ## Technical Debt & Improvements
 
-_(Items to address as we progress)_
+### Current Technical Debt
+
+- **i18n Not Implemented**: All labels currently hardcoded strings (Rule #5 violation)
+  - Need to implement translation keys for all user-facing text
+  - i18next infrastructure exists but not integrated
+- **HTML in JavaScript**: Template strings in main.ts should be extracted to separate files
+- **No Component Structure**: Monolithic rendering function should be split into components
+- **No OOP Design**: Business logic should be in domain models that know how to render themselves
+
+### Planned Refactoring
+
+1. **Extract HTML Templates**: Move template strings to dedicated HTML files
+2. **Implement OOP Architecture**:
+   - Domain models (Character, StatPool, Item, etc.)
+   - UI components that render themselves
+   - Separation of business logic from presentation
+3. **Add i18n**: Integrate i18next for all user-facing text
+4. **Component Library**: Build reusable UI components (StatCard, ItemList, etc.)
 
 ## Known Issues
 
