@@ -15,52 +15,31 @@ export class StatPool {
   render(): TemplateResult {
     const nameLower = this.name.toLowerCase();
     return html`
-      <div
-        data-testid="stat-${nameLower}"
-        class="relative bg-gradient-to-b from-parchment-light to-parchment border-2 border-numenera-secondary rounded-lg p-6 shadow-lg"
-      >
+      <div data-testid="stat-${nameLower}" class="stat-pool-card">
         <!-- Stat name - serif, bold, uppercase -->
-        <h3
-          data-testid="stat-${nameLower}-label"
-          class="text-center font-serif text-xl font-bold text-brown-900 mb-4 uppercase tracking-wider"
-        >
-          ${this.name}
-        </h3>
+        <h3 data-testid="stat-${nameLower}-label" class="stat-pool-label">${this.name}</h3>
 
         <!-- Pool value - VERY LARGE, handwritten font -->
-        <div class="text-center mb-6 pb-4 border-b border-numenera-secondary/30">
-          <div
-            data-testid="stat-${nameLower}-pool"
-            class="text-7xl font-handwritten font-bold text-numenera-primary leading-none"
-          >
-            ${this.pool}
-          </div>
-          <div class="text-xs font-serif text-gray-600 uppercase tracking-wider mt-2">
-            ${t("stats.pool")}
-          </div>
+        <div class="stat-pool-value-section">
+          <div data-testid="stat-${nameLower}-pool" class="stat-pool-number">${this.pool}</div>
+          <div class="stat-pool-sublabel">${t("stats.pool")}</div>
         </div>
 
         <!-- Edge and Current - two columns with handwritten values -->
-        <div class="grid grid-cols-2 gap-4">
-          <div class="text-center">
-            <div class="text-xs font-serif text-gray-600 uppercase tracking-wide mb-1">
+        <div class="stat-pool-grid">
+          <div class="stat-pool-stat">
+            <div class="stat-pool-stat-label">
               <label data-testid="label-${nameLower}-edge">${t("stats.edge")}:</label>
             </div>
-            <div
-              data-testid="stat-${nameLower}-edge"
-              class="text-3xl font-handwritten font-semibold text-numenera-secondary"
-            >
+            <div data-testid="stat-${nameLower}-edge" class="stat-pool-stat-value">
               ${this.edge}
             </div>
           </div>
-          <div class="text-center">
-            <div class="text-xs font-serif text-gray-600 uppercase tracking-wide mb-1">
+          <div class="stat-pool-stat">
+            <div class="stat-pool-stat-label">
               <label data-testid="label-${nameLower}-current">${t("stats.current")}:</label>
             </div>
-            <div
-              data-testid="stat-${nameLower}-current"
-              class="text-3xl font-handwritten font-semibold text-numenera-secondary"
-            >
+            <div data-testid="stat-${nameLower}-current" class="stat-pool-stat-value">
               ${this.current}
             </div>
           </div>

@@ -1,10 +1,20 @@
 @import "tailwindcss";
 
+/* Component styles - must import before @theme */
+@import "./components/stat-pool.css";
+
+/* Utility styles */
+@import "./utilities/animations.css";
+
 /* Custom theme configuration */
 @theme {
   --color-numenera-primary: #1a5490;
   --color-numenera-secondary: #8b4513;
   --color-numenera-accent: #d4af37;
-}
 
-/* Add your custom styles here */
+  --color-parchment-light: #f5e6d3;
+  --color-parchment: #ede1cf;
+  --color-parchment-dark: #e5d4be;
+
+  --color-brown-900: #2d2416;
+}
