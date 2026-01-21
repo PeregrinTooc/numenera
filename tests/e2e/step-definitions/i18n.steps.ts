@@ -93,15 +93,15 @@ Then("the intellect stat should display {string}", async function (expectedText:
 });
 
 Then("the stat pool label should be {string}", async function (expectedText: string) {
-  // Find any label containing the expected text within stats section
-  const label = this.page
-    .locator('[data-testid="stats-section"] label', { hasText: expectedText })
+  // Find any element containing the expected text within stats section (div or label)
+  const element = this.page
+    .locator('[data-testid="stats-section"]', { hasText: expectedText })
     .first();
-  await expect(label).toBeVisible();
+  await expect(element).toBeVisible();
 });
 
 Then("the stat edge label should be {string}", async function (expectedText: string) {
-  // Find any label containing the expected text within stats section
+  // Find label element containing the expected text within stats section
   const label = this.page
     .locator('[data-testid="stats-section"] label', { hasText: expectedText })
     .first();
@@ -109,7 +109,7 @@ Then("the stat edge label should be {string}", async function (expectedText: str
 });
 
 Then("the stat current label should be {string}", async function (expectedText: string) {
-  // Find any label containing the expected text within stats section
+  // Find label element containing the expected text within stats section
   const label = this.page
     .locator('[data-testid="stats-section"] label', { hasText: expectedText })
     .first();

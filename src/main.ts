@@ -1,6 +1,7 @@
 // Entry point for the application
 // Minimal bootstrapping - all components are now class-based
 
+import "./styles/main.css";
 import { render } from "lit-html";
 import { saveCharacterState, loadCharacterState } from "./storage/localStorage";
 import { Character } from "./types/character.js";

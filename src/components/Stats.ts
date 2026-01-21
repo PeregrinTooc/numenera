@@ -1,4 +1,5 @@
 // Stats component - Displays all three stat pools
+// Arranged side-by-side on tablet/desktop to match official character sheet
 
 import { html, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
@@ -30,8 +31,14 @@ export class Stats {
 
     return html`
       <div data-testid="stats-section" class="mt-8">
-        <h2 data-testid="stats-heading" class="text-2xl font-bold mb-4">${t("stats.heading")}</h2>
-        <div class="space-y-4">
+        <h2
+          data-testid="stats-heading"
+          class="text-2xl font-serif font-bold text-brown-900 mb-6 uppercase tracking-wide"
+        >
+          ${t("stats.heading")}
+        </h2>
+        <!-- Three stat pools side-by-side on tablet/desktop -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           ${mightPool.render()} ${speedPool.render()} ${intellectPool.render()}
         </div>
       </div>

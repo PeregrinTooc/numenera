@@ -9,6 +9,18 @@ export default {
           secondary: "#8b4513",
           accent: "#d4af37",
         },
+        parchment: {
+          light: "#f5e6d3",
+          DEFAULT: "#ede1cf",
+          dark: "#e5d4be",
+        },
+        brown: {
+          900: "#2d2416",
+        },
+      },
+      fontFamily: {
+        serif: ["Cinzel", "Georgia", "serif"],
+        handwritten: ["Caveat", "Patrick Hand", "cursive"],
       },
       screens: {
         xs: "480px",
