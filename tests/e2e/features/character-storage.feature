@@ -3,7 +3,6 @@ Feature: Character Storage and State Management
     I want my character data to persist
     So that I don't lose my work between sessions
 
-    @wip
     Scenario: Load hard-coded character via load button
         Given I am on the character sheet page
         And the character sheet is empty

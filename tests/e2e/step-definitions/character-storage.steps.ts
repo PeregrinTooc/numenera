@@ -28,6 +28,35 @@ Then("all sections should display empty state messages", async function () {
   await expect(this.page.getByTestId("empty-abilities")).toBeVisible();
 });
 
+// Scenario: Load hard-coded character via load button
+Given("the character sheet is empty", async function () {
+  // Navigate with empty=true to start with empty character
+  await this.page.goto("http://localhost:3000?empty=true");
+});
+
+When('I click the "Load" button', async function () {
+  const loadButton = this.page.getByTestId("load-button");
+  await loadButton.click();
+});
+
+Then("the character {string} should be displayed", async function (name: string) {
+  const nameElement = this.page.getByTestId("character-name");
+  await expect(nameElement).toHaveText(name);
+});
+
+Then("all character sections should show data", async function () {
+  // Verify at least one item in each section
+  await expect(this.page.getByTestId("cypher-item").first()).toBeVisible();
+  await expect(this.page.getByTestId("artifact-item").first()).toBeVisible();
+  await expect(this.page.getByTestId("oddity-item").first()).toBeVisible();
+
+  // Verify text fields have content (not empty states)
+  await expect(this.page.getByTestId("text-background")).toBeVisible();
+  await expect(this.page.getByTestId("text-notes")).toBeVisible();
+  await expect(this.page.getByTestId("text-equipment")).toBeVisible();
+  await expect(this.page.getByTestId("text-abilities")).toBeVisible();
+});
+
 // Scenario: Empty state persists across page reloads after clearing
 When("I reload the page", async function () {
   await this.page.reload();

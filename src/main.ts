@@ -103,12 +103,20 @@ function renderCharacterSheet(character: typeof FULL_CHARACTER): void {
                 <div class="max-w-4xl mx-auto bg-white shadow rounded-lg p-6">
                     <div class="flex justify-between items-center mb-6">
                         <h1 class="text-3xl font-bold">Numenera Character Sheet</h1>
-                        <button 
-                            data-testid="clear-button" 
-                            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded shadow transition-colors"
-                        >
-                            Clear
-                        </button>
+                        <div class="flex gap-2">
+                            <button 
+                                data-testid="load-button" 
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded shadow transition-colors"
+                            >
+                                Load
+                            </button>
+                            <button 
+                                data-testid="clear-button" 
+                                class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded shadow transition-colors"
+                            >
+                                Clear
+                            </button>
+                        </div>
                     </div>
                     
                     <div class="space-y-4">
@@ -296,6 +304,14 @@ function renderCharacterSheet(character: typeof FULL_CHARACTER): void {
 
   // Save character state to localStorage after rendering
   saveCharacterState(character);
+
+  // Add event listener for Load button
+  const loadButton = app.querySelector('[data-testid="load-button"]');
+  if (loadButton) {
+    loadButton.addEventListener("click", () => {
+      renderCharacterSheet(FULL_CHARACTER);
+    });
+  }
 
   // Add event listener for Clear button
   const clearButton = app.querySelector('[data-testid="clear-button"]');
