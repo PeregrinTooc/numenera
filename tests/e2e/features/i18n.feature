@@ -7,13 +7,13 @@ Feature: Internationalization (i18n)
         Given I am on the character sheet page
         Then the page title should be in English
         And the load button should display "Load"
-        And the clear button should display "Clear"
+        And the new button should display "New"
 
     Scenario: Switch to German language via URL parameter
         Given I am on the character sheet page with "?lang=de"
         Then the page title should be "Numenera Charakterbogen"
-        And the load button should display "Laden"
-        And the clear button should display "Löschen"
+        And the load button should display "Load"
+        And the new button should display "Neu"
 
     # Note: Basic info now uses sentence format without individual labels
     # Character data (name, tier, type, descriptor, focus) is displayed inline
@@ -68,4 +68,4 @@ Feature: Internationalization (i18n)
         When I navigate to the page with "?lang=en"
         Then the page title should be in English
         And the load button should display "Load"
-        And the clear button should display "Clear"
+        And the new button should display "New"

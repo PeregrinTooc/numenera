@@ -71,7 +71,7 @@
 }
 
 /* Clear button - Numenera secondary brown */
-.btn-clear {
+.btn-new {
   background: #8b4513;
   color: white;
   padding: 0.75rem 2rem;
@@ -87,13 +87,13 @@
   transition: all 0.2s ease;
 }
 
-.btn-clear:hover {
+.btn-new:hover {
   background: #5c2d0c;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(139, 69, 19, 0.4);
 }
 
-.btn-clear:active {
+.btn-new:active {
   transform: translateY(0);
   box-shadow: 0 1px 2px rgba(139, 69, 19, 0.3);
 }
@@ -119,7 +119,7 @@
   }
 
   .btn-load,
-  .btn-clear {
+  .btn-new {
     width: 100%;
   }
 }

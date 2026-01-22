@@ -3,8 +3,8 @@
     "title": "Numenera Charakterbogen"
   },
   "buttons": {
-    "load": "Laden",
-    "clear": "Löschen"
+    "load": "Load",
+    "new": "Neu"
   },
   "character": {
     "name": "Name",

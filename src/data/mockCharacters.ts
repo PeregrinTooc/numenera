@@ -76,16 +76,16 @@ export const FULL_CHARACTER: Character = {
   },
 };
 
-export const EMPTY_CHARACTER: Character = {
-  name: "Kael the Wanderer",
-  tier: 3,
-  type: "Glaive",
-  descriptor: "Strong",
-  focus: "Bears a Halo of Fire",
+export const NEW_CHARACTER: Character = {
+  name: "",
+  tier: 1,
+  type: "",
+  descriptor: "",
+  focus: "",
   stats: {
-    might: { pool: 15, edge: 2, current: 12 },
-    speed: { pool: 12, edge: 1, current: 12 },
-    intellect: { pool: 10, edge: 0, current: 8 },
+    might: { pool: 7, edge: 0, current: 7 },
+    speed: { pool: 7, edge: 0, current: 7 },
+    intellect: { pool: 7, edge: 0, current: 7 },
   },
   cyphers: [],
   artifacts: [],

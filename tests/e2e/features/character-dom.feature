@@ -13,7 +13,7 @@ Feature: Character Sheet DOM Structure
             | Page Title          | page-title          |
             | Character Name      | character-name      |
             | Load Button         | load-button         |
-            | Clear Button        | clear-button        |
+            | New Button          | new-button          |
             | Basic Info Section  | basic-info          |
             | Stats Section       | stats-section       |
             | Cyphers Section     | cyphers-section     |
@@ -52,7 +52,7 @@ Feature: Character Sheet DOM Structure
             | Notes      | notes-container      | label-notes      |
 
     Scenario: Verify empty state DOM markers
-        When I click the clear button
+        When I click the new button
         Then the element with testid "empty-cyphers" should be visible
         And the element with testid "empty-artifacts" should be visible
         And the element with testid "empty-oddities" should be visible
@@ -69,7 +69,7 @@ Feature: Character Sheet DOM Structure
     Scenario: Count button elements in header
         Then I should see exactly 2 buttons in the character header
         And the load button should have testid "load-button"
-        And the clear button should have testid "clear-button"
+        And the new button should have testid "new-button"
 
     @responsive @skip
     Scenario: Verify responsive layout classes at mobile (320px)

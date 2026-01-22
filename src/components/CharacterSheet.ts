@@ -13,11 +13,11 @@ export class CharacterSheet {
   constructor(
     private character: Character,
     private onLoad: () => void,
-    private onClear: () => void
+    private onNew: () => void
   ) {}
 
   render(): TemplateResult {
-    const header = new Header(this.onLoad, this.onClear);
+    const header = new Header(this.onLoad, this.onNew);
     const basicInfo = new BasicInfo(this.character);
     const stats = new Stats(this.character);
     const abilities = new Abilities(this.character.abilities);

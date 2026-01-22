@@ -32,9 +32,9 @@ Then("the load button should display {string}", async function (expectedText: st
   await expect(button).toHaveText(expectedText);
 });
 
-Then("the clear button should display {string}", async function (expectedText: string) {
+Then("the new button should display {string}", async function (expectedText: string) {
   const dom = new DOMHelpers(this.page);
-  const button = dom.getByTestId("clear-button");
+  const button = dom.getByTestId("new-button");
   await expect(button).toHaveText(expectedText);
 });
 

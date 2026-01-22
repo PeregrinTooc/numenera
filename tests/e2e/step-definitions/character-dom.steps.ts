@@ -109,10 +109,10 @@ Then("the following text field containers should exist:", async function (dataTa
   }
 });
 
-When("I click the clear button", async function () {
+When("I click the new button", async function () {
   const dom = new DOMHelpers(this.page);
-  const clearButton = dom.getByTestId("clear-button");
-  await clearButton.click();
+  const newButton = dom.getByTestId("new-button");
+  await newButton.click();
   // Wait for the page to update
   await this.page.waitForTimeout(100);
 });
@@ -147,11 +147,11 @@ Then("the load button should have testid {string}", async function (testId: stri
   await expect(loadButton).toHaveText("Load");
 });
 
-Then("the clear button should have testid {string}", async function (testId: string) {
+Then("the new button should have testid {string}", async function (testId: string) {
   const dom = new DOMHelpers(this.page);
-  const clearButton = dom.getByTestId(testId);
-  await expect(clearButton).toBeAttached();
-  await expect(clearButton).toHaveText("Clear");
+  const newButton = dom.getByTestId(testId);
+  await expect(newButton).toBeAttached();
+  await expect(newButton).toHaveText("New");
 });
 
 // Responsive tests (currently @skip)

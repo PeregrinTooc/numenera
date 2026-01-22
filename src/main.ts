@@ -5,7 +5,7 @@ import "./styles/main.css";
 import { render } from "lit-html";
 import { saveCharacterState, loadCharacterState } from "./storage/localStorage";
 import { Character } from "./types/character.js";
-import { FULL_CHARACTER, EMPTY_CHARACTER } from "./data/mockCharacters.js";
+import { FULL_CHARACTER, NEW_CHARACTER } from "./data/mockCharacters.js";
 import { CharacterSheet } from "./components/CharacterSheet.js";
 import { initI18n, onLanguageChanged } from "./i18n/index.js";
 
@@ -17,7 +17,7 @@ function renderCharacterSheet(character: Character): void {
   const sheet = new CharacterSheet(
     character,
     () => renderCharacterSheet(FULL_CHARACTER),
-    () => renderCharacterSheet(EMPTY_CHARACTER)
+    () => renderCharacterSheet(NEW_CHARACTER)
   );
 
   render(sheet.render(), app);
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let initialCharacter: Character;
   if (useEmpty) {
     // URL param explicitly requests empty character
-    initialCharacter = EMPTY_CHARACTER;
+    initialCharacter = NEW_CHARACTER;
   } else if (storedCharacter) {
     // Load from localStorage if available
     initialCharacter = storedCharacter;

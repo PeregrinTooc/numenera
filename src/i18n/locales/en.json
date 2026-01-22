@@ -4,7 +4,7 @@
   },
   "buttons": {
     "load": "Load",
-    "clear": "Clear"
+    "new": "New"
   },
   "character": {
     "name": "Name",

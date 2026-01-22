@@ -8,9 +8,9 @@ Given("a character is currently displayed", async function () {
   await expect(this.page.getByTestId("character-name")).toBeVisible();
 });
 
-When('I click the "Clear" button', async function () {
-  const clearButton = this.page.getByTestId("clear-button");
-  await clearButton.click();
+When('I click the "New" button', async function () {
+  const newButton = this.page.getByTestId("new-button");
+  await newButton.click();
 });
 
 Then("the character sheet should show empty states", async function () {

@@ -10,10 +10,10 @@ Feature: Character Storage and State Management
         Then the character "Kael the Wanderer" should be displayed
         And all character sections should show data
 
-    Scenario: Clear character data via clear button
+    Scenario: Create new character via new button
         Given I am on the character sheet page
         And a character is currently displayed
-        When I click the "Clear" button
+        When I click the "New" button
         Then the character sheet should show empty states
         And all sections should display empty state messages
 
@@ -25,9 +25,9 @@ Feature: Character Storage and State Management
         Then the same character should still be displayed
         And all character data should be preserved
 
-    Scenario: Empty state persists across page reloads after clearing
+    Scenario: Empty state persists across page reloads after creating new
         Given I am on the character sheet page
-        When I click the "Clear" button
+        When I click the "New" button
         And I reload the page
         Then the character sheet should show empty states
         And all sections should display empty state messages
