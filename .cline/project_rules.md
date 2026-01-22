@@ -252,14 +252,30 @@ lg: 1024px  (desktops)
 xl: 1280px  (large desktops)
 ```
 
-### Internationalization (i18n)
+### Internationalization (i18n) - CRITICAL REQUIREMENT
 
 **MANDATORY Rules:**
 
-- ALL user-facing text through translation keys
+- ALL user-facing text MUST use translation keys via `t()` function
 - English (`en`) for development and testing
 - German (`de`) for production
-- Use `t("key.path")` function for translations
+- Translation coverage verified by pre-commit hook
+
+**⚠️ PRE-COMMIT CHECK ENFORCED:**
+
+A pre-commit hook automatically runs `npm run check:i18n` which:
+
+- Scans all components for `t()` function calls
+- Verifies every translation key exists in BOTH `en.json` AND `de.json`
+- **BLOCKS the commit if any keys are missing**
+- Reports exactly which keys need to be added
+
+**Translation Files:**
+
+Located in `src/i18n/locales/`:
+
+- `en.json` - English translations (default)
+- `de.json` - German translations
 
 **Translation File Structure:**
 
@@ -270,20 +286,50 @@ xl: 1280px  (large desktops)
   },
   "character": {
     "name": "Name",
-    "tier": "Tier"
+    "tier": "Tier",
+    "sentence": {
+      "prefix": "A tier",
+      "connector": "who"
+    }
   }
 }
 ```
 
-**Never hardcode text:**
+**Usage in Components:**
 
 ```typescript
-// ❌ BAD
-<h1>Character Sheet</h1>
+import { t } from "../i18n/index.js";
 
-// ✅ GOOD
+// ❌ BAD - Hardcoded text
+<h1>Character Sheet</h1>
+<div>A tier {tier}</div>
+
+// ✅ GOOD - Using translation keys
 <h1>{t("app.characterSheet")}</h1>
+<div>{t("character.sentence.prefix")} {tier}</div>
 ```
+
+**Adding New Translations:**
+
+1. Add key to `src/i18n/locales/en.json`
+2. Add corresponding German translation to `src/i18n/locales/de.json`
+3. Use key in component with `t("your.key")`
+4. Pre-commit hook will verify both keys exist
+
+**What Doesn't Need Translation:**
+
+- Technical identifiers: `data-testid`, CSS classes, code strings
+- HTML attributes: `class`, `type`, `role`, etc.
+- Variable/function names in code
+
+**Documentation:**
+
+See `docs/I18N.md` for complete i18n guide including:
+
+- Detailed usage examples
+- Troubleshooting guide
+- Best practices
+- Common translation keys reference
 
 ### Styling with Tailwind CSS
 
