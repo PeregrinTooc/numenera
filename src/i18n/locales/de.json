@@ -11,7 +11,12 @@
     "tier": "Stufe",
     "type": "Typ",
     "descriptor": "Eigenschaft",
-    "focus": "Fokus"
+    "focus": "Fokus",
+    "sentence": {
+      "prefix": "Stufe",
+      "connector": "mit"
+    },
+    "portrait": "Porträt"
   },
   "stats": {
     "heading": "Attribute",

@@ -11,7 +11,12 @@
     "tier": "Tier",
     "type": "Type",
     "descriptor": "Descriptor",
-    "focus": "Focus"
+    "focus": "Focus",
+    "sentence": {
+      "prefix": "A tier",
+      "connector": "who"
+    },
+    "portrait": "Portrait"
   },
   "stats": {
     "heading": "Stats",

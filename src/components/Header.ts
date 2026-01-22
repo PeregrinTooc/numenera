@@ -12,23 +12,15 @@ export class Header {
   render(): TemplateResult {
     return html`
       <div data-testid="character-header" class="character-header">
-        <!-- Main content: title, decorative line, and buttons -->
-        <div class="header-content">
-          <h1 data-testid="page-title" class="page-title">${t("app.title")}</h1>
-          <div class="title-underline"></div>
-          <div class="header-buttons">
-            <button data-testid="load-button" @click=${this.onLoad} class="btn-load">
-              ${t("buttons.load")}
-            </button>
-            <button data-testid="clear-button" @click=${this.onClear} class="btn-clear">
-              ${t("buttons.clear")}
-            </button>
-          </div>
-        </div>
-
-        <!-- Character portrait placeholder (right side) -->
-        <div class="character-portrait">
-          <span class="character-portrait-text">Portrait</span>
+        <h1 data-testid="page-title" class="page-title">${t("app.title")}</h1>
+        <div class="title-underline"></div>
+        <div class="header-buttons">
+          <button data-testid="load-button" @click=${this.onLoad} class="btn-load">
+            ${t("buttons.load")}
+          </button>
+          <button data-testid="clear-button" @click=${this.onClear} class="btn-clear">
+            ${t("buttons.clear")}
+          </button>
         </div>
       </div>
     `;

@@ -15,13 +15,8 @@ Feature: Internationalization (i18n)
         And the load button should display "Laden"
         And the clear button should display "Löschen"
 
-    Scenario: German translations for character basic info
-        Given I am on the character sheet page with "?lang=de"
-        Then the character name label should be "Name"
-        And the character tier label should be "Stufe"
-        And the character type label should be "Typ"
-        And the character descriptor label should be "Eigenschaft"
-        And the character focus label should be "Fokus"
+    # Note: Basic info now uses sentence format without individual labels
+    # Character data (name, tier, type, descriptor, focus) is displayed inline
 
     Scenario: German translations for stats section
         Given I am on the character sheet page with "?lang=de"

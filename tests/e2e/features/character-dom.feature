@@ -21,14 +21,14 @@ Feature: Character Sheet DOM Structure
             | Oddities Section    | oddities-section    |
             | Text Fields Section | text-fields-section |
 
-    Scenario: Verify basic info field structure
-        Then the following basic info elements should exist:
-            | Field      | Label testid     | Value testid         |
-            | Name       | label-name       | character-name       |
-            | Tier       | label-tier       | character-tier       |
-            | Type       | label-type       | character-type       |
-            | Descriptor | label-descriptor | character-descriptor |
-            | Focus      | label-focus      | character-focus      |
+    Scenario: Verify basic info field structure (sentence format)
+        Then the following elements should exist in the DOM:
+            | Element              | data-testid          |
+            | Character Name       | character-name       |
+            | Character Tier       | character-tier       |
+            | Character Type       | character-type       |
+            | Character Descriptor | character-descriptor |
+            | Character Focus      | character-focus      |
 
     Scenario: Verify stat pool DOM structure
         Then each stat pool should have the following elements:
