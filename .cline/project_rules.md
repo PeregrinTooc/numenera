@@ -480,6 +480,135 @@ Now properly sets timestamp before serialization.
 - ❌ Linter errors exist
 - ❌ Temporary debug code is present
 
+### AI-Assisted Git Workflow (CRITICAL FOR AUTOMATION)
+
+**Problem:** Combining `git add`, `git commit`, and `git push` with long commit messages causes interactive shell prompts that break automation.
+
+**Solution:** Use multiple `-m` flags for structured commit messages instead of embedding newlines in a single `-m` flag.
+
+**MANDATORY Format for AI Tools:**
+
+```bash
+git add -A && \
+git commit \
+  -m "type(scope): subject line (max 72 chars)" \
+  -m "Detailed explanation paragraph." \
+  -m "Additional context or changes:
+- First change
+- Second change
+- Third change" \
+  -m "Closes #123" && \
+git push
+```
+
+**Rules:**
+
+1. **NEVER embed newlines within a single `-m` flag**
+   - ❌ BAD: `-m "feat: add feature\n\nThis breaks the shell"`
+   - ✅ GOOD: Multiple `-m` flags (see below)
+
+2. **Use multiple `-m` flags for structure:**
+   - **First `-m`**: Subject line only (conventional commit format)
+     - Format: `type(scope): description`
+     - Max 72 characters
+     - Present tense, no period
+   - **Second `-m`**: Detailed explanation (optional)
+     - Why the change was made
+     - What problem it solves
+     - 1-2 sentences
+   - **Third `-m`**: Bullet list of changes (optional)
+     - Specific files or components changed
+     - Key implementation details
+     - Can include newlines within this single `-m`
+   - **Fourth `-m`**: Footer (optional)
+     - Issue references: `Closes #123`
+     - Breaking changes: `BREAKING CHANGE: description`
+     - Co-authors
+
+3. **Chain commands with `&&`**
+   - Ensures each step succeeds before proceeding
+   - Stops on error (won't push if commit fails)
+   - Use backslash `\` for line continuation
+
+4. **Each `-m` creates a paragraph**
+   - Paragraphs are separated by blank lines
+   - First `-m` is the subject
+   - Subsequent `-m` flags form the body
+
+**Examples:**
+
+**Simple commit:**
+
+```bash
+git add -A && git commit -m "fix(stats): correct pool calculation" && git push
+```
+
+**Commit with explanation:**
+
+```bash
+git add -A && \
+git commit \
+  -m "feat(i18n): add translation coverage check" \
+  -m "Implement automated verification to ensure all user-facing text uses translation keys." && \
+git push
+```
+
+**Full structured commit:**
+
+```bash
+git add -A && \
+git commit \
+  -m "feat(storage): add auto-save functionality" \
+  -m "Implements automatic saving every 30 seconds to prevent data loss during long editing sessions." \
+  -m "Changes:
+- Add AutoSaveService class
+- Update CharacterSheet to use auto-save
+- Add visual indicator for save status
+- Include debounce to avoid excessive saves" \
+  -m "Closes #42" && \
+git push
+```
+
+**Why This Works:**
+
+- No interactive shell prompts
+- No quote escaping issues
+- Works in automated contexts (CI/CD, AI tools)
+- Maintains professional commit structure
+- Follows conventional commits format
+- Each `-m` is self-contained
+
+**What NOT to Do:**
+
+```bash
+# ❌ WRONG - Newlines in single -m flag (breaks shell)
+git commit -m "feat: add feature
+
+This explanation breaks
+because of newlines"
+
+# ❌ WRONG - Unclosed quotes
+git commit -m "feat: add feature
+> (shell waits for closing quote)
+
+# ❌ WRONG - Using semicolons instead of &&
+git add -A; git commit -m "feat: add"; git push
+# (continues even if commit fails)
+```
+
+**For AI Development:**
+
+When Cline or other AI tools need to commit code:
+
+1. Use `git add -A` to stage all changes
+2. Build commit message with multiple `-m` flags
+3. Chain with `&&` for safety
+4. Use backslashes for readability
+5. Always include `git push` at the end
+6. Wait for command completion before proceeding
+
+This ensures git operations are fully automated, non-interactive, and professional.
+
 ---
 
 ## Project-Specific Context
