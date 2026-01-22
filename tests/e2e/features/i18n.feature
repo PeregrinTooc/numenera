@@ -44,11 +44,8 @@ Feature: Internationalization (i18n)
 
     Scenario: German translations for text fields section
         Given I am on the character sheet page with "?lang=de"
-        Then the text fields heading should be "Charakterdetails"
-        And the background field label should be "Hintergrund"
+        Then the background field label should be "Hintergrund"
         And the notes field label should be "Notizen"
-        And the equipment field label should be "Ausrüstung"
-        And the abilities field label should be "Fähigkeiten"
 
     Scenario: German translations for empty states
         Given I am on the character sheet page with "?lang=de&empty=true"

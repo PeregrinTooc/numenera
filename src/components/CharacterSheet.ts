@@ -5,8 +5,9 @@ import { Character } from "../types/character.js";
 import { Header } from "./Header.js";
 import { BasicInfo } from "./BasicInfo.js";
 import { Stats } from "./Stats.js";
+import { Abilities } from "./Abilities.js";
 import { ItemsSection } from "./ItemsSection.js";
-import { TextFields } from "./TextFields.js";
+import { BottomTextFields } from "./BottomTextFields.js";
 
 export class CharacterSheet {
   constructor(
@@ -19,18 +20,20 @@ export class CharacterSheet {
     const header = new Header(this.onLoad, this.onClear);
     const basicInfo = new BasicInfo(this.character);
     const stats = new Stats(this.character);
+    const abilities = new Abilities(this.character.abilities);
     const itemsSection = new ItemsSection(
+      this.character.textFields.equipment,
       this.character.cyphers,
       this.character.artifacts,
       this.character.oddities
     );
-    const textFields = new TextFields(this.character);
+    const bottomTextFields = new BottomTextFields(this.character);
 
     return html`
       <div class="min-h-screen bg-gray-50 p-4">
-        <div class="max-w-7xl mx-auto bg-white shadow rounded-lg p-6">
-          ${header.render()} ${basicInfo.render()} ${stats.render()} ${itemsSection.render()}
-          ${textFields.render()}
+        <div class="max-w-6xl mx-auto bg-white shadow rounded-lg p-6">
+          ${header.render()} ${basicInfo.render()} ${stats.render()} ${abilities.render()}
+          ${itemsSection.render()} ${bottomTextFields.render()}
         </div>
       </div>
     `;

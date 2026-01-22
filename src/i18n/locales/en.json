@@ -46,6 +46,14 @@
     "heading": "Oddities",
     "empty": "No oddities"
   },
+  "equipment": {
+    "heading": "Equipment",
+    "empty": "No equipment"
+  },
+  "abilities": {
+    "heading": "Abilities",
+    "empty": "No abilities"
+  },
   "textFields": {
     "heading": "Character Details",
     "background": {
@@ -55,14 +63,6 @@
     "notes": {
       "label": "Notes",
       "empty": "No notes"
-    },
-    "equipment": {
-      "label": "Equipment",
-      "empty": "No equipment"
-    },
-    "abilities": {
-      "label": "Abilities",
-      "empty": "No abilities"
     }
   }
 }

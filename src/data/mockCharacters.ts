@@ -36,11 +36,28 @@ export const FULL_CHARACTER: Character = {
     "A glowing cube that hums when near water",
     "A piece of transparent metal that's always cold",
   ],
+  abilities: [
+    {
+      name: "Trained in Intimidation",
+      description: "You are trained in intimidation tasks",
+    },
+    {
+      name: "Specialized in Heavy Weapons",
+      description: "You are specialized in attacks with heavy weapons",
+    },
+    {
+      name: "Bash",
+      description: "You can use your weapon or a shield to make a melee bash attack",
+    },
+    {
+      name: "Fleet of Foot",
+      description: "You can move a short distance and still make an attack",
+    },
+  ],
   textFields: {
     background: "Born in a remote village, discovered ancient ruins that changed everything",
     notes: "Currently investigating the mysterious disappearances in the nearby forest",
     equipment: "Medium armor, Broadsword, Explorer's pack, 50 feet of rope",
-    abilities: "Trained in intimidation, Specialized in heavy weapons",
   },
 };
 
@@ -58,10 +75,10 @@ export const EMPTY_CHARACTER: Character = {
   cyphers: [],
   artifacts: [],
   oddities: [],
+  abilities: [],
   textFields: {
     background: "",
     notes: "",
     equipment: "",
-    abilities: "",
   },
 };

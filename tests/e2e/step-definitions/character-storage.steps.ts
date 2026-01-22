@@ -53,8 +53,10 @@ Then("all character sections should show data", async function () {
   // Verify text fields have content (not empty states)
   await expect(this.page.getByTestId("text-background")).toBeVisible();
   await expect(this.page.getByTestId("text-notes")).toBeVisible();
-  await expect(this.page.getByTestId("text-equipment")).toBeVisible();
-  await expect(this.page.getByTestId("text-abilities")).toBeVisible();
+
+  // Equipment and abilities are now separate components
+  await expect(this.page.getByTestId("equipment-content")).toBeVisible();
+  await expect(this.page.getByTestId("ability-item").first()).toBeVisible();
 });
 
 // Scenario: Character state persists across page reloads (after Load)

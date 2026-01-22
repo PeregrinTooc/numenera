@@ -146,14 +146,16 @@ Then("I should see the notes text", async function () {
 
 Then("I should see the equipment text", async function () {
   const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("text-equipment")).toBeVisible();
-  await expect(dom.getByTestId("text-equipment")).not.toBeEmpty();
+  await expect(dom.getByTestId("equipment-content")).toBeVisible();
+  await expect(dom.getByTestId("equipment-content")).not.toBeEmpty();
 });
 
 Then("I should see the abilities text", async function () {
   const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("text-abilities")).toBeVisible();
-  await expect(dom.getByTestId("text-abilities")).not.toBeEmpty();
+  // Abilities are now cards, check for abilities section and at least one ability
+  await expect(dom.getByTestId("abilities-section")).toBeVisible();
+  const abilityCount = await dom.count("ability-item");
+  expect(abilityCount).toBeGreaterThan(0);
 });
 
 Then("all text field labels should use translation keys", async function () {

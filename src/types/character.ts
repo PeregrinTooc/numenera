@@ -18,6 +18,11 @@ export type Artifact = {
   effect: string;
 };
 
+export type Ability = {
+  name: string;
+  description: string;
+};
+
 export interface Character {
   name: string;
   tier: number;
@@ -32,10 +37,10 @@ export interface Character {
   cyphers: Cypher[];
   artifacts: Artifact[];
   oddities: string[];
+  abilities: Ability[];
   textFields: {
     background: string;
     notes: string;
     equipment: string;
-    abilities: string;
   };
 }

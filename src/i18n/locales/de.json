@@ -46,6 +46,14 @@
     "heading": "Kuriositäten",
     "empty": "Keine Kuriositäten"
   },
+  "equipment": {
+    "heading": "Ausrüstung",
+    "empty": "Keine Ausrüstung"
+  },
+  "abilities": {
+    "heading": "Fähigkeiten",
+    "empty": "Keine Fähigkeiten"
+  },
   "textFields": {
     "heading": "Charakterdetails",
     "background": {
@@ -55,14 +63,6 @@
     "notes": {
       "label": "Notizen",
       "empty": "Keine Notizen"
-    },
-    "equipment": {
-      "label": "Ausrüstung",
-      "empty": "Keine Ausrüstung"
-    },
-    "abilities": {
-      "label": "Fähigkeiten",
-      "empty": "Keine Fähigkeiten"
     }
   }
 }

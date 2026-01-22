@@ -50,8 +50,6 @@ Feature: Character Sheet DOM Structure
             | Field      | Container testid     | Label testid     |
             | Background | background-container | label-background |
             | Notes      | notes-container      | label-notes      |
-            | Equipment  | equipment-container  | label-equipment  |
-            | Abilities  | abilities-container  | label-abilities  |
 
     Scenario: Verify empty state DOM markers
         When I click the clear button
