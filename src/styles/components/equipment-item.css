@@ -1,0 +1,38 @@
+/* Equipment Item Styling - Light green theme for equipment cards */
+
+.equipment-item-card {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px solid #86efac;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(34, 197, 94, 0.1);
+  transition: all 0.3s ease;
+}
+
+.equipment-item-card:hover {
+  box-shadow: 0 4px 6px rgba(34, 197, 94, 0.2);
+  transform: translateY(-2px);
+}
+
+.equipment-name {
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: #166534;
+  margin-bottom: 0.5rem;
+}
+
+.equipment-description {
+  font-size: 0.875rem;
+  color: #15803d;
+  line-height: 1.5;
+}
+
+/* Empty state styling */
+.empty-equipment-styled {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px dashed #86efac;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  color: #16a34a;
+}

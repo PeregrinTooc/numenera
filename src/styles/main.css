@@ -7,6 +7,8 @@
 @import "./components/cypher-item.css";
 @import "./components/artifact-item.css";
 @import "./components/oddity-item.css";
+@import "./components/equipment-item.css";
+@import "./components/text-field.css";
 
 /* Utility styles */
 @import "./utilities/animations.css";

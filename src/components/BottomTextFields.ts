@@ -13,7 +13,7 @@ export class BottomTextFields {
 
     return html`
       <div data-testid="text-fields-section" class="mt-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bottom-text-fields">
           <div>${background.render()}</div>
           <div>${notes.render()}</div>
         </div>

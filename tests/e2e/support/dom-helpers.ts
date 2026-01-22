@@ -129,4 +129,42 @@ export class DOMHelpers {
   getAllByTestIdPattern(testIdPattern: string): Locator {
     return this.page.locator(`[data-testid^="${testIdPattern}"]`);
   }
+
+  // Static helper methods for computed styles
+  static async getComputedBackgroundColor(element: Locator): Promise<string> {
+    return await element.evaluate((el) => {
+      return window.getComputedStyle(el).backgroundColor;
+    });
+  }
+
+  static async getComputedBorderColor(element: Locator): Promise<string> {
+    return await element.evaluate((el) => {
+      return window.getComputedStyle(el).borderColor;
+    });
+  }
+
+  static async getComputedBorderRadius(element: Locator): Promise<string> {
+    return await element.evaluate((el) => {
+      return window.getComputedStyle(el).borderRadius;
+    });
+  }
+
+  static async getComputedBoxShadow(element: Locator): Promise<string> {
+    return await element.evaluate((el) => {
+      return window.getComputedStyle(el).boxShadow;
+    });
+  }
+
+  static async findEquipmentItemByName(page: Page, name: string): Promise<Locator> {
+    // Find equipment item by looking for the name text
+    const items = await page.locator(".equipment-item").all();
+    for (const item of items) {
+      const nameEl = item.locator(".equipment-name");
+      const text = await nameEl.textContent();
+      if (text?.trim() === name) {
+        return item;
+      }
+    }
+    throw new Error(`Equipment item with name "${name}" not found`);
+  }
 }

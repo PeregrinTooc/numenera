@@ -1,0 +1,38 @@
+/* Text Field Styling - Parchment theme for background and notes */
+
+.parchment-field {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 2px solid #d97706;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(180, 83, 9, 0.1);
+}
+
+.text-content {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #78350f;
+  white-space: pre-wrap;
+}
+
+.empty-text-content {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.875rem;
+  color: #92400e;
+  font-style: italic;
+}
+
+/* Two-column layout for bottom fields */
+.bottom-text-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .bottom-text-fields {
+    grid-template-columns: 1fr;
+  }
+}
