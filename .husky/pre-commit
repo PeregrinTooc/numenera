@@ -1,3 +1,4 @@
+echo "🔍 Running Pre-Commit-Hook."
 # Run lint-staged (format check and unit tests)
 npx lint-staged
 
@@ -8,6 +9,4 @@ npm run test:unit || true
 echo "🌍 Checking translation coverage..."
 npm run check:i18n || exit 1
 
-# Run E2E tests with production build
-echo "Running E2E tests with production build..."
-npm run test:e2e:prod
+echo "✅ Pre-commit checks passed! Proceeding with commit..."

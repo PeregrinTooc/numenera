@@ -1,12 +1,14 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 echo "🔍 Running TypeScript build check before push..."
+
 npm run build
 
 if [ $? -ne 0 ]; then
   echo "❌ Build failed! Fix TypeScript errors before pushing."
   exit 1
 fi
+
+# Run E2E tests with production build
+echo "Running E2E tests with production build..."
+npm run test:e2e:prod
 
 echo "✅ Build successful! Proceeding with push..."
