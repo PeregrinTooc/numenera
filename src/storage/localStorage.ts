@@ -17,6 +17,19 @@ export function saveCharacterState(character: any): void {
 }
 
 /**
+ * Migrate old character data to new format
+ * @param character The character object to migrate
+ * @returns Migrated character object
+ */
+function migrateCharacterData(character: any): any {
+  // Add abilities array if missing (migration from old format)
+  if (!character.abilities) {
+    character.abilities = [];
+  }
+  return character;
+}
+
+/**
  * Load character state from localStorage
  * @returns The stored character object, or null if not found
  */
@@ -26,7 +39,8 @@ export function loadCharacterState(): any | null {
     if (!stored) {
       return null;
     }
-    return JSON.parse(stored);
+    const character = JSON.parse(stored);
+    return migrateCharacterData(character);
   } catch (error) {
     console.error("Failed to load character state:", error);
     return null;
