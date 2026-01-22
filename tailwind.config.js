@@ -19,6 +19,7 @@ export default {
         },
       },
       fontFamily: {
+        sans: ["Cinzel", "Georgia", "serif"], // Set Cinzel as default
         serif: ["Cinzel", "Georgia", "serif"],
         handwritten: ["Caveat", "Patrick Hand", "cursive"],
       },
