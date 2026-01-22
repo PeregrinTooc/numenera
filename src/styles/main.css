@@ -2,6 +2,7 @@
 
 /* Component styles - must import before @theme */
 @import "./components/stat-pool.css";
+@import "./components/header.css";
 
 /* Utility styles */
 @import "./utilities/animations.css";

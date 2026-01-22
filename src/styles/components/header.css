@@ -1,0 +1,165 @@
+/* Header Component Styles */
+
+/* Header container - parchment card matching stat pools */
+.character-header {
+  background: linear-gradient(to bottom, #f5e6d3, #ede1cf);
+  border: 2px solid #8b4513;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+
+  /* Grid layout: content area (centered) | portrait placeholder (right) */
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  align-items: center;
+}
+
+/* Main content area - centers title and buttons */
+.header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Page title - large, elegant serif */
+.page-title {
+  font-family: "Cinzel", Georgia, serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2d2416;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Decorative underline with gradient */
+.title-underline {
+  width: 250px;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #8b4513, #d4af37, #8b4513, transparent);
+}
+
+/* Button container - centered */
+.header-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Load button - Numenera primary blue */
+.btn-load {
+  background: #1a5490;
+  color: white;
+  padding: 0.75rem 2rem;
+  border: 2px solid #0d3a6b;
+  border-radius: 0.5rem;
+  font-family: "Cinzel", serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(26, 84, 144, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-load:hover {
+  background: #0d3a6b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(26, 84, 144, 0.4);
+}
+
+.btn-load:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(26, 84, 144, 0.3);
+}
+
+/* Clear button - Numenera secondary brown */
+.btn-clear {
+  background: #8b4513;
+  color: white;
+  padding: 0.75rem 2rem;
+  border: 2px solid #5c2d0c;
+  border-radius: 0.5rem;
+  font-family: "Cinzel", serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(139, 69, 19, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-clear:hover {
+  background: #5c2d0c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(139, 69, 19, 0.4);
+}
+
+.btn-clear:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(139, 69, 19, 0.3);
+}
+
+/* Character portrait placeholder - right side */
+.character-portrait {
+  width: 120px;
+  height: 120px;
+  border: 2px solid #8b4513;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #e5d4be, #ede1cf);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.character-portrait-text {
+  color: #8b4513;
+  font-family: "Cinzel", serif;
+  font-size: 0.75rem;
+  text-align: center;
+  opacity: 0.4;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Responsive: Stack on mobile/tablet */
+@media (max-width: 768px) {
+  .character-header {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .character-portrait {
+    margin: 0 auto;
+    width: 100px;
+    height: 100px;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .title-underline {
+    width: 200px;
+  }
+
+  .header-buttons {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .btn-load,
+  .btn-clear {
+    width: 100%;
+  }
+}
