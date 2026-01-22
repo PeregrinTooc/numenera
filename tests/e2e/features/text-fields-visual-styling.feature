@@ -5,13 +5,13 @@ Feature: Text Fields Visual Styling
         Given a character exists with background text "Born in a remote village"
         And I am on the character sheet page
         Then the background container should have parchment styling
-        And the background text should be displayed with serif font
+        And the background text should be displayed with handwritten font
 
     Scenario: Notes field has parchment theme
         Given a character exists with notes text "Investigating disappearances"
         And I am on the character sheet page
         Then the notes container should have parchment styling
-        And the notes text should be displayed with serif font
+        And the notes text should be displayed with handwritten font
 
     Scenario: Empty background has parchment theme
         Given I have a character with empty background in localStorage

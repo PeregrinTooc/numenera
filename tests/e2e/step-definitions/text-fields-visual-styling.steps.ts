@@ -4,6 +4,7 @@ import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { FULL_CHARACTER } from "../../../src/data/mockCharacters.js";
 import { Character } from "../../../src/types/character.js";
+import { DOMHelpers } from "../support/dom-helpers.js";
 
 Given("a character exists with background text {string}", async function (backgroundText: string) {
   if (!this.character) {
@@ -111,14 +112,12 @@ Then("the background container should have parchment styling", async function ()
   expect(classes).toContain("parchment-field");
 });
 
-Then("the background text should be displayed with serif font", async function () {
-  const textElement = this.page.locator('[data-testid="text-background"]');
-  await expect(textElement).toBeVisible();
+Then("the background text should be displayed with handwritten font", async function () {
+  const dom = new DOMHelpers(this.page);
+  const textContent = dom.getByTestId("text-background");
 
-  const fontFamily = await textElement.evaluate((el: HTMLElement) => {
-    return window.getComputedStyle(el).fontFamily;
-  });
-  expect(fontFamily).toMatch(/serif/i);
+  const fontFamily = await textContent.evaluate((el) => window.getComputedStyle(el).fontFamily);
+  expect(fontFamily).toMatch(/Caveat|Patrick Hand|cursive/i);
 });
 
 Then("the notes container should have parchment styling", async function () {
@@ -129,14 +128,12 @@ Then("the notes container should have parchment styling", async function () {
   expect(classes).toContain("parchment-field");
 });
 
-Then("the notes text should be displayed with serif font", async function () {
-  const textElement = this.page.locator('[data-testid="text-notes"]');
-  await expect(textElement).toBeVisible();
+Then("the notes text should be displayed with handwritten font", async function () {
+  const dom = new DOMHelpers(this.page);
+  const textContent = dom.getByTestId("text-notes");
 
-  const fontFamily = await textElement.evaluate((el: HTMLElement) => {
-    return window.getComputedStyle(el).fontFamily;
-  });
-  expect(fontFamily).toMatch(/serif/i);
+  const fontFamily = await textContent.evaluate((el) => window.getComputedStyle(el).fontFamily);
+  expect(fontFamily).toMatch(/Caveat|Patrick Hand|cursive/i);
 });
 
 Then("the empty background message should be displayed", async function () {

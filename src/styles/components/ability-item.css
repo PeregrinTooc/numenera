@@ -1,0 +1,15 @@
+/* Ability Item Styling - Purple/Indigo theme */
+
+/* Ability name - user data with handwritten font */
+.ability-item-card .ability-name {
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 1.375rem;
+  line-height: 1.4;
+}
+
+/* Ability description - user data with handwritten font */
+.ability-item-card .ability-description {
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}

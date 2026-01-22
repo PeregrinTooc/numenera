@@ -60,13 +60,14 @@
   }
 }
 
-/* Artifact name - Serif font for elegance */
+/* Artifact name - Handwritten font for user data */
 .artifact-name {
-  font-family: "Cinzel", Georgia, serif;
-  font-size: 1.125rem;
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 1.375rem;
   font-weight: 700;
   color: #2d2416;
   margin-bottom: 0.5rem;
+  line-height: 1.4;
 }
 
 /* Artifact level badge - Gold background */
@@ -79,10 +80,11 @@
   font-size: 0.875rem;
 }
 
-/* Artifact effect text */
+/* Artifact effect text - Handwritten font for user data */
 .artifact-effect {
+  font-family: "Caveat", "Patrick Hand", cursive;
   color: #5a4a3a;
-  font-size: 0.875rem;
+  font-size: 1.125rem;
   line-height: 1.5;
 }
 

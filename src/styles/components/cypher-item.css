@@ -81,6 +81,20 @@
   margin-right: 0.5rem;
 }
 
+/* Cypher name - user data with handwritten font */
+.cypher-item-card .font-semibold {
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 1.375rem;
+  line-height: 1.4;
+}
+
+/* Cypher effect - user data with handwritten font */
+.cypher-item-card .text-sm {
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
 /* Empty cyphers state - blue themed */
 .empty-cyphers-styled {
   background: linear-gradient(135deg, #f5e6d3 0%, #e8f4f8 100%);

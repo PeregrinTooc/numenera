@@ -26,10 +26,11 @@
   opacity: 1;
 }
 
-/* Oddity text - subtle and understated */
+/* Oddity text - subtle and understated with handwritten font */
 .oddity-text {
+  font-family: "Caveat", "Patrick Hand", cursive;
   color: #5a4a3a;
-  font-size: 0.875rem;
+  font-size: 1.125rem;
   font-style: italic;
   line-height: 1.6;
 }

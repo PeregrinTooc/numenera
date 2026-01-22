@@ -9,6 +9,7 @@
 @import "./components/oddity-item.css";
 @import "./components/equipment-item.css";
 @import "./components/text-field.css";
+@import "./components/ability-item.css";
 
 /* Utility styles */
 @import "./utilities/animations.css";
