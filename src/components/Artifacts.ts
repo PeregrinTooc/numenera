@@ -16,10 +16,7 @@ export class Artifacts {
         </h2>
         <div data-testid="artifacts-list" class="space-y-3">
           ${this.artifacts.length === 0
-            ? html`<div
-                data-testid="empty-artifacts"
-                class="text-gray-500 italic p-3 border rounded"
-              >
+            ? html`<div data-testid="empty-artifacts" class="empty-artifacts-styled">
                 ${t("artifacts.empty")}
               </div>`
             : this.artifacts.map((artifact) => new ArtifactItem(artifact).render())}

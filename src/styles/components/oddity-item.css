@@ -1,0 +1,75 @@
+/* Oddity Item Card Styling - Brown Theme (Curious Collectibles) */
+
+.oddity-item-card {
+  /* Light parchment background */
+  background: #f5e6d3;
+
+  /* Brown border - subtle */
+  border: 2px solid #8b4513;
+  border-radius: 8px;
+  padding: 1rem;
+
+  /* Subtle shadow */
+  box-shadow: 0 1px 3px rgba(139, 69, 19, 0.1);
+
+  /* Smooth transitions */
+  transition: all 0.3s ease;
+
+  /* Less prominent than cyphers/artifacts */
+  opacity: 0.95;
+}
+
+/* Gentle hover effect - less dramatic */
+.oddity-item-card:hover {
+  box-shadow: 0 2px 6px rgba(139, 69, 19, 0.15);
+  transform: translateY(-1px);
+  opacity: 1;
+}
+
+/* Oddity text - subtle and understated */
+.oddity-text {
+  color: #5a4a3a;
+  font-size: 0.875rem;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* Mystery icon for oddities */
+.oddity-icon {
+  color: #8b4513;
+  font-size: 1rem;
+  margin-right: 0.5rem;
+  opacity: 0.7;
+}
+
+/* Curiosity badge - optional subtle label */
+.oddity-badge {
+  background: rgba(139, 69, 19, 0.1);
+  color: #8b4513;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: inline-block;
+  margin-top: 0.25rem;
+}
+
+/* Empty oddities state - brown themed */
+.empty-oddities-styled {
+  background: #f5e6d3;
+  border: 2px dashed #8b4513;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  color: #8b7355;
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.empty-oddities-styled::before {
+  content: "🔮";
+  font-size: 1.5rem;
+  opacity: 0.3;
+  display: block;
+  margin-bottom: 0.5rem;
+}

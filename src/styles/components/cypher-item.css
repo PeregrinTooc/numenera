@@ -1,0 +1,93 @@
+/* Cypher Item Card Styling - Blue Theme (Temporary Power) */
+
+.cypher-item-card {
+  /* Parchment background with blue tint */
+  background: linear-gradient(135deg, #f5e6d3 0%, #e8f4f8 100%);
+
+  /* Blue border */
+  border: 2px solid #1a5490;
+  border-radius: 8px;
+  padding: 1rem;
+
+  /* Shadow with blue tint */
+  box-shadow: 0 2px 4px rgba(26, 84, 144, 0.1);
+
+  /* Smooth transitions for hover effects */
+  transition: all 0.3s ease;
+
+  /* Position for pseudo-element */
+  position: relative;
+}
+
+/* Hover effects - dramatic elevation */
+.cypher-item-card:hover {
+  box-shadow: 0 8px 16px rgba(26, 84, 144, 0.25);
+  transform: translateY(-4px);
+  border-color: #2a6ab0;
+}
+
+/* Electric glow effect on hover */
+.cypher-item-card:hover::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #1a5490, #3a8bc0, #1a5490);
+  border-radius: 10px;
+  z-index: -1;
+  opacity: 0.3;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Cypher level badge - Blue background */
+.cypher-level-badge {
+  background: #1a5490;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+/* ONE-USE warning badge - Gold/urgent */
+.cypher-warning {
+  background: #d4af37;
+  color: #2d2416;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+/* Electric icon styling */
+.cypher-icon {
+  color: #1a5490;
+  font-size: 1.25rem;
+  margin-right: 0.5rem;
+}
+
+/* Empty cyphers state - blue themed */
+.empty-cyphers-styled {
+  background: linear-gradient(135deg, #f5e6d3 0%, #e8f4f8 100%);
+  border: 2px dashed #1a5490;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  color: #4a7ba7;
+  font-style: italic;
+}

@@ -9,21 +9,19 @@ export class CypherItem {
 
   render(): TemplateResult {
     return html`
-      <div data-testid="cypher-item" class="border rounded p-3">
-        <div class="flex justify-between items-start">
-          <div>
-            <div data-testid="cypher-name-${this.cypher.name}" class="font-semibold">
-              ${this.cypher.name}
+      <div data-testid="cypher-item" class="cypher-item-card">
+        <div class="flex justify-between items-start mb-2">
+          <div class="flex-1">
+            <div data-testid="cypher-name-${this.cypher.name}" class="font-semibold text-lg">
+              ⚡ ${this.cypher.name}
             </div>
-            <div class="text-sm text-gray-600">${this.cypher.effect}</div>
+            <div class="text-sm text-gray-700 mt-1">${this.cypher.effect}</div>
           </div>
-          <div
-            data-testid="cypher-level-${this.cypher.name}"
-            class="text-sm font-medium bg-gray-100 px-2 py-1 rounded"
-          >
+          <div data-testid="cypher-level-${this.cypher.name}" class="cypher-level-badge ml-3">
             ${t("cyphers.level")}: ${this.cypher.level}
           </div>
         </div>
+        <div data-testid="cypher-warning" class="cypher-warning">⚠️ ONE-USE</div>
       </div>
     `;
   }

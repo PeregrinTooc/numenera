@@ -9,18 +9,15 @@ export class ArtifactItem {
 
   render(): TemplateResult {
     return html`
-      <div data-testid="artifact-item" class="border rounded p-3">
+      <div data-testid="artifact-item" class="artifact-item-card">
         <div class="flex justify-between items-start">
-          <div>
-            <div data-testid="artifact-name-${this.artifact.name}" class="font-semibold">
+          <div class="flex-1">
+            <div data-testid="artifact-name-${this.artifact.name}" class="artifact-name">
               ${this.artifact.name}
             </div>
-            <div class="text-sm text-gray-600">${this.artifact.effect}</div>
+            <div class="artifact-effect">${this.artifact.effect}</div>
           </div>
-          <div
-            data-testid="artifact-level-${this.artifact.name}"
-            class="text-sm font-medium bg-gray-100 px-2 py-1 rounded"
-          >
+          <div data-testid="artifact-level-${this.artifact.name}" class="artifact-level-badge ml-3">
             ${t("artifacts.level")}: ${this.artifact.level}
           </div>
         </div>

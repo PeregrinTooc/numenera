@@ -7,8 +7,8 @@ export class OddityItem {
 
   render(): TemplateResult {
     return html`
-      <div data-testid="oddity-item" class="border rounded p-3">
-        <div data-testid="oddity-${this.oddity}" class="text-sm">${this.oddity}</div>
+      <div data-testid="oddity-item" class="oddity-item-card">
+        <div data-testid="oddity-${this.oddity}" class="oddity-text">🔮 ${this.oddity}</div>
       </div>
     `;
   }

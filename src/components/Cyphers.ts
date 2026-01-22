@@ -16,7 +16,7 @@ export class Cyphers {
         </h2>
         <div data-testid="cyphers-list" class="space-y-3">
           ${this.cyphers.length === 0
-            ? html`<div data-testid="empty-cyphers" class="text-gray-500 italic p-3 border rounded">
+            ? html`<div data-testid="empty-cyphers" class="empty-cyphers-styled">
                 ${t("cyphers.empty")}
               </div>`
             : this.cyphers.map((cypher) => new CypherItem(cypher).render())}

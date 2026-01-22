@@ -23,7 +23,7 @@ export class DOMHelpers {
    * @returns True if the element has the class, false otherwise
    */
   async hasClass(testId: string, className: string): Promise<boolean> {
-    const element = this.getByTestId(testId);
+    const element = this.getByTestId(testId).first();
     const classes = await element.getAttribute("class");
     return classes?.includes(className) ?? false;
   }

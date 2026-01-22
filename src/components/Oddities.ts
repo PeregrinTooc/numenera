@@ -15,10 +15,7 @@ export class Oddities {
         </h2>
         <div data-testid="oddities-list" class="space-y-2">
           ${this.oddities.length === 0
-            ? html`<div
-                data-testid="empty-oddities"
-                class="text-gray-500 italic p-3 border rounded"
-              >
+            ? html`<div data-testid="empty-oddities" class="empty-oddities-styled">
                 ${t("oddities.empty")}
               </div>`
             : this.oddities.map((oddity) => new OddityItem(oddity).render())}
