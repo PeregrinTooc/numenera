@@ -1,15 +1,15 @@
 // ItemsSection component - 2x2 grid layout for Equipment, Cyphers, Artifacts, and Oddities
 
 import { html, TemplateResult } from "lit-html";
-import { Cypher, Artifact } from "../types/character.js";
 import { Equipment } from "./Equipment.js";
 import { Cyphers } from "./Cyphers.js";
 import { Artifacts } from "./Artifacts.js";
 import { Oddities } from "./Oddities.js";
+import { Cypher, Artifact, EquipmentItem } from "../types/character.js";
 
 export class ItemsSection {
   constructor(
-    private equipment: string,
+    private equipment: EquipmentItem[],
     private cyphers: Cypher[],
     private artifacts: Artifact[],
     private oddities: string[]

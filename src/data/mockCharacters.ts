@@ -54,10 +54,25 @@ export const FULL_CHARACTER: Character = {
       description: "You can move a short distance and still make an attack",
     },
   ],
+  equipment: [
+    {
+      name: "Medium armor",
+      description: "Provides protection without hindering movement",
+    },
+    {
+      name: "Broadsword",
+      description: "Heavy melee weapon",
+    },
+    {
+      name: "Explorer's pack",
+    },
+    {
+      name: "50 feet of rope",
+    },
+  ],
   textFields: {
     background: "Born in a remote village, discovered ancient ruins that changed everything",
     notes: "Currently investigating the mysterious disappearances in the nearby forest",
-    equipment: "Medium armor, Broadsword, Explorer's pack, 50 feet of rope",
   },
 };
 
@@ -76,9 +91,9 @@ export const EMPTY_CHARACTER: Character = {
   artifacts: [],
   oddities: [],
   abilities: [],
+  equipment: [],
   textFields: {
     background: "",
     notes: "",
-    equipment: "",
   },
 };

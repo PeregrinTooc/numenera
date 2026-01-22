@@ -22,7 +22,7 @@ export class CharacterSheet {
     const stats = new Stats(this.character);
     const abilities = new Abilities(this.character.abilities);
     const itemsSection = new ItemsSection(
-      this.character.textFields.equipment,
+      this.character.equipment,
       this.character.cyphers,
       this.character.artifacts,
       this.character.oddities

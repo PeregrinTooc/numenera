@@ -60,6 +60,7 @@ describe("localStorage", () => {
         name: "Test Character",
         tier: 1,
         abilities: [{ name: "Test Ability", cost: 3, description: "Test" }],
+        equipment: [], // Migration will add this if missing
       };
 
       saveCharacterState(character);
@@ -114,6 +115,51 @@ describe("localStorage", () => {
 
       expect(loaded.abilities).toEqual(newCharacterData.abilities);
       expect(loaded.abilities.length).toBe(1);
+    });
+
+    // THIS TEST WILL FAIL - demonstrating equipment migration bug!
+    it("should migrate old equipment string to array", () => {
+      // Simulate old localStorage data (equipment as string in textFields)
+      const oldCharacterData = {
+        name: "Old Character",
+        tier: 2,
+        textFields: {
+          background: "Some background",
+          notes: "Some notes",
+          equipment: "Sword, Shield, 50ft rope",
+        },
+      };
+
+      localStorage.setItem("numenera-character-state", JSON.stringify(oldCharacterData));
+
+      const loaded = loadCharacterState();
+
+      // Should convert equipment string to array
+      expect(loaded).toBeTruthy();
+      expect(loaded.equipment).toBeDefined();
+      expect(Array.isArray(loaded.equipment)).toBe(true);
+      expect(loaded.equipment.length).toBe(1);
+      expect(loaded.equipment[0]).toEqual({
+        name: "Sword, Shield, 50ft rope",
+        description: undefined,
+      });
+
+      // textFields should no longer have equipment
+      expect(loaded.textFields.equipment).toBeUndefined();
+    });
+
+    it("should not modify equipment array if already in new format", () => {
+      const newCharacterData = {
+        name: "New Character",
+        tier: 3,
+        equipment: [{ name: "Broadsword", description: "Heavy weapon" }, { name: "Shield" }],
+      };
+
+      saveCharacterState(newCharacterData);
+      const loaded = loadCharacterState();
+
+      expect(loaded.equipment).toEqual(newCharacterData.equipment);
+      expect(loaded.equipment.length).toBe(2);
     });
   });
 

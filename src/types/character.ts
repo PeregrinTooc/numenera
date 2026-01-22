@@ -23,6 +23,11 @@ export type Ability = {
   description: string;
 };
 
+export type EquipmentItem = {
+  name: string;
+  description?: string;
+};
+
 export interface Character {
   name: string;
   tier: number;
@@ -38,9 +43,9 @@ export interface Character {
   artifacts: Artifact[];
   oddities: string[];
   abilities: Ability[];
+  equipment: EquipmentItem[];
   textFields: {
     background: string;
     notes: string;
-    equipment: string;
   };
 }

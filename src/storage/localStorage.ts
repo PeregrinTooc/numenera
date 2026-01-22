@@ -26,6 +26,25 @@ function migrateCharacterData(character: any): any {
   if (!character.abilities) {
     character.abilities = [];
   }
+
+  // Migrate equipment from textFields.equipment (string) to equipment array
+  if (character.textFields?.equipment && !character.equipment) {
+    // Convert old string equipment to new array format
+    character.equipment = [
+      {
+        name: character.textFields.equipment,
+        description: undefined,
+      },
+    ];
+    // Remove from textFields
+    delete character.textFields.equipment;
+  }
+
+  // If equipment is missing entirely, initialize as empty array
+  if (!character.equipment) {
+    character.equipment = [];
+  }
+
   return character;
 }
 
