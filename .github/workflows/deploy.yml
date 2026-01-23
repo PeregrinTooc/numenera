@@ -39,14 +39,14 @@ jobs:
         run: npm run format:check
 
       - name: Run unit tests
-        run: npm run test:unit || echo "No unit tests found, skipping"
+        run: npm run test:unit
 
       - name: Install Playwright Browsers
         if: hashFiles('tests/e2e/**/*.ts') != ''
         run: npx playwright install --with-deps
 
       - name: Run E2E tests
-        run: npm run test:e2e || echo "No E2E tests found, skipping"
+        run: npm run test:e2e
 
       - name: Build
         run: npm run build

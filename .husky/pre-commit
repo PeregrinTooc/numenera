@@ -2,8 +2,8 @@ echo "🔍 Running Pre-Commit-Hook."
 # Run lint-staged (format check and unit tests)
 npx lint-staged
 
-# Run unit tests (skip if no tests exist)
-npm run test:unit || true
+# Run unit tests to ensure no breaking changes
+npm run test:unit
 
 # Check translation coverage (all t() keys exist in both locales)
 echo "🌍 Checking translation coverage..."

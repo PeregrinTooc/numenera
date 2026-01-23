@@ -60,13 +60,24 @@ describe("localStorage", () => {
         name: "Test Character",
         tier: 1,
         abilities: [{ name: "Test Ability", cost: 3, description: "Test" }],
-        equipment: [], // Migration will add this if missing
       };
 
       saveCharacterState(character);
       const loaded = loadCharacterState();
 
-      expect(loaded).toEqual(character);
+      // loadCharacterState performs migration, adding default values
+      expect(loaded).toBeTruthy();
+      expect(loaded.name).toBe(character.name);
+      expect(loaded.tier).toBe(character.tier);
+      expect(loaded.abilities).toEqual(character.abilities);
+
+      // Migration should add these default values
+      expect(loaded.equipment).toEqual([]);
+      expect(loaded.armor).toBe(0);
+      expect(loaded.effort).toBe(1);
+      expect(loaded.maxCyphers).toBe(2);
+      expect(loaded.shins).toBe(0);
+      expect(loaded.xp).toBe(0);
     });
 
     // THIS TEST WILL FAIL - demonstrating the bug!
