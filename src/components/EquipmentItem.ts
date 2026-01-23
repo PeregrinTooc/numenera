@@ -8,7 +8,10 @@ export class EquipmentItem {
 
   render(): TemplateResult {
     return html`
-      <div class="equipment-item equipment-item-card">
+      <div
+        data-testid="equipment-item-${this.item.name}"
+        class="equipment-item equipment-item-card"
+      >
         <div class="equipment-name">${this.item.name}</div>
         ${this.item.description
           ? html`<div class="equipment-description">${this.item.description}</div>`

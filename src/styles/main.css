@@ -4,6 +4,8 @@
 @import "./components/stat-pool.css";
 @import "./components/header.css";
 @import "./components/basic-info.css";
+@import "./components/section-box.css";
+@import "./components/stat-badge.css";
 @import "./components/cypher-item.css";
 @import "./components/artifact-item.css";
 @import "./components/oddity-item.css";

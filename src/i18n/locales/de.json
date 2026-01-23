@@ -10,13 +10,25 @@
     "name": "Name",
     "tier": "Stufe",
     "type": "Typ",
-    "descriptor": "Eigenschaft",
+    "descriptor": "Deskriptor",
     "focus": "Fokus",
     "sentence": {
-      "prefix": "Rang",
-      "connector": "und"
+      "prefix": "Ein Stufe",
+      "connector": "der"
     },
-    "portrait": "Porträt"
+    "portrait": "Portrait",
+    "xp": "EP",
+    "shins": "Shins"
+  },
+  "resourceTracker": {
+    "xp": "EP",
+    "shins": "Shins",
+    "armor": "Rüstung"
+  },
+  "effort": {
+    "title": "Anstrengung",
+    "max": "Maximum",
+    "costPerLevel": "Kosten pro Stufe"
   },
   "stats": {
     "heading": "Attribute",
@@ -25,14 +37,16 @@
     "intellect": "Intellekt",
     "pool": "Pool",
     "edge": "Vorteil",
-    "current": "Aktuell"
+    "current": "Aktuell",
+    "effort": "Anstrengung"
   },
   "cyphers": {
     "heading": "Cypher",
     "name": "Name",
     "level": "Stufe",
     "effect": "Effekt",
-    "empty": "Keine Cypher"
+    "empty": "Keine Cypher",
+    "max": "Max"
   },
   "artifacts": {
     "heading": "Artefakte",
@@ -45,6 +59,9 @@
   "oddities": {
     "heading": "Kuriositäten",
     "empty": "Keine Kuriositäten"
+  },
+  "items": {
+    "heading": "Besitztümer"
   },
   "equipment": {
     "heading": "Ausrüstung",

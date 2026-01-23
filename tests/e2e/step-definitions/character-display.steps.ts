@@ -146,8 +146,11 @@ Then("I should see the notes text", async function () {
 
 Then("I should see the equipment text", async function () {
   const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("equipment-content")).toBeVisible();
-  await expect(dom.getByTestId("equipment-content")).not.toBeEmpty();
+  // Equipment is now displayed as individual items, not a text field
+  // Check for equipment section and at least one equipment item
+  await expect(dom.getByTestId("equipment-heading")).toBeVisible();
+  const equipmentCount = await dom.count("equipment-item");
+  expect(equipmentCount).toBeGreaterThan(0);
 });
 
 Then("I should see the abilities text", async function () {

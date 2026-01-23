@@ -16,7 +16,19 @@
       "prefix": "A tier",
       "connector": "who"
     },
-    "portrait": "Portrait"
+    "portrait": "Portrait",
+    "xp": "XP",
+    "shins": "Shins"
+  },
+  "resourceTracker": {
+    "xp": "XP",
+    "shins": "Shins",
+    "armor": "Armor"
+  },
+  "effort": {
+    "title": "Effort",
+    "max": "Maximum",
+    "costPerLevel": "Cost per Level"
   },
   "stats": {
     "heading": "Stats",
@@ -25,14 +37,16 @@
     "intellect": "Intellect",
     "pool": "Pool",
     "edge": "Edge",
-    "current": "Current"
+    "current": "Current",
+    "effort": "Effort"
   },
   "cyphers": {
     "heading": "Cyphers",
     "name": "Name",
     "level": "Level",
     "effect": "Effect",
-    "empty": "No cyphers"
+    "empty": "No cyphers",
+    "max": "Max"
   },
   "artifacts": {
     "heading": "Artifacts",
@@ -45,6 +59,9 @@
   "oddities": {
     "heading": "Oddities",
     "empty": "No oddities"
+  },
+  "items": {
+    "heading": "Items"
   },
   "equipment": {
     "heading": "Equipment",

@@ -1,0 +1,57 @@
+/* Shared Section Box Styles */
+/* Used for Stats, Cyphers, and Items sections */
+
+.section-box {
+  position: relative;
+  background: linear-gradient(to bottom, #f5e6d3, #ede1cf);
+  border: 2px solid #8b4513;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.section-box-heading {
+  font-family: "Cinzel", serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2d2416;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Section dividers for items box */
+.section-divider {
+  height: 2px;
+  background: linear-gradient(to right, transparent, #8b4513, transparent);
+  margin: 1.5rem 0;
+}
+
+/* Subsection heading (e.g., Equipment, Artifacts, Oddities within Items box) */
+.subsection-heading {
+  font-family: "Cinzel", serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #2d2416;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Two-column layout for Artifacts | Oddities */
+.two-column-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .two-column-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-box {
+    padding: 1.5rem;
+  }
+}

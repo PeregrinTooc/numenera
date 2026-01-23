@@ -8,6 +8,11 @@ export const FULL_CHARACTER: Character = {
   type: "Glaive",
   descriptor: "Strong",
   focus: "Bears a Halo of Fire",
+  xp: 12,
+  shins: 47,
+  armor: 2,
+  effort: 3,
+  maxCyphers: 4,
   stats: {
     might: { pool: 15, edge: 2, current: 12 },
     speed: { pool: 12, edge: 1, current: 12 },
@@ -82,6 +87,11 @@ export const NEW_CHARACTER: Character = {
   type: "",
   descriptor: "",
   focus: "",
+  xp: 0,
+  shins: 0,
+  armor: 0,
+  effort: 1,
+  maxCyphers: 2,
   stats: {
     might: { pool: 7, edge: 0, current: 7 },
     speed: { pool: 7, edge: 0, current: 7 },

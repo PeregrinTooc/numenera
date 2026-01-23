@@ -2,6 +2,7 @@
 
 /* Parchment card matching header/stats */
 .basic-info-card {
+  position: relative; /* For absolute positioning of XP badge */
   background: linear-gradient(to bottom, #f5e6d3, #ede1cf);
   border: 2px solid #8b4513;
   border-radius: 0.5rem;

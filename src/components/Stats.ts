@@ -30,10 +30,15 @@ export class Stats {
     );
 
     return html`
-      <div data-testid="stats-section" class="mt-8">
-        <h2 data-testid="stats-heading" class="text-2xl font-serif font-bold mb-4">
-          ${t("stats.heading")}
-        </h2>
+      <div data-testid="stats-section" class="section-box">
+        <!-- Effort Badge - top-right corner -->
+        <div class="stat-badge badge-top-right">
+          <span class="stat-badge-value">${this.character.effort}</span>
+          <span class="stat-badge-label">${t("stats.effort")}</span>
+        </div>
+
+        <h2 data-testid="stats-heading" class="section-box-heading">${t("stats.heading")}</h2>
+
         <!-- Three stat pools side-by-side on tablet/desktop -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           ${mightPool.render()} ${speedPool.render()} ${intellectPool.render()}

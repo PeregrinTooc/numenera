@@ -34,6 +34,11 @@ export interface Character {
   type: string;
   descriptor: string;
   focus: string;
+  xp: number;
+  shins: number;
+  armor: number;
+  effort: number;
+  maxCyphers: number;
   stats: {
     might: StatPool;
     speed: StatPool;

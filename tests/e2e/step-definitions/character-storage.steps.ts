@@ -46,17 +46,17 @@ Then("the character {string} should be displayed", async function (name: string)
 
 Then("all character sections should show data", async function () {
   // Verify at least one item in each section
-  await expect(this.page.getByTestId("cypher-item").first()).toBeVisible();
-  await expect(this.page.getByTestId("artifact-item").first()).toBeVisible();
-  await expect(this.page.getByTestId("oddity-item").first()).toBeVisible();
+  await expect(this.page.locator('[data-testid^="cypher-item"]').first()).toBeVisible();
+  await expect(this.page.locator('[data-testid^="artifact-item"]').first()).toBeVisible();
+  await expect(this.page.locator('[data-testid^="oddity-item"]').first()).toBeVisible();
 
   // Verify text fields have content (not empty states)
   await expect(this.page.getByTestId("text-background")).toBeVisible();
   await expect(this.page.getByTestId("text-notes")).toBeVisible();
 
-  // Equipment and abilities are now separate components
-  await expect(this.page.getByTestId("equipment-content")).toBeVisible();
-  await expect(this.page.getByTestId("ability-item").first()).toBeVisible();
+  // Equipment and abilities are now individual items
+  await expect(this.page.locator('[data-testid^="equipment-item"]').first()).toBeVisible();
+  await expect(this.page.locator('[data-testid^="ability-item"]').first()).toBeVisible();
 });
 
 // Scenario: Character state persists across page reloads (after Load)

@@ -1,0 +1,77 @@
+/* Shared Stat Badge Component Styles */
+/* Used for XP, Shins, and Effort badges */
+
+.stat-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  border: 3px solid #d4af37;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 4.5rem;
+  min-height: 4.5rem;
+  transition: all 0.2s ease;
+}
+
+.stat-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.stat-badge-value {
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #78350f;
+  line-height: 1;
+  margin-bottom: 0.125rem;
+}
+
+.stat-badge-label {
+  font-family: "Cinzel", serif;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: #92400e;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Badge positioning classes */
+.badge-top-left {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+}
+
+.badge-top-right {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+}
+
+/* Legacy support - XP Badge in BasicInfo */
+.xp-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+}
+
+/* Shins Badge container - centered between sections */
+.shins-badge-container {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 0;
+}
+
+/* Effort Badge container - centered below stat pools */
+.effort-badge-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}

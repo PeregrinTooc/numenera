@@ -1,6 +1,6 @@
 {
   "name": "numenera",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "Numenera Character Sheet - A responsive web application for managing Numenera P&P RPG characters",
   "type": "module",
   "scripts": {

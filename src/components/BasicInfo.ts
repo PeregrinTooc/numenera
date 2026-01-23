@@ -10,6 +10,12 @@ export class BasicInfo {
   render(): TemplateResult {
     return html`
       <div data-testid="basic-info" class="basic-info-card">
+        <!-- XP Badge - top-left corner -->
+        <div class="xp-badge stat-badge">
+          <span class="stat-badge-value">${this.character.xp}</span>
+          <span class="stat-badge-label">${t("character.xp")}</span>
+        </div>
+
         <!-- Character info content - left side -->
         <div class="character-info-content">
           <!-- Large character name -->

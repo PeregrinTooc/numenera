@@ -45,6 +45,33 @@ function migrateCharacterData(character: any): any {
     character.equipment = [];
   }
 
+  // Phase 1: Add XP field if missing
+  if (character.xp === undefined) {
+    character.xp = 0;
+  }
+
+  // Phase 1: Add Shins field if missing
+  if (character.shins === undefined) {
+    character.shins = 0;
+  }
+
+  // Phase 1: Add Armor field if missing
+  if (character.armor === undefined) {
+    character.armor = 0;
+  }
+
+  // Phase 1: Add Effort field if missing or migrate from old object format
+  if (character.effort === undefined || typeof character.effort === "object") {
+    // Handle both undefined and old {max, costPerLevel} format
+    character.effort =
+      typeof character.effort === "object" ? character.effort.max : character.tier || 1;
+  }
+
+  // Phase 1.7: Add maxCyphers field if missing
+  if (character.maxCyphers === undefined) {
+    character.maxCyphers = (character.tier || 1) + 1;
+  }
+
   return character;
 }
 
