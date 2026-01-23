@@ -77,6 +77,7 @@ Numenera Character Sheet - A responsive web application for managing Numenera P&
 
 ### Phase 2: Enhanced Features
 
+- [ ] **Re-arrange sections**: Let users arrange the sheet's sections
 - [ ] **Multiple Characters**: Manage and switch between multiple characters
 - [ ] **Character List View**: Overview of all characters
 - [ ] **Multiple Images**: Support for multiple images per character
@@ -91,7 +92,6 @@ Numenera Character Sheet - A responsive web application for managing Numenera P&
   - [ ] Cyphers
   - [ ] Artifacts
   - [ ] Oddities/Curiosities
-- [ ] **Reference Database**: German language game data
 
 ### Phase 4: Cloud Integration
 
@@ -103,40 +103,6 @@ Numenera Character Sheet - A responsive web application for managing Numenera P&
 - [ ] **Auto-sync**: Automatic synchronization with cloud storage
 - [ ] **Conflict Resolution**: Handle sync conflicts
 - [ ] **Offline Support**: Queue changes when offline
-
-### Phase 5: Advanced Features
-
-- [ ] **Character Creation Wizard**: Guided character creation
-- [ ] **Advanced Abilities Tracking**: Detailed abilities management
-- [ ] **Equipment Management**: Enhanced equipment tracking
-- [ ] **PDF Export**: Printable character sheets
-- [ ] **Search & Filter**: Find characters quickly
-- [ ] **Dark Mode**: Theme support
-
-## Technical Debt & Improvements
-
-### Current Technical Debt
-
-- **i18n Not Implemented**: All labels currently hardcoded strings (Rule #5 violation)
-  - Need to implement translation keys for all user-facing text
-  - i18next infrastructure exists but not integrated
-- **HTML in JavaScript**: Template strings in main.ts should be extracted to separate files
-- **No Component Structure**: Monolithic rendering function should be split into components
-- **No OOP Design**: Business logic should be in domain models that know how to render themselves
-
-### Planned Refactoring
-
-1. **Extract HTML Templates**: Move template strings to dedicated HTML files
-2. **Implement OOP Architecture**:
-   - Domain models (Character, StatPool, Item, etc.)
-   - UI components that render themselves
-   - Separation of business logic from presentation
-3. **Add i18n**: Integrate i18next for all user-facing text
-4. **Component Library**: Build reusable UI components (StatCard, ItemList, etc.)
-
-## Known Issues
-
-_(Issues discovered during development)_
 
 ## Future Considerations
 
