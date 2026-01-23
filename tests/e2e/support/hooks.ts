@@ -1,7 +1,10 @@
 import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
 import { chromium, Browser } from "@playwright/test";
 import { CustomWorld } from "./world";
-import { spawn, ChildProcess } from "child_process";
+import { spawn, exec, ChildProcess } from "child_process";
+import { promisify } from "util";
+
+const execAsync = promisify(exec);
 
 let browser: Browser;
 let devServer: ChildProcess | null = null;
@@ -120,28 +123,25 @@ After(async function (this: CustomWorld) {
 AfterAll(async function () {
   await browser?.close();
 
-  // Properly terminate the dev/preview server and all child processes
-  if (devServer && devServer.pid) {
-    try {
-      // Kill the entire process group (negative PID kills the group)
-      // This ensures we kill npm and all its child processes (like vite)
-      process.kill(-devServer.pid, "SIGTERM");
-
-      // Give it a moment to terminate gracefully
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Force kill the process group if still running
-      try {
-        process.kill(-devServer.pid, "SIGKILL");
-      } catch (killError) {
-        // Process group already terminated, which is fine
-        // eslint-disable-next-line no-console
-        console.log("Process group already terminated" + killError);
-      }
-    } catch (error) {
-      // Process might already be dead, which is fine
-      // eslint-disable-next-line no-console
-      console.log("Server process already terminated: " + error);
+  // Kill the dev/preview server using pkill to ensure all vite processes are terminated
+  try {
+    // First try to kill the spawned process
+    if (devServer) {
+      devServer.kill("SIGTERM");
     }
+
+    // Give it a moment
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    // Use pkill to ensure all vite processes are killed (same as npm run kill)
+    // This is more reliable across platforms than process group killing
+    await execAsync("pkill -9 -f vite || true");
+
+    // eslint-disable-next-line no-console
+    console.log("Server processes terminated successfully");
+  } catch (error) {
+    // Process might already be dead or pkill not available
+    // eslint-disable-next-line no-console
+    console.log("Server cleanup completed: " + error);
   }
 });
