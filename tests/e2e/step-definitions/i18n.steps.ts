@@ -3,13 +3,13 @@ import { expect } from "@playwright/test";
 import { DOMHelpers } from "../support/dom-helpers.js";
 
 Given("I am on the character sheet page with {string}", async function (queryString: string) {
-  await this.page.goto(`http://localhost:3000${queryString}`);
+  await this.page.goto(`${this.getBaseUrl()}${queryString}`);
   // Wait for i18n to initialize
   await this.page.waitForTimeout(200);
 });
 
 When("I navigate to the page with {string}", async function (queryString: string) {
-  await this.page.goto(`http://localhost:3000${queryString}`);
+  await this.page.goto(`${this.getBaseUrl()}${queryString}`);
   // Wait for i18n to initialize
   await this.page.waitForTimeout(200);
 });

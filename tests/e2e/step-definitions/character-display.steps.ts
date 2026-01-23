@@ -9,7 +9,7 @@ Given("a character exists with the following data:", function (_dataTable) {
 });
 
 Given("I am on the character sheet page", async function () {
-  await this.page.goto("http://localhost:3000");
+  await this.page.goto(this.getBaseUrl() + "");
 });
 
 Then("I should see the character name {string}", async function (name: string) {
@@ -168,7 +168,7 @@ Then("all text field labels should use translation keys", async function () {
 // Scenario 6: View empty character items sections
 Given("the character has no cyphers", async function () {
   // Navigate with empty=true parameter
-  await this.page.goto("http://localhost:3000?empty=true");
+  await this.page.goto(this.getBaseUrl() + "?empty=true");
 });
 
 Given("the character has no artifacts", function () {
@@ -201,7 +201,7 @@ Then("empty states should use translation keys", async function () {
 // Scenario 7: View empty character text fields
 Given("the character has empty text fields", async function () {
   // Navigate with empty=true parameter
-  await this.page.goto("http://localhost:3000?empty=true");
+  await this.page.goto(this.getBaseUrl() + "?empty=true");
 });
 
 Then("I should see empty state for background", async function () {

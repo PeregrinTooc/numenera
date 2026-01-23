@@ -7,41 +7,92 @@ import { setTimeout, clearTimeout } from "timers";
 let browser: Browser;
 let devServer: ChildProcess;
 
-BeforeAll({ timeout: 60000 }, async function () {
-  console.log("Starting Vite dev server...");
+BeforeAll({ timeout: 30000 }, async function () {
+  // Determine if we're running production tests
+  const isProduction = process.env.TEST_PROD === "true";
 
-  // Start Vite dev server
-  devServer = spawn("npm", ["run", "dev"], {
-    stdio: "pipe",
-    shell: true,
-  });
-
-  // Wait for server to be ready with timeout fallback
-  await new Promise<void>((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      reject(new Error("Dev server failed to start within 55 seconds"));
-    }, 55000);
-
-    devServer.stdout?.on("data", (data) => {
-      const output = data.toString();
-      console.log("Dev server stdout:", output);
-      if (output.includes("Local:")) {
-        console.log("Dev server is ready!");
-        clearTimeout(timeout);
-        resolve();
-      }
+  if (isProduction) {
+    // Start Vite preview server for production build
+    devServer = spawn("npm", ["run", "build"], {
+      stdio: "pipe",
+      shell: true,
     });
 
-    devServer.stderr?.on("data", (data) => {
-      console.error("Dev server stderr:", data.toString());
+    // Wait for build to complete
+    await new Promise<void>((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error("Build failed to complete within 25 seconds"));
+      }, 25000);
+
+      devServer.stdout?.on("data", (data) => {
+        const output = data.toString();
+        if (output.includes("built in") || output.includes("dist/")) {
+          clearTimeout(timeout);
+          resolve();
+        }
+      });
+
+      devServer.stderr?.on("data", (data) => {
+        console.error("Build error:", data.toString());
+      });
+
+      devServer.on("close", (code) => {
+        if (code === 0) {
+          clearTimeout(timeout);
+          resolve();
+        }
+      });
     });
 
-    devServer.on("error", (error) => {
-      console.error("Dev server spawn error:", error);
-      clearTimeout(timeout);
-      reject(error);
+    // Start preview server
+    devServer = spawn("npm", ["run", "preview", "--", "--port", "4173"], {
+      stdio: "pipe",
+      shell: true,
     });
-  });
+
+    // Wait for preview server to be ready
+    await new Promise<void>((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error("Preview server failed to start within 10 seconds"));
+      }, 10000);
+
+      devServer.stdout?.on("data", (data) => {
+        const output = data.toString();
+        if (output.includes("Local:") || output.includes("4173")) {
+          clearTimeout(timeout);
+          resolve();
+        }
+      });
+
+      devServer.stderr?.on("data", (data) => {
+        console.error("Preview server error:", data.toString());
+      });
+    });
+  } else {
+    // Start Vite dev server
+    devServer = spawn("npm", ["run", "dev"], {
+      stdio: "pipe",
+      shell: true,
+    });
+
+    // Wait for server to be ready with timeout fallback
+    await new Promise<void>((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error("Dev server failed to start within 25 seconds"));
+      }, 25000);
+
+      devServer.stdout?.on("data", (data) => {
+        if (data.toString().includes("Local:")) {
+          clearTimeout(timeout);
+          resolve();
+        }
+      });
+
+      devServer.stderr?.on("data", (data) => {
+        console.error("Dev server error:", data.toString());
+      });
+    });
+  }
 
   // Give server a moment to fully initialize
   await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -56,7 +107,9 @@ Before(async function (this: CustomWorld) {
   this.page = await this.context.newPage();
 
   // Clear localStorage before each test to ensure clean state
-  await this.page.goto("http://localhost:3000");
+  const baseURL =
+    process.env.TEST_PROD === "true" ? "http://localhost:4173" : "http://localhost:3000";
+  await this.page.goto(baseURL);
   await this.page.evaluate(() => localStorage.clear());
 });
 

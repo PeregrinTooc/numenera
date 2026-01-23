@@ -5,6 +5,7 @@ export interface CustomWorld extends World {
   browser?: Browser;
   context?: BrowserContext;
   page: Page;
+  getBaseUrl(): string;
 }
 
 export class CustomWorldConstructor extends World implements CustomWorld {
@@ -14,6 +15,10 @@ export class CustomWorldConstructor extends World implements CustomWorld {
 
   constructor(options: IWorldOptions) {
     super(options);
+  }
+
+  getBaseUrl(): string {
+    return process.env.TEST_PROD === "true" ? "http://localhost:4173" : "http://localhost:3000";
   }
 }
 
