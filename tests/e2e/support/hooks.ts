@@ -7,7 +7,7 @@ import { setTimeout, clearTimeout } from "timers";
 let browser: Browser;
 let devServer: ChildProcess;
 
-BeforeAll(async function () {
+BeforeAll({ timeout: 30000 }, async function () {
   // Start Vite dev server
   devServer = spawn("npm", ["run", "dev"], {
     stdio: "pipe",
