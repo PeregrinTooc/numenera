@@ -1,0 +1,45 @@
+/* Recovery Rolls Component Styles */
+
+.recovery-rolls-section {
+  transition: all 0.2s ease;
+}
+
+.recovery-rolls-section:hover {
+  box-shadow:
+    0 4px 6px -1px rgba(16, 185, 129, 0.1),
+    0 2px 4px -1px rgba(16, 185, 129, 0.06);
+}
+
+/* Checkbox Styling */
+.recovery-checkbox {
+  cursor: pointer;
+  accent-color: #10b981;
+}
+
+.recovery-checkbox:hover {
+  border-color: #059669;
+}
+
+.recovery-checkbox:checked {
+  background-color: #10b981;
+  border-color: #10b981;
+}
+
+.recovery-checkbox:focus {
+  outline: 2px solid rgba(16, 185, 129, 0.5);
+  outline-offset: 2px;
+}
+
+/* Label hover effects */
+.recovery-rolls-section label:hover {
+  background-color: rgba(16, 185, 129, 0.05);
+}
+
+/* Typography */
+.recovery-rolls-section .font-handwritten {
+  font-family: "Caveat", cursive;
+}
+
+.recovery-rolls-section .font-serif {
+  font-family: "Cinzel", serif;
+}

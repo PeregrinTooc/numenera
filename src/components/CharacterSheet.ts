@@ -5,6 +5,8 @@ import { Character } from "../types/character.js";
 import { Header } from "./Header.js";
 import { BasicInfo } from "./BasicInfo.js";
 import { Stats } from "./Stats.js";
+import { RecoveryRolls } from "./RecoveryRolls.js";
+import { DamageTrack } from "./DamageTrack.js";
 import { Abilities } from "./Abilities.js";
 import { SpecialAbilities } from "./SpecialAbilities.js";
 import { Attacks } from "./Attacks.js";
@@ -23,6 +25,8 @@ export class CharacterSheet {
     const header = new Header(this.onLoad, this.onNew);
     const basicInfo = new BasicInfo(this.character);
     const stats = new Stats(this.character);
+    const recoveryRolls = new RecoveryRolls(this.character.recoveryRolls);
+    const damageTrack = new DamageTrack(this.character.damageTrack);
     const abilities = new Abilities(this.character.abilities);
     const specialAbilities = new SpecialAbilities(this.character.specialAbilities);
     const attacks = new Attacks(this.character.attacks, this.character.armor);
@@ -38,7 +42,11 @@ export class CharacterSheet {
     return html`
       <div class="min-h-screen p-4">
         <div class="max-w-6xl mx-auto shadow rounded-lg p-6 parchment-container">
-          ${header.render()} ${basicInfo.render()} ${stats.render()} ${abilities.render()}
+          ${header.render()} ${basicInfo.render()} ${stats.render()}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            ${recoveryRolls.render()} ${damageTrack.render()}
+          </div>
+          ${abilities.render()}
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             ${specialAbilities.render()} ${attacks.render()}
           </div>

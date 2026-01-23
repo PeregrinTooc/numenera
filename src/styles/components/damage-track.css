@@ -1,0 +1,64 @@
+/* Damage Track Component Styles */
+
+.damage-track-section {
+  transition: all 0.2s ease;
+}
+
+.damage-track-section:hover {
+  box-shadow:
+    0 4px 6px -1px rgba(239, 68, 68, 0.1),
+    0 2px 4px -1px rgba(239, 68, 68, 0.06);
+}
+
+/* Radio Button Styling */
+.damage-radio {
+  cursor: pointer;
+}
+
+.damage-radio:hover {
+  transform: scale(1.05);
+}
+
+.damage-radio:focus {
+  outline: 2px solid rgba(239, 68, 68, 0.5);
+  outline-offset: 2px;
+}
+
+/* Color-coded radio buttons */
+.damage-radio[value="healthy"]:checked {
+  accent-color: #16a34a;
+}
+
+.damage-radio[value="impaired"]:checked {
+  accent-color: #eab308;
+}
+
+.damage-radio[value="debilitated"]:checked {
+  accent-color: #dc2626;
+}
+
+/* Label hover effects */
+.damage-track-section label:hover {
+  background-color: rgba(239, 68, 68, 0.05);
+}
+
+/* Typography */
+.damage-track-section .font-serif {
+  font-family: "Cinzel", serif;
+}
+
+/* Status-specific text colors */
+.damage-track-section label:has(input[value="healthy"]:checked) {
+  background-color: rgba(16, 185, 129, 0.05);
+  border-left: 3px solid #16a34a;
+}
+
+.damage-track-section label:has(input[value="impaired"]:checked) {
+  background-color: rgba(234, 179, 8, 0.05);
+  border-left: 3px solid #eab308;
+}
+
+.damage-track-section label:has(input[value="debilitated"]:checked) {
+  background-color: rgba(220, 38, 38, 0.05);
+  border-left: 3px solid #dc2626;
+}

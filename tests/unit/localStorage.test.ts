@@ -30,7 +30,7 @@ describe("localStorage", () => {
       expect(stored).toBeTruthy();
 
       const parsed = JSON.parse(stored!);
-      expect(parsed.schemaVersion).toBe(3);
+      expect(parsed.schemaVersion).toBe(4);
       expect(parsed.character).toEqual(character);
     });
   });

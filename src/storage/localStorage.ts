@@ -12,10 +12,11 @@ const STORAGE_KEY = "numenera-character-state";
  * - v1: Initial schema (base character structure)
  * - v2: Added ability enhancements (cost, pool, action) - Phase 2
  * - v3: Added attacks and specialAbilities arrays - Phase 3
+ * - v4: Added recoveryRolls and damageTrack - Phase 4
  *
  * When the version doesn't match, all localStorage data is cleared to prevent corruption.
  */
-const SCHEMA_VERSION = 3;
+const SCHEMA_VERSION = 4;
 
 interface StoredData {
   schemaVersion: number;

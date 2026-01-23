@@ -129,6 +129,16 @@ export const FULL_CHARACTER: Character = {
       source: "Tier 3 Focus ability",
     },
   ],
+  recoveryRolls: {
+    action: false,
+    tenMinutes: true,
+    oneHour: false,
+    tenHours: false,
+    modifier: 2,
+  },
+  damageTrack: {
+    impairment: "healthy",
+  },
   textFields: {
     background: "Born in a remote village, discovered ancient ruins that changed everything",
     notes: "Currently investigating the mysterious disappearances in the nearby forest",
@@ -158,6 +168,16 @@ export const NEW_CHARACTER: Character = {
   equipment: [],
   attacks: [],
   specialAbilities: [],
+  recoveryRolls: {
+    action: false,
+    tenMinutes: false,
+    oneHour: false,
+    tenHours: false,
+    modifier: 0,
+  },
+  damageTrack: {
+    impairment: "healthy",
+  },
   textFields: {
     background: "",
     notes: "",

@@ -1,0 +1,169 @@
+import { Given, Then } from "@cucumber/cucumber";
+import { expect } from "@playwright/test";
+import { DOMHelpers } from "../support/dom-helpers.js";
+
+// Recovery Rolls step definitions
+
+Then("I should see a section titled {string}", async function (title: string) {
+  const text = await this.page.textContent("body");
+  expect(text).toContain(title);
+});
+
+Then("I should see the recovery modifier display {string}", async function (display: string) {
+  const dom = new DOMHelpers(this.page);
+  const recoveryDisplay = dom.getByTestId("recovery-modifier-display");
+  await expect(recoveryDisplay).toBeVisible();
+  await expect(recoveryDisplay).toContainText(display);
+});
+
+Then("I should see {int} recovery roll checkboxes", async function (count: number) {
+  const checkboxes = await this.page.locator('input[type="checkbox"][data-recovery-roll]').count();
+  expect(checkboxes).toBe(count);
+});
+
+Then(
+  "I should see recovery roll {string} with time {string}",
+  async function (rollName: string, timeText: string) {
+    const text = await this.page.textContent("body");
+    expect(text).toContain(rollName);
+    expect(text).toContain(timeText);
+  }
+);
+
+Given("the character has {string} recovery used", async function (rollType: string) {
+  // This is already set in FULL_CHARACTER mock data
+  this.testRecoveryRoll = rollType;
+});
+
+Then("the {string} recovery checkbox should be checked", async function (rollType: string) {
+  const dom = new DOMHelpers(this.page);
+  const sanitized = rollType.toLowerCase().replace(/\s+/g, "-");
+  const checkbox = dom.getByTestId(`recovery-${sanitized}`);
+  await expect(checkbox).toBeChecked();
+});
+
+Then("the {string} recovery checkbox should be unchecked", async function (rollType: string) {
+  const dom = new DOMHelpers(this.page);
+  const sanitized = rollType.toLowerCase().replace(/\s+/g, "-");
+  const checkbox = dom.getByTestId(`recovery-${sanitized}`);
+  await expect(checkbox).not.toBeChecked();
+});
+
+// Damage Track step definitions
+
+Then("I should see {int} damage status options", async function (count: number) {
+  const radios = await this.page.locator('input[type="radio"][name="damage-track"]').count();
+  expect(radios).toBe(count);
+});
+
+Then("I should see damage status {string}", async function (status: string) {
+  const text = await this.page.textContent("body");
+  expect(text).toContain(status);
+});
+
+Then(
+  "I should see damage status {string} with description {string}",
+  async function (status: string, description: string) {
+    const text = await this.page.textContent("body");
+    expect(text).toContain(status);
+    expect(text).toContain(description);
+  }
+);
+
+Given("the character is {string}", async function (impairmentStatus: string) {
+  // Modify character in localStorage to have the specified impairment status
+  await this.page.evaluate((status: string) => {
+    const stored = localStorage.getItem("numenera-character-state");
+    if (stored) {
+      const data = JSON.parse(stored);
+      data.character.damageTrack.impairment = status;
+      localStorage.setItem("numenera-character-state", JSON.stringify(data));
+    }
+  }, impairmentStatus);
+
+  // Reload page to pick up the changes
+  await this.page.reload();
+  await this.page.waitForTimeout(500);
+});
+
+Then("the {string} radio button should be selected", async function (status: string) {
+  const dom = new DOMHelpers(this.page);
+  const sanitized = status.toLowerCase();
+  const radio = dom.getByTestId(`damage-${sanitized}`);
+  await expect(radio).toBeChecked();
+});
+
+Then("the {string} radio button should not be selected", async function (status: string) {
+  const dom = new DOMHelpers(this.page);
+  const sanitized = status.toLowerCase();
+  const radio = dom.getByTestId(`damage-${sanitized}`);
+  await expect(radio).not.toBeChecked();
+});
+
+// Styling step definitions
+
+Then("the recovery rolls section should have green styling", async function () {
+  const dom = new DOMHelpers(this.page);
+  const section = dom.getByTestId("recovery-rolls-section");
+  await expect(section).toBeVisible();
+
+  // Check for green-themed classes
+  const hasGreenTheme = await dom.hasClass("recovery-rolls-section", "from-green-50");
+  expect(hasGreenTheme).toBe(true);
+});
+
+Then("the damage track section should have red styling", async function () {
+  const dom = new DOMHelpers(this.page);
+  const section = dom.getByTestId("damage-track-section");
+  await expect(section).toBeVisible();
+
+  // Check for red-themed classes
+  const hasRedTheme = await dom.hasClass("damage-track-section", "from-red-50");
+  expect(hasRedTheme).toBe(true);
+});
+
+// Recovery modifier step definitions
+
+Given("the character has recovery modifier {int}", async function (modifier: number) {
+  // Modify character in localStorage to have the specified recovery modifier
+  await this.page.evaluate((mod: number) => {
+    const stored = localStorage.getItem("numenera-character-state");
+    if (stored) {
+      const data = JSON.parse(stored);
+      data.character.recoveryRolls.modifier = mod;
+      localStorage.setItem("numenera-character-state", JSON.stringify(data));
+    }
+  }, modifier);
+
+  // Reload page to pick up the changes
+  await this.page.reload();
+  await this.page.waitForTimeout(500);
+});
+
+Then("I should see {string} in the recovery section", async function (text: string) {
+  const dom = new DOMHelpers(this.page);
+  const recoverySection = dom.getByTestId("recovery-rolls-section");
+  await expect(recoverySection).toContainText(text);
+});
+
+// New character step definitions
+
+Given("the character is new", async function () {
+  // Click the NEW button to load NEW_CHARACTER
+  const newButton = this.page.locator('[data-testid="new-button"]');
+  await newButton.click();
+  // Wait for the recovery rolls section to be visible
+  await this.page.waitForSelector('[data-testid="recovery-rolls-section"]', { state: "visible" });
+  await this.page.waitForTimeout(500);
+});
+
+Then("all recovery checkboxes should be unchecked", async function () {
+  // Wait for checkboxes to be present
+  await this.page.waitForSelector('input[type="checkbox"][data-recovery-roll]', {
+    state: "visible",
+  });
+  const checkboxes = await this.page.locator('input[type="checkbox"][data-recovery-roll]').all();
+  for (const checkbox of checkboxes) {
+    await expect(checkbox).not.toBeChecked();
+  }
+});

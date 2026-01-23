@@ -45,6 +45,18 @@ export type SpecialAbility = {
   source: string;
 };
 
+export type RecoveryRolls = {
+  action: boolean; // false = available, true = used
+  tenMinutes: boolean;
+  oneHour: boolean;
+  tenHours: boolean;
+  modifier: number; // Recovery roll bonus: 1d6 + modifier
+};
+
+export type DamageTrack = {
+  impairment: "healthy" | "impaired" | "debilitated";
+};
+
 export interface Character {
   name: string;
   tier: number;
@@ -68,6 +80,8 @@ export interface Character {
   equipment: EquipmentItem[];
   attacks: Attack[];
   specialAbilities: SpecialAbility[];
+  recoveryRolls: RecoveryRolls;
+  damageTrack: DamageTrack;
   textFields: {
     background: string;
     notes: string;

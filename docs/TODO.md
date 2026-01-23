@@ -19,11 +19,11 @@
 - [ ] **Loading States** - Show feedback during operations
 - [ ] **User Notifications** - Toast/banner for schema version changes
 
-## Phase 4: Recovery & Damage Tracking (Next)
+## Phase 5: Editing & Persistence (Next)
 
-- [ ] Recovery Rolls tracker (action, 10 min, 1 hour, 10 hours)
-- [ ] Editable recovery modifier (1d6 + modifier)
-- [ ] Damage Track (healthy, impaired, debilitated)
+- [ ] Make all fields editable (inline editing)
+- [ ] Auto-save to localStorage on changes
+- [ ] Confirmation dialogs for destructive actions
 
 ## Phase 1: MVP Features (Incomplete)
 
@@ -123,6 +123,17 @@
 - [x] Armor badge in attacks section
 - [x] Schema versioning system
 
+### Phase 4: Recovery Rolls & Damage Tracking ✅
+
+- [x] Recovery Rolls tracker (action, 10 min, 1 hour, 10 hours)
+- [x] Editable recovery modifier (1d6 + modifier)
+- [x] Damage Track (healthy, impaired, debilitated)
+- [x] Green healing theme for recovery rolls
+- [x] Red warning theme for damage track
+- [x] Radio buttons for damage status
+- [x] Checkboxes for recovery roll usage
+- [x] Bilingual support (English/German)
+
 ---
 
-**Last Updated:** Phase 3 Complete (January 2026)
+**Last Updated:** Phase 4 Complete (January 2026)

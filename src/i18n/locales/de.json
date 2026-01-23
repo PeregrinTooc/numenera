@@ -85,6 +85,26 @@
     "empty": "Keine Spezialfähigkeiten",
     "source": "Quelle"
   },
+  "recovery": {
+    "title": "Erholungswürfe",
+    "modifier": "Erholung",
+    "action": "Aktion",
+    "tenMinutes": "Zehn Minuten",
+    "oneHour": "Eine Stunde",
+    "tenHours": "Zehn Stunden",
+    "timeAction": "1 Aktion",
+    "time10min": "10 Min",
+    "time1hour": "1 Stunde",
+    "time10hours": "10 Stunden"
+  },
+  "damage": {
+    "title": "Schadensanzeige",
+    "healthy": "Gesund",
+    "impaired": "Beeinträchtigt",
+    "debilitated": "Handlungsunfähig",
+    "impairedDesc": "Aufgaben +1 Schwierigkeit",
+    "debilitatedDesc": "nur Bewegung"
+  },
   "textFields": {
     "heading": "Charakterdetails",
     "background": {

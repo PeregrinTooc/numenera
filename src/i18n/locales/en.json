@@ -85,6 +85,26 @@
     "empty": "No special abilities",
     "source": "Source"
   },
+  "recovery": {
+    "title": "Recovery Rolls",
+    "modifier": "Recovery",
+    "action": "Action",
+    "tenMinutes": "Ten Minutes",
+    "oneHour": "One Hour",
+    "tenHours": "Ten Hours",
+    "timeAction": "1 action",
+    "time10min": "10 min",
+    "time1hour": "1 hour",
+    "time10hours": "10 hours"
+  },
+  "damage": {
+    "title": "Damage Track",
+    "healthy": "Healthy",
+    "impaired": "Impaired",
+    "debilitated": "Debilitated",
+    "impairedDesc": "tasks +1 difficulty",
+    "debilitatedDesc": "move only"
+  },
   "textFields": {
     "heading": "Character Details",
     "background": {
