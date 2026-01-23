@@ -14,10 +14,37 @@ function renderCharacterSheet(character: Character): void {
   const app = document.getElementById("app");
   if (!app) return;
 
+  // Handler for field updates
+  const handleFieldUpdate = (field: string, value: string | number): void => {
+    // Update the character object
+    const updatedCharacter = { ...character };
+    switch (field) {
+      case "name":
+        updatedCharacter.name = value as string;
+        break;
+      case "tier":
+        updatedCharacter.tier = value as number;
+        break;
+      case "descriptor":
+        updatedCharacter.descriptor = value as string;
+        break;
+      case "focus":
+        updatedCharacter.focus = value as string;
+        break;
+    }
+
+    // Save to localStorage
+    saveCharacterState(updatedCharacter);
+
+    // Re-render with updated character
+    renderCharacterSheet(updatedCharacter);
+  };
+
   const sheet = new CharacterSheet(
     character,
     () => renderCharacterSheet(FULL_CHARACTER),
-    () => renderCharacterSheet(NEW_CHARACTER)
+    () => renderCharacterSheet(NEW_CHARACTER),
+    handleFieldUpdate
   );
 
   render(sheet.render(), app);

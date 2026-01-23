@@ -102,7 +102,10 @@ BeforeAll({ timeout: 60000 }, async function () {
 });
 
 Before(async function (this: CustomWorld) {
-  this.context = await browser.newContext();
+  // Enable touch support for mobile tests
+  this.context = await browser.newContext({
+    hasTouch: true,
+  });
   this.page = await this.context.newPage();
 
   // Clear localStorage before each test to ensure clean state

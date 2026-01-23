@@ -55,12 +55,14 @@ function hasKey(obj, keyPath) {
 /**
  * Extract all t() function calls from a file
  * Matches patterns like: t("key") or t('key')
+ * Excludes false positives like createElement("div")
  */
 function extractTranslationKeys(content) {
   const keys = [];
 
-  // Match t("...") or t('...')
-  const regex = /t\(\s*["']([^"']+)["']\s*\)/g;
+  // Match t("...") or t('...') but not when preceded by word characters
+  // This excludes createElement("div") but matches t("div")
+  const regex = /\bt\(\s*["']([^"']+)["']\s*\)/g;
   let match;
 
   while ((match = regex.exec(content)) !== null) {

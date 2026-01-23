@@ -351,6 +351,58 @@ npm run test:unit -- --coverage
 
 ---
 
+## Rule #10: 🧪 Test New Features in Isolation First
+
+**Run new scenario tests independently before running the full test suite.**
+
+### Requirement:
+
+When implementing a new feature with BDD scenarios:
+
+1. **First:** Run ONLY the new feature's scenarios
+2. **Verify:** All new scenarios pass (100%)
+3. **Then:** Run the complete test suite
+4. **Ensure:** All tests still pass (no regressions)
+
+### Commands:
+
+```bash
+# Run only new feature scenarios
+npm run test:e2e:cucumber -- tests/e2e/features/new-feature.feature
+
+# After new tests pass, run full suite
+npm run test:e2e
+
+# Or for specific features
+npm run test:e2e -- --grep="feature-name"
+```
+
+### Benefits:
+
+- **Faster feedback** during development
+- **Isolated debugging** of new features
+- **Prevents test pollution** affecting other tests
+- **Clear verification** that implementation is complete
+- **Confidence** before running expensive full suite
+
+### Example Workflow:
+
+```bash
+# 1. Implement new feature with BDD scenarios
+# 2. Run only new scenarios
+npm run test:e2e:cucumber -- tests/e2e/features/basic-info-editing.feature
+
+# 3. Fix until all pass (100%)
+# 4. Then run full suite to check for regressions
+npm run test:e2e
+
+# 5. Commit only when both pass
+```
+
+**This rule is MANDATORY for all new features.**
+
+---
+
 ## Test-Driven Development (TDD)
 
 ### Red-Green-Refactor Cycle:

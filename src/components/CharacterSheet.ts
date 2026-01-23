@@ -18,12 +18,13 @@ export class CharacterSheet {
   constructor(
     private character: Character,
     private onLoad: () => void,
-    private onNew: () => void
+    private onNew: () => void,
+    private onFieldUpdate: (field: string, value: string | number) => void
   ) {}
 
   render(): TemplateResult {
     const header = new Header(this.onLoad, this.onNew);
-    const basicInfo = new BasicInfo(this.character);
+    const basicInfo = new BasicInfo(this.character, this.onFieldUpdate);
     const stats = new Stats(this.character);
     const recoveryRolls = new RecoveryRolls(this.character.recoveryRolls);
     const damageTrack = new DamageTrack(this.character.damageTrack);

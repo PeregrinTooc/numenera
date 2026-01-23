@@ -36,7 +36,7 @@
     "speed": "Geschwindigkeit",
     "intellect": "Intellekt",
     "pool": "Pool",
-    "edge": "Vorteil",
+    "edge": "Edge",
     "current": "Aktuell",
     "effort": "Anstrengung"
   },
@@ -98,12 +98,22 @@
     "time10hours": "10 Stunden"
   },
   "damage": {
-    "title": "Schadensanzeige",
+    "title": "Schadensleiste",
     "healthy": "Gesund",
     "impaired": "Beeinträchtigt",
-    "debilitated": "Handlungsunfähig",
+    "debilitated": "Geschwächt",
     "impairedDesc": "Aufgaben +1 Schwierigkeit",
-    "debilitatedDesc": "nur Bewegung"
+    "debilitatedDesc": "nur bewegen"
+  },
+  "modal": {
+    "edit": {
+      "name": "Charaktername bearbeiten",
+      "tier": "Stufe bearbeiten",
+      "descriptor": "Deskriptor bearbeiten",
+      "focus": "Fokus bearbeiten",
+      "confirm": "Bestätigen",
+      "cancel": "Abbrechen"
+    }
   },
   "textFields": {
     "heading": "Charakterdetails",

@@ -5,3 +5,4 @@ test-results/**
 .cline-resources
 nextTasks.md
 test-output.log
+test-output.txt

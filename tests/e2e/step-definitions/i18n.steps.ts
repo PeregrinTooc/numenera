@@ -2,6 +2,13 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { DOMHelpers } from "../support/dom-helpers.js";
 
+Given("the language is set to {string}", async function (language: string) {
+  // Set language by navigating with query parameter
+  await this.page.goto(`${this.getBaseUrl()}?lang=${language}`);
+  // Wait for i18n to initialize
+  await this.page.waitForTimeout(200);
+});
+
 Given("I am on the character sheet page with {string}", async function (queryString: string) {
   await this.page.goto(`${this.getBaseUrl()}${queryString}`);
   // Wait for i18n to initialize

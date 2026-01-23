@@ -16,6 +16,7 @@
 @import "./components/special-ability-item.css";
 @import "./components/recovery-rolls.css";
 @import "./components/damage-track.css";
+@import "./components/edit-modal.css";
 
 /* Utility styles */
 @import "./utilities/animations.css";

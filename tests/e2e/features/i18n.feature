@@ -25,7 +25,7 @@ Feature: Internationalization (i18n)
         And the speed stat should display "Geschwindigkeit"
         And the intellect stat should display "Intellekt"
         And the stat pool label should be "Pool"
-        And the stat edge label should be "Vorteil"
+        And the stat edge label should be "Edge"
         And the stat current label should be "Aktuell"
 
     Scenario: German translations for cyphers section

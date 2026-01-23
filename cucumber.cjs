@@ -6,5 +6,6 @@ module.exports = {
     formatOptions: { snippetInterface: "async-await" },
     tags: "not @skip and not @wip",
     timeout: 200, // 200ms for faster feedback on steps
+    failFast: true, // Stop on first failure
   },
 };

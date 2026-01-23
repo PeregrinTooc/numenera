@@ -1,11 +1,59 @@
 // BasicInfo component - Displays character basic information
 
-import { html, TemplateResult } from "lit-html";
+import { html, render, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
 import { t } from "../i18n/index.js";
+import { EditFieldModal } from "./EditFieldModal.js";
+
+type FieldType = "name" | "tier" | "descriptor" | "focus";
 
 export class BasicInfo {
-  constructor(private character: Character) {}
+  constructor(
+    private character: Character,
+    private onFieldUpdate: (field: FieldType, value: string | number) => void
+  ) {}
+
+  private openEditModal(fieldType: FieldType): void {
+    const currentValue =
+      fieldType === "tier"
+        ? this.character.tier
+        : fieldType === "name"
+          ? this.character.name
+          : fieldType === "descriptor"
+            ? this.character.descriptor
+            : this.character.focus;
+
+    // Create modal element and append to body
+    const modalContainer = document.createElement("div");
+    document.body.appendChild(modalContainer);
+
+    const modal = new EditFieldModal({
+      fieldType,
+      currentValue,
+      onConfirm: (newValue) => {
+        this.onFieldUpdate(fieldType, newValue);
+        document.body.removeChild(modalContainer);
+      },
+      onCancel: () => {
+        document.body.removeChild(modalContainer);
+      },
+    });
+
+    // Render modal into the container
+    render(modal.render(), modalContainer);
+
+    // Focus the input field after render
+    setTimeout(() => {
+      const input = modalContainer.querySelector<HTMLInputElement>(
+        '[data-testid="edit-modal-input"]'
+      );
+      if (input) {
+        input.focus();
+        // Select all text for easier editing
+        input.select();
+      }
+    }, 0);
+  }
 
   render(): TemplateResult {
     return html`
@@ -18,19 +66,50 @@ export class BasicInfo {
 
         <!-- Character info content - left side -->
         <div class="character-info-content">
-          <!-- Large character name -->
-          <div data-testid="character-name" class="character-name">${this.character.name}</div>
+          <!-- Large character name - EDITABLE -->
+          <div
+            data-testid="character-name"
+            class="character-name editable-field"
+            @click=${() => this.openEditModal("name")}
+            role="button"
+            tabindex="0"
+            aria-label="Edit character name"
+          >
+            ${this.character.name}
+          </div>
 
           <!-- Numenera sentence format: "A tier 3 Strong Glaive who Bears a Halo of Fire" -->
           <div class="character-sentence">
             ${t("character.sentence.prefix")}
-            <span class="char-tier" data-testid="character-tier">${this.character.tier}</span>
-            <span class="char-descriptor" data-testid="character-descriptor"
+            <span
+              class="char-tier editable-field"
+              data-testid="character-tier"
+              @click=${() => this.openEditModal("tier")}
+              role="button"
+              tabindex="0"
+              aria-label="Edit tier"
+              >${this.character.tier}</span
+            >
+            <span
+              class="char-descriptor editable-field"
+              data-testid="character-descriptor"
+              @click=${() => this.openEditModal("descriptor")}
+              role="button"
+              tabindex="0"
+              aria-label="Edit descriptor"
               >${this.character.descriptor}</span
             >
             <span class="char-type" data-testid="character-type">${this.character.type}</span>
             ${t("character.sentence.connector")}
-            <span class="char-focus" data-testid="character-focus">${this.character.focus}</span>
+            <span
+              class="char-focus editable-field"
+              data-testid="character-focus"
+              @click=${() => this.openEditModal("focus")}
+              role="button"
+              tabindex="0"
+              aria-label="Edit focus"
+              >${this.character.focus}</span
+            >
           </div>
         </div>
 

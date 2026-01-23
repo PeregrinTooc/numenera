@@ -45,6 +45,7 @@
 /* Emphasis on tier - user data with handwritten font */
 .char-tier {
   font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #1a5490;
 }
@@ -98,6 +99,41 @@
   letter-spacing: 0.05em;
 }
 
+/* Editable field styles */
+.editable-field {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin: -2px -6px;
+  display: inline-block;
+}
+
+.editable-field:hover {
+  background-color: rgba(139, 105, 20, 0.1);
+  box-shadow: 0 0 0 2px rgba(139, 105, 20, 0.2);
+}
+
+.editable-field:focus {
+  outline: 2px solid rgba(139, 105, 20, 0.4);
+  outline-offset: 2px;
+}
+
+.editable-field:active {
+  background-color: rgba(139, 105, 20, 0.15);
+}
+
+/* Make editable name more prominent on hover */
+.character-name.editable-field {
+  padding: 4px 8px;
+  margin: -4px -8px;
+}
+
+.character-name.editable-field:hover {
+  background-color: rgba(139, 105, 20, 0.08);
+  transform: scale(1.01);
+}
+
 /* Mobile responsive - stack vertically */
 @media (max-width: 768px) {
   .basic-info-card {
@@ -119,5 +155,16 @@
 
   .character-sentence {
     font-size: 1rem;
+  }
+
+  /* Ensure touch-friendly tap targets on mobile */
+  .editable-field {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    margin: -8px -12px;
   }
 }

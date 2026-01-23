@@ -105,6 +105,16 @@
     "impairedDesc": "tasks +1 difficulty",
     "debilitatedDesc": "move only"
   },
+  "modal": {
+    "edit": {
+      "name": "Edit Character Name",
+      "tier": "Edit Tier",
+      "descriptor": "Edit Descriptor",
+      "focus": "Edit Focus",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    }
+  },
   "textFields": {
     "heading": "Character Details",
     "background": {

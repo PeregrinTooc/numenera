@@ -19,11 +19,28 @@
 - [ ] **Loading States** - Show feedback during operations
 - [ ] **User Notifications** - Toast/banner for schema version changes
 
-## Phase 5: Editing & Persistence (Next)
+## Phase 5: Editing & Persistence (In Progress)
 
-- [ ] Make all fields editable (inline editing)
-- [ ] Auto-save to localStorage on changes
+### Basic Info Editing (Current)
+
+- [ ] Make name, tier, descriptor, focus editable (modal-based)
+- [x] EditFieldModal component with validation
+- [x] Numenera-themed styling (gold/crimson buttons)
+- [x] Keyboard support (Enter/Escape)
+- [x] Touch-friendly mobile design
+- [x] i18n support (EN/DE)
+- [ ] Wire up to character data
+- [ ] Auto-save to localStorage on confirm
+
+### Future Editing Features
+
+- [ ] Make all other fields editable (stats, abilities, etc.)
+- [ ] Inline editing for simple text fields
 - [ ] Confirmation dialogs for destructive actions
+
+### Performance Notes
+
+- **Portrait Images**: When portrait upload is implemented, use keyed elements or CSS backgrounds to prevent image reload on text edits. See implementation notes for details on caching strategies.
 
 ## Phase 1: MVP Features (Incomplete)
 
