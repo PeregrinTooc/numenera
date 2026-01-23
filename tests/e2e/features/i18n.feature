@@ -55,7 +55,7 @@ Feature: Internationalization (i18n)
         And the empty background message should be "Kein Hintergrund"
         And the empty notes message should be "Keine Notizen"
         And the empty equipment message should be "Keine Ausrüstung"
-        And the empty abilities message should be "Keine Fähigkeiten"
+        And the empty abilities message should be "Keine Fähigkeiten vorhanden. Fügen Sie hier besondere Fähigkeiten, trainierte Fertigkeiten und andere Charaktereigenschaften hinzu."
 
     Scenario: Language persists across page reloads
         Given I am on the character sheet page with "?lang=de"

@@ -69,7 +69,8 @@
   },
   "abilities": {
     "heading": "Fähigkeiten",
-    "empty": "Keine Fähigkeiten"
+    "empty": "Keine Fähigkeiten vorhanden. Fügen Sie hier besondere Fähigkeiten, trainierte Fertigkeiten und andere Charaktereigenschaften hinzu.",
+    "cost": "Kosten"
   },
   "textFields": {
     "heading": "Charakterdetails",

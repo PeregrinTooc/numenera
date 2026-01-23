@@ -53,10 +53,37 @@ export const FULL_CHARACTER: Character = {
     {
       name: "Bash",
       description: "You can use your weapon or a shield to make a melee bash attack",
+      cost: 1,
+      pool: "might",
+      action: "1 action",
     },
     {
       name: "Fleet of Foot",
       description: "You can move a short distance and still make an attack",
+      cost: 2,
+      pool: "speed",
+      action: "1 action",
+    },
+    {
+      name: "Power Strike",
+      description: "Deal additional damage with a melee attack",
+      cost: 3,
+      pool: "might",
+      action: "1 action",
+    },
+    {
+      name: "Quick Strike",
+      description: "Make an attack as a quick action",
+      cost: 4,
+      pool: "speed",
+      action: "1 action",
+    },
+    {
+      name: "Scan",
+      description: "Gain information about creatures or objects",
+      cost: 2,
+      pool: "intellect",
+      action: "1 action",
     },
   ],
   equipment: [

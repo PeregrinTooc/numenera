@@ -25,3 +25,22 @@
   font-size: 0.875rem;
   font-style: italic;
 }
+
+/* Pool-specific badge styling */
+.pool-might {
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #991b1b;
+}
+
+.pool-speed {
+  background-color: #dbeafe;
+  border: 1px solid #93c5fd;
+  color: #1e40af;
+}
+
+.pool-intellect {
+  background-color: #e9d5ff;
+  border: 1px solid #c084fc;
+  color: #6b21a8;
+}

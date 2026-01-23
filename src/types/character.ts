@@ -21,6 +21,9 @@ export type Artifact = {
 export type Ability = {
   name: string;
   description: string;
+  cost?: number;
+  pool?: "might" | "speed" | "intellect";
+  action?: string;
 };
 
 export type EquipmentItem = {
