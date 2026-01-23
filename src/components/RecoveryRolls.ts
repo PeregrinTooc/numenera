@@ -3,7 +3,16 @@ import { RecoveryRolls as RecoveryRollsType } from "../types/character.js";
 import { t } from "../i18n/index.js";
 
 export class RecoveryRolls {
-  constructor(private data: RecoveryRollsType) {}
+  constructor(private data: RecoveryRollsType) {
+    // Defensive: provide defaults if data is undefined (shouldn't happen with schema v4)
+    this.data = data ?? {
+      action: false,
+      tenMinutes: false,
+      oneHour: false,
+      tenHours: false,
+      modifier: 0,
+    };
+  }
 
   render(): TemplateResult {
     const { action, tenMinutes, oneHour, tenHours, modifier } = this.data;

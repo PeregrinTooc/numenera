@@ -3,7 +3,12 @@ import { DamageTrack as DamageTrackType } from "../types/character.js";
 import { t } from "../i18n/index.js";
 
 export class DamageTrack {
-  constructor(private data: DamageTrackType) {}
+  constructor(private data: DamageTrackType) {
+    // Defensive: provide defaults if data is undefined (shouldn't happen with schema v4)
+    this.data = data ?? {
+      impairment: "healthy",
+    };
+  }
 
   render(): TemplateResult {
     const { impairment } = this.data;
