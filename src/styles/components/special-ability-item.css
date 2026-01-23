@@ -1,0 +1,27 @@
+/* Special Ability Item Styling - Teal/Cyan theme */
+
+/* Special ability name - user data with handwritten font */
+.special-ability-item-card .special-ability-name {
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 1.375rem;
+  line-height: 1.4;
+}
+
+/* Special ability description - user data with handwritten font */
+.special-ability-item-card .special-ability-description {
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+/* Empty special abilities state - teal/cyan themed */
+.empty-special-abilities-styled {
+  background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);
+  border: 2px dashed #67e8f9;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  color: #0891b2;
+  font-size: 0.875rem;
+  font-style: italic;
+}

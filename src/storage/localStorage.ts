@@ -1,15 +1,38 @@
 // localStorage adapter for character state persistence
-// Simple key-value storage in browser
+// Simple key-value storage in browser with schema versioning
 
 const STORAGE_KEY = "numenera-character-state";
 
 /**
- * Save character state to localStorage
+ * SCHEMA VERSION
+ *
+ * RULE: Increment this version number whenever the Character type changes in src/types/character.ts
+ *
+ * Version History:
+ * - v1: Initial schema (base character structure)
+ * - v2: Added ability enhancements (cost, pool, action) - Phase 2
+ * - v3: Added attacks and specialAbilities arrays - Phase 3
+ *
+ * When the version doesn't match, all localStorage data is cleared to prevent corruption.
+ */
+const SCHEMA_VERSION = 3;
+
+interface StoredData {
+  schemaVersion: number;
+  character: any;
+}
+
+/**
+ * Save character state to localStorage with schema version
  * @param character The character object to save
  */
 export function saveCharacterState(character: any): void {
   try {
-    const serialized = JSON.stringify(character);
+    const data: StoredData = {
+      schemaVersion: SCHEMA_VERSION,
+      character,
+    };
+    const serialized = JSON.stringify(data);
     localStorage.setItem(STORAGE_KEY, serialized);
   } catch (error) {
     console.error("Failed to save character state:", error);
@@ -17,67 +40,8 @@ export function saveCharacterState(character: any): void {
 }
 
 /**
- * Migrate old character data to new format
- * @param character The character object to migrate
- * @returns Migrated character object
- */
-function migrateCharacterData(character: any): any {
-  // Add abilities array if missing (migration from old format)
-  if (!character.abilities) {
-    character.abilities = [];
-  }
-
-  // Migrate equipment from textFields.equipment (string) to equipment array
-  if (character.textFields?.equipment && !character.equipment) {
-    // Convert old string equipment to new array format
-    character.equipment = [
-      {
-        name: character.textFields.equipment,
-        description: undefined,
-      },
-    ];
-    // Remove from textFields
-    delete character.textFields.equipment;
-  }
-
-  // If equipment is missing entirely, initialize as empty array
-  if (!character.equipment) {
-    character.equipment = [];
-  }
-
-  // Phase 1: Add XP field if missing
-  if (character.xp === undefined) {
-    character.xp = 0;
-  }
-
-  // Phase 1: Add Shins field if missing
-  if (character.shins === undefined) {
-    character.shins = 0;
-  }
-
-  // Phase 1: Add Armor field if missing
-  if (character.armor === undefined) {
-    character.armor = 0;
-  }
-
-  // Phase 1: Add Effort field if missing or migrate from old object format
-  if (character.effort === undefined || typeof character.effort === "object") {
-    // Handle both undefined and old {max, costPerLevel} format
-    character.effort =
-      typeof character.effort === "object" ? character.effort.max : character.tier || 1;
-  }
-
-  // Phase 1.7: Add maxCyphers field if missing
-  if (character.maxCyphers === undefined) {
-    character.maxCyphers = (character.tier || 1) + 1;
-  }
-
-  return character;
-}
-
-/**
- * Load character state from localStorage
- * @returns The stored character object, or null if not found
+ * Load character state from localStorage with version checking
+ * @returns The stored character object, or null if not found or version mismatch
  */
 export function loadCharacterState(): any | null {
   try {
@@ -85,10 +49,29 @@ export function loadCharacterState(): any | null {
     if (!stored) {
       return null;
     }
-    const character = JSON.parse(stored);
-    return migrateCharacterData(character);
+
+    const data = JSON.parse(stored);
+
+    // Check if data has schema version wrapper
+    if (data.schemaVersion !== undefined) {
+      // Versioned data: check version match
+      if (data.schemaVersion !== SCHEMA_VERSION) {
+        console.log(
+          `Schema version mismatch (stored: ${data.schemaVersion}, current: ${SCHEMA_VERSION}). Clearing localStorage.`
+        );
+        clearCharacterState();
+        return null;
+      }
+      return data.character;
+    } else {
+      // No schema version: treat as raw character data (backwards compatibility for tests)
+      console.log("Loading data without schema version (test mode)");
+      return data;
+    }
   } catch (error) {
     console.error("Failed to load character state:", error);
+    // On error, clear potentially corrupted data
+    clearCharacterState();
     return null;
   }
 }

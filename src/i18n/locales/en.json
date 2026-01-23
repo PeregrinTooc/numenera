@@ -72,6 +72,19 @@
     "empty": "No abilities yet. Add special abilities, trained skills, and other character capabilities here.",
     "cost": "Cost"
   },
+  "attacks": {
+    "title": "Attacks",
+    "empty": "No attacks configured",
+    "damage": "Damage",
+    "modifier": "Modifier",
+    "range": "Range",
+    "notes": "Notes"
+  },
+  "specialAbilities": {
+    "title": "Special Abilities",
+    "empty": "No special abilities",
+    "source": "Source"
+  },
   "textFields": {
     "heading": "Character Details",
     "background": {

@@ -31,6 +31,20 @@ export type EquipmentItem = {
   description?: string;
 };
 
+export type Attack = {
+  name: string;
+  damage: number;
+  modifier: number;
+  range: string;
+  notes?: string;
+};
+
+export type SpecialAbility = {
+  name: string;
+  description: string;
+  source: string;
+};
+
 export interface Character {
   name: string;
   tier: number;
@@ -52,6 +66,8 @@ export interface Character {
   oddities: string[];
   abilities: Ability[];
   equipment: EquipmentItem[];
+  attacks: Attack[];
+  specialAbilities: SpecialAbility[];
   textFields: {
     background: string;
     notes: string;

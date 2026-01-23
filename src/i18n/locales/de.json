@@ -72,6 +72,19 @@
     "empty": "Keine Fähigkeiten vorhanden. Fügen Sie hier besondere Fähigkeiten, trainierte Fertigkeiten und andere Charaktereigenschaften hinzu.",
     "cost": "Kosten"
   },
+  "attacks": {
+    "title": "Angriffe",
+    "empty": "Keine Angriffe konfiguriert",
+    "damage": "Schaden",
+    "modifier": "Modifikator",
+    "range": "Reichweite",
+    "notes": "Notizen"
+  },
+  "specialAbilities": {
+    "title": "Spezialfähigkeiten",
+    "empty": "Keine Spezialfähigkeiten",
+    "source": "Quelle"
+  },
   "textFields": {
     "heading": "Charakterdetails",
     "background": {

@@ -102,6 +102,33 @@ export const FULL_CHARACTER: Character = {
       name: "50 feet of rope",
     },
   ],
+  attacks: [
+    {
+      name: "Broadsword",
+      damage: 4,
+      modifier: 1,
+      range: "Immediate",
+      notes: "Heavy weapon, two-handed",
+    },
+    {
+      name: "Crossbow",
+      damage: 4,
+      modifier: 0,
+      range: "Long",
+    },
+  ],
+  specialAbilities: [
+    {
+      name: "Lightning Bolt",
+      description: "Projects a bolt of lightning up to long range, inflicting 4 points of damage",
+      source: "Lightning Rod artifact",
+    },
+    {
+      name: "Phase Sprint",
+      description: "Move through solid objects for one round as part of movement",
+      source: "Tier 3 Focus ability",
+    },
+  ],
   textFields: {
     background: "Born in a remote village, discovered ancient ruins that changed everything",
     notes: "Currently investigating the mysterious disappearances in the nearby forest",
@@ -129,6 +156,8 @@ export const NEW_CHARACTER: Character = {
   oddities: [],
   abilities: [],
   equipment: [],
+  attacks: [],
+  specialAbilities: [],
   textFields: {
     background: "",
     notes: "",
