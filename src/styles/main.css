@@ -14,6 +14,27 @@
 /* Utility styles */
 @import "./utilities/animations.css";
 
+/* Global page styles - must come AFTER imports */
+@layer base {
+  body {
+    /* Light mode - parchment gradient */
+    background: linear-gradient(to bottom, #f5e6d3, #ede1cf) !important;
+    min-height: 100vh;
+  }
+
+  /* Dark mode - true dark background */
+  @media (prefers-color-scheme: dark) {
+    body {
+      background: linear-gradient(to bottom, #1a1a1a, #0a0a0a) !important;
+    }
+  }
+}
+
+/* Container that always uses parchment (regardless of dark/light mode) */
+.parchment-container {
+  background: linear-gradient(to bottom, #f5e6d3, #ede1cf);
+}
+
 /* Custom theme configuration */
 @theme {
   --color-numenera-primary: #1a5490;

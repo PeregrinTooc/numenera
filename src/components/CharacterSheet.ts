@@ -30,8 +30,8 @@ export class CharacterSheet {
     const bottomTextFields = new BottomTextFields(this.character);
 
     return html`
-      <div class="min-h-screen bg-gray-50 p-4">
-        <div class="max-w-6xl mx-auto bg-white shadow rounded-lg p-6">
+      <div class="min-h-screen p-4">
+        <div class="max-w-6xl mx-auto shadow rounded-lg p-6 parchment-container">
           ${header.render()} ${basicInfo.render()} ${stats.render()} ${abilities.render()}
           ${itemsSection.render()} ${bottomTextFields.render()}
         </div>
