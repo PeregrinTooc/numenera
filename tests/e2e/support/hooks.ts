@@ -119,5 +119,22 @@ After(async function (this: CustomWorld) {
 
 AfterAll(async function () {
   await browser?.close();
-  devServer?.kill();
+
+  // Properly terminate the dev/preview server
+  if (devServer) {
+    // Try graceful termination first
+    devServer.kill("SIGTERM");
+
+    // Give it a moment to terminate gracefully
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Force kill if still running
+    try {
+      devServer.kill("SIGKILL");
+    } catch (error) {
+      // Process might already be dead, which is fine
+      // eslint-disable-next-line no-console
+      console.log("Server process already terminated " + error);
+    }
+  }
 });
