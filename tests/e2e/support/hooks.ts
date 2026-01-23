@@ -14,7 +14,7 @@ BeforeAll({ timeout: 60000 }, async function () {
     // Start preview server
     devServer = spawn("npm", ["run", "preview", "--", "--port", "4173"], {
       stdio: "pipe",
-      shell: true,
+      detached: false,
     });
 
     // Log output for debugging
@@ -57,7 +57,7 @@ BeforeAll({ timeout: 60000 }, async function () {
     // Start Vite dev server
     devServer = spawn("npm", ["run", "dev"], {
       stdio: "pipe",
-      shell: true,
+      detached: false,
     });
 
     // Log output for debugging
@@ -120,21 +120,28 @@ After(async function (this: CustomWorld) {
 AfterAll(async function () {
   await browser?.close();
 
-  // Properly terminate the dev/preview server
-  if (devServer) {
-    // Try graceful termination first
-    devServer.kill("SIGTERM");
-
-    // Give it a moment to terminate gracefully
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // Force kill if still running
+  // Properly terminate the dev/preview server and all child processes
+  if (devServer && devServer.pid) {
     try {
-      devServer.kill("SIGKILL");
+      // Kill the entire process group (negative PID kills the group)
+      // This ensures we kill npm and all its child processes (like vite)
+      process.kill(-devServer.pid, "SIGTERM");
+
+      // Give it a moment to terminate gracefully
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Force kill the process group if still running
+      try {
+        process.kill(-devServer.pid, "SIGKILL");
+      } catch (killError) {
+        // Process group already terminated, which is fine
+        // eslint-disable-next-line no-console
+        console.log("Process group already terminated" + killError);
+      }
     } catch (error) {
       // Process might already be dead, which is fine
       // eslint-disable-next-line no-console
-      console.log("Server process already terminated " + error);
+      console.log("Server process already terminated: " + error);
     }
   }
 });
