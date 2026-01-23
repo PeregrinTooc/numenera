@@ -52,20 +52,23 @@
 .char-descriptor {
   font-family: "Caveat", "Patrick Hand", cursive;
   font-weight: 700;
-  color: #8b4513;
+  font-size: 1.5rem;
+  color: #50b385;
 }
 
 /* Emphasis on type - user data with handwritten font */
 .char-type {
   font-family: "Caveat", "Patrick Hand", cursive;
   font-weight: 700;
-  color: #8b4513;
+  font-size: 1.5rem;
+  color: #8b1313;
 }
 
 /* Emphasis on focus - user data with handwritten font, italic for special ability */
 .char-focus {
   font-family: "Caveat", "Patrick Hand", cursive;
   font-weight: 700;
+  font-size: 1.5rem;
   font-style: italic;
   color: #1a5490;
 }

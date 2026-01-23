@@ -11,7 +11,7 @@ export class Artifacts {
   render(): TemplateResult {
     return html`
       <div data-testid="artifacts-section" class="mt-8">
-        <h2 data-testid="artifacts-heading" class="text-2xl font-bold mb-4">
+        <h2 data-testid="artifacts-heading" class="text-2xl font-serif font-bold mb-4">
           ${t("artifacts.heading")}
         </h2>
         <div data-testid="artifacts-list" class="space-y-3">

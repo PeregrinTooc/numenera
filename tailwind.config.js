@@ -2,6 +2,11 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    fontFamily: {
+      sans: ["Cinzel", "Georgia", "serif"], // Replace default sans with Cinzel
+      serif: ["Cinzel", "Georgia", "serif"],
+      handwritten: ["Caveat", "Patrick Hand", "cursive"],
+    },
     extend: {
       colors: {
         numenera: {
@@ -17,11 +22,6 @@ export default {
         brown: {
           900: "#2d2416",
         },
-      },
-      fontFamily: {
-        sans: ["Cinzel", "Georgia", "serif"], // Set Cinzel as default
-        serif: ["Cinzel", "Georgia", "serif"],
-        handwritten: ["Caveat", "Patrick Hand", "cursive"],
       },
       screens: {
         xs: "480px",

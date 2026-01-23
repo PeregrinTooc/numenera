@@ -31,10 +31,7 @@ export class Stats {
 
     return html`
       <div data-testid="stats-section" class="mt-8">
-        <h2
-          data-testid="stats-heading"
-          class="text-2xl font-serif font-bold text-brown-900 mb-6 uppercase tracking-wide"
-        >
+        <h2 data-testid="stats-heading" class="text-2xl font-serif font-bold mb-4">
           ${t("stats.heading")}
         </h2>
         <!-- Three stat pools side-by-side on tablet/desktop -->

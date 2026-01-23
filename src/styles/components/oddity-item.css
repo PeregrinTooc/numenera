@@ -63,14 +63,8 @@
   padding: 1.5rem;
   text-align: center;
   color: #8b7355;
+  font-family: serif;
+  font-size: 0.875rem;
   font-style: italic;
   opacity: 0.9;
-}
-
-.empty-oddities-styled::before {
-  content: "🔮";
-  font-size: 1.5rem;
-  opacity: 0.3;
-  display: block;
-  margin-bottom: 0.5rem;
 }

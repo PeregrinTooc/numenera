@@ -17,9 +17,9 @@
 }
 
 .empty-text-content {
-  font-family: "Cinzel", Georgia, serif;
-  font-size: 0.875rem;
   color: #92400e;
+  font-family: serif;
+  font-size: 0.875rem;
   font-style: italic;
 }
 

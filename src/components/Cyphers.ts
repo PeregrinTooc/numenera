@@ -11,7 +11,7 @@ export class Cyphers {
   render(): TemplateResult {
     return html`
       <div data-testid="cyphers-section" class="mt-8">
-        <h2 data-testid="cyphers-heading" class="text-2xl font-bold mb-4">
+        <h2 data-testid="cyphers-heading" class="text-2xl font-serif font-bold mb-4">
           ${t("cyphers.heading")}
         </h2>
         <div data-testid="cyphers-list" class="space-y-3">

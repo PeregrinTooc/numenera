@@ -16,7 +16,7 @@ export class StatPool {
     const nameLower = this.name.toLowerCase();
     return html`
       <div data-testid="stat-${nameLower}" class="stat-pool-card">
-        <!-- Stat name - serif, bold, uppercase -->
+        <!-- Stat name - serif, bold -->
         <h3 data-testid="stat-${nameLower}-label" class="stat-pool-label">${this.name}</h3>
 
         <!-- Pool value - VERY LARGE, handwritten font -->

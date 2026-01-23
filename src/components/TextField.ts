@@ -16,7 +16,7 @@ export class TextField {
       <div data-testid="${this.fieldName}-container" class="parchment-field">
         <label
           data-testid="label-${this.fieldName}"
-          class="block text-sm font-medium text-gray-700 mb-2"
+          class="block text-sm font-serif font-medium text-gray-700 mb-2"
           >${t(`textFields.${this.fieldName}.label`)}</label
         >
         ${hasValue

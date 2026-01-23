@@ -14,7 +14,7 @@ export class Equipment {
     if (isEmpty) {
       return html`
         <div class="equipment-section mt-8">
-          <h2 class="text-2xl font-bold mb-4">${t("equipment.heading")} 🎒</h2>
+          <h2 class="text-2xl font-serif font-bold mb-4">${t("equipment.heading")} 🎒</h2>
           <div data-testid="empty-equipment" class="empty-equipment-styled">
             ${t("equipment.empty")}
           </div>
@@ -24,7 +24,7 @@ export class Equipment {
 
     return html`
       <div class="equipment-section mt-8">
-        <h2 class="text-2xl font-bold mb-4">${t("equipment.heading")} 🎒</h2>
+        <h2 class="text-2xl font-serif font-bold mb-4">${t("equipment.heading")} 🎒</h2>
         <div class="equipment-list space-y-3" data-testid="equipment-content">
           ${this.equipment.map((item) => {
             const equipmentItem = new EquipmentItem(item);

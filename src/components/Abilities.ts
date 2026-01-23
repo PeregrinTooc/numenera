@@ -14,11 +14,10 @@ export class Abilities {
     if (isEmpty) {
       return html`
         <div data-testid="abilities-section" class="mt-8">
-          <h2 class="text-2xl font-bold mb-4 text-gray-700">${t("abilities.heading")} ⚡</h2>
-          <div
-            data-testid="empty-abilities"
-            class="empty-abilities-styled border-2 border-dashed border-indigo-300 rounded-lg p-6 text-center text-gray-500 bg-indigo-50/30"
-          >
+          <h2 class="text-2xl font-serif font-bold mb-4 text-gray-700">
+            ${t("abilities.heading")} ⚡
+          </h2>
+          <div data-testid="empty-abilities" class="empty-abilities-styled">
             ${t("abilities.empty")}
           </div>
         </div>
@@ -31,7 +30,9 @@ export class Abilities {
 
     return html`
       <div data-testid="abilities-section" class="mt-8">
-        <h2 class="text-2xl font-bold mb-4 text-gray-700">${t("abilities.heading")} ⚡</h2>
+        <h2 class="text-2xl font-serif font-bold mb-4 text-gray-700">
+          ${t("abilities.heading")} ⚡
+        </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">${abilityItems}</div>
       </div>
     `;

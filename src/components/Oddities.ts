@@ -10,7 +10,7 @@ export class Oddities {
   render(): TemplateResult {
     return html`
       <div data-testid="oddities-section" class="mt-8">
-        <h2 data-testid="oddities-heading" class="text-2xl font-bold mb-4">
+        <h2 data-testid="oddities-heading" class="text-2xl font-serif font-bold mb-4">
           ${t("oddities.heading")}
         </h2>
         <div data-testid="oddities-list" class="space-y-2">
