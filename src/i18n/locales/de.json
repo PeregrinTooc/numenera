@@ -3,7 +3,7 @@
     "title": "Numenera Charakterbogen"
   },
   "buttons": {
-    "load": "Load",
+    "load": "Laden",
     "new": "Neu"
   },
   "character": {
@@ -13,14 +13,14 @@
     "descriptor": "Eigenschaft",
     "focus": "Fokus",
     "sentence": {
-      "prefix": "Stufe",
-      "connector": "mit"
+      "prefix": "Rang",
+      "connector": "und"
     },
     "portrait": "Porträt"
   },
   "stats": {
     "heading": "Attribute",
-    "might": "Macht",
+    "might": "Kraft",
     "speed": "Geschwindigkeit",
     "intellect": "Intellekt",
     "pool": "Pool",

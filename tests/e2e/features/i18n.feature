@@ -12,7 +12,7 @@ Feature: Internationalization (i18n)
     Scenario: Switch to German language via URL parameter
         Given I am on the character sheet page with "?lang=de"
         Then the page title should be "Numenera Charakterbogen"
-        And the load button should display "Load"
+        And the load button should display "Laden"
         And the new button should display "Neu"
 
     # Note: Basic info now uses sentence format without individual labels
@@ -21,7 +21,7 @@ Feature: Internationalization (i18n)
     Scenario: German translations for stats section
         Given I am on the character sheet page with "?lang=de"
         Then the stats heading should be "Attribute"
-        And the might stat should display "Macht"
+        And the might stat should display "Kraft"
         And the speed stat should display "Geschwindigkeit"
         And the intellect stat should display "Intellekt"
         And the stat pool label should be "Pool"
