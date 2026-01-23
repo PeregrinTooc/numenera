@@ -1,10 +1,7 @@
 import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
 import { chromium, Browser } from "@playwright/test";
 import { CustomWorld } from "./world";
-import { spawn, exec, ChildProcess } from "child_process";
-import { promisify } from "util";
-
-const execAsync = promisify(exec);
+import { spawn, ChildProcess } from "child_process";
 
 let browser: Browser;
 let devServer: ChildProcess | null = null;
@@ -14,10 +11,10 @@ BeforeAll({ timeout: 60000 }, async function () {
   const isProduction = process.env.TEST_PROD === "true";
 
   if (isProduction) {
-    // Start preview server
+    // Start preview server in detached mode so we can kill its process group
     devServer = spawn("npm", ["run", "preview", "--", "--port", "4173"], {
       stdio: "pipe",
-      detached: false,
+      detached: true,
     });
 
     // Log output for debugging
@@ -57,10 +54,10 @@ BeforeAll({ timeout: 60000 }, async function () {
       throw new Error(`Preview server failed to start after ${maxAttempts} seconds`);
     }
   } else {
-    // Start Vite dev server
+    // Start Vite dev server in detached mode so we can kill its process group
     devServer = spawn("npm", ["run", "dev"], {
       stdio: "pipe",
-      detached: false,
+      detached: true,
     });
 
     // Log output for debugging
@@ -123,25 +120,29 @@ After(async function (this: CustomWorld) {
 AfterAll(async function () {
   await browser?.close();
 
-  // Kill the dev/preview server using pkill to ensure all vite processes are terminated
-  try {
-    // First try to kill the spawned process
-    if (devServer) {
-      devServer.kill("SIGTERM");
+  // Kill the dev/preview server and all its child processes
+  if (devServer && devServer.pid) {
+    try {
+      // When detached:true, we need to kill the process group
+      // The negative PID tells the system to kill the entire process group
+      process.kill(-devServer.pid, "SIGTERM");
+
+      // Give it a moment to terminate gracefully
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Force kill the process group if still running
+      try {
+        process.kill(-devServer.pid, "SIGKILL");
+      } catch {
+        // Already dead, ignore
+      }
+
+      // eslint-disable-next-line no-console
+      console.log("Server processes terminated successfully");
+    } catch (error) {
+      // Process might already be dead
+      // eslint-disable-next-line no-console
+      console.log("Server cleanup completed: " + error);
     }
-
-    // Give it a moment
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    // Use pkill to ensure all vite processes are killed (same as npm run kill)
-    // This is more reliable across platforms than process group killing
-    await execAsync("pkill -9 -f vite || true");
-
-    // eslint-disable-next-line no-console
-    console.log("Server processes terminated successfully");
-  } catch (error) {
-    // Process might already be dead or pkill not available
-    // eslint-disable-next-line no-console
-    console.log("Server cleanup completed: " + error);
   }
 });
