@@ -53,11 +53,8 @@ jobs:
         if: hashFiles('tests/e2e/**/*.ts') != ''
         run: npx playwright install --with-deps
 
-      - name: Run E2E tests
-        run: npm run test:e2e
-
-      - name: Build
-        run: npm run build
+      - name: Build and Run E2E tests
+        run: npm run test:e2e:prod
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
