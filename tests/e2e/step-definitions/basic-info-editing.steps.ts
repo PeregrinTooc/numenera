@@ -51,27 +51,9 @@ When("I tap on the tier {string}", async function (this: CustomWorld, _tier: str
 });
 
 // Input interactions
-When("I clear the input field", async function (this: CustomWorld) {
-  const input = this.page!.locator('[data-testid="edit-modal-input"]');
-  await input.clear();
-});
-
 When("I type {string} in the input field", async function (this: CustomWorld, text: string) {
   const input = this.page!.locator('[data-testid="edit-modal-input"]');
   await input.fill(text);
-});
-
-When("I type {string} into the input field", async function (this: CustomWorld, text: string) {
-  const input = this.page!.locator('[data-testid="edit-modal-input"]');
-  await input.fill(text);
-});
-
-When("I press the Escape key", async function (this: CustomWorld) {
-  await this.page!.keyboard.press("Escape");
-});
-
-When("I press the Enter key", async function (this: CustomWorld) {
-  await this.page!.keyboard.press("Enter");
 });
 
 When("I press Tab repeatedly", async function (this: CustomWorld) {
@@ -109,29 +91,6 @@ When("I click the confirm button", async function (this: CustomWorld) {
     });
   }
   // If button is disabled, don't click (next step will verify disabled state)
-});
-
-When("I click the Confirm button", async function (this: CustomWorld) {
-  const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
-  const isDisabled = await confirmButton.isDisabled();
-
-  // Only click if button is not disabled
-  if (!isDisabled) {
-    await this.page!.click('[data-testid="modal-confirm-button"]');
-    // Wait for modal to close
-    await this.page!.waitForSelector('[data-testid="edit-modal"]', {
-      state: "hidden",
-      timeout: 2000,
-    }).catch(() => {
-      // Modal might already be hidden
-    });
-  }
-  // If button is disabled, don't click (next step will verify disabled state)
-});
-
-When("I click the Cancel button", async function (this: CustomWorld) {
-  await this.page!.click('[data-testid="modal-cancel-button"]');
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "hidden" });
 });
 
 When("I click the cancel button", async function (this: CustomWorld) {
@@ -179,10 +138,6 @@ When("I hover over the tier {string}", async function (this: CustomWorld, _tier:
 });
 
 // Modal assertions
-Then("an edit modal should appear", async function (this: CustomWorld) {
-  const modal = this.page!.locator('[data-testid="edit-modal"]');
-  await expect(modal).toBeVisible();
-});
 
 Then(
   "the modal should have aria-label {string}",
@@ -218,11 +173,6 @@ Then("the modal should have a cancel button with icon", async function (this: Cu
   await expect(cancelButton).toBeVisible();
   const icon = cancelButton.locator("svg");
   await expect(icon).toBeVisible();
-});
-
-Then("the modal should close", async function (this: CustomWorld) {
-  const modal = this.page!.locator('[data-testid="edit-modal"]');
-  await expect(modal).not.toBeVisible();
 });
 
 Then(
@@ -394,11 +344,6 @@ Then("focus should not leave the modal", async function (this: CustomWorld) {
 });
 
 Then("the input field should receive focus automatically", async function (this: CustomWorld) {
-  const input = this.page!.locator('[data-testid="edit-modal-input"]');
-  await expect(input).toBeFocused();
-});
-
-Then("the input field should be focused", async function (this: CustomWorld) {
   const input = this.page!.locator('[data-testid="edit-modal-input"]');
   await expect(input).toBeFocused();
 });

@@ -101,8 +101,3 @@ Then("all character data should be preserved", async function () {
   const notesValue = await notes.inputValue();
   expect(notesValue.length).toBeGreaterThan(0);
 });
-
-// Scenario: Empty state persists across page reloads after clearing
-When("I reload the page", async function () {
-  await this.page.reload();
-});
