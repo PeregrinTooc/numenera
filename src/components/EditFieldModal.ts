@@ -10,7 +10,7 @@ import {
   validateFocus,
 } from "../utils/validation.js";
 
-type FieldType = "name" | "tier" | "descriptor" | "focus";
+type FieldType = "name" | "tier" | "descriptor" | "focus" | "xp";
 
 interface EditFieldModalConfig {
   fieldType: FieldType;
@@ -52,15 +52,17 @@ export class EditFieldModal {
         return t("modal.edit.descriptor");
       case "focus":
         return t("modal.edit.focus");
+      case "xp":
+        return t("modal.edit.xp");
     }
   }
 
   private getInputType(): string {
-    return this.fieldType === "tier" ? "number" : "text";
+    return this.fieldType === "tier" || this.fieldType === "xp" ? "number" : "text";
   }
 
   private getInputMode(): string | undefined {
-    return this.fieldType === "tier" ? "numeric" : undefined;
+    return this.fieldType === "tier" || this.fieldType === "xp" ? "numeric" : undefined;
   }
 
   private validate(value: string): boolean {
@@ -91,13 +93,27 @@ export class EditFieldModal {
       case "tier":
         // Tier validation happens in handleConfirm
         return true;
+      case "xp": {
+        // XP must be a non-negative integer, max 9999
+        const num = parseInt(value, 10);
+        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
+          this.validationError = t("validation.xp.invalid");
+          return false;
+        }
+        return true;
+      }
     }
   }
 
   private handleInput(e: Event): void {
     const input = e.target as HTMLInputElement;
     this.inputValue = input.value;
-    this.validate(this.inputValue);
+
+    // For XP field, validate immediately to disable button if invalid
+    if (this.fieldType === "xp") {
+      this.validate(this.inputValue);
+    }
+
     // Trigger re-render to update button state
     this.rerender();
   }
@@ -128,6 +144,11 @@ export class EditFieldModal {
       // Apply tier constraints
       const validated = validateTier(this.inputValue);
       this.onConfirm(validated);
+    } else if (this.fieldType === "xp") {
+      // Validate and convert to number
+      if (this.validate(this.inputValue)) {
+        this.onConfirm(parseInt(this.inputValue, 10));
+      }
     } else {
       // Validate text fields
       if (this.validate(this.inputValue)) {
@@ -203,7 +224,10 @@ export class EditFieldModal {
   }
 
   render(): TemplateResult {
-    const isValid = this.fieldType === "tier" || this.validate(this.inputValue);
+    const isValid =
+      this.fieldType === "tier" || this.fieldType === "xp"
+        ? this.validate(this.inputValue)
+        : this.validate(this.inputValue);
     const inputMode = this.getInputMode();
 
     return html`
@@ -228,8 +252,8 @@ export class EditFieldModal {
             .value=${this.inputValue}
             @input=${this.handleInput}
             inputmode=${inputMode || ""}
-            min=${this.fieldType === "tier" ? "1" : ""}
-            max=${this.fieldType === "tier" ? "6" : ""}
+            min=${this.fieldType === "tier" ? "1" : this.fieldType === "xp" ? "0" : ""}
+            max=${this.fieldType === "tier" ? "6" : this.fieldType === "xp" ? "9999" : ""}
             maxlength=${this.fieldType === "name" || this.fieldType === "focus"
               ? "50"
               : this.fieldType === "descriptor"

@@ -116,8 +116,14 @@
       "tier": "Edit Tier",
       "descriptor": "Edit Descriptor",
       "focus": "Edit Focus",
+      "xp": "Edit XP",
       "confirm": "Confirm",
       "cancel": "Cancel"
+    }
+  },
+  "validation": {
+    "xp": {
+      "invalid": "XP must be a number between 0 and 9999"
     }
   },
   "textFields": {

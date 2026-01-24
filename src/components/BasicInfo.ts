@@ -7,7 +7,7 @@ import { EditFieldModal } from "./EditFieldModal.js";
 import { saveCharacterState } from "../storage/localStorage.js";
 /* global Event, HTMLSelectElement, CustomEvent */
 
-type FieldType = "name" | "tier" | "descriptor" | "focus";
+type FieldType = "name" | "tier" | "descriptor" | "focus" | "xp";
 
 export class BasicInfo {
   constructor(
@@ -42,7 +42,9 @@ export class BasicInfo {
           ? this.character.name
           : fieldType === "descriptor"
             ? this.character.descriptor
-            : this.character.focus;
+            : fieldType === "focus"
+              ? this.character.focus
+              : this.character.xp;
 
     // Create modal element and append to body
     const modalContainer = document.createElement("div");
@@ -80,7 +82,14 @@ export class BasicInfo {
     return html`
       <div data-testid="basic-info" class="basic-info-card">
         <!-- XP Badge - top-left corner -->
-        <div class="xp-badge stat-badge">
+        <div
+          class="xp-badge stat-badge editable-field"
+          data-testid="xp-badge"
+          @click=${() => this.openEditModal("xp")}
+          role="button"
+          tabindex="0"
+          aria-label="Edit XP"
+        >
           <span class="stat-badge-value">${this.character.xp}</span>
           <span class="stat-badge-label">${t("character.xp")}</span>
         </div>

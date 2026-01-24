@@ -112,12 +112,18 @@
   },
   "modal": {
     "edit": {
-      "name": "Charaktername bearbeiten",
+      "name": "Name bearbeiten",
       "tier": "Stufe bearbeiten",
       "descriptor": "Deskriptor bearbeiten",
       "focus": "Fokus bearbeiten",
+      "xp": "EP bearbeiten",
       "confirm": "Bestätigen",
       "cancel": "Abbrechen"
+    }
+  },
+  "validation": {
+    "xp": {
+      "invalid": "EP muss eine Zahl zwischen 0 und 9999 sein"
     }
   },
   "textFields": {

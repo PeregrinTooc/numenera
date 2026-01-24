@@ -35,6 +35,9 @@ function renderCharacterSheet(character: Character): void {
       case "focus":
         updatedCharacter.focus = value as string;
         break;
+      case "xp":
+        updatedCharacter.xp = value as number;
+        break;
     }
 
     // Save to localStorage
@@ -57,7 +60,9 @@ function renderCharacterSheet(character: Character): void {
     );
   }
 
-  render(currentSheet.render(), app);
+  if (currentSheet) {
+    render(currentSheet.render(), app);
+  }
 
   // Save character state to localStorage after rendering
   saveCharacterState(character);
