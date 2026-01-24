@@ -1,6 +1,6 @@
 // BottomTextFields component - Editable Background and Notes fields
 
-import { html, render, TemplateResult } from "lit-html";
+import { html, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
 import { t } from "../i18n/index.js";
 import { saveCharacterState } from "../storage/localStorage.js";
@@ -8,57 +8,49 @@ import { saveCharacterState } from "../storage/localStorage.js";
 
 export class BottomTextFields {
   private editingField: "background" | "notes" | null = null;
-  private container: HTMLElement;
 
-  constructor(
-    private character: Character,
-    container: HTMLElement
-  ) {
-    this.container = container;
-
+  constructor(private character: Character) {
     // Bind methods to preserve 'this' context
     this.startEditing = this.startEditing.bind(this);
     this.saveField = this.saveField.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.rerender = this.rerender.bind(this);
-
-    // Initial render
-    this.rerender();
   }
 
   private startEditing(field: "background" | "notes"): void {
     this.editingField = field;
-    this.rerender();
+    // Dispatch event to trigger re-render with updated editingField state
+    const event = new CustomEvent("character-updated", {
+      detail: this.character,
+      bubbles: true,
+      composed: true,
+    });
+    document.dispatchEvent(event);
 
-    // Focus the textarea after render
+    // Focus the textarea after re-render
     setTimeout(() => {
-      const textarea = this.container?.querySelector<HTMLTextAreaElement>(
+      const textarea = document.querySelector<HTMLTextAreaElement>(
         `[data-testid="character-${field}"]`
       );
       if (textarea) {
         textarea.focus();
       }
-    }, 0);
+    }, 50);
   }
 
   private saveField(_field: "background" | "notes"): void {
     // Save to character state
     saveCharacterState(this.character);
 
-    // Dispatch character-updated event
+    // Dispatch character-updated event to trigger re-render
     const event = new CustomEvent("character-updated", {
       detail: this.character,
       bubbles: true,
       composed: true,
     });
-
-    if (this.container) {
-      this.container.dispatchEvent(event);
-    }
+    document.dispatchEvent(event);
 
     // Exit edit mode
     this.editingField = null;
-    this.rerender();
   }
 
   private handleClick(e: MouseEvent, field: "background" | "notes"): void {
@@ -66,11 +58,6 @@ export class BottomTextFields {
     if (textarea.hasAttribute("readonly")) {
       this.startEditing(field);
     }
-  }
-
-  private rerender(): void {
-    // Re-render this component directly
-    render(this.render(), this.container);
   }
 
   render(): TemplateResult {

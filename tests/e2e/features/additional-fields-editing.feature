@@ -64,7 +64,6 @@ Feature: Additional Character Fields Editing
     # BACKGROUND INLINE EDITING SCENARIOS
     # ============================================================================
 
-    @wip
     Scenario: Background field displays in readonly state initially
         Then the background textarea should be readonly
         And the background textarea should show "A mysterious wanderer..."

@@ -17,8 +17,7 @@ import { BottomTextFields } from "./BottomTextFields.js";
 export class CharacterSheet {
   private header: Header;
   private basicInfo: BasicInfo;
-  private bottomTextFields: BottomTextFields | null = null;
-  private bottomTextFieldsInitialized = false;
+  private bottomTextFields: BottomTextFields;
 
   constructor(
     private character: Character,
@@ -29,7 +28,7 @@ export class CharacterSheet {
     // Create stateful components once to preserve their state across re-renders
     this.header = new Header(this.onLoad, this.onNew);
     this.basicInfo = new BasicInfo(this.character, this.onFieldUpdate);
-    // bottomTextFields will be created after container exists
+    this.bottomTextFields = new BottomTextFields(this.character);
   }
 
   render(): TemplateResult {
@@ -48,17 +47,6 @@ export class CharacterSheet {
       this.character.shins
     );
 
-    // Initialize BottomTextFields after container exists (only once)
-    if (!this.bottomTextFieldsInitialized) {
-      this.bottomTextFieldsInitialized = true;
-      setTimeout(() => {
-        const container = document.querySelector('[data-testid="text-fields-section"]');
-        if (container && !this.bottomTextFields) {
-          this.bottomTextFields = new BottomTextFields(this.character, container as HTMLElement);
-        }
-      }, 0);
-    }
-
     return html`
       <div class="min-h-screen p-4">
         <div class="max-w-6xl mx-auto shadow rounded-lg p-6 parchment-container">
@@ -72,7 +60,7 @@ export class CharacterSheet {
           </div>
           ${cyphersBox.render()} ${itemsBox.render()}
           <div data-testid="text-fields-section" class="mt-8">
-            <!-- BottomTextFields will render itself here -->
+            ${this.bottomTextFields.render()}
           </div>
         </div>
       </div>

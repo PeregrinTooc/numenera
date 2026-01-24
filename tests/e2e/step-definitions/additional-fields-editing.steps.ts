@@ -5,8 +5,15 @@ import { CustomWorld } from "../support/world.js";
 // Background Data Setup Step
 
 Given("the character has the following data:", async function (this: CustomWorld, dataTable) {
-  // Parse the data table
-  const data = dataTable.hashes()[0];
+  // Parse the data table - it's in vertical format with field/value columns
+  const rows = dataTable.raw();
+  const data: Record<string, string> = {};
+
+  // Skip header row and convert to key-value pairs
+  for (let i = 1; i < rows.length; i++) {
+    const [field, value] = rows[i];
+    data[field] = value;
+  }
 
   // Set character data in localStorage matching the Character type structure
   const characterState = {
@@ -48,9 +55,15 @@ Given("the character has the following data:", async function (this: CustomWorld
     },
   };
 
+  // Wrap with schema version to match production storage format
+  const wrappedState = {
+    schemaVersion: 4,
+    character: characterState,
+  };
+
   await this.page!.evaluate((state) => {
     localStorage.setItem("numenera-character-state", JSON.stringify(state));
-  }, characterState);
+  }, wrappedState);
 
   // Reload to apply the data
   await this.page!.reload();
@@ -67,6 +80,15 @@ When("I click on the type dropdown", async function (this: CustomWorld) {
 When("I select {string} from the type dropdown", async function (this: CustomWorld, type: string) {
   const select = this.page!.locator('[data-testid="character-type-select"]');
   await select.selectOption(type);
+});
+
+When("I focus the type dropdown", async function (this: CustomWorld) {
+  const select = this.page!.locator('[data-testid="character-type-select"]');
+  await select.focus();
+});
+
+When("I press the {string} key", async function (this: CustomWorld, key: string) {
+  await this.page!.keyboard.press(key);
 });
 
 When(
@@ -182,7 +204,37 @@ Then("the type dropdown should have an accessible label", async function (this: 
   expect(ariaLabel!.length).toBeGreaterThan(0);
 });
 
+Then("the type should change to the next option", async function (this: CustomWorld) {
+  const select = this.page!.locator('[data-testid="character-type-select"]');
+  // Wait a moment for the keyboard navigation to take effect
+  await this.page!.waitForTimeout(100);
+  const currentValue = await select.inputValue();
+  // Started with "Nano", after ArrowDown and Enter should be "Glaive"
+  expect(currentValue).toBe("Glaive");
+});
+
 // Background Field Steps
+
+Then("the background textarea should be readonly", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-background"]');
+  await expect(textarea).toHaveAttribute("readonly", "");
+});
+
+Then(
+  "the background textarea should show {string}",
+  async function (this: CustomWorld, text: string) {
+    const textarea = this.page!.locator('[data-testid="character-background"]');
+    // Wait for the textarea to be visible and check the value
+    await textarea.waitFor({ state: "visible" });
+    await expect(textarea).toHaveValue(text);
+  }
+);
+
+Then("the background textarea should have a pointer cursor", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-background"]');
+  const cursor = await textarea.evaluate((el) => window.getComputedStyle(el).cursor);
+  expect(cursor).toBe("pointer");
+});
 
 When("I click on the background field", async function (this: CustomWorld) {
   const textarea = this.page!.locator('[data-testid="character-background"]');
