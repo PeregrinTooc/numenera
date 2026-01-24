@@ -15,16 +15,25 @@ import { ItemsBox } from "./ItemsBox.js";
 import { BottomTextFields } from "./BottomTextFields.js";
 
 export class CharacterSheet {
+  private header: Header;
+  private basicInfo: BasicInfo;
+  private bottomTextFields: BottomTextFields | null = null;
+  private bottomTextFieldsInitialized = false;
+
   constructor(
     private character: Character,
     private onLoad: () => void,
     private onNew: () => void,
     private onFieldUpdate: (field: string, value: string | number) => void
-  ) {}
+  ) {
+    // Create stateful components once to preserve their state across re-renders
+    this.header = new Header(this.onLoad, this.onNew);
+    this.basicInfo = new BasicInfo(this.character, this.onFieldUpdate);
+    // bottomTextFields will be created after container exists
+  }
 
   render(): TemplateResult {
-    const header = new Header(this.onLoad, this.onNew);
-    const basicInfo = new BasicInfo(this.character, this.onFieldUpdate);
+    // Create stateless components that don't need to preserve state
     const stats = new Stats(this.character);
     const recoveryRolls = new RecoveryRolls(this.character.recoveryRolls);
     const damageTrack = new DamageTrack(this.character.damageTrack);
@@ -38,12 +47,22 @@ export class CharacterSheet {
       this.character.oddities,
       this.character.shins
     );
-    const bottomTextFields = new BottomTextFields(this.character);
+
+    // Initialize BottomTextFields after container exists (only once)
+    if (!this.bottomTextFieldsInitialized) {
+      this.bottomTextFieldsInitialized = true;
+      setTimeout(() => {
+        const container = document.querySelector('[data-testid="text-fields-section"]');
+        if (container && !this.bottomTextFields) {
+          this.bottomTextFields = new BottomTextFields(this.character, container as HTMLElement);
+        }
+      }, 0);
+    }
 
     return html`
       <div class="min-h-screen p-4">
         <div class="max-w-6xl mx-auto shadow rounded-lg p-6 parchment-container">
-          ${header.render()} ${basicInfo.render()} ${stats.render()}
+          ${this.header.render()} ${this.basicInfo.render()} ${stats.render()}
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             ${recoveryRolls.render()} ${damageTrack.render()}
           </div>
@@ -51,7 +70,10 @@ export class CharacterSheet {
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             ${specialAbilities.render()} ${attacks.render()}
           </div>
-          ${cyphersBox.render()} ${itemsBox.render()} ${bottomTextFields.render()}
+          ${cyphersBox.render()} ${itemsBox.render()}
+          <div data-testid="text-fields-section" class="mt-8">
+            <!-- BottomTextFields will render itself here -->
+          </div>
         </div>
       </div>
     `;

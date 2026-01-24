@@ -9,7 +9,12 @@
   "character": {
     "name": "Name",
     "tier": "Tier",
-    "type": "Type",
+    "type": {
+      "label": "Type",
+      "nano": "Nano",
+      "glaive": "Glaive",
+      "jack": "Jack"
+    },
     "descriptor": "Descriptor",
     "focus": "Focus",
     "sentence": {
@@ -119,11 +124,13 @@
     "heading": "Character Details",
     "background": {
       "label": "Background",
-      "empty": "No background"
+      "empty": "No background",
+      "placeholder": "Click to edit background..."
     },
     "notes": {
       "label": "Notes",
-      "empty": "No notes"
+      "empty": "No notes",
+      "placeholder": "Click to edit notes..."
     }
   }
 }

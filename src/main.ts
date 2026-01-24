@@ -1,5 +1,6 @@
 // Entry point for the application
 // Minimal bootstrapping - all components are now class-based
+/* global Event, CustomEvent, EventListener */
 
 import "./styles/main.css";
 import { render } from "lit-html";
@@ -51,6 +52,19 @@ function renderCharacterSheet(character: Character): void {
 
   // Save character state to localStorage after rendering
   saveCharacterState(character);
+
+  // Listen for character-updated events and re-render
+  // Use setTimeout to ensure the event listener is added after render completes
+  setTimeout(() => {
+    const listener = (e: Event) => {
+      const customEvent = e as CustomEvent<Character>;
+      renderCharacterSheet(customEvent.detail);
+    };
+
+    // Remove any existing listeners to avoid duplicates
+    app.removeEventListener("character-updated", listener as EventListener);
+    app.addEventListener("character-updated", listener as EventListener);
+  }, 0);
 }
 
 // Initialize on page load

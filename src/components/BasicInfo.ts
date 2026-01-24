@@ -4,6 +4,8 @@ import { html, render, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
 import { t } from "../i18n/index.js";
 import { EditFieldModal } from "./EditFieldModal.js";
+import { saveCharacterState } from "../storage/localStorage.js";
+/* global Event, HTMLSelectElement, CustomEvent */
 
 type FieldType = "name" | "tier" | "descriptor" | "focus";
 
@@ -12,6 +14,25 @@ export class BasicInfo {
     private character: Character,
     private onFieldUpdate: (field: FieldType, value: string | number) => void
   ) {}
+
+  private handleTypeChange(e: Event): void {
+    const select = e.target as HTMLSelectElement;
+    this.character.type = select.value as "Nano" | "Glaive" | "Jack";
+    saveCharacterState(this.character);
+
+    // Dispatch character-updated event
+    const event = new CustomEvent("character-updated", {
+      detail: this.character,
+      bubbles: true,
+      composed: true,
+    });
+
+    // Find the container element to dispatch from
+    const container = (e.target as HTMLElement).closest('[data-testid="basic-info"]');
+    if (container) {
+      container.dispatchEvent(event);
+    }
+  }
 
   private openEditModal(fieldType: FieldType): void {
     const currentValue =
@@ -99,7 +120,17 @@ export class BasicInfo {
               aria-label="Edit descriptor"
               >${this.character.descriptor}</span
             >
-            <span class="char-type" data-testid="character-type">${this.character.type}</span>
+            <select
+              class="char-type-select"
+              data-testid="character-type-select"
+              @change=${this.handleTypeChange.bind(this)}
+              .value=${this.character.type}
+              aria-label=${t("character.type.label")}
+            >
+              <option value="Nano">${t("character.type.nano")}</option>
+              <option value="Glaive">${t("character.type.glaive")}</option>
+              <option value="Jack">${t("character.type.jack")}</option>
+            </select>
             ${t("character.sentence.connector")}
             <span
               class="char-focus editable-field"
