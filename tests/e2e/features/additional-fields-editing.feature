@@ -46,7 +46,6 @@ Feature: Additional Character Fields Editing
         When I select "Glaive" from the mobile picker
         Then the type dropdown should show "Glaive" as selected
 
-    @wip
     Scenario: Type dropdown respects i18n (German)
         Given the language is set to "de"
         Then the type dropdown label should be "Typ"
@@ -122,7 +121,6 @@ Feature: Additional Character Fields Editing
         When I hover over the background textarea
         Then the background textarea should show a visual hover state
 
-    @wip
     Scenario: Background respects i18n (German)
         Given the language is set to "de"
         Then the background field label should be "Hintergrund"
@@ -198,7 +196,6 @@ Feature: Additional Character Fields Editing
         When I hover over the notes textarea
         Then the notes textarea should show a visual hover state
 
-    @wip
     Scenario: Notes respects i18n (German)
         Given the language is set to "de"
         Then the notes field label should be "Notizen"

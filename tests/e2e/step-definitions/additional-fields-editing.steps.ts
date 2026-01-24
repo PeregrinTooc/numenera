@@ -213,6 +213,25 @@ Then("the type should change to the next option", async function (this: CustomWo
   expect(currentValue).toBe("Glaive");
 });
 
+Then(
+  "the type dropdown label should be {string}",
+  async function (this: CustomWorld, label: string) {
+    const select = this.page!.locator('[data-testid="character-type-select"]');
+    const ariaLabel = await select.getAttribute("aria-label");
+    expect(ariaLabel).toBe(label);
+  }
+);
+
+Then(
+  "the type dropdown option for {string} should display as {string}",
+  async function (this: CustomWorld, optionValue: string, displayText: string) {
+    const select = this.page!.locator('[data-testid="character-type-select"]');
+    const option = select.locator(`option[value="${optionValue}"]`);
+    const text = await option.textContent();
+    expect(text).toBe(displayText);
+  }
+);
+
 // Background Field Steps
 
 Then("the background textarea should be readonly", async function (this: CustomWorld) {
@@ -341,6 +360,31 @@ Then("the background textarea should still be editable", async function (this: C
   const textarea = this.page!.locator('[data-testid="character-background"]');
   await expect(textarea).not.toHaveAttribute("readonly");
   await expect(textarea).toBeEnabled();
+});
+
+When("the background textarea is empty", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-background"]');
+  await textarea.clear();
+});
+
+Then(
+  "the background placeholder should be {string}",
+  async function (this: CustomWorld, text: string) {
+    const textarea = this.page!.locator('[data-testid="character-background"]');
+    const placeholder = await textarea.getAttribute("placeholder");
+    expect(placeholder).toBe(text);
+  }
+);
+
+When("the notes textarea is empty", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-notes"]');
+  await textarea.clear();
+});
+
+Then("the notes placeholder should be {string}", async function (this: CustomWorld, text: string) {
+  const textarea = this.page!.locator('[data-testid="character-notes"]');
+  const placeholder = await textarea.getAttribute("placeholder");
+  expect(placeholder).toBe(text);
 });
 
 Then(

@@ -71,9 +71,7 @@ export class BottomTextFields {
             class="inline-edit-textarea"
             .value=${this.character.textFields.background}
             ?readonly=${this.editingField !== "background"}
-            placeholder=${this.editingField === "background"
-              ? t("textFields.background.placeholder")
-              : ""}
+            placeholder=${t("textFields.background.placeholder")}
             @input=${(e: Event) => {
               const target = e.target as HTMLTextAreaElement;
               this.character.textFields.background = target.value;
@@ -95,7 +93,7 @@ export class BottomTextFields {
             class="inline-edit-textarea"
             .value=${this.character.textFields.notes}
             ?readonly=${this.editingField !== "notes"}
-            placeholder=${this.editingField === "notes" ? t("textFields.notes.placeholder") : ""}
+            placeholder=${t("textFields.notes.placeholder")}
             @input=${(e: Event) => {
               const target = e.target as HTMLTextAreaElement;
               this.character.textFields.notes = target.value;
