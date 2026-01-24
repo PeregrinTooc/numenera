@@ -118,6 +118,7 @@
       "focus": "Edit Focus",
       "xp": "Edit XP",
       "shins": "Edit Shins",
+      "armor": "Edit Armor",
       "confirm": "Confirm",
       "cancel": "Cancel"
     }
@@ -128,6 +129,9 @@
     },
     "shins": {
       "invalid": "Shins must be a number between 0 and 999999"
+    },
+    "armor": {
+      "invalid": "Armor must be a number between 0 and 10"
     }
   },
   "textFields": {

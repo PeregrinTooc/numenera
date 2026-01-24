@@ -41,6 +41,9 @@ function renderCharacterSheet(character: Character): void {
       case "shins":
         updatedCharacter.shins = value as number;
         break;
+      case "armor":
+        updatedCharacter.armor = value as number;
+        break;
     }
 
     // Save to localStorage

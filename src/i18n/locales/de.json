@@ -118,6 +118,7 @@
       "focus": "Fokus bearbeiten",
       "xp": "EP bearbeiten",
       "shins": "Shins bearbeiten",
+      "armor": "Rüstung bearbeiten",
       "confirm": "Bestätigen",
       "cancel": "Abbrechen"
     }
@@ -128,6 +129,9 @@
     },
     "shins": {
       "invalid": "Shins muss eine Zahl zwischen 0 und 999999 sein"
+    },
+    "armor": {
+      "invalid": "Rüstung muss eine Zahl zwischen 0 und 10 sein"
     }
   },
   "textFields": {

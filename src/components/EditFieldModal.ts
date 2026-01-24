@@ -10,7 +10,7 @@ import {
   validateFocus,
 } from "../utils/validation.js";
 
-type FieldType = "name" | "tier" | "descriptor" | "focus" | "xp" | "shins";
+type FieldType = "name" | "tier" | "descriptor" | "focus" | "xp" | "shins" | "armor";
 
 interface EditFieldModalConfig {
   fieldType: FieldType;
@@ -56,17 +56,25 @@ export class EditFieldModal {
         return t("modal.edit.xp");
       case "shins":
         return t("modal.edit.shins");
+      case "armor":
+        return t("modal.edit.armor");
     }
   }
 
   private getInputType(): string {
-    return this.fieldType === "tier" || this.fieldType === "xp" || this.fieldType === "shins"
+    return this.fieldType === "tier" ||
+      this.fieldType === "xp" ||
+      this.fieldType === "shins" ||
+      this.fieldType === "armor"
       ? "number"
       : "text";
   }
 
   private getInputMode(): string | undefined {
-    return this.fieldType === "tier" || this.fieldType === "xp" || this.fieldType === "shins"
+    return this.fieldType === "tier" ||
+      this.fieldType === "xp" ||
+      this.fieldType === "shins" ||
+      this.fieldType === "armor"
       ? "numeric"
       : undefined;
   }
@@ -117,6 +125,15 @@ export class EditFieldModal {
         }
         return true;
       }
+      case "armor": {
+        // Armor must be a non-negative integer, max 10
+        const num = parseInt(value, 10);
+        if (isNaN(num) || num < 0 || num > 10 || !Number.isInteger(Number(value))) {
+          this.validationError = t("validation.armor.invalid");
+          return false;
+        }
+        return true;
+      }
     }
   }
 
@@ -125,7 +142,7 @@ export class EditFieldModal {
     this.inputValue = input.value;
 
     // For numeric fields, validate immediately to disable button if invalid
-    if (this.fieldType === "xp" || this.fieldType === "shins") {
+    if (this.fieldType === "xp" || this.fieldType === "shins" || this.fieldType === "armor") {
       this.validate(this.inputValue);
     }
 
@@ -159,7 +176,11 @@ export class EditFieldModal {
       // Apply tier constraints
       const validated = validateTier(this.inputValue);
       this.onConfirm(validated);
-    } else if (this.fieldType === "xp" || this.fieldType === "shins") {
+    } else if (
+      this.fieldType === "xp" ||
+      this.fieldType === "shins" ||
+      this.fieldType === "armor"
+    ) {
       // Validate and convert to number
       if (this.validate(this.inputValue)) {
         this.onConfirm(parseInt(this.inputValue, 10));
@@ -266,7 +287,7 @@ export class EditFieldModal {
             inputmode=${inputMode || ""}
             min=${this.fieldType === "tier"
               ? "1"
-              : this.fieldType === "xp" || this.fieldType === "shins"
+              : this.fieldType === "xp" || this.fieldType === "shins" || this.fieldType === "armor"
                 ? "0"
                 : ""}
             max=${this.fieldType === "tier"
@@ -275,7 +296,9 @@ export class EditFieldModal {
                 ? "9999"
                 : this.fieldType === "shins"
                   ? "999999"
-                  : ""}
+                  : this.fieldType === "armor"
+                    ? "10"
+                    : ""}
             maxlength=${this.fieldType === "name" || this.fieldType === "focus"
               ? "50"
               : this.fieldType === "descriptor"

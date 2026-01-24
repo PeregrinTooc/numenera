@@ -136,19 +136,16 @@ Feature: Resource Tracker Fields Editing
     # ARMOR EDITING SCENARIOS
     # ============================================================================
 
-    @wip
     Scenario: Armor badge displays current value
         Given the character has 2 armor
         Then the Armor badge should show "2"
 
-    @wip
     Scenario: Clicking Armor badge opens edit modal
         Given the character has 2 armor
         When I click the Armor badge
         Then the edit modal should open
         And the modal input should contain "2"
 
-    @wip
     Scenario: Editing Armor and confirming saves changes
         Given the character has 2 armor
         When I click the Armor badge
@@ -157,7 +154,6 @@ Feature: Resource Tracker Fields Editing
         Then the Armor badge should show "3"
         And the character data should have armor 3
 
-    @wip
     Scenario: Armor changes persist after page reload
         Given the character has 2 armor
         When I click the Armor badge
@@ -166,7 +162,6 @@ Feature: Resource Tracker Fields Editing
         And I reload the page
         Then the Armor badge should show "5"
 
-    @wip
     Scenario: Armor accepts zero value
         Given the character has 2 armor
         When I click the Armor badge
