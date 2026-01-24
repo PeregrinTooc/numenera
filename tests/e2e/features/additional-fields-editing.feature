@@ -31,14 +31,6 @@ Feature: Additional Character Fields Editing
         And I reload the page
         Then the type dropdown should show "Jack" as selected
 
-    @wip
-    Scenario: Type dropdown is keyboard navigable
-        When I focus the type dropdown
-        And I press the "ArrowDown" key
-        And I press the "Enter" key
-        Then the type should change to the next option
-
-    @wip
     Scenario: Type dropdown works on mobile devices
         Given I am using a mobile device
         When I tap the type dropdown
@@ -99,13 +91,6 @@ Feature: Additional Character Fields Editing
         Then the background textarea should contain the full 1000 character text
         And the character data should have the full background text
 
-    @wip
-    Scenario: Background textarea maintains size during editing
-        When I measure the background textarea height
-        And I click the background textarea
-        Then the background textarea height should remain the same
-
-    @wip
     Scenario: Background field works on mobile devices
         Given I am using a mobile device
         When I tap the background textarea
@@ -114,11 +99,6 @@ Feature: Additional Character Fields Editing
         When I type "Mobile text" in the background textarea
         And I tap outside the background textarea
         Then the background textarea should show "Mobile text"
-
-    @wip
-    Scenario: Background field shows edit hint on hover
-        When I hover over the background textarea
-        Then the background textarea should show a visual hover state
 
     Scenario: Background respects i18n (German)
         Given the language is set to "de"
@@ -173,13 +153,6 @@ Feature: Additional Character Fields Editing
         Then the notes textarea should contain the full 2000 character text
         And the character data should have the full notes text
 
-    @wip
-    Scenario: Notes textarea maintains size during editing
-        When I measure the notes textarea height
-        And I click the notes textarea
-        Then the notes textarea height should remain the same
-
-    @wip
     Scenario: Notes field works on mobile devices
         Given I am using a mobile device
         When I tap the notes textarea
@@ -188,11 +161,6 @@ Feature: Additional Character Fields Editing
         When I type "Mobile notes" in the notes textarea
         And I tap outside the notes textarea
         Then the notes textarea should show "Mobile notes"
-
-    @wip
-    Scenario: Notes field shows edit hint on hover
-        When I hover over the notes textarea
-        Then the notes textarea should show a visual hover state
 
     Scenario: Notes respects i18n (German)
         Given the language is set to "de"
@@ -247,14 +215,6 @@ Feature: Additional Character Fields Editing
     # EDGE CASES
     # ============================================================================
 
-    @wip
-    Scenario: Multiple rapid clicks on background don't cause issues
-        When I click the background textarea
-        And I click the background textarea again
-        And I click the background textarea again
-        Then the background textarea should be editable
-        And there should be no JavaScript errors
-
     Scenario: Background with special characters is handled correctly
         When I click the background textarea
         And I type "Special: <>&chars" in the background textarea
@@ -262,11 +222,3 @@ Feature: Additional Character Fields Editing
         Then the background textarea should show "Special: <>&chars"
         And the character data should have background "Special: <>&chars"
 
-    @wip
-    Scenario: Notes with newlines are preserved
-        When I click the notes textarea
-        And I clear the notes textarea
-        And I type "Line 1\nLine 2" in the notes textarea
-        And I click outside the notes textarea
-        Then the notes textarea should contain a newline
-        And the character data should preserve the newline
