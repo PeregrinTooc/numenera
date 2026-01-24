@@ -337,6 +337,12 @@ Then("the background textarea should be empty", async function (this: CustomWorl
   await expect(textarea).toHaveValue("");
 });
 
+Then("the background textarea should still be editable", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-background"]');
+  await expect(textarea).not.toHaveAttribute("readonly");
+  await expect(textarea).toBeEnabled();
+});
+
 Then(
   "the character data should have background {string}",
   async function (this: CustomWorld, text: string) {

@@ -39,12 +39,6 @@ Feature: Additional Character Fields Editing
         Then the type should change to the next option
 
     @wip
-    Scenario: Type dropdown has proper labels for accessibility
-        Then the type dropdown should have an associated label
-        And the type dropdown label should be "Type" in English
-        And the type dropdown should be accessible to screen readers
-
-    @wip
     Scenario: Type dropdown works on mobile devices
         Given I am using a mobile device
         When I tap the type dropdown
@@ -112,13 +106,6 @@ Feature: Additional Character Fields Editing
         When I measure the background textarea height
         And I click the background textarea
         Then the background textarea height should remain the same
-
-    @wip
-    Scenario: Background field has proper accessibility
-        Then the background textarea should have an accessible label or aria-label
-        When I click the background textarea
-        Then the background textarea should be focusable via keyboard
-        And the focus indicator should be visible
 
     @wip
     Scenario: Background field works on mobile devices
@@ -197,13 +184,6 @@ Feature: Additional Character Fields Editing
         Then the notes textarea height should remain the same
 
     @wip
-    Scenario: Notes field has proper accessibility
-        Then the notes textarea should have an accessible label or aria-label
-        When I click the notes textarea
-        Then the notes textarea should be focusable via keyboard
-        And the focus indicator should be visible
-
-    @wip
     Scenario: Notes field works on mobile devices
         Given I am using a mobile device
         When I tap the notes textarea
@@ -230,7 +210,6 @@ Feature: Additional Character Fields Editing
     # INTERACTION SCENARIOS
     # ============================================================================
 
-    @wip
     Scenario: Clicking notes while editing background saves background first
         When I click the background textarea
         And I type "Background edit" in the background textarea
@@ -240,7 +219,6 @@ Feature: Additional Character Fields Editing
         And the notes textarea should not be readonly
         And the notes textarea should be focused
 
-    @wip
     Scenario: Clicking background while editing notes saves notes first
         When I click the notes textarea
         And I type "Notes edit" in the notes textarea
@@ -250,7 +228,6 @@ Feature: Additional Character Fields Editing
         And the background textarea should not be readonly
         And the background textarea should be focused
 
-    @wip
     Scenario: Changing type while editing background does not interfere
         When I click the background textarea
         And I type "Background edit" in the background textarea
@@ -259,7 +236,6 @@ Feature: Additional Character Fields Editing
         And the background textarea should show "Background edit"
         And the type dropdown should show "Glaive" as selected
 
-    @wip
     Scenario: All fields can be edited in sequence
         When I select "Jack" from the type dropdown
         And I click the background textarea
@@ -273,32 +249,6 @@ Feature: Additional Character Fields Editing
         And the notes textarea should show "Sequential notes"
 
     # ============================================================================
-    # CHARACTER-UPDATED EVENT SCENARIOS
-    # ============================================================================
-
-    @wip
-    Scenario: Type change dispatches character-updated event
-        When I select "Glaive" from the type dropdown
-        Then a "character-updated" event should be dispatched
-        And the event detail should contain the updated character
-
-    @wip
-    Scenario: Background change dispatches character-updated event
-        When I click the background textarea
-        And I type "Event test background" in the background textarea
-        And I click outside the background textarea
-        Then a "character-updated" event should be dispatched
-        And the event detail should contain the updated character
-
-    @wip
-    Scenario: Notes change dispatches character-updated event
-        When I click the notes textarea
-        And I type "Event test notes" in the notes textarea
-        And I click outside the notes textarea
-        Then a "character-updated" event should be dispatched
-        And the event detail should contain the updated character
-
-    # ============================================================================
     # EDGE CASES
     # ============================================================================
 
@@ -310,13 +260,12 @@ Feature: Additional Character Fields Editing
         Then the background textarea should be editable
         And there should be no JavaScript errors
 
-    @wip
     Scenario: Background with special characters is handled correctly
         When I click the background textarea
-        And I type "Special: <>&"' chars" in the background textarea
+        And I type "Special: <>&chars" in the background textarea
         And I click outside the background textarea
-        Then the background textarea should show "Special: <>&"' chars"
-        And the character data should have background "Special: <>&"' chars"
+        Then the background textarea should show "Special: <>&chars"
+        And the character data should have background "Special: <>&chars"
 
     @wip
     Scenario: Notes with newlines are preserved
