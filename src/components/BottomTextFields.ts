@@ -4,7 +4,7 @@ import { html, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
 import { t } from "../i18n/index.js";
 import { saveCharacterState } from "../storage/localStorage.js";
-/* global MouseEvent, Event, HTMLTextAreaElement, CustomEvent */
+/* global MouseEvent, Event, HTMLTextAreaElement */
 
 export class BottomTextFields {
   private editingField: "background" | "notes" | null = null;
@@ -17,45 +17,45 @@ export class BottomTextFields {
   }
 
   private startEditing(field: "background" | "notes"): void {
+    console.log("startEditing called for field:", field);
     this.editingField = field;
-    // Dispatch event to trigger re-render with updated editingField state
-    const event = new CustomEvent("character-updated", {
-      detail: this.character,
-      bubbles: true,
-      composed: true,
-    });
-    document.dispatchEvent(event);
 
-    // Focus the textarea after re-render
-    setTimeout(() => {
-      const textarea = document.querySelector<HTMLTextAreaElement>(
-        `[data-testid="character-${field}"]`
-      );
-      if (textarea) {
-        textarea.focus();
-      }
-    }, 50);
+    // Directly manipulate the DOM to remove readonly
+    const textarea = document.querySelector<HTMLTextAreaElement>(
+      `[data-testid="character-${field}"]`
+    );
+    console.log("Found textarea:", textarea);
+    if (textarea) {
+      console.log("Removing readonly attribute");
+      textarea.removeAttribute("readonly");
+      textarea.focus();
+      console.log("Textarea focused, readonly removed");
+    }
   }
 
-  private saveField(_field: "background" | "notes"): void {
+  private saveField(field: "background" | "notes"): void {
     // Save to character state
     saveCharacterState(this.character);
 
-    // Dispatch character-updated event to trigger re-render
-    const event = new CustomEvent("character-updated", {
-      detail: this.character,
-      bubbles: true,
-      composed: true,
-    });
-    document.dispatchEvent(event);
-
     // Exit edit mode
     this.editingField = null;
+
+    // Directly manipulate the DOM to add readonly back
+    const textarea = document.querySelector<HTMLTextAreaElement>(
+      `[data-testid="character-${field}"]`
+    );
+    if (textarea) {
+      textarea.setAttribute("readonly", "");
+    }
   }
 
   private handleClick(e: MouseEvent, field: "background" | "notes"): void {
+    console.log("handleClick called for field:", field);
     const textarea = e.target as HTMLTextAreaElement;
-    if (textarea.hasAttribute("readonly")) {
+    const hasReadonly = textarea.hasAttribute("readonly");
+    console.log("Has readonly attribute:", hasReadonly);
+    if (hasReadonly) {
+      console.log("Calling startEditing for field:", field);
       this.startEditing(field);
     }
   }

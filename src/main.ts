@@ -1,6 +1,6 @@
 // Entry point for the application
 // Minimal bootstrapping - all components are now class-based
-/* global Event, CustomEvent, EventListener */
+/* global Event, EventListener */
 
 import "./styles/main.css";
 import { render } from "lit-html";
@@ -9,6 +9,9 @@ import { Character } from "./types/character.js";
 import { FULL_CHARACTER, NEW_CHARACTER } from "./data/mockCharacters.js";
 import { CharacterSheet } from "./components/CharacterSheet.js";
 import { initI18n, onLanguageChanged } from "./i18n/index.js";
+
+// Global CharacterSheet instance to preserve state across re-renders
+let currentSheet: CharacterSheet | null = null;
 
 // Render the character sheet with the given character data
 function renderCharacterSheet(character: Character): void {
@@ -41,14 +44,20 @@ function renderCharacterSheet(character: Character): void {
     renderCharacterSheet(updatedCharacter);
   };
 
-  const sheet = new CharacterSheet(
-    character,
-    () => renderCharacterSheet(FULL_CHARACTER),
-    () => renderCharacterSheet(NEW_CHARACTER),
-    handleFieldUpdate
-  );
+  // Create new sheet only if we don't have one yet, or if it's a different character
+  // (e.g., Load or New button clicked)
+  const needsNewSheet = !currentSheet || (currentSheet as any).character !== character;
 
-  render(sheet.render(), app);
+  if (needsNewSheet) {
+    currentSheet = new CharacterSheet(
+      character,
+      () => renderCharacterSheet(FULL_CHARACTER),
+      () => renderCharacterSheet(NEW_CHARACTER),
+      handleFieldUpdate
+    );
+  }
+
+  render(currentSheet.render(), app);
 
   // Save character state to localStorage after rendering
   saveCharacterState(character);
@@ -56,9 +65,11 @@ function renderCharacterSheet(character: Character): void {
   // Listen for character-updated events and re-render
   // Use setTimeout to ensure the event listener is added after render completes
   setTimeout(() => {
-    const listener = (e: Event) => {
-      const customEvent = e as CustomEvent<Character>;
-      renderCharacterSheet(customEvent.detail);
+    const listener = (_e: Event) => {
+      // Just re-render with the same sheet instance to preserve component state
+      if (currentSheet) {
+        render(currentSheet.render(), app);
+      }
     };
 
     // Remove any existing listeners to avoid duplicates

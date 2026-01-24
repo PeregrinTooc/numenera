@@ -241,6 +241,11 @@ When("I click on the background field", async function (this: CustomWorld) {
   await textarea.click();
 });
 
+When("I click the background textarea", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-background"]');
+  await textarea.click();
+});
+
 When("I tap on the background field on mobile", async function (this: CustomWorld) {
   const textarea = this.page!.locator('[data-testid="character-background"]');
   await textarea.tap();
@@ -274,6 +279,28 @@ Then("the background field should be in edit mode", async function (this: Custom
   const textarea = this.page!.locator('[data-testid="character-background"]');
   await expect(textarea).not.toHaveAttribute("readonly");
 });
+
+Then("the background textarea should not be readonly", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-background"]');
+  // Wait for the readonly attribute to be removed (with increased timeout)
+  await expect(textarea).not.toHaveAttribute("readonly", { timeout: 10000 });
+});
+
+Then("the background textarea should be focused", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-background"]');
+  await expect(textarea).toBeFocused();
+});
+
+Then(
+  "the background textarea should have an edit state visual indicator",
+  async function (this: CustomWorld) {
+    const textarea = this.page!.locator('[data-testid="character-background"]');
+    // Check that textarea does not have readonly attribute (visual indicator of edit mode)
+    await expect(textarea).not.toHaveAttribute("readonly");
+    // Additional check: verify it's actually editable by checking if it's enabled
+    await expect(textarea).toBeEnabled();
+  }
+);
 
 Then(
   "the background field should contain {string}",

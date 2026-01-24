@@ -69,7 +69,6 @@ Feature: Additional Character Fields Editing
         And the background textarea should show "A mysterious wanderer..."
         And the background textarea should have a pointer cursor
 
-    @wip
     Scenario: Clicking background field enables editing
         When I click the background textarea
         Then the background textarea should not be readonly
