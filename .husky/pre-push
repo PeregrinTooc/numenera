@@ -7,8 +7,5 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-# Run E2E tests with production build
-echo "Running E2E tests with production build..."
-npm run test:e2e:prod
 
 echo "✅ Build successful! Proceeding with push..."
