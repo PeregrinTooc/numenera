@@ -393,8 +393,8 @@ Then(
 Then(
   "the Effort badge should show {string}",
   async function (this: CustomWorld, expectedValue: string) {
-    const effortBadge = this.page!.locator('[data-testid="effort-badge"]');
-    await expect(effortBadge).toHaveText(expectedValue);
+    const effortValue = this.page!.locator('[data-testid="effort-value"]');
+    await expect(effortValue).toHaveText(expectedValue);
   }
 );
 

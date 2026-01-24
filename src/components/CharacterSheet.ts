@@ -21,6 +21,7 @@ export class CharacterSheet {
   private itemsBox: ItemsBox;
   private attacks: Attacks;
   private cyphersBox: CyphersBox;
+  private stats: Stats;
 
   constructor(
     private character: Character,
@@ -35,11 +36,11 @@ export class CharacterSheet {
     this.itemsBox = new ItemsBox(this.character, this.onFieldUpdate);
     this.attacks = new Attacks(this.character, this.onFieldUpdate);
     this.cyphersBox = new CyphersBox(this.character, this.onFieldUpdate);
+    this.stats = new Stats(this.character, this.onFieldUpdate);
   }
 
   render(): TemplateResult {
     // Create stateless components that don't need to preserve state
-    const stats = new Stats(this.character);
     const recoveryRolls = new RecoveryRolls(this.character.recoveryRolls);
     const damageTrack = new DamageTrack(this.character.damageTrack);
     const abilities = new Abilities(this.character.abilities);
@@ -48,7 +49,7 @@ export class CharacterSheet {
     return html`
       <div class="min-h-screen p-4">
         <div class="max-w-6xl mx-auto shadow rounded-lg p-6 parchment-container">
-          ${this.header.render()} ${this.basicInfo.render()} ${stats.render()}
+          ${this.header.render()} ${this.basicInfo.render()} ${this.stats.render()}
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             ${recoveryRolls.render()} ${damageTrack.render()}
           </div>

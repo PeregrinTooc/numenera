@@ -128,6 +128,9 @@
     },
     "maxCyphers": {
       "invalid": "Max. Cypher muss eine Zahl zwischen 0 und 10 sein"
+    },
+    "effort": {
+      "invalid": "Anstrengung muss eine Zahl zwischen 1 und 6 sein"
     }
   },
   "textFields": {

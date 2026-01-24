@@ -203,19 +203,16 @@ Feature: Resource Tracker Fields Editing
     # EFFORT EDITING SCENARIOS
     # ============================================================================
 
-    @wip
     Scenario: Effort badge displays current value
         Given the character has effort 1
         Then the Effort badge should show "1"
 
-    @wip
     Scenario: Clicking Effort badge opens edit modal
         Given the character has effort 1
         When I click the Effort badge
         Then the edit modal should open
         And the modal input should contain "1"
 
-    @wip
     Scenario: Editing Effort and confirming saves changes
         Given the character has effort 1
         When I click the Effort badge
@@ -224,7 +221,6 @@ Feature: Resource Tracker Fields Editing
         Then the Effort badge should show "3"
         And the character data should have effort 3
 
-    @wip
     Scenario: Effort changes persist after page reload
         Given the character has effort 1
         When I click the Effort badge

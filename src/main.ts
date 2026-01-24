@@ -47,6 +47,9 @@ function renderCharacterSheet(character: Character): void {
       case "maxCyphers":
         updatedCharacter.maxCyphers = value as number;
         break;
+      case "effort":
+        updatedCharacter.effort = value as number;
+        break;
     }
 
     // Save to localStorage

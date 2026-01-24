@@ -10,7 +10,16 @@ import {
   validateFocus,
 } from "../utils/validation.js";
 
-type FieldType = "name" | "tier" | "descriptor" | "focus" | "xp" | "shins" | "armor" | "maxCyphers";
+type FieldType =
+  | "name"
+  | "tier"
+  | "descriptor"
+  | "focus"
+  | "xp"
+  | "shins"
+  | "armor"
+  | "maxCyphers"
+  | "effort";
 
 interface EditFieldModalConfig {
   fieldType: FieldType;
@@ -47,7 +56,8 @@ export class EditFieldModal {
       this.fieldType === "xp" ||
       this.fieldType === "shins" ||
       this.fieldType === "armor" ||
-      this.fieldType === "maxCyphers"
+      this.fieldType === "maxCyphers" ||
+      this.fieldType === "effort"
       ? "number"
       : "text";
   }
@@ -57,7 +67,8 @@ export class EditFieldModal {
       this.fieldType === "xp" ||
       this.fieldType === "shins" ||
       this.fieldType === "armor" ||
-      this.fieldType === "maxCyphers"
+      this.fieldType === "maxCyphers" ||
+      this.fieldType === "effort"
       ? "numeric"
       : undefined;
   }
@@ -126,6 +137,15 @@ export class EditFieldModal {
         }
         return true;
       }
+      case "effort": {
+        // Effort must be an integer between 1 and 6
+        const num = parseInt(value, 10);
+        if (isNaN(num) || num < 1 || num > 6 || !Number.isInteger(Number(value))) {
+          this.validationError = t("validation.effort.invalid");
+          return false;
+        }
+        return true;
+      }
     }
   }
 
@@ -138,7 +158,8 @@ export class EditFieldModal {
       this.fieldType === "xp" ||
       this.fieldType === "shins" ||
       this.fieldType === "armor" ||
-      this.fieldType === "maxCyphers"
+      this.fieldType === "maxCyphers" ||
+      this.fieldType === "effort"
     ) {
       this.validate(this.inputValue);
     }
@@ -177,7 +198,8 @@ export class EditFieldModal {
       this.fieldType === "xp" ||
       this.fieldType === "shins" ||
       this.fieldType === "armor" ||
-      this.fieldType === "maxCyphers"
+      this.fieldType === "maxCyphers" ||
+      this.fieldType === "effort"
     ) {
       // Validate and convert to number
       if (this.validate(this.inputValue)) {
@@ -277,7 +299,7 @@ export class EditFieldModal {
             .value=${this.inputValue}
             @input=${this.handleInput}
             inputmode=${inputMode || ""}
-            min=${this.fieldType === "tier"
+            min=${this.fieldType === "tier" || this.fieldType === "effort"
               ? "1"
               : this.fieldType === "xp" ||
                   this.fieldType === "shins" ||
@@ -285,7 +307,7 @@ export class EditFieldModal {
                   this.fieldType === "maxCyphers"
                 ? "0"
                 : ""}
-            max=${this.fieldType === "tier"
+            max=${this.fieldType === "tier" || this.fieldType === "effort"
               ? "6"
               : this.fieldType === "xp"
                 ? "9999"
