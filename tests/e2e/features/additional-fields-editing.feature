@@ -75,7 +75,6 @@ Feature: Additional Character Fields Editing
         And the background textarea should be focused
         And the background textarea should have an edit state visual indicator
 
-    @wip
     Scenario: Editing background and blurring saves changes
         When I click the background textarea
         And I clear the background textarea

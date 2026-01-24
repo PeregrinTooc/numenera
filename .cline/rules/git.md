@@ -6,15 +6,17 @@
 
 ## Rule #7: 📤 Git Workflow - Smart Commit Messages
 
+**create concise commit messages, don't mention test state**
+
 **Use appropriate git commit format based on message length.**
 
-### For Simple Commits (≤ 256 characters):
+### For Simple Commits (≤ 128 characters):
 
 ```bash
 git add -A && git commit -m "type(scope): description" && git push
 ```
 
-### For Complex Commits (> 256 characters):
+### For Complex Commits (> 128 characters):
 
 ```bash
 git add -A && \

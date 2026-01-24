@@ -256,6 +256,28 @@ When("I type {string} into the background field", async function (this: CustomWo
   await textarea.fill(text);
 });
 
+When("I clear the background textarea", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-background"]');
+  await textarea.clear();
+});
+
+When(
+  "I type {string} in the background textarea",
+  async function (this: CustomWorld, text: string) {
+    const textarea = this.page!.locator('[data-testid="character-background"]');
+    await textarea.fill(text);
+  }
+);
+
+When("I click outside the background textarea", async function (this: CustomWorld) {
+  // Trigger blur by clicking outside - use body as a safe target
+  const textarea = this.page!.locator('[data-testid="character-background"]');
+  await textarea.blur();
+
+  // Give the blur handler time to execute
+  await this.page!.waitForTimeout(100);
+});
+
 When("I click outside the background field", async function (this: CustomWorld) {
   // Click on a neutral area like the page header
   await this.page!.locator('[data-testid="app-header"]').click();
@@ -307,6 +329,30 @@ Then(
   async function (this: CustomWorld, text: string) {
     const textarea = this.page!.locator('[data-testid="character-background"]');
     await expect(textarea).toHaveValue(text);
+  }
+);
+
+Then(
+  "the character data should have background {string}",
+  async function (this: CustomWorld, text: string) {
+    // Wait a bit for the save to complete
+    await this.page!.waitForTimeout(200);
+
+    // Verify in localStorage
+    const storedData = await this.page!.evaluate(() => {
+      const data = localStorage.getItem("numenera-character-state");
+      return data ? JSON.parse(data) : null;
+    });
+
+    expect(storedData).toBeTruthy();
+
+    // Data is stored with schemaVersion wrapper: { schemaVersion, character: { textFields: { background } } }
+    if (storedData.character) {
+      expect(storedData.character.textFields.background).toBe(text);
+    } else {
+      // Fallback for direct structure
+      expect(storedData.textFields.background).toBe(text);
+    }
   }
 );
 
