@@ -112,7 +112,7 @@
   },
   "modal": {
     "edit": {
-      "name": "Namen bearbeiten",
+      "name": "Name bearbeiten",
       "tier": "Stufe bearbeiten",
       "descriptor": "Deskriptor bearbeiten",
       "focus": "Fokus bearbeiten",
