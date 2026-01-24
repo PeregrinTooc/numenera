@@ -5,6 +5,7 @@ import { spawn, ChildProcess } from "child_process";
 import {
   waitForPort,
   clearPort,
+  clearAllTestState,
   incrementWorkerCount,
   decrementWorkerCount,
 } from "./port-manager.js";
@@ -14,6 +15,14 @@ let devServer: ChildProcess | null = null;
 export let serverPort: number;
 
 BeforeAll({ timeout: 60000 }, async function () {
+  // CRITICAL: Clear all test state files BEFORE worker registration
+  // This ensures cleanup from previous failed test runs
+  // Each worker attempts this, but file system operations are safe to repeat
+  clearAllTestState();
+
+  // Small delay to ensure file system operations complete
+  await new Promise((resolve) => setTimeout(resolve, 50));
+
   // Register this worker
   const workerCount = incrementWorkerCount();
   const isFirstWorker = workerCount === 1;

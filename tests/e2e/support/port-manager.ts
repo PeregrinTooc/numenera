@@ -61,6 +61,29 @@ export function portFileExists(): boolean {
 }
 
 /**
+ * Clears all test state files (port file and worker count file)
+ * This should be called at the start of test runs to clean up from previous failed runs
+ * Safe to call from multiple workers simultaneously - race conditions are handled
+ */
+export function clearAllTestState(): void {
+  try {
+    if (existsSync(PORT_FILE)) {
+      unlinkSync(PORT_FILE);
+    }
+  } catch {
+    // File may have been deleted by another worker, ignore
+  }
+
+  try {
+    if (existsSync(WORKER_COUNT_FILE)) {
+      unlinkSync(WORKER_COUNT_FILE);
+    }
+  } catch {
+    // File may have been deleted by another worker, ignore
+  }
+}
+
+/**
  * Increments the worker count with retry for race condition handling
  * Returns the new count
  */
