@@ -112,11 +112,12 @@
   },
   "modal": {
     "edit": {
-      "name": "Name bearbeiten",
+      "name": "Namen bearbeiten",
       "tier": "Stufe bearbeiten",
       "descriptor": "Deskriptor bearbeiten",
       "focus": "Fokus bearbeiten",
       "xp": "EP bearbeiten",
+      "shins": "Shins bearbeiten",
       "confirm": "Bestätigen",
       "cancel": "Abbrechen"
     }
@@ -124,6 +125,9 @@
   "validation": {
     "xp": {
       "invalid": "EP muss eine Zahl zwischen 0 und 9999 sein"
+    },
+    "shins": {
+      "invalid": "Shins muss eine Zahl zwischen 0 und 999999 sein"
     }
   },
   "textFields": {

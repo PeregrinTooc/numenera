@@ -1,30 +1,72 @@
 // ItemsBox component - Combines Equipment, Artifacts, and Oddities in a single box with Shins badge
 
-import { html, TemplateResult } from "lit-html";
-import { EquipmentItem as EquipmentItemType, Artifact } from "../types/character.js";
+import { html, render, TemplateResult } from "lit-html";
+import { Character } from "../types/character.js";
 import { EquipmentItem } from "./EquipmentItem.js";
 import { ArtifactItem } from "./ArtifactItem.js";
 import { OddityItem } from "./OddityItem.js";
+import { EditFieldModal } from "./EditFieldModal.js";
 import { t } from "../i18n/index.js";
+
+type FieldType = "shins";
 
 export class ItemsBox {
   constructor(
-    private equipment: EquipmentItemType[],
-    private artifacts: Artifact[],
-    private oddities: string[],
-    private shins: number
+    private character: Character,
+    private onFieldUpdate: (field: FieldType, value: number) => void
   ) {}
 
+  private openEditModal(fieldType: FieldType): void {
+    const currentValue = this.character.shins;
+
+    // Create modal element and append to body
+    const modalContainer = document.createElement("div");
+    document.body.appendChild(modalContainer);
+
+    const modal = new EditFieldModal({
+      fieldType,
+      currentValue,
+      onConfirm: (newValue) => {
+        this.onFieldUpdate(fieldType, newValue as number);
+        document.body.removeChild(modalContainer);
+      },
+      onCancel: () => {
+        document.body.removeChild(modalContainer);
+      },
+    });
+
+    // Render modal into the container
+    render(modal.render(), modalContainer);
+
+    // Focus the input field after render
+    setTimeout(() => {
+      const input = modalContainer.querySelector<HTMLInputElement>(
+        '[data-testid="edit-modal-input"]'
+      );
+      if (input) {
+        input.focus();
+        input.select();
+      }
+    }, 0);
+  }
+
   render(): TemplateResult {
-    const equipmentItems = this.equipment.map((item) => new EquipmentItem(item));
-    const artifactItems = this.artifacts.map((artifact) => new ArtifactItem(artifact));
-    const oddityItems = this.oddities.map((oddity) => new OddityItem(oddity));
+    const equipmentItems = this.character.equipment.map((item) => new EquipmentItem(item));
+    const artifactItems = this.character.artifacts.map((artifact) => new ArtifactItem(artifact));
+    const oddityItems = this.character.oddities.map((oddity) => new OddityItem(oddity));
 
     return html`
       <div data-testid="items-section" class="section-box">
         <!-- Shins Badge - top-right corner -->
-        <div class="stat-badge badge-top-right">
-          <span class="stat-badge-value">${this.shins}</span>
+        <div
+          class="stat-badge badge-top-right editable-field"
+          data-testid="shins-badge"
+          @click=${() => this.openEditModal("shins")}
+          role="button"
+          tabindex="0"
+          aria-label="Edit Shins"
+        >
+          <span class="stat-badge-value">${this.character.shins}</span>
           <span class="stat-badge-label">${t("character.shins")}</span>
         </div>
 
@@ -35,7 +77,7 @@ export class ItemsBox {
           <h3 data-testid="equipment-heading" class="subsection-heading">
             ${t("equipment.heading")}
           </h3>
-          ${this.equipment.length === 0
+          ${this.character.equipment.length === 0
             ? html`
                 <div data-testid="empty-equipment" class="empty-equipment-styled">
                   <p>${t("equipment.empty")}</p>
@@ -58,7 +100,7 @@ export class ItemsBox {
             <h3 data-testid="artifacts-heading" class="subsection-heading">
               ${t("artifacts.heading")}
             </h3>
-            ${this.artifacts.length === 0
+            ${this.character.artifacts.length === 0
               ? html`
                   <div data-testid="empty-artifacts" class="empty-artifacts-styled">
                     <p>${t("artifacts.empty")}</p>
@@ -76,7 +118,7 @@ export class ItemsBox {
             <h3 data-testid="oddities-heading" class="subsection-heading">
               ${t("oddities.heading")}
             </h3>
-            ${this.oddities.length === 0
+            ${this.character.oddities.length === 0
               ? html`
                   <div data-testid="empty-oddities" class="empty-oddities-styled">
                     <p>${t("oddities.empty")}</p>

@@ -369,8 +369,8 @@ Then(
 Then(
   "the Shins badge should show {string}",
   async function (this: CustomWorld, expectedValue: string) {
-    const shinsBadge = this.page!.locator('[data-testid="shins-badge"]');
-    await expect(shinsBadge).toHaveText(expectedValue);
+    const shinsBadgeValue = this.page!.locator('[data-testid="shins-badge"] .stat-badge-value');
+    await expect(shinsBadgeValue).toHaveText(expectedValue);
   }
 );
 

@@ -38,6 +38,9 @@ function renderCharacterSheet(character: Character): void {
       case "xp":
         updatedCharacter.xp = value as number;
         break;
+      case "shins":
+        updatedCharacter.shins = value as number;
+        break;
     }
 
     // Save to localStorage

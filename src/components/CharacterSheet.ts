@@ -18,6 +18,7 @@ export class CharacterSheet {
   private header: Header;
   private basicInfo: BasicInfo;
   private bottomTextFields: BottomTextFields;
+  private itemsBox: ItemsBox;
 
   constructor(
     private character: Character,
@@ -29,6 +30,7 @@ export class CharacterSheet {
     this.header = new Header(this.onLoad, this.onNew);
     this.basicInfo = new BasicInfo(this.character, this.onFieldUpdate);
     this.bottomTextFields = new BottomTextFields(this.character);
+    this.itemsBox = new ItemsBox(this.character, this.onFieldUpdate);
   }
 
   render(): TemplateResult {
@@ -40,12 +42,6 @@ export class CharacterSheet {
     const specialAbilities = new SpecialAbilities(this.character.specialAbilities);
     const attacks = new Attacks(this.character.attacks, this.character.armor);
     const cyphersBox = new CyphersBox(this.character.cyphers, this.character.maxCyphers);
-    const itemsBox = new ItemsBox(
-      this.character.equipment,
-      this.character.artifacts,
-      this.character.oddities,
-      this.character.shins
-    );
 
     return html`
       <div class="min-h-screen p-4">
@@ -58,7 +54,7 @@ export class CharacterSheet {
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             ${specialAbilities.render()} ${attacks.render()}
           </div>
-          ${cyphersBox.render()} ${itemsBox.render()}
+          ${cyphersBox.render()} ${this.itemsBox.render()}
           <div data-testid="text-fields-section" class="mt-8">
             ${this.bottomTextFields.render()}
           </div>

@@ -93,19 +93,16 @@ Feature: Resource Tracker Fields Editing
     # SHINS EDITING SCENARIOS
     # ============================================================================
 
-    @wip
     Scenario: Shins badge displays current value
         Given the character has 100 shins
         Then the Shins badge should show "100"
 
-    @wip
     Scenario: Clicking Shins badge opens edit modal
         Given the character has 100 shins
         When I click the Shins badge
         Then the edit modal should open
         And the modal input should contain "100"
 
-    @wip
     Scenario: Editing Shins and confirming saves changes
         Given the character has 100 shins
         When I click the Shins badge
@@ -114,7 +111,6 @@ Feature: Resource Tracker Fields Editing
         Then the Shins badge should show "250"
         And the character data should have shins 250
 
-    @wip
     Scenario: Shins changes persist after page reload
         Given the character has 100 shins
         When I click the Shins badge
@@ -123,7 +119,6 @@ Feature: Resource Tracker Fields Editing
         And I reload the page
         Then the Shins badge should show "500"
 
-    @wip
     Scenario: Shins accepts zero value
         Given the character has 100 shins
         When I click the Shins badge
@@ -131,7 +126,6 @@ Feature: Resource Tracker Fields Editing
         And I click the modal confirm button
         Then the Shins badge should show "0"
 
-    @wip
     Scenario: Shins on mobile devices
         Given I am using a mobile device
         And the character has 100 shins
