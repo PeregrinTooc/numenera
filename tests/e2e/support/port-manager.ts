@@ -61,25 +61,24 @@ export function portFileExists(): boolean {
 }
 
 /**
- * Clears all test state files (port file and worker count file)
- * This should be called at the start of test runs to clean up from previous failed runs
- * Safe to call from multiple workers simultaneously - race conditions are handled
+ * Clears stale worker count file if it exists
+ * Should only be called by the first worker after successful registration
+ * This handles cleanup from previous failed test runs
  */
-export function clearAllTestState(): void {
-  try {
-    if (existsSync(PORT_FILE)) {
-      unlinkSync(PORT_FILE);
-    }
-  } catch {
-    // File may have been deleted by another worker, ignore
-  }
-
+export function clearStaleWorkerCount(): void {
   try {
     if (existsSync(WORKER_COUNT_FILE)) {
-      unlinkSync(WORKER_COUNT_FILE);
+      const content = readFileSync(WORKER_COUNT_FILE, "utf8");
+      const count = parseInt(content, 10) || 0;
+
+      // If count is suspiciously high (> 10), it's likely stale from a crashed run
+      // Clear it so we can start fresh
+      if (count > 10) {
+        unlinkSync(WORKER_COUNT_FILE);
+      }
     }
   } catch {
-    // File may have been deleted by another worker, ignore
+    // File operations failed, ignore
   }
 }
 
@@ -91,29 +90,32 @@ export function incrementWorkerCount(): number {
   const MAX_RETRIES = 10;
   const RETRY_DELAY_MS = 50;
 
+  // First attempt: try to create file exclusively (first worker scenario)
+  try {
+    writeFileSync(WORKER_COUNT_FILE, "1", { encoding: "utf8", flag: "wx" });
+    return 1;
+  } catch {
+    // File already exists, not the first worker
+  }
+
+  // Subsequent workers: increment existing count with retry logic
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
-      let count = 0;
-      if (existsSync(WORKER_COUNT_FILE)) {
-        const content = readFileSync(WORKER_COUNT_FILE, "utf8");
-        count = parseInt(content, 10) || 0;
+      if (!existsSync(WORKER_COUNT_FILE)) {
+        // File disappeared, try to be first again
+        writeFileSync(WORKER_COUNT_FILE, "1", { encoding: "utf8", flag: "wx" });
+        return 1;
       }
-      count++;
 
-      // Use flag 'wx' for exclusive write - fails if file exists
-      // This provides atomic write semantics
-      if (count === 1) {
-        // First worker - file shouldn't exist
-        writeFileSync(WORKER_COUNT_FILE, count.toString(), { encoding: "utf8", flag: "wx" });
-      } else {
-        // Subsequent workers - overwrite existing file
-        writeFileSync(WORKER_COUNT_FILE, count.toString(), "utf8");
-      }
-      return count;
+      const content = readFileSync(WORKER_COUNT_FILE, "utf8");
+      const count = parseInt(content, 10) || 0;
+      const newCount = count + 1;
+
+      writeFileSync(WORKER_COUNT_FILE, newCount.toString(), "utf8");
+      return newCount;
     } catch {
-      // File was created by another worker, retry
+      // Race condition, retry
       if (attempt < MAX_RETRIES - 1) {
-        // Wait a bit before retrying with exponential backoff
         const delay = RETRY_DELAY_MS * Math.pow(2, attempt);
         const start = Date.now();
         while (Date.now() - start < delay) {
