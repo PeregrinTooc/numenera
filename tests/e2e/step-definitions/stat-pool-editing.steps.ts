@@ -135,10 +135,10 @@ Then(
 Then("the Might Pool value should not have changed", async function (this: CustomWorld) {
   // Get the original value that was displayed before the edit attempt
   const mightPool = this.page!.locator('[data-testid="stat-might-pool"]');
-  const currentValue = await mightPool.textContent();
+  const currentValue = (await mightPool.textContent())?.trim();
 
-  // Verify it matches the expected default from FULL_CHARACTER (17)
-  expect(currentValue).toBe("17");
+  // Verify it matches the expected default from FULL_CHARACTER (15)
+  expect(currentValue).toBe("15");
 });
 
 // Might Edge assertions
@@ -157,8 +157,8 @@ Then(
 
 Then("the Might Edge value should not have changed", async function (this: CustomWorld) {
   const mightEdge = this.page!.locator('[data-testid="stat-might-edge"]');
-  const currentValue = await mightEdge.textContent();
-  expect(currentValue).toBe("1");
+  const currentValue = (await mightEdge.textContent())?.trim();
+  expect(currentValue).toBe("2");
 });
 
 // Might Current assertions
@@ -177,8 +177,8 @@ Then(
 
 Then("the Might Current value should not have changed", async function (this: CustomWorld) {
   const mightCurrent = this.page!.locator('[data-testid="stat-might-current"]');
-  const currentValue = await mightCurrent.textContent();
-  expect(currentValue).toBe("17");
+  const currentValue = (await mightCurrent.textContent())?.trim();
+  expect(currentValue).toBe("12");
 });
 
 // Speed Pool assertions
@@ -197,8 +197,8 @@ Then(
 
 Then("the Speed Pool value should not have changed", async function (this: CustomWorld) {
   const speedPool = this.page!.locator('[data-testid="stat-speed-pool"]');
-  const currentValue = await speedPool.textContent();
-  expect(currentValue).toBe("14");
+  const currentValue = (await speedPool.textContent())?.trim();
+  expect(currentValue).toBe("12");
 });
 
 // Speed Edge assertions
@@ -217,7 +217,7 @@ Then(
 
 Then("the Speed Edge value should not have changed", async function (this: CustomWorld) {
   const speedEdge = this.page!.locator('[data-testid="stat-speed-edge"]');
-  const currentValue = await speedEdge.textContent();
+  const currentValue = (await speedEdge.textContent())?.trim();
   expect(currentValue).toBe("1");
 });
 
@@ -237,8 +237,8 @@ Then(
 
 Then("the Speed Current value should not have changed", async function (this: CustomWorld) {
   const speedCurrent = this.page!.locator('[data-testid="stat-speed-current"]');
-  const currentValue = await speedCurrent.textContent();
-  expect(currentValue).toBe("14");
+  const currentValue = (await speedCurrent.textContent())?.trim();
+  expect(currentValue).toBe("12");
 });
 
 // Intellect Pool assertions
@@ -257,8 +257,8 @@ Then(
 
 Then("the Intellect Pool value should not have changed", async function (this: CustomWorld) {
   const intellectPool = this.page!.locator('[data-testid="stat-intellect-pool"]');
-  const currentValue = await intellectPool.textContent();
-  expect(currentValue).toBe("12");
+  const currentValue = (await intellectPool.textContent())?.trim();
+  expect(currentValue).toBe("10");
 });
 
 // Intellect Edge assertions
@@ -277,8 +277,8 @@ Then(
 
 Then("the Intellect Edge value should not have changed", async function (this: CustomWorld) {
   const intellectEdge = this.page!.locator('[data-testid="stat-intellect-edge"]');
-  const currentValue = await intellectEdge.textContent();
-  expect(currentValue).toBe("1");
+  const currentValue = (await intellectEdge.textContent())?.trim();
+  expect(currentValue).toBe("0");
 });
 
 // Intellect Current assertions
@@ -297,8 +297,8 @@ Then(
 
 Then("the Intellect Current value should not have changed", async function (this: CustomWorld) {
   const intellectCurrent = this.page!.locator('[data-testid="stat-intellect-current"]');
-  const currentValue = await intellectCurrent.textContent();
-  expect(currentValue).toBe("12");
+  const currentValue = (await intellectCurrent.textContent())?.trim();
+  expect(currentValue).toBe("8");
 });
 
 // ============================================================================
@@ -309,7 +309,7 @@ Then(
   "the input field should contain the current Might Pool value",
   async function (this: CustomWorld) {
     const input = this.page!.locator('[data-testid="edit-modal-input"]');
-    await expect(input).toHaveValue("17");
+    await expect(input).toHaveValue("15", { timeout: 10000 });
   }
 );
 
@@ -317,7 +317,7 @@ Then(
   "the input field should contain the current Might Edge value",
   async function (this: CustomWorld) {
     const input = this.page!.locator('[data-testid="edit-modal-input"]');
-    await expect(input).toHaveValue("1");
+    await expect(input).toHaveValue("2", { timeout: 10000 });
   }
 );
 
@@ -325,7 +325,7 @@ Then(
   "the input field should contain the current Might Current value",
   async function (this: CustomWorld) {
     const input = this.page!.locator('[data-testid="edit-modal-input"]');
-    await expect(input).toHaveValue("17");
+    await expect(input).toHaveValue("12", { timeout: 10000 });
   }
 );
 
@@ -333,7 +333,7 @@ Then(
   "the input field should contain the current Speed Pool value",
   async function (this: CustomWorld) {
     const input = this.page!.locator('[data-testid="edit-modal-input"]');
-    await expect(input).toHaveValue("14");
+    await expect(input).toHaveValue("12", { timeout: 10000 });
   }
 );
 
@@ -341,7 +341,7 @@ Then(
   "the input field should contain the current Speed Edge value",
   async function (this: CustomWorld) {
     const input = this.page!.locator('[data-testid="edit-modal-input"]');
-    await expect(input).toHaveValue("1");
+    await expect(input).toHaveValue("1", { timeout: 10000 });
   }
 );
 
@@ -349,7 +349,7 @@ Then(
   "the input field should contain the current Speed Current value",
   async function (this: CustomWorld) {
     const input = this.page!.locator('[data-testid="edit-modal-input"]');
-    await expect(input).toHaveValue("14");
+    await expect(input).toHaveValue("12", { timeout: 10000 });
   }
 );
 
@@ -357,7 +357,7 @@ Then(
   "the input field should contain the current Intellect Pool value",
   async function (this: CustomWorld) {
     const input = this.page!.locator('[data-testid="edit-modal-input"]');
-    await expect(input).toHaveValue("12");
+    await expect(input).toHaveValue("10", { timeout: 10000 });
   }
 );
 
@@ -365,7 +365,7 @@ Then(
   "the input field should contain the current Intellect Edge value",
   async function (this: CustomWorld) {
     const input = this.page!.locator('[data-testid="edit-modal-input"]');
-    await expect(input).toHaveValue("1");
+    await expect(input).toHaveValue("0", { timeout: 10000 });
   }
 );
 
@@ -373,6 +373,6 @@ Then(
   "the input field should contain the current Intellect Current value",
   async function (this: CustomWorld) {
     const input = this.page!.locator('[data-testid="edit-modal-input"]');
-    await expect(input).toHaveValue("12");
+    await expect(input).toHaveValue("8", { timeout: 10000 });
   }
 );

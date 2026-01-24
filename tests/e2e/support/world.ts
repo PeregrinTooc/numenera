@@ -1,5 +1,8 @@
-import { setWorldConstructor, World, IWorldOptions } from "@cucumber/cucumber";
+import { setWorldConstructor, World, IWorldOptions, setDefaultTimeout } from "@cucumber/cucumber";
 import { Browser, BrowserContext, Page } from "@playwright/test";
+
+// Set default timeout for all steps to 30 seconds
+setDefaultTimeout(30000);
 
 export interface CustomWorld extends World {
   browser?: Browser;

@@ -398,6 +398,11 @@ Then("the input field should receive focus automatically", async function (this:
   await expect(input).toBeFocused();
 });
 
+Then("the input field should be focused", async function (this: CustomWorld) {
+  const input = this.page!.locator('[data-testid="edit-modal-input"]');
+  await expect(input).toBeFocused();
+});
+
 Then("I can navigate with Tab key", async function (this: CustomWorld) {
   await this.page!.keyboard.press("Tab");
   const focusedElement = await this.page!.evaluate(() =>

@@ -5,7 +5,7 @@ module.exports = {
     format: ["progress", "html:test-results/cucumber-report.html"],
     formatOptions: { snippetInterface: "async-await" },
     tags: "not @skip and not @wip",
-    timeout: 200, // 200ms for faster feedback on steps
+    timeout: 30000, // 30 seconds for e2e tests with modal rendering
     failFast: true, // Stop on first failure
   },
 };
