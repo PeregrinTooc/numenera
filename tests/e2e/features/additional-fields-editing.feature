@@ -16,7 +16,6 @@ Feature: Additional Character Fields Editing
     # TYPE DROPDOWN SCENARIOS
     # ============================================================================
 
-    @wip
     Scenario: Type field displays as dropdown with current value selected
         Then the type dropdown should show "Nano" as selected
         And the type dropdown should have 3 options

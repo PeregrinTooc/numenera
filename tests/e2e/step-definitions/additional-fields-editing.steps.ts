@@ -113,6 +113,27 @@ Then(
 );
 
 Then(
+  "the type dropdown should have {int} options",
+  async function (this: CustomWorld, count: number) {
+    const select = this.page!.locator('[data-testid="character-type-select"]');
+    const options = await select.locator("option").count();
+    expect(options).toBe(count);
+  }
+);
+
+Then(
+  "the type dropdown options should be {string}, {string}, {string}",
+  async function (this: CustomWorld, option1: string, option2: string, option3: string) {
+    const select = this.page!.locator('[data-testid="character-type-select"]');
+    const options = await select.locator("option").allTextContents();
+    expect(options).toHaveLength(3);
+    expect(options).toContain(option1);
+    expect(options).toContain(option2);
+    expect(options).toContain(option3);
+  }
+);
+
+Then(
   "the character data should have type {string}",
   async function (this: CustomWorld, type: string) {
     // Wait a bit for the save to complete
