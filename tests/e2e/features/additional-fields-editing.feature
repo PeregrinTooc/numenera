@@ -26,7 +26,6 @@ Feature: Additional Character Fields Editing
         Then the type dropdown should show "Glaive" as selected
         And the character data should have type "Glaive"
 
-    @wip
     Scenario: Type change persists after page reload
         When I select "Jack" from the type dropdown
         And I reload the page
