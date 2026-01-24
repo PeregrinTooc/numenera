@@ -23,8 +23,9 @@ Then("I should see tier {string} displayed", async function (tier: string) {
 });
 
 Then("I should see type {string} displayed", async function (type: string) {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("character-type")).toContainText(type);
+  // Type is now displayed as a dropdown, check the selected value
+  const select = this.page.locator('[data-testid="character-type-select"]');
+  await expect(select).toHaveValue(type);
 });
 
 Then("I should see descriptor {string} displayed", async function (descriptor: string) {
@@ -133,15 +134,19 @@ Given("the character has the following text fields:", function (_dataTable) {
 });
 
 Then("I should see the background text", async function () {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("text-background")).toBeVisible();
-  await expect(dom.getByTestId("text-background")).not.toBeEmpty();
+  // Background is now an editable textarea
+  const textarea = this.page.locator('[data-testid="character-background"]');
+  await expect(textarea).toBeVisible();
+  const value = await textarea.inputValue();
+  expect(value.length).toBeGreaterThan(0);
 });
 
 Then("I should see the notes text", async function () {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("text-notes")).toBeVisible();
-  await expect(dom.getByTestId("text-notes")).not.toBeEmpty();
+  // Notes is now an editable textarea
+  const textarea = this.page.locator('[data-testid="character-notes"]');
+  await expect(textarea).toBeVisible();
+  const value = await textarea.inputValue();
+  expect(value.length).toBeGreaterThan(0);
 });
 
 Then("I should see the equipment text", async function () {
@@ -205,13 +210,19 @@ Given("the character has empty text fields", async function () {
 });
 
 Then("I should see empty state for background", async function () {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("empty-background")).toBeVisible();
+  // Background textarea should be visible and empty
+  const textarea = this.page.locator('[data-testid="character-background"]');
+  await expect(textarea).toBeVisible();
+  const value = await textarea.inputValue();
+  expect(value).toBe("");
 });
 
 Then("I should see empty state for notes", async function () {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("empty-notes")).toBeVisible();
+  // Notes textarea should be visible and empty
+  const textarea = this.page.locator('[data-testid="character-notes"]');
+  await expect(textarea).toBeVisible();
+  const value = await textarea.inputValue();
+  expect(value).toBe("");
 });
 
 Then("I should see empty state for equipment", async function () {

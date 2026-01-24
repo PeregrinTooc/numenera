@@ -1,6 +1,61 @@
-import { When, Then } from "@cucumber/cucumber";
+import { When, Then, Given } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
+
+// Background Data Setup Step
+
+Given("the character has the following data:", async function (this: CustomWorld, dataTable) {
+  // Parse the data table
+  const data = dataTable.hashes()[0];
+
+  // Set character data in localStorage matching the Character type structure
+  const characterState = {
+    name: data.name || "Test Character",
+    tier: 1,
+    type: data.type || "Nano",
+    descriptor: "Strong",
+    focus: "Controls Beasts",
+    xp: 0,
+    shins: 0,
+    armor: 0,
+    effort: 1,
+    maxCyphers: 2,
+    stats: {
+      might: { pool: 10, current: 10, edge: 0 },
+      speed: { pool: 10, current: 10, edge: 0 },
+      intellect: { pool: 10, current: 10, edge: 0 },
+    },
+    textFields: {
+      background: data.background || "",
+      notes: data.notes || "",
+    },
+    abilities: [],
+    attacks: [],
+    specialAbilities: [],
+    equipment: [],
+    cyphers: [],
+    artifacts: [],
+    oddities: [],
+    recoveryRolls: {
+      action: false,
+      tenMinutes: false,
+      oneHour: false,
+      tenHours: false,
+      modifier: 0,
+    },
+    damageTrack: {
+      impairment: "healthy",
+    },
+  };
+
+  await this.page!.evaluate((state) => {
+    localStorage.setItem("numenera-character-state", JSON.stringify(state));
+  }, characterState);
+
+  // Reload to apply the data
+  await this.page!.reload();
+  await this.page!.waitForLoadState("domcontentloaded");
+});
 
 // Type Dropdown Steps
 
@@ -48,6 +103,38 @@ Then("the type dropdown should show {string}", async function (this: CustomWorld
   const select = this.page!.locator('[data-testid="character-type-select"]');
   await expect(select).toHaveValue(type);
 });
+
+Then(
+  "the type dropdown should show {string} as selected",
+  async function (this: CustomWorld, type: string) {
+    const select = this.page!.locator('[data-testid="character-type-select"]');
+    await expect(select).toHaveValue(type);
+  }
+);
+
+Then(
+  "the character data should have type {string}",
+  async function (this: CustomWorld, type: string) {
+    // Wait a bit for the save to complete
+    await this.page!.waitForTimeout(200);
+
+    // Verify in localStorage
+    const storedData = await this.page!.evaluate(() => {
+      const data = localStorage.getItem("numenera-character-state");
+      return data ? JSON.parse(data) : null;
+    });
+
+    expect(storedData).toBeTruthy();
+
+    // Data is stored with schemaVersion wrapper: { schemaVersion, character: { type, ... } }
+    if (storedData.character) {
+      expect(storedData.character.type).toBe(type);
+    } else {
+      // Fallback for direct structure
+      expect(storedData.type).toBe(type);
+    }
+  }
+);
 
 Then(
   "the type dropdown should display in {string}",

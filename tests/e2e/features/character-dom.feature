@@ -23,12 +23,12 @@ Feature: Character Sheet DOM Structure
 
     Scenario: Verify basic info field structure (sentence format)
         Then the following elements should exist in the DOM:
-            | Element              | data-testid          |
-            | Character Name       | character-name       |
-            | Character Tier       | character-tier       |
-            | Character Type       | character-type       |
-            | Character Descriptor | character-descriptor |
-            | Character Focus      | character-focus      |
+            | Element              | data-testid           |
+            | Character Name       | character-name        |
+            | Character Tier       | character-tier        |
+            | Character Type       | character-type-select |
+            | Character Descriptor | character-descriptor  |
+            | Character Focus      | character-focus       |
 
     Scenario: Verify stat pool DOM structure
         Then each stat pool should have the following elements:
@@ -46,18 +46,16 @@ Feature: Character Sheet DOM Structure
         And the oddities section should have a list with testid "oddities-list"
 
     Scenario: Verify text fields container structure
-        Then the following text field containers should exist:
-            | Field      | Container testid     | Label testid     |
-            | Background | background-container | label-background |
-            | Notes      | notes-container      | label-notes      |
+        Then the following elements should exist in the DOM:
+            | Element             | data-testid          |
+            | Background Textarea | character-background |
+            | Notes Textarea      | character-notes      |
 
     Scenario: Verify empty state DOM markers
         When I click the new button
         Then the element with testid "empty-cyphers" should be visible
         And the element with testid "empty-artifacts" should be visible
         And the element with testid "empty-oddities" should be visible
-        And the element with testid "empty-background" should be visible
-        And the element with testid "empty-notes" should be visible
         And the element with testid "empty-equipment" should be visible
         And the element with testid "empty-abilities" should be visible
 

@@ -21,11 +21,15 @@ Then("the character sheet should show empty states", async function () {
 });
 
 Then("all sections should display empty state messages", async function () {
-  // Verify empty states for text fields
-  await expect(this.page.getByTestId("empty-background")).toBeVisible();
-  await expect(this.page.getByTestId("empty-notes")).toBeVisible();
+  // Verify empty states for items sections (background and notes don't have empty states anymore)
   await expect(this.page.getByTestId("empty-equipment")).toBeVisible();
   await expect(this.page.getByTestId("empty-abilities")).toBeVisible();
+
+  // Background and notes textareas should be empty
+  const background = this.page.locator('[data-testid="character-background"]');
+  await expect(background).toHaveValue("");
+  const notes = this.page.locator('[data-testid="character-notes"]');
+  await expect(notes).toHaveValue("");
 });
 
 // Scenario: Load hard-coded character via load button
@@ -50,9 +54,16 @@ Then("all character sections should show data", async function () {
   await expect(this.page.locator('[data-testid^="artifact-item"]').first()).toBeVisible();
   await expect(this.page.locator('[data-testid^="oddity-item"]').first()).toBeVisible();
 
-  // Verify text fields have content (not empty states)
-  await expect(this.page.getByTestId("text-background")).toBeVisible();
-  await expect(this.page.getByTestId("text-notes")).toBeVisible();
+  // Verify text fields have content (textareas are visible and not empty)
+  const background = this.page.locator('[data-testid="character-background"]');
+  await expect(background).toBeVisible();
+  const backgroundValue = await background.inputValue();
+  expect(backgroundValue.length).toBeGreaterThan(0);
+
+  const notes = this.page.locator('[data-testid="character-notes"]');
+  await expect(notes).toBeVisible();
+  const notesValue = await notes.inputValue();
+  expect(notesValue.length).toBeGreaterThan(0);
 
   // Equipment and abilities are now individual items
   await expect(this.page.locator('[data-testid^="equipment-item"]').first()).toBeVisible();
@@ -75,11 +86,20 @@ Then("the same character should still be displayed", async function () {
 
 Then("all character data should be preserved", async function () {
   // Verify all sections still have data (not empty states)
-  await expect(this.page.getByTestId("cypher-item").first()).toBeVisible();
-  await expect(this.page.getByTestId("artifact-item").first()).toBeVisible();
-  await expect(this.page.getByTestId("oddity-item").first()).toBeVisible();
-  await expect(this.page.getByTestId("text-background")).toBeVisible();
-  await expect(this.page.getByTestId("text-notes")).toBeVisible();
+  await expect(this.page.locator('[data-testid^="cypher-item"]').first()).toBeVisible();
+  await expect(this.page.locator('[data-testid^="artifact-item"]').first()).toBeVisible();
+  await expect(this.page.locator('[data-testid^="oddity-item"]').first()).toBeVisible();
+
+  // Verify text fields have content
+  const background = this.page.locator('[data-testid="character-background"]');
+  await expect(background).toBeVisible();
+  const backgroundValue = await background.inputValue();
+  expect(backgroundValue.length).toBeGreaterThan(0);
+
+  const notes = this.page.locator('[data-testid="character-notes"]');
+  await expect(notes).toBeVisible();
+  const notesValue = await notes.inputValue();
+  expect(notesValue.length).toBeGreaterThan(0);
 });
 
 // Scenario: Empty state persists across page reloads after clearing

@@ -94,6 +94,7 @@
 
 ### Features
 
+- [ ] **Character versioning/history function** - Allow undo/redo of character changes with version history
 - [ ] Multiple character slots/profiles
 - [ ] Cloud sync (optional)
 - [ ] Print-friendly view/PDF export

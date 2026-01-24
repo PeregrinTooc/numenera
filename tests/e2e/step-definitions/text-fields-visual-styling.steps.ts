@@ -104,7 +104,8 @@ Given("I have a character with empty notes in localStorage", async function () {
 });
 
 Then("the background container should have parchment styling", async function () {
-  const container = this.page.locator('[data-testid="background-container"]');
+  // Find the parchment-field div containing the background textarea
+  const container = this.page.locator('.parchment-field:has([data-testid="character-background"])');
   await expect(container).toBeVisible();
 
   // Check for parchment-themed class
@@ -114,14 +115,15 @@ Then("the background container should have parchment styling", async function ()
 
 Then("the background text should be displayed with handwritten font", async function () {
   const dom = new DOMHelpers(this.page);
-  const textContent = dom.getByTestId("text-background");
+  const textContent = dom.getByTestId("character-background");
 
   const fontFamily = await textContent.evaluate((el) => window.getComputedStyle(el).fontFamily);
   expect(fontFamily).toMatch(/Caveat|Patrick Hand|cursive/i);
 });
 
 Then("the notes container should have parchment styling", async function () {
-  const container = this.page.locator('[data-testid="notes-container"]');
+  // Find the parchment-field div containing the notes textarea
+  const container = this.page.locator('.parchment-field:has([data-testid="character-notes"])');
   await expect(container).toBeVisible();
 
   const classes = await container.getAttribute("class");
@@ -130,30 +132,36 @@ Then("the notes container should have parchment styling", async function () {
 
 Then("the notes text should be displayed with handwritten font", async function () {
   const dom = new DOMHelpers(this.page);
-  const textContent = dom.getByTestId("text-notes");
+  const textContent = dom.getByTestId("character-notes");
 
   const fontFamily = await textContent.evaluate((el) => window.getComputedStyle(el).fontFamily);
   expect(fontFamily).toMatch(/Caveat|Patrick Hand|cursive/i);
 });
 
 Then("the empty background message should be displayed", async function () {
-  const empty = this.page.locator('[data-testid="empty-background"]');
-  await expect(empty).toBeVisible();
+  // With inline editing, empty state is just an empty textarea
+  const textarea = this.page.locator('[data-testid="character-background"]');
+  const value = await textarea.inputValue();
+  expect(value).toBe("");
 });
 
 Then("the empty background container should have parchment styling", async function () {
-  const container = this.page.locator('[data-testid="background-container"]');
+  // Find the parchment-field div containing the background textarea
+  const container = this.page.locator('.parchment-field:has([data-testid="character-background"])');
   const classes = await container.getAttribute("class");
   expect(classes).toContain("parchment-field");
 });
 
 Then("the empty notes message should be displayed", async function () {
-  const empty = this.page.locator('[data-testid="empty-notes"]');
-  await expect(empty).toBeVisible();
+  // With inline editing, empty state is just an empty textarea
+  const textarea = this.page.locator('[data-testid="character-notes"]');
+  const value = await textarea.inputValue();
+  expect(value).toBe("");
 });
 
 Then("the empty notes container should have parchment styling", async function () {
-  const container = this.page.locator('[data-testid="notes-container"]');
+  // Find the parchment-field div containing the notes textarea
+  const container = this.page.locator('.parchment-field:has([data-testid="character-notes"])');
   const classes = await container.getAttribute("class");
   expect(classes).toContain("parchment-field");
 });
