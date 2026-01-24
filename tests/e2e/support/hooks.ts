@@ -2,101 +2,67 @@ import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
 import { chromium, Browser } from "@playwright/test";
 import { CustomWorld } from "./world";
 import { spawn, ChildProcess } from "child_process";
+import { waitForPort, clearPort, incrementWorkerCount, decrementWorkerCount } from "./port-manager.js";
 
 let browser: Browser;
 let devServer: ChildProcess | null = null;
+export let serverPort: number;
 
 BeforeAll({ timeout: 60000 }, async function () {
-  // Determine if we're running production tests
-  const isProduction = process.env.TEST_PROD === "true";
+  // Register this worker
+  const workerCount = incrementWorkerCount();
+  const isFirstWorker = workerCount === 1;
 
-  if (isProduction) {
-    // Start preview server in detached mode so we can kill its process group
-    devServer = spawn("npm", ["run", "preview", "--", "--port", "4173"], {
-      stdio: "pipe",
-      detached: true,
-    });
+  if (isFirstWorker) {
+    // Clear any stale port file (first worker only)
+    clearPort();
 
-    // Log output for debugging
-    devServer.stdout?.on("data", (data) => {
-      // eslint-disable-next-line no-console
-      console.log("Preview server output:", data.toString());
-    });
+    // Determine if we're running production tests
+    const isProduction = process.env.TEST_PROD === "true";
 
-    devServer.stderr?.on("data", (data) => {
-      console.error("Preview server stderr:", data.toString());
-    });
+    if (isProduction) {
+      // Start preview server WITHOUT hardcoded port, let Vite choose
+      // Enable PORT_CAPTURE so the plugin writes the actual port
+      devServer = spawn("npm", ["run", "preview"], {
+        stdio: "pipe",
+        detached: true,
+        env: { ...process.env, PORT_CAPTURE: "true" },
+      });
 
-    // Poll the server until it's ready
-    const maxAttempts = 30; // 30 attempts * 1 second = 30 seconds max
-    let attempts = 0;
-    let serverReady = false;
+      // Log output for debugging
+      devServer.stdout?.on("data", (data) => {
+        // eslint-disable-next-line no-console
+        console.log("Preview server output:", data.toString());
+      });
 
-    while (attempts < maxAttempts && !serverReady) {
-      attempts++;
-      try {
-        // Try to fetch from the server
-        // eslint-disable-next-line no-undef
-        const response = await fetch("http://localhost:4173/numenera/");
-        if (response.ok) {
-          serverReady = true;
-          // eslint-disable-next-line no-console
-          console.log(`Preview server is ready after ${attempts} attempts!`);
-          break;
-        }
-      } catch {
-        // Server not ready yet, wait and try again
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-    }
+      devServer.stderr?.on("data", (data) => {
+        console.error("Preview server stderr:", data.toString());
+      });
+    } else {
+      // Start Vite dev server WITHOUT hardcoded port, let Vite choose
+      // Enable PORT_CAPTURE so the plugin writes the actual port
+      devServer = spawn("npm", ["run", "dev"], {
+        stdio: "pipe",
+        detached: true,
+        env: { ...process.env, PORT_CAPTURE: "true" },
+      });
 
-    if (!serverReady) {
-      throw new Error(`Preview server failed to start after ${maxAttempts} seconds`);
-    }
-  } else {
-    // Start Vite dev server in detached mode so we can kill its process group
-    devServer = spawn("npm", ["run", "dev"], {
-      stdio: "pipe",
-      detached: true,
-    });
+      // Log output for debugging
+      devServer.stdout?.on("data", (data) => {
+        // eslint-disable-next-line no-console
+        console.log("Dev server output:", data.toString());
+      });
 
-    // Log output for debugging
-    devServer.stdout?.on("data", (data) => {
-      // eslint-disable-next-line no-console
-      console.log("Dev server output:", data.toString());
-    });
-
-    devServer.stderr?.on("data", (data) => {
-      console.error("Dev server stderr:", data.toString());
-    });
-
-    // Poll the server until it's ready
-    const maxAttempts = 60; // 60 attempts * 1 second = 60 seconds max
-    let attempts = 0;
-    let serverReady = false;
-
-    while (attempts < maxAttempts && !serverReady) {
-      attempts++;
-      try {
-        // Try to fetch from the server
-        // eslint-disable-next-line no-undef
-        const response = await fetch("http://localhost:3000/numenera/");
-        if (response.ok) {
-          serverReady = true;
-          // eslint-disable-next-line no-console
-          console.log(`Dev server is ready after ${attempts} attempts!`);
-          break;
-        }
-      } catch {
-        // Server not ready yet, wait and try again
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-    }
-
-    if (!serverReady) {
-      throw new Error(`Dev server failed to start after ${maxAttempts} seconds`);
+      devServer.stderr?.on("data", (data) => {
+        console.error("Dev server stderr:", data.toString());
+      });
     }
   }
+
+  // All workers wait for the port file (first worker creates it, others wait)
+  serverPort = await waitForPort();
+  // eslint-disable-next-line no-console
+  console.log(`Server is ready on port ${serverPort}!`);
 
   browser = await chromium.launch();
 });
@@ -109,8 +75,7 @@ Before(async function (this: CustomWorld) {
   this.page = await this.context.newPage();
 
   // Clear localStorage before each test to ensure clean state
-  const baseURL =
-    process.env.TEST_PROD === "true" ? "http://localhost:4173" : "http://localhost:3000";
+  const baseURL = `http://localhost:${serverPort}`;
   await this.page.goto(baseURL);
   await this.page.evaluate(() => localStorage.clear());
 });
@@ -123,8 +88,15 @@ After(async function (this: CustomWorld) {
 AfterAll(async function () {
   await browser?.close();
 
-  // Kill the dev/preview server and all its child processes
-  if (devServer && devServer.pid) {
+  // Unregister this worker
+  const remainingWorkers = decrementWorkerCount();
+
+  // Only shut down the server when ALL workers are done
+  if (remainingWorkers === 0 && devServer && devServer.pid) {
+    // Clear the port file
+    clearPort();
+
+    // Kill the dev/preview server and all its child processes
     try {
       // When detached:true, we need to kill the process group
       // The negative PID tells the system to kill the entire process group

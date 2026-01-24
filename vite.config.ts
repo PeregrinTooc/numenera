@@ -1,10 +1,12 @@
 import { defineConfig } from "vite";
 import path from "path";
 import { fileURLToPath } from "url";
+import { portCapturePlugin } from "./vite-plugins/port-capture.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  plugins: [portCapturePlugin()],
   base: "/numenera/",
   resolve: {
     alias: {

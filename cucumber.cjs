@@ -7,5 +7,7 @@ module.exports = {
     tags: "not @skip and not @wip",
     timeout: 30000, // 30 seconds for e2e tests with modal rendering
     failFast: true, // Stop on first failure
+    // eslint-disable-next-line no-undef
+    parallel: process.env.CI ? 1 : 4, // 4 workers locally
   },
 };
