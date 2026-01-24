@@ -332,6 +332,11 @@ Then(
   }
 );
 
+Then("the background textarea should be empty", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-background"]');
+  await expect(textarea).toHaveValue("");
+});
+
 Then(
   "the character data should have background {string}",
   async function (this: CustomWorld, text: string) {

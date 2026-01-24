@@ -84,7 +84,6 @@ Feature: Additional Character Fields Editing
         And the background textarea should show "New background story here"
         And the character data should have background "New background story here"
 
-    @wip
     Scenario: Background changes persist after page reload
         When I click the background textarea
         And I type "Persistent background" in the background textarea
@@ -92,7 +91,6 @@ Feature: Additional Character Fields Editing
         And I reload the page
         Then the background textarea should show "Persistent background"
 
-    @wip
     Scenario: Empty background value is allowed
         When I click the background textarea
         And I clear the background textarea
