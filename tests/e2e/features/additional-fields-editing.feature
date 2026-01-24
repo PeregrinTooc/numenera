@@ -92,7 +92,6 @@ Feature: Additional Character Fields Editing
         And the background textarea should be empty
         And the character data should have background ""
 
-    @wip
     Scenario: Long background text is handled properly
         When I click the background textarea
         And I type a 1000 character string in the background textarea
@@ -167,7 +166,6 @@ Feature: Additional Character Fields Editing
         And the notes textarea should be empty
         And the character data should have notes ""
 
-    @wip
     Scenario: Long notes text is handled properly
         When I click the notes textarea
         And I type a 2000 character string in the notes textarea
@@ -267,9 +265,8 @@ Feature: Additional Character Fields Editing
     @wip
     Scenario: Notes with newlines are preserved
         When I click the notes textarea
-        And I type "Line 1" in the notes textarea
-        And I press the "Enter" key in the notes textarea
-        And I type "Line 2" in the notes textarea
+        And I clear the notes textarea
+        And I type "Line 1\nLine 2" in the notes textarea
         And I click outside the notes textarea
         Then the notes textarea should contain a newline
         And the character data should preserve the newline

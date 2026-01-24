@@ -684,3 +684,101 @@ Then("the notes field should preserve the special characters", async function (t
   expect(value).toContain("Special:");
   expect(value).toContain("<>&\"'`");
 });
+
+// Long Text Steps
+
+When(
+  "I type a {int} character string in the background textarea",
+  async function (this: CustomWorld, length: number) {
+    const longText = "A".repeat(length);
+    const textarea = this.page!.locator('[data-testid="character-background"]');
+    await textarea.fill(longText);
+  }
+);
+
+When(
+  "I type a {int} character string in the notes textarea",
+  async function (this: CustomWorld, length: number) {
+    const longText = "B".repeat(length);
+    const textarea = this.page!.locator('[data-testid="character-notes"]');
+    await textarea.fill(longText);
+  }
+);
+
+Then(
+  "the background textarea should contain the full {int} character text",
+  async function (this: CustomWorld, length: number) {
+    const textarea = this.page!.locator('[data-testid="character-background"]');
+    const value = await textarea.inputValue();
+    expect(value.length).toBe(length);
+    expect(value).toBe("A".repeat(length));
+  }
+);
+
+Then(
+  "the notes textarea should contain the full {int} character text",
+  async function (this: CustomWorld, length: number) {
+    const textarea = this.page!.locator('[data-testid="character-notes"]');
+    const value = await textarea.inputValue();
+    expect(value.length).toBe(length);
+    expect(value).toBe("B".repeat(length));
+  }
+);
+
+Then("the character data should have the full background text", async function (this: CustomWorld) {
+  await this.page!.waitForTimeout(200);
+  const storedData = await this.page!.evaluate(() => {
+    const data = localStorage.getItem("numenera-character-state");
+    return data ? JSON.parse(data) : null;
+  });
+  expect(storedData).toBeTruthy();
+  const background = storedData.character
+    ? storedData.character.textFields.background
+    : storedData.textFields.background;
+  expect(background.length).toBe(1000);
+  expect(background).toBe("A".repeat(1000));
+});
+
+Then("the character data should have the full notes text", async function (this: CustomWorld) {
+  await this.page!.waitForTimeout(200);
+  const storedData = await this.page!.evaluate(() => {
+    const data = localStorage.getItem("numenera-character-state");
+    return data ? JSON.parse(data) : null;
+  });
+  expect(storedData).toBeTruthy();
+  const notes = storedData.character
+    ? storedData.character.textFields.notes
+    : storedData.textFields.notes;
+  expect(notes.length).toBe(2000);
+  expect(notes).toBe("B".repeat(2000));
+});
+
+// Newlines Steps
+
+When(
+  "I press the {string} key in the notes textarea",
+  async function (this: CustomWorld, key: string) {
+    await this.page!.keyboard.press(key);
+  }
+);
+
+Then("the notes textarea should contain a newline", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-notes"]');
+  const value = await textarea.inputValue();
+  expect(value).toContain("\n");
+  expect(value).toBe("Line 1\nLine 2");
+});
+
+Then("the character data should preserve the newline", async function (this: CustomWorld) {
+  await this.page!.waitForTimeout(200);
+  const storedData = await this.page!.evaluate(() => {
+    const data = localStorage.getItem("numenera-character-state");
+    return data ? JSON.parse(data) : null;
+  });
+  expect(storedData).toBeTruthy();
+  const notes = storedData.character
+    ? storedData.character.textFields.notes
+    : storedData.textFields.notes;
+  expect(notes).toContain("\n");
+  expect(notes).toBe("Line 1\nLine 2");
+});
