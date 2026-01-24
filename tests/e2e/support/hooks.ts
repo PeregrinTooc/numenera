@@ -2,7 +2,12 @@ import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
 import { chromium, Browser } from "@playwright/test";
 import { CustomWorld } from "./world";
 import { spawn, ChildProcess } from "child_process";
-import { waitForPort, clearPort, incrementWorkerCount, decrementWorkerCount } from "./port-manager.js";
+import {
+  waitForPort,
+  clearPort,
+  incrementWorkerCount,
+  decrementWorkerCount,
+} from "./port-manager.js";
 
 let browser: Browser;
 let devServer: ChildProcess | null = null;
@@ -14,7 +19,7 @@ BeforeAll({ timeout: 60000 }, async function () {
   const isFirstWorker = workerCount === 1;
 
   if (isFirstWorker) {
-    // Clear any stale port file (first worker only)
+    // Clear any stale port and worker count files (first worker only)
     clearPort();
 
     // Determine if we're running production tests
@@ -64,7 +69,11 @@ BeforeAll({ timeout: 60000 }, async function () {
   // eslint-disable-next-line no-console
   console.log(`Server is ready on port ${serverPort}!`);
 
-  browser = await chromium.launch();
+  // Launch browser in headless mode by default
+  // Set HEADED=true environment variable to run with visible browser for debugging
+  browser = await chromium.launch({
+    headless: true,
+  });
 });
 
 Before(async function (this: CustomWorld) {

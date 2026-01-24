@@ -10,7 +10,7 @@ const POLL_INTERVAL_MS = 100; // 100ms
  * Writes the server port to a file for other workers to read
  */
 export function writePort(port: number): void {
-    writeFileSync(PORT_FILE, port.toString(), "utf8");
+  writeFileSync(PORT_FILE, port.toString(), "utf8");
 }
 
 /**
@@ -18,12 +18,12 @@ export function writePort(port: number): void {
  * Returns null if file doesn't exist
  */
 export function readPort(): number | null {
-    if (!existsSync(PORT_FILE)) {
-        return null;
-    }
-    const content = readFileSync(PORT_FILE, "utf8");
-    const port = parseInt(content, 10);
-    return isNaN(port) ? null : port;
+  if (!existsSync(PORT_FILE)) {
+    return null;
+  }
+  const content = readFileSync(PORT_FILE, "utf8");
+  const port = parseInt(content, 10);
+  return isNaN(port) ? null : port;
 }
 
 /**
@@ -31,48 +31,84 @@ export function readPort(): number | null {
  * Throws error if timeout is reached
  */
 export async function waitForPort(timeoutMs: number = MAX_WAIT_MS): Promise<number> {
-    const startTime = Date.now();
+  const startTime = Date.now();
 
-    while (Date.now() - startTime < timeoutMs) {
-        const port = readPort();
-        if (port !== null) {
-            return port;
-        }
-        await new Promise(resolve => setTimeout(resolve, POLL_INTERVAL_MS));
+  while (Date.now() - startTime < timeoutMs) {
+    const port = readPort();
+    if (port !== null) {
+      return port;
     }
+    await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
+  }
 
-    throw new Error(`Timeout waiting for port file after ${timeoutMs}ms`);
+  throw new Error(`Timeout waiting for port file after ${timeoutMs}ms`);
 }
 
 /**
  * Clears the port file
  */
 export function clearPort(): void {
-    if (existsSync(PORT_FILE)) {
-        unlinkSync(PORT_FILE);
-    }
+  if (existsSync(PORT_FILE)) {
+    unlinkSync(PORT_FILE);
+  }
 }
 
 /**
  * Checks if port file exists
  */
 export function portFileExists(): boolean {
-    return existsSync(PORT_FILE);
+  return existsSync(PORT_FILE);
 }
 
 /**
- * Increments the worker count
+ * Increments the worker count with retry for race condition handling
  * Returns the new count
  */
 export function incrementWorkerCount(): number {
-    let count = 0;
-    if (existsSync(WORKER_COUNT_FILE)) {
+  const MAX_RETRIES = 10;
+  const RETRY_DELAY_MS = 50;
+
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    try {
+      let count = 0;
+      if (existsSync(WORKER_COUNT_FILE)) {
         const content = readFileSync(WORKER_COUNT_FILE, "utf8");
         count = parseInt(content, 10) || 0;
+      }
+      count++;
+
+      // Use flag 'wx' for exclusive write - fails if file exists
+      // This provides atomic write semantics
+      if (count === 1) {
+        // First worker - file shouldn't exist
+        writeFileSync(WORKER_COUNT_FILE, count.toString(), { encoding: "utf8", flag: "wx" });
+      } else {
+        // Subsequent workers - overwrite existing file
+        writeFileSync(WORKER_COUNT_FILE, count.toString(), "utf8");
+      }
+      return count;
+    } catch {
+      // File was created by another worker, retry
+      if (attempt < MAX_RETRIES - 1) {
+        // Wait a bit before retrying with exponential backoff
+        const delay = RETRY_DELAY_MS * Math.pow(2, attempt);
+        const start = Date.now();
+        while (Date.now() - start < delay) {
+          // Busy wait
+        }
+      }
     }
-    count++;
-    writeFileSync(WORKER_COUNT_FILE, count.toString(), "utf8");
-    return count;
+  }
+
+  // Fallback: read current count and add 1
+  let count = 0;
+  if (existsSync(WORKER_COUNT_FILE)) {
+    const content = readFileSync(WORKER_COUNT_FILE, "utf8");
+    count = parseInt(content, 10) || 0;
+  }
+  count++;
+  writeFileSync(WORKER_COUNT_FILE, count.toString(), "utf8");
+  return count;
 }
 
 /**
@@ -80,21 +116,21 @@ export function incrementWorkerCount(): number {
  * Returns the new count
  */
 export function decrementWorkerCount(): number {
-    let count = 0;
+  let count = 0;
+  if (existsSync(WORKER_COUNT_FILE)) {
+    const content = readFileSync(WORKER_COUNT_FILE, "utf8");
+    count = parseInt(content, 10) || 0;
+  }
+  count = Math.max(0, count - 1);
+
+  if (count === 0) {
+    // Last worker, clean up the file
     if (existsSync(WORKER_COUNT_FILE)) {
-        const content = readFileSync(WORKER_COUNT_FILE, "utf8");
-        count = parseInt(content, 10) || 0;
+      unlinkSync(WORKER_COUNT_FILE);
     }
-    count = Math.max(0, count - 1);
+  } else {
+    writeFileSync(WORKER_COUNT_FILE, count.toString(), "utf8");
+  }
 
-    if (count === 0) {
-        // Last worker, clean up the file
-        if (existsSync(WORKER_COUNT_FILE)) {
-            unlinkSync(WORKER_COUNT_FILE);
-        }
-    } else {
-        writeFileSync(WORKER_COUNT_FILE, count.toString(), "utf8");
-    }
-
-    return count;
+  return count;
 }
