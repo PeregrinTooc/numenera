@@ -378,6 +378,47 @@ Then(
 
 // Notes Field Steps
 
+Then("the notes textarea should be readonly", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-notes"]');
+  await expect(textarea).toHaveAttribute("readonly", "");
+});
+
+Then("the notes textarea should show {string}", async function (this: CustomWorld, text: string) {
+  const textarea = this.page!.locator('[data-testid="character-notes"]');
+  await textarea.waitFor({ state: "visible" });
+  await expect(textarea).toHaveValue(text);
+});
+
+Then("the notes textarea should have a pointer cursor", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-notes"]');
+  const cursor = await textarea.evaluate((el) => window.getComputedStyle(el).cursor);
+  expect(cursor).toBe("pointer");
+});
+
+When("I click the notes textarea", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-notes"]');
+  await textarea.click();
+});
+
+Then("the notes textarea should not be readonly", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-notes"]');
+  await expect(textarea).not.toHaveAttribute("readonly", { timeout: 10000 });
+});
+
+Then("the notes textarea should be focused", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-notes"]');
+  await expect(textarea).toBeFocused();
+});
+
+Then(
+  "the notes textarea should have an edit state visual indicator",
+  async function (this: CustomWorld) {
+    const textarea = this.page!.locator('[data-testid="character-notes"]');
+    await expect(textarea).not.toHaveAttribute("readonly");
+    await expect(textarea).toBeEnabled();
+  }
+);
+
 When("I click on the notes field", async function (this: CustomWorld) {
   const textarea = this.page!.locator('[data-testid="character-notes"]');
   await textarea.click();
@@ -391,6 +432,22 @@ When("I tap on the notes field on mobile", async function (this: CustomWorld) {
 When("I type {string} into the notes field", async function (this: CustomWorld, text: string) {
   const textarea = this.page!.locator('[data-testid="character-notes"]');
   await textarea.fill(text);
+});
+
+When("I clear the notes textarea", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-notes"]');
+  await textarea.clear();
+});
+
+When("I type {string} in the notes textarea", async function (this: CustomWorld, text: string) {
+  const textarea = this.page!.locator('[data-testid="character-notes"]');
+  await textarea.fill(text);
+});
+
+When("I click outside the notes textarea", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-notes"]');
+  await textarea.blur();
+  await this.page!.waitForTimeout(100);
 });
 
 When("I click outside the notes field", async function (this: CustomWorld) {
@@ -421,6 +478,28 @@ Then("the notes field should contain {string}", async function (this: CustomWorl
   const textarea = this.page!.locator('[data-testid="character-notes"]');
   await expect(textarea).toHaveValue(text);
 });
+
+Then("the notes textarea should be empty", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-notes"]');
+  await expect(textarea).toHaveValue("");
+});
+
+Then(
+  "the character data should have notes {string}",
+  async function (this: CustomWorld, text: string) {
+    await this.page!.waitForTimeout(200);
+    const storedData = await this.page!.evaluate(() => {
+      const data = localStorage.getItem("numenera-character-state");
+      return data ? JSON.parse(data) : null;
+    });
+    expect(storedData).toBeTruthy();
+    if (storedData.character) {
+      expect(storedData.character.textFields.notes).toBe(text);
+    } else {
+      expect(storedData.textFields.notes).toBe(text);
+    }
+  }
+);
 
 Then(
   "the notes field should show the placeholder in {string}",

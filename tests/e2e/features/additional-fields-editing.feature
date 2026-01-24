@@ -147,20 +147,17 @@ Feature: Additional Character Fields Editing
     # NOTES INLINE EDITING SCENARIOS
     # ============================================================================
 
-    @wip
     Scenario: Notes field displays in readonly state initially
         Then the notes textarea should be readonly
         And the notes textarea should show "Quest: Find the artifact"
         And the notes textarea should have a pointer cursor
 
-    @wip
     Scenario: Clicking notes field enables editing
         When I click the notes textarea
         Then the notes textarea should not be readonly
         And the notes textarea should be focused
         And the notes textarea should have an edit state visual indicator
 
-    @wip
     Scenario: Editing notes and blurring saves changes
         When I click the notes textarea
         And I clear the notes textarea
@@ -170,7 +167,6 @@ Feature: Additional Character Fields Editing
         And the notes textarea should show "New notes content"
         And the character data should have notes "New notes content"
 
-    @wip
     Scenario: Notes changes persist after page reload
         When I click the notes textarea
         And I type "Persistent notes" in the notes textarea
@@ -178,7 +174,6 @@ Feature: Additional Character Fields Editing
         And I reload the page
         Then the notes textarea should show "Persistent notes"
 
-    @wip
     Scenario: Empty notes value is allowed
         When I click the notes textarea
         And I clear the notes textarea
