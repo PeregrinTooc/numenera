@@ -112,13 +112,6 @@
   },
   "modal": {
     "edit": {
-      "name": "Name bearbeiten",
-      "tier": "Stufe bearbeiten",
-      "descriptor": "Deskriptor bearbeiten",
-      "focus": "Fokus bearbeiten",
-      "xp": "EP bearbeiten",
-      "shins": "Shins bearbeiten",
-      "armor": "Rüstung bearbeiten",
       "confirm": "Bestätigen",
       "cancel": "Abbrechen"
     }

@@ -112,13 +112,6 @@
   },
   "modal": {
     "edit": {
-      "name": "Edit Character Name",
-      "tier": "Edit Tier",
-      "descriptor": "Edit Descriptor",
-      "focus": "Edit Focus",
-      "xp": "Edit XP",
-      "shins": "Edit Shins",
-      "armor": "Edit Armor",
       "confirm": "Confirm",
       "cancel": "Cancel"
     }

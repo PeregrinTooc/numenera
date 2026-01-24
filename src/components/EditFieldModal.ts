@@ -42,25 +42,6 @@ export class EditFieldModal {
     this.handleInput = this.handleInput.bind(this);
   }
 
-  private getLabel(): string {
-    switch (this.fieldType) {
-      case "name":
-        return t("modal.edit.name");
-      case "tier":
-        return t("modal.edit.tier");
-      case "descriptor":
-        return t("modal.edit.descriptor");
-      case "focus":
-        return t("modal.edit.focus");
-      case "xp":
-        return t("modal.edit.xp");
-      case "shins":
-        return t("modal.edit.shins");
-      case "armor":
-        return t("modal.edit.armor");
-    }
-  }
-
   private getInputType(): string {
     return this.fieldType === "tier" ||
       this.fieldType === "xp" ||
@@ -271,13 +252,7 @@ export class EditFieldModal {
         aria-hidden="true"
         data-testid="modal-backdrop"
       >
-        <div
-          class="edit-modal-content"
-          data-testid="edit-modal"
-          role="dialog"
-          aria-label=${this.getLabel()}
-          aria-modal="true"
-        >
+        <div class="edit-modal-content" data-testid="edit-modal" role="dialog" aria-modal="true">
           <!-- Input Field -->
           <input
             type=${this.getInputType()}

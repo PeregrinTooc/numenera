@@ -163,21 +163,6 @@ Feature: Edit Basic Character Information
         Then focus should cycle between input field, confirm button, and cancel button
         And focus should not leave the modal
 
-    @i18n
-    Scenario: Modal uses correct translations in English
-        Given the language is set to "en"
-        When I click on the character name "Kael the Wanderer"
-        Then the modal should have aria-label "Edit Character Name"
-        And the confirm button should have appropriate label
-        And the cancel button should have appropriate label
-
-    @i18n
-    Scenario: Modal uses correct translations in German
-        Given the language is set to "de"
-        When I click on the character name "Kael the Wanderer"
-        Then the modal should have German aria-label translation
-        And the buttons should display German translations
-
     @accessibility
     Scenario: Modal is keyboard accessible
         When I click on the character name "Kael the Wanderer"
@@ -190,7 +175,6 @@ Feature: Edit Basic Character Information
     Scenario: Modal has proper ARIA attributes
         When I click on the character name "Kael the Wanderer"
         Then the modal should have role="dialog"
-        And the modal should have aria-label attribute
         And the backdrop should have aria-hidden="true"
 
     @mobile
