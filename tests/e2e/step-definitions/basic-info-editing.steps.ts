@@ -61,6 +61,11 @@ When("I type {string} in the input field", async function (this: CustomWorld, te
   await input.fill(text);
 });
 
+When("I type {string} into the input field", async function (this: CustomWorld, text: string) {
+  const input = this.page!.locator('[data-testid="edit-modal-input"]');
+  await input.fill(text);
+});
+
 When("I press the Escape key", async function (this: CustomWorld) {
   await this.page!.keyboard.press("Escape");
 });
@@ -104,6 +109,29 @@ When("I click the confirm button", async function (this: CustomWorld) {
     });
   }
   // If button is disabled, don't click (next step will verify disabled state)
+});
+
+When("I click the Confirm button", async function (this: CustomWorld) {
+  const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
+  const isDisabled = await confirmButton.isDisabled();
+
+  // Only click if button is not disabled
+  if (!isDisabled) {
+    await this.page!.click('[data-testid="modal-confirm-button"]');
+    // Wait for modal to close
+    await this.page!.waitForSelector('[data-testid="edit-modal"]', {
+      state: "hidden",
+      timeout: 2000,
+    }).catch(() => {
+      // Modal might already be hidden
+    });
+  }
+  // If button is disabled, don't click (next step will verify disabled state)
+});
+
+When("I click the Cancel button", async function (this: CustomWorld) {
+  await this.page!.click('[data-testid="modal-cancel-button"]');
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "hidden" });
 });
 
 When("I click the cancel button", async function (this: CustomWorld) {

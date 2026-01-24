@@ -51,23 +51,16 @@ export class Stats {
   }
 
   render(): TemplateResult {
-    const mightPool = new StatPool(
-      t("stats.might"),
-      this.character.stats.might.pool,
-      this.character.stats.might.edge,
-      this.character.stats.might.current
+    const mightPool = new StatPool("might", this.character.stats.might, (field, value) =>
+      this.onFieldUpdate(field as any, value)
     );
-    const speedPool = new StatPool(
-      t("stats.speed"),
-      this.character.stats.speed.pool,
-      this.character.stats.speed.edge,
-      this.character.stats.speed.current
+    const speedPool = new StatPool("speed", this.character.stats.speed, (field, value) =>
+      this.onFieldUpdate(field as any, value)
     );
     const intellectPool = new StatPool(
-      t("stats.intellect"),
-      this.character.stats.intellect.pool,
-      this.character.stats.intellect.edge,
-      this.character.stats.intellect.current
+      "intellect",
+      this.character.stats.intellect,
+      (field, value) => this.onFieldUpdate(field as any, value)
     );
 
     return html`

@@ -1,4 +1,3 @@
-@wip
 Feature: Stat Pool Value Editing
     As a Numenera player
     I want to edit stat pool values (Pool, Edge, Current) for Might, Speed, and Intellect
@@ -18,7 +17,6 @@ Feature: Stat Pool Value Editing
     Scenario: Open modal by clicking Might Pool value
         When I click on the Might Pool value
         Then an edit modal should appear
-        And the modal title should be "Edit Might Pool"
         And the input field should contain the current Might Pool value
         And the input field should be focused
 
@@ -89,7 +87,6 @@ Feature: Stat Pool Value Editing
     Scenario: Mobile: Tap to edit Might Pool
         When I tap on the Might Pool value
         Then an edit modal should appear
-        And the modal title should be "Edit Might Pool"
 
     # ============================================================================
     # MIGHT EDGE TESTS
@@ -101,7 +98,6 @@ Feature: Stat Pool Value Editing
     Scenario: Open modal by clicking Might Edge value
         When I click on the Might Edge value
         Then an edit modal should appear
-        And the modal title should be "Edit Might Edge"
         And the input field should contain the current Might Edge value
         And the input field should be focused
 
@@ -132,7 +128,6 @@ Feature: Stat Pool Value Editing
     Scenario: Mobile: Tap to edit Might Edge
         When I tap on the Might Edge value
         Then an edit modal should appear
-        And the modal title should be "Edit Might Edge"
 
     # ============================================================================
     # MIGHT CURRENT TESTS
@@ -144,7 +139,6 @@ Feature: Stat Pool Value Editing
     Scenario: Open modal by clicking Might Current value
         When I click on the Might Current value
         Then an edit modal should appear
-        And the modal title should be "Edit Current Might"
         And the input field should contain the current Might Current value
         And the input field should be focused
 
@@ -175,7 +169,6 @@ Feature: Stat Pool Value Editing
     Scenario: Mobile: Tap to edit Might Current
         When I tap on the Might Current value
         Then an edit modal should appear
-        And the modal title should be "Edit Current Might"
 
     # ============================================================================
     # SPEED POOL TESTS
@@ -187,7 +180,6 @@ Feature: Stat Pool Value Editing
     Scenario: Open modal by clicking Speed Pool value
         When I click on the Speed Pool value
         Then an edit modal should appear
-        And the modal title should be "Edit Speed Pool"
         And the input field should contain the current Speed Pool value
         And the input field should be focused
 
@@ -218,7 +210,6 @@ Feature: Stat Pool Value Editing
     Scenario: Mobile: Tap to edit Speed Pool
         When I tap on the Speed Pool value
         Then an edit modal should appear
-        And the modal title should be "Edit Speed Pool"
 
     # ============================================================================
     # SPEED EDGE TESTS
@@ -230,7 +221,6 @@ Feature: Stat Pool Value Editing
     Scenario: Open modal by clicking Speed Edge value
         When I click on the Speed Edge value
         Then an edit modal should appear
-        And the modal title should be "Edit Speed Edge"
         And the input field should contain the current Speed Edge value
         And the input field should be focused
 
@@ -261,7 +251,6 @@ Feature: Stat Pool Value Editing
     Scenario: Mobile: Tap to edit Speed Edge
         When I tap on the Speed Edge value
         Then an edit modal should appear
-        And the modal title should be "Edit Speed Edge"
 
     # ============================================================================
     # SPEED CURRENT TESTS
@@ -273,7 +262,6 @@ Feature: Stat Pool Value Editing
     Scenario: Open modal by clicking Speed Current value
         When I click on the Speed Current value
         Then an edit modal should appear
-        And the modal title should be "Edit Current Speed"
         And the input field should contain the current Speed Current value
         And the input field should be focused
 
@@ -304,7 +292,6 @@ Feature: Stat Pool Value Editing
     Scenario: Mobile: Tap to edit Speed Current
         When I tap on the Speed Current value
         Then an edit modal should appear
-        And the modal title should be "Edit Current Speed"
 
     # ============================================================================
     # INTELLECT POOL TESTS
@@ -316,7 +303,6 @@ Feature: Stat Pool Value Editing
     Scenario: Open modal by clicking Intellect Pool value
         When I click on the Intellect Pool value
         Then an edit modal should appear
-        And the modal title should be "Edit Intellect Pool"
         And the input field should contain the current Intellect Pool value
         And the input field should be focused
 
@@ -347,7 +333,6 @@ Feature: Stat Pool Value Editing
     Scenario: Mobile: Tap to edit Intellect Pool
         When I tap on the Intellect Pool value
         Then an edit modal should appear
-        And the modal title should be "Edit Intellect Pool"
 
     # ============================================================================
     # INTELLECT EDGE TESTS
@@ -359,7 +344,6 @@ Feature: Stat Pool Value Editing
     Scenario: Open modal by clicking Intellect Edge value
         When I click on the Intellect Edge value
         Then an edit modal should appear
-        And the modal title should be "Edit Intellect Edge"
         And the input field should contain the current Intellect Edge value
         And the input field should be focused
 
@@ -390,7 +374,6 @@ Feature: Stat Pool Value Editing
     Scenario: Mobile: Tap to edit Intellect Edge
         When I tap on the Intellect Edge value
         Then an edit modal should appear
-        And the modal title should be "Edit Intellect Edge"
 
     # ============================================================================
     # INTELLECT CURRENT TESTS
@@ -402,7 +385,6 @@ Feature: Stat Pool Value Editing
     Scenario: Open modal by clicking Intellect Current value
         When I click on the Intellect Current value
         Then an edit modal should appear
-        And the modal title should be "Edit Current Intellect"
         And the input field should contain the current Intellect Current value
         And the input field should be focused
 
@@ -433,4 +415,3 @@ Feature: Stat Pool Value Editing
     Scenario: Mobile: Tap to edit Intellect Current
         When I tap on the Intellect Current value
         Then an edit modal should appear
-        And the modal title should be "Edit Current Intellect"

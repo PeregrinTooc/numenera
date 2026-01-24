@@ -50,6 +50,33 @@ function renderCharacterSheet(character: Character): void {
       case "effort":
         updatedCharacter.effort = value as number;
         break;
+      case "mightPool":
+        updatedCharacter.stats.might.pool = value as number;
+        break;
+      case "mightEdge":
+        updatedCharacter.stats.might.edge = value as number;
+        break;
+      case "mightCurrent":
+        updatedCharacter.stats.might.current = value as number;
+        break;
+      case "speedPool":
+        updatedCharacter.stats.speed.pool = value as number;
+        break;
+      case "speedEdge":
+        updatedCharacter.stats.speed.edge = value as number;
+        break;
+      case "speedCurrent":
+        updatedCharacter.stats.speed.current = value as number;
+        break;
+      case "intellectPool":
+        updatedCharacter.stats.intellect.pool = value as number;
+        break;
+      case "intellectEdge":
+        updatedCharacter.stats.intellect.edge = value as number;
+        break;
+      case "intellectCurrent":
+        updatedCharacter.stats.intellect.current = value as number;
+        break;
     }
 
     // Save to localStorage

@@ -131,6 +131,33 @@
     },
     "effort": {
       "invalid": "Effort must be a number between 1 and 6"
+    },
+    "mightPool": {
+      "invalid": "Might Pool must be a number between 0 and 9999"
+    },
+    "mightEdge": {
+      "invalid": "Might Edge must be a number between 0 and 9999"
+    },
+    "mightCurrent": {
+      "invalid": "Current Might must be a number between 0 and 9999"
+    },
+    "speedPool": {
+      "invalid": "Speed Pool must be a number between 0 and 9999"
+    },
+    "speedEdge": {
+      "invalid": "Speed Edge must be a number between 0 and 9999"
+    },
+    "speedCurrent": {
+      "invalid": "Current Speed must be a number between 0 and 9999"
+    },
+    "intellectPool": {
+      "invalid": "Intellect Pool must be a number between 0 and 9999"
+    },
+    "intellectEdge": {
+      "invalid": "Intellect Edge must be a number between 0 and 9999"
+    },
+    "intellectCurrent": {
+      "invalid": "Current Intellect must be a number between 0 and 9999"
     }
   },
   "textFields": {

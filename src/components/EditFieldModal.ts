@@ -19,7 +19,16 @@ type FieldType =
   | "shins"
   | "armor"
   | "maxCyphers"
-  | "effort";
+  | "effort"
+  | "mightPool"
+  | "mightEdge"
+  | "mightCurrent"
+  | "speedPool"
+  | "speedEdge"
+  | "speedCurrent"
+  | "intellectPool"
+  | "intellectEdge"
+  | "intellectCurrent";
 
 interface EditFieldModalConfig {
   fieldType: FieldType;
@@ -57,7 +66,16 @@ export class EditFieldModal {
       this.fieldType === "shins" ||
       this.fieldType === "armor" ||
       this.fieldType === "maxCyphers" ||
-      this.fieldType === "effort"
+      this.fieldType === "effort" ||
+      this.fieldType === "mightPool" ||
+      this.fieldType === "mightEdge" ||
+      this.fieldType === "mightCurrent" ||
+      this.fieldType === "speedPool" ||
+      this.fieldType === "speedEdge" ||
+      this.fieldType === "speedCurrent" ||
+      this.fieldType === "intellectPool" ||
+      this.fieldType === "intellectEdge" ||
+      this.fieldType === "intellectCurrent"
       ? "number"
       : "text";
   }
@@ -68,7 +86,16 @@ export class EditFieldModal {
       this.fieldType === "shins" ||
       this.fieldType === "armor" ||
       this.fieldType === "maxCyphers" ||
-      this.fieldType === "effort"
+      this.fieldType === "effort" ||
+      this.fieldType === "mightPool" ||
+      this.fieldType === "mightEdge" ||
+      this.fieldType === "mightCurrent" ||
+      this.fieldType === "speedPool" ||
+      this.fieldType === "speedEdge" ||
+      this.fieldType === "speedCurrent" ||
+      this.fieldType === "intellectPool" ||
+      this.fieldType === "intellectEdge" ||
+      this.fieldType === "intellectCurrent"
       ? "numeric"
       : undefined;
   }
@@ -146,6 +173,87 @@ export class EditFieldModal {
         }
         return true;
       }
+      case "mightPool": {
+        // Might Pool must be a non-negative integer, max 9999
+        const num = parseInt(value, 10);
+        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
+          this.validationError = t("validation.mightPool.invalid");
+          return false;
+        }
+        return true;
+      }
+      case "mightEdge": {
+        // Might Edge must be a non-negative integer, max 9999
+        const num = parseInt(value, 10);
+        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
+          this.validationError = t("validation.mightEdge.invalid");
+          return false;
+        }
+        return true;
+      }
+      case "mightCurrent": {
+        // Current Might must be a non-negative integer, max 9999
+        const num = parseInt(value, 10);
+        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
+          this.validationError = t("validation.mightCurrent.invalid");
+          return false;
+        }
+        return true;
+      }
+      case "speedPool": {
+        // Speed Pool must be a non-negative integer, max 9999
+        const num = parseInt(value, 10);
+        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
+          this.validationError = t("validation.speedPool.invalid");
+          return false;
+        }
+        return true;
+      }
+      case "speedEdge": {
+        // Speed Edge must be a non-negative integer, max 9999
+        const num = parseInt(value, 10);
+        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
+          this.validationError = t("validation.speedEdge.invalid");
+          return false;
+        }
+        return true;
+      }
+      case "speedCurrent": {
+        // Current Speed must be a non-negative integer, max 9999
+        const num = parseInt(value, 10);
+        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
+          this.validationError = t("validation.speedCurrent.invalid");
+          return false;
+        }
+        return true;
+      }
+      case "intellectPool": {
+        // Intellect Pool must be a non-negative integer, max 9999
+        const num = parseInt(value, 10);
+        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
+          this.validationError = t("validation.intellectPool.invalid");
+          return false;
+        }
+        return true;
+      }
+      case "intellectEdge": {
+        // Intellect Edge must be a non-negative integer, max 9999
+        const num = parseInt(value, 10);
+        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
+          this.validationError = t("validation.intellectEdge.invalid");
+          return false;
+        }
+        return true;
+      }
+      case "intellectCurrent": {
+        // Current Intellect must be a non-negative integer, max 9999
+        const num = parseInt(value, 10);
+        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
+          this.validationError = t("validation.intellectCurrent.invalid");
+          return false;
+        }
+        return true;
+      }
     }
   }
 
@@ -159,7 +267,16 @@ export class EditFieldModal {
       this.fieldType === "shins" ||
       this.fieldType === "armor" ||
       this.fieldType === "maxCyphers" ||
-      this.fieldType === "effort"
+      this.fieldType === "effort" ||
+      this.fieldType === "mightPool" ||
+      this.fieldType === "mightEdge" ||
+      this.fieldType === "mightCurrent" ||
+      this.fieldType === "speedPool" ||
+      this.fieldType === "speedEdge" ||
+      this.fieldType === "speedCurrent" ||
+      this.fieldType === "intellectPool" ||
+      this.fieldType === "intellectEdge" ||
+      this.fieldType === "intellectCurrent"
     ) {
       this.validate(this.inputValue);
     }
@@ -199,7 +316,16 @@ export class EditFieldModal {
       this.fieldType === "shins" ||
       this.fieldType === "armor" ||
       this.fieldType === "maxCyphers" ||
-      this.fieldType === "effort"
+      this.fieldType === "effort" ||
+      this.fieldType === "mightPool" ||
+      this.fieldType === "mightEdge" ||
+      this.fieldType === "mightCurrent" ||
+      this.fieldType === "speedPool" ||
+      this.fieldType === "speedEdge" ||
+      this.fieldType === "speedCurrent" ||
+      this.fieldType === "intellectPool" ||
+      this.fieldType === "intellectEdge" ||
+      this.fieldType === "intellectCurrent"
     ) {
       // Validate and convert to number
       if (this.validate(this.inputValue)) {
@@ -304,12 +430,30 @@ export class EditFieldModal {
               : this.fieldType === "xp" ||
                   this.fieldType === "shins" ||
                   this.fieldType === "armor" ||
-                  this.fieldType === "maxCyphers"
+                  this.fieldType === "maxCyphers" ||
+                  this.fieldType === "mightPool" ||
+                  this.fieldType === "mightEdge" ||
+                  this.fieldType === "mightCurrent" ||
+                  this.fieldType === "speedPool" ||
+                  this.fieldType === "speedEdge" ||
+                  this.fieldType === "speedCurrent" ||
+                  this.fieldType === "intellectPool" ||
+                  this.fieldType === "intellectEdge" ||
+                  this.fieldType === "intellectCurrent"
                 ? "0"
                 : ""}
             max=${this.fieldType === "tier" || this.fieldType === "effort"
               ? "6"
-              : this.fieldType === "xp"
+              : this.fieldType === "xp" ||
+                  this.fieldType === "mightPool" ||
+                  this.fieldType === "mightEdge" ||
+                  this.fieldType === "mightCurrent" ||
+                  this.fieldType === "speedPool" ||
+                  this.fieldType === "speedEdge" ||
+                  this.fieldType === "speedCurrent" ||
+                  this.fieldType === "intellectPool" ||
+                  this.fieldType === "intellectEdge" ||
+                  this.fieldType === "intellectCurrent"
                 ? "9999"
                 : this.fieldType === "shins"
                   ? "999999"
