@@ -10,7 +10,7 @@ import {
   validateFocus,
 } from "../utils/validation.js";
 
-type FieldType = "name" | "tier" | "descriptor" | "focus" | "xp" | "shins" | "armor";
+type FieldType = "name" | "tier" | "descriptor" | "focus" | "xp" | "shins" | "armor" | "maxCyphers";
 
 interface EditFieldModalConfig {
   fieldType: FieldType;
@@ -46,7 +46,8 @@ export class EditFieldModal {
     return this.fieldType === "tier" ||
       this.fieldType === "xp" ||
       this.fieldType === "shins" ||
-      this.fieldType === "armor"
+      this.fieldType === "armor" ||
+      this.fieldType === "maxCyphers"
       ? "number"
       : "text";
   }
@@ -55,7 +56,8 @@ export class EditFieldModal {
     return this.fieldType === "tier" ||
       this.fieldType === "xp" ||
       this.fieldType === "shins" ||
-      this.fieldType === "armor"
+      this.fieldType === "armor" ||
+      this.fieldType === "maxCyphers"
       ? "numeric"
       : undefined;
   }
@@ -115,6 +117,15 @@ export class EditFieldModal {
         }
         return true;
       }
+      case "maxCyphers": {
+        // Max Cyphers must be a non-negative integer, max 10
+        const num = parseInt(value, 10);
+        if (isNaN(num) || num < 0 || num > 10 || !Number.isInteger(Number(value))) {
+          this.validationError = t("validation.maxCyphers.invalid");
+          return false;
+        }
+        return true;
+      }
     }
   }
 
@@ -123,7 +134,12 @@ export class EditFieldModal {
     this.inputValue = input.value;
 
     // For numeric fields, validate immediately to disable button if invalid
-    if (this.fieldType === "xp" || this.fieldType === "shins" || this.fieldType === "armor") {
+    if (
+      this.fieldType === "xp" ||
+      this.fieldType === "shins" ||
+      this.fieldType === "armor" ||
+      this.fieldType === "maxCyphers"
+    ) {
       this.validate(this.inputValue);
     }
 
@@ -160,7 +176,8 @@ export class EditFieldModal {
     } else if (
       this.fieldType === "xp" ||
       this.fieldType === "shins" ||
-      this.fieldType === "armor"
+      this.fieldType === "armor" ||
+      this.fieldType === "maxCyphers"
     ) {
       // Validate and convert to number
       if (this.validate(this.inputValue)) {
@@ -262,7 +279,10 @@ export class EditFieldModal {
             inputmode=${inputMode || ""}
             min=${this.fieldType === "tier"
               ? "1"
-              : this.fieldType === "xp" || this.fieldType === "shins" || this.fieldType === "armor"
+              : this.fieldType === "xp" ||
+                  this.fieldType === "shins" ||
+                  this.fieldType === "armor" ||
+                  this.fieldType === "maxCyphers"
                 ? "0"
                 : ""}
             max=${this.fieldType === "tier"
@@ -271,7 +291,7 @@ export class EditFieldModal {
                 ? "9999"
                 : this.fieldType === "shins"
                   ? "999999"
-                  : this.fieldType === "armor"
+                  : this.fieldType === "armor" || this.fieldType === "maxCyphers"
                     ? "10"
                     : ""}
             maxlength=${this.fieldType === "name" || this.fieldType === "focus"

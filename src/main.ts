@@ -44,6 +44,9 @@ function renderCharacterSheet(character: Character): void {
       case "armor":
         updatedCharacter.armor = value as number;
         break;
+      case "maxCyphers":
+        updatedCharacter.maxCyphers = value as number;
+        break;
     }
 
     // Save to localStorage

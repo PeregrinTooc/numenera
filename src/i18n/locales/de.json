@@ -125,6 +125,9 @@
     },
     "armor": {
       "invalid": "Rüstung muss eine Zahl zwischen 0 und 10 sein"
+    },
+    "maxCyphers": {
+      "invalid": "Max. Cypher muss eine Zahl zwischen 0 und 10 sein"
     }
   },
   "textFields": {

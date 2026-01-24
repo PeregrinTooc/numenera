@@ -173,19 +173,16 @@ Feature: Resource Tracker Fields Editing
     # MAX CYPHERS EDITING SCENARIOS
     # ============================================================================
 
-    @wip
     Scenario: Max Cyphers badge displays current value
         Given the character has max cyphers 2
         Then the Max Cyphers portion of the badge should show "2"
 
-    @wip
     Scenario: Clicking Max Cyphers opens edit modal
         Given the character has max cyphers 2
         When I click the Max Cyphers badge
         Then the edit modal should open
         And the modal input should contain "2"
 
-    @wip
     Scenario: Editing Max Cyphers and confirming saves changes
         Given the character has max cyphers 2
         When I click the Max Cyphers badge
@@ -194,7 +191,6 @@ Feature: Resource Tracker Fields Editing
         Then the Max Cyphers portion of the badge should show "4"
         And the character data should have maxCyphers 4
 
-    @wip
     Scenario: Max Cyphers changes persist after page reload
         Given the character has max cyphers 2
         When I click the Max Cyphers badge
