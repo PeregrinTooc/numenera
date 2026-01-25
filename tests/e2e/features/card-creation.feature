@@ -89,18 +89,18 @@ Feature: Card Creation
     # ITERATION 2: EQUIPMENT
     # ============================================================================
 
-    
+
     Scenario: Add button is visible for Equipment
         Then I should see an add equipment button
 
-    
+
     Scenario: Add Equipment button opens modal with empty fields
         When I click the add equipment button
         Then the card edit modal should be open
         And the modal should show equipment fields
         And all equipment fields should be empty
 
-    
+
     Scenario: Canceling equipment creation does not add a card
         Given the character has 4 equipment cards
         When I click the add equipment button
@@ -109,7 +109,7 @@ Feature: Card Creation
         And I cancel the card edit modal
         Then I should see 4 equipment cards
 
-    
+
     Scenario: Confirming equipment creation adds a new card
         Given the character has 4 equipment cards
         When I click the add equipment button
@@ -119,7 +119,7 @@ Feature: Card Creation
         Then I should see 5 equipment cards
         And I should see an equipment card with name "Climbing Gear"
 
-    
+
     Scenario: New equipment persists after page reload
         Given the character has 4 equipment cards
         When I click the add equipment button
@@ -131,7 +131,7 @@ Feature: Card Creation
         Then I should see 5 equipment cards
         And I should see an equipment card with name "Medical Kit"
 
-    
+
     Scenario: Multiple equipment items can be added
         Given the character has 4 equipment cards
         When I click the add equipment button
@@ -145,7 +145,7 @@ Feature: Card Creation
         And I confirm the card edit modal
         Then I should see 6 equipment cards
 
-    
+
     Scenario: Create equipment, then edit it, verify persistence
         Given the character has 4 equipment cards
         When I click the add equipment button
@@ -168,18 +168,15 @@ Feature: Card Creation
     # ITERATION 3: ARTIFACTS
     # ============================================================================
 
-    @current
     Scenario: Add button is visible for Artifacts
         Then I should see an add artifact button
 
-    @current
     Scenario: Add Artifact button opens modal with empty fields
         When I click the add artifact button
         Then the card edit modal should be open
         And the modal should show artifact fields
         And all artifact fields should be empty
 
-    @current
     Scenario: Canceling artifact creation does not add a card
         Given the character has 2 artifact cards
         When I click the add artifact button
@@ -189,7 +186,6 @@ Feature: Card Creation
         And I cancel the card edit modal
         Then I should see 2 artifact cards
 
-    @current
     Scenario: Confirming artifact creation adds a new card
         Given the character has 2 artifact cards
         When I click the add artifact button
@@ -200,7 +196,6 @@ Feature: Card Creation
         Then I should see 3 artifact cards
         And I should see an artifact card with name "Crystal Blade"
 
-    @current
     Scenario: New artifact persists after page reload
         Given the character has 2 artifact cards
         When I click the add artifact button
@@ -213,7 +208,6 @@ Feature: Card Creation
         Then I should see 3 artifact cards
         And I should see an artifact card with name "Shield of Force"
 
-    @current
     Scenario: Multiple artifacts can be added
         Given the character has 2 artifact cards
         When I click the add artifact button
@@ -229,7 +223,6 @@ Feature: Card Creation
         And I confirm the card edit modal
         Then I should see 4 artifact cards
 
-    @current
     Scenario: Create artifact, then edit it, verify persistence
         Given the character has 2 artifact cards
         When I click the add artifact button
@@ -250,3 +243,75 @@ Feature: Card Creation
         And I should see an artifact card with name "Power Gauntlet Mk II"
         And the artifact "Power Gauntlet Mk II" should have level "1d6+2"
         And the artifact "Power Gauntlet Mk II" should have effect "Greatly enhances strength and speed"
+
+    # ============================================================================
+    # ITERATION 4: ODDITIES
+    # ============================================================================
+
+    @current
+    Scenario: Add button is visible for Oddities
+        Then I should see an add oddity button
+
+    @current
+    Scenario: Add Oddity button opens modal with empty fields
+        When I click the add oddity button
+        Then the card edit modal should be open
+        And the modal should show oddity fields
+        And all oddity fields should be empty
+
+    @current
+    Scenario: Canceling oddity creation does not add a card
+        Given the character has 2 oddity cards
+        When I click the add oddity button
+        And I fill in the oddity text with "Test Oddity"
+        And I cancel the card edit modal
+        Then I should see 2 oddity cards
+
+    @current
+    Scenario: Confirming oddity creation adds a new card
+        Given the character has 2 oddity cards
+        When I click the add oddity button
+        And I fill in the oddity text with "A metal sphere that whispers in the dark"
+        And I confirm the card edit modal
+        Then I should see 3 oddity cards
+        And I should see an oddity card with text "A metal sphere that whispers in the dark"
+
+    @current
+    Scenario: New oddity persists after page reload
+        Given the character has 2 oddity cards
+        When I click the add oddity button
+        And I fill in the oddity text with "A translucent stone that floats in water"
+        And I confirm the card edit modal
+        Then I should see 3 oddity cards
+        When I reload the page
+        Then I should see 3 oddity cards
+        And I should see an oddity card with text "A translucent stone that floats in water"
+
+    @current
+    Scenario: Multiple oddities can be added
+        Given the character has 2 oddity cards
+        When I click the add oddity button
+        And I fill in the oddity text with "First Oddity Description"
+        And I confirm the card edit modal
+        Then I should see 3 oddity cards
+        When I click the add oddity button
+        And I fill in the oddity text with "Second Oddity Description"
+        And I confirm the card edit modal
+        Then I should see 4 oddity cards
+
+    @current
+    Scenario: Create oddity, then edit it, verify persistence
+        Given the character has 2 oddity cards
+        When I click the add oddity button
+        And I fill in the oddity text with "A small crystal that changes color"
+        And I confirm the card edit modal
+        Then I should see 3 oddity cards
+        And I should see an oddity card with text "A small crystal that changes color"
+        When I click the edit button on oddity "A small crystal that changes color"
+        And I fill in the oddity text with "A large crystal that changes color based on temperature"
+        And I confirm the card edit modal
+        Then I should see an oddity card with text "A large crystal that changes color based on temperature"
+        When I reload the page
+        Then I should see 3 oddity cards
+        And I should see an oddity card with text "A large crystal that changes color based on temperature"
+

@@ -145,6 +145,133 @@ describe("ItemsBox - Equipment Add Button", () => {
   });
 });
 
+describe("ItemsBox - Oddity Add Button", () => {
+  let container: HTMLElement;
+  let mockCharacter: Character;
+  let mockOnFieldUpdate: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    container = document.createElement("div");
+    container.id = "app";
+    document.body.appendChild(container);
+
+    mockOnFieldUpdate = vi.fn();
+
+    mockCharacter = {
+      name: "Test Character",
+      tier: 1,
+      type: "Glaive",
+      descriptor: "Strong",
+      focus: "Combat",
+      xp: 0,
+      shins: 10,
+      armor: 1,
+      effort: 1,
+      maxCyphers: 2,
+      stats: {
+        might: { pool: 10, edge: 0, current: 10 },
+        speed: { pool: 10, edge: 0, current: 10 },
+        intellect: { pool: 10, edge: 0, current: 10 },
+      },
+      cyphers: [],
+      artifacts: [],
+      oddities: ["A glowing cube that hums", "A piece of transparent metal"],
+      abilities: [],
+      equipment: [],
+      attacks: [],
+      specialAbilities: [],
+      recoveryRolls: {
+        action: false,
+        tenMinutes: false,
+        oneHour: false,
+        tenHours: false,
+        modifier: 0,
+      },
+      damageTrack: {
+        impairment: "healthy",
+      },
+      textFields: {
+        background: "",
+        notes: "",
+      },
+    };
+  });
+
+  afterEach(() => {
+    document.body.removeChild(container);
+  });
+
+  it("should render add oddity button with correct test ID", () => {
+    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
+    render(component.render(), container);
+
+    const addButton = container.querySelector('[data-testid="add-oddity-button"]');
+    expect(addButton).toBeTruthy();
+  });
+
+  it("should render add oddity button even when no oddities exist", () => {
+    mockCharacter.oddities = [];
+    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
+    render(component.render(), container);
+
+    const addButton = container.querySelector('[data-testid="add-oddity-button"]');
+    expect(addButton).toBeTruthy();
+  });
+
+  it("should open modal when add oddity button is clicked", () => {
+    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
+    render(component.render(), container);
+
+    const addButton = container.querySelector('[data-testid="add-oddity-button"]');
+    addButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(addButton).toBeTruthy();
+  });
+
+  it("should add oddity when onConfirm callback is invoked", () => {
+    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
+    render(component.render(), container);
+
+    const initialCount = mockCharacter.oddities.length;
+    expect(initialCount).toBe(2);
+
+    const newOddity = "A new mysterious oddity";
+    mockCharacter.oddities.push(newOddity);
+
+    render(component.render(), container);
+
+    expect(mockCharacter.oddities.length).toBe(3);
+    expect(mockCharacter.oddities[2]).toEqual(newOddity);
+  });
+
+  it("should save character state after adding oddity", async () => {
+    const { saveCharacterState } = await import("../../src/storage/localStorage.js");
+    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
+    render(component.render(), container);
+
+    const newOddity = "A new mysterious oddity";
+    mockCharacter.oddities.push(newOddity);
+
+    expect(saveCharacterState).toBeDefined();
+  });
+
+  it("should dispatch character-updated event after adding oddity", () => {
+    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
+    render(component.render(), container);
+
+    const eventSpy = vi.fn();
+    container.addEventListener("character-updated", eventSpy);
+
+    const newOddity = "A new mysterious oddity";
+    mockCharacter.oddities.push(newOddity);
+
+    const event = new CustomEvent("character-updated");
+    container.dispatchEvent(event);
+
+    expect(eventSpy).toHaveBeenCalled();
+  });
+});
+
 describe("ItemsBox - Artifact Add Button", () => {
   let container: HTMLElement;
   let mockCharacter: Character;

@@ -17,7 +17,7 @@ export class OddityItem {
     this.editedOddity = oddity;
   }
 
-  private handleEdit(): void {
+  public handleEdit(): void {
     this.editedOddity = this.oddity;
     openCardEditModal({
       content: this.renderEditableVersion(),

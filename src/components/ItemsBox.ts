@@ -52,6 +52,17 @@ export class ItemsBox {
     tempItem.handleEdit();
   }
 
+  private handleAddOddity(): void {
+    const emptyOddity = "";
+    const tempItem = new OddityItem(emptyOddity, -1, (updated) => {
+      this.character.oddities.push(updated);
+      saveCharacterState(this.character);
+      const event = new CustomEvent("character-updated");
+      document.getElementById("app")?.dispatchEvent(event);
+    });
+    tempItem.handleEdit();
+  }
+
   render(): TemplateResult {
     const equipmentItems = this.character.equipment.map(
       (item, index) =>
@@ -106,6 +117,7 @@ export class ItemsBox {
           index,
           (updated) => {
             this.character.oddities[index] = updated;
+            saveCharacterState(this.character);
             // Trigger re-render via character-updated event
             const event = new CustomEvent("character-updated");
             document.getElementById("app")?.dispatchEvent(event);
@@ -227,9 +239,32 @@ export class ItemsBox {
 
           <!-- Oddities Column -->
           <div data-testid="oddities-section">
-            <h3 data-testid="oddities-heading" class="subsection-heading">
-              ${t("oddities.heading")}
-            </h3>
+            <div class="flex justify-between items-center mb-2">
+              <h3 data-testid="oddities-heading" class="subsection-heading">
+                ${t("oddities.heading")}
+              </h3>
+              <button
+                @click=${() => this.handleAddOddity()}
+                data-testid="add-oddity-button"
+                class="add-card-button"
+                aria-label="Add oddity"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 5v14M5 12h14"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
+            </div>
             ${this.character.oddities.length === 0
               ? html`
                   <div data-testid="empty-oddities" class="empty-oddities-styled">

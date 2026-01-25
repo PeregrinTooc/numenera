@@ -717,3 +717,171 @@ When(
     await this.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
   }
 );
+
+// ============================================================================
+// ITERATION 4: ODDITIES
+// ============================================================================
+
+// PRECONDITION STEPS
+Given("the character has {int} oddity card", async function (this: CustomWorld, count: number) {
+  if (count === 2) {
+    await this.page!.evaluate(() => {
+      const FULL_CHARACTER = {
+        name: "Kael the Wanderer",
+        tier: 3,
+        type: "Glaive",
+        descriptor: "Strong",
+        focus: "Bears a Halo of Fire",
+        xp: 12,
+        shins: 47,
+        armor: 2,
+        effort: 3,
+        maxCyphers: 4,
+        stats: {
+          might: { pool: 15, edge: 2, current: 12 },
+          speed: { pool: 12, edge: 1, current: 12 },
+          intellect: { pool: 10, edge: 0, current: 8 },
+        },
+        cyphers: [],
+        artifacts: [],
+        oddities: [
+          "A glowing cube that hums when near water",
+          "A piece of transparent metal that's always cold",
+        ],
+        abilities: [],
+        equipment: [],
+        attacks: [],
+        specialAbilities: [],
+        recoveryRolls: {
+          action: false,
+          tenMinutes: false,
+          oneHour: false,
+          tenHours: false,
+          modifier: 0,
+        },
+        damageTrack: { impairment: "healthy" },
+        textFields: { background: "", notes: "" },
+      };
+      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
+    });
+    await this.page!.reload({ waitUntil: "load" });
+    await this.page!.waitForSelector('[data-testid="oddity-item"]', { timeout: 5000 });
+  }
+  const cards = this.page!.locator('[data-testid="oddity-item"]');
+  await expect(cards).toHaveCount(count);
+});
+
+Given("the character has {int} oddity cards", async function (this: CustomWorld, count: number) {
+  if (count === 2) {
+    await this.page!.evaluate(() => {
+      const FULL_CHARACTER = {
+        name: "Kael the Wanderer",
+        tier: 3,
+        type: "Glaive",
+        descriptor: "Strong",
+        focus: "Bears a Halo of Fire",
+        xp: 12,
+        shins: 47,
+        armor: 2,
+        effort: 3,
+        maxCyphers: 4,
+        stats: {
+          might: { pool: 15, edge: 2, current: 12 },
+          speed: { pool: 12, edge: 1, current: 12 },
+          intellect: { pool: 10, edge: 0, current: 8 },
+        },
+        cyphers: [],
+        artifacts: [],
+        oddities: [
+          "A glowing cube that hums when near water",
+          "A piece of transparent metal that's always cold",
+        ],
+        abilities: [],
+        equipment: [],
+        attacks: [],
+        specialAbilities: [],
+        recoveryRolls: {
+          action: false,
+          tenMinutes: false,
+          oneHour: false,
+          tenHours: false,
+          modifier: 0,
+        },
+        damageTrack: { impairment: "healthy" },
+        textFields: { background: "", notes: "" },
+      };
+      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
+    });
+    await this.page!.reload({ waitUntil: "load" });
+    await this.page!.waitForSelector('[data-testid="oddity-item"]', { timeout: 5000 });
+  }
+  const cards = this.page!.locator('[data-testid="oddity-item"]');
+  await expect(cards).toHaveCount(count);
+});
+
+// ADD BUTTON VISIBILITY
+Then("I should see an add oddity button", async function (this: CustomWorld) {
+  const button = this.page!.locator('[data-testid="add-oddity-button"]');
+  await expect(button).toBeVisible();
+});
+
+// ADD BUTTON CLICK
+When("I click the add oddity button", async function (this: CustomWorld) {
+  const button = this.page!.locator('[data-testid="add-oddity-button"]');
+  await button.click();
+  await this.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
+});
+
+// MODAL FIELD VERIFICATION
+Then("the modal should show oddity fields", async function (this: CustomWorld) {
+  const oddityField = this.page!.locator('[data-testid="edit-field-oddity"]');
+  await expect(oddityField).toBeVisible();
+});
+
+Then("all oddity fields should be empty", async function (this: CustomWorld) {
+  const oddityField = this.page!.locator('[data-testid="edit-field-oddity"]');
+  await expect(oddityField).toHaveValue("");
+});
+
+// FIELD FILLING
+When("I fill in the oddity text with {string}", async function (this: CustomWorld, value: string) {
+  const field = this.page!.locator('[data-testid="edit-field-oddity"]');
+  await field.fill(value);
+});
+
+// CARD VERIFICATION
+Then("I should see {int} oddity card", async function (this: CustomWorld, count: number) {
+  await this.page!.waitForTimeout(100);
+  const cards = this.page!.locator('[data-testid="oddity-item"]');
+  await expect(cards).toHaveCount(count);
+});
+
+Then("I should see {int} oddity cards", async function (this: CustomWorld, count: number) {
+  await this.page!.waitForTimeout(100);
+  const cards = this.page!.locator('[data-testid="oddity-item"]');
+  await expect(cards).toHaveCount(count);
+});
+
+Then(
+  "I should see an oddity card with text {string}",
+  async function (this: CustomWorld, text: string) {
+    await this.page!.waitForTimeout(100);
+    const oddityCard = this.page!.locator('[data-testid="oddity-item"]').filter({
+      hasText: text,
+    });
+    await expect(oddityCard).toBeVisible();
+  }
+);
+
+// EDIT EXISTING CARD
+When(
+  "I click the edit button on oddity {string}",
+  async function (this: CustomWorld, text: string) {
+    const oddityCard = this.page!.locator('[data-testid="oddity-item"]').filter({
+      hasText: text,
+    });
+    const editButton = oddityCard.locator('[data-testid^="oddity-edit-button-"]');
+    await editButton.click();
+    await this.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
+  }
+);
