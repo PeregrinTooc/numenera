@@ -305,3 +305,200 @@ When(
     await this.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
   }
 );
+
+// ============================================================================
+// ITERATION 2: EQUIPMENT
+// ============================================================================
+
+// PRECONDITION STEPS
+Given("the character has {int} equipment card", async function (this: CustomWorld, count: number) {
+  if (count === 4) {
+    await this.page!.evaluate(() => {
+      const FULL_CHARACTER = {
+        name: "Kael the Wanderer",
+        tier: 3,
+        type: "Glaive",
+        descriptor: "Strong",
+        focus: "Bears a Halo of Fire",
+        xp: 12,
+        shins: 47,
+        armor: 2,
+        effort: 3,
+        maxCyphers: 4,
+        stats: {
+          might: { pool: 15, edge: 2, current: 12 },
+          speed: { pool: 12, edge: 1, current: 12 },
+          intellect: { pool: 10, edge: 0, current: 8 },
+        },
+        cyphers: [],
+        artifacts: [],
+        oddities: [],
+        abilities: [],
+        equipment: [
+          { name: "Medium armor", description: "Provides protection without hindering movement" },
+          { name: "Broadsword", description: "Heavy melee weapon" },
+          { name: "Explorer's pack", description: undefined },
+          { name: "50 feet of rope", description: undefined },
+        ],
+        attacks: [],
+        specialAbilities: [],
+        recoveryRolls: {
+          action: false,
+          tenMinutes: false,
+          oneHour: false,
+          tenHours: false,
+          modifier: 0,
+        },
+        damageTrack: { impairment: "healthy" },
+        textFields: { background: "", notes: "" },
+      };
+      localStorage.setItem("numenera-character", JSON.stringify(FULL_CHARACTER));
+    });
+    await this.page!.reload({ waitUntil: "load" });
+    await this.page!.waitForSelector('[data-testid^="equipment-item-"]', { timeout: 5000 });
+  }
+  const cards = this.page!.locator('[data-testid^="equipment-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+Given("the character has {int} equipment cards", async function (this: CustomWorld, count: number) {
+  if (count === 4) {
+    await this.page!.evaluate(() => {
+      const FULL_CHARACTER = {
+        name: "Kael the Wanderer",
+        tier: 3,
+        type: "Glaive",
+        descriptor: "Strong",
+        focus: "Bears a Halo of Fire",
+        xp: 12,
+        shins: 47,
+        armor: 2,
+        effort: 3,
+        maxCyphers: 4,
+        stats: {
+          might: { pool: 15, edge: 2, current: 12 },
+          speed: { pool: 12, edge: 1, current: 12 },
+          intellect: { pool: 10, edge: 0, current: 8 },
+        },
+        cyphers: [],
+        artifacts: [],
+        oddities: [],
+        abilities: [],
+        equipment: [
+          { name: "Medium armor", description: "Provides protection without hindering movement" },
+          { name: "Broadsword", description: "Heavy melee weapon" },
+          { name: "Explorer's pack", description: undefined },
+          { name: "50 feet of rope", description: undefined },
+        ],
+        attacks: [],
+        specialAbilities: [],
+        recoveryRolls: {
+          action: false,
+          tenMinutes: false,
+          oneHour: false,
+          tenHours: false,
+          modifier: 0,
+        },
+        damageTrack: { impairment: "healthy" },
+        textFields: { background: "", notes: "" },
+      };
+      localStorage.setItem("numenera-character", JSON.stringify(FULL_CHARACTER));
+    });
+    await this.page!.reload({ waitUntil: "load" });
+    await this.page!.waitForSelector('[data-testid^="equipment-item-"]', { timeout: 5000 });
+  }
+  const cards = this.page!.locator('[data-testid^="equipment-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+// ADD BUTTON VISIBILITY
+Then("I should see an add equipment button", async function (this: CustomWorld) {
+  const button = this.page!.locator('[data-testid="add-equipment-button"]');
+  await expect(button).toBeVisible();
+});
+
+// ADD BUTTON CLICK
+When("I click the add equipment button", async function (this: CustomWorld) {
+  const button = this.page!.locator('[data-testid="add-equipment-button"]');
+  await button.click();
+  await this.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
+});
+
+// MODAL FIELD VERIFICATION
+Then("the modal should show equipment fields", async function (this: CustomWorld) {
+  const nameField = this.page!.locator('[data-testid="edit-field-name"]');
+  const descField = this.page!.locator('[data-testid="edit-field-description"]');
+  await expect(nameField).toBeVisible();
+  await expect(descField).toBeVisible();
+});
+
+Then("all equipment fields should be empty", async function (this: CustomWorld) {
+  const nameField = this.page!.locator('[data-testid="edit-field-name"]');
+  const descField = this.page!.locator('[data-testid="edit-field-description"]');
+  await expect(nameField).toHaveValue("");
+  await expect(descField).toHaveValue("");
+});
+
+// FIELD FILLING
+When(
+  "I fill in the equipment name with {string}",
+  async function (this: CustomWorld, value: string) {
+    const field = this.page!.locator('[data-testid="edit-field-name"]');
+    await field.fill(value);
+  }
+);
+
+When(
+  "I fill in the equipment description with {string}",
+  async function (this: CustomWorld, value: string) {
+    const field = this.page!.locator('[data-testid="edit-field-description"]');
+    await field.fill(value);
+  }
+);
+
+// CARD VERIFICATION
+Then("I should see {int} equipment card", async function (this: CustomWorld, count: number) {
+  await this.page!.waitForTimeout(100);
+  const cards = this.page!.locator('[data-testid^="equipment-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+Then("I should see {int} equipment cards", async function (this: CustomWorld, count: number) {
+  await this.page!.waitForTimeout(100);
+  const cards = this.page!.locator('[data-testid^="equipment-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+Then(
+  "I should see an equipment card with name {string}",
+  async function (this: CustomWorld, name: string) {
+    await this.page!.waitForTimeout(100);
+    const equipmentCard = this.page!.locator('[data-testid^="equipment-item-"]').filter({
+      hasText: name,
+    });
+    await expect(equipmentCard).toBeVisible();
+  }
+);
+
+Then(
+  "the equipment {string} should have description {string}",
+  async function (this: CustomWorld, name: string, description: string) {
+    const equipmentCard = this.page!.locator('[data-testid^="equipment-item-"]').filter({
+      hasText: name,
+    });
+    await expect(equipmentCard).toContainText(description);
+  }
+);
+
+// EDIT EXISTING CARD
+When(
+  "I click the edit button on equipment {string}",
+  async function (this: CustomWorld, name: string) {
+    const equipmentCard = this.page!.locator('[data-testid^="equipment-item-"]').filter({
+      hasText: name,
+    });
+    const editButton = equipmentCard.locator('[data-testid^="equipment-edit-button-"]');
+    await editButton.click();
+    await this.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
+  }
+);

@@ -84,3 +84,82 @@ Feature: Card Creation
         And I should see a cypher card with name "Energy Shield Mk II"
         And the cypher "Energy Shield Mk II" should have level "1d6+2"
         And the cypher "Energy Shield Mk II" should have effect "Provides enhanced protection"
+
+    # ============================================================================
+    # ITERATION 2: EQUIPMENT
+    # ============================================================================
+
+    @current
+    Scenario: Add button is visible for Equipment
+        Then I should see an add equipment button
+
+    @current
+    Scenario: Add Equipment button opens modal with empty fields
+        When I click the add equipment button
+        Then the card edit modal should be open
+        And the modal should show equipment fields
+        And all equipment fields should be empty
+
+    @current
+    Scenario: Canceling equipment creation does not add a card
+        Given the character has 4 equipment cards
+        When I click the add equipment button
+        And I fill in the equipment name with "Test Equipment"
+        And I fill in the equipment description with "Test description"
+        And I cancel the card edit modal
+        Then I should see 4 equipment cards
+
+    @current
+    Scenario: Confirming equipment creation adds a new card
+        Given the character has 4 equipment cards
+        When I click the add equipment button
+        And I fill in the equipment name with "Climbing Gear"
+        And I fill in the equipment description with "Rope, hooks, and harness"
+        And I confirm the card edit modal
+        Then I should see 5 equipment cards
+        And I should see an equipment card with name "Climbing Gear"
+
+    @current
+    Scenario: New equipment persists after page reload
+        Given the character has 4 equipment cards
+        When I click the add equipment button
+        And I fill in the equipment name with "Medical Kit"
+        And I fill in the equipment description with "Contains bandages and medicine"
+        And I confirm the card edit modal
+        Then I should see 5 equipment cards
+        When I reload the page
+        Then I should see 5 equipment cards
+        And I should see an equipment card with name "Medical Kit"
+
+    @current
+    Scenario: Multiple equipment items can be added
+        Given the character has 4 equipment cards
+        When I click the add equipment button
+        And I fill in the equipment name with "First Item"
+        And I fill in the equipment description with "First description"
+        And I confirm the card edit modal
+        Then I should see 5 equipment cards
+        When I click the add equipment button
+        And I fill in the equipment name with "Second Item"
+        And I fill in the equipment description with "Second description"
+        And I confirm the card edit modal
+        Then I should see 6 equipment cards
+
+    @current
+    Scenario: Create equipment, then edit it, verify persistence
+        Given the character has 4 equipment cards
+        When I click the add equipment button
+        And I fill in the equipment name with "Basic Sword"
+        And I fill in the equipment description with "Standard weapon"
+        And I confirm the card edit modal
+        Then I should see 5 equipment cards
+        And I should see an equipment card with name "Basic Sword"
+        When I click the edit button on equipment "Basic Sword"
+        And I fill in the equipment name with "Enchanted Sword"
+        And I fill in the equipment description with "Magical weapon with fire damage"
+        And I confirm the card edit modal
+        Then I should see an equipment card with name "Enchanted Sword"
+        When I reload the page
+        Then I should see 5 equipment cards
+        And I should see an equipment card with name "Enchanted Sword"
+        And the equipment "Enchanted Sword" should have description "Magical weapon with fire damage"

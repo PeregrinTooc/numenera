@@ -18,7 +18,7 @@ export class EquipmentItem {
     this.editedItem = { ...item };
   }
 
-  private handleEdit(): void {
+  public handleEdit(): void {
     this.editedItem = { ...this.item };
     openCardEditModal({
       content: this.renderEditableVersion(),
