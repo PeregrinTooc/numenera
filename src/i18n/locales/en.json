@@ -63,14 +63,17 @@
   },
   "oddities": {
     "heading": "Oddities",
-    "empty": "No oddities"
+    "empty": "No oddities",
+    "oddity": "Oddity"
   },
   "items": {
     "heading": "Items"
   },
   "equipment": {
     "heading": "Equipment",
-    "empty": "No equipment"
+    "empty": "No equipment",
+    "name": "Name",
+    "description": "Description"
   },
   "abilities": {
     "heading": "Abilities",
@@ -115,6 +118,11 @@
       "confirm": "Confirm",
       "cancel": "Cancel"
     }
+  },
+  "cards": {
+    "edit": "Edit",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
   },
   "validation": {
     "xp": {

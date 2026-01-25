@@ -6,7 +6,10 @@ import { SpecialAbilityItem } from "./SpecialAbilityItem.js";
 import { t } from "../i18n/index.js";
 
 export class SpecialAbilities {
-  constructor(private specialAbilities: SpecialAbility[]) {}
+  constructor(
+    private specialAbilities: SpecialAbility[],
+    private onUpdate?: (index: number, updated: SpecialAbility) => void
+  ) {}
 
   render(): TemplateResult {
     const isEmpty = !this.specialAbilities || this.specialAbilities.length === 0;
@@ -25,7 +28,11 @@ export class SpecialAbilities {
     }
 
     const specialAbilityItems = this.specialAbilities.map((specialAbility, index) =>
-      new SpecialAbilityItem(specialAbility, index).render()
+      new SpecialAbilityItem(specialAbility, index, (updated) => {
+        if (this.onUpdate) {
+          this.onUpdate(index, updated);
+        }
+      }).render()
     );
 
     return html`

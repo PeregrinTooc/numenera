@@ -29,14 +29,13 @@
 - [x] Keyboard support (Enter/Escape)
 - [x] Touch-friendly mobile design
 - [x] i18n support (EN/DE)
-- [ ] Wire up to character data
-- [ ] Auto-save to localStorage on confirm
+- [x] Wire up to character data
+- [x] Auto-save to localStorage on confirm
 
 ### Future Editing Features
 
 - [ ] Make all other fields editable (stats, abilities, etc.)
-- [ ] Inline editing for simple text fields
-- [ ] Confirmation dialogs for destructive actions
+- [x] Inline editing for simple text fields
 
 ### Performance Notes
 

@@ -63,14 +63,17 @@
   },
   "oddities": {
     "heading": "Kuriositäten",
-    "empty": "Keine Kuriositäten"
+    "empty": "Keine Kuriositäten",
+    "oddity": "Kuriosität"
   },
   "items": {
     "heading": "Besitztümer"
   },
   "equipment": {
     "heading": "Ausrüstung",
-    "empty": "Keine Ausrüstung"
+    "empty": "Keine Ausrüstung",
+    "name": "Name",
+    "description": "Beschreibung"
   },
   "abilities": {
     "heading": "Fähigkeiten",
@@ -115,6 +118,11 @@
       "confirm": "Bestätigen",
       "cancel": "Abbrechen"
     }
+  },
+  "cards": {
+    "edit": "Bearbeiten",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen"
   },
   "validation": {
     "xp": {

@@ -1,4 +1,5 @@
 // CharacterSheet component - Main container that composes all sections
+/* global CustomEvent */
 
 import { html, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
@@ -13,6 +14,7 @@ import { Attacks } from "./Attacks.js";
 import { CyphersBox } from "./CyphersBox.js";
 import { ItemsBox } from "./ItemsBox.js";
 import { BottomTextFields } from "./BottomTextFields.js";
+import { saveCharacterState } from "../storage/localStorage.js";
 
 export class CharacterSheet {
   private header: Header;
@@ -34,7 +36,12 @@ export class CharacterSheet {
     this.basicInfo = new BasicInfo(this.character, this.onFieldUpdate);
     this.bottomTextFields = new BottomTextFields(this.character);
     this.itemsBox = new ItemsBox(this.character, this.onFieldUpdate);
-    this.attacks = new Attacks(this.character, this.onFieldUpdate);
+    this.attacks = new Attacks(this.character, this.onFieldUpdate, (index, updated) => {
+      this.character.attacks[index] = updated;
+      saveCharacterState(this.character);
+      const event = new CustomEvent("character-updated");
+      document.getElementById("app")?.dispatchEvent(event);
+    });
     this.cyphersBox = new CyphersBox(this.character, this.onFieldUpdate);
     this.stats = new Stats(this.character, this.onFieldUpdate);
   }
@@ -43,8 +50,26 @@ export class CharacterSheet {
     // Create stateless components that don't need to preserve state
     const recoveryRolls = new RecoveryRolls(this.character.recoveryRolls);
     const damageTrack = new DamageTrack(this.character.damageTrack);
-    const abilities = new Abilities(this.character.abilities);
-    const specialAbilities = new SpecialAbilities(this.character.specialAbilities);
+
+    // Collection update handlers that save directly to localStorage
+    const abilities = new Abilities(this.character.abilities, (index, updated) => {
+      this.character.abilities[index] = updated;
+      saveCharacterState(this.character);
+      // Trigger re-render via character-updated event
+      const event = new CustomEvent("character-updated");
+      document.getElementById("app")?.dispatchEvent(event);
+    });
+
+    const specialAbilities = new SpecialAbilities(
+      this.character.specialAbilities,
+      (index, updated) => {
+        this.character.specialAbilities[index] = updated;
+        saveCharacterState(this.character);
+        // Trigger re-render via character-updated event
+        const event = new CustomEvent("character-updated");
+        document.getElementById("app")?.dispatchEvent(event);
+      }
+    );
 
     return html`
       <div class="min-h-screen p-4">

@@ -1,0 +1,272 @@
+/* Card Edit Modal Styles - Fluid scaling for tablets and desktops */
+
+/* Backdrop */
+.card-edit-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.2s ease-out;
+  padding: 1rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Container */
+.card-edit-modal-container {
+  background: linear-gradient(135deg, #f5f1e8 0%, #ede5d8 100%);
+  border: 3px solid #8b6914;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  animation: slideUp 0.3s ease-out;
+  position: relative;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Modal Content - Card with editable fields */
+.card-edit-modal-content {
+  margin-bottom: 20px;
+}
+
+/* Base mobile size - no scaling */
+.card-edit-modal-content .card-edit-wrapper {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Tablet scaling (768px+) - increase to 1.5x */
+@media (min-width: 768px) {
+  .card-edit-modal-content .card-edit-wrapper {
+    font-size: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .card-edit-modal-content .card-edit-wrapper input,
+  .card-edit-modal-content .card-edit-wrapper textarea {
+    font-size: 1.5rem;
+    padding: 0.75rem;
+  }
+
+  .card-edit-modal-content .card-edit-wrapper .text-lg {
+    font-size: 1.875rem;
+  }
+
+  .card-edit-modal-content .card-edit-wrapper .text-sm {
+    font-size: 1.125rem;
+  }
+
+  .card-edit-modal-content .card-edit-wrapper .text-xs {
+    font-size: 1rem;
+  }
+
+  .card-edit-modal-container {
+    padding: 30px;
+  }
+}
+
+/* Desktop scaling (1024px+) - increase to 2x */
+@media (min-width: 1024px) {
+  .card-edit-modal-content .card-edit-wrapper {
+    font-size: 2rem;
+    line-height: 1.6;
+  }
+
+  .card-edit-modal-content .card-edit-wrapper input,
+  .card-edit-modal-content .card-edit-wrapper textarea {
+    font-size: 2rem;
+    padding: 1rem;
+  }
+
+  .card-edit-modal-content .card-edit-wrapper .text-lg {
+    font-size: 2.25rem;
+  }
+
+  .card-edit-modal-content .card-edit-wrapper .text-sm {
+    font-size: 1.5rem;
+  }
+
+  .card-edit-modal-content .card-edit-wrapper .text-xs {
+    font-size: 1.25rem;
+  }
+
+  .card-edit-modal-container {
+    padding: 40px;
+  }
+}
+
+/* Editable fields in modal */
+.card-edit-modal-content input,
+.card-edit-modal-content textarea {
+  width: 100%;
+  border: 2px solid #b8935c;
+  border-radius: 6px;
+  background: white;
+  color: #2c1810;
+  transition: all 0.2s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: inherit;
+}
+
+.card-edit-modal-content input:focus,
+.card-edit-modal-content textarea:focus {
+  outline: none;
+  border-color: #8b6914;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 0 0 3px rgba(139, 105, 20, 0.2);
+}
+
+.card-edit-modal-content textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Buttons Container */
+.card-edit-modal-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Button Base Styles */
+.card-modal-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.card-modal-button svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.card-modal-button .button-label {
+  white-space: nowrap;
+}
+
+/* Cancel Button */
+.card-modal-button.cancel {
+  background: linear-gradient(135deg, #c41e3a 0%, #9a1529 100%);
+  color: white;
+}
+
+.card-modal-button.cancel:hover {
+  background: linear-gradient(135deg, #d42644 0%, #aa1a31 100%);
+  box-shadow: 0 4px 12px rgba(196, 30, 58, 0.4);
+  transform: translateY(-1px);
+}
+
+.card-modal-button.cancel:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(196, 30, 58, 0.4);
+}
+
+/* Confirm Button */
+.card-modal-button.confirm {
+  background: linear-gradient(135deg, #8b6914 0%, #6a4f0f 100%);
+  color: white;
+}
+
+.card-modal-button.confirm:hover {
+  background: linear-gradient(135deg, #a07a18 0%, #7a5912 100%);
+  box-shadow: 0 4px 12px rgba(139, 105, 20, 0.4);
+  transform: translateY(-1px);
+}
+
+.card-modal-button.confirm:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(139, 105, 20, 0.4);
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .card-edit-modal-container {
+    padding: 16px;
+    max-width: 98vw;
+  }
+
+  .card-modal-button {
+    flex: 1;
+    justify-content: center;
+  }
+
+  /* Hide button labels on very small screens */
+  @media (max-width: 360px) {
+    .card-modal-button .button-label {
+      display: none;
+    }
+
+    .card-modal-button {
+      padding: 12px;
+    }
+  }
+}
+
+/* Accessibility: High contrast mode support */
+@media (prefers-contrast: high) {
+  .card-edit-modal-container {
+    border-width: 4px;
+  }
+
+  .card-edit-modal-content input,
+  .card-edit-modal-content textarea {
+    border-width: 3px;
+  }
+
+  .card-modal-button {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Accessibility: Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .card-edit-modal-backdrop,
+  .card-edit-modal-container,
+  .card-modal-button {
+    animation: none;
+    transition: none;
+  }
+}

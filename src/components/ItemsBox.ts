@@ -1,4 +1,5 @@
 // ItemsBox component - Combines Equipment, Artifacts, and Oddities in a single box with Shins badge
+/* global CustomEvent */
 
 import { html, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
@@ -29,9 +30,35 @@ export class ItemsBox {
   }
 
   render(): TemplateResult {
-    const equipmentItems = this.character.equipment.map((item) => new EquipmentItem(item));
-    const artifactItems = this.character.artifacts.map((artifact) => new ArtifactItem(artifact));
-    const oddityItems = this.character.oddities.map((oddity) => new OddityItem(oddity));
+    const equipmentItems = this.character.equipment.map(
+      (item, index) =>
+        new EquipmentItem(item, index, (updated) => {
+          this.character.equipment[index] = updated;
+          // Trigger re-render via character-updated event
+          const event = new CustomEvent("character-updated");
+          document.getElementById("app")?.dispatchEvent(event);
+        })
+    );
+
+    const artifactItems = this.character.artifacts.map(
+      (artifact, index) =>
+        new ArtifactItem(artifact, index, (updated) => {
+          this.character.artifacts[index] = updated;
+          // Trigger re-render via character-updated event
+          const event = new CustomEvent("character-updated");
+          document.getElementById("app")?.dispatchEvent(event);
+        })
+    );
+
+    const oddityItems = this.character.oddities.map(
+      (oddity, index) =>
+        new OddityItem(oddity, index, (updated) => {
+          this.character.oddities[index] = updated;
+          // Trigger re-render via character-updated event
+          const event = new CustomEvent("character-updated");
+          document.getElementById("app")?.dispatchEvent(event);
+        })
+    );
 
     return html`
       <div data-testid="items-section" class="section-box">

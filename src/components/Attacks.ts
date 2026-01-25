@@ -1,7 +1,7 @@
 // Attacks component - Displays character attacks in grid
 
 import { html, TemplateResult } from "lit-html";
-import { Character } from "../types/character.js";
+import { Character, Attack } from "../types/character.js";
 import { AttackItem } from "./AttackItem.js";
 import { ModalService } from "../services/modalService.js";
 import { t } from "../i18n/index.js";
@@ -11,7 +11,8 @@ type FieldType = "armor";
 export class Attacks {
   constructor(
     private character: Character,
-    private onFieldUpdate: (field: FieldType, value: number) => void
+    private onFieldUpdate: (field: FieldType, value: number) => void,
+    private onAttackUpdate?: (index: number, updated: Attack) => void
   ) {}
 
   private openEditModal(fieldType: FieldType): void {
@@ -58,7 +59,13 @@ export class Attacks {
           : html`
               <div class="grid grid-cols-1 gap-4">
                 ${this.character.attacks.map((attack, index) =>
-                  new AttackItem(attack, index).render()
+                  new AttackItem(
+                    attack,
+                    index,
+                    this.onAttackUpdate
+                      ? (updated) => this.onAttackUpdate!(index, updated)
+                      : undefined
+                  ).render()
                 )}
               </div>
             `}

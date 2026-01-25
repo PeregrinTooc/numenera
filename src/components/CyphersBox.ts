@@ -1,4 +1,5 @@
 // CyphersBox component - Displays cyphers in a standalone section with max cyphers badge
+/* global CustomEvent */
 
 import { html, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
@@ -27,7 +28,15 @@ export class CyphersBox {
   }
 
   render(): TemplateResult {
-    const cypherItems = this.character.cyphers.map((cypher) => new CypherItem(cypher));
+    const cypherItems = this.character.cyphers.map(
+      (cypher, index) =>
+        new CypherItem(cypher, index, (updated) => {
+          this.character.cyphers[index] = updated;
+          // Trigger re-render via character-updated event
+          const event = new CustomEvent("character-updated");
+          document.getElementById("app")?.dispatchEvent(event);
+        })
+    );
 
     return html`
       <div data-testid="cyphers-section" class="section-box">
