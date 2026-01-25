@@ -9,9 +9,13 @@ import { CustomWorld } from "../support/world.js";
 const FIELD_TEST_IDS: Record<string, string> = {
   // Basic Info fields
   "character name": "character-name",
+  "character name value": "character-name",
   tier: "character-tier",
+  "tier value": "character-tier",
   descriptor: "character-descriptor",
+  "descriptor value": "character-descriptor",
   focus: "character-focus",
+  "focus value": "character-focus",
 
   // Stat Pool fields
   "Might Pool": "stat-might-pool",
@@ -130,6 +134,45 @@ When("I tap the Shins badge", async function (this: CustomWorld) {
   await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
 });
 
+// Basic info field click steps (with value parameter)
+When("I click on the character name {string}", async function (this: CustomWorld, _name: string) {
+  await this.page!.locator('[data-testid="character-name"]').click();
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
+});
+
+When("I click on the tier {string}", async function (this: CustomWorld, _tier: string) {
+  await this.page!.locator('[data-testid="character-tier"]').click();
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
+});
+
+When("I click on the descriptor {string}", async function (this: CustomWorld, _descriptor: string) {
+  await this.page!.locator('[data-testid="character-descriptor"]').click();
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
+});
+
+When("I click on the focus {string}", async function (this: CustomWorld, _focus: string) {
+  await this.page!.locator('[data-testid="character-focus"]').click();
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
+});
+
+When("I tap on the character name {string}", async function (this: CustomWorld, _name: string) {
+  await this.page!.locator('[data-testid="character-name"]').tap();
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
+});
+
+When("I tap on the tier {string}", async function (this: CustomWorld, _tier: string) {
+  await this.page!.locator('[data-testid="character-tier"]').tap();
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
+});
+
+When("I hover over the character name {string}", async function (this: CustomWorld, _name: string) {
+  await this.page!.locator('[data-testid="character-name"]').hover();
+});
+
+When("I hover over the tier {string}", async function (this: CustomWorld, _tier: string) {
+  await this.page!.locator('[data-testid="character-tier"]').hover();
+});
+
 When("I click the modal confirm button", async function (this: CustomWorld) {
   await this.page!.click('[data-testid="modal-confirm-button"]');
   await this.page!.waitForSelector('[data-testid="edit-modal"]', {
@@ -240,6 +283,29 @@ When("I type {string} in the modal input", async function (this: CustomWorld, va
   }
 });
 
+When("I type {string} in the input field", async function (this: CustomWorld, text: string) {
+  const input = this.page!.locator('[data-testid="edit-modal-input"]');
+  await input.fill(text);
+});
+
+When("I click outside the modal on the backdrop", async function (this: CustomWorld) {
+  // Click in the top-left corner which is definitely the backdrop, not the modal
+  await this.page!.click("body", { position: { x: 10, y: 10 } });
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
+    state: "hidden",
+    timeout: 1000,
+  });
+});
+
+When("I tap outside the modal on the backdrop", async function (this: CustomWorld) {
+  // Tap in the top-left corner which is definitely the backdrop, not the modal
+  await this.page!.tap("body", { position: { x: 10, y: 10 } });
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
+    state: "hidden",
+    timeout: 1000,
+  });
+});
+
 When("I press the Escape key", async function (this: CustomWorld) {
   await this.page!.keyboard.press("Escape");
 });
@@ -336,6 +402,16 @@ Then(
 Then("the modal should close", async function (this: CustomWorld) {
   const modal = this.page!.locator('[data-testid="edit-modal"]');
   await expect(modal).not.toBeVisible();
+});
+
+Then("the input field should contain {string}", async function (this: CustomWorld, value: string) {
+  const input = this.page!.locator('[data-testid="edit-modal-input"]');
+  await expect(input).toHaveValue(value);
+});
+
+Then("the input field should receive focus automatically", async function (this: CustomWorld) {
+  const input = this.page!.locator('[data-testid="edit-modal-input"]');
+  await expect(input).toBeFocused();
 });
 
 Then("the input field should be focused", async function (this: CustomWorld) {

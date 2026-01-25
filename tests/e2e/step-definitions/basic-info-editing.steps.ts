@@ -2,6 +2,17 @@ import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 
+// ============================================================================
+// UNIQUE STEPS FOR BASIC INFO EDITING
+// ============================================================================
+// NOTE: Most common steps (click, type, modal interactions) are now in common-steps.ts
+// This file contains only unique steps specific to basic info editing:
+// - Modal validation and styling
+// - Accessibility features
+// - Mobile-specific assertions
+// - Character field display assertions
+// ============================================================================
+
 // Helper function to get field selector
 function getFieldSelector(fieldName: string): string {
   const fieldMap: Record<string, string> = {
@@ -13,48 +24,9 @@ function getFieldSelector(fieldName: string): string {
   return fieldMap[fieldName.toLowerCase()] || "";
 }
 
-// Modal interactions
-When("I click on the character name {string}", async function (this: CustomWorld, _name: string) {
-  const selector = getFieldSelector("name");
-  await this.page!.click(selector);
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-});
-
-When("I click on the tier {string}", async function (this: CustomWorld, _tier: string) {
-  const selector = getFieldSelector("tier");
-  await this.page!.click(selector);
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-});
-
-When("I click on the descriptor {string}", async function (this: CustomWorld, _descriptor: string) {
-  const selector = getFieldSelector("descriptor");
-  await this.page!.click(selector);
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-});
-
-When("I click on the focus {string}", async function (this: CustomWorld, _focus: string) {
-  const selector = getFieldSelector("focus");
-  await this.page!.click(selector);
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-});
-
-When("I tap on the character name {string}", async function (this: CustomWorld, _name: string) {
-  const selector = getFieldSelector("name");
-  await this.page!.tap(selector);
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-});
-
-When("I tap on the tier {string}", async function (this: CustomWorld, _tier: string) {
-  const selector = getFieldSelector("tier");
-  await this.page!.tap(selector);
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-});
-
-// Input interactions
-When("I type {string} in the input field", async function (this: CustomWorld, text: string) {
-  const input = this.page!.locator('[data-testid="edit-modal-input"]');
-  await input.fill(text);
-});
+// ============================================================================
+// UNIQUE WHEN STEPS
+// ============================================================================
 
 When("I press Tab repeatedly", async function (this: CustomWorld) {
   const validElements = ["edit-modal-input", "modal-confirm-button", "modal-cancel-button"];
@@ -74,7 +46,6 @@ When("I press Tab repeatedly", async function (this: CustomWorld) {
   }
 });
 
-// Button interactions
 When("I click the confirm button", async function (this: CustomWorld) {
   const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
   const isDisabled = await confirmButton.isDisabled();
@@ -108,36 +79,9 @@ When("I tap the confirm button", async function (this: CustomWorld) {
   });
 });
 
-When("I click outside the modal on the backdrop", async function (this: CustomWorld) {
-  // Click in the top-left corner which is definitely the backdrop, not the modal
-  await this.page!.click("body", { position: { x: 10, y: 10 } });
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
-    state: "hidden",
-    timeout: 1000,
-  });
-});
-
-When("I tap outside the modal on the backdrop", async function (this: CustomWorld) {
-  // Tap in the top-left corner which is definitely the backdrop, not the modal
-  await this.page!.tap("body", { position: { x: 10, y: 10 } });
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
-    state: "hidden",
-    timeout: 1000,
-  });
-});
-
-// Hover interactions
-When("I hover over the character name {string}", async function (this: CustomWorld, _name: string) {
-  const selector = getFieldSelector("name");
-  await this.page!.hover(selector);
-});
-
-When("I hover over the tier {string}", async function (this: CustomWorld, _tier: string) {
-  const selector = getFieldSelector("tier");
-  await this.page!.hover(selector);
-});
-
-// Modal assertions
+// ============================================================================
+// UNIQUE THEN STEPS - Modal Assertions
+// ============================================================================
 
 Then(
   "the modal should have aria-label {string}",
@@ -154,11 +98,6 @@ Then("the modal should have German aria-label translation", async function (this
   // Check that it's truthy and not the English version
   expect(ariaLabel).toBeTruthy();
   expect(ariaLabel).not.toBe("Edit Character Name");
-});
-
-Then("the input field should contain {string}", async function (this: CustomWorld, value: string) {
-  const input = this.page!.locator('[data-testid="edit-modal-input"]');
-  await expect(input).toHaveValue(value);
 });
 
 Then("the modal should have a confirm button with icon", async function (this: CustomWorld) {
@@ -184,7 +123,10 @@ Then(
   }
 );
 
-// Character field assertions
+// ============================================================================
+// UNIQUE THEN STEPS - Character Field Display Assertions
+// ============================================================================
+
 Then(
   "the character name should display {string}",
   async function (this: CustomWorld, name: string) {
@@ -220,7 +162,10 @@ Then("the focus should display {string}", async function (this: CustomWorld, foc
   await expect(focusElement).toHaveText(focus);
 });
 
-// Validation assertions
+// ============================================================================
+// UNIQUE THEN STEPS - Validation Assertions
+// ============================================================================
+
 Then(
   "the tier should be constrained to {string}",
   async function (this: CustomWorld, _tier: string) {
@@ -245,7 +190,10 @@ Then("an error or validation message may appear", async function (this: CustomWo
   // We don't strictly require them, so this is a no-op
 });
 
-// Visual styling assertions
+// ============================================================================
+// UNIQUE THEN STEPS - Visual Styling Assertions
+// ============================================================================
+
 Then("the modal should have Numenera-themed styling", async function (this: CustomWorld) {
   const modal = this.page!.locator('[data-testid="edit-modal"]');
   const bgColor = await modal.evaluate(
@@ -298,7 +246,10 @@ Then(
   }
 );
 
-// Focus and keyboard navigation
+// ============================================================================
+// UNIQUE THEN STEPS - Focus and Keyboard Navigation
+// ============================================================================
+
 Then(
   "focus should cycle between input field, confirm button, and cancel button",
   async function (this: CustomWorld) {
@@ -343,11 +294,6 @@ Then("focus should not leave the modal", async function (this: CustomWorld) {
   expect(isWithinModal).toBe(true);
 });
 
-Then("the input field should receive focus automatically", async function (this: CustomWorld) {
-  const input = this.page!.locator('[data-testid="edit-modal-input"]');
-  await expect(input).toBeFocused();
-});
-
 Then("I can navigate with Tab key", async function (this: CustomWorld) {
   await this.page!.keyboard.press("Tab");
   const focusedElement = await this.page!.evaluate(() =>
@@ -370,7 +316,10 @@ Then("I can cancel with Escape key", async function (this: CustomWorld) {
   await expect(modal).toBeVisible();
 });
 
-// Accessibility assertions
+// ============================================================================
+// UNIQUE THEN STEPS - Accessibility Assertions
+// ============================================================================
+
 Then("the modal should have role={string}", async function (this: CustomWorld, role: string) {
   const modal = this.page!.locator('[data-testid="edit-modal"]');
   const actualRole = await modal.getAttribute("role");
@@ -392,7 +341,33 @@ Then(
   }
 );
 
-// Mobile-specific assertions
+Then("the confirm button should have appropriate label", async function (this: CustomWorld) {
+  const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
+  const ariaLabel = await confirmButton.getAttribute("aria-label");
+  expect(ariaLabel).toBeTruthy();
+});
+
+Then("the cancel button should have appropriate label", async function (this: CustomWorld) {
+  const cancelButton = this.page!.locator('[data-testid="modal-cancel-button"]');
+  const ariaLabel = await cancelButton.getAttribute("aria-label");
+  expect(ariaLabel).toBeTruthy();
+});
+
+Then("the buttons should display German translations", async function (this: CustomWorld) {
+  const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
+  const cancelButton = this.page!.locator('[data-testid="modal-cancel-button"]');
+
+  const confirmLabel = await confirmButton.getAttribute("aria-label");
+  const cancelLabel = await cancelButton.getAttribute("aria-label");
+
+  expect(confirmLabel).toBeTruthy();
+  expect(cancelLabel).toBeTruthy();
+});
+
+// ============================================================================
+// UNIQUE GIVEN/THEN STEPS - Mobile Device Configuration
+// ============================================================================
+
 Given(
   "I am viewing on a mobile device with width {string}",
   async function (this: CustomWorld, width: string) {
@@ -512,27 +487,3 @@ Then(
     expect(box!.height).toBeGreaterThanOrEqual(44);
   }
 );
-
-// i18n assertions
-Then("the confirm button should have appropriate label", async function (this: CustomWorld) {
-  const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
-  const ariaLabel = await confirmButton.getAttribute("aria-label");
-  expect(ariaLabel).toBeTruthy();
-});
-
-Then("the cancel button should have appropriate label", async function (this: CustomWorld) {
-  const cancelButton = this.page!.locator('[data-testid="modal-cancel-button"]');
-  const ariaLabel = await cancelButton.getAttribute("aria-label");
-  expect(ariaLabel).toBeTruthy();
-});
-
-Then("the buttons should display German translations", async function (this: CustomWorld) {
-  const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
-  const cancelButton = this.page!.locator('[data-testid="modal-cancel-button"]');
-
-  const confirmLabel = await confirmButton.getAttribute("aria-label");
-  const cancelLabel = await cancelButton.getAttribute("aria-label");
-
-  expect(confirmLabel).toBeTruthy();
-  expect(cancelLabel).toBeTruthy();
-});
