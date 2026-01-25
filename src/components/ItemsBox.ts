@@ -1,11 +1,11 @@
 // ItemsBox component - Combines Equipment, Artifacts, and Oddities in a single box with Shins badge
 
-import { html, render, TemplateResult } from "lit-html";
+import { html, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
 import { EquipmentItem } from "./EquipmentItem.js";
 import { ArtifactItem } from "./ArtifactItem.js";
 import { OddityItem } from "./OddityItem.js";
-import { EditFieldModal } from "./EditFieldModal.js";
+import { ModalService } from "../services/modalService.js";
 import { t } from "../i18n/index.js";
 
 type FieldType = "shins";
@@ -19,35 +19,13 @@ export class ItemsBox {
   private openEditModal(fieldType: FieldType): void {
     const currentValue = this.character.shins;
 
-    // Create modal element and append to body
-    const modalContainer = document.createElement("div");
-    document.body.appendChild(modalContainer);
-
-    const modal = new EditFieldModal({
+    ModalService.openEditModal({
       fieldType,
       currentValue,
       onConfirm: (newValue) => {
         this.onFieldUpdate(fieldType, newValue as number);
-        document.body.removeChild(modalContainer);
-      },
-      onCancel: () => {
-        document.body.removeChild(modalContainer);
       },
     });
-
-    // Render modal into the container
-    render(modal.render(), modalContainer);
-
-    // Focus the input field after render
-    setTimeout(() => {
-      const input = modalContainer.querySelector<HTMLInputElement>(
-        '[data-testid="edit-modal-input"]'
-      );
-      if (input) {
-        input.focus();
-        input.select();
-      }
-    }, 0);
   }
 
   render(): TemplateResult {

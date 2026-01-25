@@ -1,10 +1,10 @@
 // StatPool component - Displays a single stat pool (Might, Speed, or Intellect)
 // Redesigned to match official Numenera character sheet aesthetic
 
-import { html, render, TemplateResult } from "lit-html";
+import { html, TemplateResult } from "lit-html";
 import { t } from "../i18n/index.js";
 import { StatPool as StatPoolType } from "../types/character.js";
-import { EditFieldModal } from "./EditFieldModal.js";
+import { ModalService } from "../services/modalService.js";
 
 type FieldType =
   | "mightPool"
@@ -32,36 +32,13 @@ export class StatPool {
     // Get the current value for this field
     const currentValue = this.stats[fieldName];
 
-    // Create modal element and append to body
-    const modalContainer = document.createElement("div");
-    document.body.appendChild(modalContainer);
-
-    const modal = new EditFieldModal({
+    ModalService.openEditModal({
       fieldType,
       currentValue,
       onConfirm: (newValue) => {
         this.onFieldUpdate(fieldType, newValue as number);
-        document.body.removeChild(modalContainer);
-      },
-      onCancel: () => {
-        document.body.removeChild(modalContainer);
       },
     });
-
-    // Render modal into the container
-    render(modal.render(), modalContainer);
-
-    // Focus the input field after render
-    setTimeout(() => {
-      const input = modalContainer.querySelector<HTMLInputElement>(
-        '[data-testid="edit-modal-input"]'
-      );
-      if (input) {
-        input.focus();
-        // Select all text for easier editing
-        input.select();
-      }
-    }, 0);
   }
 
   render(): TemplateResult {
