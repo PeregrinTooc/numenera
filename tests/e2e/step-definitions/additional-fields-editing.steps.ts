@@ -2,7 +2,9 @@ import { When, Then, Given } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 
-// Background Data Setup Step
+// ============================================================================
+// BACKGROUND DATA SETUP - Unique to additional fields
+// ============================================================================
 
 Given("the character has the following data:", async function (this: CustomWorld, dataTable) {
   // Parse the data table - it's in vertical format with field/value columns
@@ -70,7 +72,9 @@ Given("the character has the following data:", async function (this: CustomWorld
   await this.page!.waitForLoadState("domcontentloaded");
 });
 
-// Type Dropdown Steps
+// ============================================================================
+// TYPE DROPDOWN STEPS - Unique to additional fields (not modal-based)
+// ============================================================================
 
 When("I click on the type dropdown", async function (this: CustomWorld) {
   const select = this.page!.locator('[data-testid="character-type-select"]');
@@ -232,7 +236,9 @@ Then(
   }
 );
 
-// Background Field Steps
+// ============================================================================
+// BACKGROUND FIELD STEPS - Unique inline editing (not modal-based)
+// ============================================================================
 
 Then("the background textarea should be readonly", async function (this: CustomWorld) {
   const textarea = this.page!.locator('[data-testid="character-background"]');
@@ -376,17 +382,6 @@ Then(
   }
 );
 
-When("the notes textarea is empty", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  await textarea.clear();
-});
-
-Then("the notes placeholder should be {string}", async function (this: CustomWorld, text: string) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  const placeholder = await textarea.getAttribute("placeholder");
-  expect(placeholder).toBe(text);
-});
-
 Then(
   "the character data should have background {string}",
   async function (this: CustomWorld, text: string) {
@@ -426,7 +421,9 @@ Then(
   }
 );
 
-// Notes Field Steps
+// ============================================================================
+// NOTES FIELD STEPS - Unique inline editing (not modal-based)
+// ============================================================================
 
 Then("the notes textarea should be readonly", async function (this: CustomWorld) {
   const textarea = this.page!.locator('[data-testid="character-notes"]');
@@ -534,6 +531,17 @@ Then("the notes textarea should be empty", async function (this: CustomWorld) {
   await expect(textarea).toHaveValue("");
 });
 
+When("the notes textarea is empty", async function (this: CustomWorld) {
+  const textarea = this.page!.locator('[data-testid="character-notes"]');
+  await textarea.clear();
+});
+
+Then("the notes placeholder should be {string}", async function (this: CustomWorld, text: string) {
+  const textarea = this.page!.locator('[data-testid="character-notes"]');
+  const placeholder = await textarea.getAttribute("placeholder");
+  expect(placeholder).toBe(text);
+});
+
 Then(
   "the character data should have notes {string}",
   async function (this: CustomWorld, text: string) {
@@ -566,7 +574,9 @@ Then(
   }
 );
 
-// Interaction and Event Steps
+// ============================================================================
+// INTERACTION AND EVENT STEPS - Unique to additional fields
+// ============================================================================
 
 When("I edit the background field and then switch to notes", async function (this: CustomWorld) {
   const backgroundTextarea = this.page!.locator('[data-testid="character-background"]');
@@ -626,7 +636,9 @@ Then(
   }
 );
 
-// Edge Case Steps
+// ============================================================================
+// EDGE CASE STEPS - Unique to additional fields
+// ============================================================================
 
 When("I try to edit both background and notes simultaneously", async function (this: CustomWorld) {
   const backgroundTextarea = this.page!.locator('[data-testid="character-background"]');
@@ -685,7 +697,9 @@ Then("the notes field should preserve the special characters", async function (t
   expect(value).toContain("<>&\"'`");
 });
 
-// Long Text Steps
+// ============================================================================
+// LONG TEXT STEPS - Unique to additional fields
+// ============================================================================
 
 When(
   "I type a {int} character string in the background textarea",
@@ -753,7 +767,9 @@ Then("the character data should have the full notes text", async function (this:
   expect(notes).toBe("B".repeat(2000));
 });
 
-// Mobile Device Steps
+// ============================================================================
+// MOBILE DEVICE STEPS - Unique to additional fields
+// ============================================================================
 
 Given("I am using a mobile device", async function (this: CustomWorld) {
   // Set mobile viewport for tablet (iPad)
