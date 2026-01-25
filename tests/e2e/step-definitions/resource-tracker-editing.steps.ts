@@ -1,173 +1,31 @@
-import { Given, When, Then } from "@cucumber/cucumber";
+import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 
 // ============================================================================
-// GIVEN STEPS - Setup character state
+// GIVEN STEPS - Setup character state with specific resource values
 // ============================================================================
 
-Given("the character has {int} XP", async function (this: CustomWorld, xp: number) {
-  const character = {
-    name: "Test Character",
-    tier: 1,
-    type: "Nano",
-    descriptor: "Strong",
-    focus: "Controls Beasts",
-    xp,
-    shins: 0,
-    armor: 0,
-    effort: 1,
-    maxCyphers: 2,
-    stats: {
-      might: { pool: 10, current: 10, edge: 0 },
-      speed: { pool: 10, current: 10, edge: 0 },
-      intellect: { pool: 10, current: 10, edge: 0 },
-    },
-    textFields: {
-      background: "",
-      notes: "",
-    },
-    abilities: [],
-    attacks: [],
-    specialAbilities: [],
-    equipment: [],
-    cyphers: [],
-    artifacts: [],
-    oddities: [],
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: {
-      impairment: "healthy",
-    },
-  };
-
-  const wrappedState = {
-    schemaVersion: 4,
-    character: character,
-  };
-
-  await this.page!.evaluate((state) => {
-    localStorage.setItem("numenera-character-state", JSON.stringify(state));
-  }, wrappedState);
-
-  await this.page!.reload();
-  await this.page!.waitForLoadState("domcontentloaded");
-});
-
-Given("the character has {int} shins", async function (this: CustomWorld, shins: number) {
-  const character = {
-    name: "Test Character",
-    tier: 1,
-    type: "Nano",
-    descriptor: "Strong",
-    focus: "Controls Beasts",
-    xp: 0,
-    shins,
-    armor: 0,
-    effort: 1,
-    maxCyphers: 2,
-    stats: {
-      might: { pool: 10, current: 10, edge: 0 },
-      speed: { pool: 10, current: 10, edge: 0 },
-      intellect: { pool: 10, current: 10, edge: 0 },
-    },
-    textFields: {
-      background: "",
-      notes: "",
-    },
-    abilities: [],
-    attacks: [],
-    specialAbilities: [],
-    equipment: [],
-    cyphers: [],
-    artifacts: [],
-    oddities: [],
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: {
-      impairment: "healthy",
-    },
-  };
-
-  const wrappedState = {
-    schemaVersion: 4,
-    character: character,
-  };
-
-  await this.page!.evaluate((state) => {
-    localStorage.setItem("numenera-character-state", JSON.stringify(state));
-  }, wrappedState);
-
-  await this.page!.reload();
-  await this.page!.waitForLoadState("domcontentloaded");
-});
-
-Given("the character has {int} armor", async function (this: CustomWorld, armor: number) {
-  const character = {
-    name: "Test Character",
-    tier: 1,
-    type: "Nano",
-    descriptor: "Strong",
-    focus: "Controls Beasts",
-    xp: 0,
-    shins: 0,
-    armor,
-    effort: 1,
-    maxCyphers: 2,
-    stats: {
-      might: { pool: 10, current: 10, edge: 0 },
-      speed: { pool: 10, current: 10, edge: 0 },
-      intellect: { pool: 10, current: 10, edge: 0 },
-    },
-    textFields: {
-      background: "",
-      notes: "",
-    },
-    abilities: [],
-    attacks: [],
-    specialAbilities: [],
-    equipment: [],
-    cyphers: [],
-    artifacts: [],
-    oddities: [],
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: {
-      impairment: "healthy",
-    },
-  };
-
-  const wrappedState = {
-    schemaVersion: 4,
-    character: character,
-  };
-
-  await this.page!.evaluate((state) => {
-    localStorage.setItem("numenera-character-state", JSON.stringify(state));
-  }, wrappedState);
-
-  await this.page!.reload();
-  await this.page!.waitForLoadState("domcontentloaded");
-});
-
+/**
+ * Unified Given step for setting up character with specific resource tracker value
+ * Replaces 5 duplicate Given steps (XP, Shins, Armor, Max Cyphers, Effort)
+ */
 Given(
-  "the character has max cyphers {int}",
-  async function (this: CustomWorld, maxCyphers: number) {
+  "the character has {string} set to {int}",
+  async function (this: CustomWorld, resourceName: string, value: number) {
+    const resourceMap: Record<string, string> = {
+      XP: "xp",
+      shins: "shins",
+      armor: "armor",
+      "max cyphers": "maxCyphers",
+      effort: "effort",
+    };
+
+    const fieldKey = resourceMap[resourceName];
+    if (!fieldKey) {
+      throw new Error(`Unknown resource: "${resourceName}"`);
+    }
+
     const character = {
       name: "Test Character",
       tier: 1,
@@ -178,7 +36,7 @@ Given(
       shins: 0,
       armor: 0,
       effort: 1,
-      maxCyphers,
+      maxCyphers: 2,
       stats: {
         might: { pool: 10, current: 10, edge: 0 },
         speed: { pool: 10, current: 10, edge: 0 },
@@ -205,6 +63,7 @@ Given(
       damageTrack: {
         impairment: "healthy",
       },
+      [fieldKey]: value,
     };
 
     const wrappedState = {
@@ -221,7 +80,8 @@ Given(
   }
 );
 
-Given("the character has effort {int}", async function (this: CustomWorld, effort: number) {
+// Helper function to create character state
+function createCharacterState(fieldKey: string, value: number) {
   const character = {
     name: "Test Character",
     tier: 1,
@@ -231,7 +91,7 @@ Given("the character has effort {int}", async function (this: CustomWorld, effor
     xp: 0,
     shins: 0,
     armor: 0,
-    effort,
+    effort: 1,
     maxCyphers: 2,
     stats: {
       might: { pool: 10, current: 10, edge: 0 },
@@ -259,103 +119,66 @@ Given("the character has effort {int}", async function (this: CustomWorld, effor
     damageTrack: {
       impairment: "healthy",
     },
+    [fieldKey]: value,
   };
 
-  const wrappedState = {
+  return {
     schemaVersion: 4,
     character: character,
   };
+}
 
+// Legacy Given steps for backward compatibility with existing feature files
+Given("the character has {int} XP", async function (this: CustomWorld, xp: number) {
+  const wrappedState = createCharacterState("xp", xp);
   await this.page!.evaluate((state) => {
     localStorage.setItem("numenera-character-state", JSON.stringify(state));
   }, wrappedState);
+  await this.page!.reload();
+  await this.page!.waitForLoadState("domcontentloaded");
+});
 
+Given("the character has {int} shins", async function (this: CustomWorld, shins: number) {
+  const wrappedState = createCharacterState("shins", shins);
+  await this.page!.evaluate((state) => {
+    localStorage.setItem("numenera-character-state", JSON.stringify(state));
+  }, wrappedState);
+  await this.page!.reload();
+  await this.page!.waitForLoadState("domcontentloaded");
+});
+
+Given("the character has {int} armor", async function (this: CustomWorld, armor: number) {
+  const wrappedState = createCharacterState("armor", armor);
+  await this.page!.evaluate((state) => {
+    localStorage.setItem("numenera-character-state", JSON.stringify(state));
+  }, wrappedState);
+  await this.page!.reload();
+  await this.page!.waitForLoadState("domcontentloaded");
+});
+
+Given(
+  "the character has max cyphers {int}",
+  async function (this: CustomWorld, maxCyphers: number) {
+    const wrappedState = createCharacterState("maxCyphers", maxCyphers);
+    await this.page!.evaluate((state) => {
+      localStorage.setItem("numenera-character-state", JSON.stringify(state));
+    }, wrappedState);
+    await this.page!.reload();
+    await this.page!.waitForLoadState("domcontentloaded");
+  }
+);
+
+Given("the character has effort {int}", async function (this: CustomWorld, effort: number) {
+  const wrappedState = createCharacterState("effort", effort);
+  await this.page!.evaluate((state) => {
+    localStorage.setItem("numenera-character-state", JSON.stringify(state));
+  }, wrappedState);
   await this.page!.reload();
   await this.page!.waitForLoadState("domcontentloaded");
 });
 
 // ============================================================================
-// WHEN STEPS - User actions
-// ============================================================================
-
-When("I click the XP badge", async function (this: CustomWorld) {
-  const xpBadge = this.page!.locator('[data-testid="xp-badge"]');
-  await xpBadge.click();
-});
-
-When("I tap the XP badge", async function (this: CustomWorld) {
-  const xpBadge = this.page!.locator('[data-testid="xp-badge"]');
-  await xpBadge.tap();
-});
-
-When("I click the Shins badge", async function (this: CustomWorld) {
-  const shinsBadge = this.page!.locator('[data-testid="shins-badge"]');
-  await shinsBadge.click();
-});
-
-When("I tap the Shins badge", async function (this: CustomWorld) {
-  const shinsBadge = this.page!.locator('[data-testid="shins-badge"]');
-  await shinsBadge.tap();
-});
-
-When("I click the Armor badge", async function (this: CustomWorld) {
-  const armorBadge = this.page!.locator('[data-testid="armor-badge"]');
-  await armorBadge.click();
-});
-
-When("I click the Max Cyphers badge", async function (this: CustomWorld) {
-  const maxCyphersBadge = this.page!.locator('[data-testid="max-cyphers-badge"]');
-  await maxCyphersBadge.click();
-});
-
-When("I click the Effort badge", async function (this: CustomWorld) {
-  const effortBadge = this.page!.locator('[data-testid="effort-badge"]');
-  await effortBadge.click();
-});
-
-When("I type {string} in the modal input", async function (this: CustomWorld, value: string) {
-  const input = this.page!.locator('[data-testid="edit-modal-input"]');
-  await input.clear();
-
-  // For non-numeric values in number inputs, use pressSequentially to simulate keyboard
-  const inputType = await input.getAttribute("type");
-  if (inputType === "number" && !/^\d+$/.test(value)) {
-    await input.pressSequentially(value);
-  } else {
-    await input.fill(value);
-  }
-});
-
-When("I click the modal confirm button", async function (this: CustomWorld) {
-  const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
-  await confirmButton.click();
-});
-
-When("I tap the modal confirm button", async function (this: CustomWorld) {
-  const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
-  await confirmButton.tap();
-});
-
-When("I click the modal cancel button", async function (this: CustomWorld) {
-  const cancelButton = this.page!.locator('[data-testid="modal-cancel-button"]');
-  await cancelButton.click();
-});
-
-When("I click the modal backdrop", async function (this: CustomWorld) {
-  const backdrop = this.page!.locator('[data-testid="modal-backdrop"]');
-  await backdrop.click({ position: { x: 10, y: 10 } });
-});
-
-When("I press Escape", async function (this: CustomWorld) {
-  await this.page!.keyboard.press("Escape");
-});
-
-When("I press Enter", async function (this: CustomWorld) {
-  await this.page!.keyboard.press("Enter");
-});
-
-// ============================================================================
-// THEN STEPS - Assertions
+// THEN STEPS - Badge-specific assertions
 // ============================================================================
 
 Then(
@@ -398,18 +221,9 @@ Then(
   }
 );
 
-Then("the edit modal should open", async function (this: CustomWorld) {
-  const modal = this.page!.locator('[data-testid="edit-modal"]');
-  await expect(modal).toBeVisible();
-});
-
-Then(
-  "the modal input should contain {string}",
-  async function (this: CustomWorld, expectedValue: string) {
-    const input = this.page!.locator('[data-testid="edit-modal-input"]');
-    await expect(input).toHaveValue(expectedValue);
-  }
-);
+// ============================================================================
+// THEN STEPS - LocalStorage data verification
+// ============================================================================
 
 Then(
   "the character data should have xp {int}",
@@ -500,3 +314,17 @@ Then("the modal confirm button should be disabled", async function (this: Custom
   const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
   await expect(confirmButton).toBeDisabled();
 });
+
+// ============================================================================
+// NOTE: The following steps are now handled by common-steps.ts:
+// - When I click the XP/Shins/Armor/Max Cyphers/Effort badge
+// - When I tap the XP/Shins badge
+// - When I type {string} in the modal input
+// - When I click the modal confirm/cancel button
+// - When I tap the modal confirm button
+// - When I click the modal backdrop
+// - When I press Escape/Enter
+// - Then the edit modal should open
+// - Then the modal input should contain {string}
+// - Then the modal should close
+// ============================================================================

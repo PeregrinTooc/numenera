@@ -24,7 +24,14 @@ const FIELD_TEST_IDS: Record<string, string> = {
   "Intellect Edge": "stat-intellect-edge",
   "Intellect Current": "stat-intellect-current",
 
-  // Resource trackers
+  // Resource trackers (badges)
+  "XP badge": "xp-badge",
+  "Shins badge": "shins-badge",
+  "Armor badge": "armor-badge",
+  "Max Cyphers badge": "max-cyphers-badge",
+  "Effort badge": "effort-badge",
+
+  // Resource trackers (legacy - for backward compatibility)
   XP: "xp-badge",
   Shins: "shins-badge",
   Armor: "armor-badge",
@@ -87,13 +94,88 @@ When("I click the Cancel button", async function (this: CustomWorld) {
   });
 });
 
+// Individual badge click steps
+When("I click the XP badge", async function (this: CustomWorld) {
+  await this.page!.locator('[data-testid="xp-badge"]').click();
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
+});
+
+When("I click the Shins badge", async function (this: CustomWorld) {
+  await this.page!.locator('[data-testid="shins-badge"]').click();
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
+});
+
+When("I click the Armor badge", async function (this: CustomWorld) {
+  await this.page!.locator('[data-testid="armor-badge"]').click();
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
+});
+
+When("I click the Max Cyphers badge", async function (this: CustomWorld) {
+  await this.page!.locator('[data-testid="max-cyphers-badge"]').click();
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
+});
+
+When("I click the Effort badge", async function (this: CustomWorld) {
+  await this.page!.locator('[data-testid="effort-badge"]').click();
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
+});
+
+When("I tap the XP badge", async function (this: CustomWorld) {
+  await this.page!.locator('[data-testid="xp-badge"]').tap();
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
+});
+
+When("I tap the Shins badge", async function (this: CustomWorld) {
+  await this.page!.locator('[data-testid="shins-badge"]').tap();
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
+});
+
+When("I click the modal confirm button", async function (this: CustomWorld) {
+  await this.page!.click('[data-testid="modal-confirm-button"]');
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
+    state: "hidden",
+    timeout: 2000,
+  }).catch(() => {
+    // Modal might already be hidden
+  });
+});
+
+When("I click the modal cancel button", async function (this: CustomWorld) {
+  await this.page!.click('[data-testid="modal-cancel-button"]');
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
+    state: "hidden",
+    timeout: 2000,
+  }).catch(() => {
+    // Modal might already be hidden
+  });
+});
+
+When("I click the modal backdrop", async function (this: CustomWorld) {
+  await this.page!.click('[data-testid="modal-backdrop"]', { position: { x: 10, y: 10 } });
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
+    state: "hidden",
+    timeout: 2000,
+  }).catch(() => {
+    // Modal might already be hidden
+  });
+});
+
+When("I tap the modal confirm button", async function (this: CustomWorld) {
+  await this.page!.tap('[data-testid="modal-confirm-button"]');
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
+    state: "hidden",
+    timeout: 2000,
+  }).catch(() => {
+    // Modal might already be hidden
+  });
+});
+
 When("I click the {string}", async function (this: CustomWorld, elementName: string) {
   const testIdMap: Record<string, string> = {
     "Confirm button": "modal-confirm-button",
     "confirm button": "modal-confirm-button",
     "Cancel button": "modal-cancel-button",
     "cancel button": "modal-cancel-button",
-    "modal backdrop": "modal-backdrop",
   };
 
   const testId = testIdMap[elementName];
@@ -104,7 +186,7 @@ When("I click the {string}", async function (this: CustomWorld, elementName: str
   await this.page!.click(`[data-testid="${testId}"]`);
 
   // Wait for modal to close after confirm/cancel
-  if (elementName.toLowerCase().includes("button") || elementName.includes("backdrop")) {
+  if (elementName.toLowerCase().includes("button")) {
     await this.page!.waitForSelector('[data-testid="edit-modal"]', {
       state: "hidden",
       timeout: 2000,
@@ -145,12 +227,33 @@ When("I type {string} into the input field", async function (this: CustomWorld, 
   await input.fill(text);
 });
 
+When("I type {string} in the modal input", async function (this: CustomWorld, value: string) {
+  const input = this.page!.locator('[data-testid="edit-modal-input"]');
+  await input.clear();
+
+  // For non-numeric values in number inputs, use pressSequentially to simulate keyboard
+  const inputType = await input.getAttribute("type");
+  if (inputType === "number" && !/^\d+$/.test(value)) {
+    await input.pressSequentially(value);
+  } else {
+    await input.fill(value);
+  }
+});
+
 When("I press the Escape key", async function (this: CustomWorld) {
   await this.page!.keyboard.press("Escape");
 });
 
 When("I press the Enter key", async function (this: CustomWorld) {
   await this.page!.keyboard.press("Enter");
+});
+
+When("I press Enter", async function (this: CustomWorld) {
+  await this.page!.keyboard.press("Enter");
+});
+
+When("I press Escape", async function (this: CustomWorld) {
+  await this.page!.keyboard.press("Escape");
 });
 
 When("I reload the page", async function (this: CustomWorld) {
@@ -216,6 +319,19 @@ Then("an edit modal should appear", async function (this: CustomWorld) {
   const modal = this.page!.locator('[data-testid="edit-modal"]');
   await expect(modal).toBeVisible();
 });
+
+Then("the edit modal should open", async function (this: CustomWorld) {
+  const modal = this.page!.locator('[data-testid="edit-modal"]');
+  await expect(modal).toBeVisible();
+});
+
+Then(
+  "the modal input should contain {string}",
+  async function (this: CustomWorld, expectedValue: string) {
+    const input = this.page!.locator('[data-testid="edit-modal-input"]');
+    await expect(input).toHaveValue(expectedValue);
+  }
+);
 
 Then("the modal should close", async function (this: CustomWorld) {
   const modal = this.page!.locator('[data-testid="edit-modal"]');
