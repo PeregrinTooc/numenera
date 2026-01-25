@@ -3,6 +3,7 @@
 import { html, TemplateResult } from "lit-html";
 import { Ability } from "../types/character.js";
 import { t } from "../i18n/index.js";
+import { sanitizeForTestId } from "../utils/testHelpers.js";
 
 export class AbilityItem {
   constructor(
@@ -10,12 +11,8 @@ export class AbilityItem {
     private index: number
   ) {}
 
-  private sanitizeForTestId(name: string): string {
-    return name.toLowerCase().replace(/\s+/g, "-");
-  }
-
   render(): TemplateResult {
-    const testIdBase = this.sanitizeForTestId(this.ability.name);
+    const testIdBase = sanitizeForTestId(this.ability.name);
 
     return html`
       <div

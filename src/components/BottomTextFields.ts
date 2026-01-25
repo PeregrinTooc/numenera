@@ -17,19 +17,15 @@ export class BottomTextFields {
   }
 
   private startEditing(field: "background" | "notes"): void {
-    console.log("startEditing called for field:", field);
     this.editingField = field;
 
     // Directly manipulate the DOM to remove readonly
     const textarea = document.querySelector<HTMLTextAreaElement>(
       `[data-testid="character-${field}"]`
     );
-    console.log("Found textarea:", textarea);
     if (textarea) {
-      console.log("Removing readonly attribute");
       textarea.removeAttribute("readonly");
       textarea.focus();
-      console.log("Textarea focused, readonly removed");
     }
   }
 
@@ -50,12 +46,9 @@ export class BottomTextFields {
   }
 
   private handleClick(e: MouseEvent, field: "background" | "notes"): void {
-    console.log("handleClick called for field:", field);
     const textarea = e.target as HTMLTextAreaElement;
     const hasReadonly = textarea.hasAttribute("readonly");
-    console.log("Has readonly attribute:", hasReadonly);
     if (hasReadonly) {
-      console.log("Calling startEditing for field:", field);
       this.startEditing(field);
     }
   }

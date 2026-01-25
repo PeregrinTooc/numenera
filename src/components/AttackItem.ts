@@ -3,16 +3,13 @@
 import { html, TemplateResult } from "lit-html";
 import { Attack } from "../types/character.js";
 import { t } from "../i18n/index.js";
+import { sanitizeForTestId } from "../utils/testHelpers.js";
 
 export class AttackItem {
   constructor(
     private attack: Attack,
     private index: number
   ) {}
-
-  private sanitizeForTestId(name: string): string {
-    return name.toLowerCase().replace(/\s+/g, "-");
-  }
 
   private formatModifier(modifier: number): string {
     if (modifier > 0) return `+${modifier}`;
@@ -21,7 +18,7 @@ export class AttackItem {
   }
 
   render(): TemplateResult {
-    const testIdBase = this.sanitizeForTestId(this.attack.name);
+    const testIdBase = sanitizeForTestId(this.attack.name);
 
     return html`
       <div
