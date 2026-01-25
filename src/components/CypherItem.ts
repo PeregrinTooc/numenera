@@ -61,7 +61,7 @@ export class CypherItem {
               .value=${this.editedCypher.level.toString()}
               @input=${(e: Event) => {
                 const target = e.target as HTMLInputElement;
-                this.editedCypher.level = parseInt(target.value) || 1;
+                this.editedCypher.level = target.value || "1";
               }}
               class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-purple-900 font-semibold"
               data-testid="edit-cypher-level"

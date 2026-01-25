@@ -40,18 +40,25 @@ export class AbilityItem {
         <div
           class="ability-item-card bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-lg p-4"
         >
-          <div class="ability-header flex justify-between items-start mb-2">
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-indigo-900 mb-1">
+              ${t("character.name")}
+            </label>
             <input
               type="text"
               .value=${this.editedAbility.name}
               @input=${(e: Event) => {
                 this.editedAbility.name = (e.target as HTMLInputElement).value;
               }}
-              class="ability-name font-bold text-lg text-indigo-900 bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 flex-1"
-              placeholder="Ability Name"
+              class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-indigo-900 font-semibold"
               data-testid="edit-ability-name"
             />
-            <div class="ability-badges flex gap-2 ml-2">
+          </div>
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <div>
+              <label class="block text-sm font-medium text-indigo-900 mb-1">
+                ${t("abilities.cost")}
+              </label>
               <input
                 type="number"
                 .value=${this.editedAbility.cost?.toString() || ""}
@@ -59,11 +66,15 @@ export class AbilityItem {
                   const value = (e.target as HTMLInputElement).value;
                   this.editedAbility.cost = value ? parseInt(value, 10) : undefined;
                 }}
-                class="ability-badge ability-cost px-2 py-1 bg-amber-100 border border-amber-300 rounded text-xs font-semibold text-amber-900 w-16"
-                placeholder="Cost"
+                class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-indigo-900 font-semibold"
                 min="0"
                 data-testid="edit-ability-cost"
               />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-indigo-900 mb-1">
+                ${t("stats.pool")}
+              </label>
               <select
                 .value=${this.editedAbility.pool || ""}
                 @change=${(e: Event) => {
@@ -72,7 +83,7 @@ export class AbilityItem {
                     ? (value as "might" | "speed" | "intellect")
                     : undefined;
                 }}
-                class="ability-badge ability-pool px-2 py-1 rounded text-xs font-semibold"
+                class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-indigo-900 font-semibold"
                 data-testid="edit-ability-pool"
               >
                 <option value="">None</option>
@@ -82,26 +93,30 @@ export class AbilityItem {
               </select>
             </div>
           </div>
-          <input
-            type="text"
-            .value=${this.editedAbility.action || ""}
-            @input=${(e: Event) => {
-              this.editedAbility.action = (e.target as HTMLInputElement).value || undefined;
-            }}
-            class="ability-action text-xs text-indigo-600 italic mb-2 bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 w-full"
-            placeholder="Action (e.g., 1 action)"
-            data-testid="edit-ability-action"
-          />
-          <textarea
-            .value=${this.editedAbility.description}
-            @input=${(e: Event) => {
-              this.editedAbility.description = (e.target as HTMLTextAreaElement).value;
-            }}
-            class="ability-description text-gray-700 text-sm leading-relaxed w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500"
-            placeholder="Description"
-            rows="3"
-            data-testid="edit-ability-description"
-          ></textarea>
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-indigo-900 mb-1"> Action </label>
+            <input
+              type="text"
+              .value=${this.editedAbility.action || ""}
+              @input=${(e: Event) => {
+                this.editedAbility.action = (e.target as HTMLInputElement).value || undefined;
+              }}
+              class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-indigo-900 font-semibold"
+              data-testid="edit-ability-action"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-indigo-900 mb-1"> Description </label>
+            <textarea
+              .value=${this.editedAbility.description}
+              @input=${(e: Event) => {
+                this.editedAbility.description = (e.target as HTMLTextAreaElement).value;
+              }}
+              class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-gray-700"
+              rows="3"
+              data-testid="edit-ability-description"
+            ></textarea>
+          </div>
         </div>
       </div>
     `;

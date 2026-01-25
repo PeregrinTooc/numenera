@@ -41,38 +41,46 @@ export class SpecialAbilityItem {
         <div
           class="special-ability-item-card bg-gradient-to-br from-cyan-50 to-teal-50 border-2 border-teal-200 rounded-lg p-4"
         >
-          <div class="special-ability-header flex justify-between items-start mb-2">
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-teal-900 mb-1">
+              ${t("character.name")}
+            </label>
             <input
               type="text"
               .value=${this.editedAbility.name}
               @input=${(e: Event) => {
                 this.editedAbility.name = (e.target as HTMLInputElement).value;
               }}
-              class="special-ability-name font-bold text-lg text-teal-900 bg-transparent border-b-2 border-teal-300 focus:border-teal-500"
-              placeholder="${t("specialAbilities.title")}"
+              class="w-full bg-transparent border-b-2 border-teal-300 focus:border-teal-500 px-2 py-1 text-teal-900 font-semibold"
               data-testid="edit-special-ability-name"
             />
+          </div>
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-teal-900 mb-1">
+              ${t("specialAbilities.source")}
+            </label>
             <input
               type="text"
               .value=${this.editedAbility.source}
               @input=${(e: Event) => {
                 this.editedAbility.source = (e.target as HTMLInputElement).value;
               }}
-              class="special-ability-badge px-2 py-1 bg-teal-100 border border-teal-300 rounded text-xs font-semibold text-teal-900"
-              placeholder="${t("specialAbilities.source")}"
+              class="w-full bg-transparent border-b-2 border-teal-300 focus:border-teal-500 px-2 py-1 text-teal-900 font-semibold"
               data-testid="edit-special-ability-source"
             />
           </div>
-          <textarea
-            .value=${this.editedAbility.description}
-            @input=${(e: Event) => {
-              this.editedAbility.description = (e.target as HTMLTextAreaElement).value;
-            }}
-            class="special-ability-description text-gray-700 text-sm leading-relaxed w-full bg-transparent border-b-2 border-teal-300 focus:border-teal-500"
-            placeholder="Description"
-            rows="3"
-            data-testid="edit-special-ability-description"
-          ></textarea>
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-teal-900 mb-1"> Description </label>
+            <textarea
+              .value=${this.editedAbility.description}
+              @input=${(e: Event) => {
+                this.editedAbility.description = (e.target as HTMLTextAreaElement).value;
+              }}
+              class="w-full bg-transparent border-b-2 border-teal-300 focus:border-teal-500 px-2 py-1 text-gray-700"
+              rows="3"
+              data-testid="edit-special-ability-description"
+            ></textarea>
+          </div>
         </div>
       </div>
     `;
