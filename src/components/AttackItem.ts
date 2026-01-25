@@ -25,7 +25,7 @@ export class AttackItem {
     return modifier.toString();
   }
 
-  private handleEdit(): void {
+  public handleEdit(): void {
     this.editedAttack = { ...this.attack };
 
     openCardEditModal({

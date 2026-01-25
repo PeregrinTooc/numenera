@@ -885,3 +885,224 @@ When(
     await this.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
   }
 );
+
+// ============================================================================
+// ITERATION 5: ATTACKS
+// ============================================================================
+
+// PRECONDITION STEPS
+Given("the character has {int} attack card", async function (this: CustomWorld, count: number) {
+  if (count === 2) {
+    await this.page!.evaluate(() => {
+      const FULL_CHARACTER = {
+        name: "Kael the Wanderer",
+        tier: 3,
+        type: "Glaive",
+        descriptor: "Strong",
+        focus: "Bears a Halo of Fire",
+        xp: 12,
+        shins: 47,
+        armor: 2,
+        effort: 3,
+        maxCyphers: 4,
+        stats: {
+          might: { pool: 15, edge: 2, current: 12 },
+          speed: { pool: 12, edge: 1, current: 12 },
+          intellect: { pool: 10, edge: 0, current: 8 },
+        },
+        cyphers: [],
+        artifacts: [],
+        oddities: [],
+        abilities: [],
+        equipment: [],
+        attacks: [
+          { name: "Broadsword", damage: 6, modifier: 1, range: "Immediate", notes: undefined },
+          { name: "Crossbow", damage: 4, modifier: 0, range: "Long", notes: undefined },
+        ],
+        specialAbilities: [],
+        recoveryRolls: {
+          action: false,
+          tenMinutes: false,
+          oneHour: false,
+          tenHours: false,
+          modifier: 0,
+        },
+        damageTrack: { impairment: "healthy" },
+        textFields: { background: "", notes: "" },
+      };
+      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
+    });
+    await this.page!.reload({ waitUntil: "load" });
+    await this.page!.waitForSelector('[data-testid^="attack-item-"]', { timeout: 5000 });
+  }
+  const cards = this.page!.locator('[data-testid^="attack-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+Given("the character has {int} attack cards", async function (this: CustomWorld, count: number) {
+  if (count === 2) {
+    await this.page!.evaluate(() => {
+      const FULL_CHARACTER = {
+        name: "Kael the Wanderer",
+        tier: 3,
+        type: "Glaive",
+        descriptor: "Strong",
+        focus: "Bears a Halo of Fire",
+        xp: 12,
+        shins: 47,
+        armor: 2,
+        effort: 3,
+        maxCyphers: 4,
+        stats: {
+          might: { pool: 15, edge: 2, current: 12 },
+          speed: { pool: 12, edge: 1, current: 12 },
+          intellect: { pool: 10, edge: 0, current: 8 },
+        },
+        cyphers: [],
+        artifacts: [],
+        oddities: [],
+        abilities: [],
+        equipment: [],
+        attacks: [
+          { name: "Broadsword", damage: 6, modifier: 1, range: "Immediate", notes: undefined },
+          { name: "Crossbow", damage: 4, modifier: 0, range: "Long", notes: undefined },
+        ],
+        specialAbilities: [],
+        recoveryRolls: {
+          action: false,
+          tenMinutes: false,
+          oneHour: false,
+          tenHours: false,
+          modifier: 0,
+        },
+        damageTrack: { impairment: "healthy" },
+        textFields: { background: "", notes: "" },
+      };
+      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
+    });
+    await this.page!.reload({ waitUntil: "load" });
+    await this.page!.waitForSelector('[data-testid^="attack-item-"]', { timeout: 5000 });
+  }
+  const cards = this.page!.locator('[data-testid^="attack-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+// ADD BUTTON VISIBILITY
+Then("I should see an add attack button", async function (this: CustomWorld) {
+  const button = this.page!.locator('[data-testid="add-attack-button"]');
+  await expect(button).toBeVisible();
+});
+
+// ADD BUTTON CLICK
+When("I click the add attack button", async function (this: CustomWorld) {
+  const button = this.page!.locator('[data-testid="add-attack-button"]');
+  await button.click();
+  await this.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
+});
+
+// MODAL FIELD VERIFICATION
+Then("the modal should show attack fields", async function (this: CustomWorld) {
+  const nameField = this.page!.locator('[data-testid="edit-attack-name"]');
+  const damageField = this.page!.locator('[data-testid="edit-attack-damage"]');
+  const modifierField = this.page!.locator('[data-testid="edit-attack-modifier"]');
+  const rangeField = this.page!.locator('[data-testid="edit-attack-range"]');
+  await expect(nameField).toBeVisible();
+  await expect(damageField).toBeVisible();
+  await expect(modifierField).toBeVisible();
+  await expect(rangeField).toBeVisible();
+});
+
+Then("all attack fields should be empty", async function (this: CustomWorld) {
+  const nameField = this.page!.locator('[data-testid="edit-attack-name"]');
+  const damageField = this.page!.locator('[data-testid="edit-attack-damage"]');
+  const modifierField = this.page!.locator('[data-testid="edit-attack-modifier"]');
+  const rangeField = this.page!.locator('[data-testid="edit-attack-range"]');
+  await expect(nameField).toHaveValue("");
+  await expect(damageField).toHaveValue("0");
+  await expect(modifierField).toHaveValue("0");
+  await expect(rangeField).toHaveValue("");
+});
+
+// FIELD FILLING
+When("I fill in the attack name with {string}", async function (this: CustomWorld, value: string) {
+  const field = this.page!.locator('[data-testid="edit-attack-name"]');
+  await field.fill(value);
+});
+
+When(
+  "I fill in the attack damage with {string}",
+  async function (this: CustomWorld, value: string) {
+    const field = this.page!.locator('[data-testid="edit-attack-damage"]');
+    await field.fill(value);
+  }
+);
+
+When(
+  "I fill in the attack modifier with {string}",
+  async function (this: CustomWorld, value: string) {
+    const field = this.page!.locator('[data-testid="edit-attack-modifier"]');
+    await field.fill(value);
+  }
+);
+
+When("I fill in the attack range with {string}", async function (this: CustomWorld, value: string) {
+  const field = this.page!.locator('[data-testid="edit-attack-range"]');
+  await field.fill(value);
+});
+
+// CARD VERIFICATION
+Then("I should see {int} attack card", async function (this: CustomWorld, count: number) {
+  await this.page!.waitForTimeout(100);
+  const cards = this.page!.locator('[data-testid^="attack-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+Then("I should see {int} attack cards", async function (this: CustomWorld, count: number) {
+  await this.page!.waitForTimeout(100);
+  const cards = this.page!.locator('[data-testid^="attack-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+Then(
+  "I should see an attack card with name {string}",
+  async function (this: CustomWorld, name: string) {
+    await this.page!.waitForTimeout(100);
+    const attackCard = this.page!.locator('[data-testid^="attack-item-"]').filter({
+      hasText: name,
+    });
+    await expect(attackCard).toBeVisible();
+  }
+);
+
+Then(
+  "the attack {string} should have modifier {string}",
+  async function (this: CustomWorld, name: string, modifier: string) {
+    const attackCard = this.page!.locator('[data-testid^="attack-item-"]').filter({
+      hasText: name,
+    });
+    await expect(attackCard).toContainText(modifier);
+  }
+);
+
+Then(
+  "the attack {string} should have damage {string}",
+  async function (this: CustomWorld, name: string, damage: string) {
+    const attackCard = this.page!.locator('[data-testid^="attack-item-"]').filter({
+      hasText: name,
+    });
+    await expect(attackCard).toContainText(damage);
+  }
+);
+
+// EDIT EXISTING CARD
+When(
+  "I click the edit button on attack {string}",
+  async function (this: CustomWorld, name: string) {
+    const attackCard = this.page!.locator('[data-testid^="attack-item-"]').filter({
+      hasText: name,
+    });
+    const editButton = attackCard.locator('[data-testid^="attack-edit-button-"]');
+    await editButton.click();
+    await this.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
+  }
+);

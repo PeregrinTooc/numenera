@@ -28,13 +28,64 @@ export class Attacks {
     });
   }
 
+  private handleAddAttack(): void {
+    // Create temporary attack with empty fields
+    const tempAttack: Attack = {
+      name: "",
+      damage: 0,
+      modifier: 0,
+      range: "",
+    };
+
+    // Create temporary AttackItem to leverage its edit UI
+    const tempItem = new AttackItem(tempAttack, -1, (updated) => {
+      // Add the new attack to the character's attacks array
+      if (this.onAttackUpdate) {
+        this.character.attacks.push(updated);
+        const newIndex = this.character.attacks.length - 1;
+        this.onAttackUpdate(newIndex, updated);
+      }
+    });
+
+    // Open the edit modal with the temporary item's UI
+    tempItem.handleEdit();
+  }
+
   render(): TemplateResult {
     const isEmpty = !this.character.attacks || this.character.attacks.length === 0;
 
     return html`
       <div data-testid="attacks-section" class="mt-8">
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-2xl font-serif font-bold text-gray-700">${t("attacks.title")} ⚔️</h2>
+          <div class="flex items-center gap-3">
+            <h2 class="text-2xl font-serif font-bold text-gray-700">${t("attacks.title")} ⚔️</h2>
+            ${this.onAttackUpdate
+              ? html`
+                  <button
+                    @click=${() => this.handleAddAttack()}
+                    class="add-button p-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-full transition-colors"
+                    data-testid="add-attack-button"
+                    aria-label="Add Attack"
+                    title="Add Attack"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 5v14M5 12h14"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </button>
+                `
+              : ""}
+          </div>
           <div
             data-testid="armor-badge"
             class="stat-badge stat-badge-armor editable-field flex items-center gap-2 px-4 py-2 bg-gray-100 border-2 border-gray-300 rounded-lg shadow-sm"
