@@ -1106,3 +1106,231 @@ When(
     await this.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
   }
 );
+
+// ============================================================================
+// ITERATION 6: ABILITIES
+// ============================================================================
+
+// PRECONDITION STEPS
+Given("the character has {int} ability card", async function (this: CustomWorld, count: number) {
+  if (count === 2) {
+    await this.page!.evaluate(() => {
+      const FULL_CHARACTER = {
+        name: "Kael the Wanderer",
+        tier: 3,
+        type: "Glaive",
+        descriptor: "Strong",
+        focus: "Bears a Halo of Fire",
+        xp: 12,
+        shins: 47,
+        armor: 2,
+        effort: 3,
+        maxCyphers: 4,
+        stats: {
+          might: { pool: 15, edge: 2, current: 12 },
+          speed: { pool: 12, edge: 1, current: 12 },
+          intellect: { pool: 10, edge: 0, current: 8 },
+        },
+        cyphers: [],
+        artifacts: [],
+        oddities: [],
+        abilities: [
+          { name: "Bash", cost: 1, pool: "might", description: "Strike a foe with your weapon" },
+          {
+            name: "Fleet of Foot",
+            cost: 1,
+            pool: "speed",
+            description: "Move a short distance as part of another action",
+          },
+        ],
+        equipment: [],
+        attacks: [],
+        specialAbilities: [],
+        recoveryRolls: {
+          action: false,
+          tenMinutes: false,
+          oneHour: false,
+          tenHours: false,
+          modifier: 0,
+        },
+        damageTrack: { impairment: "healthy" },
+        textFields: { background: "", notes: "" },
+      };
+      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
+    });
+    await this.page!.reload({ waitUntil: "load" });
+    await this.page!.waitForSelector('[data-testid^="ability-item-"]', { timeout: 5000 });
+  }
+  const cards = this.page!.locator('[data-testid^="ability-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+Given("the character has {int} ability cards", async function (this: CustomWorld, count: number) {
+  if (count === 2) {
+    await this.page!.evaluate(() => {
+      const FULL_CHARACTER = {
+        name: "Kael the Wanderer",
+        tier: 3,
+        type: "Glaive",
+        descriptor: "Strong",
+        focus: "Bears a Halo of Fire",
+        xp: 12,
+        shins: 47,
+        armor: 2,
+        effort: 3,
+        maxCyphers: 4,
+        stats: {
+          might: { pool: 15, edge: 2, current: 12 },
+          speed: { pool: 12, edge: 1, current: 12 },
+          intellect: { pool: 10, edge: 0, current: 8 },
+        },
+        cyphers: [],
+        artifacts: [],
+        oddities: [],
+        abilities: [
+          { name: "Bash", cost: 1, pool: "might", description: "Strike a foe with your weapon" },
+          {
+            name: "Fleet of Foot",
+            cost: 1,
+            pool: "speed",
+            description: "Move a short distance as part of another action",
+          },
+        ],
+        equipment: [],
+        attacks: [],
+        specialAbilities: [],
+        recoveryRolls: {
+          action: false,
+          tenMinutes: false,
+          oneHour: false,
+          tenHours: false,
+          modifier: 0,
+        },
+        damageTrack: { impairment: "healthy" },
+        textFields: { background: "", notes: "" },
+      };
+      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
+    });
+    await this.page!.reload({ waitUntil: "load" });
+    await this.page!.waitForSelector('[data-testid^="ability-item-"]', { timeout: 5000 });
+  }
+  const cards = this.page!.locator('[data-testid^="ability-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+// ADD BUTTON VISIBILITY
+Then("I should see an add ability button", async function (this: CustomWorld) {
+  const button = this.page!.locator('[data-testid="add-ability-button"]');
+  await expect(button).toBeVisible();
+});
+
+// ADD BUTTON CLICK
+When("I click the add ability button", async function (this: CustomWorld) {
+  const button = this.page!.locator('[data-testid="add-ability-button"]');
+  await button.click();
+  await this.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
+});
+
+// MODAL FIELD VERIFICATION
+Then("the modal should show ability fields", async function (this: CustomWorld) {
+  const nameField = this.page!.locator('[data-testid="edit-ability-name"]');
+  const costField = this.page!.locator('[data-testid="edit-ability-cost"]');
+  const poolField = this.page!.locator('[data-testid="edit-ability-pool"]');
+  const descField = this.page!.locator('[data-testid="edit-ability-description"]');
+  await expect(nameField).toBeVisible();
+  await expect(costField).toBeVisible();
+  await expect(poolField).toBeVisible();
+  await expect(descField).toBeVisible();
+});
+
+Then("all ability fields should be empty", async function (this: CustomWorld) {
+  const nameField = this.page!.locator('[data-testid="edit-ability-name"]');
+  const costField = this.page!.locator('[data-testid="edit-ability-cost"]');
+  const poolField = this.page!.locator('[data-testid="edit-ability-pool"]');
+  const descField = this.page!.locator('[data-testid="edit-ability-description"]');
+  await expect(nameField).toHaveValue("");
+  await expect(costField).toHaveValue("");
+  await expect(poolField).toHaveValue("");
+  await expect(descField).toHaveValue("");
+});
+
+// FIELD FILLING
+When("I fill in the ability name with {string}", async function (this: CustomWorld, value: string) {
+  const field = this.page!.locator('[data-testid="edit-ability-name"]');
+  await field.fill(value);
+});
+
+When("I fill in the ability cost with {string}", async function (this: CustomWorld, value: string) {
+  const field = this.page!.locator('[data-testid="edit-ability-cost"]');
+  await field.fill(value);
+});
+
+When("I fill in the ability pool with {string}", async function (this: CustomWorld, value: string) {
+  const field = this.page!.locator('[data-testid="edit-ability-pool"]');
+  await field.selectOption(value.toLowerCase());
+});
+
+When(
+  "I fill in the ability description with {string}",
+  async function (this: CustomWorld, value: string) {
+    const field = this.page!.locator('[data-testid="edit-ability-description"]');
+    await field.fill(value);
+  }
+);
+
+// CARD VERIFICATION
+Then("I should see {int} ability card", async function (this: CustomWorld, count: number) {
+  await this.page!.waitForTimeout(100);
+  const cards = this.page!.locator('[data-testid^="ability-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+Then("I should see {int} ability cards", async function (this: CustomWorld, count: number) {
+  await this.page!.waitForTimeout(100);
+  const cards = this.page!.locator('[data-testid^="ability-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+Then(
+  "I should see an ability card with name {string}",
+  async function (this: CustomWorld, name: string) {
+    await this.page!.waitForTimeout(100);
+    const abilityCard = this.page!.locator('[data-testid^="ability-item-"]').filter({
+      hasText: name,
+    });
+    await expect(abilityCard).toBeVisible();
+  }
+);
+
+Then(
+  "the ability {string} should have cost {string}",
+  async function (this: CustomWorld, name: string, cost: string) {
+    const abilityCard = this.page!.locator('[data-testid^="ability-item-"]').filter({
+      hasText: name,
+    });
+    await expect(abilityCard).toContainText(cost);
+  }
+);
+
+Then(
+  "the ability {string} should have pool {string}",
+  async function (this: CustomWorld, name: string, pool: string) {
+    const abilityCard = this.page!.locator('[data-testid^="ability-item-"]').filter({
+      hasText: name,
+    });
+    await expect(abilityCard).toContainText(pool);
+  }
+);
+
+// EDIT EXISTING CARD
+When(
+  "I click the edit button on ability {string}",
+  async function (this: CustomWorld, name: string) {
+    const abilityCard = this.page!.locator('[data-testid^="ability-item-"]').filter({
+      hasText: name,
+    });
+    const editButton = abilityCard.locator('[data-testid^="ability-edit-button-"]');
+    await editButton.click();
+    await this.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
+  }
+);

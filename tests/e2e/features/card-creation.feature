@@ -402,3 +402,91 @@ Feature: Card Creation
         And the attack "Power Strike" should have modifier "+3"
         And the attack "Power Strike" should have damage "8"
 
+    # ============================================================================
+    # ITERATION 6: ABILITIES
+    # ============================================================================
+
+    @current
+    Scenario: Add button is visible for Abilities
+        Then I should see an add ability button
+
+    @current
+    Scenario: Add Ability button opens modal with empty fields
+        When I click the add ability button
+        Then the card edit modal should be open
+        And the modal should show ability fields
+        And all ability fields should be empty
+
+    @current
+    Scenario: Canceling ability creation does not add a card
+        Given the character has 2 ability cards
+        When I click the add ability button
+        And I fill in the ability name with "Test Ability"
+        And I fill in the ability description with "Test description"
+        And I cancel the card edit modal
+        Then I should see 2 ability cards
+
+    @current
+    Scenario: Confirming ability creation adds a new card
+        Given the character has 2 ability cards
+        When I click the add ability button
+        And I fill in the ability name with "Flame Strike"
+        And I fill in the ability cost with "3"
+        And I fill in the ability pool with "Intellect"
+        And I fill in the ability description with "Deal fire damage to enemies"
+        And I confirm the card edit modal
+        Then I should see 3 ability cards
+        And I should see an ability card with name "Flame Strike"
+
+    @current
+    Scenario: New ability persists after page reload
+        Given the character has 2 ability cards
+        When I click the add ability button
+        And I fill in the ability name with "Ice Shield"
+        And I fill in the ability cost with "2"
+        And I fill in the ability pool with "Speed"
+        And I fill in the ability description with "Create a protective ice barrier"
+        And I confirm the card edit modal
+        Then I should see 3 ability cards
+        When I reload the page
+        Then I should see 3 ability cards
+        And I should see an ability card with name "Ice Shield"
+
+    @current
+    Scenario: Multiple abilities can be added
+        Given the character has 2 ability cards
+        When I click the add ability button
+        And I fill in the ability name with "First Ability"
+        And I fill in the ability description with "First description"
+        And I confirm the card edit modal
+        Then I should see 3 ability cards
+        When I click the add ability button
+        And I fill in the ability name with "Second Ability"
+        And I fill in the ability description with "Second description"
+        And I confirm the card edit modal
+        Then I should see 4 ability cards
+
+    @current
+    Scenario: Create ability, then edit it, verify persistence
+        Given the character has 2 ability cards
+        When I click the add ability button
+        And I fill in the ability name with "Basic Heal"
+        And I fill in the ability cost with "2"
+        And I fill in the ability pool with "Intellect"
+        And I fill in the ability description with "Heal minor wounds"
+        And I confirm the card edit modal
+        Then I should see 3 ability cards
+        And I should see an ability card with name "Basic Heal"
+        When I click the edit button on ability "Basic Heal"
+        And I fill in the ability name with "Greater Heal"
+        And I fill in the ability cost with "5"
+        And I fill in the ability pool with "Intellect"
+        And I fill in the ability description with "Heal major wounds and restore vitality"
+        And I confirm the card edit modal
+        Then I should see an ability card with name "Greater Heal"
+        When I reload the page
+        Then I should see 3 ability cards
+        And I should see an ability card with name "Greater Heal"
+        And the ability "Greater Heal" should have cost "5"
+        And the ability "Greater Heal" should have pool "Intellect"
+

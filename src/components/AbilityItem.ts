@@ -19,7 +19,7 @@ export class AbilityItem {
     this.editedAbility = { ...ability };
   }
 
-  private handleEdit(): void {
+  public handleEdit(): void {
     this.editedAbility = { ...this.ability };
 
     openCardEditModal({
