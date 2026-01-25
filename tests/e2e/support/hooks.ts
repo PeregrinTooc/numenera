@@ -1,148 +1,42 @@
 import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
 import { chromium, Browser } from "@playwright/test";
 import { CustomWorld } from "./world";
-import { spawn, ChildProcess } from "child_process";
-import {
-  waitForPort,
-  clearPort,
-  incrementWorkerCount,
-  decrementWorkerCount,
-  isCoordinationStateStale,
-  clearCoordinationState,
-} from "./port-manager.js";
 
 let browser: Browser;
-let devServer: ChildProcess | null = null;
-export let serverPort: number;
+
+// Server is managed by concurrently + wait-on in package.json scripts
+// We just need to know which port to connect to
+const SERVER_PORT = process.env.TEST_PROD === "true" ? 4173 : 3000;
+const BASE_URL = `http://localhost:${SERVER_PORT}`;
 
 BeforeAll({ timeout: 60000 }, async function () {
-  // CRITICAL: Check for stale state from crashed previous runs (Defense in Depth - Layer 2)
-  // This runs BEFORE worker registration to catch any files older than 60 seconds
-  if (isCoordinationStateStale()) {
-    // eslint-disable-next-line no-console
-    console.log("Detected stale coordination state, cleaning up...");
-    clearCoordinationState();
-    // Small delay to ensure cleanup completes
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  }
-
-  // Register this worker FIRST to ensure proper coordination
-  const workerCount = incrementWorkerCount();
-  const isFirstWorker = workerCount === 1;
-
-  // CRITICAL: Small delay after incrementing to ensure file write is fully committed
-  // This prevents race conditions where multiple workers think they're first
-  await new Promise((resolve) => setTimeout(resolve, 50));
-
-  if (isFirstWorker) {
-    // CRITICAL: First worker clears stale port file from previous failed runs
-    // This ensures cleanup while maintaining worker count coordination
-    clearPort();
-
-    const isProduction = process.env.TEST_PROD === "true";
-
-    if (isProduction) {
-      // Start preview server WITHOUT hardcoded port, let Vite choose
-      // Enable PORT_CAPTURE so the plugin writes the actual port
-      devServer = spawn("npm", ["run", "preview"], {
-        stdio: "pipe",
-        detached: true,
-        env: { ...process.env, PORT_CAPTURE: "true" },
-      });
-
-      // Log output for debugging
-      devServer.stdout?.on("data", (data) => {
-        // eslint-disable-next-line no-console
-        console.log("Preview server output:", data.toString());
-      });
-
-      devServer.stderr?.on("data", (data) => {
-        console.error("Preview server stderr:", data.toString());
-      });
-    } else {
-      // Start Vite dev server WITHOUT hardcoded port, let Vite choose
-      // Enable PORT_CAPTURE so the plugin writes the actual port
-      devServer = spawn("npm", ["run", "dev"], {
-        stdio: "pipe",
-        detached: true,
-        env: { ...process.env, PORT_CAPTURE: "true" },
-      });
-
-      // Log output for debugging
-      devServer.stdout?.on("data", (data) => {
-        // eslint-disable-next-line no-console
-        console.log("Dev server output:", data.toString());
-      });
-
-      devServer.stderr?.on("data", (data) => {
-        console.error("Dev server stderr:", data.toString());
-      });
-    }
-  }
-
-  // All workers wait for the port file (first worker creates it, others wait)
-  serverPort = await waitForPort();
-  // eslint-disable-next-line no-console
-  console.log(`Server is ready on port ${serverPort}!`);
-
-  // Launch browser in headless mode by default
-  // Set HEADED=true environment variable to run with visible browser for debugging
+  // Server is already running (started by concurrently, verified by wait-on)
+  // Just launch the browser
   browser = await chromium.launch({
-    headless: true,
+    headless: !process.env.HEADED,
   });
 });
 
 Before(async function (this: CustomWorld) {
-  // Enable touch support for mobile tests
+  // Create a new context and page for each test
   this.context = await browser.newContext({
     hasTouch: true,
   });
   this.page = await this.context.newPage();
 
-  // Clear localStorage before each test to ensure clean state
-  const baseURL = `http://localhost:${serverPort}`;
-  await this.page.goto(baseURL);
+  // Navigate to the server and clear localStorage for clean state
+  await this.page.goto(BASE_URL);
   await this.page.evaluate(() => localStorage.clear());
 });
 
 After(async function (this: CustomWorld) {
+  // Clean up page and context after each test
   await this.page?.close();
   await this.context?.close();
 });
 
 AfterAll(async function () {
+  // Close the browser
   await browser?.close();
-
-  // Unregister this worker
-  const remainingWorkers = decrementWorkerCount();
-
-  // Only shut down the server when ALL workers are done
-  if (remainingWorkers === 0 && devServer && devServer.pid) {
-    // Clear the port file
-    clearPort();
-
-    // Kill the dev/preview server and all its child processes
-    try {
-      // When detached:true, we need to kill the process group
-      // The negative PID tells the system to kill the entire process group
-      process.kill(-devServer.pid, "SIGTERM");
-
-      // Give it a moment to terminate gracefully
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Force kill the process group if still running
-      try {
-        process.kill(-devServer.pid, "SIGKILL");
-      } catch {
-        // Already dead, ignore
-      }
-
-      // eslint-disable-next-line no-console
-      console.log("Server processes terminated successfully");
-    } catch (error) {
-      // Process might already be dead
-      // eslint-disable-next-line no-console
-      console.log("Server cleanup completed: " + error);
-    }
-  }
+  // No server cleanup needed - Playwright handles it automatically!
 });
