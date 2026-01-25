@@ -8,3 +8,4 @@ test-output.log
 test-output.txt
 .test-server-port
 .test-worker-count
+coverage
