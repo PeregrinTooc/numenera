@@ -30,6 +30,10 @@ BeforeAll({ timeout: 60000 }, async function () {
   const workerCount = incrementWorkerCount();
   const isFirstWorker = workerCount === 1;
 
+  // CRITICAL: Small delay after incrementing to ensure file write is fully committed
+  // This prevents race conditions where multiple workers think they're first
+  await new Promise((resolve) => setTimeout(resolve, 50));
+
   if (isFirstWorker) {
     // CRITICAL: First worker clears stale port file from previous failed runs
     // This ensures cleanup while maintaining worker count coordination
