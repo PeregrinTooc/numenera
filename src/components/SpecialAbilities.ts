@@ -33,7 +33,7 @@ export class SpecialAbilities {
         <h2 class="text-2xl font-serif font-bold mb-4 text-gray-700">
           ${t("specialAbilities.title")} ✨
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">${specialAbilityItems}</div>
+        <div class="grid grid-cols-1 gap-4">${specialAbilityItems}</div>
       </div>
     `;
   }
