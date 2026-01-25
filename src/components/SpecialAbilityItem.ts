@@ -19,7 +19,7 @@ export class SpecialAbilityItem {
     this.editedAbility = { ...specialAbility };
   }
 
-  private handleEdit(): void {
+  public handleEdit(): void {
     // Reset edited ability to current values
     this.editedAbility = { ...this.specialAbility };
 

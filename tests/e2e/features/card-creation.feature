@@ -490,3 +490,89 @@ Feature: Card Creation
         And the ability "Greater Heal" should have cost "5"
         And the ability "Greater Heal" should have pool "Intellect"
 
+    # ============================================================================
+    # ITERATION 7: SPECIAL ABILITIES
+    # ============================================================================
+
+    @current
+    Scenario: Add button is visible for Special Abilities
+        Then I should see an add special ability button
+
+    @current
+    Scenario: Add Special Ability button opens modal with empty fields
+        When I click the add special ability button
+        Then the card edit modal should be open
+        And the modal should show special ability fields
+        And all special ability fields should be empty
+
+    @current
+    Scenario: Canceling special ability creation does not add a card
+        Given the character has 2 special ability cards
+        When I click the add special ability button
+        And I fill in the special ability name with "Test Special"
+        And I fill in the special ability source with "Test Type"
+        And I fill in the special ability description with "Test description"
+        And I cancel the card edit modal
+        Then I should see 2 special ability cards
+
+    @current
+    Scenario: Confirming special ability creation adds a new card
+        Given the character has 2 special ability cards
+        When I click the add special ability button
+        And I fill in the special ability name with "Energy Mastery"
+        And I fill in the special ability source with "Focus"
+        And I fill in the special ability description with "Control energy fields at will"
+        And I confirm the card edit modal
+        Then I should see 3 special ability cards
+        And I should see a special ability card with name "Energy Mastery"
+
+    @current
+    Scenario: New special ability persists after page reload
+        Given the character has 2 special ability cards
+        When I click the add special ability button
+        And I fill in the special ability name with "Time Manipulation"
+        And I fill in the special ability source with "Descriptor"
+        And I fill in the special ability description with "Slow or speed up time in small area"
+        And I confirm the card edit modal
+        Then I should see 3 special ability cards
+        When I reload the page
+        Then I should see 3 special ability cards
+        And I should see a special ability card with name "Time Manipulation"
+
+    @current
+    Scenario: Multiple special abilities can be added
+        Given the character has 2 special ability cards
+        When I click the add special ability button
+        And I fill in the special ability name with "First Special"
+        And I fill in the special ability source with "Type"
+        And I fill in the special ability description with "First description"
+        And I confirm the card edit modal
+        Then I should see 3 special ability cards
+        When I click the add special ability button
+        And I fill in the special ability name with "Second Special"
+        And I fill in the special ability source with "Focus"
+        And I fill in the special ability description with "Second description"
+        And I confirm the card edit modal
+        Then I should see 4 special ability cards
+
+    @current
+    Scenario: Create special ability, then edit it, verify persistence
+        Given the character has 2 special ability cards
+        When I click the add special ability button
+        And I fill in the special ability name with "Basic Shield"
+        And I fill in the special ability source with "Type"
+        And I fill in the special ability description with "Provides basic protection"
+        And I confirm the card edit modal
+        Then I should see 3 special ability cards
+        And I should see a special ability card with name "Basic Shield"
+        When I click the edit button on special ability "Basic Shield"
+        And I fill in the special ability name with "Advanced Shield"
+        And I fill in the special ability source with "Focus"
+        And I fill in the special ability description with "Provides enhanced protection and reflects damage"
+        And I confirm the card edit modal
+        Then I should see a special ability card with name "Advanced Shield"
+        When I reload the page
+        Then I should see 3 special ability cards
+        And I should see a special ability card with name "Advanced Shield"
+        And the special ability "Advanced Shield" should have source "Focus"
+
