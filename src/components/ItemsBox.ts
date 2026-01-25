@@ -2,7 +2,7 @@
 /* global CustomEvent */
 
 import { html, TemplateResult } from "lit-html";
-import { Character, EquipmentItem as EquipmentItemType } from "../types/character.js";
+import { Character, EquipmentItem as EquipmentItemType, Artifact } from "../types/character.js";
 import { EquipmentItem } from "./EquipmentItem.js";
 import { ArtifactItem } from "./ArtifactItem.js";
 import { OddityItem } from "./OddityItem.js";
@@ -41,6 +41,17 @@ export class ItemsBox {
     tempItem.handleEdit();
   }
 
+  private handleAddArtifact(): void {
+    const emptyArtifact: Artifact = { name: "", level: "", effect: "" };
+    const tempItem = new ArtifactItem(emptyArtifact, -1, (updated) => {
+      this.character.artifacts.push(updated);
+      saveCharacterState(this.character);
+      const event = new CustomEvent("character-updated");
+      document.getElementById("app")?.dispatchEvent(event);
+    });
+    tempItem.handleEdit();
+  }
+
   render(): TemplateResult {
     const equipmentItems = this.character.equipment.map(
       (item, index) =>
@@ -72,6 +83,7 @@ export class ItemsBox {
           index,
           (updated) => {
             this.character.artifacts[index] = updated;
+            saveCharacterState(this.character);
             // Trigger re-render via character-updated event
             const event = new CustomEvent("character-updated");
             document.getElementById("app")?.dispatchEvent(event);
@@ -174,9 +186,32 @@ export class ItemsBox {
         <div class="two-column-grid">
           <!-- Artifacts Column -->
           <div data-testid="artifacts-section">
-            <h3 data-testid="artifacts-heading" class="subsection-heading">
-              ${t("artifacts.heading")}
-            </h3>
+            <div class="flex justify-between items-center mb-2">
+              <h3 data-testid="artifacts-heading" class="subsection-heading">
+                ${t("artifacts.heading")}
+              </h3>
+              <button
+                @click=${() => this.handleAddArtifact()}
+                data-testid="add-artifact-button"
+                class="add-card-button"
+                aria-label="Add artifact"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 5v14M5 12h14"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
+            </div>
             ${this.character.artifacts.length === 0
               ? html`
                   <div data-testid="empty-artifacts" class="empty-artifacts-styled">

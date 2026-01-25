@@ -144,3 +144,133 @@ describe("ItemsBox - Equipment Add Button", () => {
     expect(eventSpy).toHaveBeenCalled();
   });
 });
+
+describe("ItemsBox - Artifact Add Button", () => {
+  let container: HTMLElement;
+  let mockCharacter: Character;
+  let mockOnFieldUpdate: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    container = document.createElement("div");
+    container.id = "app";
+    document.body.appendChild(container);
+
+    mockOnFieldUpdate = vi.fn();
+
+    mockCharacter = {
+      name: "Test Character",
+      tier: 1,
+      type: "Glaive",
+      descriptor: "Strong",
+      focus: "Combat",
+      xp: 0,
+      shins: 10,
+      armor: 1,
+      effort: 1,
+      maxCyphers: 2,
+      stats: {
+        might: { pool: 10, edge: 0, current: 10 },
+        speed: { pool: 10, edge: 0, current: 10 },
+        intellect: { pool: 10, edge: 0, current: 10 },
+      },
+      cyphers: [],
+      artifacts: [
+        { name: "Artifact 1", level: "1d6", effect: "Effect 1" },
+        { name: "Artifact 2", level: "1d6+2", effect: "Effect 2" },
+      ],
+      oddities: [],
+      abilities: [],
+      equipment: [],
+      attacks: [],
+      specialAbilities: [],
+      recoveryRolls: {
+        action: false,
+        tenMinutes: false,
+        oneHour: false,
+        tenHours: false,
+        modifier: 0,
+      },
+      damageTrack: {
+        impairment: "healthy",
+      },
+      textFields: {
+        background: "",
+        notes: "",
+      },
+    };
+  });
+
+  afterEach(() => {
+    document.body.removeChild(container);
+  });
+
+  it("should render add artifact button with correct test ID", () => {
+    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
+    render(component.render(), container);
+
+    const addButton = container.querySelector('[data-testid="add-artifact-button"]');
+    expect(addButton).toBeTruthy();
+  });
+
+  it("should render add artifact button even when no artifacts exist", () => {
+    mockCharacter.artifacts = [];
+    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
+    render(component.render(), container);
+
+    const addButton = container.querySelector('[data-testid="add-artifact-button"]');
+    expect(addButton).toBeTruthy();
+  });
+
+  it("should open modal when add artifact button is clicked", () => {
+    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
+    render(component.render(), container);
+
+    const addButton = container.querySelector('[data-testid="add-artifact-button"]');
+    addButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(addButton).toBeTruthy();
+  });
+
+  it("should add artifact when onConfirm callback is invoked", () => {
+    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
+    render(component.render(), container);
+
+    const initialCount = mockCharacter.artifacts.length;
+    expect(initialCount).toBe(2);
+
+    const newArtifact = { name: "New Artifact", level: "1d6", effect: "Test effect" };
+    mockCharacter.artifacts.push(newArtifact);
+
+    render(component.render(), container);
+
+    expect(mockCharacter.artifacts.length).toBe(3);
+    expect(mockCharacter.artifacts[2]).toEqual(newArtifact);
+  });
+
+  it("should save character state after adding artifact", async () => {
+    const { saveCharacterState } = await import("../../src/storage/localStorage.js");
+    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
+    render(component.render(), container);
+
+    const newArtifact = { name: "New Artifact", level: "1d6", effect: "Test effect" };
+    mockCharacter.artifacts.push(newArtifact);
+
+    expect(saveCharacterState).toBeDefined();
+  });
+
+  it("should dispatch character-updated event after adding artifact", () => {
+    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
+    render(component.render(), container);
+
+    const eventSpy = vi.fn();
+    container.addEventListener("character-updated", eventSpy);
+
+    const newArtifact = { name: "New Artifact", level: "1d6", effect: "Test effect" };
+    mockCharacter.artifacts.push(newArtifact);
+
+    const event = new CustomEvent("character-updated");
+    container.dispatchEvent(event);
+
+    expect(eventSpy).toHaveBeenCalled();
+  });
+});

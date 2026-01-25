@@ -51,10 +51,11 @@ Then("the cypher level badge should have blue background", async function () {
 
 // Artifact gold-themed styling
 Then("the artifact card should have gold-themed styling", async function () {
-  const dom = new DOMHelpers(this.page);
+  const artifactCard = this.page.locator('[data-testid^="artifact-item-"]').first();
+  await expect(artifactCard).toBeVisible();
 
-  const hasGoldTheme = await dom.hasClass("artifact-item", "artifact-item-card");
-  expect(hasGoldTheme).toBe(true);
+  const classes = await artifactCard.getAttribute("class");
+  expect(classes).toContain("artifact-item-card");
 });
 
 Then("the artifact name should use serif font", async function () {
@@ -179,23 +180,21 @@ Then("the cypher card should elevate slightly", async function () {
 });
 
 When("I hover over an artifact card", async function () {
-  const artifactCard = this.page.locator('[data-testid="artifact-item"]').first();
+  const artifactCard = this.page.locator('[data-testid^="artifact-item-"]').first();
   await artifactCard.hover();
   await this.page.waitForTimeout(100);
 });
 
 Then("the artifact card should have a shimmer effect", async function () {
-  const dom = new DOMHelpers(this.page);
-
-  const hasShimmer = await dom.hasClass("artifact-item", "artifact-item-card");
-  expect(hasShimmer).toBe(true);
+  const artifactCard = this.page.locator('[data-testid^="artifact-item-"]').first();
+  const classes = await artifactCard.getAttribute("class");
+  expect(classes).toContain("artifact-item-card");
 });
 
 Then("the artifact card should show enhanced depth", async function () {
-  const dom = new DOMHelpers(this.page);
-
-  const hasDepth = await dom.hasClass("artifact-item", "artifact-item-card");
-  expect(hasDepth).toBe(true);
+  const artifactCard = this.page.locator('[data-testid^="artifact-item-"]').first();
+  const classes = await artifactCard.getAttribute("class");
+  expect(classes).toContain("artifact-item-card");
 });
 
 // Background styling
@@ -214,17 +213,15 @@ Then("cypher cards should have subtle blue tint", async function () {
 });
 
 Then("artifact cards should have rich parchment background", async function () {
-  const dom = new DOMHelpers(this.page);
-
-  const hasRichParchment = await dom.hasClass("artifact-item", "artifact-item-card");
-  expect(hasRichParchment).toBe(true);
+  const artifactCard = this.page.locator('[data-testid^="artifact-item-"]').first();
+  const classes = await artifactCard.getAttribute("class");
+  expect(classes).toContain("artifact-item-card");
 });
 
 Then("artifact cards should have decorative elements", async function () {
-  const dom = new DOMHelpers(this.page);
-
-  const hasDecorative = await dom.hasClass("artifact-item", "artifact-item-card");
-  expect(hasDecorative).toBe(true);
+  const artifactCard = this.page.locator('[data-testid^="artifact-item-"]').first();
+  const classes = await artifactCard.getAttribute("class");
+  expect(classes).toContain("artifact-item-card");
 });
 
 Then("oddity cards should have light parchment background", async function () {

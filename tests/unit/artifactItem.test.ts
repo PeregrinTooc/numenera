@@ -1,5 +1,5 @@
 // Unit tests for ArtifactItem component
-/* global describe, it, expect, beforeEach, afterEach, vi, HTMLDivElement */
+/* global describe, it, expect, beforeEach, afterEach, vi, HTMLDivElement, HTMLTextAreaElement */
 
 import { render } from "lit-html";
 import { screen, fireEvent } from "@testing-library/dom";
@@ -11,7 +11,6 @@ import {
   expectModalClosed,
   clickConfirmButton,
   clickCancelButton,
-  changeFieldValue,
 } from "./helpers/cardEditHelpers.js";
 
 describe("ArtifactItem", () => {
@@ -43,7 +42,7 @@ describe("ArtifactItem", () => {
     const item = new ArtifactItem(mockArtifact, 0);
     render(item.render(), container);
 
-    expect(screen.getByTestId("artifact-item")).toBeTruthy();
+    expect(screen.getByTestId(`artifact-item-${mockArtifact.name}`)).toBeTruthy();
     expect(screen.getByTestId(`artifact-name-${mockArtifact.name}`)).toBeTruthy();
     expect(screen.getByTestId(`artifact-level-${mockArtifact.name}`)).toBeTruthy();
     expect(container.textContent).toContain(mockArtifact.name);
@@ -71,9 +70,9 @@ describe("ArtifactItem", () => {
     expectModalOpen();
 
     // Verify all fields are present
-    expect(screen.getByTestId("edit-field-name")).toBeTruthy();
-    expect(screen.getByTestId("edit-field-level")).toBeTruthy();
-    expect(screen.getByTestId("edit-field-effect")).toBeTruthy();
+    expect(screen.getByTestId("edit-artifact-name")).toBeTruthy();
+    expect(screen.getByTestId("edit-artifact-level")).toBeTruthy();
+    expect(screen.getByTestId("edit-artifact-effect")).toBeTruthy();
   });
 
   it("confirms changes and calls onUpdate callback", () => {
@@ -84,10 +83,14 @@ describe("ArtifactItem", () => {
     const editButton = findEditButton(container);
     fireEvent.click(editButton);
 
-    // Edit fields
-    changeFieldValue("name", "New Artifact");
-    changeFieldValue("level", "1d6+2");
-    changeFieldValue("effect", "New effect description");
+    // Edit fields - use artifact-specific test IDs
+    const nameField = screen.getByTestId("edit-artifact-name") as HTMLInputElement;
+    const levelField = screen.getByTestId("edit-artifact-level") as HTMLInputElement;
+    const effectField = screen.getByTestId("edit-artifact-effect") as HTMLTextAreaElement;
+
+    fireEvent.input(nameField, { target: { value: "New Artifact" } });
+    fireEvent.input(levelField, { target: { value: "1d6+2" } });
+    fireEvent.input(effectField, { target: { value: "New effect description" } });
 
     clickConfirmButton();
 
@@ -107,9 +110,12 @@ describe("ArtifactItem", () => {
     const editButton = findEditButton(container);
     fireEvent.click(editButton);
 
-    // Edit fields
-    changeFieldValue("name", "New Artifact");
-    changeFieldValue("level", "1d6+2");
+    // Edit fields - use artifact-specific test IDs
+    const nameField = screen.getByTestId("edit-artifact-name") as HTMLInputElement;
+    const levelField = screen.getByTestId("edit-artifact-level") as HTMLInputElement;
+
+    fireEvent.input(nameField, { target: { value: "New Artifact" } });
+    fireEvent.input(levelField, { target: { value: "1d6+2" } });
 
     clickCancelButton();
 

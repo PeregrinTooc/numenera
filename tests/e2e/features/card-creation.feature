@@ -89,18 +89,18 @@ Feature: Card Creation
     # ITERATION 2: EQUIPMENT
     # ============================================================================
 
-    @current
+    
     Scenario: Add button is visible for Equipment
         Then I should see an add equipment button
 
-    @current
+    
     Scenario: Add Equipment button opens modal with empty fields
         When I click the add equipment button
         Then the card edit modal should be open
         And the modal should show equipment fields
         And all equipment fields should be empty
 
-    @current
+    
     Scenario: Canceling equipment creation does not add a card
         Given the character has 4 equipment cards
         When I click the add equipment button
@@ -109,7 +109,7 @@ Feature: Card Creation
         And I cancel the card edit modal
         Then I should see 4 equipment cards
 
-    @current
+    
     Scenario: Confirming equipment creation adds a new card
         Given the character has 4 equipment cards
         When I click the add equipment button
@@ -119,7 +119,7 @@ Feature: Card Creation
         Then I should see 5 equipment cards
         And I should see an equipment card with name "Climbing Gear"
 
-    @current
+    
     Scenario: New equipment persists after page reload
         Given the character has 4 equipment cards
         When I click the add equipment button
@@ -131,7 +131,7 @@ Feature: Card Creation
         Then I should see 5 equipment cards
         And I should see an equipment card with name "Medical Kit"
 
-    @current
+    
     Scenario: Multiple equipment items can be added
         Given the character has 4 equipment cards
         When I click the add equipment button
@@ -145,7 +145,7 @@ Feature: Card Creation
         And I confirm the card edit modal
         Then I should see 6 equipment cards
 
-    @current
+    
     Scenario: Create equipment, then edit it, verify persistence
         Given the character has 4 equipment cards
         When I click the add equipment button
@@ -163,3 +163,90 @@ Feature: Card Creation
         Then I should see 5 equipment cards
         And I should see an equipment card with name "Enchanted Sword"
         And the equipment "Enchanted Sword" should have description "Magical weapon with fire damage"
+
+    # ============================================================================
+    # ITERATION 3: ARTIFACTS
+    # ============================================================================
+
+    @current
+    Scenario: Add button is visible for Artifacts
+        Then I should see an add artifact button
+
+    @current
+    Scenario: Add Artifact button opens modal with empty fields
+        When I click the add artifact button
+        Then the card edit modal should be open
+        And the modal should show artifact fields
+        And all artifact fields should be empty
+
+    @current
+    Scenario: Canceling artifact creation does not add a card
+        Given the character has 2 artifact cards
+        When I click the add artifact button
+        And I fill in the artifact name with "Test Artifact"
+        And I fill in the artifact level with "1d6"
+        And I fill in the artifact effect with "Test effect"
+        And I cancel the card edit modal
+        Then I should see 2 artifact cards
+
+    @current
+    Scenario: Confirming artifact creation adds a new card
+        Given the character has 2 artifact cards
+        When I click the add artifact button
+        And I fill in the artifact name with "Crystal Blade"
+        And I fill in the artifact level with "1d6+2"
+        And I fill in the artifact effect with "A sword that never dulls"
+        And I confirm the card edit modal
+        Then I should see 3 artifact cards
+        And I should see an artifact card with name "Crystal Blade"
+
+    @current
+    Scenario: New artifact persists after page reload
+        Given the character has 2 artifact cards
+        When I click the add artifact button
+        And I fill in the artifact name with "Shield of Force"
+        And I fill in the artifact level with "1d6+4"
+        And I fill in the artifact effect with "Creates an energy barrier"
+        And I confirm the card edit modal
+        Then I should see 3 artifact cards
+        When I reload the page
+        Then I should see 3 artifact cards
+        And I should see an artifact card with name "Shield of Force"
+
+    @current
+    Scenario: Multiple artifacts can be added
+        Given the character has 2 artifact cards
+        When I click the add artifact button
+        And I fill in the artifact name with "First Artifact"
+        And I fill in the artifact level with "1d6"
+        And I fill in the artifact effect with "First effect"
+        And I confirm the card edit modal
+        Then I should see 3 artifact cards
+        When I click the add artifact button
+        And I fill in the artifact name with "Second Artifact"
+        And I fill in the artifact level with "1d6+2"
+        And I fill in the artifact effect with "Second effect"
+        And I confirm the card edit modal
+        Then I should see 4 artifact cards
+
+    @current
+    Scenario: Create artifact, then edit it, verify persistence
+        Given the character has 2 artifact cards
+        When I click the add artifact button
+        And I fill in the artifact name with "Power Gauntlet"
+        And I fill in the artifact level with "1d6"
+        And I fill in the artifact effect with "Enhances strength"
+        And I confirm the card edit modal
+        Then I should see 3 artifact cards
+        And I should see an artifact card with name "Power Gauntlet"
+        When I click the edit button on artifact "Power Gauntlet"
+        And I fill in the artifact name with "Power Gauntlet Mk II"
+        And I fill in the artifact level with "1d6+2"
+        And I fill in the artifact effect with "Greatly enhances strength and speed"
+        And I confirm the card edit modal
+        Then I should see an artifact card with name "Power Gauntlet Mk II"
+        When I reload the page
+        Then I should see 3 artifact cards
+        And I should see an artifact card with name "Power Gauntlet Mk II"
+        And the artifact "Power Gauntlet Mk II" should have level "1d6+2"
+        And the artifact "Power Gauntlet Mk II" should have effect "Greatly enhances strength and speed"

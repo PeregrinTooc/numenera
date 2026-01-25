@@ -18,7 +18,7 @@ export class ArtifactItem {
     this.editedArtifact = { ...artifact };
   }
 
-  private handleEdit(): void {
+  public handleEdit(): void {
     this.editedArtifact = { ...this.artifact };
     openCardEditModal({
       content: this.renderEditableVersion(),
@@ -43,7 +43,7 @@ export class ArtifactItem {
             </label>
             <input
               type="text"
-              data-testid="edit-field-name"
+              data-testid="edit-artifact-name"
               class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-purple-900 font-semibold"
               .value=${this.editedArtifact.name}
               @input=${(e: Event) => {
@@ -57,7 +57,7 @@ export class ArtifactItem {
             </label>
             <input
               type="text"
-              data-testid="edit-field-level"
+              data-testid="edit-artifact-level"
               class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-purple-900 font-semibold"
               .value=${this.editedArtifact.level}
               @input=${(e: Event) => {
@@ -70,7 +70,7 @@ export class ArtifactItem {
               ${t("artifacts.effect")}
             </label>
             <textarea
-              data-testid="edit-field-effect"
+              data-testid="edit-artifact-effect"
               class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-gray-700"
               rows="3"
               .value=${this.editedArtifact.effect}
@@ -86,7 +86,7 @@ export class ArtifactItem {
 
   render(): TemplateResult {
     return html`
-      <div data-testid="artifact-item" class="artifact-item-card relative">
+      <div data-testid="artifact-item-${this.artifact.name}" class="artifact-item-card relative">
         ${this.onDelete
           ? html`
               <button

@@ -502,3 +502,218 @@ When(
     await this.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
   }
 );
+
+// ============================================================================
+// ITERATION 3: ARTIFACTS
+// ============================================================================
+
+// PRECONDITION STEPS
+Given("the character has {int} artifact card", async function (this: CustomWorld, count: number) {
+  if (count === 2) {
+    await this.page!.evaluate(() => {
+      const FULL_CHARACTER = {
+        name: "Kael the Wanderer",
+        tier: 3,
+        type: "Glaive",
+        descriptor: "Strong",
+        focus: "Bears a Halo of Fire",
+        xp: 12,
+        shins: 47,
+        armor: 2,
+        effort: 3,
+        maxCyphers: 4,
+        stats: {
+          might: { pool: 15, edge: 2, current: 12 },
+          speed: { pool: 12, edge: 1, current: 12 },
+          intellect: { pool: 10, edge: 0, current: 8 },
+        },
+        cyphers: [],
+        artifacts: [
+          { name: "Lightning Rod", level: "6", effect: "Projects lightning bolt up to long range" },
+          { name: "Healing Crystal", level: "1d6+2", effect: "Heals wounds over time" },
+        ],
+        oddities: [],
+        abilities: [],
+        equipment: [],
+        attacks: [],
+        specialAbilities: [],
+        recoveryRolls: {
+          action: false,
+          tenMinutes: false,
+          oneHour: false,
+          tenHours: false,
+          modifier: 0,
+        },
+        damageTrack: { impairment: "healthy" },
+        textFields: { background: "", notes: "" },
+      };
+      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
+    });
+    await this.page!.reload({ waitUntil: "load" });
+    await this.page!.waitForSelector('[data-testid^="artifact-item-"]', { timeout: 5000 });
+  }
+  const cards = this.page!.locator('[data-testid^="artifact-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+Given("the character has {int} artifact cards", async function (this: CustomWorld, count: number) {
+  if (count === 2) {
+    await this.page!.evaluate(() => {
+      const FULL_CHARACTER = {
+        name: "Kael the Wanderer",
+        tier: 3,
+        type: "Glaive",
+        descriptor: "Strong",
+        focus: "Bears a Halo of Fire",
+        xp: 12,
+        shins: 47,
+        armor: 2,
+        effort: 3,
+        maxCyphers: 4,
+        stats: {
+          might: { pool: 15, edge: 2, current: 12 },
+          speed: { pool: 12, edge: 1, current: 12 },
+          intellect: { pool: 10, edge: 0, current: 8 },
+        },
+        cyphers: [],
+        artifacts: [
+          { name: "Lightning Rod", level: "6", effect: "Projects lightning bolt up to long range" },
+          { name: "Healing Crystal", level: "1d6+2", effect: "Heals wounds over time" },
+        ],
+        oddities: [],
+        abilities: [],
+        equipment: [],
+        attacks: [],
+        specialAbilities: [],
+        recoveryRolls: {
+          action: false,
+          tenMinutes: false,
+          oneHour: false,
+          tenHours: false,
+          modifier: 0,
+        },
+        damageTrack: { impairment: "healthy" },
+        textFields: { background: "", notes: "" },
+      };
+      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
+    });
+    await this.page!.reload({ waitUntil: "load" });
+    await this.page!.waitForSelector('[data-testid^="artifact-item-"]', { timeout: 5000 });
+  }
+  const cards = this.page!.locator('[data-testid^="artifact-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+// ADD BUTTON VISIBILITY
+Then("I should see an add artifact button", async function (this: CustomWorld) {
+  const button = this.page!.locator('[data-testid="add-artifact-button"]');
+  await expect(button).toBeVisible();
+});
+
+// ADD BUTTON CLICK
+When("I click the add artifact button", async function (this: CustomWorld) {
+  const button = this.page!.locator('[data-testid="add-artifact-button"]');
+  await button.click();
+  await this.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
+});
+
+// MODAL FIELD VERIFICATION
+Then("the modal should show artifact fields", async function (this: CustomWorld) {
+  const nameField = this.page!.locator('[data-testid="edit-artifact-name"]');
+  const levelField = this.page!.locator('[data-testid="edit-artifact-level"]');
+  const effectField = this.page!.locator('[data-testid="edit-artifact-effect"]');
+  await expect(nameField).toBeVisible();
+  await expect(levelField).toBeVisible();
+  await expect(effectField).toBeVisible();
+});
+
+Then("all artifact fields should be empty", async function (this: CustomWorld) {
+  const nameField = this.page!.locator('[data-testid="edit-artifact-name"]');
+  const levelField = this.page!.locator('[data-testid="edit-artifact-level"]');
+  const effectField = this.page!.locator('[data-testid="edit-artifact-effect"]');
+  await expect(nameField).toHaveValue("");
+  await expect(levelField).toHaveValue("");
+  await expect(effectField).toHaveValue("");
+});
+
+// FIELD FILLING
+When(
+  "I fill in the artifact name with {string}",
+  async function (this: CustomWorld, value: string) {
+    const field = this.page!.locator('[data-testid="edit-artifact-name"]');
+    await field.fill(value);
+  }
+);
+
+When(
+  "I fill in the artifact level with {string}",
+  async function (this: CustomWorld, value: string) {
+    const field = this.page!.locator('[data-testid="edit-artifact-level"]');
+    await field.fill(value);
+  }
+);
+
+When(
+  "I fill in the artifact effect with {string}",
+  async function (this: CustomWorld, value: string) {
+    const field = this.page!.locator('[data-testid="edit-artifact-effect"]');
+    await field.fill(value);
+  }
+);
+
+// CARD VERIFICATION
+Then("I should see {int} artifact card", async function (this: CustomWorld, count: number) {
+  await this.page!.waitForTimeout(100);
+  const cards = this.page!.locator('[data-testid^="artifact-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+Then("I should see {int} artifact cards", async function (this: CustomWorld, count: number) {
+  await this.page!.waitForTimeout(100);
+  const cards = this.page!.locator('[data-testid^="artifact-item-"]');
+  await expect(cards).toHaveCount(count);
+});
+
+Then(
+  "I should see an artifact card with name {string}",
+  async function (this: CustomWorld, name: string) {
+    await this.page!.waitForTimeout(100);
+    const artifactCard = this.page!.locator('[data-testid^="artifact-item-"]').filter({
+      hasText: name,
+    });
+    await expect(artifactCard).toBeVisible();
+  }
+);
+
+Then(
+  "the artifact {string} should have level {string}",
+  async function (this: CustomWorld, name: string, level: string) {
+    const artifactCard = this.page!.locator('[data-testid^="artifact-item-"]').filter({
+      hasText: name,
+    });
+    await expect(artifactCard).toContainText(`${level}`);
+  }
+);
+
+Then(
+  "the artifact {string} should have effect {string}",
+  async function (this: CustomWorld, name: string, effect: string) {
+    const artifactCard = this.page!.locator('[data-testid^="artifact-item-"]').filter({
+      hasText: name,
+    });
+    await expect(artifactCard).toContainText(effect);
+  }
+);
+
+// EDIT EXISTING CARD
+When(
+  "I click the edit button on artifact {string}",
+  async function (this: CustomWorld, name: string) {
+    const artifactCard = this.page!.locator('[data-testid^="artifact-item-"]').filter({
+      hasText: name,
+    });
+    const editButton = artifactCard.locator('[data-testid^="artifact-edit-button-"]');
+    await editButton.click();
+    await this.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
+  }
+);
