@@ -319,6 +319,72 @@ Before considering tests complete:
 
 ---
 
+## Rule #11: 🚨 ALWAYS Use NPM Scripts for E2E Tests
+
+**NEVER call cucumber-js directly. ALWAYS use npm scripts.**
+
+### CRITICAL REQUIREMENT:
+
+E2E tests MUST be executed using npm scripts, NOT by calling `cucumber-js` directly.
+
+### ✅ CORRECT:
+
+```bash
+# Run all E2E tests
+npm run test:e2e
+
+# Run tests tagged @current
+npm run test:e2e:current
+
+# Run production build tests
+npm run test:e2e:prod
+
+# Run specific feature file
+npm run test:e2e:cucumber -- tests/e2e/features/basic-info-editing.feature
+```
+
+### ❌ INCORRECT:
+
+```bash
+# NEVER do this - bypasses cleanup hooks
+cucumber-js tests/e2e/features/**/*.feature
+
+# NEVER do this - no cleanup pre-hook
+npx cucumber-js --tags "@current"
+```
+
+### Why This Rule Exists:
+
+The npm scripts include **critical cleanup pre-hooks** that:
+
+1. Remove stale coordination files (`.test-server-port`, `.test-worker-count`)
+2. Ensure clean test state before execution
+3. Prevent `ERR_CONNECTION_REFUSED` errors from previous failed runs
+4. Enable proper parallel test execution with 6 workers
+
+**Calling cucumber-js directly bypasses these hooks and WILL cause test failures.**
+
+### Implementation Details:
+
+```json
+// package.json
+{
+  "scripts": {
+    "test:e2e:clean": "rm -f .test-server-port .test-worker-count",
+    "test:e2e": "npm run test:e2e:clean && npm run test:e2e:cucumber",
+    "test:e2e:current": "npm run test:e2e:clean && cucumber-js tests/e2e/features/**/*.feature --tags \"@current\"",
+    "test:e2e:prod": "npm run test:e2e:clean && npm run build && TEST_PROD=true npm run test:e2e:cucumber",
+    "posttest:e2e": "npm run test:e2e:clean",
+    "posttest:e2e:current": "npm run test:e2e:clean",
+    "posttest:e2e:prod": "npm run test:e2e:clean"
+  }
+}
+```
+
+**This rule is ABSOLUTE and NON-NEGOTIABLE.**
+
+---
+
 ## Running Tests
 
 ### Commands:
@@ -330,13 +396,19 @@ npm run test:unit
 # Run unit tests in watch mode
 npm run test:unit -- --watch
 
-# Run all E2E tests
+# Run all E2E tests (see Rule #11 above)
 npm run test:e2e
 
-# Run E2E tests for specific browser
-npm run test:e2e -- --project=chromium
+# Run E2E tests tagged @current
+npm run test:e2e:current
 
-# Run specific test file
+# Run production build E2E tests
+npm run test:e2e:prod
+
+# Run specific E2E feature file
+npm run test:e2e:cucumber -- tests/e2e/features/basic-info-editing.feature
+
+# Run specific unit test file
 npm run test:unit src/components/StatPool.test.ts
 
 # Run with coverage

@@ -7,6 +7,8 @@ import {
   clearPort,
   incrementWorkerCount,
   decrementWorkerCount,
+  isCoordinationStateStale,
+  clearCoordinationState,
 } from "./port-manager.js";
 
 let browser: Browser;
@@ -14,6 +16,16 @@ let devServer: ChildProcess | null = null;
 export let serverPort: number;
 
 BeforeAll({ timeout: 60000 }, async function () {
+  // CRITICAL: Check for stale state from crashed previous runs (Defense in Depth - Layer 2)
+  // This runs BEFORE worker registration to catch any files older than 60 seconds
+  if (isCoordinationStateStale()) {
+    // eslint-disable-next-line no-console
+    console.log("Detected stale coordination state, cleaning up...");
+    clearCoordinationState();
+    // Small delay to ensure cleanup completes
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+
   // Register this worker FIRST to ensure proper coordination
   const workerCount = incrementWorkerCount();
   const isFirstWorker = workerCount === 1;
@@ -23,46 +35,23 @@ BeforeAll({ timeout: 60000 }, async function () {
     // This ensures cleanup while maintaining worker count coordination
     clearPort();
 
-    // Determine if we're running production tests
-    const isProduction = process.env.TEST_PROD === "true";
+    // Start Vite dev server WITHOUT hardcoded port, let Vite choose
+    // Enable PORT_CAPTURE so the plugin writes the actual port
+    devServer = spawn("npm", ["run", "dev"], {
+      stdio: "pipe",
+      detached: true,
+      env: { ...process.env, PORT_CAPTURE: "true" },
+    });
 
-    if (isProduction) {
-      // Start preview server WITHOUT hardcoded port, let Vite choose
-      // Enable PORT_CAPTURE so the plugin writes the actual port
-      devServer = spawn("npm", ["run", "preview"], {
-        stdio: "pipe",
-        detached: true,
-        env: { ...process.env, PORT_CAPTURE: "true" },
-      });
+    // Log output for debugging
+    devServer.stdout?.on("data", (data) => {
+      // eslint-disable-next-line no-console
+      console.log("Dev server output:", data.toString());
+    });
 
-      // Log output for debugging
-      devServer.stdout?.on("data", (data) => {
-        // eslint-disable-next-line no-console
-        console.log("Preview server output:", data.toString());
-      });
-
-      devServer.stderr?.on("data", (data) => {
-        console.error("Preview server stderr:", data.toString());
-      });
-    } else {
-      // Start Vite dev server WITHOUT hardcoded port, let Vite choose
-      // Enable PORT_CAPTURE so the plugin writes the actual port
-      devServer = spawn("npm", ["run", "dev"], {
-        stdio: "pipe",
-        detached: true,
-        env: { ...process.env, PORT_CAPTURE: "true" },
-      });
-
-      // Log output for debugging
-      devServer.stdout?.on("data", (data) => {
-        // eslint-disable-next-line no-console
-        console.log("Dev server output:", data.toString());
-      });
-
-      devServer.stderr?.on("data", (data) => {
-        console.error("Dev server stderr:", data.toString());
-      });
-    }
+    devServer.stderr?.on("data", (data) => {
+      console.error("Dev server stderr:", data.toString());
+    });
   }
 
   // All workers wait for the port file (first worker creates it, others wait)

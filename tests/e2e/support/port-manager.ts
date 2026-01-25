@@ -1,10 +1,11 @@
-import { readFileSync, writeFileSync, existsSync, unlinkSync } from "fs";
+import { readFileSync, writeFileSync, existsSync, unlinkSync, statSync } from "fs";
 import { resolve } from "path";
 
 const PORT_FILE = resolve(process.cwd(), ".test-server-port");
 const WORKER_COUNT_FILE = resolve(process.cwd(), ".test-worker-count");
 const MAX_WAIT_MS = 60000; // 60 seconds
 const POLL_INTERVAL_MS = 100; // 100ms
+const STALE_THRESHOLD_MS = 60000; // 60 seconds - files older than this are considered stale
 
 /**
  * Writes the server port to a file for other workers to read
@@ -61,24 +62,54 @@ export function portFileExists(): boolean {
 }
 
 /**
- * Clears stale worker count file if it exists
- * Should only be called by the first worker after successful registration
- * This handles cleanup from previous failed test runs
+ * Checks if a file is stale (older than STALE_THRESHOLD_MS)
  */
-export function clearStaleWorkerCount(): void {
+function isFileStale(filePath: string): boolean {
   try {
-    if (existsSync(WORKER_COUNT_FILE)) {
-      const content = readFileSync(WORKER_COUNT_FILE, "utf8");
-      const count = parseInt(content, 10) || 0;
+    if (!existsSync(filePath)) {
+      return false;
+    }
+    const stats = statSync(filePath);
+    const fileAge = Date.now() - stats.mtimeMs;
+    return fileAge > STALE_THRESHOLD_MS;
+  } catch {
+    // If we can't read the file stats, assume it's not stale
+    return false;
+  }
+}
 
-      // If count is suspiciously high (> 10), it's likely stale from a crashed run
-      // Clear it so we can start fresh
-      if (count > 10) {
-        unlinkSync(WORKER_COUNT_FILE);
-      }
+/**
+ * Checks if coordination state is stale and should be cleaned up
+ * Returns true if either port file or worker count file is stale
+ */
+export function isCoordinationStateStale(): boolean {
+  const portFileStale = isFileStale(PORT_FILE);
+  const workerCountFileStale = isFileStale(WORKER_COUNT_FILE);
+
+  // If either file is stale, the entire state is considered stale
+  return portFileStale || workerCountFileStale;
+}
+
+/**
+ * Clears all coordination files (port and worker count)
+ * This should be called when stale state is detected
+ * Safe to call from multiple workers - uses try-catch for race conditions
+ */
+export function clearCoordinationState(): void {
+  try {
+    if (existsSync(PORT_FILE)) {
+      unlinkSync(PORT_FILE);
     }
   } catch {
-    // File operations failed, ignore
+    // File may have been deleted by another worker, ignore
+  }
+
+  try {
+    if (existsSync(WORKER_COUNT_FILE)) {
+      unlinkSync(WORKER_COUNT_FILE);
+    }
+  } catch {
+    // File may have been deleted by another worker, ignore
   }
 }
 
