@@ -3,32 +3,17 @@
 import { html, render, TemplateResult } from "lit-html";
 import { t } from "../i18n/index.js";
 /* global KeyboardEvent, Event */
+import { validateTier } from "../utils/validation.js";
 import {
-  validateTier,
-  validateName,
-  validateDescriptor,
-  validateFocus,
-} from "../utils/validation.js";
-
-type FieldType =
-  | "name"
-  | "tier"
-  | "descriptor"
-  | "focus"
-  | "xp"
-  | "shins"
-  | "armor"
-  | "maxCyphers"
-  | "effort"
-  | "mightPool"
-  | "mightEdge"
-  | "mightCurrent"
-  | "speedPool"
-  | "speedEdge"
-  | "speedCurrent"
-  | "intellectPool"
-  | "intellectEdge"
-  | "intellectCurrent";
+  FieldType,
+  validateField,
+  getInputType,
+  getInputMode,
+  getMinValue,
+  getMaxValue,
+  getMaxLength,
+  isNumericField,
+} from "../utils/fieldValidation.js";
 
 interface EditFieldModalConfig {
   fieldType: FieldType;
@@ -60,201 +45,20 @@ export class EditFieldModal {
     this.handleInput = this.handleInput.bind(this);
   }
 
-  private getInputType(): string {
-    return this.fieldType === "tier" ||
-      this.fieldType === "xp" ||
-      this.fieldType === "shins" ||
-      this.fieldType === "armor" ||
-      this.fieldType === "maxCyphers" ||
-      this.fieldType === "effort" ||
-      this.fieldType === "mightPool" ||
-      this.fieldType === "mightEdge" ||
-      this.fieldType === "mightCurrent" ||
-      this.fieldType === "speedPool" ||
-      this.fieldType === "speedEdge" ||
-      this.fieldType === "speedCurrent" ||
-      this.fieldType === "intellectPool" ||
-      this.fieldType === "intellectEdge" ||
-      this.fieldType === "intellectCurrent"
-      ? "number"
-      : "text";
-  }
-
-  private getInputMode(): string | undefined {
-    return this.fieldType === "tier" ||
-      this.fieldType === "xp" ||
-      this.fieldType === "shins" ||
-      this.fieldType === "armor" ||
-      this.fieldType === "maxCyphers" ||
-      this.fieldType === "effort" ||
-      this.fieldType === "mightPool" ||
-      this.fieldType === "mightEdge" ||
-      this.fieldType === "mightCurrent" ||
-      this.fieldType === "speedPool" ||
-      this.fieldType === "speedEdge" ||
-      this.fieldType === "speedCurrent" ||
-      this.fieldType === "intellectPool" ||
-      this.fieldType === "intellectEdge" ||
-      this.fieldType === "intellectCurrent"
-      ? "numeric"
-      : undefined;
-  }
-
   private validate(value: string): boolean {
     this.validationError = null;
 
-    switch (this.fieldType) {
-      case "name": {
-        const result = validateName(value);
-        if (!result.valid) {
-          this.validationError = result.error || null;
-        }
-        return result.valid;
-      }
-      case "descriptor": {
-        const result = validateDescriptor(value);
-        if (!result.valid) {
-          this.validationError = result.error || null;
-        }
-        return result.valid;
-      }
-      case "focus": {
-        const result = validateFocus(value);
-        if (!result.valid) {
-          this.validationError = result.error || null;
-        }
-        return result.valid;
-      }
-      case "tier":
-        // Tier validation happens in handleConfirm
-        return true;
-      case "xp": {
-        // XP must be a non-negative integer, max 9999
-        const num = parseInt(value, 10);
-        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
-          this.validationError = t("validation.xp.invalid");
-          return false;
-        }
-        return true;
-      }
-      case "shins": {
-        // Shins must be a non-negative integer, max 999999
-        const num = parseInt(value, 10);
-        if (isNaN(num) || num < 0 || num > 999999 || !Number.isInteger(Number(value))) {
-          this.validationError = t("validation.shins.invalid");
-          return false;
-        }
-        return true;
-      }
-      case "armor": {
-        // Armor must be a non-negative integer, max 10
-        const num = parseInt(value, 10);
-        if (isNaN(num) || num < 0 || num > 10 || !Number.isInteger(Number(value))) {
-          this.validationError = t("validation.armor.invalid");
-          return false;
-        }
-        return true;
-      }
-      case "maxCyphers": {
-        // Max Cyphers must be a non-negative integer, max 10
-        const num = parseInt(value, 10);
-        if (isNaN(num) || num < 0 || num > 10 || !Number.isInteger(Number(value))) {
-          this.validationError = t("validation.maxCyphers.invalid");
-          return false;
-        }
-        return true;
-      }
-      case "effort": {
-        // Effort must be an integer between 1 and 6
-        const num = parseInt(value, 10);
-        if (isNaN(num) || num < 1 || num > 6 || !Number.isInteger(Number(value))) {
-          this.validationError = t("validation.effort.invalid");
-          return false;
-        }
-        return true;
-      }
-      case "mightPool": {
-        // Might Pool must be a non-negative integer, max 9999
-        const num = parseInt(value, 10);
-        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
-          this.validationError = t("validation.mightPool.invalid");
-          return false;
-        }
-        return true;
-      }
-      case "mightEdge": {
-        // Might Edge must be a non-negative integer, max 9999
-        const num = parseInt(value, 10);
-        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
-          this.validationError = t("validation.mightEdge.invalid");
-          return false;
-        }
-        return true;
-      }
-      case "mightCurrent": {
-        // Current Might must be a non-negative integer, max 9999
-        const num = parseInt(value, 10);
-        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
-          this.validationError = t("validation.mightCurrent.invalid");
-          return false;
-        }
-        return true;
-      }
-      case "speedPool": {
-        // Speed Pool must be a non-negative integer, max 9999
-        const num = parseInt(value, 10);
-        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
-          this.validationError = t("validation.speedPool.invalid");
-          return false;
-        }
-        return true;
-      }
-      case "speedEdge": {
-        // Speed Edge must be a non-negative integer, max 9999
-        const num = parseInt(value, 10);
-        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
-          this.validationError = t("validation.speedEdge.invalid");
-          return false;
-        }
-        return true;
-      }
-      case "speedCurrent": {
-        // Current Speed must be a non-negative integer, max 9999
-        const num = parseInt(value, 10);
-        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
-          this.validationError = t("validation.speedCurrent.invalid");
-          return false;
-        }
-        return true;
-      }
-      case "intellectPool": {
-        // Intellect Pool must be a non-negative integer, max 9999
-        const num = parseInt(value, 10);
-        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
-          this.validationError = t("validation.intellectPool.invalid");
-          return false;
-        }
-        return true;
-      }
-      case "intellectEdge": {
-        // Intellect Edge must be a non-negative integer, max 9999
-        const num = parseInt(value, 10);
-        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
-          this.validationError = t("validation.intellectEdge.invalid");
-          return false;
-        }
-        return true;
-      }
-      case "intellectCurrent": {
-        // Current Intellect must be a non-negative integer, max 9999
-        const num = parseInt(value, 10);
-        if (isNaN(num) || num < 0 || num > 9999 || !Number.isInteger(Number(value))) {
-          this.validationError = t("validation.intellectCurrent.invalid");
-          return false;
-        }
-        return true;
-      }
+    // Special case: tier validation happens in handleConfirm
+    if (this.fieldType === "tier") {
+      return true;
     }
+
+    // Use centralized validation
+    const result = validateField(this.fieldType, value);
+    if (!result.valid) {
+      this.validationError = result.error || null;
+    }
+    return result.valid;
   }
 
   private handleInput(e: Event): void {
@@ -262,22 +66,7 @@ export class EditFieldModal {
     this.inputValue = input.value;
 
     // For numeric fields, validate immediately to disable button if invalid
-    if (
-      this.fieldType === "xp" ||
-      this.fieldType === "shins" ||
-      this.fieldType === "armor" ||
-      this.fieldType === "maxCyphers" ||
-      this.fieldType === "effort" ||
-      this.fieldType === "mightPool" ||
-      this.fieldType === "mightEdge" ||
-      this.fieldType === "mightCurrent" ||
-      this.fieldType === "speedPool" ||
-      this.fieldType === "speedEdge" ||
-      this.fieldType === "speedCurrent" ||
-      this.fieldType === "intellectPool" ||
-      this.fieldType === "intellectEdge" ||
-      this.fieldType === "intellectCurrent"
-    ) {
+    if (isNumericField(this.fieldType)) {
       this.validate(this.inputValue);
     }
 
@@ -311,22 +100,7 @@ export class EditFieldModal {
       // Apply tier constraints
       const validated = validateTier(this.inputValue);
       this.onConfirm(validated);
-    } else if (
-      this.fieldType === "xp" ||
-      this.fieldType === "shins" ||
-      this.fieldType === "armor" ||
-      this.fieldType === "maxCyphers" ||
-      this.fieldType === "effort" ||
-      this.fieldType === "mightPool" ||
-      this.fieldType === "mightEdge" ||
-      this.fieldType === "mightCurrent" ||
-      this.fieldType === "speedPool" ||
-      this.fieldType === "speedEdge" ||
-      this.fieldType === "speedCurrent" ||
-      this.fieldType === "intellectPool" ||
-      this.fieldType === "intellectEdge" ||
-      this.fieldType === "intellectCurrent"
-    ) {
+    } else if (isNumericField(this.fieldType)) {
       // Validate and convert to number
       if (this.validate(this.inputValue)) {
         this.onConfirm(parseInt(this.inputValue, 10));
@@ -407,7 +181,11 @@ export class EditFieldModal {
 
   render(): TemplateResult {
     const isValid = this.validate(this.inputValue);
-    const inputMode = this.getInputMode();
+    const inputType = getInputType(this.fieldType);
+    const inputMode = getInputMode(this.fieldType);
+    const minValue = getMinValue(this.fieldType);
+    const maxValue = getMaxValue(this.fieldType);
+    const maxLength = getMaxLength(this.fieldType);
 
     return html`
       <div
@@ -420,51 +198,14 @@ export class EditFieldModal {
         <div class="edit-modal-content" data-testid="edit-modal" role="dialog" aria-modal="true">
           <!-- Input Field -->
           <input
-            type=${this.getInputType()}
+            type=${inputType}
             class="edit-modal-input ${this.validationError ? "error" : ""}"
             .value=${this.inputValue}
             @input=${this.handleInput}
             inputmode=${inputMode || ""}
-            min=${this.fieldType === "tier" || this.fieldType === "effort"
-              ? "1"
-              : this.fieldType === "xp" ||
-                  this.fieldType === "shins" ||
-                  this.fieldType === "armor" ||
-                  this.fieldType === "maxCyphers" ||
-                  this.fieldType === "mightPool" ||
-                  this.fieldType === "mightEdge" ||
-                  this.fieldType === "mightCurrent" ||
-                  this.fieldType === "speedPool" ||
-                  this.fieldType === "speedEdge" ||
-                  this.fieldType === "speedCurrent" ||
-                  this.fieldType === "intellectPool" ||
-                  this.fieldType === "intellectEdge" ||
-                  this.fieldType === "intellectCurrent"
-                ? "0"
-                : ""}
-            max=${this.fieldType === "tier" || this.fieldType === "effort"
-              ? "6"
-              : this.fieldType === "xp" ||
-                  this.fieldType === "mightPool" ||
-                  this.fieldType === "mightEdge" ||
-                  this.fieldType === "mightCurrent" ||
-                  this.fieldType === "speedPool" ||
-                  this.fieldType === "speedEdge" ||
-                  this.fieldType === "speedCurrent" ||
-                  this.fieldType === "intellectPool" ||
-                  this.fieldType === "intellectEdge" ||
-                  this.fieldType === "intellectCurrent"
-                ? "9999"
-                : this.fieldType === "shins"
-                  ? "999999"
-                  : this.fieldType === "armor" || this.fieldType === "maxCyphers"
-                    ? "10"
-                    : ""}
-            maxlength=${this.fieldType === "name" || this.fieldType === "focus"
-              ? "50"
-              : this.fieldType === "descriptor"
-                ? "30"
-                : ""}
+            min=${minValue !== undefined ? String(minValue) : ""}
+            max=${maxValue !== undefined ? String(maxValue) : ""}
+            maxlength=${maxLength !== undefined ? String(maxLength) : ""}
             data-testid="edit-modal-input"
           />
 
