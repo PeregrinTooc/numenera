@@ -11,7 +11,8 @@ export class OddityItem {
   constructor(
     private oddity: string,
     private index: number,
-    private onUpdate?: (updated: string) => void
+    private onUpdate?: (updated: string) => void,
+    private onDelete?: () => void
   ) {
     this.editedOddity = oddity;
   }
@@ -57,6 +58,39 @@ export class OddityItem {
   render(): TemplateResult {
     return html`
       <div data-testid="oddity-item" class="oddity-item-card relative">
+        ${this.onDelete
+          ? html`
+              <button
+                @click=${() => this.onDelete?.()}
+                class="absolute top-2 left-2 p-2 text-indigo-600 hover:text-red-600 hover:bg-red-100 rounded-full transition-colors"
+                data-testid="oddity-delete-button-${this.index}"
+                aria-label="${t("cards.delete")}"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M10 11v6M14 11v6"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            `
+          : ""}
         ${this.onUpdate
           ? html`
               <button
@@ -90,7 +124,7 @@ export class OddityItem {
               </button>
             `
           : ""}
-        <div class="flex justify-between items-start pr-8">
+        <div class="flex justify-between items-start pr-8 pl-8">
           <div data-testid="oddity-${this.oddity}" class="oddity-text flex-1">
             🔮 ${this.oddity}
           </div>

@@ -8,6 +8,7 @@ import { ArtifactItem } from "./ArtifactItem.js";
 import { OddityItem } from "./OddityItem.js";
 import { ModalService } from "../services/modalService.js";
 import { t } from "../i18n/index.js";
+import { saveCharacterState } from "../storage/localStorage.js";
 
 type FieldType = "shins";
 
@@ -32,32 +33,68 @@ export class ItemsBox {
   render(): TemplateResult {
     const equipmentItems = this.character.equipment.map(
       (item, index) =>
-        new EquipmentItem(item, index, (updated) => {
-          this.character.equipment[index] = updated;
-          // Trigger re-render via character-updated event
-          const event = new CustomEvent("character-updated");
-          document.getElementById("app")?.dispatchEvent(event);
-        })
+        new EquipmentItem(
+          item,
+          index,
+          (updated) => {
+            this.character.equipment[index] = updated;
+            // Trigger re-render via character-updated event
+            const event = new CustomEvent("character-updated");
+            document.getElementById("app")?.dispatchEvent(event);
+          },
+          () => {
+            // Delete handler: filter out the equipment at this index
+            this.character.equipment = this.character.equipment.filter((_, i) => i !== index);
+            saveCharacterState(this.character);
+            // Trigger re-render via character-updated event
+            const event = new CustomEvent("character-updated");
+            document.getElementById("app")?.dispatchEvent(event);
+          }
+        )
     );
 
     const artifactItems = this.character.artifacts.map(
       (artifact, index) =>
-        new ArtifactItem(artifact, index, (updated) => {
-          this.character.artifacts[index] = updated;
-          // Trigger re-render via character-updated event
-          const event = new CustomEvent("character-updated");
-          document.getElementById("app")?.dispatchEvent(event);
-        })
+        new ArtifactItem(
+          artifact,
+          index,
+          (updated) => {
+            this.character.artifacts[index] = updated;
+            // Trigger re-render via character-updated event
+            const event = new CustomEvent("character-updated");
+            document.getElementById("app")?.dispatchEvent(event);
+          },
+          () => {
+            // Delete handler: filter out the artifact at this index
+            this.character.artifacts = this.character.artifacts.filter((_, i) => i !== index);
+            saveCharacterState(this.character);
+            // Trigger re-render via character-updated event
+            const event = new CustomEvent("character-updated");
+            document.getElementById("app")?.dispatchEvent(event);
+          }
+        )
     );
 
     const oddityItems = this.character.oddities.map(
       (oddity, index) =>
-        new OddityItem(oddity, index, (updated) => {
-          this.character.oddities[index] = updated;
-          // Trigger re-render via character-updated event
-          const event = new CustomEvent("character-updated");
-          document.getElementById("app")?.dispatchEvent(event);
-        })
+        new OddityItem(
+          oddity,
+          index,
+          (updated) => {
+            this.character.oddities[index] = updated;
+            // Trigger re-render via character-updated event
+            const event = new CustomEvent("character-updated");
+            document.getElementById("app")?.dispatchEvent(event);
+          },
+          () => {
+            // Delete handler: filter out the oddity at this index
+            this.character.oddities = this.character.oddities.filter((_, i) => i !== index);
+            saveCharacterState(this.character);
+            // Trigger re-render via character-updated event
+            const event = new CustomEvent("character-updated");
+            document.getElementById("app")?.dispatchEvent(event);
+          }
+        )
     );
 
     return html`

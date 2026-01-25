@@ -13,7 +13,8 @@ export class AttackItem {
   constructor(
     private attack: Attack,
     private index: number,
-    private onUpdate?: (updated: Attack) => void
+    private onUpdate?: (updated: Attack) => void,
+    private onDelete?: () => void
   ) {
     this.editedAttack = { ...attack };
   }
@@ -133,6 +134,40 @@ export class AttackItem {
         data-testid="attack-item-${testIdBase}"
         class="attack-item-card bg-gradient-to-br from-red-50 to-orange-50 border-2 border-red-200 rounded-lg p-4 shadow-sm hover:shadow-md hover:border-red-300 transition-all relative"
       >
+        <!-- Delete Button -->
+        ${this.onDelete
+          ? html`
+              <button
+                @click=${() => this.onDelete?.()}
+                class="absolute top-2 left-2 p-2 text-red-600 hover:text-red-800 hover:bg-red-100 rounded-full transition-colors"
+                data-testid="attack-delete-button-${this.index}"
+                aria-label="${t("cards.delete")}"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M10 11v6M14 11v6"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            `
+          : ""}
         <!-- Edit Button -->
         ${this.onUpdate
           ? html`
@@ -168,7 +203,7 @@ export class AttackItem {
             `
           : ""}
 
-        <div class="attack-header flex justify-between items-start mb-2 pr-8">
+        <div class="attack-header flex justify-between items-start mb-2 pr-8 pl-8">
           <h4
             data-testid="attack-name-${this.index}"
             class="attack-name font-bold text-lg text-red-900"

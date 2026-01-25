@@ -121,6 +121,7 @@
   },
   "cards": {
     "edit": "Bearbeiten",
+    "delete": "Löschen",
     "confirm": "Bestätigen",
     "cancel": "Abbrechen"
   },

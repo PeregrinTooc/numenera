@@ -6,6 +6,7 @@ import { Character } from "../types/character.js";
 import { CypherItem } from "./CypherItem.js";
 import { ModalService } from "../services/modalService.js";
 import { t } from "../i18n/index.js";
+import { saveCharacterState } from "../storage/localStorage.js";
 
 type FieldType = "maxCyphers";
 
@@ -30,12 +31,24 @@ export class CyphersBox {
   render(): TemplateResult {
     const cypherItems = this.character.cyphers.map(
       (cypher, index) =>
-        new CypherItem(cypher, index, (updated) => {
-          this.character.cyphers[index] = updated;
-          // Trigger re-render via character-updated event
-          const event = new CustomEvent("character-updated");
-          document.getElementById("app")?.dispatchEvent(event);
-        })
+        new CypherItem(
+          cypher,
+          index,
+          (updated) => {
+            this.character.cyphers[index] = updated;
+            // Trigger re-render via character-updated event
+            const event = new CustomEvent("character-updated");
+            document.getElementById("app")?.dispatchEvent(event);
+          },
+          () => {
+            // Delete handler: filter out the cypher at this index
+            this.character.cyphers = this.character.cyphers.filter((_, i) => i !== index);
+            saveCharacterState(this.character);
+            // Trigger re-render via character-updated event
+            const event = new CustomEvent("character-updated");
+            document.getElementById("app")?.dispatchEvent(event);
+          }
+        )
     );
 
     return html`

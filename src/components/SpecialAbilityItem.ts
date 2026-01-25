@@ -13,7 +13,8 @@ export class SpecialAbilityItem {
   constructor(
     private specialAbility: SpecialAbility,
     private index: number,
-    private onUpdate?: (updated: SpecialAbility) => void
+    private onUpdate?: (updated: SpecialAbility) => void,
+    private onDelete?: () => void
   ) {
     this.editedAbility = { ...specialAbility };
   }
@@ -92,8 +93,36 @@ export class SpecialAbilityItem {
     return html`
       <div
         data-testid="special-ability-item-${testIdBase}"
-        class="special-ability-item-card bg-gradient-to-br from-cyan-50 to-teal-50 border-2 border-teal-200 rounded-lg p-4 shadow-sm hover:shadow-md hover:border-teal-300 transition-all relative"
+        class="special-ability-item-card bg-gradient-to-br from-cyan-50 to-teal-50 border-2 border-teal-200 rounded-lg p-4 shadow-sm hover:shadow-md hover:border-teal-300 transition-all relative pr-8 pl-8"
       >
+        <!-- Delete Button -->
+        ${this.onDelete
+          ? html`
+              <button
+                @click=${() => this.onDelete!()}
+                class="absolute top-2 left-2 p-2 text-teal-600 hover:text-red-600 hover:bg-red-100 rounded-full transition-colors"
+                data-testid="special-ability-delete-button-${this.index}"
+                aria-label="${t("cards.delete")}"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            `
+          : ""}
+
         <!-- Edit Button -->
         ${this.onUpdate
           ? html`

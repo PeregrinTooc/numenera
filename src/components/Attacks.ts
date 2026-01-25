@@ -12,7 +12,8 @@ export class Attacks {
   constructor(
     private character: Character,
     private onFieldUpdate: (field: FieldType, value: number) => void,
-    private onAttackUpdate?: (index: number, updated: Attack) => void
+    private onAttackUpdate?: (index: number, updated: Attack) => void,
+    private onAttackDelete?: (index: number) => void
   ) {}
 
   private openEditModal(fieldType: FieldType): void {
@@ -64,6 +65,11 @@ export class Attacks {
                     index,
                     this.onAttackUpdate
                       ? (updated) => this.onAttackUpdate!(index, updated)
+                      : undefined,
+                    this.onAttackDelete
+                      ? () => {
+                          this.onAttackDelete!(index);
+                        }
                       : undefined
                   ).render()
                 )}

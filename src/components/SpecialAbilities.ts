@@ -8,7 +8,8 @@ import { t } from "../i18n/index.js";
 export class SpecialAbilities {
   constructor(
     private specialAbilities: SpecialAbility[],
-    private onUpdate?: (index: number, updated: SpecialAbility) => void
+    private onUpdate?: (index: number, updated: SpecialAbility) => void,
+    private onDelete?: (index: number) => void
   ) {}
 
   render(): TemplateResult {
@@ -28,11 +29,20 @@ export class SpecialAbilities {
     }
 
     const specialAbilityItems = this.specialAbilities.map((specialAbility, index) =>
-      new SpecialAbilityItem(specialAbility, index, (updated) => {
-        if (this.onUpdate) {
-          this.onUpdate(index, updated);
-        }
-      }).render()
+      new SpecialAbilityItem(
+        specialAbility,
+        index,
+        this.onUpdate
+          ? (updated) => {
+              this.onUpdate!(index, updated);
+            }
+          : undefined,
+        this.onDelete
+          ? () => {
+              this.onDelete!(index);
+            }
+          : undefined
+      ).render()
     );
 
     return html`

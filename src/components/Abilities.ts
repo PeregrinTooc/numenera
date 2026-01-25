@@ -8,7 +8,8 @@ import { t } from "../i18n/index.js";
 export class Abilities {
   constructor(
     private abilities: Ability[],
-    private onUpdate?: (index: number, updated: Ability) => void
+    private onUpdate?: (index: number, updated: Ability) => void,
+    private onDelete?: (index: number) => void
   ) {}
 
   render(): TemplateResult {
@@ -28,11 +29,20 @@ export class Abilities {
     }
 
     const abilityItems = this.abilities.map((ability, index) =>
-      new AbilityItem(ability, index, (updated) => {
-        if (this.onUpdate) {
-          this.onUpdate(index, updated);
-        }
-      }).render()
+      new AbilityItem(
+        ability,
+        index,
+        this.onUpdate
+          ? (updated) => {
+              this.onUpdate!(index, updated);
+            }
+          : undefined,
+        this.onDelete
+          ? () => {
+              this.onDelete!(index);
+            }
+          : undefined
+      ).render()
     );
 
     return html`

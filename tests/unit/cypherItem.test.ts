@@ -109,4 +109,32 @@ describe("CypherItem", () => {
     const editButton = container.querySelector('[data-testid*="edit-button"]');
     expect(editButton).toBeNull();
   });
+
+  it("should render delete button when onDelete is provided", () => {
+    const onDelete = vi.fn();
+    const component = new CypherItem(mockCypher, 0, undefined, onDelete);
+    render(component.render(), container);
+
+    const deleteButton = container.querySelector('[data-testid="cypher-delete-button-0"]');
+    expect(deleteButton).toBeTruthy();
+  });
+
+  it("should call onDelete when delete button is clicked", () => {
+    const onDelete = vi.fn();
+    const component = new CypherItem(mockCypher, 0, undefined, onDelete);
+    render(component.render(), container);
+
+    const deleteButton = container.querySelector('[data-testid="cypher-delete-button-0"]');
+    deleteButton?.dispatchEvent(new Event("click", { bubbles: true }));
+
+    expect(onDelete).toHaveBeenCalledTimes(1);
+  });
+
+  it("should not render delete button when onDelete is not provided", () => {
+    const component = new CypherItem(mockCypher, 0);
+    render(component.render(), container);
+
+    const deleteButton = container.querySelector('[data-testid*="delete-button"]');
+    expect(deleteButton).toBeNull();
+  });
 });

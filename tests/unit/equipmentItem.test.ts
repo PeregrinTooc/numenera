@@ -108,4 +108,33 @@ describe("EquipmentItem", () => {
     expectModalClosed();
     expect(onUpdate).not.toHaveBeenCalled();
   });
+
+  // Delete functionality tests
+  it("shows delete button when onDelete callback is provided", () => {
+    const onDelete = vi.fn();
+    const item = new EquipmentItem(mockEquipment, 0, undefined, onDelete);
+    render(item.render(), container);
+
+    const deleteButton = screen.queryByTestId("equipment-delete-button-0");
+    expect(deleteButton).toBeTruthy();
+  });
+
+  it("does not show delete button when onDelete callback is not provided", () => {
+    const item = new EquipmentItem(mockEquipment, 0);
+    render(item.render(), container);
+
+    const deleteButton = screen.queryByTestId("equipment-delete-button-0");
+    expect(deleteButton).toBeNull();
+  });
+
+  it("calls onDelete callback when delete button is clicked", () => {
+    const onDelete = vi.fn();
+    const item = new EquipmentItem(mockEquipment, 0, undefined, onDelete);
+    render(item.render(), container);
+
+    const deleteButton = screen.getByTestId("equipment-delete-button-0");
+    fireEvent.click(deleteButton);
+
+    expect(onDelete).toHaveBeenCalledTimes(1);
+  });
 });

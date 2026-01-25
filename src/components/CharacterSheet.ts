@@ -36,12 +36,22 @@ export class CharacterSheet {
     this.basicInfo = new BasicInfo(this.character, this.onFieldUpdate);
     this.bottomTextFields = new BottomTextFields(this.character);
     this.itemsBox = new ItemsBox(this.character, this.onFieldUpdate);
-    this.attacks = new Attacks(this.character, this.onFieldUpdate, (index, updated) => {
-      this.character.attacks[index] = updated;
-      saveCharacterState(this.character);
-      const event = new CustomEvent("character-updated");
-      document.getElementById("app")?.dispatchEvent(event);
-    });
+    this.attacks = new Attacks(
+      this.character,
+      this.onFieldUpdate,
+      (index, updated) => {
+        this.character.attacks[index] = updated;
+        saveCharacterState(this.character);
+        const event = new CustomEvent("character-updated");
+        document.getElementById("app")?.dispatchEvent(event);
+      },
+      (index) => {
+        this.character.attacks = this.character.attacks.filter((_, i) => i !== index);
+        saveCharacterState(this.character);
+        const event = new CustomEvent("character-updated");
+        document.getElementById("app")?.dispatchEvent(event);
+      }
+    );
     this.cyphersBox = new CyphersBox(this.character, this.onFieldUpdate);
     this.stats = new Stats(this.character, this.onFieldUpdate);
   }
@@ -52,18 +62,35 @@ export class CharacterSheet {
     const damageTrack = new DamageTrack(this.character.damageTrack);
 
     // Collection update handlers that save directly to localStorage
-    const abilities = new Abilities(this.character.abilities, (index, updated) => {
-      this.character.abilities[index] = updated;
-      saveCharacterState(this.character);
-      // Trigger re-render via character-updated event
-      const event = new CustomEvent("character-updated");
-      document.getElementById("app")?.dispatchEvent(event);
-    });
+    const abilities = new Abilities(
+      this.character.abilities,
+      (index, updated) => {
+        this.character.abilities[index] = updated;
+        saveCharacterState(this.character);
+        // Trigger re-render via character-updated event
+        const event = new CustomEvent("character-updated");
+        document.getElementById("app")?.dispatchEvent(event);
+      },
+      (index) => {
+        this.character.abilities.splice(index, 1);
+        saveCharacterState(this.character);
+        // Trigger re-render via character-updated event
+        const event = new CustomEvent("character-updated");
+        document.getElementById("app")?.dispatchEvent(event);
+      }
+    );
 
     const specialAbilities = new SpecialAbilities(
       this.character.specialAbilities,
       (index, updated) => {
         this.character.specialAbilities[index] = updated;
+        saveCharacterState(this.character);
+        // Trigger re-render via character-updated event
+        const event = new CustomEvent("character-updated");
+        document.getElementById("app")?.dispatchEvent(event);
+      },
+      (index) => {
+        this.character.specialAbilities.splice(index, 1);
         saveCharacterState(this.character);
         // Trigger re-render via character-updated event
         const event = new CustomEvent("character-updated");
