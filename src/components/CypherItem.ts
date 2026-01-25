@@ -18,7 +18,7 @@ export class CypherItem {
     this.editedCypher = { ...cypher };
   }
 
-  private handleEdit(): void {
+  public handleEdit(): void {
     this.editedCypher = { ...this.cypher };
     openCardEditModal({
       content: this.renderEditableVersion(),
@@ -58,13 +58,14 @@ export class CypherItem {
               ${t("cyphers.level")}
             </label>
             <input
-              type="number"
+              type="text"
               .value=${this.editedCypher.level.toString()}
               @input=${(e: Event) => {
                 const target = e.target as HTMLInputElement;
                 this.editedCypher.level = target.value || "1";
               }}
               class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-purple-900 font-semibold"
+              placeholder="${t("cyphers.level")}"
               data-testid="edit-cypher-level"
             />
           </div>

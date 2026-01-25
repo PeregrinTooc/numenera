@@ -2,7 +2,7 @@
 /* global CustomEvent */
 
 import { html, TemplateResult } from "lit-html";
-import { Character } from "../types/character.js";
+import { Character, Cypher } from "../types/character.js";
 import { CypherItem } from "./CypherItem.js";
 import { ModalService } from "../services/modalService.js";
 import { t } from "../i18n/index.js";
@@ -28,6 +28,27 @@ export class CyphersBox {
     });
   }
 
+  private handleAddCypher(): void {
+    // Create empty cypher for editing
+    const emptyCypher: Cypher = { name: "", level: "", effect: "" };
+
+    // Create temporary CypherItem with onUpdate callback that adds to array
+    const tempItem = new CypherItem(
+      emptyCypher,
+      -1, // temporary index
+      (updated) => {
+        // onUpdate callback - add the new cypher to array
+        this.character.cyphers.push(updated);
+        saveCharacterState(this.character);
+        const event = new CustomEvent("character-updated");
+        document.getElementById("app")?.dispatchEvent(event);
+      }
+    );
+
+    // Trigger edit on this temporary item
+    tempItem.handleEdit();
+  }
+
   render(): TemplateResult {
     const cypherItems = this.character.cyphers.map(
       (cypher, index) =>
@@ -36,6 +57,7 @@ export class CyphersBox {
           index,
           (updated) => {
             this.character.cyphers[index] = updated;
+            saveCharacterState(this.character);
             // Trigger re-render via character-updated event
             const event = new CustomEvent("character-updated");
             document.getElementById("app")?.dispatchEvent(event);
@@ -70,7 +92,30 @@ export class CyphersBox {
           <span class="stat-badge-label">${t("cyphers.max")}</span>
         </div>
 
-        <h2 data-testid="cyphers-heading" class="section-box-heading">${t("cyphers.heading")}</h2>
+        <h2 data-testid="cyphers-heading" class="section-box-heading">
+          ${t("cyphers.heading")}
+          <button
+            data-testid="add-cypher-button"
+            @click=${() => this.handleAddCypher()}
+            class="add-button ml-2"
+            aria-label="Add Cypher"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </h2>
 
         ${this.character.cyphers.length === 0
           ? html`
