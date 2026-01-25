@@ -35,23 +35,45 @@ BeforeAll({ timeout: 60000 }, async function () {
     // This ensures cleanup while maintaining worker count coordination
     clearPort();
 
-    // Start Vite dev server WITHOUT hardcoded port, let Vite choose
-    // Enable PORT_CAPTURE so the plugin writes the actual port
-    devServer = spawn("npm", ["run", "dev"], {
-      stdio: "pipe",
-      detached: true,
-      env: { ...process.env, PORT_CAPTURE: "true" },
-    });
+    const isProduction = process.env.TEST_PROD === "true";
 
-    // Log output for debugging
-    devServer.stdout?.on("data", (data) => {
-      // eslint-disable-next-line no-console
-      console.log("Dev server output:", data.toString());
-    });
+    if (isProduction) {
+      // Start preview server WITHOUT hardcoded port, let Vite choose
+      // Enable PORT_CAPTURE so the plugin writes the actual port
+      devServer = spawn("npm", ["run", "preview"], {
+        stdio: "pipe",
+        detached: true,
+        env: { ...process.env, PORT_CAPTURE: "true" },
+      });
 
-    devServer.stderr?.on("data", (data) => {
-      console.error("Dev server stderr:", data.toString());
-    });
+      // Log output for debugging
+      devServer.stdout?.on("data", (data) => {
+        // eslint-disable-next-line no-console
+        console.log("Preview server output:", data.toString());
+      });
+
+      devServer.stderr?.on("data", (data) => {
+        console.error("Preview server stderr:", data.toString());
+      });
+    } else {
+      // Start Vite dev server WITHOUT hardcoded port, let Vite choose
+      // Enable PORT_CAPTURE so the plugin writes the actual port
+      devServer = spawn("npm", ["run", "dev"], {
+        stdio: "pipe",
+        detached: true,
+        env: { ...process.env, PORT_CAPTURE: "true" },
+      });
+
+      // Log output for debugging
+      devServer.stdout?.on("data", (data) => {
+        // eslint-disable-next-line no-console
+        console.log("Dev server output:", data.toString());
+      });
+
+      devServer.stderr?.on("data", (data) => {
+        console.error("Dev server stderr:", data.toString());
+      });
+    }
   }
 
   // All workers wait for the port file (first worker creates it, others wait)

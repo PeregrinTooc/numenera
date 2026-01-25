@@ -168,10 +168,51 @@ export function incrementWorkerCount(): number {
 }
 
 /**
- * Decrements the worker count
+ * Decrements the worker count with retry for race condition handling
  * Returns the new count
  */
 export function decrementWorkerCount(): number {
+  const MAX_RETRIES = 10;
+  const RETRY_DELAY_MS = 50;
+
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    try {
+      if (!existsSync(WORKER_COUNT_FILE)) {
+        // File doesn't exist, count is already 0
+        return 0;
+      }
+
+      const content = readFileSync(WORKER_COUNT_FILE, "utf8");
+      const count = parseInt(content, 10) || 0;
+      const newCount = Math.max(0, count - 1);
+
+      if (newCount === 0) {
+        // Last worker, clean up the file
+        // Use try-catch in case another worker deletes it first
+        try {
+          unlinkSync(WORKER_COUNT_FILE);
+        } catch {
+          // Already deleted by another worker
+        }
+        return 0;
+      } else {
+        // Write the decremented count
+        writeFileSync(WORKER_COUNT_FILE, newCount.toString(), "utf8");
+        return newCount;
+      }
+    } catch {
+      // Race condition, retry
+      if (attempt < MAX_RETRIES - 1) {
+        const delay = RETRY_DELAY_MS * Math.pow(2, attempt);
+        const start = Date.now();
+        while (Date.now() - start < delay) {
+          // Busy wait
+        }
+      }
+    }
+  }
+
+  // Fallback: read current count and decrement
   let count = 0;
   if (existsSync(WORKER_COUNT_FILE)) {
     const content = readFileSync(WORKER_COUNT_FILE, "utf8");
@@ -180,9 +221,12 @@ export function decrementWorkerCount(): number {
   count = Math.max(0, count - 1);
 
   if (count === 0) {
-    // Last worker, clean up the file
-    if (existsSync(WORKER_COUNT_FILE)) {
-      unlinkSync(WORKER_COUNT_FILE);
+    try {
+      if (existsSync(WORKER_COUNT_FILE)) {
+        unlinkSync(WORKER_COUNT_FILE);
+      }
+    } catch {
+      // Already deleted
     }
   } else {
     writeFileSync(WORKER_COUNT_FILE, count.toString(), "utf8");
