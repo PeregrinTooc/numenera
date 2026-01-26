@@ -9,3 +9,9 @@ test-output.txt
 .test-server-port
 .test-worker-count
 coverage
+
+# Stryker mutation testing
+stryker-tmp/
+reports/
+.stryker-tmp/
+mutation-test.log
