@@ -218,10 +218,19 @@ Then("the cancel button should have an X icon", async function (this: CustomWorl
 Then("the modal backdrop should be semi-transparent", async function (this: CustomWorld) {
   const backdrop = this.page!.locator('[data-testid="modal-backdrop"]');
   await expect(backdrop).toBeVisible();
-  const opacity = await backdrop.evaluate((el: HTMLElement) => window.getComputedStyle(el).opacity);
-  const opacityNum = parseFloat(opacity);
-  expect(opacityNum).toBeGreaterThan(0);
-  expect(opacityNum).toBeLessThan(1);
+
+  // Check the background-color's alpha channel, not the element's opacity property
+  const bgColor = await backdrop.evaluate(
+    (el: HTMLElement) => window.getComputedStyle(el).backgroundColor
+  );
+
+  // Parse rgba(r, g, b, alpha) or rgb(r, g, b) format
+  // rgba format has alpha as the 4th value, rgb format is fully opaque (alpha = 1)
+  const rgbaMatch = bgColor.match(/rgba?\([\d\s]+,[\d\s]+,[\d\s]+(?:,\s*([\d.]+))?\)/);
+  const alpha = rgbaMatch?.[1] ? parseFloat(rgbaMatch[1]) : 1;
+
+  expect(alpha).toBeGreaterThan(0);
+  expect(alpha).toBeLessThan(1);
 });
 
 Then(
