@@ -5,10 +5,11 @@ import { html, TemplateResult } from "lit-html";
 import { Ability } from "../types/character.js";
 import { t } from "../i18n/index.js";
 import { sanitizeForTestId } from "../utils/testHelpers.js";
-import { openCardEditModal } from "./CardEditModal.js";
+import { createEditHandler, renderCardButtons } from "./helpers/CardEditorBehavior.js";
 
 export class AbilityItem {
   private editedAbility: Ability;
+  public handleEdit: () => void;
 
   constructor(
     private ability: Ability,
@@ -17,20 +18,13 @@ export class AbilityItem {
     private onDelete?: () => void
   ) {
     this.editedAbility = { ...ability };
-  }
-
-  public handleEdit(): void {
-    this.editedAbility = { ...this.ability };
-
-    openCardEditModal({
-      content: this.renderEditableVersion(),
-      onConfirm: () => {
-        if (this.onUpdate) {
-          this.onUpdate(this.editedAbility);
-        }
-      },
-      onCancel: () => {
-        // No action needed on cancel
+    this.handleEdit = createEditHandler<Ability>({
+      item: this.ability,
+      getEditedItem: () => this.editedAbility,
+      onUpdate: this.onUpdate,
+      renderEditableVersion: () => this.renderEditableVersion(),
+      resetEditedItem: () => {
+        this.editedAbility = { ...this.ability };
       },
     });
   }
@@ -49,8 +43,8 @@ export class AbilityItem {
               type="text"
               .value=${this.editedAbility.name}
               @input=${(e: Event) => {
-                this.editedAbility.name = (e.target as HTMLInputElement).value;
-              }}
+        this.editedAbility.name = (e.target as HTMLInputElement).value;
+      }}
               class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-indigo-900 font-semibold"
               data-testid="edit-ability-name"
             />
@@ -64,9 +58,9 @@ export class AbilityItem {
                 type="number"
                 .value=${this.editedAbility.cost?.toString() || ""}
                 @input=${(e: Event) => {
-                  const value = (e.target as HTMLInputElement).value;
-                  this.editedAbility.cost = value ? parseInt(value, 10) : undefined;
-                }}
+        const value = (e.target as HTMLInputElement).value;
+        this.editedAbility.cost = value ? parseInt(value, 10) : undefined;
+      }}
                 class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-indigo-900 font-semibold"
                 min="0"
                 data-testid="edit-ability-cost"
@@ -79,11 +73,11 @@ export class AbilityItem {
               <select
                 .value=${this.editedAbility.pool || ""}
                 @change=${(e: Event) => {
-                  const value = (e.target as HTMLSelectElement).value;
-                  this.editedAbility.pool = value
-                    ? (value as "might" | "speed" | "intellect")
-                    : undefined;
-                }}
+        const value = (e.target as HTMLSelectElement).value;
+        this.editedAbility.pool = value
+          ? (value as "might" | "speed" | "intellect")
+          : undefined;
+      }}
                 class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-indigo-900 font-semibold"
                 data-testid="edit-ability-pool"
               >
@@ -100,8 +94,8 @@ export class AbilityItem {
               type="text"
               .value=${this.editedAbility.action || ""}
               @input=${(e: Event) => {
-                this.editedAbility.action = (e.target as HTMLInputElement).value || undefined;
-              }}
+        this.editedAbility.action = (e.target as HTMLInputElement).value || undefined;
+      }}
               class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-indigo-900 font-semibold"
               data-testid="edit-ability-action"
             />
@@ -111,8 +105,8 @@ export class AbilityItem {
             <textarea
               .value=${this.editedAbility.description}
               @input=${(e: Event) => {
-                this.editedAbility.description = (e.target as HTMLTextAreaElement).value;
-              }}
+        this.editedAbility.description = (e.target as HTMLTextAreaElement).value;
+      }}
               class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-gray-700"
               rows="3"
               data-testid="edit-ability-description"
@@ -131,68 +125,14 @@ export class AbilityItem {
         data-testid="ability-item-${testIdBase}"
         class="ability-item-card bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-lg p-4 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all relative pr-8 pl-8"
       >
-        <!-- Delete Button -->
-        ${this.onDelete
-          ? html`
-              <button
-                @click=${() => this.onDelete!()}
-                class="absolute top-2 left-2 p-2 text-indigo-600 hover:text-red-600 hover:bg-red-100 rounded-full transition-colors"
-                data-testid="ability-delete-button-${this.index}"
-                aria-label="${t("cards.delete")}"
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-            `
-          : ""}
-
-        <!-- Edit Button -->
-        ${this.onUpdate
-          ? html`
-              <button
-                @click=${() => this.handleEdit()}
-                class="absolute top-2 right-2 p-2 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-100 rounded-full transition-colors"
-                data-testid="ability-edit-button-${this.index}"
-                aria-label="${t("cards.edit")}"
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M18.5 2.50023C18.8978 2.1024 19.4374 1.87891 20 1.87891C20.5626 1.87891 21.1022 2.1024 21.5 2.50023C21.8978 2.89805 22.1213 3.43762 22.1213 4.00023C22.1213 4.56284 21.8978 5.1024 21.5 5.50023L12 15.0002L8 16.0002L9 12.0002L18.5 2.50023Z"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-            `
-          : ""}
+        ${renderCardButtons({
+      index: this.index,
+      onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
+      onDelete: this.onDelete,
+      editButtonTestId: `ability-edit-button-${this.index}`,
+      deleteButtonTestId: `ability-delete-button-${this.index}`,
+      colorTheme: "indigo",
+    })}
 
         <div class="ability-header flex justify-between items-start mb-2 pr-8">
           <h4
@@ -203,7 +143,7 @@ export class AbilityItem {
           </h4>
           <div class="ability-badges flex gap-2">
             ${this.ability.cost !== undefined
-              ? html`
+        ? html`
                   <span
                     data-testid="ability-cost-${testIdBase}"
                     class="ability-badge ability-cost px-2 py-1 bg-amber-100 border border-amber-300 rounded text-xs font-semibold text-amber-900"
@@ -212,22 +152,22 @@ export class AbilityItem {
                     ${this.ability.cost}
                   </span>
                 `
-              : ""}
+        : ""}
             ${this.ability.pool
-              ? html`
+        ? html`
                   <span
                     data-testid="ability-pool-${testIdBase}"
                     class="ability-badge ability-pool pool-${this.ability
-                      .pool} px-2 py-1 rounded text-xs font-semibold"
+            .pool} px-2 py-1 rounded text-xs font-semibold"
                   >
                     ${t(`stats.${this.ability.pool}`)}
                   </span>
                 `
-              : ""}
+        : ""}
           </div>
         </div>
         ${this.ability.action
-          ? html`
+        ? html`
               <div
                 data-testid="ability-action-${testIdBase}"
                 class="ability-action text-xs text-indigo-600 italic mb-2"
@@ -235,7 +175,7 @@ export class AbilityItem {
                 ${this.ability.action}
               </div>
             `
-          : ""}
+        : ""}
         <p
           data-testid="ability-description-${this.index}"
           class="ability-description text-gray-700 text-sm leading-relaxed"

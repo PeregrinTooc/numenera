@@ -4,10 +4,11 @@
 import { html, TemplateResult } from "lit-html";
 import { Cypher } from "../types/character.js";
 import { t } from "../i18n/index.js";
-import { openCardEditModal } from "./CardEditModal.js";
+import { createEditHandler, renderCardButtons } from "./helpers/CardEditorBehavior.js";
 
 export class CypherItem {
   private editedCypher: Cypher;
+  public handleEdit: () => void;
 
   constructor(
     private cypher: Cypher,
@@ -16,18 +17,14 @@ export class CypherItem {
     private onDelete?: () => void
   ) {
     this.editedCypher = { ...cypher };
-  }
-
-  public handleEdit(): void {
-    this.editedCypher = { ...this.cypher };
-    openCardEditModal({
-      content: this.renderEditableVersion(),
-      onConfirm: () => {
-        if (this.onUpdate) {
-          this.onUpdate(this.editedCypher);
-        }
+    this.handleEdit = createEditHandler<Cypher>({
+      item: this.cypher,
+      getEditedItem: () => this.editedCypher,
+      onUpdate: this.onUpdate,
+      renderEditableVersion: () => this.renderEditableVersion(),
+      resetEditedItem: () => {
+        this.editedCypher = { ...this.cypher };
       },
-      onCancel: () => {},
     });
   }
 
@@ -45,9 +42,9 @@ export class CypherItem {
               type="text"
               .value=${this.editedCypher.name}
               @input=${(e: Event) => {
-                const target = e.target as HTMLInputElement;
-                this.editedCypher.name = target.value;
-              }}
+        const target = e.target as HTMLInputElement;
+        this.editedCypher.name = target.value;
+      }}
               class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-purple-900 font-semibold"
               placeholder="${t("cyphers.name")}"
               data-testid="edit-cypher-name"
@@ -61,9 +58,9 @@ export class CypherItem {
               type="text"
               .value=${this.editedCypher.level.toString()}
               @input=${(e: Event) => {
-                const target = e.target as HTMLInputElement;
-                this.editedCypher.level = target.value || "1";
-              }}
+        const target = e.target as HTMLInputElement;
+        this.editedCypher.level = target.value || "1";
+      }}
               class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-purple-900 font-semibold"
               placeholder="${t("cyphers.level")}"
               data-testid="edit-cypher-level"
@@ -76,9 +73,9 @@ export class CypherItem {
             <textarea
               .value=${this.editedCypher.effect}
               @input=${(e: Event) => {
-                const target = e.target as HTMLTextAreaElement;
-                this.editedCypher.effect = target.value;
-              }}
+        const target = e.target as HTMLTextAreaElement;
+        this.editedCypher.effect = target.value;
+      }}
               rows="3"
               class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-gray-700"
               placeholder="${t("cyphers.effect")}"
@@ -93,72 +90,14 @@ export class CypherItem {
   render(): TemplateResult {
     return html`
       <div data-testid="cypher-item" class="cypher-item-card relative">
-        ${this.onDelete
-          ? html`
-              <button
-                @click=${() => this.onDelete?.()}
-                class="absolute top-2 left-2 p-2 text-purple-600 hover:text-red-600 hover:bg-red-100 rounded-full transition-colors"
-                data-testid="cypher-delete-button-${this.index}"
-                aria-label="${t("cards.delete")}"
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M10 11v6M14 11v6"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-            `
-          : ""}
-        ${this.onUpdate
-          ? html`
-              <button
-                @click=${() => this.handleEdit()}
-                class="absolute top-2 right-2 p-2 text-purple-600 hover:text-purple-800 hover:bg-purple-100 rounded-full transition-colors"
-                data-testid="cypher-edit-button-${this.index}"
-                aria-label="${t("cards.edit")}"
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M18.5 2.50023C18.8978 2.1024 19.4374 1.87891 20 1.87891C20.5626 1.87891 21.1022 2.1024 21.5 2.50023C21.8978 2.89805 22.1213 3.43762 22.1213 4.00023C22.1213 4.56284 21.8978 5.1024 21.5 5.50023L12 15.0002L8 16.0002L9 12.0002L18.5 2.50023Z"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-            `
-          : ""}
+        ${renderCardButtons({
+      index: this.index,
+      onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
+      onDelete: this.onDelete,
+      editButtonTestId: `cypher-edit-button-${this.index}`,
+      deleteButtonTestId: `cypher-delete-button-${this.index}`,
+      colorTheme: "purple",
+    })}
         <div class="flex justify-between items-start mb-2 pr-8 pl-8">
           <div class="flex-1">
             <div data-testid="cypher-name-${this.cypher.name}" class="font-semibold text-lg">
