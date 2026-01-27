@@ -69,10 +69,11 @@ This document tracks UI/UX improvements and bug fixes for the Numenera Character
 
 10. **Portrait Display Modal on Click**
 
-- Status: 🔴 Not Started
+- Status: ✅ Complete
 - Description: Clicking on portrait should open a modal showing the full-size image
-- Location: `src/components/BasicInfo.ts`
+- Location: `src/components/BasicInfo.ts`, `src/components/PortraitDisplayModal.ts`, `src/services/modalService.ts`
 - Solution: Add click handler to open modal displaying portrait at original size or capped at 1500×2000px if larger
+- Completed: Created PortraitDisplayModal component with dark backdrop and image viewer. Added portrait-display-modal.css with max size constraints (1500×2000px). Updated ModalService with openPortraitModal() method. Made portrait image clickable with cursor pointer and accessibility attributes. Modal closes on backdrop click, close button, or Escape key. All 310 test scenarios passed.
 
 11. **Dropdown Indicator on Type Should Only Show on Hover**
 
