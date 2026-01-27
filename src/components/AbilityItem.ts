@@ -149,7 +149,7 @@ export class AbilityItem {
                     class="ability-badge ability-cost px-2 py-1 bg-amber-100 border border-amber-300 rounded text-xs font-semibold text-amber-900"
                     title="${t("abilities.cost")}"
                   >
-                    ${this.ability.cost}
+                    ${t("abilities.cost")}: ${this.ability.cost}
                   </span>
                 `
               : ""}
