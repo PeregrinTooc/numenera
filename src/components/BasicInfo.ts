@@ -104,7 +104,7 @@ export class BasicInfo {
               role="button"
               tabindex="0"
               aria-label="Edit descriptor"
-              >${this.character.descriptor}</span
+              >${this.character.descriptor || t("character.descriptor")}</span
             >
             <select
               class="char-type-select"
@@ -125,7 +125,7 @@ export class BasicInfo {
               role="button"
               tabindex="0"
               aria-label="Edit focus"
-              >${this.character.focus}</span
+              >${this.character.focus || t("character.focus")}</span
             >
           </div>
         </div>

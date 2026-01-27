@@ -9,6 +9,7 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["./tests/unit/setup.ts"],
+    exclude: ["node_modules/", "dist/", "tests/e2e/", "stryker-tmp/"],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],

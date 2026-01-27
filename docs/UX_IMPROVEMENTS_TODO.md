@@ -20,37 +20,44 @@ This document tracks UI/UX improvements and bug fixes for the Numenera Character
    - Solution: Design more condensed version maintaining same information and editability
    - Completed: Reduced padding (1.5rem → 1rem), reduced pool number font (4.5rem → 3rem), reduced label font (1.25rem → 1rem), reduced edge/current values (1.875rem → 1.5rem), reduced grid gap (gap-6 → gap-4), added E2E tests for condensed styling
 
-3. **Character Portrait Not Editable**
+3. **Empty Descriptor and Focus Fields Not Visible**
+   - Status: ✅ Complete
+   - Description: On new characters, empty descriptor and focus fields are not visible/clickable
+   - Location: `src/components/BasicInfo.ts`
+   - Solution: Show placeholder text ('Descriptor' and 'Focus') when fields are empty to make them visible and clickable
+   - Completed: Modified BasicInfo component to use `|| t("character.descriptor")` and `|| t("character.focus")` to show translated placeholder text when fields are empty, added E2E tests
+
+4. **Character Portrait Not Editable**
    - Status: 🔴 Not Started
    - Description: Portrait shows static placeholder, no upload/edit functionality
    - Location: `src/components/BasicInfo.ts`
    - Solution: Add image upload capability with preview, storage, and removal
 
-4. **Ability Pool Dropdown Shows 'None' in German**
+5. **Ability Pool Dropdown Shows 'None' in German**
    - Status: 🔴 Not Started
    - Description: Hardcoded "None" text in ability pool dropdown instead of translation
    - Location: `src/components/AbilityItem.ts:72`
    - Solution: Replace with `t("abilities.pool.none")` or similar translation key
 
-5. **Ability Cost Badge Needs Label in Display Mode**
+6. **Ability Cost Badge Needs Label in Display Mode**
    - Status: 🔴 Not Started
    - Description: Cost badge has no visible label (only title attribute)
    - Location: `src/components/AbilityItem.ts` (display mode)
    - Solution: Add visible label or tooltip for accessibility
 
-6. **Special Ability Description Field Not Translated**
+7. **Special Ability Description Field Not Translated**
    - Status: 🔴 Not Started
    - Description: Hardcoded "Description" label in edit mode
    - Location: `src/components/SpecialAbilityItem.ts:56`
    - Solution: Replace with `t("character.description")` or similar
 
-7. **Attack Badge Numbers Need Labels in Display Mode**
+8. **Attack Badge Numbers Need Labels in Display Mode**
    - Status: 🔴 Not Started
    - Description: Damage and modifier badges have no visible labels
    - Location: `src/components/AttackItem.ts` (display mode)
    - Solution: Add visible labels for clarity
 
-8. **Type Harmonization Across Edit Modals**
+9. **Type Harmonization Across Edit Modals**
    - Status: 🔴 Not Started
    - Description: Different card types use inconsistent patterns for edited item state
    - Locations: `AbilityItem.ts`, `SpecialAbilityItem.ts`, `AttackItem.ts`, etc.
