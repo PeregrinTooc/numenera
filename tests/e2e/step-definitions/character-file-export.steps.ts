@@ -29,7 +29,6 @@ When("I click the export button", async function () {
   // Mock the file export functionality to capture the data
   await this.page.evaluate(() => {
     // Store original functions
-    const _originalShowSaveFilePicker = (window as any).showSaveFilePicker;
     const originalCreateElement = document.createElement.bind(document);
 
     // Mock showSaveFilePicker (Chromium)
@@ -54,14 +53,13 @@ When("I click the export button", async function () {
       const element = originalCreateElement(tagName);
       if (tagName === "a") {
         // Override click to capture download info
-        const _originalClick = element.click.bind(element);
         element.click = function () {
           (window as any).__exportedFilename = (element as any).download;
           // Extract data from blob URL
           (window as any)
             .fetch((element as any).href)
-            .then((res) => res.text())
-            .then((data) => {
+            .then((res: any) => res.text())
+            .then((data: any) => {
               (window as any).__exportedData = data;
             });
         };
