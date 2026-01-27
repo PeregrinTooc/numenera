@@ -5,7 +5,7 @@ const config = {
   reporters: ["html", "clear-text", "progress"],
   testRunner: "command",
   commandRunner: {
-    command: "npm run test:unit",
+    command: "npm test",
   },
   coverageAnalysis: "perTest",
   mutate: [
@@ -16,8 +16,8 @@ const config = {
     "!src/**/*.test.ts",
     "!src/main.ts",
   ],
-  timeoutMS: 10000,
-  concurrency: 4,
+  timeoutMS: 60000,
+  concurrency: 1,
   checkers: ["typescript"],
   tsconfigFile: "tsconfig.json",
   ignoreStatic: true,

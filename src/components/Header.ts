@@ -6,7 +6,9 @@ import { t } from "../i18n/index.js";
 export class Header {
   constructor(
     private onLoad: () => void,
-    private onNew: () => void
+    private onNew: () => void,
+    private onImport: () => void,
+    private onExport: () => void
   ) {}
 
   render(): TemplateResult {
@@ -17,6 +19,12 @@ export class Header {
         <div class="header-buttons">
           <button data-testid="load-button" @click=${this.onLoad} class="btn-load">
             ${t("buttons.load")}
+          </button>
+          <button data-testid="import-button" @click=${this.onImport} class="btn-import">
+            ${t("buttons.import")}
+          </button>
+          <button data-testid="export-button" @click=${this.onExport} class="btn-export">
+            ${t("buttons.export")}
           </button>
           <button data-testid="new-button" @click=${this.onNew} class="btn-new">
             ${t("buttons.new")}

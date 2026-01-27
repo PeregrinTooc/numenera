@@ -75,9 +75,12 @@ Given("the character is {string}", async function (impairmentStatus: string) {
   await this.page.evaluate((status: string) => {
     const stored = localStorage.getItem("numenera-character-state");
     if (stored) {
-      const data = JSON.parse(stored);
-      data.character.damageTrack.impairment = status;
-      localStorage.setItem("numenera-character-state", JSON.stringify(data));
+      const character = JSON.parse(stored);
+      // Use raw format (no wrapper) - ensure damageTrack exists
+      if (character && character.damageTrack) {
+        character.damageTrack.impairment = status;
+        localStorage.setItem("numenera-character-state", JSON.stringify(character));
+      }
     }
   }, impairmentStatus);
 
@@ -129,9 +132,12 @@ Given("the character has recovery modifier {int}", async function (modifier: num
   await this.page.evaluate((mod: number) => {
     const stored = localStorage.getItem("numenera-character-state");
     if (stored) {
-      const data = JSON.parse(stored);
-      data.character.recoveryRolls.modifier = mod;
-      localStorage.setItem("numenera-character-state", JSON.stringify(data));
+      const character = JSON.parse(stored);
+      // Use raw format (no wrapper)
+      if (character && character.recoveryRolls) {
+        character.recoveryRolls.modifier = mod;
+        localStorage.setItem("numenera-character-state", JSON.stringify(character));
+      }
     }
   }, modifier);
 

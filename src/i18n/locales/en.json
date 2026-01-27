@@ -4,6 +4,8 @@
   },
   "buttons": {
     "load": "Load",
+    "import": "Import",
+    "export": "Export",
     "new": "New"
   },
   "character": {

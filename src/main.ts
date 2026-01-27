@@ -1,10 +1,11 @@
 // Entry point for the application
 // Minimal bootstrapping - all components are now class-based
-/* global Event, EventListener */
+/* global Event, EventListener, alert */
 
 import "./styles/main.css";
 import { render } from "lit-html";
 import { saveCharacterState, loadCharacterState } from "./storage/localStorage";
+import { importCharacterFromFile, exportCharacterToFile } from "./storage/fileStorage.js";
 import { Character } from "./types/character.js";
 import { FULL_CHARACTER, NEW_CHARACTER } from "./data/mockCharacters.js";
 import { CharacterSheet } from "./components/CharacterSheet.js";
@@ -86,6 +87,35 @@ function renderCharacterSheet(character: Character): void {
     renderCharacterSheet(updatedCharacter);
   };
 
+  // Handler for importing character from file
+  const handleLoadFromFile = async (): Promise<void> => {
+    try {
+      const importedCharacter = await importCharacterFromFile();
+      if (importedCharacter) {
+        renderCharacterSheet(importedCharacter);
+      }
+      // If null, user cancelled - do nothing
+    } catch (error) {
+      console.error("Error importing character:", error);
+      alert(
+        `Failed to import character: ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
+  };
+
+  // Handler for exporting character to file
+  const handleExportToFile = async (): Promise<void> => {
+    try {
+      await exportCharacterToFile(character);
+      // Export complete - no feedback needed (file save dialog handles it)
+    } catch (error) {
+      console.error("Error exporting character:", error);
+      alert(
+        `Failed to export character: ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
+  };
+
   // Create new sheet only if we don't have one yet, or if it's a different character
   // (e.g., Load or New button clicked)
   const needsNewSheet = !currentSheet || (currentSheet as any).character !== character;
@@ -95,6 +125,8 @@ function renderCharacterSheet(character: Character): void {
       character,
       () => renderCharacterSheet(FULL_CHARACTER),
       () => renderCharacterSheet(NEW_CHARACTER),
+      handleLoadFromFile,
+      handleExportToFile,
       handleFieldUpdate
     );
   }
@@ -137,24 +169,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Priority: URL param > localStorage > default
-  // URL param allows explicit override for testing
-  const urlParams = new URLSearchParams(window.location.search);
-  const useEmpty = urlParams.get("empty") === "true";
+  // Priority: localStorage > default
   const storedCharacter = loadCharacterState();
 
   // Select and render initial character data
-  let initialCharacter: Character;
-  if (useEmpty) {
-    // URL param explicitly requests empty character
-    initialCharacter = NEW_CHARACTER;
-  } else if (storedCharacter) {
-    // Load from localStorage if available
-    initialCharacter = storedCharacter;
-  } else {
-    // Default to full character
-    initialCharacter = FULL_CHARACTER;
-  }
+  const initialCharacter = storedCharacter || FULL_CHARACTER;
 
   renderCharacterSheet(initialCharacter);
 });

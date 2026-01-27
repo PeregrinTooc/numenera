@@ -98,6 +98,62 @@
   box-shadow: 0 1px 2px rgba(139, 69, 19, 0.3);
 }
 
+/* Import button - Numenera tertiary green */
+.btn-import {
+  background: #2d5016;
+  color: white;
+  padding: 0.75rem 2rem;
+  border: 2px solid #1a3009;
+  border-radius: 0.5rem;
+  font-family: "Cinzel", serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(45, 80, 22, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-import:hover {
+  background: #1a3009;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(45, 80, 22, 0.4);
+}
+
+.btn-import:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(45, 80, 22, 0.3);
+}
+
+/* Export button - Numenera quaternary purple */
+.btn-export {
+  background: #5a3d7a;
+  color: white;
+  padding: 0.75rem 2rem;
+  border: 2px solid #3d2654;
+  border-radius: 0.5rem;
+  font-family: "Cinzel", serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(90, 61, 122, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-export:hover {
+  background: #3d2654;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(90, 61, 122, 0.4);
+}
+
+.btn-export:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(90, 61, 122, 0.3);
+}
+
 /* Responsive: Stack buttons on mobile */
 @media (max-width: 768px) {
   .character-header {
@@ -119,6 +175,8 @@
   }
 
   .btn-load,
+  .btn-import,
+  .btn-export,
   .btn-new {
     width: 100%;
   }

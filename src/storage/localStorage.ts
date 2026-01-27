@@ -1,39 +1,19 @@
 // localStorage adapter for character state persistence
-// Simple key-value storage in browser with schema versioning
+// Simple key-value storage in browser
+// Schema version is now only used in file exports (see fileStorage.ts)
 
-const STORAGE_KEY = "numenera-character-state";
-
-/**
- * SCHEMA VERSION
- *
- * RULE: Increment this version number whenever the Character type changes in src/types/character.ts
- *
- * Version History:
- * - v1: Initial schema (base character structure)
- * - v2: Added ability enhancements (cost, pool, action) - Phase 2
- * - v3: Added attacks and specialAbilities arrays - Phase 3
- * - v4: Added recoveryRolls and damageTrack - Phase 4
- *
- * When the version doesn't match, all localStorage data is cleared to prevent corruption.
- */
-const SCHEMA_VERSION = 4;
-
-interface StoredData {
-  schemaVersion: number;
-  character: any;
-}
+import { STORAGE_KEY } from "./storageConstants.js";
 
 /**
- * Save character state to localStorage with schema version
+ * Save character state to localStorage
+ * Stores raw character data without version wrapper
+ * Schema version is now only used in file exports (see fileStorage.ts)
+ *
  * @param character The character object to save
  */
 export function saveCharacterState(character: any): void {
   try {
-    const data: StoredData = {
-      schemaVersion: SCHEMA_VERSION,
-      character,
-    };
-    const serialized = JSON.stringify(data);
+    const serialized = JSON.stringify(character);
     localStorage.setItem(STORAGE_KEY, serialized);
   } catch (error) {
     console.error("Failed to save character state:", error);
@@ -41,8 +21,10 @@ export function saveCharacterState(character: any): void {
 }
 
 /**
- * Load character state from localStorage with version checking
- * @returns The stored character object, or null if not found or version mismatch
+ * Load character state from localStorage
+ * Handles migration from old versioned format to new raw format
+ *
+ * @returns The stored character object, or null if not found
  */
 export function loadCharacterState(): any | null {
   try {
@@ -53,22 +35,17 @@ export function loadCharacterState(): any | null {
 
     const data = JSON.parse(stored);
 
-    // Check if data has schema version wrapper
-    if (data.schemaVersion !== undefined) {
-      // Versioned data: check version match
-      if (data.schemaVersion !== SCHEMA_VERSION) {
-        console.log(
-          `Schema version mismatch (stored: ${data.schemaVersion}, current: ${SCHEMA_VERSION}). Clearing localStorage.`
-        );
-        clearCharacterState();
-        return null;
-      }
-      return data.character;
-    } else {
-      // No schema version: treat as raw character data (backwards compatibility for tests)
-      console.log("Loading data without schema version (test mode)");
-      return data;
+    // Migration: Check if data has old schema version wrapper
+    if (data.schemaVersion !== undefined && data.character !== undefined) {
+      // Old format detected: extract character and re-save in new format
+      console.log("Migrating from old versioned format to new raw format");
+      const character = data.character;
+      saveCharacterState(character);
+      return character;
     }
+
+    // New format: raw character data
+    return data;
   } catch (error) {
     console.error("Failed to load character state:", error);
     // On error, clear potentially corrupted data

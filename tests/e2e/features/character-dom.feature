@@ -65,8 +65,10 @@ Feature: Character Sheet DOM Structure
         And I should see 2 elements with testid starting with "oddity-item"
 
     Scenario: Count button elements in header
-        Then I should see exactly 2 buttons in the character header
+        Then I should see exactly 4 buttons in the character header
         And the load button should have testid "load-button"
+        And the import button should have testid "import-button"
+        And the export button should have testid "export-button"
         And the new button should have testid "new-button"
 
     @responsive @skip

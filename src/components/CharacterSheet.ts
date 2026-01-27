@@ -29,10 +29,12 @@ export class CharacterSheet {
     private character: Character,
     private onLoad: () => void,
     private onNew: () => void,
+    private onImport: () => void,
+    private onExport: () => void,
     private onFieldUpdate: (field: string, value: string | number) => void
   ) {
     // Create stateful components once to preserve their state across re-renders
-    this.header = new Header(this.onLoad, this.onNew);
+    this.header = new Header(this.onLoad, this.onNew, this.onImport, this.onExport);
     this.basicInfo = new BasicInfo(this.character, this.onFieldUpdate);
     this.bottomTextFields = new BottomTextFields(this.character);
     this.itemsBox = new ItemsBox(this.character, this.onFieldUpdate);

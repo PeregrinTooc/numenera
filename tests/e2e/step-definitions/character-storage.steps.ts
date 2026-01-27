@@ -34,8 +34,9 @@ Then("all sections should display empty state messages", async function () {
 
 // Scenario: Load hard-coded character via load button
 Given("the character sheet is empty", async function () {
-  // Navigate with empty=true to start with empty character
-  await this.page.goto(this.getBaseUrl() + "?empty=true");
+  // Click the "New" button to start with empty character
+  await this.page.goto(this.getBaseUrl());
+  await this.page.getByTestId("new-button").click();
 });
 
 When('I click the "Load" button', async function () {

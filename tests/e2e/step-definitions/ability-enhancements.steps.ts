@@ -33,8 +33,9 @@ Given("the character has abilities with different pools:", function (dataTable) 
 });
 
 Given("the character has no abilities", async function () {
-  // Navigate to empty character using the base URL from world context
-  await this.page.goto(`${this.getBaseUrl()}?empty=true`);
+  // Click the "New" button to start with empty character
+  await this.page.goto(this.getBaseUrl());
+  await this.page.getByTestId("new-button").click();
 });
 
 Then("I should see the ability {string}", async function (abilityName: string) {

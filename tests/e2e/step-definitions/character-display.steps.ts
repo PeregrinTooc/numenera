@@ -172,8 +172,9 @@ Then("all text field labels should use translation keys", async function () {
 
 // Scenario 6: View empty character items sections
 Given("the character has no cyphers", async function () {
-  // Navigate with empty=true parameter
-  await this.page.goto(this.getBaseUrl() + "?empty=true");
+  // Click the "New" button to start with empty character
+  await this.page.goto(this.getBaseUrl());
+  await this.page.getByTestId("new-button").click();
 });
 
 Given("the character has no artifacts", function () {
@@ -205,8 +206,9 @@ Then("empty states should use translation keys", async function () {
 
 // Scenario 7: View empty character text fields
 Given("the character has empty text fields", async function () {
-  // Navigate with empty=true parameter
-  await this.page.goto(this.getBaseUrl() + "?empty=true");
+  // Click the "New" button to start with empty character
+  await this.page.goto(this.getBaseUrl());
+  await this.page.getByTestId("new-button").click();
 });
 
 Then("I should see empty state for background", async function () {

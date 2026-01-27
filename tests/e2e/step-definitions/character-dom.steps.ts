@@ -154,6 +154,20 @@ Then("the new button should have testid {string}", async function (testId: strin
   await expect(newButton).toHaveText("New");
 });
 
+Then("the import button should have testid {string}", async function (testId: string) {
+  const dom = new DOMHelpers(this.page);
+  const importButton = dom.getByTestId(testId);
+  await expect(importButton).toBeAttached();
+  await expect(importButton).toHaveText("Import");
+});
+
+Then("the export button should have testid {string}", async function (testId: string) {
+  const dom = new DOMHelpers(this.page);
+  const exportButton = dom.getByTestId(testId);
+  await expect(exportButton).toBeAttached();
+  await expect(exportButton).toHaveText("Export");
+});
+
 // Responsive tests (currently @skip)
 Then("the stats section should use responsive mobile classes", async function () {
   const dom = new DOMHelpers(this.page);
