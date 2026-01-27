@@ -3,7 +3,7 @@
     "title": "Numenera Charakterbogen"
   },
   "buttons": {
-    "load": "Laden",
+    "load": "Beispiel laden",
     "import": "Importieren",
     "export": "Exportieren",
     "new": "Neu"

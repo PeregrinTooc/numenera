@@ -6,13 +6,13 @@ Feature: Internationalization (i18n)
     Scenario: Default language detection
         Given I am on the character sheet page
         Then the page title should be in English
-        And the load button should display "Load"
+        And the load button should display "Load Example"
         And the new button should display "New"
 
     Scenario: Switch to German language via URL parameter
         Given I am on the character sheet page with "?lang=de"
         Then the page title should be "Numenera Charakterbogen"
-        And the load button should display "Laden"
+        And the load button should display "Beispiel laden"
         And the new button should display "Neu"
 
     # Note: Basic info now uses sentence format without individual labels
@@ -68,5 +68,5 @@ Feature: Internationalization (i18n)
         Given I am on the character sheet page with "?lang=de"
         When I navigate to the page with "?lang=en"
         Then the page title should be in English
-        And the load button should display "Load"
+        And the load button should display "Load Example"
         And the new button should display "New"

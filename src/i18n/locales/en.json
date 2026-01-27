@@ -3,7 +3,7 @@
     "title": "Numenera Character Sheet"
   },
   "buttons": {
-    "load": "Load",
+    "load": "Load Example",
     "import": "Import",
     "export": "Export",
     "new": "New"

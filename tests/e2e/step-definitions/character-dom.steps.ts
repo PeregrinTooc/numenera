@@ -144,7 +144,7 @@ Then("the load button should have testid {string}", async function (testId: stri
   const dom = new DOMHelpers(this.page);
   const loadButton = dom.getByTestId(testId);
   await expect(loadButton).toBeAttached();
-  await expect(loadButton).toHaveText("Load");
+  await expect(loadButton).toHaveText("Load Example");
 });
 
 Then("the new button should have testid {string}", async function (testId: string) {
