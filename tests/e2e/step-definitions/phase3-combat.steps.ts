@@ -25,7 +25,8 @@ Given("the character has an attack {string}", async function (attackName: string
 });
 
 Given("the character has no attacks", async function () {
-  await this.page.goto(`${this.getBaseUrl()}?empty=true`);
+  await this.page.goto(this.getBaseUrl());
+  await this.page.getByTestId("new-button").click();
 });
 
 Then("I should see the attack {string}", async function (attackName: string) {
@@ -128,7 +129,8 @@ Given("the character has a special ability {string}", async function (abilityNam
 });
 
 Given("the character has no special abilities", async function () {
-  await this.page.goto(`${this.getBaseUrl()}?empty=true`);
+  await this.page.goto(this.getBaseUrl());
+  await this.page.getByTestId("new-button").click();
 });
 
 Then("I should see the special ability {string}", async function (abilityName: string) {

@@ -4,6 +4,7 @@
   },
   "buttons": {
     "load": "Load",
+    "import": "Import",
     "new": "New"
   },
   "character": {

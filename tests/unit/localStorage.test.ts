@@ -11,7 +11,7 @@ describe("localStorage", () => {
   });
 
   describe("saveCharacterState", () => {
-    it("should save character to localStorage with schema version", () => {
+    it("should save character to localStorage as raw data", () => {
       const character = {
         name: "Test Character",
         tier: 1,
@@ -30,8 +30,8 @@ describe("localStorage", () => {
       expect(stored).toBeTruthy();
 
       const parsed = JSON.parse(stored!);
-      expect(parsed.schemaVersion).toBe(4);
-      expect(parsed.character).toEqual(character);
+      expect(parsed).toEqual(character);
+      expect(parsed.schemaVersion).toBeUndefined(); // No version wrapper
     });
   });
 
@@ -41,7 +41,7 @@ describe("localStorage", () => {
       expect(loaded).toBeNull();
     });
 
-    it("should load saved character with schema version", () => {
+    it("should load saved character as raw data", () => {
       const character = {
         name: "Test Character",
         tier: 1,
@@ -57,29 +57,32 @@ describe("localStorage", () => {
       expect(loaded).toEqual(character);
     });
 
-    it("should load character without schema version (backwards compatibility)", () => {
+    it("should migrate old versioned format to new raw format", () => {
       const character = {
-        name: "Old Character",
+        name: "Old Format Character",
         tier: 2,
       };
 
-      // Simulate old data format (no schema version wrapper)
-      localStorage.setItem("numenera-character-state", JSON.stringify(character));
-
-      const loaded = loadCharacterState();
-      expect(loaded).toEqual(character);
-    });
-
-    it("should clear data on schema version mismatch", () => {
+      // Simulate old format with schema version wrapper
       const oldVersionData = {
-        schemaVersion: 2,
-        character: {
-          name: "Old Version Character",
-          tier: 1,
-        },
+        schemaVersion: 4,
+        character: character,
       };
 
       localStorage.setItem("numenera-character-state", JSON.stringify(oldVersionData));
+
+      const loaded = loadCharacterState();
+      expect(loaded).toEqual(character);
+
+      // Verify it was migrated: re-saved in new format
+      const stored = localStorage.getItem("numenera-character-state");
+      const parsed = JSON.parse(stored!);
+      expect(parsed).toEqual(character);
+      expect(parsed.schemaVersion).toBeUndefined(); // No wrapper after migration
+    });
+
+    it("should handle corrupted data gracefully", () => {
+      localStorage.setItem("numenera-character-state", "invalid json{");
 
       const loaded = loadCharacterState();
       expect(loaded).toBeNull();

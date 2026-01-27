@@ -4,6 +4,7 @@
   },
   "buttons": {
     "load": "Laden",
+    "import": "Importieren",
     "new": "Neu"
   },
   "character": {

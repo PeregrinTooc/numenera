@@ -48,7 +48,8 @@ Feature: Internationalization (i18n)
         And the notes field label should be "Notizen"
 
     Scenario: German translations for empty states
-        Given I am on the character sheet page with "?lang=de&empty=true"
+        Given I am on the character sheet page with "?lang=de"
+        When I click the new button
         Then the empty cyphers message should be "Keine Cypher"
         And the empty artifacts message should be "Keine Artefakte"
         And the empty oddities message should be "Keine Kuriositäten"
