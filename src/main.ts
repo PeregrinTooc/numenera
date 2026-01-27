@@ -5,7 +5,7 @@
 import "./styles/main.css";
 import { render } from "lit-html";
 import { saveCharacterState, loadCharacterState } from "./storage/localStorage";
-import { importCharacterFromFile } from "./storage/fileStorage.js";
+import { importCharacterFromFile, exportCharacterToFile } from "./storage/fileStorage.js";
 import { Character } from "./types/character.js";
 import { FULL_CHARACTER, NEW_CHARACTER } from "./data/mockCharacters.js";
 import { CharacterSheet } from "./components/CharacterSheet.js";
@@ -103,6 +103,19 @@ function renderCharacterSheet(character: Character): void {
     }
   };
 
+  // Handler for exporting character to file
+  const handleExportToFile = async (): Promise<void> => {
+    try {
+      await exportCharacterToFile(character);
+      // Export complete - no feedback needed (file save dialog handles it)
+    } catch (error) {
+      console.error("Error exporting character:", error);
+      alert(
+        `Failed to export character: ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
+  };
+
   // Create new sheet only if we don't have one yet, or if it's a different character
   // (e.g., Load or New button clicked)
   const needsNewSheet = !currentSheet || (currentSheet as any).character !== character;
@@ -113,6 +126,7 @@ function renderCharacterSheet(character: Character): void {
       () => renderCharacterSheet(FULL_CHARACTER),
       () => renderCharacterSheet(NEW_CHARACTER),
       handleLoadFromFile,
+      handleExportToFile,
       handleFieldUpdate
     );
   }

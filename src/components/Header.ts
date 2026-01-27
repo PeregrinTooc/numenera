@@ -7,7 +7,8 @@ export class Header {
   constructor(
     private onLoad: () => void,
     private onNew: () => void,
-    private onImport: () => void
+    private onImport: () => void,
+    private onExport: () => void
   ) {}
 
   render(): TemplateResult {
@@ -21,6 +22,9 @@ export class Header {
           </button>
           <button data-testid="import-button" @click=${this.onImport} class="btn-import">
             ${t("buttons.import")}
+          </button>
+          <button data-testid="export-button" @click=${this.onExport} class="btn-export">
+            ${t("buttons.export")}
           </button>
           <button data-testid="new-button" @click=${this.onNew} class="btn-new">
             ${t("buttons.new")}

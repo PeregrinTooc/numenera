@@ -1,6 +1,6 @@
 // File storage utilities for character import/export
 // Uses File System Access API for Chromium browsers, falls back to input element for others
-/* global Event */
+/* global Event, Blob, URL */
 
 import { Character } from "../types/character.js";
 import { SCHEMA_VERSION } from "./storageConstants.js";
@@ -145,5 +145,117 @@ export async function importCharacterFromFile(): Promise<Character | null> {
   } else {
     // Fallback for Safari/Firefox
     return await importWithInputElement();
+  }
+}
+
+/**
+ * Sanitize character name for use as filename
+ * @param name - Character name to sanitize
+ * @returns Sanitized filename (without extension)
+ */
+function sanitizeFilename(name: string): string {
+  const trimmed = name.trim();
+  if (!trimmed) return "character";
+
+  return trimmed
+    .toLowerCase()
+    .replace(/\s+/g, "-") // spaces → hyphens
+    .replace(/[^a-z0-9-_]/g, "") // remove special chars
+    .replace(/-+/g, "-") // collapse multiple hyphens
+    .replace(/^-|-$/g, ""); // trim leading/trailing hyphens
+}
+
+/**
+ * Export using File System Access API (Chrome/Edge/Opera)
+ * @param character - Character to export
+ * @param fileData - Complete file data structure
+ */
+async function exportWithFileSystemAPI(
+  character: Character,
+  fileData: CharacterFileData
+): Promise<void> {
+  const filename = sanitizeFilename(character.name) + ".numenera";
+
+  try {
+    // Open file save picker
+    const fileHandle = await (window as any).showSaveFilePicker({
+      suggestedName: filename,
+      types: [
+        {
+          description: "Numenera Character Files",
+          accept: {
+            "application/json": [".numenera"],
+          },
+        },
+      ],
+    });
+
+    // Write file contents
+    const writable = await fileHandle.createWritable();
+    await writable.write(JSON.stringify(fileData, null, 2));
+    await writable.close();
+  } catch (error: any) {
+    // User cancelled the file picker
+    if (error.name === "AbortError") {
+      return;
+    }
+
+    // Re-throw other errors
+    throw error;
+  }
+}
+
+/**
+ * Export using blob download (Safari/Firefox fallback)
+ * @param character - Character to export
+ * @param fileData - Complete file data structure
+ */
+async function exportWithBlobDownload(
+  character: Character,
+  fileData: CharacterFileData
+): Promise<void> {
+  const filename = sanitizeFilename(character.name) + ".numenera";
+
+  // Create blob with JSON data
+  const blob = new Blob([JSON.stringify(fileData, null, 2)], {
+    type: "application/json",
+  });
+
+  // Create download link
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.style.display = "none";
+
+  // Trigger download
+  document.body.appendChild(link);
+  link.click();
+
+  // Cleanup
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+/**
+ * Export a character to a .numenera file
+ * Uses File System Access API for Chromium browsers, falls back to blob download for others
+ * @param character - Character to export
+ */
+export async function exportCharacterToFile(character: Character): Promise<void> {
+  // Build file data structure
+  const fileData: CharacterFileData = {
+    version: "1.0",
+    schemaVersion: SCHEMA_VERSION,
+    exportDate: new Date().toISOString(),
+    character: character,
+  };
+
+  // Try modern API first (Chrome/Edge/Opera)
+  if ("showSaveFilePicker" in window) {
+    await exportWithFileSystemAPI(character, fileData);
+  } else {
+    // Fallback for Safari/Firefox
+    await exportWithBlobDownload(character, fileData);
   }
 }

@@ -5,6 +5,7 @@
   "buttons": {
     "load": "Laden",
     "import": "Importieren",
+    "export": "Exportieren",
     "new": "Neu"
   },
   "character": {
