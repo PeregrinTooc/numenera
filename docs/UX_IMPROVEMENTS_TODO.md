@@ -76,17 +76,19 @@ This document tracks UI/UX improvements and bug fixes for the Numenera Character
 
 11. **Dropdown Indicator on Type Should Only Show on Hover**
 
-- Status: 🔴 Not Started
+- Status: ✅ Complete
 - Description: The dropdown indicator (chevron/arrow) on type field should only be visible on hover
-- Location: `src/components/BasicInfo.ts` (type field styling)
+- Location: `src/styles/components/basic-info.css`
 - Solution: Add CSS to hide indicator by default, show on hover
+- Completed: Modified `.char-type-select` to have `background-image: none` by default, moved chevron SVG to `:hover` state only. All 310 test scenarios passed.
 
 12. **Rename 'Load' Button to 'Load Example'**
 
-- Status: 🔴 Not Started
+- Status: ✅ Complete
 - Description: The "Load" button should be renamed to "Load Example" for clarity
-- Location: Translation files and Header component
+- Location: Translation files (`src/i18n/locales/en.json`, `src/i18n/locales/de.json`)
 - Solution: Update translation keys in en.json and de.json
+- Completed: Changed "Load" to "Load Example" in en.json and "Laden" to "Beispiel laden" in de.json. Updated all test scenarios that check for the button text. All 310 test scenarios passed.
 
 ## Completion Criteria
 
