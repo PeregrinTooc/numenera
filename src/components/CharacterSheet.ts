@@ -60,7 +60,15 @@ export class CharacterSheet {
 
   render(): TemplateResult {
     // Create stateless components that don't need to preserve state
-    const recoveryRolls = new RecoveryRolls(this.character.recoveryRolls);
+    const recoveryRolls = new RecoveryRolls(this.character.recoveryRolls, (field, value) => {
+      if (field === "recoveryModifier") {
+        this.character.recoveryRolls.modifier = value;
+        saveCharacterState(this.character);
+        // Trigger re-render via character-updated event
+        const event = new CustomEvent("character-updated");
+        document.getElementById("app")?.dispatchEvent(event);
+      }
+    });
     const damageTrack = new DamageTrack(this.character.damageTrack);
 
     // Collection update handlers that save directly to localStorage

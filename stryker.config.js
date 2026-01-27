@@ -5,7 +5,7 @@ const config = {
   reporters: ["html", "clear-text", "progress"],
   testRunner: "command",
   commandRunner: {
-    command: "npm test:unit",
+    command: "npm run test:unit",
   },
   coverageAnalysis: "perTest",
   mutate: [

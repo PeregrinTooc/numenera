@@ -14,6 +14,7 @@ export type FieldType =
   | "armor"
   | "maxCyphers"
   | "effort"
+  | "recoveryModifier"
   | "mightPool"
   | "mightEdge"
   | "mightCurrent"
@@ -55,6 +56,7 @@ export const FIELD_CONFIGS: Record<FieldType, FieldConfig> = {
   shins: { inputType: "number", inputMode: "numeric", min: 0, max: 999999 },
   armor: { inputType: "number", inputMode: "numeric", min: 0, max: 10 },
   maxCyphers: { inputType: "number", inputMode: "numeric", min: 0, max: 10 },
+  recoveryModifier: { inputType: "number", inputMode: "numeric", min: -10, max: 20 },
 
   // Stat pool fields
   mightPool: { inputType: "number", inputMode: "numeric", min: 0, max: 9999 },

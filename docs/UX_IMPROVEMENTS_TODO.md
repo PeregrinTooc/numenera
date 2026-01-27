@@ -7,10 +7,11 @@ This document tracks UI/UX improvements and bug fixes for the Numenera Character
 ### Issues to Address
 
 1. **Recovery Roll Modifier Not Editable**
-   - Status: 🔴 Not Started
+   - Status: ✅ Complete
    - Description: The recovery roll modifier field displays as `1d6 + ${modifier}` but cannot be edited
    - Location: `src/components/RecoveryRolls.ts`
    - Solution: Add click handler to open edit modal for the modifier field
+   - Completed: Added recoveryModifier field type, validation, translations, and wired up editing
 
 2. **Stats Section Too Large**
    - Status: 🔴 Not Started

@@ -1,4 +1,4 @@
-import { Given, Then } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { DOMHelpers } from "../support/dom-helpers.js";
 
@@ -172,4 +172,29 @@ Then("all recovery checkboxes should be unchecked", async function () {
   for (const checkbox of checkboxes) {
     await expect(checkbox).not.toBeChecked();
   }
+});
+
+// Edit recovery modifier step definitions
+
+When("I click on the recovery modifier display", async function () {
+  const dom = new DOMHelpers(this.page);
+  const modifierDisplay = dom.getByTestId("recovery-modifier-display");
+  await modifierDisplay.click();
+  await this.page.waitForTimeout(200);
+});
+
+When("I enter {string} in the modifier field", async function (value: string) {
+  const input = this.page.locator('[data-testid="edit-modal-input"]');
+  await input.fill(value);
+});
+
+Then("I should see an edit modal", async function () {
+  const modal = this.page.locator('[data-testid="edit-modal"]');
+  await expect(modal).toBeVisible();
+});
+
+When("I confirm the edit", async function () {
+  const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
+  await confirmButton.click();
+  await this.page.waitForTimeout(200);
 });

@@ -68,3 +68,11 @@ Feature: Phase 4 - Recovery Rolls and Damage Tracking
   Scenario: All recovery rolls available for new character
     Given the character is new
     Then all recovery checkboxes should be unchecked
+
+  Scenario: Edit recovery modifier
+    Given I am on the character sheet page
+    When I click on the recovery modifier display
+    Then I should see an edit modal
+    When I enter "5" in the modifier field
+    And I confirm the edit
+    Then I should see "1d6 + 5" in the recovery section

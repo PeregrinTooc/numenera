@@ -128,6 +128,9 @@
     "cancel": "Abbrechen"
   },
   "validation": {
+    "recoveryModifier": {
+      "invalid": "Erholungsmodifikator muss eine Zahl zwischen -10 und 20 sein"
+    },
     "xp": {
       "invalid": "EP muss eine Zahl zwischen 0 und 9999 sein"
     },

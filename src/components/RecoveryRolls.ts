@@ -1,9 +1,13 @@
 import { html, TemplateResult } from "lit-html";
 import { RecoveryRolls as RecoveryRollsType } from "../types/character.js";
 import { t } from "../i18n/index.js";
+import { ModalService } from "../services/modalService.js";
 
 export class RecoveryRolls {
-  constructor(private data: RecoveryRollsType) {
+  constructor(
+    private data: RecoveryRollsType,
+    private onFieldUpdate?: (field: "recoveryModifier", value: number) => void
+  ) {
     // Defensive: provide defaults if data is undefined (shouldn't happen with schema v4)
     this.data = data ?? {
       action: false,
@@ -12,6 +16,20 @@ export class RecoveryRolls {
       tenHours: false,
       modifier: 0,
     };
+  }
+
+  private openEditModal(): void {
+    if (!this.onFieldUpdate) return;
+
+    ModalService.openEditModal({
+      fieldType: "recoveryModifier",
+      currentValue: this.data.modifier,
+      onConfirm: (newValue) => {
+        if (this.onFieldUpdate) {
+          this.onFieldUpdate("recoveryModifier", newValue as number);
+        }
+      },
+    });
   }
 
   render(): TemplateResult {
@@ -29,7 +47,13 @@ export class RecoveryRolls {
           <span class="font-serif text-sm text-green-900">${t("recovery.modifier")}:</span>
           <span
             data-testid="recovery-modifier-display"
-            class="font-handwritten text-lg text-green-900"
+            class="font-handwritten text-lg text-green-900 ${this.onFieldUpdate
+              ? "editable-field cursor-pointer"
+              : ""}"
+            @click=${this.onFieldUpdate ? () => this.openEditModal() : null}
+            role="${this.onFieldUpdate ? "button" : ""}"
+            tabindex="${this.onFieldUpdate ? "0" : ""}"
+            aria-label="${this.onFieldUpdate ? "Edit recovery modifier" : ""}"
           >
             1d6 + ${modifier}
           </span>
