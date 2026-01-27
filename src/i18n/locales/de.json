@@ -6,7 +6,8 @@
     "load": "Beispiel laden",
     "import": "Importieren",
     "export": "Exportieren",
-    "new": "Neu"
+    "new": "Neu",
+    "close": "Schließen"
   },
   "character": {
     "name": "Name",
@@ -27,6 +28,7 @@
     "portraitUpload": "Portrait hochladen",
     "portraitRemove": "Portrait entfernen",
     "portraitChange": "Portrait ändern",
+    "portraitView": "Portrait anzeigen",
     "xp": "EP",
     "shins": "Shins"
   },

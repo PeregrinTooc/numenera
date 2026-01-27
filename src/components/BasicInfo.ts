@@ -72,6 +72,12 @@ export class BasicInfo {
     }
   }
 
+  private handlePortraitClick(): void {
+    if (this.character.portrait) {
+      ModalService.openPortraitModal(this.character.portrait);
+    }
+  }
+
   private handleTypeChange(e: Event): void {
     const select = e.target as HTMLSelectElement;
     this.character.type = select.value as "Nano" | "Glaive" | "Jack";
@@ -195,6 +201,12 @@ export class BasicInfo {
                   src="${this.character.portrait}"
                   alt="${t("character.portrait")}"
                   class="portrait-image"
+                  @click=${this.handlePortraitClick.bind(this)}
+                  style="cursor: pointer;"
+                  role="button"
+                  tabindex="0"
+                  aria-label="${t("character.portraitView")}"
+                  data-testid="portrait-image-clickable"
                 />
                 <div class="portrait-overlay">
                   <label class="portrait-button portrait-change">

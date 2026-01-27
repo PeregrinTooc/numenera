@@ -6,7 +6,8 @@
     "load": "Load Example",
     "import": "Import",
     "export": "Export",
-    "new": "New"
+    "new": "New",
+    "close": "Close"
   },
   "character": {
     "name": "Name",
@@ -27,6 +28,7 @@
     "portraitUpload": "Upload Portrait",
     "portraitRemove": "Remove Portrait",
     "portraitChange": "Change Portrait",
+    "portraitView": "View Portrait",
     "xp": "XP",
     "shins": "Shins"
   },

@@ -18,6 +18,7 @@
 @import "./components/damage-track.css";
 @import "./components/edit-modal.css";
 @import "./components/card-edit-modal.css";
+@import "./components/portrait-display-modal.css";
 
 /* Utility styles */
 @import "./utilities/animations.css";

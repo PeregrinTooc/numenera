@@ -3,6 +3,7 @@
 
 import { render } from "lit-html";
 import { EditFieldModal } from "../components/EditFieldModal.js";
+import { PortraitDisplayModal } from "../components/PortraitDisplayModal.js";
 import { FieldType } from "../utils/fieldValidation.js";
 
 export interface ModalConfig {
@@ -54,6 +55,35 @@ export class ModalService {
       if (input) {
         input.focus();
         input.select();
+      }
+    }, 0);
+  }
+
+  /**
+   * Opens a PortraitDisplayModal for viewing a character portrait
+   * Handles modal creation, rendering, and cleanup automatically
+   */
+  static openPortraitModal(portraitSrc: string): void {
+    // Create modal container
+    const modalContainer = document.createElement("div");
+    document.body.appendChild(modalContainer);
+
+    // Create modal with cleanup callback
+    const modal = new PortraitDisplayModal({
+      portraitSrc,
+      onClose: () => {
+        this.closeModal(modalContainer);
+      },
+    });
+
+    // Render modal
+    render(modal.render(), modalContainer);
+
+    // Focus the modal for keyboard navigation
+    setTimeout(() => {
+      const backdrop = modalContainer.querySelector<HTMLElement>(".portrait-display-backdrop");
+      if (backdrop) {
+        backdrop.focus();
       }
     }, 0);
   }
