@@ -84,6 +84,8 @@
     "heading": "Fähigkeiten",
     "empty": "Keine Fähigkeiten vorhanden. Fügen Sie hier besondere Fähigkeiten, trainierte Fertigkeiten und andere Charaktereigenschaften hinzu.",
     "cost": "Kosten",
+    "action": "Aktion",
+    "description": "Beschreibung",
     "pool": {
       "none": "Keine"
     }

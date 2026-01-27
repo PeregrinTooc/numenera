@@ -89,7 +89,9 @@ export class AbilityItem {
             </div>
           </div>
           <div class="mb-3">
-            <label class="block text-sm font-medium text-indigo-900 mb-1"> Action </label>
+            <label class="block text-sm font-medium text-indigo-900 mb-1">
+              ${t("abilities.action")}
+            </label>
             <input
               type="text"
               .value=${this.editedAbility.action || ""}
@@ -101,7 +103,9 @@ export class AbilityItem {
             />
           </div>
           <div class="mb-3">
-            <label class="block text-sm font-medium text-indigo-900 mb-1"> Description </label>
+            <label class="block text-sm font-medium text-indigo-900 mb-1">
+              ${t("abilities.description")}
+            </label>
             <textarea
               .value=${this.editedAbility.description}
               @input=${(e: Event) => {

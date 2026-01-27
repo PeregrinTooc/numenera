@@ -43,8 +43,8 @@ export class SpecialAbilityItem {
               type="text"
               .value=${this.editedAbility.name}
               @input=${(e: Event) => {
-        this.editedAbility.name = (e.target as HTMLInputElement).value;
-      }}
+                this.editedAbility.name = (e.target as HTMLInputElement).value;
+              }}
               class="w-full bg-transparent border-b-2 border-teal-300 focus:border-teal-500 px-2 py-1 text-teal-900 font-semibold"
               data-testid="edit-special-ability-name"
             />
@@ -57,19 +57,21 @@ export class SpecialAbilityItem {
               type="text"
               .value=${this.editedAbility.source}
               @input=${(e: Event) => {
-        this.editedAbility.source = (e.target as HTMLInputElement).value;
-      }}
+                this.editedAbility.source = (e.target as HTMLInputElement).value;
+              }}
               class="w-full bg-transparent border-b-2 border-teal-300 focus:border-teal-500 px-2 py-1 text-teal-900 font-semibold"
               data-testid="edit-special-ability-source"
             />
           </div>
           <div class="mb-3">
-            <label class="block text-sm font-medium text-teal-900 mb-1"> Description </label>
+            <label class="block text-sm font-medium text-teal-900 mb-1">
+              ${t("abilities.description")}
+            </label>
             <textarea
               .value=${this.editedAbility.description}
               @input=${(e: Event) => {
-        this.editedAbility.description = (e.target as HTMLTextAreaElement).value;
-      }}
+                this.editedAbility.description = (e.target as HTMLTextAreaElement).value;
+              }}
               class="w-full bg-transparent border-b-2 border-teal-300 focus:border-teal-500 px-2 py-1 text-gray-700"
               rows="3"
               data-testid="edit-special-ability-description"
@@ -89,13 +91,13 @@ export class SpecialAbilityItem {
         class="special-ability-item-card bg-gradient-to-br from-cyan-50 to-teal-50 border-2 border-teal-200 rounded-lg p-4 shadow-sm hover:shadow-md hover:border-teal-300 transition-all relative pr-8 pl-8"
       >
         ${renderCardButtons({
-      index: this.index,
-      onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
-      onDelete: this.onDelete,
-      editButtonTestId: `special-ability-edit-button-${this.index}`,
-      deleteButtonTestId: `special-ability-delete-button-${this.index}`,
-      colorTheme: "blue",
-    })}
+          index: this.index,
+          onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
+          onDelete: this.onDelete,
+          editButtonTestId: `special-ability-edit-button-${this.index}`,
+          deleteButtonTestId: `special-ability-delete-button-${this.index}`,
+          colorTheme: "blue",
+        })}
 
         <div class="special-ability-header flex justify-between items-start mb-2 pr-8">
           <h4

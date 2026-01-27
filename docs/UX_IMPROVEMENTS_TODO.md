@@ -47,10 +47,11 @@ This document tracks UI/UX improvements and bug fixes for the Numenera Character
    - Solution: Add visible label or tooltip for accessibility
 
 7. **Special Ability Description Field Not Translated**
-   - Status: 🔴 Not Started
-   - Description: Hardcoded "Description" label in edit mode
-   - Location: `src/components/SpecialAbilityItem.ts:56`
-   - Solution: Replace with `t("character.description")` or similar
+   - Status: ✅ Complete
+   - Description: Hardcoded "Action" and "Description" labels in edit mode for abilities and special abilities
+   - Locations: `src/components/AbilityItem.ts:93,104`, `src/components/SpecialAbilityItem.ts:56`
+   - Solution: Replace with `t("abilities.action")` and `t("abilities.description")`
+   - Completed: Added translation keys to en.json and de.json, replaced hardcoded text in both component files. All 310 test scenarios passed.
 
 8. **Attack Badge Numbers Need Labels in Display Mode**
    - Status: 🔴 Not Started

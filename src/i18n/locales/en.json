@@ -84,6 +84,8 @@
     "heading": "Abilities",
     "empty": "No abilities yet. Add special abilities, trained skills, and other character capabilities here.",
     "cost": "Cost",
+    "action": "Action",
+    "description": "Description",
     "pool": {
       "none": "None"
     }
