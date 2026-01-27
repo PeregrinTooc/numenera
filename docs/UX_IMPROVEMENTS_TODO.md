@@ -61,10 +61,11 @@ This document tracks UI/UX improvements and bug fixes for the Numenera Character
    - Completed: Added labels to display badges similar to ability cost badge. Damage badge now shows "Damage: X" and modifier badge shows "Modifier: +X". All 310 test scenarios passed.
 
 9. **Type Harmonization Across Edit Modals**
-   - Status: 🔴 Not Started
-   - Description: Different card types use inconsistent patterns for edited item state
-   - Locations: `AbilityItem.ts`, `SpecialAbilityItem.ts`, `AttackItem.ts`, etc.
-   - Solution: Create consistent interface/type for all card edit states
+   - Status: ✅ Complete
+   - Description: Verify consistent patterns across all card edit components
+   - Locations: All \*Item.ts components, `helpers/CardEditorBehavior.ts`
+   - Solution: Confirmed all item components use consistent CardEditorConfig<T> interface
+   - Completed: Verified that all item components (AbilityItem, AttackItem, SpecialAbilityItem, CypherItem, ArtifactItem, EquipmentItem, OddityItem) follow the same pattern with CardEditorConfig<T>, createEditHandler<T>(), and renderCardButtons(). Pattern is already well-harmonized.
 
 10. **Portrait Display Modal on Click**
 
@@ -72,6 +73,20 @@ This document tracks UI/UX improvements and bug fixes for the Numenera Character
 - Description: Clicking on portrait should open a modal showing the full-size image
 - Location: `src/components/BasicInfo.ts`
 - Solution: Add click handler to open modal displaying portrait at original size or capped at 1500×2000px if larger
+
+11. **Dropdown Indicator on Type Should Only Show on Hover**
+
+- Status: 🔴 Not Started
+- Description: The dropdown indicator (chevron/arrow) on type field should only be visible on hover
+- Location: `src/components/BasicInfo.ts` (type field styling)
+- Solution: Add CSS to hide indicator by default, show on hover
+
+12. **Rename 'Load' Button to 'Load Example'**
+
+- Status: 🔴 Not Started
+- Description: The "Load" button should be renamed to "Load Example" for clarity
+- Location: Translation files and Header component
+- Solution: Update translation keys in en.json and de.json
 
 ## Completion Criteria
 
