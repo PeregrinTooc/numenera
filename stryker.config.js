@@ -5,7 +5,7 @@ const config = {
   reporters: ["html", "clear-text", "progress"],
   testRunner: "command",
   commandRunner: {
-    command: "npm test",
+    command: "npm test:unit",
   },
   coverageAnalysis: "perTest",
   mutate: [
@@ -17,12 +17,13 @@ const config = {
     "!src/main.ts",
   ],
   timeoutMS: 60000,
-  concurrency: 1,
+  concurrency: 8,
   checkers: ["typescript"],
   tsconfigFile: "tsconfig.json",
   ignoreStatic: true,
   tempDirName: "stryker-tmp",
   cleanTempDir: true,
+  incremental: true,
 };
 
 export default config;
