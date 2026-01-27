@@ -54,10 +54,11 @@ This document tracks UI/UX improvements and bug fixes for the Numenera Character
    - Completed: Added translation keys to en.json and de.json, replaced hardcoded text in both component files. All 310 test scenarios passed.
 
 8. **Attack Badge Numbers Need Labels in Display Mode**
-   - Status: 🔴 Not Started
+   - Status: ✅ Complete
    - Description: Damage and modifier badges have no visible labels
-   - Location: `src/components/AttackItem.ts` (display mode)
+   - Location: `src/components/AttackItem.ts` (display mode, lines 166-177)
    - Solution: Add visible labels for clarity
+   - Completed: Added labels to display badges similar to ability cost badge. Damage badge now shows "Damage: X" and modifier badge shows "Modifier: +X". All 310 test scenarios passed.
 
 9. **Type Harmonization Across Edit Modals**
    - Status: 🔴 Not Started

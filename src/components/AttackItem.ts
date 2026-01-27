@@ -49,8 +49,8 @@ export class AttackItem {
               type="text"
               .value=${this.editedAttack.name}
               @input=${(e: Event) => {
-        this.editedAttack.name = (e.target as HTMLInputElement).value;
-      }}
+                this.editedAttack.name = (e.target as HTMLInputElement).value;
+              }}
               class="w-full bg-transparent border-b-2 border-red-300 focus:border-red-500 px-2 py-1 text-red-900 font-semibold"
               data-testid="edit-attack-name"
             />
@@ -64,9 +64,9 @@ export class AttackItem {
                 type="number"
                 .value=${this.editedAttack.damage.toString()}
                 @input=${(e: Event) => {
-        const value = (e.target as HTMLInputElement).value;
-        this.editedAttack.damage = parseInt(value, 10) || 0;
-      }}
+                  const value = (e.target as HTMLInputElement).value;
+                  this.editedAttack.damage = parseInt(value, 10) || 0;
+                }}
                 class="w-full bg-transparent border-b-2 border-red-300 focus:border-red-500 px-2 py-1 text-red-900 font-semibold"
                 data-testid="edit-attack-damage"
               />
@@ -79,9 +79,9 @@ export class AttackItem {
                 type="number"
                 .value=${this.editedAttack.modifier.toString()}
                 @input=${(e: Event) => {
-        const value = (e.target as HTMLInputElement).value;
-        this.editedAttack.modifier = parseInt(value, 10) || 0;
-      }}
+                  const value = (e.target as HTMLInputElement).value;
+                  this.editedAttack.modifier = parseInt(value, 10) || 0;
+                }}
                 class="w-full bg-transparent border-b-2 border-red-300 focus:border-red-500 px-2 py-1 text-red-900 font-semibold"
                 data-testid="edit-attack-modifier"
               />
@@ -95,8 +95,8 @@ export class AttackItem {
               type="text"
               .value=${this.editedAttack.range}
               @input=${(e: Event) => {
-        this.editedAttack.range = (e.target as HTMLInputElement).value;
-      }}
+                this.editedAttack.range = (e.target as HTMLInputElement).value;
+              }}
               class="w-full bg-transparent border-b-2 border-red-300 focus:border-red-500 px-2 py-1 text-red-900 font-semibold"
               data-testid="edit-attack-range"
             />
@@ -108,8 +108,8 @@ export class AttackItem {
             <textarea
               .value=${this.editedAttack.notes || ""}
               @input=${(e: Event) => {
-        this.editedAttack.notes = (e.target as HTMLTextAreaElement).value || undefined;
-      }}
+                this.editedAttack.notes = (e.target as HTMLTextAreaElement).value || undefined;
+              }}
               class="w-full bg-transparent border-b-2 border-red-300 focus:border-red-500 px-2 py-1 text-gray-700"
               rows="2"
               data-testid="edit-attack-notes"
@@ -129,13 +129,13 @@ export class AttackItem {
         class="attack-item-card bg-gradient-to-br from-red-50 to-orange-50 border-2 border-red-200 rounded-lg p-4 shadow-sm hover:shadow-md hover:border-red-300 transition-all relative"
       >
         ${renderCardButtons({
-      index: this.index,
-      onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
-      onDelete: this.onDelete,
-      editButtonTestId: `attack-edit-button-${this.index}`,
-      deleteButtonTestId: `attack-delete-button-${this.index}`,
-      colorTheme: "red",
-    })}
+          index: this.index,
+          onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
+          onDelete: this.onDelete,
+          editButtonTestId: `attack-edit-button-${this.index}`,
+          deleteButtonTestId: `attack-delete-button-${this.index}`,
+          colorTheme: "red",
+        })}
 
         <div class="attack-header flex justify-between items-start mb-2 pr-8 pl-8">
           <h4
@@ -150,14 +150,14 @@ export class AttackItem {
               class="attack-badge attack-damage px-2 py-1 bg-amber-100 border border-amber-300 rounded text-xs font-semibold text-amber-900"
               title="${t("attacks.damage")}"
             >
-              ${this.attack.damage}
+              ${t("attacks.damage")}: ${this.attack.damage}
             </span>
             <span
               data-testid="attack-modifier-${testIdBase}"
               class="attack-badge attack-modifier px-2 py-1 bg-blue-100 border border-blue-300 rounded text-xs font-semibold text-blue-900"
               title="${t("attacks.modifier")}"
             >
-              ${this.formatModifier(this.attack.modifier)}
+              ${t("attacks.modifier")}: ${this.formatModifier(this.attack.modifier)}
             </span>
           </div>
         </div>
@@ -170,7 +170,7 @@ export class AttackItem {
           </span>
         </div>
         ${this.attack.notes
-        ? html`
+          ? html`
               <p
                 data-testid="attack-notes-${testIdBase}"
                 class="attack-notes text-gray-700 text-sm leading-relaxed"
@@ -178,7 +178,7 @@ export class AttackItem {
                 ${this.attack.notes}
               </p>
             `
-        : ""}
+          : ""}
       </div>
     `;
   }
