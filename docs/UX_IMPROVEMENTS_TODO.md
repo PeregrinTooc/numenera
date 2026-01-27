@@ -28,10 +28,11 @@ This document tracks UI/UX improvements and bug fixes for the Numenera Character
    - Completed: Modified BasicInfo component to use `|| t("character.descriptor")` and `|| t("character.focus")` to show translated placeholder text when fields are empty. Added E2E tests that use the New button to create a character with empty fields (like a real user would). All 310 test scenarios passed. Committed and pushed.
 
 4. **Character Portrait Not Editable**
-   - Status: 🔴 Not Started
+   - Status: ✅ Complete
    - Description: Portrait shows static placeholder, no upload/edit functionality
    - Location: `src/components/BasicInfo.ts`
    - Solution: Add image upload capability with preview, storage, and removal
+   - Completed: Added optional portrait field to Character type (base64 storage). Implemented file upload with validation (image type, 2MB max). Added upload button for empty portraits, hover overlay with Change/Remove buttons for existing portraits. Portrait displays with object-fit: cover in 150x200px frame. All 310 test scenarios passed. Committed and pushed.
 
 5. **Ability Pool Dropdown Shows 'None' in German**
    - Status: 🔴 Not Started
@@ -62,6 +63,13 @@ This document tracks UI/UX improvements and bug fixes for the Numenera Character
    - Description: Different card types use inconsistent patterns for edited item state
    - Locations: `AbilityItem.ts`, `SpecialAbilityItem.ts`, `AttackItem.ts`, etc.
    - Solution: Create consistent interface/type for all card edit states
+
+10. **Portrait Display Modal on Click**
+
+- Status: 🔴 Not Started
+- Description: Clicking on portrait should open a modal showing the full-size image
+- Location: `src/components/BasicInfo.ts`
+- Solution: Add click handler to open modal displaying portrait at original size or capped at 1500×2000px if larger
 
 ## Completion Criteria
 

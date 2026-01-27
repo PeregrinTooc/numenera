@@ -83,7 +83,10 @@
   "abilities": {
     "heading": "Fähigkeiten",
     "empty": "Keine Fähigkeiten vorhanden. Fügen Sie hier besondere Fähigkeiten, trainierte Fertigkeiten und andere Charaktereigenschaften hinzu.",
-    "cost": "Kosten"
+    "cost": "Kosten",
+    "pool": {
+      "none": "Keine"
+    }
   },
   "attacks": {
     "title": "Angriffe",

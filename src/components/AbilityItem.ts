@@ -43,8 +43,8 @@ export class AbilityItem {
               type="text"
               .value=${this.editedAbility.name}
               @input=${(e: Event) => {
-        this.editedAbility.name = (e.target as HTMLInputElement).value;
-      }}
+                this.editedAbility.name = (e.target as HTMLInputElement).value;
+              }}
               class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-indigo-900 font-semibold"
               data-testid="edit-ability-name"
             />
@@ -58,9 +58,9 @@ export class AbilityItem {
                 type="number"
                 .value=${this.editedAbility.cost?.toString() || ""}
                 @input=${(e: Event) => {
-        const value = (e.target as HTMLInputElement).value;
-        this.editedAbility.cost = value ? parseInt(value, 10) : undefined;
-      }}
+                  const value = (e.target as HTMLInputElement).value;
+                  this.editedAbility.cost = value ? parseInt(value, 10) : undefined;
+                }}
                 class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-indigo-900 font-semibold"
                 min="0"
                 data-testid="edit-ability-cost"
@@ -73,15 +73,15 @@ export class AbilityItem {
               <select
                 .value=${this.editedAbility.pool || ""}
                 @change=${(e: Event) => {
-        const value = (e.target as HTMLSelectElement).value;
-        this.editedAbility.pool = value
-          ? (value as "might" | "speed" | "intellect")
-          : undefined;
-      }}
+                  const value = (e.target as HTMLSelectElement).value;
+                  this.editedAbility.pool = value
+                    ? (value as "might" | "speed" | "intellect")
+                    : undefined;
+                }}
                 class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-indigo-900 font-semibold"
                 data-testid="edit-ability-pool"
               >
-                <option value="">None</option>
+                <option value="">${t("abilities.pool.none")}</option>
                 <option value="might">${t("stats.might")}</option>
                 <option value="speed">${t("stats.speed")}</option>
                 <option value="intellect">${t("stats.intellect")}</option>
@@ -94,8 +94,8 @@ export class AbilityItem {
               type="text"
               .value=${this.editedAbility.action || ""}
               @input=${(e: Event) => {
-        this.editedAbility.action = (e.target as HTMLInputElement).value || undefined;
-      }}
+                this.editedAbility.action = (e.target as HTMLInputElement).value || undefined;
+              }}
               class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-indigo-900 font-semibold"
               data-testid="edit-ability-action"
             />
@@ -105,8 +105,8 @@ export class AbilityItem {
             <textarea
               .value=${this.editedAbility.description}
               @input=${(e: Event) => {
-        this.editedAbility.description = (e.target as HTMLTextAreaElement).value;
-      }}
+                this.editedAbility.description = (e.target as HTMLTextAreaElement).value;
+              }}
               class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-gray-700"
               rows="3"
               data-testid="edit-ability-description"
@@ -126,13 +126,13 @@ export class AbilityItem {
         class="ability-item-card bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-lg p-4 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all relative pr-8 pl-8"
       >
         ${renderCardButtons({
-      index: this.index,
-      onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
-      onDelete: this.onDelete,
-      editButtonTestId: `ability-edit-button-${this.index}`,
-      deleteButtonTestId: `ability-delete-button-${this.index}`,
-      colorTheme: "indigo",
-    })}
+          index: this.index,
+          onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
+          onDelete: this.onDelete,
+          editButtonTestId: `ability-edit-button-${this.index}`,
+          deleteButtonTestId: `ability-delete-button-${this.index}`,
+          colorTheme: "indigo",
+        })}
 
         <div class="ability-header flex justify-between items-start mb-2 pr-8">
           <h4
@@ -143,7 +143,7 @@ export class AbilityItem {
           </h4>
           <div class="ability-badges flex gap-2">
             ${this.ability.cost !== undefined
-        ? html`
+              ? html`
                   <span
                     data-testid="ability-cost-${testIdBase}"
                     class="ability-badge ability-cost px-2 py-1 bg-amber-100 border border-amber-300 rounded text-xs font-semibold text-amber-900"
@@ -152,22 +152,22 @@ export class AbilityItem {
                     ${this.ability.cost}
                   </span>
                 `
-        : ""}
+              : ""}
             ${this.ability.pool
-        ? html`
+              ? html`
                   <span
                     data-testid="ability-pool-${testIdBase}"
                     class="ability-badge ability-pool pool-${this.ability
-            .pool} px-2 py-1 rounded text-xs font-semibold"
+                      .pool} px-2 py-1 rounded text-xs font-semibold"
                   >
                     ${t(`stats.${this.ability.pool}`)}
                   </span>
                 `
-        : ""}
+              : ""}
           </div>
         </div>
         ${this.ability.action
-        ? html`
+          ? html`
               <div
                 data-testid="ability-action-${testIdBase}"
                 class="ability-action text-xs text-indigo-600 italic mb-2"
@@ -175,7 +175,7 @@ export class AbilityItem {
                 ${this.ability.action}
               </div>
             `
-        : ""}
+          : ""}
         <p
           data-testid="ability-description-${this.index}"
           class="ability-description text-gray-700 text-sm leading-relaxed"

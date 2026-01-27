@@ -83,7 +83,10 @@
   "abilities": {
     "heading": "Abilities",
     "empty": "No abilities yet. Add special abilities, trained skills, and other character capabilities here.",
-    "cost": "Cost"
+    "cost": "Cost",
+    "pool": {
+      "none": "None"
+    }
   },
   "attacks": {
     "title": "Attacks",
