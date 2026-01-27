@@ -14,10 +14,11 @@ This document tracks UI/UX improvements and bug fixes for the Numenera Character
    - Completed: Added recoveryModifier field type, validation, translations, and wired up editing
 
 2. **Stats Section Too Large**
-   - Status: 🔴 Not Started
+   - Status: ✅ Complete
    - Description: Current Stats section takes up significant space with three full StatPool cards side-by-side
-   - Location: `src/components/Stats.ts`, `src/components/StatPool.ts`
+   - Location: `src/components/Stats.ts`, `src/components/StatPool.ts`, `src/styles/components/stat-pool.css`
    - Solution: Design more condensed version maintaining same information and editability
+   - Completed: Reduced padding (1.5rem → 1rem), reduced pool number font (4.5rem → 3rem), reduced label font (1.25rem → 1rem), reduced edge/current values (1.875rem → 1.5rem), reduced grid gap (gap-6 → gap-4), added E2E tests for condensed styling
 
 3. **Character Portrait Not Editable**
    - Status: 🔴 Not Started

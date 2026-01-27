@@ -57,8 +57,8 @@ export class Stats {
 
         <h2 data-testid="stats-heading" class="section-box-heading">${t("stats.heading")}</h2>
 
-        <!-- Three stat pools side-by-side on tablet/desktop -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Three stat pools side-by-side on tablet/desktop - CONDENSED -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           ${mightPool.render()} ${speedPool.render()} ${intellectPool.render()}
         </div>
       </div>
