@@ -63,6 +63,7 @@ export interface Character {
   type: string;
   descriptor: string;
   focus: string;
+  portrait?: string; // Base64 encoded image data
   xp: number;
   shins: number;
   armor: number;

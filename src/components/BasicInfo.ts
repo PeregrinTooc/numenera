@@ -5,7 +5,7 @@ import { Character } from "../types/character.js";
 import { t } from "../i18n/index.js";
 import { ModalService } from "../services/modalService.js";
 import { saveCharacterState } from "../storage/localStorage.js";
-/* global Event, HTMLSelectElement, CustomEvent */
+/* global Event, HTMLSelectElement, CustomEvent, FileReader, alert */
 
 type FieldType = "name" | "tier" | "descriptor" | "focus" | "xp";
 
@@ -14,6 +14,63 @@ export class BasicInfo {
     private character: Character,
     private onFieldUpdate: (field: FieldType, value: string | number) => void
   ) {}
+
+  private handlePortraitUpload(e: Event): void {
+    const input = e.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file");
+      return;
+    }
+
+    // Validate file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Image file is too large. Maximum size is 2MB.");
+      return;
+    }
+
+    // Read file as base64
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      this.character.portrait = base64;
+      saveCharacterState(this.character);
+
+      // Dispatch character-updated event
+      const event = new CustomEvent("character-updated", {
+        detail: this.character,
+        bubbles: true,
+        composed: true,
+      });
+
+      const container = document.querySelector('[data-testid="basic-info"]');
+      if (container) {
+        container.dispatchEvent(event);
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  private handlePortraitRemove(): void {
+    this.character.portrait = undefined;
+    saveCharacterState(this.character);
+
+    // Dispatch character-updated event
+    const event = new CustomEvent("character-updated", {
+      detail: this.character,
+      bubbles: true,
+      composed: true,
+    });
+
+    const container = document.querySelector('[data-testid="basic-info"]');
+    if (container) {
+      container.dispatchEvent(event);
+    }
+  }
 
   private handleTypeChange(e: Event): void {
     const select = e.target as HTMLSelectElement;
@@ -131,8 +188,47 @@ export class BasicInfo {
         </div>
 
         <!-- Character portrait - RIGHT side, 3:4 ratio (150×200px) -->
-        <div class="character-portrait">
-          <span class="character-portrait-text">${t("character.portrait")}</span>
+        <div class="character-portrait" data-testid="character-portrait">
+          ${this.character.portrait
+            ? html`
+                <img
+                  src="${this.character.portrait}"
+                  alt="${t("character.portrait")}"
+                  class="portrait-image"
+                />
+                <div class="portrait-overlay">
+                  <label class="portrait-button portrait-change">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      @change=${this.handlePortraitUpload.bind(this)}
+                      style="display: none;"
+                      data-testid="portrait-file-input"
+                    />
+                    ${t("character.portraitChange")}
+                  </label>
+                  <button
+                    class="portrait-button portrait-remove"
+                    @click=${this.handlePortraitRemove.bind(this)}
+                    data-testid="portrait-remove-button"
+                  >
+                    ${t("character.portraitRemove")}
+                  </button>
+                </div>
+              `
+            : html`
+                <span class="character-portrait-text">${t("character.portrait")}</span>
+                <label class="portrait-button portrait-upload">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    @change=${this.handlePortraitUpload.bind(this)}
+                    style="display: none;"
+                    data-testid="portrait-file-input"
+                  />
+                  ${t("character.portraitUpload")}
+                </label>
+              `}
         </div>
       </div>
     `;

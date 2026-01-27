@@ -24,6 +24,9 @@
       "connector": "und"
     },
     "portrait": "Portrait",
+    "portraitUpload": "Portrait hochladen",
+    "portraitRemove": "Portrait entfernen",
+    "portraitChange": "Portrait ändern",
     "xp": "EP",
     "shins": "Shins"
   },

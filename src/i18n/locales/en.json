@@ -24,6 +24,9 @@
       "connector": "who"
     },
     "portrait": "Portrait",
+    "portraitUpload": "Upload Portrait",
+    "portraitRemove": "Remove Portrait",
+    "portraitChange": "Change Portrait",
     "xp": "XP",
     "shins": "Shins"
   },

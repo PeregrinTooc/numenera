@@ -25,7 +25,7 @@ This document tracks UI/UX improvements and bug fixes for the Numenera Character
    - Description: On new characters, empty descriptor and focus fields are not visible/clickable
    - Location: `src/components/BasicInfo.ts`
    - Solution: Show placeholder text ('Descriptor' and 'Focus') when fields are empty to make them visible and clickable
-   - Completed: Modified BasicInfo component to use `|| t("character.descriptor")` and `|| t("character.focus")` to show translated placeholder text when fields are empty, added E2E tests
+   - Completed: Modified BasicInfo component to use `|| t("character.descriptor")` and `|| t("character.focus")` to show translated placeholder text when fields are empty. Added E2E tests that use the New button to create a character with empty fields (like a real user would). All 310 test scenarios passed. Committed and pushed.
 
 4. **Character Portrait Not Editable**
    - Status: 🔴 Not Started
