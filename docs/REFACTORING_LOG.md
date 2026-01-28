@@ -130,6 +130,338 @@
 
 ---
 
+## Phase 2: Modal System Consolidation
+
+**Status**: NOT STARTED  
+**Priority**: HIGH  
+**Estimated Effort**: Medium (2-3 days)
+
+### Problem Statement
+
+Current state shows duplication in modal-related code:
+
+- `EditFieldModal.ts` and `CardEditModal.ts` have overlapping functionality
+- Multiple components open modals with similar patterns
+- Modal behavior logic is scattered across components
+- No centralized modal state management
+
+### Goals
+
+1. **Consolidate Modal Logic**: Create unified modal behavior system
+2. **Reduce Duplication**: Extract common modal patterns into helpers
+3. **Improve Reusability**: Make modal components more composable
+4. **Better Type Safety**: Centralize modal configuration types
+
+### Proposed Approach
+
+**Step 1**: Analyze Modal Usage Patterns
+
+- Document all modal opening locations
+- Identify common configuration patterns
+- Map modal lifecycle management
+
+**Step 2**: Create Modal Abstraction Layer
+
+- Create `src/services/modalBehavior.ts` for shared logic
+- Extract common backdrop/keyboard handling
+- Centralize modal container management
+
+**Step 3**: Refactor Existing Modals
+
+- Update EditFieldModal to use new helpers
+- Update CardEditModal to use new helpers
+- Ensure backward compatibility
+
+**Step 4**: Update Modal Consumers
+
+- Refactor components that open modals
+- Use new consolidated API
+- Test all modal interactions
+
+### Success Criteria
+
+- [ ] All modal-related code uses centralized helpers
+- [ ] No duplication in backdrop/keyboard handling
+- [ ] All tests passing
+- [ ] Modal behavior consistent across application
+
+### Files to Modify
+
+- `src/services/modalService.ts` (enhance)
+- `src/components/EditFieldModal.ts` (refactor)
+- `src/components/CardEditModal.ts` (refactor)
+- Create: `src/services/modalBehavior.ts` (new helper)
+
+---
+
+## Phase 3: Item Component Refactoring
+
+**Status**: NOT STARTED  
+**Priority**: HIGH  
+**Estimated Effort**: Large (4-5 days)
+
+### Problem Statement
+
+Significant code duplication across item components:
+
+- 7 item components with nearly identical structure:
+  - `AbilityItem.ts`
+  - `ArtifactItem.ts`
+  - `AttackItem.ts`
+  - `CypherItem.ts`
+  - `EquipmentItem.ts`
+  - `OddityItem.ts`
+  - `SpecialAbilityItem.ts`
+- Each has `renderEditableVersion()` with similar patterns
+- Edit/delete logic duplicated 7 times
+- Hard to maintain consistency across components
+
+### Goals
+
+1. **Eliminate Duplication**: Extract common item behavior
+2. **Single Source of Truth**: Centralize item rendering logic
+3. **Easier Maintenance**: Update one place instead of seven
+4. **Consistent UX**: Ensure all items behave the same way
+
+### Proposed Approach
+
+**Step 1**: Extract Common Behavior
+
+- Create `src/components/helpers/ItemBehavior.ts`
+- Move shared edit/delete logic
+- Create reusable rendering functions
+
+**Step 2**: Refactor Item Components (One at a Time)
+
+- Start with simplest (EquipmentItem)
+- Migrate to use ItemBehavior helpers
+- Test thoroughly after each migration
+- Continue with remaining items
+
+**Step 3**: Create Item Base Template
+
+- Design composable item template
+- Support different field configurations
+- Allow customization where needed
+
+**Step 4**: Update Tests
+
+- Refactor item component tests
+- Add tests for ItemBehavior helpers
+- Ensure coverage maintained
+
+### Technical Design
+
+```typescript
+// Proposed ItemBehavior helper structure
+export interface ItemConfig {
+  fields: ItemField[];
+  onEdit: (field: string, value: any) => void;
+  onDelete: () => void;
+  isEditable: boolean;
+}
+
+export function renderEditableItem(config: ItemConfig): TemplateResult {
+  // Centralized rendering logic
+}
+```
+
+### Success Criteria
+
+- [ ] ItemBehavior helper created and tested
+- [ ] All 7 item components refactored to use helpers
+- [ ] Code duplication reduced by >70%
+- [ ] All tests passing (302+ unit tests)
+- [ ] No visual/behavioral changes
+
+### Files to Modify
+
+- Create: `src/components/helpers/ItemBehavior.ts`
+- Refactor: All 7 item component files
+- Update: All item component test files
+
+---
+
+## Phase 4: Container Component Refactoring
+
+**Status**: NOT STARTED  
+**Priority**: MEDIUM  
+**Estimated Effort**: Medium (3-4 days)
+
+### Problem Statement
+
+Container components show similar duplication patterns:
+
+- `Abilities.ts`, `Attacks.ts`, `CyphersBox.ts`, `ItemsBox.ts`, `SpecialAbilities.ts`
+- Each has `handleAdd*()` methods with similar logic
+- Each has `openEditModal()` with similar patterns
+- Collection management code duplicated across containers
+
+### Goals
+
+1. **Consolidate Collection Management**: Extract common patterns
+2. **Standardize Add Operations**: Unified approach to adding items
+3. **Simplify Modal Integration**: Consistent modal opening
+4. **Reduce Code Duplication**: DRY principle across containers
+
+### Proposed Approach
+
+**Step 1**: Analyze Container Patterns
+
+- Document all container components
+- Identify common operations
+- Map data flow patterns
+
+**Step 2**: Create Collection Behavior Helper
+
+- Create `src/components/helpers/CollectionBehavior.ts`
+- Extract add/edit/delete patterns
+- Create reusable modal opening logic
+
+**Step 3**: Refactor Container Components
+
+- Update one container at a time
+- Migrate to use CollectionBehavior
+- Test after each migration
+
+**Step 4**: Verify Consistency
+
+- Ensure all containers behave consistently
+- Update tests
+- Document new patterns
+
+### Technical Design
+
+```typescript
+// Proposed CollectionBehavior helper structure
+export interface CollectionConfig<T> {
+  items: T[];
+  onAdd: (item: T) => void;
+  onEdit: (index: number, item: T) => void;
+  onDelete: (index: number) => void;
+  modalConfig: ModalConfig;
+}
+
+export function createCollectionManager<T>(config: CollectionConfig<T>) {
+  // Centralized collection management
+}
+```
+
+### Success Criteria
+
+- [ ] CollectionBehavior helper created
+- [ ] All container components refactored
+- [ ] Code duplication reduced by >60%
+- [ ] All tests passing
+- [ ] Consistent add/edit/delete behavior
+
+### Files to Modify
+
+- Create: `src/components/helpers/CollectionBehavior.ts`
+- Refactor: `Abilities.ts`, `Attacks.ts`, `CyphersBox.ts`, `ItemsBox.ts`, `SpecialAbilities.ts`
+- Update: Container component tests
+
+---
+
+## Phase 5: Cleanup & Final Consolidation
+
+**Status**: NOT STARTED  
+**Priority**: LOW  
+**Estimated Effort**: Small (1-2 days)
+
+### Goals
+
+1. **Remove Deprecated Code**: Delete old validation modules
+2. **Update Documentation**: Reflect new architecture
+3. **Final Testing**: Comprehensive test pass
+4. **Performance Audit**: Ensure no regressions
+
+### Tasks
+
+**Step 1**: Remove Deprecated Files
+
+- [ ] Delete `src/utils/fieldValidation.ts`
+- [ ] Delete `src/utils/validation.ts`
+- [ ] Delete `src/utils/characterValidation.ts`
+- [ ] Update any remaining imports (should be none)
+
+**Step 2**: Documentation Updates
+
+- [ ] Update ARCHITECTURE.md with new patterns
+- [ ] Document modal system architecture
+- [ ] Document item/container helper patterns
+- [ ] Update component documentation
+
+**Step 3**: Test Verification
+
+- [ ] Run full unit test suite
+- [ ] Run full E2E test suite
+- [ ] Manual testing of all features
+- [ ] Performance benchmarking
+
+**Step 4**: Code Quality Check
+
+- [ ] Run linter on all modified files
+- [ ] Review for any remaining duplication
+- [ ] Check for unused imports/variables
+- [ ] Verify consistent code style
+
+### Success Criteria
+
+- [ ] All deprecated files removed
+- [ ] Documentation up to date
+- [ ] 100% test pass rate
+- [ ] No performance regressions
+- [ ] Clean linter output
+
+---
+
+## Refactoring Strategy Overview
+
+### Principles
+
+1. **Incremental Changes**: One phase at a time, fully tested
+2. **Backward Compatibility**: No breaking changes during transition
+3. **Test-Driven**: Tests must pass at each step
+4. **Documentation First**: Plan before implementing
+
+### Risk Management
+
+**Low Risk Phases**:
+
+- Phase 2: Modal consolidation (isolated subsystem)
+- Phase 5: Cleanup (removing already-deprecated code)
+
+**Medium Risk Phases**:
+
+- Phase 3: Item refactoring (many components, but isolated)
+- Phase 4: Container refactoring (touches state management)
+
+**Mitigation Strategies**:
+
+- One component at a time
+- Run tests after each change
+- Keep old code until new code proven
+- Feature flags if needed for gradual rollout
+
+### Expected Benefits
+
+**Code Metrics** (Estimated):
+
+- **Lines of Code**: Reduce by ~30% overall
+- **Duplication**: Reduce by >70% in item/container components
+- **Maintainability**: Improve by centralizing common patterns
+- **Bug Surface**: Reduce by having single source of truth
+
+**Developer Experience**:
+
+- Easier to add new item types
+- Consistent patterns across codebase
+- Better IDE support with centralized helpers
+- Faster onboarding for new developers
+
+---
+
 ## Test Status
 
 **Unit Tests**: ✅ 302/302 passing  
