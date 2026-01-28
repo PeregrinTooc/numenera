@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { validateCharacter } from "../../src/utils/characterValidation";
+import { validateCharacter } from "../../src/utils/unified-validation.js";
 import { Character } from "../../src/types/character";
 
 describe("characterValidation", () => {

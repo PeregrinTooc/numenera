@@ -138,6 +138,18 @@
     "cancel": "Abbrechen"
   },
   "validation": {
+    "name": {
+      "empty": "Name darf nicht leer sein",
+      "tooLong": "Name muss 50 Zeichen oder weniger haben"
+    },
+    "descriptor": {
+      "empty": "Deskriptor darf nicht leer sein",
+      "tooLong": "Deskriptor muss 30 Zeichen oder weniger haben"
+    },
+    "focus": {
+      "empty": "Fokus darf nicht leer sein",
+      "tooLong": "Fokus muss 50 Zeichen oder weniger haben"
+    },
     "recoveryModifier": {
       "invalid": "Erholungsmodifikator muss eine Zahl zwischen -10 und 20 sein"
     },

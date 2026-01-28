@@ -3,7 +3,7 @@
 
 import { Character } from "../types/character.js";
 import { SCHEMA_VERSION } from "./storageConstants.js";
-import { validateCharacter } from "../utils/characterValidation.js";
+import { validateCharacter } from "../utils/unified-validation.js";
 
 /**
  * File format structure for exported characters

@@ -1,3 +1,7 @@
+// DEPRECATED: This module has been replaced by unified-validation.ts
+// Please import from unified-validation.ts instead
+// This file will be removed in a future version
+//
 // Field validation configuration and utilities
 // Centralizes validation logic to eliminate duplication in EditFieldModal
 

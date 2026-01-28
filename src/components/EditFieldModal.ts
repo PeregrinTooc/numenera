@@ -2,17 +2,17 @@
 
 import { html, render, TemplateResult } from "lit-html";
 import { t } from "../i18n/index.js";
-import { validateTier } from "../utils/validation.js";
 import {
   FieldType,
   validateField,
+  validateTier,
   getInputType,
   getInputMode,
   getMinValue,
   getMaxValue,
   getMaxLength,
   isNumericField,
-} from "../utils/fieldValidation.js";
+} from "../utils/unified-validation.js";
 
 interface EditFieldModalConfig {
   fieldType: FieldType;

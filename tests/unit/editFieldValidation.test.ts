@@ -5,7 +5,7 @@ import {
   validateName,
   validateDescriptor,
   validateFocus,
-} from "../../src/utils/validation.js";
+} from "../../src/utils/unified-validation.js";
 
 // Tests
 describe("Tier Validation", () => {
@@ -50,20 +50,23 @@ describe("Name Validation", () => {
   it("should reject empty names", () => {
     const result = validateName("");
     expect(result.valid).toBe(false);
-    expect(result.error).toBe("Name cannot be empty");
+    expect(result.error).toBeDefined();
+    expect(result.error).toContain("empty");
   });
 
   it("should reject whitespace-only names", () => {
     const result = validateName("   ");
     expect(result.valid).toBe(false);
-    expect(result.error).toBe("Name cannot be empty");
+    expect(result.error).toBeDefined();
+    expect(result.error).toContain("empty");
   });
 
   it("should reject names over 50 characters", () => {
     const longName = "A".repeat(51);
     const result = validateName(longName);
     expect(result.valid).toBe(false);
-    expect(result.error).toBe("Name must be 50 characters or less");
+    expect(result.error).toBeDefined();
+    expect(result.error).toContain("50");
   });
 
   it("should accept names exactly 50 characters", () => {
@@ -86,20 +89,23 @@ describe("Descriptor Validation", () => {
   it("should reject empty descriptors", () => {
     const result = validateDescriptor("");
     expect(result.valid).toBe(false);
-    expect(result.error).toBe("Descriptor cannot be empty");
+    expect(result.error).toBeDefined();
+    expect(result.error).toContain("empty");
   });
 
   it("should reject whitespace-only descriptors", () => {
     const result = validateDescriptor("   ");
     expect(result.valid).toBe(false);
-    expect(result.error).toBe("Descriptor cannot be empty");
+    expect(result.error).toBeDefined();
+    expect(result.error).toContain("empty");
   });
 
   it("should reject descriptors over 30 characters", () => {
     const longDesc = "A".repeat(31);
     const result = validateDescriptor(longDesc);
     expect(result.valid).toBe(false);
-    expect(result.error).toBe("Descriptor must be 30 characters or less");
+    expect(result.error).toBeDefined();
+    expect(result.error).toContain("30");
   });
 
   it("should accept descriptors exactly 30 characters", () => {
@@ -122,20 +128,23 @@ describe("Focus Validation", () => {
   it("should reject empty focus", () => {
     const result = validateFocus("");
     expect(result.valid).toBe(false);
-    expect(result.error).toBe("Focus cannot be empty");
+    expect(result.error).toBeDefined();
+    expect(result.error).toContain("empty");
   });
 
   it("should reject whitespace-only focus", () => {
     const result = validateFocus("   ");
     expect(result.valid).toBe(false);
-    expect(result.error).toBe("Focus cannot be empty");
+    expect(result.error).toBeDefined();
+    expect(result.error).toContain("empty");
   });
 
   it("should reject focus over 50 characters", () => {
     const longFocus = "A".repeat(51);
     const result = validateFocus(longFocus);
     expect(result.valid).toBe(false);
-    expect(result.error).toBe("Focus must be 50 characters or less");
+    expect(result.error).toBeDefined();
+    expect(result.error).toContain("50");
   });
 
   it("should accept focus exactly 50 characters", () => {

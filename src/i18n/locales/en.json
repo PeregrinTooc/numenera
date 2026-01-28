@@ -138,6 +138,18 @@
     "cancel": "Cancel"
   },
   "validation": {
+    "name": {
+      "empty": "Name cannot be empty",
+      "tooLong": "Name must be 50 characters or less"
+    },
+    "descriptor": {
+      "empty": "Descriptor cannot be empty",
+      "tooLong": "Descriptor must be 30 characters or less"
+    },
+    "focus": {
+      "empty": "Focus cannot be empty",
+      "tooLong": "Focus must be 50 characters or less"
+    },
     "recoveryModifier": {
       "invalid": "Recovery modifier must be a number between -10 and 20"
     },

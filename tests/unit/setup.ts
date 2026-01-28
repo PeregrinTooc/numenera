@@ -1,5 +1,10 @@
 // Vitest setup file
 // Runs before each test file
 
-// No setup needed for now
-// This file can be expanded later if we need global test setup
+import { beforeAll } from "vitest";
+import { initI18n } from "../../src/i18n/index.js";
+
+// Initialize i18n before all tests
+beforeAll(async () => {
+  await initI18n();
+});

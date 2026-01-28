@@ -4,7 +4,7 @@
 import { render } from "lit-html";
 import { EditFieldModal } from "../components/EditFieldModal.js";
 import { PortraitDisplayModal } from "../components/PortraitDisplayModal.js";
-import { FieldType } from "../utils/fieldValidation.js";
+import { FieldType } from "../utils/unified-validation.js";
 
 export interface ModalConfig {
   fieldType: FieldType;
