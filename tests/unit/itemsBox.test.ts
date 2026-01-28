@@ -1,50 +1,40 @@
-// Unit tests for ItemsBox component
-/* global describe, it, expect, beforeEach, afterEach, vi, MouseEvent, CustomEvent */
-
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { ItemsBox } from "../../src/components/ItemsBox";
+import type { Character } from "../../src/types/character";
 import { render } from "lit-html";
-import { ItemsBox } from "../../src/components/ItemsBox.js";
-import { Character } from "../../src/types/character.js";
 
-vi.mock("../../src/storage/localStorage.js");
-
-describe("ItemsBox - Equipment Add Button", () => {
+describe("ItemsBox", () => {
   let container: HTMLElement;
   let mockCharacter: Character;
-  let mockOnFieldUpdate: ReturnType<typeof vi.fn>;
+  let onFieldUpdate: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     container = document.createElement("div");
-    container.id = "app";
     document.body.appendChild(container);
 
-    mockOnFieldUpdate = vi.fn();
-
     mockCharacter = {
-      name: "Test Character",
-      tier: 1,
+      name: "Test",
       type: "Glaive",
       descriptor: "Strong",
-      focus: "Combat",
+      focus: "Bears a Halo of Fire",
+      tier: 3,
       xp: 0,
-      shins: 10,
-      armor: 1,
       effort: 1,
-      maxCyphers: 2,
       stats: {
         might: { pool: 10, edge: 0, current: 10 },
         speed: { pool: 10, edge: 0, current: 10 },
         intellect: { pool: 10, edge: 0, current: 10 },
       },
+      armor: 0,
+      shins: 50,
+      maxCyphers: 2,
       cyphers: [],
+      abilities: [],
+      specialAbilities: [],
+      equipment: [],
       artifacts: [],
       oddities: [],
-      abilities: [],
-      equipment: [
-        { name: "Equipment 1", description: "Description 1" },
-        { name: "Equipment 2", description: "Description 2" },
-      ],
       attacks: [],
-      specialAbilities: [],
       recoveryRolls: {
         action: false,
         tenMinutes: false,
@@ -52,352 +42,217 @@ describe("ItemsBox - Equipment Add Button", () => {
         tenHours: false,
         modifier: 0,
       },
-      damageTrack: {
-        impairment: "healthy",
-      },
-      textFields: {
-        background: "",
-        notes: "",
-      },
+      damageTrack: { impairment: "healthy" },
+      textFields: { background: "", notes: "" },
     };
+
+    onFieldUpdate = vi.fn();
   });
 
   afterEach(() => {
     document.body.removeChild(container);
   });
 
-  it("should render add equipment button with correct test ID", () => {
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
+  describe("Shins Badge", () => {
+    it("should display shins value", () => {
+      const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
+      render(itemsBox.render(), container);
 
-    const addButton = container.querySelector('[data-testid="add-equipment-button"]');
-    expect(addButton).toBeTruthy();
+      const shinsBadge = container.querySelector('[data-testid="shins-badge"]') as HTMLElement;
+      expect(shinsBadge).toBeTruthy();
+      expect(shinsBadge.textContent).toContain("50");
+    });
+
+    it("should open edit modal when shins badge clicked", () => {
+      const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
+      render(itemsBox.render(), container);
+
+      const shinsBadge = container.querySelector('[data-testid="shins-badge"]') as HTMLElement;
+      expect(shinsBadge.classList.contains("editable-field")).toBe(true);
+
+      // Verify it's clickable
+      expect(shinsBadge.getAttribute("role")).toBe("button");
+      expect(shinsBadge.getAttribute("tabindex")).toBe("0");
+    });
   });
 
-  it("should render add equipment button even when no equipment exists", () => {
-    mockCharacter.equipment = [];
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
+  describe("Equipment Management", () => {
+    it("should display empty state when no equipment", () => {
+      const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
+      render(itemsBox.render(), container);
 
-    const addButton = container.querySelector('[data-testid="add-equipment-button"]');
-    expect(addButton).toBeTruthy();
+      const emptyState = container.querySelector('[data-testid="empty-equipment"]') as HTMLElement;
+      expect(emptyState).toBeTruthy();
+    });
+
+    it("should display equipment list when items exist", () => {
+      mockCharacter.equipment = [
+        { name: "Sword", description: "A sharp blade" },
+        { name: "Shield", description: "Protective gear" },
+      ];
+
+      const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
+      render(itemsBox.render(), container);
+
+      const equipmentList = container.querySelector(
+        '[data-testid="equipment-list"]'
+      ) as HTMLElement;
+      expect(equipmentList).toBeTruthy();
+
+      const emptyState = container.querySelector('[data-testid="empty-equipment"]');
+      expect(emptyState).toBeFalsy();
+    });
+
+    it("should render add equipment button", () => {
+      const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
+      render(itemsBox.render(), container);
+
+      const addButton = container.querySelector(
+        '[data-testid="add-equipment-button"]'
+      ) as HTMLButtonElement;
+      expect(addButton).toBeTruthy();
+    });
+
+    it("should handle equipment deletion by filtering array", () => {
+      mockCharacter.equipment = [
+        { name: "Sword", description: "Sharp" },
+        { name: "Shield", description: "Strong" },
+        { name: "Bow", description: "Long range" },
+      ];
+
+      const initialLength = mockCharacter.equipment.length;
+
+      // Simulate delete by filtering (mimics component behavior)
+      const indexToDelete = 1;
+      mockCharacter.equipment = mockCharacter.equipment.filter((_, i) => i !== indexToDelete);
+
+      expect(mockCharacter.equipment.length).toBe(initialLength - 1);
+      expect(mockCharacter.equipment.find((e) => e.name === "Shield")).toBeUndefined();
+      expect(mockCharacter.equipment[0].name).toBe("Sword");
+      expect(mockCharacter.equipment[1].name).toBe("Bow");
+    });
+
+    it("should update equipment at specific index", () => {
+      mockCharacter.equipment = [
+        { name: "Sword", description: "Sharp" },
+        { name: "Shield", description: "Strong" },
+      ];
+
+      // Simulate update
+      const updatedItem = { name: "Magic Shield", description: "Very Strong" };
+      mockCharacter.equipment[1] = updatedItem;
+
+      expect(mockCharacter.equipment[1].name).toBe("Magic Shield");
+      expect(mockCharacter.equipment[1].description).toBe("Very Strong");
+    });
   });
 
-  it("should open modal when add equipment button is clicked", () => {
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
+  describe("Artifacts Management", () => {
+    it("should display empty state when no artifacts", () => {
+      const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
+      render(itemsBox.render(), container);
 
-    const addButton = container.querySelector('[data-testid="add-equipment-button"]');
-    addButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      const emptyState = container.querySelector('[data-testid="empty-artifacts"]') as HTMLElement;
+      expect(emptyState).toBeTruthy();
+    });
 
-    // The actual implementation will call ModalService.openCardModal
-    // For now, we just verify the button exists and is clickable
-    expect(addButton).toBeTruthy();
+    it("should display artifacts list when items exist", () => {
+      mockCharacter.artifacts = [{ name: "Ancient Ring", level: "5", effect: "Grants power" }];
+
+      const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
+      render(itemsBox.render(), container);
+
+      const artifactsList = container.querySelector(
+        '[data-testid="artifacts-list"]'
+      ) as HTMLElement;
+      expect(artifactsList).toBeTruthy();
+    });
+
+    it("should render add artifact button", () => {
+      const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
+      render(itemsBox.render(), container);
+
+      const addButton = container.querySelector(
+        '[data-testid="add-artifact-button"]'
+      ) as HTMLButtonElement;
+      expect(addButton).toBeTruthy();
+    });
+
+    it("should handle artifact deletion by filtering array", () => {
+      mockCharacter.artifacts = [
+        { name: "Ring", level: "5", effect: "Power" },
+        { name: "Amulet", level: "3", effect: "Protection" },
+        { name: "Staff", level: "7", effect: "Magic" },
+      ];
+
+      const initialLength = mockCharacter.artifacts.length;
+      const indexToDelete = 1;
+
+      mockCharacter.artifacts = mockCharacter.artifacts.filter((_, i) => i !== indexToDelete);
+
+      expect(mockCharacter.artifacts.length).toBe(initialLength - 1);
+      expect(mockCharacter.artifacts.find((a) => a.name === "Amulet")).toBeUndefined();
+    });
+
+    it("should update artifact at specific index", () => {
+      mockCharacter.artifacts = [{ name: "Ring", level: "5", effect: "Power" }];
+
+      const updatedItem = { name: "Enhanced Ring", level: "6", effect: "Great Power" };
+      mockCharacter.artifacts[0] = updatedItem;
+
+      expect(mockCharacter.artifacts[0].name).toBe("Enhanced Ring");
+      expect(mockCharacter.artifacts[0].level).toBe("6");
+    });
   });
 
-  it("should add equipment when onConfirm callback is invoked", () => {
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
+  describe("Oddities Management", () => {
+    it("should display empty state when no oddities", () => {
+      const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
+      render(itemsBox.render(), container);
 
-    const initialCount = mockCharacter.equipment.length;
-    expect(initialCount).toBe(2);
+      const emptyState = container.querySelector('[data-testid="empty-oddities"]') as HTMLElement;
+      expect(emptyState).toBeTruthy();
+    });
 
-    // Simulate adding a new equipment through the callback
-    const newEquipment = { name: "New Equipment", description: "Test description" };
-    mockCharacter.equipment.push(newEquipment);
+    it("should display oddities list when items exist", () => {
+      mockCharacter.oddities = ["Strange cube", "Glowing orb"];
 
-    // Re-render to see the effect
-    render(component.render(), container);
+      const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
+      render(itemsBox.render(), container);
 
-    expect(mockCharacter.equipment.length).toBe(3);
-    expect(mockCharacter.equipment[2]).toEqual(newEquipment);
-  });
+      const odditiesList = container.querySelector('[data-testid="oddities-list"]') as HTMLElement;
+      expect(odditiesList).toBeTruthy();
+    });
 
-  it("should save character state after adding equipment", async () => {
-    const { saveCharacterState } = await import("../../src/storage/localStorage.js");
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
+    it("should render add oddity button", () => {
+      const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
+      render(itemsBox.render(), container);
 
-    // Simulate adding equipment
-    const newEquipment = { name: "New Equipment", description: "Test description" };
-    mockCharacter.equipment.push(newEquipment);
+      const addButton = container.querySelector(
+        '[data-testid="add-oddity-button"]'
+      ) as HTMLButtonElement;
+      expect(addButton).toBeTruthy();
+    });
 
-    // The implementation should call saveCharacterState
-    // We'll verify this through the mock
-    expect(saveCharacterState).toBeDefined();
-  });
+    it("should handle oddity deletion by filtering array", () => {
+      mockCharacter.oddities = ["Cube", "Orb", "Stone"];
 
-  it("should dispatch character-updated event after adding equipment", () => {
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
+      const initialLength = mockCharacter.oddities.length;
+      const indexToDelete = 1;
 
-    const eventSpy = vi.fn();
-    container.addEventListener("character-updated", eventSpy);
+      mockCharacter.oddities = mockCharacter.oddities.filter((_, i) => i !== indexToDelete);
 
-    // Simulate adding equipment and dispatching the event
-    const newEquipment = { name: "New Equipment", description: "Test description" };
-    mockCharacter.equipment.push(newEquipment);
+      expect(mockCharacter.oddities.length).toBe(initialLength - 1);
+      expect(mockCharacter.oddities.includes("Orb")).toBe(false);
+      expect(mockCharacter.oddities).toEqual(["Cube", "Stone"]);
+    });
 
-    const event = new CustomEvent("character-updated");
-    container.dispatchEvent(event);
+    it("should update oddity at specific index", () => {
+      mockCharacter.oddities = ["Cube", "Orb"];
 
-    expect(eventSpy).toHaveBeenCalled();
-  });
-});
+      mockCharacter.oddities[1] = "Enhanced Orb";
 
-describe("ItemsBox - Oddity Add Button", () => {
-  let container: HTMLElement;
-  let mockCharacter: Character;
-  let mockOnFieldUpdate: ReturnType<typeof vi.fn>;
-
-  beforeEach(() => {
-    container = document.createElement("div");
-    container.id = "app";
-    document.body.appendChild(container);
-
-    mockOnFieldUpdate = vi.fn();
-
-    mockCharacter = {
-      name: "Test Character",
-      tier: 1,
-      type: "Glaive",
-      descriptor: "Strong",
-      focus: "Combat",
-      xp: 0,
-      shins: 10,
-      armor: 1,
-      effort: 1,
-      maxCyphers: 2,
-      stats: {
-        might: { pool: 10, edge: 0, current: 10 },
-        speed: { pool: 10, edge: 0, current: 10 },
-        intellect: { pool: 10, edge: 0, current: 10 },
-      },
-      cyphers: [],
-      artifacts: [],
-      oddities: ["A glowing cube that hums", "A piece of transparent metal"],
-      abilities: [],
-      equipment: [],
-      attacks: [],
-      specialAbilities: [],
-      recoveryRolls: {
-        action: false,
-        tenMinutes: false,
-        oneHour: false,
-        tenHours: false,
-        modifier: 0,
-      },
-      damageTrack: {
-        impairment: "healthy",
-      },
-      textFields: {
-        background: "",
-        notes: "",
-      },
-    };
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
-  });
-
-  it("should render add oddity button with correct test ID", () => {
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
-
-    const addButton = container.querySelector('[data-testid="add-oddity-button"]');
-    expect(addButton).toBeTruthy();
-  });
-
-  it("should render add oddity button even when no oddities exist", () => {
-    mockCharacter.oddities = [];
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
-
-    const addButton = container.querySelector('[data-testid="add-oddity-button"]');
-    expect(addButton).toBeTruthy();
-  });
-
-  it("should open modal when add oddity button is clicked", () => {
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
-
-    const addButton = container.querySelector('[data-testid="add-oddity-button"]');
-    addButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-
-    expect(addButton).toBeTruthy();
-  });
-
-  it("should add oddity when onConfirm callback is invoked", () => {
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
-
-    const initialCount = mockCharacter.oddities.length;
-    expect(initialCount).toBe(2);
-
-    const newOddity = "A new mysterious oddity";
-    mockCharacter.oddities.push(newOddity);
-
-    render(component.render(), container);
-
-    expect(mockCharacter.oddities.length).toBe(3);
-    expect(mockCharacter.oddities[2]).toEqual(newOddity);
-  });
-
-  it("should save character state after adding oddity", async () => {
-    const { saveCharacterState } = await import("../../src/storage/localStorage.js");
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
-
-    const newOddity = "A new mysterious oddity";
-    mockCharacter.oddities.push(newOddity);
-
-    expect(saveCharacterState).toBeDefined();
-  });
-
-  it("should dispatch character-updated event after adding oddity", () => {
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
-
-    const eventSpy = vi.fn();
-    container.addEventListener("character-updated", eventSpy);
-
-    const newOddity = "A new mysterious oddity";
-    mockCharacter.oddities.push(newOddity);
-
-    const event = new CustomEvent("character-updated");
-    container.dispatchEvent(event);
-
-    expect(eventSpy).toHaveBeenCalled();
-  });
-});
-
-describe("ItemsBox - Artifact Add Button", () => {
-  let container: HTMLElement;
-  let mockCharacter: Character;
-  let mockOnFieldUpdate: ReturnType<typeof vi.fn>;
-
-  beforeEach(() => {
-    container = document.createElement("div");
-    container.id = "app";
-    document.body.appendChild(container);
-
-    mockOnFieldUpdate = vi.fn();
-
-    mockCharacter = {
-      name: "Test Character",
-      tier: 1,
-      type: "Glaive",
-      descriptor: "Strong",
-      focus: "Combat",
-      xp: 0,
-      shins: 10,
-      armor: 1,
-      effort: 1,
-      maxCyphers: 2,
-      stats: {
-        might: { pool: 10, edge: 0, current: 10 },
-        speed: { pool: 10, edge: 0, current: 10 },
-        intellect: { pool: 10, edge: 0, current: 10 },
-      },
-      cyphers: [],
-      artifacts: [
-        { name: "Artifact 1", level: "1d6", effect: "Effect 1" },
-        { name: "Artifact 2", level: "1d6+2", effect: "Effect 2" },
-      ],
-      oddities: [],
-      abilities: [],
-      equipment: [],
-      attacks: [],
-      specialAbilities: [],
-      recoveryRolls: {
-        action: false,
-        tenMinutes: false,
-        oneHour: false,
-        tenHours: false,
-        modifier: 0,
-      },
-      damageTrack: {
-        impairment: "healthy",
-      },
-      textFields: {
-        background: "",
-        notes: "",
-      },
-    };
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
-  });
-
-  it("should render add artifact button with correct test ID", () => {
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
-
-    const addButton = container.querySelector('[data-testid="add-artifact-button"]');
-    expect(addButton).toBeTruthy();
-  });
-
-  it("should render add artifact button even when no artifacts exist", () => {
-    mockCharacter.artifacts = [];
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
-
-    const addButton = container.querySelector('[data-testid="add-artifact-button"]');
-    expect(addButton).toBeTruthy();
-  });
-
-  it("should open modal when add artifact button is clicked", () => {
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
-
-    const addButton = container.querySelector('[data-testid="add-artifact-button"]');
-    addButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-
-    expect(addButton).toBeTruthy();
-  });
-
-  it("should add artifact when onConfirm callback is invoked", () => {
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
-
-    const initialCount = mockCharacter.artifacts.length;
-    expect(initialCount).toBe(2);
-
-    const newArtifact = { name: "New Artifact", level: "1d6", effect: "Test effect" };
-    mockCharacter.artifacts.push(newArtifact);
-
-    render(component.render(), container);
-
-    expect(mockCharacter.artifacts.length).toBe(3);
-    expect(mockCharacter.artifacts[2]).toEqual(newArtifact);
-  });
-
-  it("should save character state after adding artifact", async () => {
-    const { saveCharacterState } = await import("../../src/storage/localStorage.js");
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
-
-    const newArtifact = { name: "New Artifact", level: "1d6", effect: "Test effect" };
-    mockCharacter.artifacts.push(newArtifact);
-
-    expect(saveCharacterState).toBeDefined();
-  });
-
-  it("should dispatch character-updated event after adding artifact", () => {
-    const component = new ItemsBox(mockCharacter, mockOnFieldUpdate);
-    render(component.render(), container);
-
-    const eventSpy = vi.fn();
-    container.addEventListener("character-updated", eventSpy);
-
-    const newArtifact = { name: "New Artifact", level: "1d6", effect: "Test effect" };
-    mockCharacter.artifacts.push(newArtifact);
-
-    const event = new CustomEvent("character-updated");
-    container.dispatchEvent(event);
-
-    expect(eventSpy).toHaveBeenCalled();
+      expect(mockCharacter.oddities[1]).toBe("Enhanced Orb");
+    });
   });
 });

@@ -2,7 +2,6 @@
 
 import { html, render, TemplateResult } from "lit-html";
 import { t } from "../i18n/index.js";
-/* global KeyboardEvent, Event */
 import { validateTier } from "../utils/validation.js";
 import {
   FieldType,
@@ -48,12 +47,13 @@ export class EditFieldModal {
   private validate(value: string): boolean {
     this.validationError = null;
 
-    // Special case: tier validation happens in handleConfirm
+    // Special case: tier validation happens on confirm, not during input
+    // This allows out-of-range values to be constrained rather than rejected
     if (this.fieldType === "tier") {
       return true;
     }
 
-    // Use centralized validation
+    // Use centralized validation for other fields
     const result = validateField(this.fieldType, value);
     if (!result.valid) {
       this.validationError = result.error || null;
