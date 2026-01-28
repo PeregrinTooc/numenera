@@ -1,5 +1,4 @@
 // OddityItem component - Displays a single oddity card
-/* global Event, HTMLTextAreaElement */
 
 import { html, TemplateResult } from "lit-html";
 import { t } from "../i18n/index.js";
@@ -43,8 +42,8 @@ export class OddityItem {
               rows="3"
               .value=${this.editedOddity}
               @input=${(e: Event) => {
-        this.editedOddity = (e.target as HTMLTextAreaElement).value;
-      }}
+                this.editedOddity = (e.target as HTMLTextAreaElement).value;
+              }}
             ></textarea>
           </div>
         </div>
@@ -56,13 +55,13 @@ export class OddityItem {
     return html`
       <div data-testid="oddity-item" class="oddity-item-card relative">
         ${renderCardButtons({
-      index: this.index,
-      onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
-      onDelete: this.onDelete,
-      editButtonTestId: `oddity-edit-button-${this.index}`,
-      deleteButtonTestId: `oddity-delete-button-${this.index}`,
-      colorTheme: "indigo",
-    })}
+          index: this.index,
+          onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
+          onDelete: this.onDelete,
+          editButtonTestId: `oddity-edit-button-${this.index}`,
+          deleteButtonTestId: `oddity-delete-button-${this.index}`,
+          colorTheme: "indigo",
+        })}
         <div class="flex justify-between items-start pr-8 pl-8">
           <div data-testid="oddity-${this.oddity}" class="oddity-text flex-1">
             🔮 ${this.oddity}

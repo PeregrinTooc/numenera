@@ -2,7 +2,6 @@
 
 import { html, TemplateResult } from "lit-html";
 import { t } from "../i18n/index.js";
-/* global Event, KeyboardEvent */
 
 export interface PortraitDisplayModalConfig {
   portraitSrc: string;

@@ -1,5 +1,4 @@
 // AttackItem component - Individual attack card with combat styling
-/* global Event, HTMLTextAreaElement */
 
 import { html, TemplateResult } from "lit-html";
 import { Attack } from "../types/character.js";

@@ -1,5 +1,4 @@
 // ArtifactItem component - Displays a single artifact card
-/* global Event, HTMLTextAreaElement */
 
 import { html, TemplateResult } from "lit-html";
 import { Artifact } from "../types/character.js";
@@ -44,8 +43,8 @@ export class ArtifactItem {
               class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-purple-900 font-semibold"
               .value=${this.editedArtifact.name}
               @input=${(e: Event) => {
-        this.editedArtifact.name = (e.target as HTMLInputElement).value;
-      }}
+                this.editedArtifact.name = (e.target as HTMLInputElement).value;
+              }}
             />
           </div>
           <div class="mb-3">
@@ -58,8 +57,8 @@ export class ArtifactItem {
               class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-purple-900 font-semibold"
               .value=${this.editedArtifact.level}
               @input=${(e: Event) => {
-        this.editedArtifact.level = (e.target as HTMLInputElement).value;
-      }}
+                this.editedArtifact.level = (e.target as HTMLInputElement).value;
+              }}
             />
           </div>
           <div class="mb-3">
@@ -72,8 +71,8 @@ export class ArtifactItem {
               rows="3"
               .value=${this.editedArtifact.effect}
               @input=${(e: Event) => {
-        this.editedArtifact.effect = (e.target as HTMLTextAreaElement).value;
-      }}
+                this.editedArtifact.effect = (e.target as HTMLTextAreaElement).value;
+              }}
             ></textarea>
           </div>
         </div>
@@ -85,13 +84,13 @@ export class ArtifactItem {
     return html`
       <div data-testid="artifact-item-${this.artifact.name}" class="artifact-item-card relative">
         ${renderCardButtons({
-      index: this.index,
-      onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
-      onDelete: this.onDelete,
-      editButtonTestId: `artifact-edit-button-${this.index}`,
-      deleteButtonTestId: `artifact-delete-button-${this.index}`,
-      colorTheme: "purple",
-    })}
+          index: this.index,
+          onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
+          onDelete: this.onDelete,
+          editButtonTestId: `artifact-edit-button-${this.index}`,
+          deleteButtonTestId: `artifact-delete-button-${this.index}`,
+          colorTheme: "purple",
+        })}
         <div class="flex justify-between items-start pr-8 pl-8">
           <div class="flex-1">
             <div data-testid="artifact-name-${this.artifact.name}" class="artifact-name">

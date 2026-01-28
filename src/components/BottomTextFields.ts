@@ -4,7 +4,6 @@ import { html, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
 import { t } from "../i18n/index.js";
 import { saveCharacterState } from "../storage/localStorage.js";
-/* global MouseEvent, Event, HTMLTextAreaElement */
 
 export class BottomTextFields {
   private editingField: "background" | "notes" | null = null;

@@ -1,5 +1,4 @@
 // AbilityItem component - Individual ability card with cost, pool, and action information
-/* global Event, HTMLTextAreaElement, HTMLSelectElement */
 
 import { html, TemplateResult } from "lit-html";
 import { Ability } from "../types/character.js";

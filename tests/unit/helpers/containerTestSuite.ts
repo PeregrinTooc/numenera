@@ -1,6 +1,5 @@
 // Shared test suite for container components (Abilities, Attacks, SpecialAbilities, etc.)
 // Promotes DRY principles and consistent testing across all container types
-/* global describe, it, expect, beforeEach, afterEach, vi, MouseEvent */
 
 import { render } from "lit-html";
 

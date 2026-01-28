@@ -1,5 +1,4 @@
 // CyphersBox component - Displays cyphers in a standalone section with max cyphers badge
-/* global CustomEvent */
 
 import { html, TemplateResult } from "lit-html";
 import { Character, Cypher } from "../types/character.js";

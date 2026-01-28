@@ -5,7 +5,6 @@ import { Character } from "../types/character.js";
 import { t } from "../i18n/index.js";
 import { ModalService } from "../services/modalService.js";
 import { saveCharacterState } from "../storage/localStorage.js";
-/* global Event, HTMLSelectElement, CustomEvent, FileReader, alert */
 
 type FieldType = "name" | "tier" | "descriptor" | "focus" | "xp";
 

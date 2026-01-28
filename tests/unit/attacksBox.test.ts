@@ -1,5 +1,4 @@
 // Unit tests for Attacks component - Add Attack Button
-/* global vi */
 import { Attacks } from "../../src/components/Attacks.js";
 import { Character } from "../../src/types/character.js";
 import { testContainerAddButton } from "./helpers/containerTestSuite.js";

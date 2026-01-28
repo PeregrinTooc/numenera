@@ -1,6 +1,5 @@
 // Entry point for the application
 // Minimal bootstrapping - all components are now class-based
-/* global Event, EventListener, alert */
 
 import "./styles/main.css";
 import { render } from "lit-html";

@@ -1,5 +1,4 @@
 // EquipmentItem component - Renders a single equipment item with green theme
-/* global Event, HTMLTextAreaElement */
 
 import { html, TemplateResult } from "lit-html";
 import { EquipmentItem as EquipmentItemType } from "../types/character.js";
@@ -44,8 +43,8 @@ export class EquipmentItem {
               class="w-full bg-transparent border-b-2 border-green-300 focus:border-green-500 px-2 py-1 text-green-900 font-semibold"
               .value=${this.editedItem.name}
               @input=${(e: Event) => {
-        this.editedItem.name = (e.target as HTMLInputElement).value;
-      }}
+                this.editedItem.name = (e.target as HTMLInputElement).value;
+              }}
             />
           </div>
           <div class="mb-3">
@@ -58,8 +57,8 @@ export class EquipmentItem {
               rows="3"
               .value=${this.editedItem.description || ""}
               @input=${(e: Event) => {
-        this.editedItem.description = (e.target as HTMLTextAreaElement).value;
-      }}
+                this.editedItem.description = (e.target as HTMLTextAreaElement).value;
+              }}
             ></textarea>
           </div>
         </div>
@@ -74,19 +73,19 @@ export class EquipmentItem {
         class="equipment-item equipment-item-card relative"
       >
         ${renderCardButtons({
-      index: this.index,
-      onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
-      onDelete: this.onDelete,
-      editButtonTestId: `equipment-edit-button-${this.index}`,
-      deleteButtonTestId: `equipment-delete-button-${this.index}`,
-      colorTheme: "green",
-    })}
+          index: this.index,
+          onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
+          onDelete: this.onDelete,
+          editButtonTestId: `equipment-edit-button-${this.index}`,
+          deleteButtonTestId: `equipment-delete-button-${this.index}`,
+          colorTheme: "green",
+        })}
         <div class="flex justify-between items-start pr-8 pl-8">
           <div class="flex-1">
             <div class="equipment-name">${this.item.name}</div>
             ${this.item.description
-        ? html`<div class="equipment-description">${this.item.description}</div>`
-        : ""}
+              ? html`<div class="equipment-description">${this.item.description}</div>`
+              : ""}
           </div>
         </div>
       </div>

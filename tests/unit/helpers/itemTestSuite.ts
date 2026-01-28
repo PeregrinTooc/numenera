@@ -1,6 +1,5 @@
 // Parameterized test suite for item components (AbilityItem, AttackItem, etc.)
 // Eliminates duplication across all item test files
-/* global describe, it, expect, beforeEach, afterEach, vi */
 
 import { render } from "lit-html";
 import { screen, fireEvent } from "@testing-library/dom";

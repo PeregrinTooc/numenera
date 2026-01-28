@@ -1,5 +1,4 @@
 // CharacterSheet component - Main container that composes all sections
-/* global CustomEvent */
 
 import { html, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";

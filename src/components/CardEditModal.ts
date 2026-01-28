@@ -1,6 +1,5 @@
 // CardEditModal component - Base modal for editing card content
 // Provides consistent modal behavior across all card types
-/* global MouseEvent, KeyboardEvent */
 
 import { html, render, TemplateResult } from "lit-html";
 import { t } from "../i18n/index.js";

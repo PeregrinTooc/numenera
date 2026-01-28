@@ -1,6 +1,5 @@
 // File storage utilities for character import/export
 // Uses File System Access API for Chromium browsers, falls back to input element for others
-/* global Event, Blob, URL */
 
 import { Character } from "../types/character.js";
 import { SCHEMA_VERSION } from "./storageConstants.js";

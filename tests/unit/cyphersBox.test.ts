@@ -1,5 +1,4 @@
 // Unit tests for CyphersBox component
-/* global describe, it, expect, beforeEach, afterEach, vi, MouseEvent, CustomEvent */
 
 import { render } from "lit-html";
 import { CyphersBox } from "../../src/components/CyphersBox.js";

@@ -1,5 +1,4 @@
 // SpecialAbilityItem component - Individual special ability card with teal styling
-/* global Event, HTMLTextAreaElement */
 
 import { html, TemplateResult } from "lit-html";
 import { SpecialAbility } from "../types/character.js";

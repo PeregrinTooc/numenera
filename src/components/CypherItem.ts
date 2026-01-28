@@ -1,5 +1,4 @@
 // CypherItem component - Displays a single cypher card
-/* global HTMLTextAreaElement, Event */
 
 import { html, TemplateResult } from "lit-html";
 import { Cypher } from "../types/character.js";
@@ -42,9 +41,9 @@ export class CypherItem {
               type="text"
               .value=${this.editedCypher.name}
               @input=${(e: Event) => {
-        const target = e.target as HTMLInputElement;
-        this.editedCypher.name = target.value;
-      }}
+                const target = e.target as HTMLInputElement;
+                this.editedCypher.name = target.value;
+              }}
               class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-purple-900 font-semibold"
               placeholder="${t("cyphers.name")}"
               data-testid="edit-cypher-name"
@@ -58,9 +57,9 @@ export class CypherItem {
               type="text"
               .value=${this.editedCypher.level.toString()}
               @input=${(e: Event) => {
-        const target = e.target as HTMLInputElement;
-        this.editedCypher.level = target.value || "1";
-      }}
+                const target = e.target as HTMLInputElement;
+                this.editedCypher.level = target.value || "1";
+              }}
               class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-purple-900 font-semibold"
               placeholder="${t("cyphers.level")}"
               data-testid="edit-cypher-level"
@@ -73,9 +72,9 @@ export class CypherItem {
             <textarea
               .value=${this.editedCypher.effect}
               @input=${(e: Event) => {
-        const target = e.target as HTMLTextAreaElement;
-        this.editedCypher.effect = target.value;
-      }}
+                const target = e.target as HTMLTextAreaElement;
+                this.editedCypher.effect = target.value;
+              }}
               rows="3"
               class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-gray-700"
               placeholder="${t("cyphers.effect")}"
@@ -91,13 +90,13 @@ export class CypherItem {
     return html`
       <div data-testid="cypher-item" class="cypher-item-card relative">
         ${renderCardButtons({
-      index: this.index,
-      onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
-      onDelete: this.onDelete,
-      editButtonTestId: `cypher-edit-button-${this.index}`,
-      deleteButtonTestId: `cypher-delete-button-${this.index}`,
-      colorTheme: "purple",
-    })}
+          index: this.index,
+          onEdit: this.onUpdate ? () => this.handleEdit() : undefined,
+          onDelete: this.onDelete,
+          editButtonTestId: `cypher-edit-button-${this.index}`,
+          deleteButtonTestId: `cypher-delete-button-${this.index}`,
+          colorTheme: "purple",
+        })}
         <div class="flex justify-between items-start mb-2 pr-8 pl-8">
           <div class="flex-1">
             <div data-testid="cypher-name-${this.cypher.name}" class="font-semibold text-lg">

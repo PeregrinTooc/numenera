@@ -22,6 +22,7 @@ export default [
         HTMLButtonElement: "readonly",
         HTMLImageElement: "readonly",
         HTMLSelectElement: "readonly",
+        HTMLTextAreaElement: "readonly",
         setTimeout: "readonly",
         window: "readonly",
         URLSearchParams: "readonly",
@@ -29,11 +30,23 @@ export default [
         Event: "readonly",
         KeyboardEvent: "readonly",
         MouseEvent: "readonly",
+        CustomEvent: "readonly",
+        FileReader: "readonly",
+        Blob: "readonly",
+        URL: "readonly",
+        EventListener: "readonly",
+        alert: "readonly",
         // Node globals
         process: "readonly",
         global: "readonly",
         // Vitest globals
         globalThis: "readonly",
+        describe: "readonly",
+        it: "readonly",
+        expect: "readonly",
+        beforeEach: "readonly",
+        afterEach: "readonly",
+        vi: "readonly",
       },
     },
     plugins: {
@@ -51,6 +64,6 @@ export default [
     },
   },
   {
-    ignores: ["node_modules", "dist", "build", "coverage", "*.config.js", "scripts"],
+    ignores: ["node_modules", "dist", "build", "coverage", "*.config.js", "scripts", "stryker-tmp"],
   },
 ];

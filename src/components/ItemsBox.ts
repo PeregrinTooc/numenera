@@ -1,5 +1,4 @@
 // ItemsBox component - Combines Equipment, Artifacts, and Oddities in a single box with Shins badge
-/* global CustomEvent */
 
 import { html, TemplateResult } from "lit-html";
 import { Character, EquipmentItem as EquipmentItemType, Artifact } from "../types/character.js";
