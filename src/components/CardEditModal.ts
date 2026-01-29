@@ -3,6 +3,12 @@
 
 import { html, render, TemplateResult } from "lit-html";
 import { t } from "../i18n/index.js";
+import {
+  ModalBehavior,
+  ModalContainer,
+  renderModalButtons,
+  FocusTrappingBehavior,
+} from "../services/modalBehavior.js";
 
 export interface CardEditModalConfig {
   content: TemplateResult; // The editable card content
@@ -10,42 +16,31 @@ export interface CardEditModalConfig {
   onCancel: () => void;
 }
 
-export class CardEditModal {
-  private onConfirm: () => void;
-  private onCancel: () => void;
+export class CardEditModal extends ModalBehavior {
   private content: TemplateResult;
 
   constructor(config: CardEditModalConfig) {
-    this.content = config.content;
-    this.onConfirm = config.onConfirm;
-    this.onCancel = config.onCancel;
+    super({
+      onConfirm: config.onConfirm,
+      onCancel: config.onCancel,
+    });
 
-    // Bind methods for event handlers
-    this.handleConfirm = this.handleConfirm.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
-    this.handleBackdropClick = this.handleBackdropClick.bind(this);
+    this.content = config.content;
+
+    // Bind handleKeyDown for Tab key trapping
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
-  private handleConfirm(): void {
-    this.onConfirm();
-  }
+  /**
+   * Override handleKeyDown to add Tab key focus trapping
+   */
+  protected handleKeyDown(e: KeyboardEvent): void {
+    // Handle Escape through base class
+    super.handleKeyDown(e);
 
-  private handleCancel(): void {
-    this.onCancel();
-  }
-
-  private handleBackdropClick(e: MouseEvent): void {
-    // Only close if clicking the backdrop itself, not the modal content
-    if (e.target === e.currentTarget) {
-      this.handleCancel();
-    }
-  }
-
-  private handleKeyDown(e: KeyboardEvent): void {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      this.handleCancel();
+    // Handle Tab key for focus trapping
+    if (e.key === "Tab") {
+      FocusTrappingBehavior.handleTabKey(e, '[data-testid="card-edit-modal"]');
     }
   }
 
@@ -69,56 +64,14 @@ export class CardEditModal {
 
           <!-- Action Buttons -->
           <div class="card-edit-modal-buttons">
-            <!-- Cancel Button -->
-            <button
-              class="card-modal-button cancel"
-              @click=${this.handleCancel}
-              data-testid="card-modal-cancel"
-              aria-label=${t("cards.cancel")}
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
-                <path
-                  d="M8 8L16 16M16 8L8 16"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-              </svg>
-              <span class="button-label">${t("cards.cancel")}</span>
-            </button>
-
-            <!-- Confirm Button -->
-            <button
-              class="card-modal-button confirm"
-              @click=${this.handleConfirm}
-              data-testid="card-modal-confirm"
-              aria-label=${t("cards.confirm")}
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
-                <path
-                  d="M7 12L10.5 15.5L17 9"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <span class="button-label">${t("cards.confirm")}</span>
-            </button>
+            ${renderModalButtons({
+              onConfirm: this.handleConfirm,
+              onCancel: this.handleCancel,
+              confirmLabel: t("cards.confirm"),
+              cancelLabel: t("cards.cancel"),
+              confirmTestId: "card-modal-confirm",
+              cancelTestId: "card-modal-cancel",
+            })}
           </div>
         </div>
       </div>
@@ -130,32 +83,27 @@ export class CardEditModal {
  * Service function to open a card edit modal
  */
 export function openCardEditModal(config: CardEditModalConfig): void {
-  // Create modal container
-  const modalContainer = document.createElement("div");
-  document.body.appendChild(modalContainer);
+  // Create modal container using helper
+  const container = new ModalContainer();
 
   // Create modal with cleanup callbacks
   const modal = new CardEditModal({
     content: config.content,
     onConfirm: () => {
       config.onConfirm();
-      closeCardEditModal(modalContainer);
+      container.remove();
     },
     onCancel: () => {
       config.onCancel();
-      closeCardEditModal(modalContainer);
+      container.remove();
     },
   });
 
   // Render modal
-  render(modal.render(), modalContainer);
-}
+  render(modal.render(), container.getElement());
 
-/**
- * Closes the modal and removes it from DOM
- */
-function closeCardEditModal(modalContainer: HTMLElement): void {
-  if (modalContainer.parentNode) {
-    document.body.removeChild(modalContainer);
-  }
+  // Auto-focus first input field in the modal
+  container.focusElement(
+    '[data-testid="card-edit-modal"] input, [data-testid="card-edit-modal"] textarea'
+  );
 }
