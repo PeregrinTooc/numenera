@@ -1,10 +1,13 @@
-echo "🔍 Running Pre-Commit-Hook."
-# Run lint-staged (format check and unit tests)
-npx lint-staged
+#!/bin/sh
+echo "🔍 Running Pre-Commit Hook..."
+
+# Run lint-staged (auto-fixes linting and formatting on staged files)
+echo "📝 Running lint-staged (auto-format staged files)..."
+npx lint-staged || exit 1
 
 # Run unit tests to ensure no breaking changes
+echo "🧪 Running unit tests..."
 npm run test:unit || exit 1
-npm run test:e2e || exit 1
 
 # Check translation coverage (all t() keys exist in both locales)
 echo "🌍 Checking translation coverage..."

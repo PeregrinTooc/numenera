@@ -5,6 +5,7 @@ import { render } from "lit-html";
 import { EditFieldModal } from "../components/EditFieldModal.js";
 import { PortraitDisplayModal } from "../components/PortraitDisplayModal.js";
 import { FieldType } from "../utils/unified-validation.js";
+import { ModalContainer } from "./modalBehavior.js";
 
 export interface ModalConfig {
   fieldType: FieldType;
@@ -19,9 +20,8 @@ export interface ModalConfig {
  */
 export class ModalService {
   static openEditModal(config: ModalConfig): void {
-    // Create modal container
-    const modalContainer = document.createElement("div");
-    document.body.appendChild(modalContainer);
+    // Create modal container using helper
+    const container = new ModalContainer();
 
     // Create modal with cleanup callbacks
     const modal = new EditFieldModal({
@@ -29,34 +29,19 @@ export class ModalService {
       currentValue: config.currentValue,
       onConfirm: (newValue) => {
         config.onConfirm(newValue);
-        this.closeModal(modalContainer);
+        container.remove();
       },
       onCancel: () => {
         config.onCancel?.();
-        this.closeModal(modalContainer);
+        container.remove();
       },
     });
 
     // Render modal
-    render(modal.render(), modalContainer);
+    render(modal.render(), container.getElement());
 
     // Focus and select input after render
-    this.focusModalInput(modalContainer);
-  }
-
-  /**
-   * Focuses the modal input field and selects its content
-   */
-  private static focusModalInput(modalContainer: HTMLElement): void {
-    setTimeout(() => {
-      const input = modalContainer.querySelector<HTMLInputElement>(
-        '[data-testid="edit-modal-input"]'
-      );
-      if (input) {
-        input.focus();
-        input.select();
-      }
-    }, 0);
+    container.focusElement('[data-testid="edit-modal-input"]', true);
   }
 
   /**
@@ -64,36 +49,21 @@ export class ModalService {
    * Handles modal creation, rendering, and cleanup automatically
    */
   static openPortraitModal(portraitSrc: string): void {
-    // Create modal container
-    const modalContainer = document.createElement("div");
-    document.body.appendChild(modalContainer);
+    // Create modal container using helper
+    const container = new ModalContainer();
 
     // Create modal with cleanup callback
     const modal = new PortraitDisplayModal({
       portraitSrc,
       onClose: () => {
-        this.closeModal(modalContainer);
+        container.remove();
       },
     });
 
     // Render modal
-    render(modal.render(), modalContainer);
+    render(modal.render(), container.getElement());
 
     // Focus the modal for keyboard navigation
-    setTimeout(() => {
-      const backdrop = modalContainer.querySelector<HTMLElement>(".portrait-display-backdrop");
-      if (backdrop) {
-        backdrop.focus();
-      }
-    }, 0);
-  }
-
-  /**
-   * Closes the modal and removes it from DOM
-   */
-  private static closeModal(modalContainer: HTMLElement): void {
-    if (modalContainer.parentNode) {
-      document.body.removeChild(modalContainer);
-    }
+    container.focusElement(".portrait-display-backdrop");
   }
 }

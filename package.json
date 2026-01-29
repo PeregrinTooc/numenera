@@ -24,8 +24,8 @@
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "check:i18n": "node scripts/check-translation-coverage.js",
-    "format": "prettier --write \"src/**/*.{ts,tsx,css,html}\" || true",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,css,html}\" || true",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,html}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css,html}\"",
     "prepare": "husky"
   },
   "lint-staged": {

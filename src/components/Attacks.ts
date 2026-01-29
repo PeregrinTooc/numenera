@@ -5,16 +5,31 @@ import { Character, Attack } from "../types/character.js";
 import { AttackItem } from "./AttackItem.js";
 import { ModalService } from "../services/modalService.js";
 import { t } from "../i18n/index.js";
+import {
+  createAddHandler,
+  createItemInstances,
+  renderAddButton,
+} from "./helpers/CollectionBehavior.js";
 
 type FieldType = "armor";
 
 export class Attacks {
+  private handleAddAttack: () => void;
+
   constructor(
     private character: Character,
     private onFieldUpdate: (field: FieldType, value: number) => void,
     private onAttackUpdate?: (index: number, updated: Attack) => void,
     private onAttackDelete?: (index: number) => void
-  ) {}
+  ) {
+    // Create add handler using CollectionBehavior helper
+    this.handleAddAttack = createAddHandler({
+      emptyItem: { name: "", damage: 0, modifier: 0, range: "" },
+      ItemComponentClass: AttackItem,
+      collection: this.character.attacks,
+      onUpdate: this.onAttackUpdate,
+    });
+  }
 
   private openEditModal(fieldType: FieldType): void {
     const currentValue = this.character.armor;
@@ -28,31 +43,18 @@ export class Attacks {
     });
   }
 
-  private handleAddAttack(): void {
-    // Create temporary attack with empty fields
-    const tempAttack: Attack = {
-      name: "",
-      damage: 0,
-      modifier: 0,
-      range: "",
-    };
-
-    // Create temporary AttackItem to leverage its edit UI
-    const tempItem = new AttackItem(tempAttack, -1, (updated) => {
-      // Add the new attack to the character's attacks array
-      if (this.onAttackUpdate) {
-        this.character.attacks.push(updated);
-        const newIndex = this.character.attacks.length - 1;
-        this.onAttackUpdate(newIndex, updated);
-      }
-    });
-
-    // Open the edit modal with the temporary item's UI
-    tempItem.handleEdit();
-  }
-
   render(): TemplateResult {
     const isEmpty = !this.character.attacks || this.character.attacks.length === 0;
+
+    // Create attack item instances using CollectionBehavior helper
+    const attackItems = isEmpty
+      ? []
+      : createItemInstances({
+          collection: this.character.attacks,
+          ItemComponentClass: AttackItem,
+          onUpdate: this.onAttackUpdate,
+          onDelete: this.onAttackDelete,
+        });
 
     return html`
       <div data-testid="attacks-section" class="mt-8">
@@ -60,30 +62,12 @@ export class Attacks {
           <div class="flex items-center gap-3">
             <h2 class="text-2xl font-serif font-bold text-gray-700">${t("attacks.title")} ⚔️</h2>
             ${this.onAttackUpdate
-              ? html`
-                  <button
-                    @click=${() => this.handleAddAttack()}
-                    class="add-button p-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-full transition-colors"
-                    data-testid="add-attack-button"
-                    aria-label="Add Attack"
-                    title="Add Attack"
-                  >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M12 5v14M5 12h14"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                      />
-                    </svg>
-                  </button>
-                `
+              ? renderAddButton({
+                  onClick: this.handleAddAttack,
+                  testId: "add-attack-button",
+                  colorTheme: "red",
+                  ariaLabel: "Add Attack",
+                })
               : ""}
           </div>
           <div
@@ -109,22 +93,7 @@ export class Attacks {
               </div>
             `
           : html`
-              <div class="grid grid-cols-1 gap-4">
-                ${this.character.attacks.map((attack, index) =>
-                  new AttackItem(
-                    attack,
-                    index,
-                    this.onAttackUpdate
-                      ? (updated) => this.onAttackUpdate!(index, updated)
-                      : undefined,
-                    this.onAttackDelete
-                      ? () => {
-                          this.onAttackDelete!(index);
-                        }
-                      : undefined
-                  ).render()
-                )}
-              </div>
+              <div class="grid grid-cols-1 gap-4">${attackItems.map((item) => item.render())}</div>
             `}
       </div>
     `;

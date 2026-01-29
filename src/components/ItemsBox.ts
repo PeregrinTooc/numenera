@@ -1,21 +1,51 @@
 // ItemsBox component - Combines Equipment, Artifacts, and Oddities in a single box with Shins badge
 
 import { html, TemplateResult } from "lit-html";
-import { Character, EquipmentItem as EquipmentItemType, Artifact } from "../types/character.js";
+import { Character } from "../types/character.js";
 import { EquipmentItem } from "./EquipmentItem.js";
 import { ArtifactItem } from "./ArtifactItem.js";
 import { OddityItem } from "./OddityItem.js";
 import { ModalService } from "../services/modalService.js";
 import { t } from "../i18n/index.js";
-import { saveCharacterState } from "../storage/localStorage.js";
+import {
+  createAddHandler,
+  createItemInstances,
+  renderAddButton,
+} from "./helpers/CollectionBehavior.js";
 
 type FieldType = "shins";
 
 export class ItemsBox {
+  private handleAddEquipment: () => void;
+  private handleAddArtifact: () => void;
+  private handleAddOddity: () => void;
+
   constructor(
     private character: Character,
     private onFieldUpdate: (field: FieldType, value: number) => void
-  ) {}
+  ) {
+    // Create add handlers using CollectionBehavior helper (event-based pattern)
+    this.handleAddEquipment = createAddHandler({
+      emptyItem: { name: "", description: "" },
+      ItemComponentClass: EquipmentItem,
+      collection: this.character.equipment,
+      character: this.character,
+    });
+
+    this.handleAddArtifact = createAddHandler({
+      emptyItem: { name: "", level: "", effect: "" },
+      ItemComponentClass: ArtifactItem,
+      collection: this.character.artifacts,
+      character: this.character,
+    });
+
+    this.handleAddOddity = createAddHandler({
+      emptyItem: "",
+      ItemComponentClass: OddityItem,
+      collection: this.character.oddities,
+      character: this.character,
+    });
+  }
 
   private openEditModal(fieldType: FieldType): void {
     const currentValue = this.character.shins;
@@ -29,108 +59,25 @@ export class ItemsBox {
     });
   }
 
-  private handleAddEquipment(): void {
-    const emptyEquipment: EquipmentItemType = { name: "", description: "" };
-    const tempItem = new EquipmentItem(emptyEquipment, -1, (updated) => {
-      this.character.equipment.push(updated);
-      saveCharacterState(this.character);
-      const event = new CustomEvent("character-updated");
-      document.getElementById("app")?.dispatchEvent(event);
-    });
-    tempItem.handleEdit();
-  }
-
-  private handleAddArtifact(): void {
-    const emptyArtifact: Artifact = { name: "", level: "", effect: "" };
-    const tempItem = new ArtifactItem(emptyArtifact, -1, (updated) => {
-      this.character.artifacts.push(updated);
-      saveCharacterState(this.character);
-      const event = new CustomEvent("character-updated");
-      document.getElementById("app")?.dispatchEvent(event);
-    });
-    tempItem.handleEdit();
-  }
-
-  private handleAddOddity(): void {
-    const emptyOddity = "";
-    const tempItem = new OddityItem(emptyOddity, -1, (updated) => {
-      this.character.oddities.push(updated);
-      saveCharacterState(this.character);
-      const event = new CustomEvent("character-updated");
-      document.getElementById("app")?.dispatchEvent(event);
-    });
-    tempItem.handleEdit();
-  }
-
   render(): TemplateResult {
-    const equipmentItems = this.character.equipment.map(
-      (item, index) =>
-        new EquipmentItem(
-          item,
-          index,
-          (updated) => {
-            this.character.equipment[index] = updated;
-            saveCharacterState(this.character);
-            // Trigger re-render via character-updated event
-            const event = new CustomEvent("character-updated");
-            document.getElementById("app")?.dispatchEvent(event);
-          },
-          () => {
-            // Delete handler: filter out the equipment at this index
-            this.character.equipment = this.character.equipment.filter((_, i) => i !== index);
-            saveCharacterState(this.character);
-            // Trigger re-render via character-updated event
-            const event = new CustomEvent("character-updated");
-            document.getElementById("app")?.dispatchEvent(event);
-          }
-        )
-    );
+    // Create item instances using CollectionBehavior helper (event-based pattern)
+    const equipmentItems = createItemInstances({
+      collection: this.character.equipment,
+      ItemComponentClass: EquipmentItem,
+      character: this.character,
+    });
 
-    const artifactItems = this.character.artifacts.map(
-      (artifact, index) =>
-        new ArtifactItem(
-          artifact,
-          index,
-          (updated) => {
-            this.character.artifacts[index] = updated;
-            saveCharacterState(this.character);
-            // Trigger re-render via character-updated event
-            const event = new CustomEvent("character-updated");
-            document.getElementById("app")?.dispatchEvent(event);
-          },
-          () => {
-            // Delete handler: filter out the artifact at this index
-            this.character.artifacts = this.character.artifacts.filter((_, i) => i !== index);
-            saveCharacterState(this.character);
-            // Trigger re-render via character-updated event
-            const event = new CustomEvent("character-updated");
-            document.getElementById("app")?.dispatchEvent(event);
-          }
-        )
-    );
+    const artifactItems = createItemInstances({
+      collection: this.character.artifacts,
+      ItemComponentClass: ArtifactItem,
+      character: this.character,
+    });
 
-    const oddityItems = this.character.oddities.map(
-      (oddity, index) =>
-        new OddityItem(
-          oddity,
-          index,
-          (updated) => {
-            this.character.oddities[index] = updated;
-            saveCharacterState(this.character);
-            // Trigger re-render via character-updated event
-            const event = new CustomEvent("character-updated");
-            document.getElementById("app")?.dispatchEvent(event);
-          },
-          () => {
-            // Delete handler: filter out the oddity at this index
-            this.character.oddities = this.character.oddities.filter((_, i) => i !== index);
-            saveCharacterState(this.character);
-            // Trigger re-render via character-updated event
-            const event = new CustomEvent("character-updated");
-            document.getElementById("app")?.dispatchEvent(event);
-          }
-        )
-    );
+    const oddityItems = createItemInstances({
+      collection: this.character.oddities,
+      ItemComponentClass: OddityItem,
+      character: this.character,
+    });
 
     return html`
       <div data-testid="items-section" class="section-box">
@@ -155,27 +102,12 @@ export class ItemsBox {
             <h3 data-testid="equipment-heading" class="subsection-heading">
               ${t("equipment.heading")}
             </h3>
-            <button
-              @click=${() => this.handleAddEquipment()}
-              data-testid="add-equipment-button"
-              class="add-card-button"
-              aria-label="Add equipment"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 5v14M5 12h14"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </button>
+            ${renderAddButton({
+              onClick: this.handleAddEquipment,
+              testId: "add-equipment-button",
+              colorTheme: "green",
+              ariaLabel: "Add equipment",
+            })}
           </div>
           ${this.character.equipment.length === 0
             ? html`
@@ -201,27 +133,12 @@ export class ItemsBox {
               <h3 data-testid="artifacts-heading" class="subsection-heading">
                 ${t("artifacts.heading")}
               </h3>
-              <button
-                @click=${() => this.handleAddArtifact()}
-                data-testid="add-artifact-button"
-                class="add-card-button"
-                aria-label="Add artifact"
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 5v14M5 12h14"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </button>
+              ${renderAddButton({
+                onClick: this.handleAddArtifact,
+                testId: "add-artifact-button",
+                colorTheme: "purple",
+                ariaLabel: "Add artifact",
+              })}
             </div>
             ${this.character.artifacts.length === 0
               ? html`
@@ -242,27 +159,12 @@ export class ItemsBox {
               <h3 data-testid="oddities-heading" class="subsection-heading">
                 ${t("oddities.heading")}
               </h3>
-              <button
-                @click=${() => this.handleAddOddity()}
-                data-testid="add-oddity-button"
-                class="add-card-button"
-                aria-label="Add oddity"
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 5v14M5 12h14"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </button>
+              ${renderAddButton({
+                onClick: this.handleAddOddity,
+                testId: "add-oddity-button",
+                colorTheme: "indigo",
+                ariaLabel: "Add oddity",
+              })}
             </div>
             ${this.character.oddities.length === 0
               ? html`

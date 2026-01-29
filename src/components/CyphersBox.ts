@@ -1,19 +1,33 @@
 // CyphersBox component - Displays cyphers in a standalone section with max cyphers badge
 
 import { html, TemplateResult } from "lit-html";
-import { Character, Cypher } from "../types/character.js";
+import { Character } from "../types/character.js";
 import { CypherItem } from "./CypherItem.js";
 import { ModalService } from "../services/modalService.js";
 import { t } from "../i18n/index.js";
-import { saveCharacterState } from "../storage/localStorage.js";
+import {
+  createAddHandler,
+  createItemInstances,
+  renderAddButton,
+} from "./helpers/CollectionBehavior.js";
 
 type FieldType = "maxCyphers";
 
 export class CyphersBox {
+  private handleAddCypher: () => void;
+
   constructor(
     private character: Character,
     private onFieldUpdate: (field: FieldType, value: number) => void
-  ) {}
+  ) {
+    // Create add handler using CollectionBehavior helper (event-based pattern)
+    this.handleAddCypher = createAddHandler({
+      emptyItem: { name: "", level: "", effect: "" },
+      ItemComponentClass: CypherItem,
+      collection: this.character.cyphers,
+      character: this.character,
+    });
+  }
 
   private openEditModal(fieldType: FieldType): void {
     const currentValue = this.character.maxCyphers;
@@ -27,50 +41,13 @@ export class CyphersBox {
     });
   }
 
-  private handleAddCypher(): void {
-    // Create empty cypher for editing
-    const emptyCypher: Cypher = { name: "", level: "", effect: "" };
-
-    // Create temporary CypherItem with onUpdate callback that adds to array
-    const tempItem = new CypherItem(
-      emptyCypher,
-      -1, // temporary index
-      (updated) => {
-        // onUpdate callback - add the new cypher to array
-        this.character.cyphers.push(updated);
-        saveCharacterState(this.character);
-        const event = new CustomEvent("character-updated");
-        document.getElementById("app")?.dispatchEvent(event);
-      }
-    );
-
-    // Trigger edit on this temporary item
-    tempItem.handleEdit();
-  }
-
   render(): TemplateResult {
-    const cypherItems = this.character.cyphers.map(
-      (cypher, index) =>
-        new CypherItem(
-          cypher,
-          index,
-          (updated) => {
-            this.character.cyphers[index] = updated;
-            saveCharacterState(this.character);
-            // Trigger re-render via character-updated event
-            const event = new CustomEvent("character-updated");
-            document.getElementById("app")?.dispatchEvent(event);
-          },
-          () => {
-            // Delete handler: filter out the cypher at this index
-            this.character.cyphers = this.character.cyphers.filter((_, i) => i !== index);
-            saveCharacterState(this.character);
-            // Trigger re-render via character-updated event
-            const event = new CustomEvent("character-updated");
-            document.getElementById("app")?.dispatchEvent(event);
-          }
-        )
-    );
+    // Create cypher item instances using CollectionBehavior helper (event-based pattern)
+    const cypherItems = createItemInstances({
+      collection: this.character.cyphers,
+      ItemComponentClass: CypherItem,
+      character: this.character,
+    });
 
     return html`
       <div data-testid="cyphers-section" class="section-box">
@@ -93,27 +70,12 @@ export class CyphersBox {
 
         <h2 data-testid="cyphers-heading" class="section-box-heading">
           ${t("cyphers.heading")}
-          <button
-            data-testid="add-cypher-button"
-            @click=${() => this.handleAddCypher()}
-            class="add-button ml-2"
-            aria-label="Add Cypher"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-          </button>
+          ${renderAddButton({
+            onClick: this.handleAddCypher,
+            testId: "add-cypher-button",
+            colorTheme: "purple",
+            ariaLabel: "Add Cypher",
+          })}
         </h2>
 
         ${this.character.cyphers.length === 0

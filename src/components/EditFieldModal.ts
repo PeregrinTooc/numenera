@@ -1,7 +1,6 @@
 // EditFieldModal component - Modal for editing character fields
 
 import { html, render, TemplateResult } from "lit-html";
-import { t } from "../i18n/index.js";
 import {
   FieldType,
   validateField,
@@ -13,6 +12,11 @@ import {
   getMaxLength,
   isNumericField,
 } from "../utils/unified-validation.js";
+import {
+  ModalBehavior,
+  FocusTrappingBehavior,
+  renderModalButtons,
+} from "../services/modalBehavior.js";
 
 interface EditFieldModalConfig {
   fieldType: FieldType;
@@ -21,26 +25,25 @@ interface EditFieldModalConfig {
   onCancel: () => void;
 }
 
-export class EditFieldModal {
+export class EditFieldModal extends ModalBehavior {
   private fieldType: FieldType;
   private currentValue: string;
-  private onConfirm: (newValue: string | number) => void;
-  private onCancel: () => void;
+  private onConfirmWithValue: (newValue: string | number) => void;
   private inputValue: string;
   private validationError: string | null = null;
 
   constructor(config: EditFieldModalConfig) {
+    super({
+      onConfirm: () => this.handleConfirmWithValidation(),
+      onCancel: config.onCancel,
+    });
+
     this.fieldType = config.fieldType;
     this.currentValue = String(config.currentValue);
-    this.onConfirm = config.onConfirm;
-    this.onCancel = config.onCancel;
+    this.onConfirmWithValue = config.onConfirm;
     this.inputValue = this.currentValue;
 
-    // Bind methods for event handlers
-    this.handleConfirm = this.handleConfirm.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
-    this.handleBackdropClick = this.handleBackdropClick.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
+    // Bind additional methods for event handlers
     this.handleInput = this.handleInput.bind(this);
   }
 
@@ -95,87 +98,34 @@ export class EditFieldModal {
     }
   }
 
-  private handleConfirm(): void {
+  private handleConfirmWithValidation(): void {
     if (this.fieldType === "tier") {
       // Apply tier constraints
       const validated = validateTier(this.inputValue);
-      this.onConfirm(validated);
+      this.onConfirmWithValue(validated);
     } else if (isNumericField(this.fieldType)) {
       // Validate and convert to number
       if (this.validate(this.inputValue)) {
-        this.onConfirm(parseInt(this.inputValue, 10));
+        this.onConfirmWithValue(parseInt(this.inputValue, 10));
       }
     } else {
       // Validate text fields
       if (this.validate(this.inputValue)) {
-        this.onConfirm(this.inputValue.trim());
+        this.onConfirmWithValue(this.inputValue.trim());
       }
     }
   }
 
-  private handleCancel(): void {
-    this.onCancel();
-  }
+  protected handleKeyDown(e: KeyboardEvent): void {
+    // Handle Escape through base class
+    super.handleKeyDown(e);
 
-  private handleBackdropClick(e: Event): void {
-    // Only close if clicking the backdrop itself, not the modal content
-    if (e.target === e.currentTarget) {
-      this.handleCancel();
-    }
-  }
-
-  private handleKeyDown(e: KeyboardEvent): void {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      this.handleCancel();
-    } else if (e.key === "Enter") {
+    // Handle Enter key
+    if (e.key === "Enter") {
       e.preventDefault();
       this.handleConfirm();
     } else if (e.key === "Tab") {
-      this.handleTabKey(e);
-    }
-  }
-
-  private handleTabKey(e: KeyboardEvent): void {
-    // Get all focusable elements in the modal
-    const modalContent = document.querySelector('[data-testid="edit-modal"]');
-    if (!modalContent) return;
-
-    const focusableElements = modalContent.querySelectorAll(
-      "input:not([disabled]), button:not([disabled])"
-    );
-    const focusableArray = Array.from(focusableElements) as HTMLElement[];
-
-    if (focusableArray.length === 0) return;
-
-    const firstElement = focusableArray[0];
-    const lastElement = focusableArray[focusableArray.length - 1];
-    const activeElement = document.activeElement as HTMLElement;
-
-    // Check if current focus is within our focusable elements
-    const currentIndex = focusableArray.indexOf(activeElement);
-
-    // Always trap Tab key when modal is open
-    e.preventDefault();
-
-    if (e.shiftKey) {
-      // Shift+Tab: moving backwards
-      if (currentIndex <= 0) {
-        // At or before first element, wrap to last
-        lastElement.focus();
-      } else {
-        // Move to previous element
-        focusableArray[currentIndex - 1].focus();
-      }
-    } else {
-      // Tab: moving forwards
-      if (currentIndex < 0 || currentIndex >= focusableArray.length - 1) {
-        // Not in list or at last element, wrap to first
-        firstElement.focus();
-      } else {
-        // Move to next element
-        focusableArray[currentIndex + 1].focus();
-      }
+      FocusTrappingBehavior.handleTabKey(e, '[data-testid="edit-modal"]');
     }
   }
 
@@ -215,61 +165,11 @@ export class EditFieldModal {
             : ""}
 
           <!-- Action Buttons -->
-          <div class="edit-modal-buttons">
-            <!-- Cancel Button -->
-            <button
-              class="edit-modal-button cancel"
-              @click=${this.handleCancel}
-              data-testid="modal-cancel-button"
-              aria-label=${t("modal.edit.cancel")}
-            >
-              <!-- X Icon (SVG) -->
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
-                <path
-                  d="M8 8L16 16M16 8L8 16"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-              </svg>
-              <span class="button-label">${t("modal.edit.cancel")}</span>
-            </button>
-
-            <!-- Confirm Button -->
-            <button
-              class="edit-modal-button confirm"
-              @click=${this.handleConfirm}
-              ?disabled=${!isValid}
-              data-testid="modal-confirm-button"
-              aria-label=${t("modal.edit.confirm")}
-            >
-              <!-- Checkmark Icon (SVG) -->
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
-                <path
-                  d="M7 12L10.5 15.5L17 9"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <span class="button-label">${t("modal.edit.confirm")}</span>
-            </button>
-          </div>
+          ${renderModalButtons({
+            onConfirm: this.handleConfirm,
+            onCancel: this.handleCancel,
+            confirmDisabled: !isValid,
+          })}
         </div>
       </div>
     `;

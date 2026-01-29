@@ -269,7 +269,7 @@ describe("EditFieldModal", () => {
       expect(onCancel).toHaveBeenCalled();
     });
 
-    it("should handle Tab key for focus trap", () => {
+    it("should trap focus with Tab key - handler is called but on wrong element", () => {
       const modal = new EditFieldModal({
         fieldType: "xp",
         currentValue: 5,
@@ -280,20 +280,72 @@ describe("EditFieldModal", () => {
       render(modal.render(), container);
 
       const input = container.querySelector('[data-testid="edit-modal-input"]') as HTMLInputElement;
-      const cancelButton = container.querySelector(
-        '[data-testid="modal-cancel-button"]'
-      ) as HTMLButtonElement;
 
-      // Focus input
+      // Start: Focus input
       input.focus();
       expect(document.activeElement).toBe(input);
 
-      // Press Tab
-      const tabEvent = new KeyboardEvent("keydown", { key: "Tab", bubbles: true });
-      container.querySelector('[data-testid="modal-backdrop"]')?.dispatchEvent(tabEvent);
+      // The current implementation: @keydown is on the backdrop
+      // So when we dispatch from input, it bubbles to backdrop and IS handled
+      const tabEventFromInput = new KeyboardEvent("keydown", {
+        key: "Tab",
+        bubbles: true,
+        cancelable: true,
+      });
+      input.dispatchEvent(tabEventFromInput);
 
-      // Focus should move (test that handler is called)
-      expect(cancelButton).toBeTruthy();
+      // This DOES work currently because the event bubbles to backdrop
+      expect(tabEventFromInput.defaultPrevented).toBe(true);
+
+      // BUT: The real bug is timing - in a browser, Tab moves focus BEFORE keydown bubbles
+      // The fix is to attach @keydown to the modal content div instead of backdrop
+      // After the fix, we should verify the handler is on the modal content:
+      const modalContent = container.querySelector('[data-testid="edit-modal"]') as HTMLElement;
+      expect(modalContent).toBeTruthy();
+
+      // This test documents the issue: the handler works via bubbling,
+      // but in real browsers, focus escapes before the handler can prevent it
+    });
+
+    it("should have keydown handler on modal content for proper focus trapping", () => {
+      const modal = new EditFieldModal({
+        fieldType: "xp",
+        currentValue: 5,
+        onConfirm: vi.fn(),
+        onCancel: vi.fn(),
+      });
+
+      render(modal.render(), container);
+
+      const modalContent = container.querySelector('[data-testid="edit-modal"]') as HTMLElement;
+
+      // Create an external element to test focus escape
+      const externalButton = document.createElement("button");
+      externalButton.textContent = "External";
+      document.body.appendChild(externalButton);
+
+      try {
+        const input = container.querySelector(
+          '[data-testid="edit-modal-input"]'
+        ) as HTMLInputElement;
+        input.focus();
+
+        // Dispatch Tab event that would normally move focus
+        const tabEvent = new KeyboardEvent("keydown", {
+          key: "Tab",
+          bubbles: true,
+          cancelable: true,
+        });
+
+        // The bug: If handler is on backdrop (aria-hidden), focus can escape
+        // The fix: Handler should be on modalContent (role="dialog")
+        modalContent.dispatchEvent(tabEvent);
+
+        // After fix, Tab should be prevented
+        expect(tabEvent.defaultPrevented).toBe(true);
+      } finally {
+        document.body.removeChild(externalButton);
+      }
     });
   });
 
