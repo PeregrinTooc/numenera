@@ -11,6 +11,9 @@ Given("a character is currently displayed", async function () {
 When('I click the "New" button', async function () {
   const newButton = this.page.getByTestId("new-button");
   await newButton.click();
+
+  // Save is now immediate, just wait for UI to settle
+  await this.page.waitForTimeout(100);
 });
 
 Then("the character sheet should show empty states", async function () {

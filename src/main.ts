@@ -195,8 +195,16 @@ function renderCharacterSheet(character: Character): void {
   if (needsNewSheet) {
     currentSheet = new CharacterSheet(
       character,
-      () => renderCharacterSheet(FULL_CHARACTER),
-      () => renderCharacterSheet(NEW_CHARACTER),
+      () => {
+        renderCharacterSheet(FULL_CHARACTER);
+        // Save immediately when loading a character
+        saveCharacterState(FULL_CHARACTER);
+      },
+      () => {
+        renderCharacterSheet(NEW_CHARACTER);
+        // Save immediately when creating new character
+        saveCharacterState(NEW_CHARACTER);
+      },
       handleLoadFromFile,
       handleExport,
       handleFieldUpdate,

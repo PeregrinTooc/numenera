@@ -66,21 +66,31 @@ Given("my browser does not support File System Access API", async function () {
 });
 
 Given("the character name is {string}", async function (name: string) {
-  // Update the character name in localStorage
-  await this.page.evaluate((characterName: string) => {
-    const stateStr = localStorage.getItem("numenera-character-state");
-    if (stateStr) {
-      const character = JSON.parse(stateStr);
-      character.name = characterName;
-      localStorage.setItem("numenera-character-state", JSON.stringify(character));
-    }
-  }, name);
-
-  // Reload to apply the change
-  await this.page.reload({ waitUntil: "domcontentloaded" });
-
-  // Wait for the name to be visible
+  // Click on the name field to open the modal
   const nameElement = this.page.getByTestId("character-name");
+  await nameElement.click();
+
+  // Fill in the new name
+  const input = this.page.locator('[data-testid="edit-modal-input"]');
+  await input.fill(name);
+
+  // Click confirm
+  await this.page.click('[data-testid="modal-confirm-button"]');
+
+  // Wait for modal to close
+  await this.page
+    .waitForSelector('[data-testid="edit-modal"]', {
+      state: "hidden",
+      timeout: 2000,
+    })
+    .catch(() => {
+      // Modal might already be hidden
+    });
+
+  // Wait for auto-save to complete (debounce is 300ms, wait a bit longer)
+  await this.page.waitForTimeout(500);
+
+  // Verify the name was updated
   await expect(nameElement).toHaveText(name, { timeout: 5000 });
 });
 
