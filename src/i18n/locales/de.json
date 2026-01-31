@@ -210,5 +210,8 @@
       "empty": "Keine Notizen",
       "placeholder": "Zum Bearbeiten klicken..."
     }
+  },
+  "autoSave": {
+    "lastSaved": "Zuletzt gespeichert"
   }
 }

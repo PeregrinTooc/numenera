@@ -6,6 +6,8 @@ import { render } from "lit-html";
 import { saveCharacterState, loadCharacterState } from "./storage/localStorage";
 import { importCharacterFromFile } from "./storage/fileStorage.js";
 import { ExportManager } from "./storage/exportManager.js";
+import { AutoSaveService } from "./services/autoSaveService.js";
+import { SaveIndicator } from "./components/SaveIndicator.js";
 import { Character } from "./types/character.js";
 import { FULL_CHARACTER, NEW_CHARACTER } from "./data/mockCharacters.js";
 import { CharacterSheet } from "./components/CharacterSheet.js";
@@ -17,10 +19,41 @@ let currentSheet: CharacterSheet | null = null;
 // Global ExportManager instance
 const exportManager = new ExportManager();
 
+// Global AutoSaveService instance with 300ms debounce
+const autoSaveService = new AutoSaveService(() => {
+  if (currentCharacter) {
+    saveCharacterState(currentCharacter);
+  }
+}, 300);
+
+// Global SaveIndicator instance
+const saveIndicator = new SaveIndicator();
+
+// Listen for save-completed events to update indicator
+autoSaveService.on("save-completed", (event) => {
+  saveIndicator.updateTimestamp(event.timestamp);
+  // Re-render to show updated indicator
+  const app = document.getElementById("app");
+  if (app && currentSheet) {
+    render(currentSheet.render(), app);
+    // Re-render indicator separately to avoid full sheet re-render
+    const indicatorContainer = document.getElementById("save-indicator-container");
+    if (indicatorContainer) {
+      render(saveIndicator.render(), indicatorContainer);
+    }
+  }
+});
+
+// Track current character for auto-save
+let currentCharacter: Character | null = null;
+
 // Render the character sheet with the given character data
 function renderCharacterSheet(character: Character): void {
   const app = document.getElementById("app");
   if (!app) return;
+
+  // Update current character for auto-save
+  currentCharacter = character;
 
   // Handler for field updates
   const handleFieldUpdate = (field: string, value: string | number): void => {
@@ -83,8 +116,8 @@ function renderCharacterSheet(character: Character): void {
         break;
     }
 
-    // Save to localStorage
-    saveCharacterState(updatedCharacter);
+    // Request auto-save (debounced)
+    autoSaveService.requestSave();
 
     // Re-render with updated character
     renderCharacterSheet(updatedCharacter);
@@ -178,13 +211,25 @@ function renderCharacterSheet(character: Character): void {
     render(currentSheet.render(), app);
   }
 
-  // Save character state to localStorage after rendering
-  saveCharacterState(character);
+  // Render save indicator in separate container
+  let indicatorContainer = document.getElementById("save-indicator-container");
+  if (!indicatorContainer) {
+    indicatorContainer = document.createElement("div");
+    indicatorContainer.id = "save-indicator-container";
+    document.body.appendChild(indicatorContainer);
+  }
+  render(saveIndicator.render(), indicatorContainer);
 
-  // Listen for character-updated events and re-render
+  // Request auto-save (debounced) - initial render doesn't trigger save
+  // Only subsequent changes will trigger auto-save
+
+  // Listen for character-updated events and re-render + auto-save
   // Use setTimeout to ensure the event listener is added after render completes
   setTimeout(() => {
     const listener = (_e: Event) => {
+      // Trigger auto-save when character is updated
+      autoSaveService.requestSave();
+
       // Just re-render with the same sheet instance to preserve component state
       if (currentSheet) {
         render(currentSheet.render(), app);

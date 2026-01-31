@@ -210,5 +210,8 @@
       "empty": "No notes",
       "placeholder": "Click to edit notes..."
     }
+  },
+  "autoSave": {
+    "lastSaved": "Last saved"
   }
 }
