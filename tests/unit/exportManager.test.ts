@@ -53,6 +53,37 @@ function createMockHandle(name = "character.json") {
   } as unknown as FileSystemFileHandle;
 }
 
+// Helper to setup export test with File System Access API
+function setupExportTest() {
+  const mockHandle = createMockHandle();
+  (window as any).showSaveFilePicker = vi.fn().mockResolvedValue(mockHandle);
+  return { mockHandle };
+}
+
+// Helper to setup download test (non-Chromium)
+function setupDownloadTest() {
+  delete (window as any).showSaveFilePicker;
+  const createElementSpy = vi.spyOn(document, "createElement");
+  const mockLink = {
+    click: vi.fn(),
+    download: "",
+    href: "",
+  };
+  createElementSpy.mockReturnValue(mockLink as any);
+  return { mockLink, createElementSpy };
+}
+
+// Helper to verify valid file structure
+function expectValidFileStructure(data: string) {
+  expect(data).toBeTruthy();
+  const parsed = JSON.parse(data);
+  expect(parsed).toHaveProperty("version");
+  expect(parsed).toHaveProperty("schemaVersion");
+  expect(parsed).toHaveProperty("exportDate");
+  expect(parsed).toHaveProperty("character");
+  return parsed;
+}
+
 // Helper to setup IndexedDB mock
 function setupIndexedDBMock() {
   const store = new Map();
@@ -176,8 +207,7 @@ describe("ExportManager", () => {
 
   describe("export() - First Time Export", () => {
     it("should prompt for location on first export in Chromium", async () => {
-      const mockHandle = createMockHandle();
-      (window as any).showSaveFilePicker = vi.fn().mockResolvedValue(mockHandle);
+      setupExportTest();
 
       await exportManager.export(mockCharacter);
 
@@ -193,22 +223,23 @@ describe("ExportManager", () => {
     });
 
     it("should save file to selected location", async () => {
-      const mockHandle = createMockHandle();
+      const { mockHandle } = setupExportTest();
       const writableMock = await mockHandle.createWritable();
-      (window as any).showSaveFilePicker = vi.fn().mockResolvedValue(mockHandle);
 
       await exportManager.export(mockCharacter);
 
       expect(mockHandle.createWritable).toHaveBeenCalled();
-      expect(writableMock.write).toHaveBeenCalledWith(
-        expect.stringContaining('"name": "Glaive Warrior"')
-      );
+
+      // Verify the written data has valid structure
+      const writtenData = (writableMock.write as any).mock.calls[0][0];
+      const parsed = expectValidFileStructure(writtenData);
+      expect(parsed.character.name).toBe("Glaive Warrior");
+
       expect(writableMock.close).toHaveBeenCalled();
     });
 
     it("should remember file handle after first export", async () => {
-      const mockHandle = createMockHandle();
-      (window as any).showSaveFilePicker = vi.fn().mockResolvedValue(mockHandle);
+      setupExportTest();
 
       await exportManager.export(mockCharacter);
 
@@ -216,8 +247,7 @@ describe("ExportManager", () => {
     });
 
     it("should dispatch handle-updated event after first export", async () => {
-      const mockHandle = createMockHandle();
-      (window as any).showSaveFilePicker = vi.fn().mockResolvedValue(mockHandle);
+      setupExportTest();
 
       const eventSpy = vi.fn();
       window.addEventListener("export-handle-updated", eventSpy);
@@ -239,15 +269,7 @@ describe("ExportManager", () => {
     });
 
     it("should use fallback download in non-Chromium browsers", async () => {
-      delete (window as any).showSaveFilePicker;
-
-      const createElementSpy = vi.spyOn(document, "createElement");
-      const mockLink = {
-        click: vi.fn(),
-        download: "",
-        href: "",
-      };
-      createElementSpy.mockReturnValue(mockLink as any);
+      const { mockLink } = setupDownloadTest();
 
       await exportManager.export(mockCharacter);
 
@@ -264,8 +286,7 @@ describe("ExportManager", () => {
     });
 
     it("should save to remembered location without prompting", async () => {
-      const mockHandle = createMockHandle();
-      (window as any).showSaveFilePicker = vi.fn().mockResolvedValue(mockHandle);
+      const { mockHandle } = setupExportTest();
 
       // First export to set handle
       await exportManager.export(mockCharacter);
@@ -288,8 +309,8 @@ describe("ExportManager", () => {
     });
 
     it("should dispatch success event after quick export", async () => {
-      const mockHandle = createMockHandle("test.json");
-      (window as any).showSaveFilePicker = vi.fn().mockResolvedValue(mockHandle);
+      const _mockHandle = createMockHandle("test.json");
+      (window as any).showSaveFilePicker = vi.fn().mockResolvedValue(_mockHandle);
 
       await exportManager.export(mockCharacter);
       await new Promise((resolve) => setTimeout(resolve, 10));
@@ -411,8 +432,7 @@ describe("ExportManager", () => {
 
   describe("clearRememberedLocation()", () => {
     it("should clear stored file handle", async () => {
-      const mockHandle = createMockHandle();
-      (window as any).showSaveFilePicker = vi.fn().mockResolvedValue(mockHandle);
+      setupExportTest();
 
       await exportManager.export(mockCharacter);
       expect(exportManager.hasRememberedLocation()).toBe(true);
@@ -434,15 +454,7 @@ describe("ExportManager", () => {
 
   describe("Filename Generation", () => {
     it("should generate filename from character name", async () => {
-      delete (window as any).showSaveFilePicker;
-
-      const createElementSpy = vi.spyOn(document, "createElement");
-      const mockLink = {
-        click: vi.fn(),
-        download: "",
-        href: "",
-      };
-      createElementSpy.mockReturnValue(mockLink as any);
+      const { mockLink } = setupDownloadTest();
 
       await exportManager.export(mockCharacter);
 
@@ -453,15 +465,7 @@ describe("ExportManager", () => {
       const specialCharacter = { ...mockCharacter };
       specialCharacter.name = "Test@Character #1";
 
-      delete (window as any).showSaveFilePicker;
-
-      const createElementSpy = vi.spyOn(document, "createElement");
-      const mockLink = {
-        click: vi.fn(),
-        download: "",
-        href: "",
-      };
-      createElementSpy.mockReturnValue(mockLink as any);
+      const { mockLink } = setupDownloadTest();
 
       await exportManager.export(specialCharacter);
 
@@ -469,15 +473,7 @@ describe("ExportManager", () => {
     });
 
     it("should use .numenera extension", async () => {
-      delete (window as any).showSaveFilePicker;
-
-      const createElementSpy = vi.spyOn(document, "createElement");
-      const mockLink = {
-        click: vi.fn(),
-        download: "",
-        href: "",
-      };
-      createElementSpy.mockReturnValue(mockLink as any);
+      const { mockLink } = setupDownloadTest();
 
       await exportManager.export(mockCharacter);
 

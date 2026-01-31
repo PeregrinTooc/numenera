@@ -106,20 +106,22 @@ function renderCharacterSheet(character: Character): void {
     }
   };
 
+  // Helper to update header button state after export operations
+  const updateHeaderButtonState = (): void => {
+    if (currentSheet && (currentSheet as any).header) {
+      (currentSheet as any).header.setHasRememberedLocation(exportManager.hasRememberedLocation());
+      // Trigger re-render to show new buttons
+      if (app) {
+        render(currentSheet.render(), app);
+      }
+    }
+  };
+
   // Handler for first export (or fallback for non-Chromium)
   const handleExport = async (): Promise<void> => {
     try {
       await exportManager.export(character);
-      // After successful export, update header button state
-      if (currentSheet && (currentSheet as any).header) {
-        (currentSheet as any).header.setHasRememberedLocation(
-          exportManager.hasRememberedLocation()
-        );
-        // Trigger re-render to show new buttons
-        if (app) {
-          render(currentSheet.render(), app);
-        }
-      }
+      updateHeaderButtonState();
     } catch (error) {
       console.error("Error exporting character:", error);
       alert(
@@ -143,16 +145,7 @@ function renderCharacterSheet(character: Character): void {
   const handleSaveAs = async (): Promise<void> => {
     try {
       await exportManager.saveAs(character);
-      // After successful Save As, update header button state
-      if (currentSheet && (currentSheet as any).header) {
-        (currentSheet as any).header.setHasRememberedLocation(
-          exportManager.hasRememberedLocation()
-        );
-        // Trigger re-render to update buttons
-        if (app) {
-          render(currentSheet.render(), app);
-        }
-      }
+      updateHeaderButtonState();
     } catch (error) {
       console.error("Error in save as:", error);
       alert(`Failed to save file: ${error instanceof Error ? error.message : String(error)}`);
