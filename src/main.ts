@@ -3,7 +3,7 @@
 
 import "./styles/main.css";
 import { render } from "lit-html";
-import { saveCharacterState, loadCharacterState } from "./storage/localStorage";
+import { saveCharacterState, loadCharacterState } from "./storage/storageFactory.js";
 import { importCharacterFromFile } from "./storage/fileStorage.js";
 import { ExportManager } from "./storage/exportManager.js";
 import { AutoSaveService } from "./services/autoSaveService.js";
@@ -265,8 +265,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   await initI18n();
 
   // Re-render on language change
-  onLanguageChanged(() => {
-    const storedCharacter = loadCharacterState();
+  onLanguageChanged(async () => {
+    const storedCharacter = await loadCharacterState();
     if (storedCharacter) {
       renderCharacterSheet(storedCharacter);
     } else {
@@ -275,7 +275,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // Priority: localStorage > default
-  const storedCharacter = loadCharacterState();
+  const storedCharacter = await loadCharacterState();
 
   // Select and render initial character data
   const initialCharacter = storedCharacter || FULL_CHARACTER;
