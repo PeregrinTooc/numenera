@@ -7,4 +7,9 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+npm run test:e2e:prod || {
+  echo "❌ End-to-end tests failed! Fix the issues before pushing."
+  exit 1
+}
+
 echo "✅ Build successful! Proceeding with push..."
