@@ -87,9 +87,17 @@ Given("the character is {string}", async function (impairmentStatus: string) {
   // Reload page to pick up the changes
   await this.page.reload({ waitUntil: "domcontentloaded" });
 
-  // Wait for character to be fully loaded and rendered
+  // Wait for damage track section to be visible and correct radio button to be selected
   await this.page.waitForSelector('[data-testid="damage-track-section"]', { state: "visible" });
-  await this.page.waitForTimeout(500);
+  const sanitized = impairmentStatus.toLowerCase();
+  await this.page.waitForFunction(
+    (status: string) => {
+      const radio = document.querySelector(`[data-testid="damage-${status}"]`) as HTMLInputElement;
+      return radio?.checked === true;
+    },
+    sanitized,
+    { timeout: 2000 }
+  );
 });
 
 Then("the {string} radio button should be selected", async function (status: string) {
@@ -147,9 +155,18 @@ Given("the character has recovery modifier {int}", async function (modifier: num
   // Reload page to pick up the changes
   await this.page.reload({ waitUntil: "domcontentloaded" });
 
-  // Wait for character to be fully loaded and rendered
-  await this.page.waitForSelector('[data-testid="recovery-rolls-section"]', { state: "visible" });
-  await this.page.waitForTimeout(500);
+  // Wait for recovery modifier display to show correct value
+  // The display shows "1d6 + X" format
+  await this.page.waitForFunction(
+    (expectedModifier: number) => {
+      const display = document.querySelector('[data-testid="recovery-modifier-display"]');
+      const sign = expectedModifier >= 0 ? "+" : "";
+      const expectedText = `1d6 ${sign} ${expectedModifier}`;
+      return display?.textContent?.includes(expectedText) === true;
+    },
+    modifier,
+    { timeout: 2000 }
+  );
 });
 
 Then("I should see {string} in the recovery section", async function (text: string) {

@@ -136,9 +136,15 @@ Given("the character has {int} XP", async function (this: CustomWorld, xp: numbe
   }, wrappedState);
   await this.page!.reload();
   await this.page!.waitForLoadState("domcontentloaded");
-  // Wait for character to be fully loaded
-  await this.page!.waitForSelector('[data-testid="xp-badge"]', { state: "visible" });
-  await this.page!.waitForTimeout(200);
+  // Wait for XP badge to show correct value
+  await this.page!.waitForFunction(
+    (expectedXp) => {
+      const badge = document.querySelector('[data-testid="xp-badge"] .stat-badge-value');
+      return badge?.textContent === String(expectedXp);
+    },
+    xp,
+    { timeout: 2000 }
+  );
 });
 
 Given("the character has {int} shins", async function (this: CustomWorld, shins: number) {
@@ -148,9 +154,15 @@ Given("the character has {int} shins", async function (this: CustomWorld, shins:
   }, wrappedState);
   await this.page!.reload();
   await this.page!.waitForLoadState("domcontentloaded");
-  // Wait for character to be fully loaded
-  await this.page!.waitForSelector('[data-testid="shins-badge"]', { state: "visible" });
-  await this.page!.waitForTimeout(200);
+  // Wait for shins badge to show correct value
+  await this.page!.waitForFunction(
+    (expectedShins) => {
+      const badge = document.querySelector('[data-testid="shins-badge"] .stat-badge-value');
+      return badge?.textContent === String(expectedShins);
+    },
+    shins,
+    { timeout: 2000 }
+  );
 });
 
 Given("the character has {int} armor", async function (this: CustomWorld, armor: number) {
@@ -160,9 +172,15 @@ Given("the character has {int} armor", async function (this: CustomWorld, armor:
   }, wrappedState);
   await this.page!.reload();
   await this.page!.waitForLoadState("domcontentloaded");
-  // Wait for character to be fully loaded
-  await this.page!.waitForSelector('[data-testid="armor-value"]', { state: "visible" });
-  await this.page!.waitForTimeout(200);
+  // Wait for armor value to show correct value
+  await this.page!.waitForFunction(
+    (expectedArmor) => {
+      const element = document.querySelector('[data-testid="armor-value"]');
+      return element?.textContent === String(expectedArmor);
+    },
+    armor,
+    { timeout: 2000 }
+  );
 });
 
 Given(
@@ -174,9 +192,15 @@ Given(
     }, wrappedState);
     await this.page!.reload();
     await this.page!.waitForLoadState("domcontentloaded");
-    // Wait for character to be fully loaded
-    await this.page!.waitForSelector('[data-testid="max-cyphers-value"]', { state: "visible" });
-    await this.page!.waitForTimeout(200);
+    // Wait for max cyphers value to show correct value
+    await this.page!.waitForFunction(
+      (expectedMaxCyphers) => {
+        const element = document.querySelector('[data-testid="max-cyphers-value"]');
+        return element?.textContent === String(expectedMaxCyphers);
+      },
+      maxCyphers,
+      { timeout: 2000 }
+    );
   }
 );
 
@@ -187,9 +211,15 @@ Given("the character has effort {int}", async function (this: CustomWorld, effor
   }, wrappedState);
   await this.page!.reload();
   await this.page!.waitForLoadState("domcontentloaded");
-  // Wait for character to be fully loaded
-  await this.page!.waitForSelector('[data-testid="effort-value"]', { state: "visible" });
-  await this.page!.waitForTimeout(200);
+  // Wait for effort value to show correct value
+  await this.page!.waitForFunction(
+    (expectedEffort) => {
+      const element = document.querySelector('[data-testid="effort-value"]');
+      return element?.textContent === String(expectedEffort);
+    },
+    effort,
+    { timeout: 2000 }
+  );
 });
 
 // ============================================================================
