@@ -6,6 +6,8 @@
     "load": "Beispiel laden",
     "import": "Importieren",
     "export": "Exportieren",
+    "quickExport": "Schnellexport",
+    "saveAs": "Speichern unter...",
     "new": "Neu",
     "close": "Schließen"
   },

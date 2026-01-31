@@ -36,6 +36,16 @@ export default [
         URL: "readonly",
         EventListener: "readonly",
         alert: "readonly",
+        // File System Access API
+        FileSystemFileHandle: "readonly",
+        FileSystemWritableFileStream: "readonly",
+        // IndexedDB
+        IDBDatabase: "readonly",
+        IDBOpenDBRequest: "readonly",
+        indexedDB: "readonly",
+        // Standard browser APIs
+        DOMException: "readonly",
+        PermissionState: "readonly",
         // Node globals
         process: "readonly",
         global: "readonly",

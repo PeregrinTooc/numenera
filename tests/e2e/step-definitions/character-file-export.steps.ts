@@ -28,16 +28,19 @@ Given("the character has name {string}", async function (name: string) {
 When("I click the export button", async function () {
   // Mock the file export functionality to capture the data
   await this.page.evaluate(() => {
-    // Store original functions
-    const originalCreateElement = document.createElement.bind(document);
+    // Clear previous data
+    delete (window as any).__exportedFilename;
+    delete (window as any).__exportedData;
 
-    // Mock showSaveFilePicker (Chromium)
+    // Mock showSaveFilePicker (Chromium) - used by ExportManager
     (window as any).showSaveFilePicker = async (options: any) => {
       // Capture the filename
       (window as any).__exportedFilename = options.suggestedName;
 
       // Return a mock file handle
       return {
+        name: options.suggestedName,
+        kind: "file",
         createWritable: async () => ({
           write: async (data: string) => {
             // Capture the exported data
@@ -45,23 +48,33 @@ When("I click the export button", async function () {
           },
           close: async () => {},
         }),
+        queryPermission: async () => "granted",
       };
     };
 
-    // Mock createElement for blob download (Safari/Firefox)
+    // Store original createElement
+    const originalCreateElement = document.createElement.bind(document);
+
+    // Mock createElement for blob download (Safari/Firefox fallback)
     document.createElement = function (tagName: string) {
       const element = originalCreateElement(tagName);
       if (tagName === "a") {
         // Override click to capture download info
         element.click = function () {
-          (window as any).__exportedFilename = (element as any).download;
-          // Extract data from blob URL
-          (window as any)
-            .fetch((element as any).href)
-            .then((res: any) => res.text())
-            .then((data: any) => {
-              (window as any).__exportedData = data;
-            });
+          const anchor = element as any;
+          (window as any).__exportedFilename = anchor.download;
+
+          // Extract data from blob URL if present
+          if (anchor.href && anchor.href.startsWith("blob:")) {
+            window
+              .fetch(anchor.href)
+              .then((res: any) => res.text())
+              .then((data: any) => {
+                (window as any).__exportedData = data;
+              });
+          }
+
+          // Don't actually trigger download in test
         };
       }
       return element;
@@ -72,8 +85,8 @@ When("I click the export button", async function () {
   const exportButton = this.page.getByTestId("export-button");
   await exportButton.click();
 
-  // Wait a moment for the export to complete
-  await this.page.waitForTimeout(500);
+  // Wait for the export to complete
+  await this.page.waitForTimeout(1000);
 
   // Retrieve the captured data
   const capturedData = await this.page.evaluate(() => {

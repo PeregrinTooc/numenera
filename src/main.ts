@@ -4,7 +4,8 @@
 import "./styles/main.css";
 import { render } from "lit-html";
 import { saveCharacterState, loadCharacterState } from "./storage/localStorage";
-import { importCharacterFromFile, exportCharacterToFile } from "./storage/fileStorage.js";
+import { importCharacterFromFile } from "./storage/fileStorage.js";
+import { ExportManager } from "./storage/exportManager.js";
 import { Character } from "./types/character.js";
 import { FULL_CHARACTER, NEW_CHARACTER } from "./data/mockCharacters.js";
 import { CharacterSheet } from "./components/CharacterSheet.js";
@@ -12,6 +13,9 @@ import { initI18n, onLanguageChanged } from "./i18n/index.js";
 
 // Global CharacterSheet instance to preserve state across re-renders
 let currentSheet: CharacterSheet | null = null;
+
+// Global ExportManager instance
+const exportManager = new ExportManager();
 
 // Render the character sheet with the given character data
 function renderCharacterSheet(character: Character): void {
@@ -102,16 +106,56 @@ function renderCharacterSheet(character: Character): void {
     }
   };
 
-  // Handler for exporting character to file
-  const handleExportToFile = async (): Promise<void> => {
+  // Handler for first export (or fallback for non-Chromium)
+  const handleExport = async (): Promise<void> => {
     try {
-      await exportCharacterToFile(character);
-      // Export complete - no feedback needed (file save dialog handles it)
+      await exportManager.export(character);
+      // After successful export, update header button state
+      if (currentSheet && (currentSheet as any).header) {
+        (currentSheet as any).header.setHasRememberedLocation(
+          exportManager.hasRememberedLocation()
+        );
+        // Trigger re-render to show new buttons
+        if (app) {
+          render(currentSheet.render(), app);
+        }
+      }
     } catch (error) {
       console.error("Error exporting character:", error);
       alert(
         `Failed to export character: ${error instanceof Error ? error.message : String(error)}`
       );
+    }
+  };
+
+  // Handler for Quick Export
+  const handleQuickExport = async (): Promise<void> => {
+    try {
+      await exportManager.quickExport(character);
+      // Success feedback is handled by export-success event
+    } catch (error) {
+      console.error("Error in quick export:", error);
+      alert(`Failed to save file: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  };
+
+  // Handler for Save As
+  const handleSaveAs = async (): Promise<void> => {
+    try {
+      await exportManager.saveAs(character);
+      // After successful Save As, update header button state
+      if (currentSheet && (currentSheet as any).header) {
+        (currentSheet as any).header.setHasRememberedLocation(
+          exportManager.hasRememberedLocation()
+        );
+        // Trigger re-render to update buttons
+        if (app) {
+          render(currentSheet.render(), app);
+        }
+      }
+    } catch (error) {
+      console.error("Error in save as:", error);
+      alert(`Failed to save file: ${error instanceof Error ? error.message : String(error)}`);
     }
   };
 
@@ -125,9 +169,16 @@ function renderCharacterSheet(character: Character): void {
       () => renderCharacterSheet(FULL_CHARACTER),
       () => renderCharacterSheet(NEW_CHARACTER),
       handleLoadFromFile,
-      handleExportToFile,
-      handleFieldUpdate
+      handleExport,
+      handleFieldUpdate,
+      handleQuickExport,
+      handleSaveAs
     );
+  }
+
+  // Update header with current export manager state
+  if (currentSheet && (currentSheet as any).header) {
+    (currentSheet as any).header.setHasRememberedLocation(exportManager.hasRememberedLocation());
   }
 
   if (currentSheet) {
