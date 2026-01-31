@@ -85,7 +85,10 @@ Given("the character is {string}", async function (impairmentStatus: string) {
   }, impairmentStatus);
 
   // Reload page to pick up the changes
-  await this.page.reload();
+  await this.page.reload({ waitUntil: "domcontentloaded" });
+
+  // Wait for character to be fully loaded and rendered
+  await this.page.waitForSelector('[data-testid="damage-track-section"]', { state: "visible" });
   await this.page.waitForTimeout(500);
 });
 
@@ -142,7 +145,10 @@ Given("the character has recovery modifier {int}", async function (modifier: num
   }, modifier);
 
   // Reload page to pick up the changes
-  await this.page.reload();
+  await this.page.reload({ waitUntil: "domcontentloaded" });
+
+  // Wait for character to be fully loaded and rendered
+  await this.page.waitForSelector('[data-testid="recovery-rolls-section"]', { state: "visible" });
   await this.page.waitForTimeout(500);
 });
 

@@ -48,7 +48,7 @@ autoSaveService.on("save-completed", (event) => {
 let currentCharacter: Character | null = null;
 
 // Render the character sheet with the given character data
-function renderCharacterSheet(character: Character): void {
+function renderCharacterSheet(character: Character, skipImmediateSave = false): void {
   const app = document.getElementById("app");
   if (!app) return;
 
@@ -122,8 +122,8 @@ function renderCharacterSheet(character: Character): void {
     // Request auto-save (debounced) - will now save the updated character
     autoSaveService.requestSave();
 
-    // Re-render with updated character
-    renderCharacterSheet(updatedCharacter);
+    // Re-render with updated character (skip immediate save since we're using debounced auto-save)
+    renderCharacterSheet(updatedCharacter, true);
   };
 
   // Handler for importing character from file
@@ -220,6 +220,12 @@ function renderCharacterSheet(character: Character): void {
 
   if (currentSheet) {
     render(currentSheet.render(), app);
+  }
+
+  // Save character state to localStorage after rendering
+  // Skip immediate save only when explicitly requested (e.g., during field updates that use debounced auto-save)
+  if (!skipImmediateSave) {
+    saveCharacterState(character);
   }
 
   // Render save indicator in separate container

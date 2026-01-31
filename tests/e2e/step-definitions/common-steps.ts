@@ -86,6 +86,8 @@ When("I click the Confirm button", async function (this: CustomWorld) {
   }).catch(() => {
     // Modal might already be hidden
   });
+  // Wait for auto-save to complete (300ms debounce + buffer)
+  await this.page!.waitForTimeout(600);
 });
 
 When("I click the Cancel button", async function (this: CustomWorld) {
@@ -181,6 +183,8 @@ When("I click the modal confirm button", async function (this: CustomWorld) {
   }).catch(() => {
     // Modal might already be hidden
   });
+  // Wait for auto-save to complete (300ms debounce + buffer)
+  await this.page!.waitForTimeout(600);
 });
 
 When("I click the modal cancel button", async function (this: CustomWorld) {
