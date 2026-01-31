@@ -60,6 +60,8 @@ When("I click the confirm button", async function (this: CustomWorld) {
     }).catch(() => {
       // Modal might already be hidden
     });
+    // Wait for auto-save to complete (debounce is 300ms, wait a bit longer)
+    await this.page!.waitForTimeout(500);
   }
   // If button is disabled, don't click (next step will verify disabled state)
 });
@@ -77,6 +79,8 @@ When("I tap the confirm button", async function (this: CustomWorld) {
   }).catch(() => {
     // Modal might already be hidden
   });
+  // Wait for auto-save to complete (debounce is 300ms, wait a bit longer)
+  await this.page!.waitForTimeout(500);
 });
 
 // ============================================================================

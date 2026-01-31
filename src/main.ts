@@ -116,7 +116,10 @@ function renderCharacterSheet(character: Character): void {
         break;
     }
 
-    // Request auto-save (debounced)
+    // Update currentCharacter BEFORE requesting auto-save
+    currentCharacter = updatedCharacter;
+
+    // Request auto-save (debounced) - will now save the updated character
     autoSaveService.requestSave();
 
     // Re-render with updated character
