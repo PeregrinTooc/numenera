@@ -102,7 +102,6 @@ export class VersionWarningBanner {
     // Restore button (compact)
     const restoreButton = document.createElement("button");
     restoreButton.setAttribute("data-testid", "version-restore-button");
-    restoreButton.setAttribute("data-read-only-exempt", "true");
     restoreButton.style.cssText = `
             background: rgb(217, 119, 6);
             color: white;

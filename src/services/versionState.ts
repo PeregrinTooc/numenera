@@ -110,9 +110,39 @@ export class VersionState {
   }
 
   /**
-   * Restore to latest version (exit read-only mode)
+   * Restore to latest version (navigate to most recent)
    */
   restoreToLatest(): void {
+    this.currentVersionIndex = this.allVersions.length - 1;
+    this.displayedCharacter = this.latestCharacter;
+  }
+
+  /**
+   * Restore current displayed version by saving it as a new version at the end
+   * This is different from restoreToLatest - it takes the old version and makes it the new latest
+   */
+  async restoreCurrentVersion(): Promise<void> {
+    if (!this.isViewingOldVersion()) {
+      // Already at latest, nothing to restore
+      return;
+    }
+
+    const metadata = this.getCurrentVersionMetadata();
+    if (!metadata) {
+      return;
+    }
+
+    // Save the currently displayed (old) character as a new version
+    const description = `Restored: ${metadata.description}`;
+    await this.versionHistory.saveVersion(this.displayedCharacter, description);
+
+    // Update latest character to the restored one
+    this.latestCharacter = this.displayedCharacter;
+
+    // Reload versions to include the new one
+    await this.reload();
+
+    // Navigate to the new latest version
     this.currentVersionIndex = this.allVersions.length - 1;
     this.displayedCharacter = this.latestCharacter;
   }

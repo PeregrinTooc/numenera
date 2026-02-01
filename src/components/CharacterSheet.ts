@@ -16,7 +16,6 @@ import { BottomTextFields } from "./BottomTextFields.js";
 import { saveCharacterState } from "../storage/localStorage.js";
 import { VersionNavigator } from "./VersionNavigator.js";
 import { VersionWarningBanner } from "./VersionWarningBanner.js";
-import { ReadOnlyModeManager } from "../utils/readOnlyMode.js";
 
 export class CharacterSheet {
   private header: Header;
@@ -28,7 +27,6 @@ export class CharacterSheet {
   private stats: Stats;
   private versionNavigator: VersionNavigator | null = null;
   private versionWarningBanner: VersionWarningBanner | null = null;
-  private readOnlyModeManager: ReadOnlyModeManager;
 
   constructor(
     private character: Character,
@@ -70,7 +68,6 @@ export class CharacterSheet {
     );
     this.cyphersBox = new CyphersBox(this.character, this.onFieldUpdate);
     this.stats = new Stats(this.character, this.onFieldUpdate);
-    this.readOnlyModeManager = new ReadOnlyModeManager();
   }
 
   /**
@@ -136,30 +133,6 @@ export class CharacterSheet {
       this.versionWarningBanner.unmount();
       this.versionWarningBanner = null;
     }
-  }
-
-  /**
-   * Enable read-only mode - disable all interactive elements
-   */
-  enableReadOnlyMode(): void {
-    const container = document.querySelector(".parchment-container") as HTMLElement;
-    if (container) {
-      this.readOnlyModeManager.enable(container);
-    }
-  }
-
-  /**
-   * Disable read-only mode - restore interactive elements
-   */
-  disableReadOnlyMode(): void {
-    this.readOnlyModeManager.disable();
-  }
-
-  /**
-   * Check if read-only mode is enabled
-   */
-  isReadOnlyMode(): boolean {
-    return this.readOnlyModeManager.isEnabled();
   }
 
   render(): TemplateResult {

@@ -386,10 +386,11 @@ async function renderCharacterSheet(
             timestamp: metadata.timestamp,
             onRestore: async () => {
               if (!versionState) return;
-              versionState.restoreToLatest();
+              // Restore the current old version by saving it as new latest
+              await versionState.restoreCurrentVersion();
               const latestCharacter = versionState.getLatestCharacter();
               await renderCharacterSheet(latestCharacter, true);
-              await updateVersionNavigator();
+              await updateVersionNavigator(true); // Reload to show new version
             },
           });
           versionWarningBanner.mount(bannerContainer);
@@ -399,10 +400,11 @@ async function renderCharacterSheet(
             timestamp: metadata.timestamp,
             onRestore: async () => {
               if (!versionState) return;
-              versionState.restoreToLatest();
+              // Restore the current old version by saving it as new latest
+              await versionState.restoreCurrentVersion();
               const latestCharacter = versionState.getLatestCharacter();
               await renderCharacterSheet(latestCharacter, true);
-              await updateVersionNavigator();
+              await updateVersionNavigator(true); // Reload to show new version
             },
           });
         }

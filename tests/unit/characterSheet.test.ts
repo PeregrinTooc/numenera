@@ -102,19 +102,4 @@ describe("CharacterSheet - Version History Integration", () => {
     expect(characterSheet).toHaveProperty("unmountVersionWarningBanner");
     expect(typeof characterSheet.unmountVersionWarningBanner).toBe("function");
   });
-
-  it("should have a method to enable read-only mode", () => {
-    expect(characterSheet).toHaveProperty("enableReadOnlyMode");
-    expect(typeof characterSheet.enableReadOnlyMode).toBe("function");
-  });
-
-  it("should have a method to disable read-only mode", () => {
-    expect(characterSheet).toHaveProperty("disableReadOnlyMode");
-    expect(typeof characterSheet.disableReadOnlyMode).toBe("function");
-  });
-
-  it("should have a method to check if read-only mode is enabled", () => {
-    expect(characterSheet).toHaveProperty("isReadOnlyMode");
-    expect(typeof characterSheet.isReadOnlyMode).toBe("function");
-  });
 });
