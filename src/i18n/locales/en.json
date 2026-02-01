@@ -215,12 +215,13 @@
     "lastSaved": "Last saved"
   },
   "versionHistory": {
-    "versionCounter": "Version {{current}} of {{total}}",
     "navigateBackward": "Navigate to previous version",
     "navigateForward": "Navigate to next version",
+    "versionCounter": "Version {{current}} of {{total}}",
     "warningBanner": {
-      "title": "You are viewing an old version of this character",
-      "restoreButton": "Restore to Latest"
+      "title": "You are viewing an old version",
+      "returnButton": "Return to Current Version",
+      "restoreButton": "Restore Version"
     }
   }
 }

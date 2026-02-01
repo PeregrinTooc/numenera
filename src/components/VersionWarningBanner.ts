@@ -8,6 +8,7 @@ import { t } from "../i18n/index.js";
 export interface VersionWarningBannerProps {
   description: string;
   timestamp: Date;
+  onReturn: () => void;
   onRestore: () => void;
 }
 
@@ -99,7 +100,37 @@ export class VersionWarningBanner {
     metadata.appendChild(description);
     metadata.appendChild(timestamp);
 
-    // Restore button (compact)
+    // Button container
+    const buttonContainer = document.createElement("div");
+    buttonContainer.style.cssText = `
+            display: flex;
+            gap: 0.5rem;
+        `;
+
+    // Return button (navigate to current without creating new version)
+    const returnButton = document.createElement("button");
+    returnButton.setAttribute("data-testid", "version-return-button");
+    returnButton.style.cssText = `
+            background: rgb(209, 213, 219);
+            color: rgb(55, 65, 81);
+            font-weight: 600;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            flex: 1;
+        `;
+    returnButton.textContent = t("versionHistory.warningBanner.returnButton");
+    returnButton.addEventListener("click", this.props.onReturn);
+    returnButton.addEventListener("mouseenter", () => {
+      returnButton.style.background = "rgb(156, 163, 175)";
+    });
+    returnButton.addEventListener("mouseleave", () => {
+      returnButton.style.background = "rgb(209, 213, 219)";
+    });
+
+    // Restore button (save old version as new latest)
     const restoreButton = document.createElement("button");
     restoreButton.setAttribute("data-testid", "version-restore-button");
     restoreButton.style.cssText = `
@@ -111,7 +142,7 @@ export class VersionWarningBanner {
             border: none;
             cursor: pointer;
             transition: background-color 0.2s;
-            width: 100%;
+            flex: 1;
         `;
     restoreButton.textContent = t("versionHistory.warningBanner.restoreButton");
     restoreButton.addEventListener("click", this.props.onRestore);
@@ -122,9 +153,12 @@ export class VersionWarningBanner {
       restoreButton.style.background = "rgb(217, 119, 6)";
     });
 
+    buttonContainer.appendChild(returnButton);
+    buttonContainer.appendChild(restoreButton);
+
     innerContainer.appendChild(warningText);
     innerContainer.appendChild(metadata);
-    innerContainer.appendChild(restoreButton);
+    innerContainer.appendChild(buttonContainer);
     banner.appendChild(innerContainer);
 
     return banner;

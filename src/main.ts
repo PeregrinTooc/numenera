@@ -80,6 +80,15 @@ autoSaveService.on("save-completed", async (event) => {
       // Update versionState's latest character
       if (versionState) {
         versionState.setLatestCharacter(currentCharacter);
+
+        // If we were viewing an old version, navigate to the new latest version
+        if (versionState.isViewingOldVersion()) {
+          await versionState.reload();
+          versionState.restoreToLatest();
+          // Re-render to update the UI (including removing warning banner)
+          const latestCharacter = versionState.getLatestCharacter();
+          await renderCharacterSheet(latestCharacter, true);
+        }
       }
 
       // Update version navigator with reload
@@ -384,6 +393,14 @@ async function renderCharacterSheet(
           versionWarningBanner = new VersionWarningBanner({
             description: metadata.description,
             timestamp: metadata.timestamp,
+            onReturn: async () => {
+              if (!versionState) return;
+              // Navigate to latest version without creating new version
+              versionState.restoreToLatest();
+              const latestCharacter = versionState.getLatestCharacter();
+              await renderCharacterSheet(latestCharacter, true);
+              await updateVersionNavigator(false); // Don't reload, just update UI
+            },
             onRestore: async () => {
               if (!versionState) return;
               // Restore the current old version by saving it as new latest
@@ -398,6 +415,14 @@ async function renderCharacterSheet(
           versionWarningBanner.update({
             description: metadata.description,
             timestamp: metadata.timestamp,
+            onReturn: async () => {
+              if (!versionState) return;
+              // Navigate to latest version without creating new version
+              versionState.restoreToLatest();
+              const latestCharacter = versionState.getLatestCharacter();
+              await renderCharacterSheet(latestCharacter, true);
+              await updateVersionNavigator(false); // Don't reload, just update UI
+            },
             onRestore: async () => {
               if (!versionState) return;
               // Restore the current old version by saving it as new latest
@@ -409,18 +434,13 @@ async function renderCharacterSheet(
           });
         }
       }
-
-      // Add read-only mode indicator to app
-      app.setAttribute("data-readonly", "true");
+      // Note: No read-only mode - user can edit from any version, which auto-navigates to latest
     } else {
       // Remove warning banner if it exists
       if (versionWarningBanner) {
         versionWarningBanner.unmount();
         versionWarningBanner = null;
       }
-
-      // Remove read-only mode indicator
-      app.removeAttribute("data-readonly");
     }
   }
 

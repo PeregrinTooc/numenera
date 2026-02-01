@@ -115,11 +115,13 @@ export class CharacterSheet {
     container: HTMLElement,
     description: string,
     timestamp: Date,
+    onReturn: () => void,
     onRestore: () => void
   ): void {
     this.versionWarningBanner = new VersionWarningBanner({
       description,
       timestamp,
+      onReturn,
       onRestore,
     });
     this.versionWarningBanner.mount(container);

@@ -13,6 +13,7 @@ export interface CustomWorld extends World {
   context?: BrowserContext;
   page: Page;
   storageHelper: TestStorageHelper;
+  testContext?: Record<string, any>;
   getBaseUrl(): string;
 }
 
@@ -21,6 +22,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   context?: BrowserContext;
   page!: Page;
   storageHelper!: TestStorageHelper;
+  testContext?: Record<string, any>;
 
   constructor(options: IWorldOptions) {
     super(options);

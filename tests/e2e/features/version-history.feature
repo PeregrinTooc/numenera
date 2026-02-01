@@ -31,7 +31,6 @@ Feature: Version History (Character Time Travel)
         And the forward arrow should be disabled
         And no warning banner should be visible
 
-    @current
     Scenario: Navigate backward to previous version
         Given the character has 3 versions in history
         And I am viewing the latest version
@@ -42,9 +41,8 @@ Feature: Version History (Character Time Travel)
         And the timestamp should be displayed
         And both navigation arrows should be enabled
         And the warning banner should be visible
-        And all edit controls should be disabled
 
-    @wip
+
     Scenario: Navigate to oldest version
         Given the character has 3 versions in history
         And I am viewing the latest version
@@ -56,7 +54,7 @@ Feature: Version History (Character Time Travel)
         And the forward arrow should be enabled
         And the warning banner should be visible
 
-    @wip
+
     Scenario: Navigate forward to newer version
         Given the character has 3 versions in history
         And I am viewing version 1
@@ -66,7 +64,7 @@ Feature: Version History (Character Time Travel)
         And both navigation arrows should be enabled
         And the warning banner should be visible
 
-    @wip
+
     Scenario: Navigate forward to latest version
         Given the character has 3 versions in history
         And I am viewing version 1
@@ -77,20 +75,19 @@ Feature: Version History (Character Time Travel)
         And the backward arrow should be enabled
         And the forward arrow should be disabled
         And no warning banner should be visible
-        And all edit controls should be enabled
 
-    @wip
-    Scenario: Restore button returns to latest version
+
+    Scenario: Restore button saves old version as new latest
         Given the character has 5 versions in history
         And I am viewing version 2
         When I click the restore button in the warning banner
-        Then the version counter should show "Version 5 of 5"
-        And the character data should match the latest version
+        Then a new version should be created with description "Restored: <version 2 description>"
+        And the version counter should show "Version 6 of 6"
+        And the character data should match version 2 data
         And no warning banner should be visible
-        And all edit controls should be enabled
         And the forward arrow should be disabled
 
-    @wip
+
     Scenario: Warning banner displays when viewing old version
         Given the character has 3 versions in history
         And I am viewing version 1
@@ -98,39 +95,29 @@ Feature: Version History (Character Time Travel)
         And the warning banner should contain text "You are viewing an old version"
         And the warning banner should have a restore button
 
-    @wip
-    Scenario: Edit controls disabled in read-only mode
+
+    Scenario: Editing while viewing old version creates new version
         Given the character has 3 versions in history
         And I am viewing version 1
-        Then the edit field modal buttons should be disabled
-        And the card edit buttons should be disabled
-        And the stat pool edit controls should be disabled
-        And the recovery roll checkboxes should be disabled
-        But the export button should still be enabled
-        And the language selector should still be enabled
+        When I edit the character name to "Time Traveler"
+        Then a new version should be created
+        And the version counter should show "Version 4 of 4"
+        And I should be viewing the latest version
+        And no warning banner should be visible
 
-    @wip
-    Scenario: Visual indicators for read-only mode
-        Given the character has 3 versions in history
-        And I am viewing version 1
-        Then editable fields should have reduced opacity
-        And the cursor should show "not-allowed" over edit controls
-        And the character sheet should have a visual indicator of read-only mode
 
-    @wip
     Scenario: Version description shows what changed
         Given the character has a version with name change
         And I am viewing that version
         Then the version description should contain "Changed name"
         And the timestamp should be in human-readable format
-
     @wip
     Scenario: Multiple changes show combined description
         Given the character has a version with multiple basic info changes
         And I am viewing that version
         Then the version description should contain "Edited basic info"
 
-    @wip
+
     Scenario: Version counter updates correctly
         Given the character has 10 versions in history
         When I navigate to version 5
@@ -140,13 +127,13 @@ Feature: Version History (Character Time Travel)
         When I navigate forward twice
         Then the version counter should show "Version 6 of 10"
 
-    @wip
+
     Scenario: Timestamp displays in readable format
         Given the character has a version from 5 minutes ago
         And I am viewing that version
         Then the timestamp should show a relative time like "5 minutes ago"
 
-    @wip
+
     Scenario: Navigation preserves character integrity
         Given the character has 5 versions with different data
         When I navigate to version 2
@@ -158,7 +145,7 @@ Feature: Version History (Character Time Travel)
         And the character stats should match version 4 stats
         And the character equipment should match version 4 equipment
 
-    @wip
+
     Scenario: Portrait is not affected by version navigation
         Given the character has 3 versions with different names
         And the character has a portrait image
@@ -167,33 +154,14 @@ Feature: Version History (Character Time Travel)
         When I navigate to version 2
         Then the portrait should remain unchanged
 
-    @wip
-    Scenario: Export works from old version (read-only mode)
+
+    Scenario: Export works from old version
         Given the character has 3 versions in history
         And I am viewing version 1
         When I click the export button
         Then the exported file should contain version 1 data
         And the exported file should not contain version history
         And the exported file should use the current portrait
-
-    @wip
-    Scenario: Creating new version while viewing old version
-        Given the character has 3 versions in history
-        And I am viewing version 2
-        When I click the restore button
-        And I edit the character name to "New Name"
-        Then a new version should be created
-        And the version counter should show "Version 4 of 4"
-        And I should be viewing the latest version
-
-    @wip
-    Scenario: Version navigator accessibility
-        Given the character has 3 versions in history
-        When I view the version navigator
-        Then the backward arrow should have an accessible label
-        And the forward arrow should have an accessible label
-        And the restore button should have an accessible label
-        And the version counter should be announced to screen readers
 
     @wip
     Scenario: Keyboard navigation support
@@ -206,7 +174,6 @@ Feature: Version History (Character Time Travel)
 
     # Edge Cases
 
-    @wip
     Scenario: Rapid navigation through many versions
         Given the character has 20 versions in history
         When I rapidly click the backward arrow 10 times
@@ -214,7 +181,6 @@ Feature: Version History (Character Time Travel)
         And the character data should be correct for version 10
         And the UI should remain responsive
 
-    @wip
     Scenario: Browser refresh preserves current position
         Given the character has 5 versions in history
         And I am viewing version 3
@@ -223,7 +189,7 @@ Feature: Version History (Character Time Travel)
         And I should be viewing the latest version
         And the warning banner should not be visible
 
-    @wip
+
     Scenario: Version navigator updates after new edit
         Given the character has 3 versions in history
         And I am viewing the latest version
@@ -231,7 +197,7 @@ Feature: Version History (Character Time Travel)
         Then the version counter should show "Version 4 of 4"
         And the version description should contain the tier change
 
-    @wip
+
     Scenario: Maximum versions (FIFO) updates navigator
         Given the character has 99 versions in history
         When I create a new version by editing the name

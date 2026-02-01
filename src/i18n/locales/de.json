@@ -215,12 +215,13 @@
     "lastSaved": "Zuletzt gespeichert"
   },
   "versionHistory": {
-    "versionCounter": "Version {{current}} von {{total}}",
     "navigateBackward": "Zur vorherigen Version navigieren",
     "navigateForward": "Zur nächsten Version navigieren",
+    "versionCounter": "Version {{current}} von {{total}}",
     "warningBanner": {
-      "title": "Sie betrachten eine alte Version dieses Charakters",
-      "restoreButton": "Zur neuesten wiederherstellen"
+      "title": "Sie sehen eine alte Version",
+      "returnButton": "Zur aktuellen Version",
+      "restoreButton": "Version Wiederherstellen"
     }
   }
 }
