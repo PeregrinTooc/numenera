@@ -14,6 +14,9 @@ import { CyphersBox } from "./CyphersBox.js";
 import { ItemsBox } from "./ItemsBox.js";
 import { BottomTextFields } from "./BottomTextFields.js";
 import { saveCharacterState } from "../storage/localStorage.js";
+import { VersionNavigator } from "./VersionNavigator.js";
+import { VersionWarningBanner } from "./VersionWarningBanner.js";
+import { ReadOnlyModeManager } from "../utils/readOnlyMode.js";
 
 export class CharacterSheet {
   private header: Header;
@@ -23,6 +26,9 @@ export class CharacterSheet {
   private attacks: Attacks;
   private cyphersBox: CyphersBox;
   private stats: Stats;
+  private versionNavigator: VersionNavigator | null = null;
+  private versionWarningBanner: VersionWarningBanner | null = null;
+  private readOnlyModeManager: ReadOnlyModeManager;
 
   constructor(
     private character: Character,
@@ -64,6 +70,96 @@ export class CharacterSheet {
     );
     this.cyphersBox = new CyphersBox(this.character, this.onFieldUpdate);
     this.stats = new Stats(this.character, this.onFieldUpdate);
+    this.readOnlyModeManager = new ReadOnlyModeManager();
+  }
+
+  /**
+   * Mount version navigator to a container
+   */
+  mountVersionNavigator(
+    container: HTMLElement,
+    versionCount: number,
+    currentIndex: number,
+    onNavigateBackward: () => void,
+    onNavigateForward: () => void
+  ): void {
+    this.versionNavigator = new VersionNavigator({
+      versionCount,
+      currentIndex,
+      onNavigateBackward,
+      onNavigateForward,
+    });
+    this.versionNavigator.mount(container);
+  }
+
+  /**
+   * Update version navigator with new props
+   */
+  updateVersionNavigator(
+    versionCount: number,
+    currentIndex: number,
+    onNavigateBackward: () => void,
+    onNavigateForward: () => void
+  ): void {
+    if (this.versionNavigator) {
+      this.versionNavigator.update({
+        versionCount,
+        currentIndex,
+        onNavigateBackward,
+        onNavigateForward,
+      });
+    }
+  }
+
+  /**
+   * Mount version warning banner to a container
+   */
+  mountVersionWarningBanner(
+    container: HTMLElement,
+    description: string,
+    timestamp: Date,
+    onRestore: () => void
+  ): void {
+    this.versionWarningBanner = new VersionWarningBanner({
+      description,
+      timestamp,
+      onRestore,
+    });
+    this.versionWarningBanner.mount(container);
+  }
+
+  /**
+   * Unmount version warning banner
+   */
+  unmountVersionWarningBanner(): void {
+    if (this.versionWarningBanner) {
+      this.versionWarningBanner.unmount();
+      this.versionWarningBanner = null;
+    }
+  }
+
+  /**
+   * Enable read-only mode - disable all interactive elements
+   */
+  enableReadOnlyMode(): void {
+    const container = document.querySelector(".parchment-container") as HTMLElement;
+    if (container) {
+      this.readOnlyModeManager.enable(container);
+    }
+  }
+
+  /**
+   * Disable read-only mode - restore interactive elements
+   */
+  disableReadOnlyMode(): void {
+    this.readOnlyModeManager.disable();
+  }
+
+  /**
+   * Check if read-only mode is enabled
+   */
+  isReadOnlyMode(): boolean {
+    return this.readOnlyModeManager.isEnabled();
   }
 
   render(): TemplateResult {

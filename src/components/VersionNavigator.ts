@@ -75,6 +75,7 @@ export class VersionNavigator {
     // Create backward arrow button
     const backwardButton = document.createElement("button");
     backwardButton.setAttribute("data-testid", "version-nav-backward");
+    backwardButton.setAttribute("data-read-only-exempt", "true");
     backwardButton.innerHTML = "←";
     backwardButton.setAttribute("aria-label", t("versionHistory.navigateBackward"));
     backwardButton.style.cssText = `
@@ -125,6 +126,7 @@ export class VersionNavigator {
     // Create forward arrow button
     const forwardButton = document.createElement("button");
     forwardButton.setAttribute("data-testid", "version-nav-forward");
+    forwardButton.setAttribute("data-read-only-exempt", "true");
     forwardButton.innerHTML = "→";
     forwardButton.setAttribute("aria-label", t("versionHistory.navigateForward"));
     forwardButton.style.cssText = `

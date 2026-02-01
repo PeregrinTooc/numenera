@@ -262,23 +262,49 @@ This plan breaks the feature into 7 phases. Each phase follows strict TDD/BDD me
 - `src/i18n/locales/de.json` - German translations added
 - All UI text translated (navigator, warning banner, buttons)
 
+**Step 3.7: Read-Only Mode Manager (TDD)** ✅
+
+- `src/utils/readOnlyMode.ts` - ReadOnlyModeManager class
+- `tests/unit/readOnlyMode.test.ts` - 19 unit tests (all passing)
+- **Key Features:**
+  - Disables all input/textarea/button/select elements
+  - Tracks original disabled state for proper restoration
+  - Adds visual indicator CSS class (read-only-disabled)
+  - Supports data-read-only-exempt attribute
+  - Version navigator & restore buttons marked as exempt
+
+**Step 3.8: CharacterSheet Integration** ✅
+
+- `src/components/CharacterSheet.ts` - Integration methods added
+- `tests/unit/characterSheet.test.ts` - 8 unit tests (all passing)
+- **Integration Points:**
+  - mountVersionNavigator() - Mount navigator to container
+  - updateVersionNavigator() - Update navigator props
+  - mountVersionWarningBanner() - Mount warning banner
+  - unmountVersionWarningBanner() - Remove warning banner
+  - enableReadOnlyMode() - Disable editing in parchment container
+  - disableReadOnlyMode() - Re-enable editing
+  - isReadOnlyMode() - Check if read-only active
+
 **Current Status:**
 
-- ✅ BDD: E2E scenarios written (31 scenarios, 3 passing baseline)
+- ✅ BDD: All E2E scenarios passing (335/335 total, all version history tests GREEN)
 - ✅ TDD: VersionNavigator component complete (15/15 tests passing)
 - ✅ TDD: VersionWarningBanner component complete (8/8 tests passing)
 - ✅ TDD: VersionState service complete (19/19 tests passing)
+- ✅ TDD: ReadOnlyModeManager complete (19/19 tests passing)
+- ✅ TDD: CharacterSheet integration complete (8/8 tests passing)
 - ✅ Styling: Fixed positioning in top-right corner
 - ✅ i18n: Full translation support (English + German)
-- ⏳ NEXT: Read-Only Mode Manager (Step 3.7)
-- ⏳ PENDING: CharacterSheet Integration (Step 3.8)
+- ✅ Phase 3 COMPLETE - All acceptance criteria met!
 
 **Test Results:**
 
-- ✅ 484/484 total unit tests passing (no regressions)
-- ✅ 3/31 E2E scenarios passing (baseline, 28 pending implementation)
+- ✅ 511/511 total unit tests passing (no regressions)
+- ✅ 335/335 E2E scenarios passing (ALL GREEN, including 31 version history tests)
 - ✅ All new components have 100% test coverage
 - ✅ All eslint checks passing
+- ✅ 2203 E2E steps executed successfully
 
 **Implementation Challenges & Solutions:**
 
@@ -304,39 +330,28 @@ This plan breaks the feature into 7 phases. Each phase follows strict TDD/BDD me
 
 **Git Commits:**
 
-- Commit [pending]: "feat(version-history): Phase 3 Steps 3.1-3.6 - Navigator UI Components"
-  - VersionNavigator component with unit tests
-  - VersionWarningBanner component with unit tests
-  - VersionState service with unit tests
-  - E2E test scenarios (baseline passing)
+- Commit [ready]: "feat(version-history): Phase 3 Complete - Navigator UI with Read-Only Mode"
+  - VersionNavigator component with 15 unit tests
+  - VersionWarningBanner component with 8 unit tests
+  - VersionState service with 19 unit tests
+  - ReadOnlyModeManager with 19 unit tests
+  - CharacterSheet integration with 8 unit tests
+  - E2E test scenarios (31 version history tests, ALL PASSING)
   - i18n integration (EN + DE)
   - Fixed positioning and styling
+  - Read-only mode with exempt navigation buttons
 
-**Next Steps:**
+**Phase 3 Acceptance Criteria - ALL MET:**
 
-**Step 3.7: Read-Only Mode Manager (TDD)**
+- ✅ All E2E tests pass (335/335 passing, including 31 version history)
+- ✅ All unit tests pass (511/511 passing)
+- ✅ Can navigate through versions (navigator + state service working)
+- ✅ Read-only mode prevents edits (ReadOnlyModeManager active)
+- ✅ UI displays correctly in top-right corner (fixed positioning)
 
-- File: `tests/unit/readOnlyMode.test.ts` → Write failing tests
-- File: `src/utils/readOnlyMode.ts` → Implement read-only mode
-- Tests cover:
-  - Disable all edit inputs when active
-  - Enable inputs when deactivated
-  - Visual indicators applied correctly
-  - Export still works in read-only mode
+**Next Phase:**
 
-**Step 3.8: CharacterSheet Integration**
-
-- File: `tests/unit/characterSheet.test.ts` → Update with version navigator tests
-- File: `src/components/CharacterSheet.ts` → Add version navigator to header
-- **Run E2E tests → Should now PASS (GREEN)**
-
-**Phase 3 Acceptance Criteria Progress:**
-
-- [ ] All E2E tests pass (3/31 passing, 28 pending)
-- [x] All unit tests pass (484/484 passing)
-- [ ] Can navigate through versions (service ready, UI integration pending)
-- [ ] Read-only mode prevents edits (next step)
-- [x] UI displays correctly in top-right corner (fixed positioning)
+- ⏳ **Phase 4: Smart Squashing System** - Implement 5-second inactivity timer with version compression
 
 ---
 
