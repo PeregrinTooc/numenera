@@ -8,6 +8,6 @@ module.exports = {
     timeout: 300, // 300 milliseconds for e2e tests with modal rendering
     failFast: false, // Stop on first failure
     // eslint-disable-next-line no-undef
-    parallel: process.env.CI ? 1 : 6, // 6 workers locally
+    parallel: process.env.CI ? 1 : 12, // 12 workers locally
   },
 };
