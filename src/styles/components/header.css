@@ -154,6 +154,62 @@
   box-shadow: 0 1px 2px rgba(90, 61, 122, 0.3);
 }
 
+/* Quick Export button - Cyan/Teal variant */
+.btn-quick-export {
+  background: #0e7490;
+  color: white;
+  padding: 0.75rem 2rem;
+  border: 2px solid #0a5468;
+  border-radius: 0.5rem;
+  font-family: "Cinzel", serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(14, 116, 144, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-quick-export:hover {
+  background: #0a5468;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(14, 116, 144, 0.4);
+}
+
+.btn-quick-export:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(14, 116, 144, 0.3);
+}
+
+/* Save As button - Cyan/Teal variant (matching Quick Export) */
+.btn-save-as {
+  background: #0e7490;
+  color: white;
+  padding: 0.75rem 2rem;
+  border: 2px solid #0a5468;
+  border-radius: 0.5rem;
+  font-family: "Cinzel", serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(14, 116, 144, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-save-as:hover {
+  background: #0a5468;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(14, 116, 144, 0.4);
+}
+
+.btn-save-as:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(14, 116, 144, 0.3);
+}
+
 /* Responsive: Stack buttons on mobile */
 @media (max-width: 768px) {
   .character-header {
@@ -177,6 +233,8 @@
   .btn-load,
   .btn-import,
   .btn-export,
+  .btn-quick-export,
+  .btn-save-as,
   .btn-new {
     width: 100%;
   }
