@@ -2,101 +2,78 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { VersionHistoryManager } from "../../src/storage/versionHistory.js";
 import type { Character } from "../../src/types/character.js";
 
+// Helper for async delays
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Helper to create a mock character with all required fields
+function createMockCharacter(): Character {
+  return {
+    name: "Test Character",
+    tier: 1,
+    type: "Glaive",
+    descriptor: "Strong",
+    focus: "Battles",
+    portrait: "data:image/png;base64,test-image-data",
+    xp: 0,
+    shins: 10,
+    armor: 1,
+    effort: 1,
+    maxCyphers: 2,
+    stats: {
+      might: { pool: 10, edge: 0, current: 10 },
+      speed: { pool: 10, edge: 0, current: 10 },
+      intellect: { pool: 10, edge: 0, current: 10 },
+    },
+    cyphers: [],
+    artifacts: [],
+    oddities: [],
+    abilities: [],
+    equipment: [],
+    attacks: [],
+    specialAbilities: [],
+    recoveryRolls: {
+      action: false,
+      tenMinutes: false,
+      oneHour: false,
+      tenHours: false,
+      modifier: 0,
+    },
+    damageTrack: { impairment: "healthy" },
+    textFields: { background: "", notes: "" },
+  };
+}
+
 describe.sequential("VersionHistoryManager", () => {
   let manager: VersionHistoryManager;
   let mockCharacter: Character;
   const testDbName = "test-version-history-suite";
 
   beforeEach(async () => {
-    // Close any existing manager
     if (manager) {
       manager.close();
     }
 
     manager = new VersionHistoryManager(testDbName);
     await manager.init();
+    await manager.clear();
+    await wait(100);
 
-    // Get any existing versions and delete them one by one
-    let existingVersions = await manager.getAllVersions();
-    while (existingVersions.length > 0) {
-      // Delete all existing versions manually
-      for (const version of existingVersions) {
-        await manager.getVersionById(version.id); // Verify it exists
-        // Use the private deleteVersion by clearing
-      }
-      await manager.clear();
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      existingVersions = await manager.getAllVersions();
-    }
-
-    // Create a mock character with all required fields
-    mockCharacter = {
-      name: "Test Character",
-      tier: 1,
-      type: "Glaive",
-      descriptor: "Strong",
-      focus: "Battles",
-      portrait: "data:image/png;base64,test-image-data",
-      xp: 0,
-      shins: 10,
-      armor: 1,
-      effort: 1,
-      maxCyphers: 2,
-      stats: {
-        might: { pool: 10, edge: 0, current: 10 },
-        speed: { pool: 10, edge: 0, current: 10 },
-        intellect: { pool: 10, edge: 0, current: 10 },
-      },
-      cyphers: [],
-      artifacts: [],
-      oddities: [],
-      abilities: [],
-      equipment: [],
-      attacks: [],
-      specialAbilities: [],
-      recoveryRolls: {
-        action: false,
-        tenMinutes: false,
-        oneHour: false,
-        tenHours: false,
-        modifier: 0,
-      },
-      damageTrack: { impairment: "healthy" },
-      textFields: { background: "", notes: "" },
-    };
+    mockCharacter = createMockCharacter();
   });
 
   afterEach(async () => {
-    // Close the manager
     if (manager) {
       manager.close();
     }
 
-    // Wait to ensure all connections are fully closed
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await wait(100);
 
-    // Delete the test database and wait for completion
-    if (testDbName) {
-      await new Promise<void>((resolve) => {
-        const request = indexedDB.deleteDatabase(testDbName);
-        request.onsuccess = () => {
-          // Add significant delay to ensure deletion is fully complete
-          setTimeout(resolve, 100);
-        };
-        request.onerror = () => {
-          console.error("Failed to delete database:", testDbName);
-          setTimeout(resolve, 100); // Resolve anyway to not block tests
-        };
-        request.onblocked = () => {
-          console.warn("Database deletion blocked:", testDbName);
-          // Force close any remaining connections and retry
-          setTimeout(resolve, 100);
-        };
-      });
-    }
-
-    // Final wait to ensure cleanup is complete
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    await new Promise<void>((resolve) => {
+      const request = indexedDB.deleteDatabase(testDbName);
+      request.onsuccess = () => setTimeout(resolve, 100);
+      request.onerror = () => setTimeout(resolve, 100);
+      request.onblocked = () => setTimeout(resolve, 100);
+    });
   });
 
   describe("Initialization", () => {
@@ -154,9 +131,8 @@ describe.sequential("VersionHistoryManager", () => {
 
   describe.sequential("FIFO Queue (Max 99 Versions)", () => {
     it.sequential("should allow up to 99 versions", async () => {
-      // Create 99 versions
       for (let i = 1; i <= 99; i++) {
-        await manager.saveVersion(mockCharacter, `T1-Version ${i}`);
+        await manager.saveVersion(mockCharacter, `Version ${i}`);
       }
 
       const versions = await manager.getAllVersions();
@@ -164,30 +140,27 @@ describe.sequential("VersionHistoryManager", () => {
     });
 
     it.sequential("should remove oldest version when exceeding 99", async () => {
-      // Create 99 versions
       for (let i = 1; i <= 99; i++) {
-        await manager.saveVersion(mockCharacter, `T2-Version ${i}`);
+        await manager.saveVersion(mockCharacter, `Version ${i}`);
       }
 
-      // Add 100th version - should remove "T2-Version 1"
-      await manager.saveVersion(mockCharacter, "T2-Version 100");
+      await manager.saveVersion(mockCharacter, "Version 100");
 
       const versions = await manager.getAllVersions();
       expect(versions).toHaveLength(99);
-      expect(versions[0].description).toBe("T2-Version 2"); // First one removed
-      expect(versions[98].description).toBe("T2-Version 100"); // Latest one added
+      expect(versions[0].description).toBe("Version 2");
+      expect(versions[98].description).toBe("Version 100");
     });
 
     it.sequential("should maintain FIFO order when removing old versions", async () => {
-      // Create 101 versions
       for (let i = 1; i <= 101; i++) {
-        await manager.saveVersion(mockCharacter, `T3-Version ${i}`);
+        await manager.saveVersion(mockCharacter, `Version ${i}`);
       }
 
       const versions = await manager.getAllVersions();
       expect(versions).toHaveLength(99);
-      expect(versions[0].description).toBe("T3-Version 3"); // First two removed
-      expect(versions[98].description).toBe("T3-Version 101");
+      expect(versions[0].description).toBe("Version 3");
+      expect(versions[98].description).toBe("Version 101");
     });
   });
 

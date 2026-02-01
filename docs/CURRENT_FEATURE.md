@@ -162,10 +162,10 @@ This plan breaks the feature into 7 phases. Each phase follows strict TDD/BDD me
 
 **Acceptance Criteria:**
 
-- [ ] All unit tests pass
-- [ ] Can save/load versions programmatically
-- [ ] Portrait excluded from versions
-- [ ] FIFO queue works correctly
+- [x] All unit tests pass
+- [x] Can save/load versions programmatically
+- [x] Portrait excluded from versions
+- [x] FIFO queue works correctly
 
 ---
 
@@ -639,4 +639,112 @@ Key test scenarios:
 
 ## Implementation Notes
 
-_Add notes, discoveries, and decisions as you work..._
+### Phase 1: Core Version Storage ✅ COMPLETE
+
+**Completed:** 2026-02-01  
+**Methodology:** Strict TDD
+
+**Files Created:**
+
+- `src/types/versionHistory.ts` - Type definitions for CharacterVersion and VersionHistoryState
+- `src/storage/versionHistory.ts` - VersionHistoryManager class with IndexedDB integration
+- `src/utils/etag.ts` - SHA-256 hash generator for conflict detection
+- `tests/unit/versionHistory.test.ts` - 19 comprehensive unit tests (all passing)
+
+**Key Implementation Details:**
+
+1. **Version Storage:**
+   - Successfully stores up to 99 versions in IndexedDB
+   - FIFO queue correctly removes oldest when exceeding limit
+   - Deep cloning prevents reference bugs
+   - Portrait data excluded from versions
+
+2. **Test Strategy:**
+   - Single shared test database with explicit `clear()` in beforeEach
+   - Sequential test execution prevents race conditions
+   - Helper functions (`wait`, `createMockCharacter`) improve maintainability
+
+3. **Critical Bug Discovery & Fix:**
+   - **Issue:** Timestamp collision when creating versions rapidly (Date.now() millisecond precision)
+   - **Symptom:** FIFO tests showing out-of-order versions
+   - **Solution:** Ensure each version's timestamp is strictly greater than previous version
+   - **Code:** Added timestamp uniqueness check in `saveVersion()` method
+
+4. **Test Refactoring:**
+   - Simplified beforeEach/afterEach cleanup logic
+   - Extracted helper functions for better maintainability
+   - Removed debugging prefixes (T1, T2, T3) from test descriptions
+   - Reduced test file from ~300 to ~260 lines
+
+**Test Results:**
+
+- ✅ 19/19 unit tests passing
+- ✅ 390/390 total unit tests passing
+- ✅ 331/331 E2E scenarios passing (no regressions)
+- ✅ All eslint checks passing
+
+**Phase 1 Acceptance Criteria - ALL MET:**
+
+- [x] All unit tests pass
+- [x] Can save/load versions programmatically
+- [x] Portrait excluded from versions
+- [x] FIFO queue works correctly
+
+**Next:** Phase 2 - Change Detection
+
+### Phase 2: Change Detection ✅ COMPLETE (Step 2.1)
+
+**Completed:** 2026-02-01 (Step 2.1)  
+**Methodology:** Strict TDD
+
+**Files Created:**
+
+- `src/utils/changeDetection.ts` - Change detection algorithm with priority system
+- `tests/unit/changeDetection.test.ts` - 33 comprehensive unit tests (all passing)
+
+**Key Implementation Details:**
+
+1. **Change Detection Algorithm:**
+   - Detects all character property changes (excluding portrait)
+   - Priority system: Basic info (1) > Stats (2) > Resources (3) > Collections (4) > Text fields (5)
+   - Intelligent combining: Merges multiple changes within same category
+   - Top 3 limit: Returns maximum 3 changes when across multiple categories
+   - Returns individual changes when limiting across categories
+
+2. **Combining Logic:**
+   - **Rule:** Combine ONLY when ALL changes are in the same category
+   - Example 1: [name, tier, type] → ["Edited basic info"] ✅
+   - Example 2: [name, tier, might] → ["Changed name", "Changed tier", "Updated might"] ✅
+   - Example 3: [might, speed, intellect] → ["Updated stats"] ✅
+   - Preserves granularity when changes span multiple categories
+
+3. **Test Coverage:**
+   - No changes detection (including portrait-only)
+   - All basic info changes (name, tier, type, descriptor, focus)
+   - All stat changes (might, speed, intellect - pool, edge, current)
+   - All resource changes (xp, shins, armor, effort, maxCyphers)
+   - All collection changes (cyphers, artifacts, equipment, attacks, abilities, special abilities, oddities)
+   - All text field changes (background, notes)
+   - Priority ordering across categories
+   - Top 3 limit with mixed categories
+   - Combining within categories
+
+4. **Implementation Challenges:**
+   - Initial combining logic was too aggressive (combined across categories)
+   - Fixed by checking if ALL changes are in same category before combining
+   - Simplified final algorithm: Check category uniformity → Combine if uniform → Else return top 3
+
+**Test Results:**
+
+- ✅ 33/33 change detection tests passing
+- ✅ 423/423 total unit tests passing (no regressions)
+
+**Step 2.1 Acceptance Criteria - ALL MET:**
+
+- [x] All unit tests pass
+- [x] All change types detected correctly
+- [x] Descriptions are concise and accurate
+- [x] Priority ordering works
+- [x] Combining logic works correctly
+
+**Next:** Step 2.2 - Squash Description Generator
