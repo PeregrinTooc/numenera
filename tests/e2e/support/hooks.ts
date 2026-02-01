@@ -1,6 +1,7 @@
 import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
 import { chromium, Browser } from "@playwright/test";
 import { CustomWorld } from "./world";
+import { TestStorageHelper } from "./testStorageHelper.js";
 
 let browser: Browser;
 
@@ -78,6 +79,9 @@ Before(async function (this: CustomWorld) {
 
   // Wait for the page to be fully loaded after clearing storage
   await this.page.waitForLoadState("networkidle");
+
+  // Initialize storage helper
+  this.storageHelper = new TestStorageHelper(this.page);
 });
 
 After(async function (this: CustomWorld) {

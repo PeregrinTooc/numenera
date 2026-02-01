@@ -5,8 +5,10 @@
 import { ICharacterStorage } from "./ICharacterStorage.js";
 import { IndexedDBStorageImpl } from "./indexedDBStorageImpl.js";
 import { LocalStorageImpl } from "./localStorageImpl.js";
+import { VersionHistoryManager } from "./versionHistory.js";
 
 let storageInstance: ICharacterStorage | null = null;
+let versionHistoryInstance: VersionHistoryManager | null = null;
 
 /**
  * Get the storage instance (singleton pattern)
@@ -72,4 +74,20 @@ export async function loadCharacterState(): Promise<any | null> {
 export async function clearCharacterState(): Promise<void> {
   const storage = await getStorage();
   await storage.clear();
+}
+
+/**
+ * Get the version history manager instance (singleton pattern)
+ * Initializes on first access
+ *
+ * @returns Initialized version history manager
+ */
+export async function getVersionHistory(): Promise<VersionHistoryManager> {
+  if (versionHistoryInstance) {
+    return versionHistoryInstance;
+  }
+
+  versionHistoryInstance = new VersionHistoryManager();
+  await versionHistoryInstance.init();
+  return versionHistoryInstance;
 }
