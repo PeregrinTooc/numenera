@@ -327,6 +327,10 @@ When("I press Escape", async function (this: CustomWorld) {
 });
 
 When("I reload the page", async function (this: CustomWorld) {
+  // Wait for debounced auto-save to complete before reloading
+  // (300ms debounce + buffer for async IndexedDB operations)
+  await this.page!.waitForTimeout(500);
+
   await this.page!.reload();
   await this.page!.waitForLoadState("domcontentloaded");
 });

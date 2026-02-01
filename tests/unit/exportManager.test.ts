@@ -92,39 +92,49 @@ function setupIndexedDBMock() {
     open: vi.fn().mockImplementation((_name: string, _version: number) => {
       const db = {
         objectStoreNames: { contains: () => false },
-        transaction: (_storeName: string, _mode: string) => ({
-          objectStore: (_name: string) => ({
-            get: vi.fn().mockImplementation((key: string) => {
-              const result = store.get(key);
-              const request = {
-                result,
-                onsuccess: null as any,
-                onerror: null as any,
-              };
-              // Resolve immediately in next tick
-              Promise.resolve().then(() => {
-                if (request.onsuccess) {
-                  request.onsuccess();
-                }
-              });
-              return request;
+        transaction: (_storeName: string, _mode: string) => {
+          const tx = {
+            objectStore: (_name: string) => ({
+              get: vi.fn().mockImplementation((key: string) => {
+                const result = store.get(key);
+                const request = {
+                  result,
+                  onsuccess: null as any,
+                  onerror: null as any,
+                };
+                // Resolve immediately in next tick
+                Promise.resolve().then(() => {
+                  if (request.onsuccess) {
+                    request.onsuccess();
+                  }
+                });
+                return request;
+              }),
+              put: vi.fn().mockImplementation((value: any, key: string) => {
+                store.set(key, value);
+                const request = {
+                  onsuccess: null as any,
+                  onerror: null as any,
+                };
+                Promise.resolve().then(() => {
+                  if (request.onsuccess) {
+                    request.onsuccess();
+                  }
+                });
+                return request;
+              }),
             }),
-            put: vi.fn().mockImplementation((value: any, key: string) => {
-              store.set(key, value);
-              const request = {
-                onsuccess: null as any,
-                onerror: null as any,
-              };
-              Promise.resolve().then(() => {
-                if (request.onsuccess) {
-                  request.onsuccess();
-                }
-              });
-              return request;
-            }),
-          }),
-          done: Promise.resolve(),
-        }),
+            oncomplete: null as any,
+            onerror: null as any,
+          };
+          // Trigger oncomplete in next tick
+          Promise.resolve().then(() => {
+            if (tx.oncomplete) {
+              tx.oncomplete();
+            }
+          });
+          return tx;
+        },
         createObjectStore: vi.fn(),
       };
 

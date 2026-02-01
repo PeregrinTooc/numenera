@@ -3,8 +3,8 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { FULL_CHARACTER } from "../../../src/data/mockCharacters.js";
-import { Character } from "../../../src/types/character.js";
 import { DOMHelpers } from "../support/dom-helpers.js";
+import { TestStorageHelper } from "../support/testStorageHelper.js";
 
 Given("a character exists with background text {string}", async function (backgroundText: string) {
   if (!this.character) {
@@ -72,6 +72,7 @@ Given("a character exists with background and notes", async function () {
 });
 
 Given("I have a character with empty background in localStorage", async function () {
+  const storageHelper = new TestStorageHelper(this.page);
   const character = {
     ...FULL_CHARACTER,
     textFields: {
@@ -79,15 +80,11 @@ Given("I have a character with empty background in localStorage", async function
       background: "",
     },
   };
-  await this.page.evaluate(
-    ({ char }: { char: Character }) => {
-      localStorage.setItem("numenera-character-state", JSON.stringify(char));
-    },
-    { char: character }
-  );
+  await storageHelper.setCharacter(character);
 });
 
 Given("I have a character with empty notes in localStorage", async function () {
+  const storageHelper = new TestStorageHelper(this.page);
   const character = {
     ...FULL_CHARACTER,
     textFields: {
@@ -95,12 +92,7 @@ Given("I have a character with empty notes in localStorage", async function () {
       notes: "",
     },
   };
-  await this.page.evaluate(
-    ({ char }: { char: Character }) => {
-      localStorage.setItem("numenera-character-state", JSON.stringify(char));
-    },
-    { char: character }
-  );
+  await storageHelper.setCharacter(character);
 });
 
 Then("the background container should have parchment styling", async function () {

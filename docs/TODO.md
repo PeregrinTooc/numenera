@@ -1,156 +1,210 @@
 # TODO - Numenera Character Sheet
 
-## Critical for Production
+## 🔨 Development Workflow
 
-### Data Management
+**When starting a new feature:**
 
-- [ ] **Character Export/Import** - Allow users to backup and restore character data
-  - Export to JSON file
-  - Import from JSON file
-  - Prevents data loss during schema changes
-- [ ] **Data Validation** - Validate imported/loaded character data
-  - Type checking
-  - Required fields validation
-  - Graceful error handling
+1. Move the topmost feature from this file to `CURRENT_FEATURE.md`
+2. Delete it from this TODO file
+3. Fill out the detailed planning sections in CURRENT_FEATURE.md
+4. Implement the feature
+5. When complete, move to FEATURES.md and delete CURRENT_FEATURE.md
+6. Repeat with next feature
 
-### User Experience
+**File Purposes:**
 
-- [ ] **Error Boundaries** - Catch and display errors gracefully
-- [ ] **Loading States** - Show feedback during operations
-- [ ] **User Notifications** - Toast/banner for schema version changes
-
-## Phase 5: Editing & Persistence (In Progress)
-
-### Basic Info Editing (Current)
-
-- [ ] Make name, tier, descriptor, focus editable (modal-based)
-- [x] EditFieldModal component with validation
-- [x] Numenera-themed styling (gold/crimson buttons)
-- [x] Keyboard support (Enter/Escape)
-- [x] Touch-friendly mobile design
-- [x] i18n support (EN/DE)
-- [x] Wire up to character data
-- [x] Auto-save to localStorage on confirm
-
-### Future Editing Features
-
-- [ ] Make all other fields editable (stats, abilities, etc.)
-- [x] Inline editing for simple text fields
-
-### Performance Notes
-
-- **Portrait Images**: When portrait upload is implemented, use keyed elements or CSS backgrounds to prevent image reload on text edits. See implementation notes for details on caching strategies.
-
-## Phase 1: MVP Features (Incomplete)
-
-### Responsive Layout
-
-- [ ] Mobile-first design implementation
-- [ ] Mobile viewport (320px): Vertical stacking
-- [ ] Tablet viewport (768px): Optimized arrangement
-- [ ] Desktop viewport (1280px): Multi-column layout
-
-### Core Features
-
-- [ ] Character Editing: Editable form fields
-- [ ] Image Upload: Single character portrait
-- [ ] i18n Infrastructure: English for development, German translation support
-
-## Phase 2: Enhanced Features
-
-### UI Enhancements
-
-- [ ] Re-arrange sections: Let users arrange the sheet's sections
-- [ ] Multiple Characters: Manage and switch between multiple characters
-- [ ] Character List View: Overview of all characters
-- [ ] Multiple Images: Support for multiple images per character
-- [ ] Image Gallery: View and manage character images
-
-## Phase 3: Reference Data & Modals
-
-### Info Modals
-
-- [ ] Character Types info (Glaive, Nano, Jack)
-- [ ] Descriptors info
-- [ ] Foci info
-- [ ] Cyphers info
-- [ ] Artifacts info
-- [ ] Oddities/Curiosities info
-
-## Phase 4: Cloud Integration
-
-### Cloud Storage
-
-- [ ] OneDrive integration
-- [ ] Google Drive integration
-- [ ] Dropbox integration
-- [ ] iCloud integration (limited browser support)
-- [ ] Auto-sync: Automatic synchronization with cloud storage
-- [ ] Conflict Resolution: Handle sync conflicts
-- [ ] Offline Support: Queue changes when offline
-
-## Future Enhancements
-
-### Features
-
-- [ ] **Character versioning/history function** - Allow undo/redo of character changes with version history
-- [ ] Multiple character slots/profiles
-- [ ] Cloud sync (optional)
-- [ ] Print-friendly view/PDF export
-- [ ] Character portrait upload
-- [ ] Dice roller integration
-- [ ] Session notes/log
-- [ ] Multiple language support beyond German/English
-- [ ] Character sharing/collaboration
-- [ ] Campaign management
-- [ ] Character templates
-
-### Technical
-
-- [ ] Progressive Web App (PWA) support
-- [ ] Offline functionality
-- [ ] Performance optimization for large character sheets
-- [ ] Accessibility audit (WCAG compliance)
-
-## Known Issues
-
-- None currently
+- **TODO.md** (this file) - Backlog of lightweight feature requests
+- **CURRENT_FEATURE.md** - Active work with full implementation details
+- **FEATURES.md** - Completed, documented features
 
 ---
 
-## Completed Features
+## 📝 Feature Request Template
 
-### Phase 1: Core Stats & Resources ✅
+When adding a new feature to this TODO, provide these **required** sections:
 
-- [x] XP tracking
-- [x] Shins (currency) tracking
-- [x] Armor value display
-- [x] Effort tracking
+### Feature Name
 
-### Phase 2: Ability Enhancements ✅
+**Overview** (Required)  
+Brief description of what the feature does and why it's needed.
 
-- [x] Ability cost badges
-- [x] Pool type indicators
-- [x] Action type display
+**Goals** (Required)
 
-### Phase 3: Combat & Special Abilities ✅
+- What problems does this solve?
+- What user needs does it address?
 
-- [x] Attacks system (damage, modifier, range, notes)
-- [x] Special Abilities (description, source)
-- [x] Armor badge in attacks section
-- [x] Schema versioning system
+**E2E Tests** (Required)
 
-### Phase 4: Recovery Rolls & Damage Tracking ✅
+- File: `tests/e2e/features/[name].feature`
+- List expected Gherkin scenarios
 
-- [x] Recovery Rolls tracker (action, 10 min, 1 hour, 10 hours)
-- [x] Editable recovery modifier (1d6 + modifier)
-- [x] Damage Track (healthy, impaired, debilitated)
-- [x] Green healing theme for recovery rolls
-- [x] Red warning theme for damage track
-- [x] Radio buttons for damage status
-- [x] Checkboxes for recovery roll usage
-- [x] Bilingual support (English/German)
+_Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge Cases, Success Criteria) is done in CURRENT_FEATURE.md when you start working on the feature._
 
 ---
 
-**Last Updated:** Phase 4 Complete (January 2026)
+## 📊 Current Status
+
+**Implemented Features**: 24 fully tested features  
+**Test Coverage**: 323 unit tests + 317 E2E scenarios (2090 steps) - 100% passing  
+**Documentation**: See [FEATURES.md](./FEATURES.md) for complete feature list
+
+---
+
+## 📋 Feature Backlog
+
+### Data Validation Enhancement
+
+**Overview**  
+Strengthen validation for imported and loaded character data to prevent corrupt data and improve error recovery.
+
+**Goals**
+
+- Prevent invalid character data from being loaded
+- Provide clear error messages when data is corrupt
+- Enable graceful schema migration for format changes
+- Improve user experience when importing characters
+
+**E2E Tests**
+
+- File: `tests/e2e/features/data-validation.feature`
+- Scenarios:
+  - Import character with invalid data shows error
+  - Import character with missing required fields
+  - Import character with wrong data types
+  - Migrate character from old schema version
+
+### Re-arrange Sections
+
+**Overview**  
+Allow users to drag and drop character sheet sections to customize their layout preferences.
+
+**Goals**
+
+- Personalize character sheet layout
+- Save custom layout preferences
+- Support different play styles and preferences
+- Make frequently-used sections easily accessible
+
+**E2E Tests**
+
+- File: `tests/e2e/features/section-rearrangement.feature`
+- Scenarios:
+  - Drag section to new position
+  - Section order is saved
+  - Layout persists after page reload
+  - Reset to default layout option
+
+### Multiple Images
+
+**Overview**  
+Support multiple images per character including portrait, gear art, and reference images.
+
+**Goals**
+
+- Store multiple images for each character
+- Switch between different character portraits
+- Add reference images for equipment and abilities
+- Manage image gallery per character
+
+**E2E Tests**
+
+- File: `tests/e2e/features/multiple-images.feature`
+- Scenarios:
+  - Upload multiple images for a character
+  - Switch active portrait image
+  - View image gallery
+  - Delete images from gallery
+
+### Game Reference Info Modals
+
+**Overview**  
+Add help modals with game reference information for character types, descriptors, foci, cyphers, artifacts, and oddities.
+
+**Goals**
+
+- Provide quick reference during character creation and playing
+- Help new players understand game concepts
+- Reduce need to consult rulebooks
+- Critical Note: only refer publicly available information (wikis, other internet sources with stable links, they can be rendered in-modal ) and don't store this data in the app since it might breach IP rules!
+
+**E2E Tests**
+
+- File: `tests/e2e/features/reference-info-modals.feature`
+- Scenarios:
+  - Open character types info modal
+  - View descriptor reference
+  - Browse foci information
+  - Search cypher reference
+  - View artifact and oddity descriptions
+
+**Overview**  
+Share characters with other players via export links or shareable JSON.
+
+**Goals**
+
+- Generate shareable character link including the character data (without pictures)
+- Export character for sharing
+- Import shared character from others
+- Preview shared character before importing
+
+**E2E Tests**
+
+- File: `tests/e2e/features/character-sharing.feature`
+- Scenarios:
+  - Generate shareable character link
+  - Copy character JSON for sharing
+  - Import character from shared link
+  - Preview shared character
+
+### Print-Friendly View
+
+**Overview**  
+Add print-optimized view and PDF export for printing physical character sheets.
+
+**Goals**
+
+- Generate print-friendly character sheet layout
+- Export character sheet as PDF
+- Support printer-friendly styling
+- Include all character information
+
+**E2E Tests**
+
+- File: `tests/e2e/features/print-export.feature`
+- Scenarios:
+  - View print-friendly layout
+  - Export character sheet as PDF
+  - Print character sheet maintains formatting
+  - All character data included in printout
+
+### PWA Support
+
+**Overview**  
+Add Progressive Web App support for installing the app and offline functionality.
+
+**Goals**
+
+- Enable app installation on devices
+- Support offline character sheet access
+- Cache character data locally
+- Provide app-like experience
+
+**E2E Tests**
+
+- File: `tests/e2e/features/pwa-support.feature`
+- Scenarios:
+  - Install app on device
+  - Access app while offline
+  - Character data persists offline
+  - Sync when coming back online
+
+## 🔗 Related Documentation
+
+- **[FEATURES.md](./FEATURES.md)** - Completed and documented features
+- **[CURRENT_FEATURE.md](./CURRENT_FEATURE.md)** - Feature currently being implemented
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System architecture and design decisions
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Deployment and hosting setup
+
+---
+
+**Last Updated**: January 30, 2026

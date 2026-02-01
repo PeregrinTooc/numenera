@@ -13,6 +13,18 @@ import { FULL_CHARACTER, NEW_CHARACTER } from "./data/mockCharacters.js";
 import { CharacterSheet } from "./components/CharacterSheet.js";
 import { initI18n, onLanguageChanged } from "./i18n/index.js";
 
+// Expose storage functions on window for E2E tests
+// This allows tests to work in both dev and production builds
+declare global {
+  interface Window {
+    __testStorage?: {
+      saveCharacterState: typeof saveCharacterState;
+      loadCharacterState: typeof loadCharacterState;
+      clearCharacterState: () => Promise<void>;
+    };
+  }
+}
+
 // Global CharacterSheet instance to preserve state across re-renders
 let currentSheet: CharacterSheet | null = null;
 
@@ -20,9 +32,9 @@ let currentSheet: CharacterSheet | null = null;
 const exportManager = new ExportManager();
 
 // Global AutoSaveService instance with 300ms debounce
-const autoSaveService = new AutoSaveService(() => {
+const autoSaveService = new AutoSaveService(async () => {
   if (currentCharacter) {
-    saveCharacterState(currentCharacter);
+    await saveCharacterState(currentCharacter);
   }
 }, 300);
 
@@ -48,7 +60,10 @@ autoSaveService.on("save-completed", (event) => {
 let currentCharacter: Character | null = null;
 
 // Render the character sheet with the given character data
-function renderCharacterSheet(character: Character, skipImmediateSave = false): void {
+async function renderCharacterSheet(
+  character: Character,
+  skipImmediateSave = false
+): Promise<void> {
   const app = document.getElementById("app");
   if (!app) return;
 
@@ -56,7 +71,7 @@ function renderCharacterSheet(character: Character, skipImmediateSave = false): 
   currentCharacter = character;
 
   // Handler for field updates
-  const handleFieldUpdate = (field: string, value: string | number): void => {
+  const handleFieldUpdate = async (field: string, value: string | number): Promise<void> => {
     // Update the character object
     const updatedCharacter = { ...character };
     switch (field) {
@@ -195,15 +210,15 @@ function renderCharacterSheet(character: Character, skipImmediateSave = false): 
   if (needsNewSheet) {
     currentSheet = new CharacterSheet(
       character,
-      () => {
+      async () => {
         renderCharacterSheet(FULL_CHARACTER);
         // Save immediately when loading a character
-        saveCharacterState(FULL_CHARACTER);
+        await saveCharacterState(FULL_CHARACTER);
       },
-      () => {
+      async () => {
         renderCharacterSheet(NEW_CHARACTER);
         // Save immediately when creating new character
-        saveCharacterState(NEW_CHARACTER);
+        await saveCharacterState(NEW_CHARACTER);
       },
       handleLoadFromFile,
       handleExport,
@@ -225,7 +240,7 @@ function renderCharacterSheet(character: Character, skipImmediateSave = false): 
   // Save character state to localStorage after rendering
   // Skip immediate save only when explicitly requested (e.g., during field updates that use debounced auto-save)
   if (!skipImmediateSave) {
-    saveCharacterState(character);
+    await saveCharacterState(character);
   }
 
   // Render save indicator in separate container
@@ -243,7 +258,7 @@ function renderCharacterSheet(character: Character, skipImmediateSave = false): 
   // Listen for character-updated events and re-render + auto-save
   // Use setTimeout to ensure the event listener is added after render completes
   setTimeout(() => {
-    const listener = (_e: Event) => {
+    const listener = async (_e: Event) => {
       // Trigger auto-save when character is updated
       autoSaveService.requestSave();
 
@@ -261,6 +276,21 @@ function renderCharacterSheet(character: Character, skipImmediateSave = false): 
 
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", async () => {
+  // Expose storage API for E2E tests (works in both dev and production)
+  window.__testStorage = {
+    saveCharacterState,
+    loadCharacterState,
+    clearCharacterState: async () => {
+      localStorage.clear();
+      const dbName = "NumeneraCharacterDB";
+      await new Promise<void>((resolve, reject) => {
+        const request = indexedDB.deleteDatabase(dbName);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    },
+  };
+
   // Initialize i18n first
   await initI18n();
 

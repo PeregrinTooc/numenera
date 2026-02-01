@@ -1,6 +1,7 @@
 import { When, Then, Given } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
+import { TestStorageHelper } from "../support/testStorageHelper.js";
 
 // ============================================================================
 // BACKGROUND DATA SETUP - Unique to additional fields
@@ -17,7 +18,7 @@ Given("the character has the following data:", async function (this: CustomWorld
     data[field] = value;
   }
 
-  // Set character data in localStorage matching the Character type structure
+  // Set character data using TestStorageHelper (handles IndexedDB/localStorage abstraction)
   const characterState = {
     name: data.name || "Test Character",
     tier: 1,
@@ -57,19 +58,20 @@ Given("the character has the following data:", async function (this: CustomWorld
     },
   };
 
-  // Wrap with schema version to match production storage format
-  const wrappedState = {
-    schemaVersion: 4,
-    character: characterState,
-  };
+  // Use TestStorageHelper to set character data (uses app's storage backend)
+  const storageHelper = new TestStorageHelper(this.page!);
+  await this.page!.waitForTimeout(500);
+  await storageHelper.setCharacter(characterState);
 
-  await this.page!.evaluate((state) => {
-    localStorage.setItem("numenera-character-state", JSON.stringify(state));
-  }, wrappedState);
+  // Wait for IndexedDB save to complete before reloading
+  await this.page!.waitForTimeout(500);
 
   // Reload to apply the data
   await this.page!.reload();
-  await this.page!.waitForLoadState("domcontentloaded");
+  await this.page!.waitForLoadState("networkidle");
+
+  // Additional wait for character to load from IndexedDB
+  await this.page!.waitForTimeout(200);
 });
 
 // ============================================================================
@@ -162,24 +164,15 @@ Then(
 Then(
   "the character data should have type {string}",
   async function (this: CustomWorld, type: string) {
-    // Wait a bit for the save to complete
-    await this.page!.waitForTimeout(200);
+    // Wait for debounced auto-save to complete (300ms debounce + buffer)
+    await this.page!.waitForTimeout(400);
 
-    // Verify in localStorage
-    const storedData = await this.page!.evaluate(() => {
-      const data = localStorage.getItem("numenera-character-state");
-      return data ? JSON.parse(data) : null;
-    });
+    // Verify using TestStorageHelper
+    const storageHelper = new TestStorageHelper(this.page!);
+    const storedData = await storageHelper.getCharacter();
 
     expect(storedData).toBeTruthy();
-
-    // Data is stored with schemaVersion wrapper: { schemaVersion, character: { type, ... } }
-    if (storedData.character) {
-      expect(storedData.character.type).toBe(type);
-    } else {
-      // Fallback for direct structure
-      expect(storedData.type).toBe(type);
-    }
+    expect(storedData.type).toBe(type);
   }
 );
 
@@ -385,24 +378,15 @@ Then(
 Then(
   "the character data should have background {string}",
   async function (this: CustomWorld, text: string) {
-    // Wait a bit for the save to complete
-    await this.page!.waitForTimeout(200);
+    // Wait for debounced auto-save to complete (300ms debounce + buffer)
+    await this.page!.waitForTimeout(400);
 
-    // Verify in localStorage
-    const storedData = await this.page!.evaluate(() => {
-      const data = localStorage.getItem("numenera-character-state");
-      return data ? JSON.parse(data) : null;
-    });
+    // Verify using TestStorageHelper
+    const storageHelper = new TestStorageHelper(this.page!);
+    const storedData = await storageHelper.getCharacter();
 
     expect(storedData).toBeTruthy();
-
-    // Data is stored with schemaVersion wrapper: { schemaVersion, character: { textFields: { background } } }
-    if (storedData.character) {
-      expect(storedData.character.textFields.background).toBe(text);
-    } else {
-      // Fallback for direct structure
-      expect(storedData.textFields.background).toBe(text);
-    }
+    expect(storedData.textFields.background).toBe(text);
   }
 );
 
@@ -545,17 +529,15 @@ Then("the notes placeholder should be {string}", async function (this: CustomWor
 Then(
   "the character data should have notes {string}",
   async function (this: CustomWorld, text: string) {
-    await this.page!.waitForTimeout(200);
-    const storedData = await this.page!.evaluate(() => {
-      const data = localStorage.getItem("numenera-character-state");
-      return data ? JSON.parse(data) : null;
-    });
+    // Wait for debounced auto-save to complete (300ms debounce + buffer)
+    await this.page!.waitForTimeout(400);
+
+    // Verify using TestStorageHelper
+    const storageHelper = new TestStorageHelper(this.page!);
+    const storedData = await storageHelper.getCharacter();
+
     expect(storedData).toBeTruthy();
-    if (storedData.character) {
-      expect(storedData.character.textFields.notes).toBe(text);
-    } else {
-      expect(storedData.textFields.notes).toBe(text);
-    }
+    expect(storedData.textFields.notes).toBe(text);
   }
 );
 
@@ -596,12 +578,9 @@ Then("the background field should automatically save", async function (this: Cus
 Then(
   "a character-updated event should be dispatched for type change",
   async function (this: CustomWorld) {
-    // This is verified implicitly by localStorage persistence
-    // The event handler in CharacterSheet updates localStorage
-    const storedData = await this.page!.evaluate(() => {
-      const data = localStorage.getItem("numenera-character-state");
-      return data ? JSON.parse(data) : null;
-    });
+    // This is verified implicitly by storage persistence
+    const storageHelper = new TestStorageHelper(this.page!);
+    const storedData = await storageHelper.getCharacter();
 
     expect(storedData).toBeTruthy();
     expect(storedData.type).toBeTruthy();
@@ -611,11 +590,9 @@ Then(
 Then(
   "a character-updated event should be dispatched for background change",
   async function (this: CustomWorld) {
-    // This is verified implicitly by localStorage persistence
-    const storedData = await this.page!.evaluate(() => {
-      const data = localStorage.getItem("numenera-character-state");
-      return data ? JSON.parse(data) : null;
-    });
+    // This is verified implicitly by storage persistence
+    const storageHelper = new TestStorageHelper(this.page!);
+    const storedData = await storageHelper.getCharacter();
 
     expect(storedData).toBeTruthy();
     expect(storedData.textFields?.background).toBeTruthy();
@@ -625,11 +602,9 @@ Then(
 Then(
   "a character-updated event should be dispatched for notes change",
   async function (this: CustomWorld) {
-    // This is verified implicitly by localStorage persistence
-    const storedData = await this.page!.evaluate(() => {
-      const data = localStorage.getItem("numenera-character-state");
-      return data ? JSON.parse(data) : null;
-    });
+    // This is verified implicitly by storage persistence
+    const storageHelper = new TestStorageHelper(this.page!);
+    const storedData = await storageHelper.getCharacter();
 
     expect(storedData).toBeTruthy();
     expect(storedData.textFields?.notes).toBeTruthy();
@@ -740,29 +715,29 @@ Then(
 );
 
 Then("the character data should have the full background text", async function (this: CustomWorld) {
-  await this.page!.waitForTimeout(200);
-  const storedData = await this.page!.evaluate(() => {
-    const data = localStorage.getItem("numenera-character-state");
-    return data ? JSON.parse(data) : null;
-  });
+  // Wait for debounced auto-save to complete (300ms debounce + buffer)
+  await this.page!.waitForTimeout(400);
+
+  // Verify using TestStorageHelper
+  const storageHelper = new TestStorageHelper(this.page!);
+  const storedData = await storageHelper.getCharacter();
+
   expect(storedData).toBeTruthy();
-  const background = storedData.character
-    ? storedData.character.textFields.background
-    : storedData.textFields.background;
+  const background = storedData.textFields.background;
   expect(background.length).toBe(1000);
   expect(background).toBe("A".repeat(1000));
 });
 
 Then("the character data should have the full notes text", async function (this: CustomWorld) {
-  await this.page!.waitForTimeout(200);
-  const storedData = await this.page!.evaluate(() => {
-    const data = localStorage.getItem("numenera-character-state");
-    return data ? JSON.parse(data) : null;
-  });
+  // Wait for debounced auto-save to complete (300ms debounce + buffer)
+  await this.page!.waitForTimeout(400);
+
+  // Verify using TestStorageHelper
+  const storageHelper = new TestStorageHelper(this.page!);
+  const storedData = await storageHelper.getCharacter();
+
   expect(storedData).toBeTruthy();
-  const notes = storedData.character
-    ? storedData.character.textFields.notes
-    : storedData.textFields.notes;
+  const notes = storedData.textFields.notes;
   expect(notes.length).toBe(2000);
   expect(notes).toBe("B".repeat(2000));
 });

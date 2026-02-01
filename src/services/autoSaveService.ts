@@ -17,16 +17,16 @@ type EventCallback = (event: SaveCompletedEvent) => void;
 export class AutoSaveService {
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
   private lastSaveTimestamp: string | null = null;
-  private saveCallback: () => void;
+  private saveCallback: () => void | Promise<void>;
   private debounceTime: number;
   private listeners: Map<string, EventCallback[]> = new Map();
 
   /**
    * Create a new AutoSaveService
-   * @param saveCallback Function to call when save is triggered
+   * @param saveCallback Function to call when save is triggered (can be async)
    * @param debounceTime Time in milliseconds to wait before saving (default: 300ms)
    */
-  constructor(saveCallback: () => void, debounceTime: number = 300) {
+  constructor(saveCallback: () => void | Promise<void>, debounceTime: number = 300) {
     this.saveCallback = saveCallback;
     this.debounceTime = debounceTime;
   }
@@ -50,9 +50,9 @@ export class AutoSaveService {
   /**
    * Perform the actual save and update timestamp
    */
-  private performSave(): void {
-    // Call the save callback
-    this.saveCallback();
+  private async performSave(): Promise<void> {
+    // Call the save callback (await if it's a promise)
+    await this.saveCallback();
 
     // Update timestamp
     this.lastSaveTimestamp = this.formatTimestamp(new Date());

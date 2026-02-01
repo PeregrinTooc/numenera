@@ -153,7 +153,7 @@ export class ExportManager {
     const filename = this.generateFilename(character);
 
     try {
-      return await window.showSaveFilePicker({
+      return await window.showSaveFilePicker!({
         suggestedName: filename,
         types: [
           {
@@ -224,7 +224,10 @@ export class ExportManager {
       const tx = db.transaction("handles", "readwrite");
       const store = tx.objectStore("handles");
       store.put(handle, this.HANDLE_STORAGE_KEY);
-      await tx.done;
+      await new Promise<void>((resolve, reject) => {
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
     } catch (error) {
       console.warn("Failed to persist file handle:", error);
     }
@@ -245,8 +248,9 @@ export class ExportManager {
 
       if (handle) {
         // Verify we still have permission (if queryPermission exists)
-        if (typeof handle.queryPermission === "function") {
-          const permission = await handle.queryPermission({ mode: "readwrite" });
+        const queryPermission = (handle as any).queryPermission;
+        if (typeof queryPermission === "function") {
+          const permission = await queryPermission.call(handle, { mode: "readwrite" });
           if (permission === "granted") {
             this.fileHandle = handle;
           }

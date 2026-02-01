@@ -81,7 +81,7 @@ This project follows BDD/TDD principles:
 4. **Refactor** while keeping tests green
 5. **Commit** the working feature
 
-See [docs/FEATURES.md](docs/FEATURES.md) for the feature roadmap and [.cline/cline_docs.md](.cline/cline_docs.md) for detailed development guidelines.
+See [docs/FEATURES.md](docs/FEATURES.md) for implemented features and [docs/TODO.md](docs/TODO.md) for the development roadmap.
 
 ## Git Hooks
 
@@ -118,12 +118,13 @@ Once configured, every push to `main`:
 
 ## Contributing
 
-1. Check [docs/FEATURES.md](docs/FEATURES.md) for planned features
-2. Create a feature branch
-3. Write tests first (BDD/TDD)
-4. Implement the feature
-5. Ensure all tests pass
-6. Submit a pull request
+1. Check [docs/TODO.md](docs/TODO.md) for planned features
+2. Check [docs/FEATURES.md](docs/FEATURES.md) for implemented features
+3. Create a feature branch
+4. Write tests first (BDD/TDD)
+5. Implement the feature
+6. Ensure all tests pass
+7. Submit a pull request
 
 ## License
 
@@ -132,5 +133,6 @@ ISC
 ## Resources
 
 - [Numenera RPG](https://www.montecookgames.com/store/product/numenera-discovery/)
-- [Development Guide](.cline/cline_docs.md)
-- [Feature Roadmap](docs/FEATURES.md)
+- [Implemented Features](docs/FEATURES.md)
+- [Development Roadmap](docs/TODO.md)
+- [Current Feature Work](docs/CURRENT_FEATURE.md)

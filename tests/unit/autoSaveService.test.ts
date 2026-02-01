@@ -8,7 +8,7 @@ describe("AutoSaveService", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     mockSaveCallback = vi.fn();
-    service = new AutoSaveService(mockSaveCallback, 300);
+    service = new AutoSaveService(mockSaveCallback as any, 300);
   });
 
   afterEach(() => {
@@ -52,28 +52,28 @@ describe("AutoSaveService", () => {
       expect(mockSaveCallback).toHaveBeenCalledTimes(1);
     });
 
-    it("should update last save timestamp after saving", () => {
+    it("should update last save timestamp after saving", async () => {
       const beforeTimestamp = service.getLastSaveTimestamp();
       expect(beforeTimestamp).toBeNull();
 
       service.requestSave();
-      vi.advanceTimersByTime(300);
+      await vi.runAllTimersAsync();
 
       const afterTimestamp = service.getLastSaveTimestamp();
       expect(afterTimestamp).not.toBeNull();
       expect(afterTimestamp).toMatch(/\d{1,2}:\d{2}:\d{2}(\s?[AP]M)?/);
     });
 
-    it("should update timestamp on subsequent saves", () => {
+    it("should update timestamp on subsequent saves", async () => {
       service.requestSave();
-      vi.advanceTimersByTime(300);
+      await vi.runAllTimersAsync();
       const firstTimestamp = service.getLastSaveTimestamp();
 
       // Advance time to ensure different timestamp
       vi.advanceTimersByTime(1000);
 
       service.requestSave();
-      vi.advanceTimersByTime(300);
+      await vi.runAllTimersAsync();
       const secondTimestamp = service.getLastSaveTimestamp();
 
       expect(secondTimestamp).not.toBe(firstTimestamp);
@@ -86,9 +86,9 @@ describe("AutoSaveService", () => {
       expect(timestamp).toBeNull();
     });
 
-    it("should return formatted time after save", () => {
+    it("should return formatted time after save", async () => {
       service.requestSave();
-      vi.advanceTimersByTime(300);
+      await vi.runAllTimersAsync();
 
       const timestamp = service.getLastSaveTimestamp();
       expect(timestamp).not.toBeNull();
@@ -102,9 +102,9 @@ describe("AutoSaveService", () => {
       expect(service.hasEverSaved()).toBe(false);
     });
 
-    it("should return true after save", () => {
+    it("should return true after save", async () => {
       service.requestSave();
-      vi.advanceTimersByTime(300);
+      await vi.runAllTimersAsync();
 
       expect(service.hasEverSaved()).toBe(true);
     });
@@ -112,25 +112,26 @@ describe("AutoSaveService", () => {
 
   describe("custom debounce time", () => {
     it("should use custom debounce time", () => {
-      const customService = new AutoSaveService(mockSaveCallback, 500);
+      const customCallback = vi.fn();
+      const customService = new AutoSaveService(customCallback as any, 500);
 
       customService.requestSave();
       vi.advanceTimersByTime(300);
-      expect(mockSaveCallback).not.toHaveBeenCalled();
+      expect(customCallback).not.toHaveBeenCalled();
 
       vi.advanceTimersByTime(200);
-      expect(mockSaveCallback).toHaveBeenCalledTimes(1);
+      expect(customCallback).toHaveBeenCalledTimes(1);
     });
   });
 
   describe("timestamp formatting", () => {
-    it("should format timestamp in user locale", () => {
+    it("should format timestamp in user locale", async () => {
       // Mock current time to a known value
       const mockDate = new Date("2026-01-31T14:30:45");
       vi.setSystemTime(mockDate);
 
       service.requestSave();
-      vi.advanceTimersByTime(300);
+      await vi.runAllTimersAsync();
 
       const timestamp = service.getLastSaveTimestamp();
       expect(timestamp).toBeTruthy();
@@ -140,12 +141,12 @@ describe("AutoSaveService", () => {
   });
 
   describe("event emission", () => {
-    it("should emit save-completed event after save", () => {
+    it("should emit save-completed event after save", async () => {
       const eventHandler = vi.fn();
       service.on("save-completed", eventHandler);
 
       service.requestSave();
-      vi.advanceTimersByTime(300);
+      await vi.runAllTimersAsync();
 
       expect(eventHandler).toHaveBeenCalledTimes(1);
       expect(eventHandler).toHaveBeenCalledWith(
@@ -155,7 +156,7 @@ describe("AutoSaveService", () => {
       );
     });
 
-    it("should allow multiple event listeners", () => {
+    it("should allow multiple event listeners", async () => {
       const handler1 = vi.fn();
       const handler2 = vi.fn();
 
@@ -163,7 +164,7 @@ describe("AutoSaveService", () => {
       service.on("save-completed", handler2);
 
       service.requestSave();
-      vi.advanceTimersByTime(300);
+      await vi.runAllTimersAsync();
 
       expect(handler1).toHaveBeenCalledTimes(1);
       expect(handler2).toHaveBeenCalledTimes(1);

@@ -1,5 +1,16 @@
 import { Page } from "@playwright/test";
 
+// Type declaration for test storage API exposed by main.ts
+declare global {
+  interface Window {
+    __testStorage?: {
+      saveCharacterState: (character: any) => Promise<void>;
+      loadCharacterState: () => Promise<any>;
+      clearCharacterState: () => Promise<void>;
+    };
+  }
+}
+
 /**
  * Test helper for character storage operations
  *
@@ -24,11 +35,11 @@ export class TestStorageHelper {
    */
   async setCharacter(character: any): Promise<void> {
     await this.page.evaluate(async (char) => {
-      // Import app's storage factory (uses runtime module path in browser)
-      // @ts-expect-error - Module path resolved at runtime in browser context
-      const module = await import("/src/storage/storageFactory.js");
-      // Save using app's storage backend (currently localStorage, future: IndexedDB)
-      await module.saveCharacterState(char);
+      // Use storage API exposed on window by main.ts (works in dev and production)
+      if (!window.__testStorage) {
+        throw new Error("Test storage API not available. Make sure the app has loaded.");
+      }
+      await window.__testStorage.saveCharacterState(char);
     }, character);
   }
 
@@ -39,9 +50,10 @@ export class TestStorageHelper {
    */
   async getCharacter(): Promise<any> {
     return await this.page.evaluate(async () => {
-      // @ts-expect-error - Module path resolved at runtime in browser context
-      const module = await import("/src/storage/storageFactory.js");
-      return await module.loadCharacterState();
+      if (!window.__testStorage) {
+        throw new Error("Test storage API not available. Make sure the app has loaded.");
+      }
+      return await window.__testStorage.loadCharacterState();
     });
   }
 
@@ -50,9 +62,10 @@ export class TestStorageHelper {
    */
   async clearStorage(): Promise<void> {
     await this.page.evaluate(async () => {
-      // @ts-expect-error - Module path resolved at runtime in browser context
-      const module = await import("/src/storage/storageFactory.js");
-      await module.clearCharacterState();
+      if (!window.__testStorage) {
+        throw new Error("Test storage API not available. Make sure the app has loaded.");
+      }
+      await window.__testStorage.clearCharacterState();
     });
   }
 

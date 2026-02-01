@@ -1,6 +1,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { DOMHelpers } from "../support/dom-helpers.js";
+import { TestStorageHelper } from "../support/testStorageHelper.js";
 
 // Recovery Rolls step definitions
 
@@ -71,21 +72,21 @@ Then(
 );
 
 Given("the character is {string}", async function (impairmentStatus: string) {
-  // Modify character in localStorage to have the specified impairment status
-  await this.page.evaluate((status: string) => {
-    const stored = localStorage.getItem("numenera-character-state");
-    if (stored) {
-      const character = JSON.parse(stored);
-      // Use raw format (no wrapper) - ensure damageTrack exists
-      if (character && character.damageTrack) {
-        character.damageTrack.impairment = status;
-        localStorage.setItem("numenera-character-state", JSON.stringify(character));
-      }
-    }
-  }, impairmentStatus);
+  // Use TestStorageHelper to modify character with IndexedDB
+  const storageHelper = new TestStorageHelper(this.page);
+  const character = await storageHelper.getCharacter();
+
+  if (character && character.damageTrack) {
+    character.damageTrack.impairment = impairmentStatus;
+    await this.page.waitForTimeout(500);
+    await storageHelper.setCharacter(character);
+  }
 
   // Reload page to pick up the changes
-  await this.page.reload({ waitUntil: "domcontentloaded" });
+  await this.page.waitForTimeout(500);
+  await this.page.reload();
+  await this.page.waitForLoadState("networkidle");
+  await this.page.waitForTimeout(200);
 
   // Wait for damage track section to be visible and correct radio button to be selected
   await this.page.waitForSelector('[data-testid="damage-track-section"]', { state: "visible" });
@@ -139,21 +140,21 @@ Then("the damage track section should have red styling", async function () {
 // Recovery modifier step definitions
 
 Given("the character has recovery modifier {int}", async function (modifier: number) {
-  // Modify character in localStorage to have the specified recovery modifier
-  await this.page.evaluate((mod: number) => {
-    const stored = localStorage.getItem("numenera-character-state");
-    if (stored) {
-      const character = JSON.parse(stored);
-      // Use raw format (no wrapper)
-      if (character && character.recoveryRolls) {
-        character.recoveryRolls.modifier = mod;
-        localStorage.setItem("numenera-character-state", JSON.stringify(character));
-      }
-    }
-  }, modifier);
+  // Use TestStorageHelper to modify character with IndexedDB
+  const storageHelper = new TestStorageHelper(this.page);
+  const character = await storageHelper.getCharacter();
+
+  if (character && character.recoveryRolls) {
+    character.recoveryRolls.modifier = modifier;
+    await this.page.waitForTimeout(500);
+    await storageHelper.setCharacter(character);
+  }
 
   // Reload page to pick up the changes
-  await this.page.reload({ waitUntil: "domcontentloaded" });
+  await this.page.waitForTimeout(500);
+  await this.page.reload();
+  await this.page.waitForLoadState("networkidle");
+  await this.page.waitForTimeout(200);
 
   // Wait for recovery modifier display to show correct value
   // The display shows "1d6 + X" format

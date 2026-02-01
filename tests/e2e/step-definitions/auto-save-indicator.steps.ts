@@ -48,20 +48,31 @@ When("I edit the tier to {string}", async function (this: CustomWorld, tier: str
 });
 
 When("I rapidly edit the character name multiple times", async function (this: CustomWorld) {
-  // Track saves by monitoring localStorage changes
+  // Track saves by monitoring save indicator updates (MutationObserver)
   saveCount = 0;
 
   await this.page.evaluate(() => {
-    const originalSetItem = localStorage.setItem;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).__saveCount = 0;
-    localStorage.setItem = function (key: string, value: string) {
-      if (key === "numenera-character-state") {
+
+    // Monitor save indicator for content changes
+    const indicator = document.querySelector('[data-testid="save-indicator"]');
+    if (indicator) {
+      // eslint-disable-next-line no-undef
+      const observer = new MutationObserver(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (window as any).__saveCount++;
-      }
-      return originalSetItem.call(this, key, value);
-    };
+      });
+
+      observer.observe(indicator, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).__saveObserver = observer;
+    }
   });
 
   const nameElement = this.page.locator('[data-testid="character-name"]');
@@ -78,12 +89,21 @@ When("I rapidly edit the character name multiple times", async function (this: C
     await this.page.waitForTimeout(50); // Short delay, within debounce window
   }
 
-  // Wait for debounce to settle
-  await this.page.waitForTimeout(500);
+  // Wait for debounce to settle and save to complete
+  await this.page.waitForTimeout(600);
 
-  // Get save count
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  saveCount = await this.page.evaluate(() => (window as any).__saveCount || 0);
+  // Get save count and cleanup observer
+
+  saveCount = await this.page.evaluate(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const count = (window as any).__saveCount || 0;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const observer = (window as any).__saveObserver;
+    if (observer) {
+      observer.disconnect();
+    }
+    return count;
+  });
 });
 
 When("I edit the might pool to {string}", async function (this: CustomWorld, value: string) {

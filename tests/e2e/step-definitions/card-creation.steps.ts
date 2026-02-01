@@ -1,62 +1,65 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
+import { TestStorageHelper } from "../support/testStorageHelper.js";
 
 // ============================================================================
 // PRECONDITION STEPS
 // ============================================================================
 
 Given("the character has {int} cypher card", async function (this: CustomWorld, count: number) {
-  // Set up character data in localStorage with the correct number of cyphers
+  // Set up character data in storage with the correct number of cyphers
   // The FULL_CHARACTER from mockCharacters.ts has 2 cyphers
   if (count === 2) {
-    // Load FULL_CHARACTER which has 2 cyphers
-    await this.page!.evaluate(() => {
-      const FULL_CHARACTER = {
-        name: "Kael the Wanderer",
-        tier: 3,
-        type: "Glaive",
-        descriptor: "Strong",
-        focus: "Bears a Halo of Fire",
-        xp: 12,
-        shins: 47,
-        armor: 2,
-        effort: 3,
-        maxCyphers: 4,
-        stats: {
-          might: { pool: 15, edge: 2, current: 12 },
-          speed: { pool: 12, edge: 1, current: 12 },
-          intellect: { pool: 10, edge: 0, current: 8 },
-        },
-        cyphers: [
-          { name: "Detonation (Cell)", level: "1d6+2", effect: "Explodes in an immediate radius" },
-          { name: "Stim (Injector)", level: "1d6", effect: "Restores 1d6 + 2 points to one Pool" },
-        ],
-        artifacts: [
-          { name: "Lightning Rod", level: "6", effect: "Projects lightning bolt up to long range" },
-        ],
-        oddities: [
-          "A glowing cube that hums when near water",
-          "A piece of transparent metal that's always cold",
-        ],
-        abilities: [],
-        equipment: [],
-        attacks: [],
-        specialAbilities: [],
-        recoveryRolls: {
-          action: false,
-          tenMinutes: false,
-          oneHour: false,
-          tenHours: false,
-          modifier: 0,
-        },
-        damageTrack: { impairment: "healthy" },
-        textFields: { background: "", notes: "" },
-      };
-      localStorage.setItem("numenera-character", JSON.stringify(FULL_CHARACTER));
-    });
+    const storageHelper = new TestStorageHelper(this.page!);
+    const FULL_CHARACTER = {
+      name: "Kael the Wanderer",
+      tier: 3,
+      type: "Glaive",
+      descriptor: "Strong",
+      focus: "Bears a Halo of Fire",
+      xp: 12,
+      shins: 47,
+      armor: 2,
+      effort: 3,
+      maxCyphers: 4,
+      stats: {
+        might: { pool: 15, edge: 2, current: 12 },
+        speed: { pool: 12, edge: 1, current: 12 },
+        intellect: { pool: 10, edge: 0, current: 8 },
+      },
+      cyphers: [
+        { name: "Detonation (Cell)", level: "1d6+2", effect: "Explodes in an immediate radius" },
+        { name: "Stim (Injector)", level: "1d6", effect: "Restores 1d6 + 2 points to one Pool" },
+      ],
+      artifacts: [
+        { name: "Lightning Rod", level: "6", effect: "Projects lightning bolt up to long range" },
+      ],
+      oddities: [
+        "A glowing cube that hums when near water",
+        "A piece of transparent metal that's always cold",
+      ],
+      abilities: [],
+      equipment: [],
+      attacks: [],
+      specialAbilities: [],
+      recoveryRolls: {
+        action: false,
+        tenMinutes: false,
+        oneHour: false,
+        tenHours: false,
+        modifier: 0,
+      },
+      damageTrack: { impairment: "healthy" },
+      textFields: { background: "", notes: "" },
+    };
+    await this.page!.waitForTimeout(500);
+    await storageHelper.setCharacter(FULL_CHARACTER);
     // Reload the page to apply the character data
-    await this.page!.reload({ waitUntil: "load" });
+    await this.page!.waitForTimeout(500);
+    await this.page!.reload();
+    await this.page!.waitForLoadState("networkidle");
+    await this.page!.waitForTimeout(200);
     // Wait for cypher items to be rendered
     await this.page!.waitForSelector('[data-testid="cypher-item"]', { timeout: 5000 });
   }
@@ -67,56 +70,58 @@ Given("the character has {int} cypher card", async function (this: CustomWorld, 
 });
 
 Given("the character has {int} cypher cards", async function (this: CustomWorld, count: number) {
-  // Set up character data in localStorage with the correct number of cyphers
+  // Set up character data in storage with the correct number of cyphers
   // The FULL_CHARACTER from mockCharacters.ts has 2 cyphers
   if (count === 2) {
-    // Load FULL_CHARACTER which has 2 cyphers
-    await this.page!.evaluate(() => {
-      const FULL_CHARACTER = {
-        name: "Kael the Wanderer",
-        tier: 3,
-        type: "Glaive",
-        descriptor: "Strong",
-        focus: "Bears a Halo of Fire",
-        xp: 12,
-        shins: 47,
-        armor: 2,
-        effort: 3,
-        maxCyphers: 4,
-        stats: {
-          might: { pool: 15, edge: 2, current: 12 },
-          speed: { pool: 12, edge: 1, current: 12 },
-          intellect: { pool: 10, edge: 0, current: 8 },
-        },
-        cyphers: [
-          { name: "Detonation (Cell)", level: "1d6+2", effect: "Explodes in an immediate radius" },
-          { name: "Stim (Injector)", level: "1d6", effect: "Restores 1d6 + 2 points to one Pool" },
-        ],
-        artifacts: [
-          { name: "Lightning Rod", level: "6", effect: "Projects lightning bolt up to long range" },
-        ],
-        oddities: [
-          "A glowing cube that hums when near water",
-          "A piece of transparent metal that's always cold",
-        ],
-        abilities: [],
-        equipment: [],
-        attacks: [],
-        specialAbilities: [],
-        recoveryRolls: {
-          action: false,
-          tenMinutes: false,
-          oneHour: false,
-          tenHours: false,
-          modifier: 0,
-        },
-        damageTrack: { impairment: "healthy" },
-        textFields: { background: "", notes: "" },
-      };
-      localStorage.setItem("numenera-character", JSON.stringify(FULL_CHARACTER));
-    });
+    const storageHelper = new TestStorageHelper(this.page!);
+    const FULL_CHARACTER = {
+      name: "Kael the Wanderer",
+      tier: 3,
+      type: "Glaive",
+      descriptor: "Strong",
+      focus: "Bears a Halo of Fire",
+      xp: 12,
+      shins: 47,
+      armor: 2,
+      effort: 3,
+      maxCyphers: 4,
+      stats: {
+        might: { pool: 15, edge: 2, current: 12 },
+        speed: { pool: 12, edge: 1, current: 12 },
+        intellect: { pool: 10, edge: 0, current: 8 },
+      },
+      cyphers: [
+        { name: "Detonation (Cell)", level: "1d6+2", effect: "Explodes in an immediate radius" },
+        { name: "Stim (Injector)", level: "1d6", effect: "Restores 1d6 + 2 points to one Pool" },
+      ],
+      artifacts: [
+        { name: "Lightning Rod", level: "6", effect: "Projects lightning bolt up to long range" },
+      ],
+      oddities: [
+        "A glowing cube that hums when near water",
+        "A piece of transparent metal that's always cold",
+      ],
+      abilities: [],
+      equipment: [],
+      attacks: [],
+      specialAbilities: [],
+      recoveryRolls: {
+        action: false,
+        tenMinutes: false,
+        oneHour: false,
+        tenHours: false,
+        modifier: 0,
+      },
+      damageTrack: { impairment: "healthy" },
+      textFields: { background: "", notes: "" },
+    };
+    await this.page!.waitForTimeout(500);
+    await storageHelper.setCharacter(FULL_CHARACTER);
     // Reload the page to apply the character data
-    await this.page!.reload({ waitUntil: "load" });
+    await this.page!.waitForTimeout(500);
+    await this.page!.reload();
+    await this.page!.waitForLoadState("networkidle");
+    await this.page!.waitForTimeout(200);
     // Wait for cypher items to be rendered
     await this.page!.waitForSelector('[data-testid="cypher-item"]', { timeout: 5000 });
   }
@@ -313,48 +318,51 @@ When(
 // PRECONDITION STEPS
 Given("the character has {int} equipment card", async function (this: CustomWorld, count: number) {
   if (count === 4) {
-    await this.page!.evaluate(() => {
-      const FULL_CHARACTER = {
-        name: "Kael the Wanderer",
-        tier: 3,
-        type: "Glaive",
-        descriptor: "Strong",
-        focus: "Bears a Halo of Fire",
-        xp: 12,
-        shins: 47,
-        armor: 2,
-        effort: 3,
-        maxCyphers: 4,
-        stats: {
-          might: { pool: 15, edge: 2, current: 12 },
-          speed: { pool: 12, edge: 1, current: 12 },
-          intellect: { pool: 10, edge: 0, current: 8 },
-        },
-        cyphers: [],
-        artifacts: [],
-        oddities: [],
-        abilities: [],
-        equipment: [
-          { name: "Medium armor", description: "Provides protection without hindering movement" },
-          { name: "Broadsword", description: "Heavy melee weapon" },
-          { name: "Explorer's pack", description: undefined },
-          { name: "50 feet of rope", description: undefined },
-        ],
-        attacks: [],
-        specialAbilities: [],
-        recoveryRolls: {
-          action: false,
-          tenMinutes: false,
-          oneHour: false,
-          tenHours: false,
-          modifier: 0,
-        },
-        damageTrack: { impairment: "healthy" },
-        textFields: { background: "", notes: "" },
-      };
-      localStorage.setItem("numenera-character", JSON.stringify(FULL_CHARACTER));
-    });
-    await this.page!.reload({ waitUntil: "load" });
+    const storageHelper = new TestStorageHelper(this.page!);
+    const FULL_CHARACTER = {
+      name: "Kael the Wanderer",
+      tier: 3,
+      type: "Glaive",
+      descriptor: "Strong",
+      focus: "Bears a Halo of Fire",
+      xp: 12,
+      shins: 47,
+      armor: 2,
+      effort: 3,
+      maxCyphers: 4,
+      stats: {
+        might: { pool: 15, edge: 2, current: 12 },
+        speed: { pool: 12, edge: 1, current: 12 },
+        intellect: { pool: 10, edge: 0, current: 8 },
+      },
+      cyphers: [],
+      artifacts: [],
+      oddities: [],
+      abilities: [],
+      equipment: [
+        { name: "Medium armor", description: "Provides protection without hindering movement" },
+        { name: "Broadsword", description: "Heavy melee weapon" },
+        { name: "Explorer's pack", description: undefined },
+        { name: "50 feet of rope", description: undefined },
+      ],
+      attacks: [],
+      specialAbilities: [],
+      recoveryRolls: {
+        action: false,
+        tenMinutes: false,
+        oneHour: false,
+        tenHours: false,
+        modifier: 0,
+      },
+      damageTrack: { impairment: "healthy" },
+      textFields: { background: "", notes: "" },
+    };
+    await this.page!.waitForTimeout(500);
+    await storageHelper.setCharacter(FULL_CHARACTER);
+    await this.page!.waitForTimeout(500);
+    await this.page!.reload();
+    await this.page!.waitForLoadState("networkidle");
+    await this.page!.waitForTimeout(200);
     await this.page!.waitForSelector('[data-testid^="equipment-item-"]', { timeout: 5000 });
   }
   const cards = this.page!.locator('[data-testid^="equipment-item-"]');
@@ -363,48 +371,51 @@ Given("the character has {int} equipment card", async function (this: CustomWorl
 
 Given("the character has {int} equipment cards", async function (this: CustomWorld, count: number) {
   if (count === 4) {
-    await this.page!.evaluate(() => {
-      const FULL_CHARACTER = {
-        name: "Kael the Wanderer",
-        tier: 3,
-        type: "Glaive",
-        descriptor: "Strong",
-        focus: "Bears a Halo of Fire",
-        xp: 12,
-        shins: 47,
-        armor: 2,
-        effort: 3,
-        maxCyphers: 4,
-        stats: {
-          might: { pool: 15, edge: 2, current: 12 },
-          speed: { pool: 12, edge: 1, current: 12 },
-          intellect: { pool: 10, edge: 0, current: 8 },
-        },
-        cyphers: [],
-        artifacts: [],
-        oddities: [],
-        abilities: [],
-        equipment: [
-          { name: "Medium armor", description: "Provides protection without hindering movement" },
-          { name: "Broadsword", description: "Heavy melee weapon" },
-          { name: "Explorer's pack", description: undefined },
-          { name: "50 feet of rope", description: undefined },
-        ],
-        attacks: [],
-        specialAbilities: [],
-        recoveryRolls: {
-          action: false,
-          tenMinutes: false,
-          oneHour: false,
-          tenHours: false,
-          modifier: 0,
-        },
-        damageTrack: { impairment: "healthy" },
-        textFields: { background: "", notes: "" },
-      };
-      localStorage.setItem("numenera-character", JSON.stringify(FULL_CHARACTER));
-    });
-    await this.page!.reload({ waitUntil: "load" });
+    const storageHelper = new TestStorageHelper(this.page!);
+    const FULL_CHARACTER = {
+      name: "Kael the Wanderer",
+      tier: 3,
+      type: "Glaive",
+      descriptor: "Strong",
+      focus: "Bears a Halo of Fire",
+      xp: 12,
+      shins: 47,
+      armor: 2,
+      effort: 3,
+      maxCyphers: 4,
+      stats: {
+        might: { pool: 15, edge: 2, current: 12 },
+        speed: { pool: 12, edge: 1, current: 12 },
+        intellect: { pool: 10, edge: 0, current: 8 },
+      },
+      cyphers: [],
+      artifacts: [],
+      oddities: [],
+      abilities: [],
+      equipment: [
+        { name: "Medium armor", description: "Provides protection without hindering movement" },
+        { name: "Broadsword", description: "Heavy melee weapon" },
+        { name: "Explorer's pack", description: undefined },
+        { name: "50 feet of rope", description: undefined },
+      ],
+      attacks: [],
+      specialAbilities: [],
+      recoveryRolls: {
+        action: false,
+        tenMinutes: false,
+        oneHour: false,
+        tenHours: false,
+        modifier: 0,
+      },
+      damageTrack: { impairment: "healthy" },
+      textFields: { background: "", notes: "" },
+    };
+    await this.page!.waitForTimeout(500);
+    await storageHelper.setCharacter(FULL_CHARACTER);
+    await this.page!.waitForTimeout(500);
+    await this.page!.reload();
+    await this.page!.waitForLoadState("networkidle");
+    await this.page!.waitForTimeout(200);
     await this.page!.waitForSelector('[data-testid^="equipment-item-"]', { timeout: 5000 });
   }
   const cards = this.page!.locator('[data-testid^="equipment-item-"]');
@@ -510,46 +521,49 @@ When(
 // PRECONDITION STEPS
 Given("the character has {int} artifact card", async function (this: CustomWorld, count: number) {
   if (count === 2) {
-    await this.page!.evaluate(() => {
-      const FULL_CHARACTER = {
-        name: "Kael the Wanderer",
-        tier: 3,
-        type: "Glaive",
-        descriptor: "Strong",
-        focus: "Bears a Halo of Fire",
-        xp: 12,
-        shins: 47,
-        armor: 2,
-        effort: 3,
-        maxCyphers: 4,
-        stats: {
-          might: { pool: 15, edge: 2, current: 12 },
-          speed: { pool: 12, edge: 1, current: 12 },
-          intellect: { pool: 10, edge: 0, current: 8 },
-        },
-        cyphers: [],
-        artifacts: [
-          { name: "Lightning Rod", level: "6", effect: "Projects lightning bolt up to long range" },
-          { name: "Healing Crystal", level: "1d6+2", effect: "Heals wounds over time" },
-        ],
-        oddities: [],
-        abilities: [],
-        equipment: [],
-        attacks: [],
-        specialAbilities: [],
-        recoveryRolls: {
-          action: false,
-          tenMinutes: false,
-          oneHour: false,
-          tenHours: false,
-          modifier: 0,
-        },
-        damageTrack: { impairment: "healthy" },
-        textFields: { background: "", notes: "" },
-      };
-      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
-    });
-    await this.page!.reload({ waitUntil: "load" });
+    const storageHelper = new TestStorageHelper(this.page!);
+    const FULL_CHARACTER = {
+      name: "Kael the Wanderer",
+      tier: 3,
+      type: "Glaive",
+      descriptor: "Strong",
+      focus: "Bears a Halo of Fire",
+      xp: 12,
+      shins: 47,
+      armor: 2,
+      effort: 3,
+      maxCyphers: 4,
+      stats: {
+        might: { pool: 15, edge: 2, current: 12 },
+        speed: { pool: 12, edge: 1, current: 12 },
+        intellect: { pool: 10, edge: 0, current: 8 },
+      },
+      cyphers: [],
+      artifacts: [
+        { name: "Lightning Rod", level: "6", effect: "Projects lightning bolt up to long range" },
+        { name: "Healing Crystal", level: "1d6+2", effect: "Heals wounds over time" },
+      ],
+      oddities: [],
+      abilities: [],
+      equipment: [],
+      attacks: [],
+      specialAbilities: [],
+      recoveryRolls: {
+        action: false,
+        tenMinutes: false,
+        oneHour: false,
+        tenHours: false,
+        modifier: 0,
+      },
+      damageTrack: { impairment: "healthy" },
+      textFields: { background: "", notes: "" },
+    };
+    await this.page!.waitForTimeout(500);
+    await storageHelper.setCharacter(FULL_CHARACTER);
+    await this.page!.waitForTimeout(500);
+    await this.page!.reload();
+    await this.page!.waitForLoadState("networkidle");
+    await this.page!.waitForTimeout(200);
     await this.page!.waitForSelector('[data-testid^="artifact-item-"]', { timeout: 5000 });
   }
   const cards = this.page!.locator('[data-testid^="artifact-item-"]');
@@ -558,46 +572,49 @@ Given("the character has {int} artifact card", async function (this: CustomWorld
 
 Given("the character has {int} artifact cards", async function (this: CustomWorld, count: number) {
   if (count === 2) {
-    await this.page!.evaluate(() => {
-      const FULL_CHARACTER = {
-        name: "Kael the Wanderer",
-        tier: 3,
-        type: "Glaive",
-        descriptor: "Strong",
-        focus: "Bears a Halo of Fire",
-        xp: 12,
-        shins: 47,
-        armor: 2,
-        effort: 3,
-        maxCyphers: 4,
-        stats: {
-          might: { pool: 15, edge: 2, current: 12 },
-          speed: { pool: 12, edge: 1, current: 12 },
-          intellect: { pool: 10, edge: 0, current: 8 },
-        },
-        cyphers: [],
-        artifacts: [
-          { name: "Lightning Rod", level: "6", effect: "Projects lightning bolt up to long range" },
-          { name: "Healing Crystal", level: "1d6+2", effect: "Heals wounds over time" },
-        ],
-        oddities: [],
-        abilities: [],
-        equipment: [],
-        attacks: [],
-        specialAbilities: [],
-        recoveryRolls: {
-          action: false,
-          tenMinutes: false,
-          oneHour: false,
-          tenHours: false,
-          modifier: 0,
-        },
-        damageTrack: { impairment: "healthy" },
-        textFields: { background: "", notes: "" },
-      };
-      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
-    });
-    await this.page!.reload({ waitUntil: "load" });
+    const storageHelper = new TestStorageHelper(this.page!);
+    const FULL_CHARACTER = {
+      name: "Kael the Wanderer",
+      tier: 3,
+      type: "Glaive",
+      descriptor: "Strong",
+      focus: "Bears a Halo of Fire",
+      xp: 12,
+      shins: 47,
+      armor: 2,
+      effort: 3,
+      maxCyphers: 4,
+      stats: {
+        might: { pool: 15, edge: 2, current: 12 },
+        speed: { pool: 12, edge: 1, current: 12 },
+        intellect: { pool: 10, edge: 0, current: 8 },
+      },
+      cyphers: [],
+      artifacts: [
+        { name: "Lightning Rod", level: "6", effect: "Projects lightning bolt up to long range" },
+        { name: "Healing Crystal", level: "1d6+2", effect: "Heals wounds over time" },
+      ],
+      oddities: [],
+      abilities: [],
+      equipment: [],
+      attacks: [],
+      specialAbilities: [],
+      recoveryRolls: {
+        action: false,
+        tenMinutes: false,
+        oneHour: false,
+        tenHours: false,
+        modifier: 0,
+      },
+      damageTrack: { impairment: "healthy" },
+      textFields: { background: "", notes: "" },
+    };
+    await this.page!.waitForTimeout(500);
+    await storageHelper.setCharacter(FULL_CHARACTER);
+    await this.page!.waitForTimeout(500);
+    await this.page!.reload();
+    await this.page!.waitForLoadState("networkidle");
+    await this.page!.waitForTimeout(200);
     await this.page!.waitForSelector('[data-testid^="artifact-item-"]', { timeout: 5000 });
   }
   const cards = this.page!.locator('[data-testid^="artifact-item-"]');
@@ -725,46 +742,49 @@ When(
 // PRECONDITION STEPS
 Given("the character has {int} oddity card", async function (this: CustomWorld, count: number) {
   if (count === 2) {
-    await this.page!.evaluate(() => {
-      const FULL_CHARACTER = {
-        name: "Kael the Wanderer",
-        tier: 3,
-        type: "Glaive",
-        descriptor: "Strong",
-        focus: "Bears a Halo of Fire",
-        xp: 12,
-        shins: 47,
-        armor: 2,
-        effort: 3,
-        maxCyphers: 4,
-        stats: {
-          might: { pool: 15, edge: 2, current: 12 },
-          speed: { pool: 12, edge: 1, current: 12 },
-          intellect: { pool: 10, edge: 0, current: 8 },
-        },
-        cyphers: [],
-        artifacts: [],
-        oddities: [
-          "A glowing cube that hums when near water",
-          "A piece of transparent metal that's always cold",
-        ],
-        abilities: [],
-        equipment: [],
-        attacks: [],
-        specialAbilities: [],
-        recoveryRolls: {
-          action: false,
-          tenMinutes: false,
-          oneHour: false,
-          tenHours: false,
-          modifier: 0,
-        },
-        damageTrack: { impairment: "healthy" },
-        textFields: { background: "", notes: "" },
-      };
-      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
-    });
-    await this.page!.reload({ waitUntil: "load" });
+    const storageHelper = new TestStorageHelper(this.page!);
+    const FULL_CHARACTER = {
+      name: "Kael the Wanderer",
+      tier: 3,
+      type: "Glaive",
+      descriptor: "Strong",
+      focus: "Bears a Halo of Fire",
+      xp: 12,
+      shins: 47,
+      armor: 2,
+      effort: 3,
+      maxCyphers: 4,
+      stats: {
+        might: { pool: 15, edge: 2, current: 12 },
+        speed: { pool: 12, edge: 1, current: 12 },
+        intellect: { pool: 10, edge: 0, current: 8 },
+      },
+      cyphers: [],
+      artifacts: [],
+      oddities: [
+        "A glowing cube that hums when near water",
+        "A piece of transparent metal that's always cold",
+      ],
+      abilities: [],
+      equipment: [],
+      attacks: [],
+      specialAbilities: [],
+      recoveryRolls: {
+        action: false,
+        tenMinutes: false,
+        oneHour: false,
+        tenHours: false,
+        modifier: 0,
+      },
+      damageTrack: { impairment: "healthy" },
+      textFields: { background: "", notes: "" },
+    };
+    await this.page!.waitForTimeout(500);
+    await storageHelper.setCharacter(FULL_CHARACTER);
+    await this.page!.waitForTimeout(500);
+    await this.page!.reload();
+    await this.page!.waitForLoadState("networkidle");
+    await this.page!.waitForTimeout(200);
     await this.page!.waitForSelector('[data-testid="oddity-item"]', { timeout: 5000 });
   }
   const cards = this.page!.locator('[data-testid="oddity-item"]');
@@ -773,46 +793,49 @@ Given("the character has {int} oddity card", async function (this: CustomWorld, 
 
 Given("the character has {int} oddity cards", async function (this: CustomWorld, count: number) {
   if (count === 2) {
-    await this.page!.evaluate(() => {
-      const FULL_CHARACTER = {
-        name: "Kael the Wanderer",
-        tier: 3,
-        type: "Glaive",
-        descriptor: "Strong",
-        focus: "Bears a Halo of Fire",
-        xp: 12,
-        shins: 47,
-        armor: 2,
-        effort: 3,
-        maxCyphers: 4,
-        stats: {
-          might: { pool: 15, edge: 2, current: 12 },
-          speed: { pool: 12, edge: 1, current: 12 },
-          intellect: { pool: 10, edge: 0, current: 8 },
-        },
-        cyphers: [],
-        artifacts: [],
-        oddities: [
-          "A glowing cube that hums when near water",
-          "A piece of transparent metal that's always cold",
-        ],
-        abilities: [],
-        equipment: [],
-        attacks: [],
-        specialAbilities: [],
-        recoveryRolls: {
-          action: false,
-          tenMinutes: false,
-          oneHour: false,
-          tenHours: false,
-          modifier: 0,
-        },
-        damageTrack: { impairment: "healthy" },
-        textFields: { background: "", notes: "" },
-      };
-      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
-    });
-    await this.page!.reload({ waitUntil: "load" });
+    const storageHelper = new TestStorageHelper(this.page!);
+    const FULL_CHARACTER = {
+      name: "Kael the Wanderer",
+      tier: 3,
+      type: "Glaive",
+      descriptor: "Strong",
+      focus: "Bears a Halo of Fire",
+      xp: 12,
+      shins: 47,
+      armor: 2,
+      effort: 3,
+      maxCyphers: 4,
+      stats: {
+        might: { pool: 15, edge: 2, current: 12 },
+        speed: { pool: 12, edge: 1, current: 12 },
+        intellect: { pool: 10, edge: 0, current: 8 },
+      },
+      cyphers: [],
+      artifacts: [],
+      oddities: [
+        "A glowing cube that hums when near water",
+        "A piece of transparent metal that's always cold",
+      ],
+      abilities: [],
+      equipment: [],
+      attacks: [],
+      specialAbilities: [],
+      recoveryRolls: {
+        action: false,
+        tenMinutes: false,
+        oneHour: false,
+        tenHours: false,
+        modifier: 0,
+      },
+      damageTrack: { impairment: "healthy" },
+      textFields: { background: "", notes: "" },
+    };
+    await this.page!.waitForTimeout(500);
+    await storageHelper.setCharacter(FULL_CHARACTER);
+    await this.page!.waitForTimeout(500);
+    await this.page!.reload();
+    await this.page!.waitForLoadState("networkidle");
+    await this.page!.waitForTimeout(200);
     await this.page!.waitForSelector('[data-testid="oddity-item"]', { timeout: 5000 });
   }
   const cards = this.page!.locator('[data-testid="oddity-item"]');
@@ -893,46 +916,49 @@ When(
 // PRECONDITION STEPS
 Given("the character has {int} attack card", async function (this: CustomWorld, count: number) {
   if (count === 2) {
-    await this.page!.evaluate(() => {
-      const FULL_CHARACTER = {
-        name: "Kael the Wanderer",
-        tier: 3,
-        type: "Glaive",
-        descriptor: "Strong",
-        focus: "Bears a Halo of Fire",
-        xp: 12,
-        shins: 47,
-        armor: 2,
-        effort: 3,
-        maxCyphers: 4,
-        stats: {
-          might: { pool: 15, edge: 2, current: 12 },
-          speed: { pool: 12, edge: 1, current: 12 },
-          intellect: { pool: 10, edge: 0, current: 8 },
-        },
-        cyphers: [],
-        artifacts: [],
-        oddities: [],
-        abilities: [],
-        equipment: [],
-        attacks: [
-          { name: "Broadsword", damage: 6, modifier: 1, range: "Immediate", notes: undefined },
-          { name: "Crossbow", damage: 4, modifier: 0, range: "Long", notes: undefined },
-        ],
-        specialAbilities: [],
-        recoveryRolls: {
-          action: false,
-          tenMinutes: false,
-          oneHour: false,
-          tenHours: false,
-          modifier: 0,
-        },
-        damageTrack: { impairment: "healthy" },
-        textFields: { background: "", notes: "" },
-      };
-      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
-    });
-    await this.page!.reload({ waitUntil: "load" });
+    const storageHelper = new TestStorageHelper(this.page!);
+    const FULL_CHARACTER = {
+      name: "Kael the Wanderer",
+      tier: 3,
+      type: "Glaive",
+      descriptor: "Strong",
+      focus: "Bears a Halo of Fire",
+      xp: 12,
+      shins: 47,
+      armor: 2,
+      effort: 3,
+      maxCyphers: 4,
+      stats: {
+        might: { pool: 15, edge: 2, current: 12 },
+        speed: { pool: 12, edge: 1, current: 12 },
+        intellect: { pool: 10, edge: 0, current: 8 },
+      },
+      cyphers: [],
+      artifacts: [],
+      oddities: [],
+      abilities: [],
+      equipment: [],
+      attacks: [
+        { name: "Broadsword", damage: 6, modifier: 1, range: "Immediate", notes: undefined },
+        { name: "Crossbow", damage: 4, modifier: 0, range: "Long", notes: undefined },
+      ],
+      specialAbilities: [],
+      recoveryRolls: {
+        action: false,
+        tenMinutes: false,
+        oneHour: false,
+        tenHours: false,
+        modifier: 0,
+      },
+      damageTrack: { impairment: "healthy" },
+      textFields: { background: "", notes: "" },
+    };
+    await this.page!.waitForTimeout(500);
+    await storageHelper.setCharacter(FULL_CHARACTER);
+    await this.page!.waitForTimeout(500);
+    await this.page!.reload();
+    await this.page!.waitForLoadState("networkidle");
+    await this.page!.waitForTimeout(200);
     await this.page!.waitForSelector('[data-testid^="attack-item-"]', { timeout: 5000 });
   }
   const cards = this.page!.locator('[data-testid^="attack-item-"]');
@@ -941,46 +967,49 @@ Given("the character has {int} attack card", async function (this: CustomWorld, 
 
 Given("the character has {int} attack cards", async function (this: CustomWorld, count: number) {
   if (count === 2) {
-    await this.page!.evaluate(() => {
-      const FULL_CHARACTER = {
-        name: "Kael the Wanderer",
-        tier: 3,
-        type: "Glaive",
-        descriptor: "Strong",
-        focus: "Bears a Halo of Fire",
-        xp: 12,
-        shins: 47,
-        armor: 2,
-        effort: 3,
-        maxCyphers: 4,
-        stats: {
-          might: { pool: 15, edge: 2, current: 12 },
-          speed: { pool: 12, edge: 1, current: 12 },
-          intellect: { pool: 10, edge: 0, current: 8 },
-        },
-        cyphers: [],
-        artifacts: [],
-        oddities: [],
-        abilities: [],
-        equipment: [],
-        attacks: [
-          { name: "Broadsword", damage: 6, modifier: 1, range: "Immediate", notes: undefined },
-          { name: "Crossbow", damage: 4, modifier: 0, range: "Long", notes: undefined },
-        ],
-        specialAbilities: [],
-        recoveryRolls: {
-          action: false,
-          tenMinutes: false,
-          oneHour: false,
-          tenHours: false,
-          modifier: 0,
-        },
-        damageTrack: { impairment: "healthy" },
-        textFields: { background: "", notes: "" },
-      };
-      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
-    });
-    await this.page!.reload({ waitUntil: "load" });
+    const storageHelper = new TestStorageHelper(this.page!);
+    const FULL_CHARACTER = {
+      name: "Kael the Wanderer",
+      tier: 3,
+      type: "Glaive",
+      descriptor: "Strong",
+      focus: "Bears a Halo of Fire",
+      xp: 12,
+      shins: 47,
+      armor: 2,
+      effort: 3,
+      maxCyphers: 4,
+      stats: {
+        might: { pool: 15, edge: 2, current: 12 },
+        speed: { pool: 12, edge: 1, current: 12 },
+        intellect: { pool: 10, edge: 0, current: 8 },
+      },
+      cyphers: [],
+      artifacts: [],
+      oddities: [],
+      abilities: [],
+      equipment: [],
+      attacks: [
+        { name: "Broadsword", damage: 6, modifier: 1, range: "Immediate", notes: undefined },
+        { name: "Crossbow", damage: 4, modifier: 0, range: "Long", notes: undefined },
+      ],
+      specialAbilities: [],
+      recoveryRolls: {
+        action: false,
+        tenMinutes: false,
+        oneHour: false,
+        tenHours: false,
+        modifier: 0,
+      },
+      damageTrack: { impairment: "healthy" },
+      textFields: { background: "", notes: "" },
+    };
+    await this.page!.waitForTimeout(500);
+    await storageHelper.setCharacter(FULL_CHARACTER);
+    await this.page!.waitForTimeout(500);
+    await this.page!.reload();
+    await this.page!.waitForLoadState("networkidle");
+    await this.page!.waitForTimeout(200);
     await this.page!.waitForSelector('[data-testid^="attack-item-"]', { timeout: 5000 });
   }
   const cards = this.page!.locator('[data-testid^="attack-item-"]');
@@ -1114,51 +1143,54 @@ When(
 // PRECONDITION STEPS
 Given("the character has {int} ability card", async function (this: CustomWorld, count: number) {
   if (count === 2) {
-    await this.page!.evaluate(() => {
-      const FULL_CHARACTER = {
-        name: "Kael the Wanderer",
-        tier: 3,
-        type: "Glaive",
-        descriptor: "Strong",
-        focus: "Bears a Halo of Fire",
-        xp: 12,
-        shins: 47,
-        armor: 2,
-        effort: 3,
-        maxCyphers: 4,
-        stats: {
-          might: { pool: 15, edge: 2, current: 12 },
-          speed: { pool: 12, edge: 1, current: 12 },
-          intellect: { pool: 10, edge: 0, current: 8 },
+    const storageHelper = new TestStorageHelper(this.page!);
+    const FULL_CHARACTER = {
+      name: "Kael the Wanderer",
+      tier: 3,
+      type: "Glaive",
+      descriptor: "Strong",
+      focus: "Bears a Halo of Fire",
+      xp: 12,
+      shins: 47,
+      armor: 2,
+      effort: 3,
+      maxCyphers: 4,
+      stats: {
+        might: { pool: 15, edge: 2, current: 12 },
+        speed: { pool: 12, edge: 1, current: 12 },
+        intellect: { pool: 10, edge: 0, current: 8 },
+      },
+      cyphers: [],
+      artifacts: [],
+      oddities: [],
+      abilities: [
+        { name: "Bash", cost: 1, pool: "might", description: "Strike a foe with your weapon" },
+        {
+          name: "Fleet of Foot",
+          cost: 1,
+          pool: "speed",
+          description: "Move a short distance as part of another action",
         },
-        cyphers: [],
-        artifacts: [],
-        oddities: [],
-        abilities: [
-          { name: "Bash", cost: 1, pool: "might", description: "Strike a foe with your weapon" },
-          {
-            name: "Fleet of Foot",
-            cost: 1,
-            pool: "speed",
-            description: "Move a short distance as part of another action",
-          },
-        ],
-        equipment: [],
-        attacks: [],
-        specialAbilities: [],
-        recoveryRolls: {
-          action: false,
-          tenMinutes: false,
-          oneHour: false,
-          tenHours: false,
-          modifier: 0,
-        },
-        damageTrack: { impairment: "healthy" },
-        textFields: { background: "", notes: "" },
-      };
-      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
-    });
-    await this.page!.reload({ waitUntil: "load" });
+      ],
+      equipment: [],
+      attacks: [],
+      specialAbilities: [],
+      recoveryRolls: {
+        action: false,
+        tenMinutes: false,
+        oneHour: false,
+        tenHours: false,
+        modifier: 0,
+      },
+      damageTrack: { impairment: "healthy" },
+      textFields: { background: "", notes: "" },
+    };
+    await this.page!.waitForTimeout(500);
+    await storageHelper.setCharacter(FULL_CHARACTER);
+    await this.page!.waitForTimeout(500);
+    await this.page!.reload();
+    await this.page!.waitForLoadState("networkidle");
+    await this.page!.waitForTimeout(200);
     await this.page!.waitForSelector('[data-testid^="ability-item-"]', { timeout: 5000 });
   }
   const cards = this.page!.locator('[data-testid^="ability-item-"]');
@@ -1167,51 +1199,54 @@ Given("the character has {int} ability card", async function (this: CustomWorld,
 
 Given("the character has {int} ability cards", async function (this: CustomWorld, count: number) {
   if (count === 2) {
-    await this.page!.evaluate(() => {
-      const FULL_CHARACTER = {
-        name: "Kael the Wanderer",
-        tier: 3,
-        type: "Glaive",
-        descriptor: "Strong",
-        focus: "Bears a Halo of Fire",
-        xp: 12,
-        shins: 47,
-        armor: 2,
-        effort: 3,
-        maxCyphers: 4,
-        stats: {
-          might: { pool: 15, edge: 2, current: 12 },
-          speed: { pool: 12, edge: 1, current: 12 },
-          intellect: { pool: 10, edge: 0, current: 8 },
+    const storageHelper = new TestStorageHelper(this.page!);
+    const FULL_CHARACTER = {
+      name: "Kael the Wanderer",
+      tier: 3,
+      type: "Glaive",
+      descriptor: "Strong",
+      focus: "Bears a Halo of Fire",
+      xp: 12,
+      shins: 47,
+      armor: 2,
+      effort: 3,
+      maxCyphers: 4,
+      stats: {
+        might: { pool: 15, edge: 2, current: 12 },
+        speed: { pool: 12, edge: 1, current: 12 },
+        intellect: { pool: 10, edge: 0, current: 8 },
+      },
+      cyphers: [],
+      artifacts: [],
+      oddities: [],
+      abilities: [
+        { name: "Bash", cost: 1, pool: "might", description: "Strike a foe with your weapon" },
+        {
+          name: "Fleet of Foot",
+          cost: 1,
+          pool: "speed",
+          description: "Move a short distance as part of another action",
         },
-        cyphers: [],
-        artifacts: [],
-        oddities: [],
-        abilities: [
-          { name: "Bash", cost: 1, pool: "might", description: "Strike a foe with your weapon" },
-          {
-            name: "Fleet of Foot",
-            cost: 1,
-            pool: "speed",
-            description: "Move a short distance as part of another action",
-          },
-        ],
-        equipment: [],
-        attacks: [],
-        specialAbilities: [],
-        recoveryRolls: {
-          action: false,
-          tenMinutes: false,
-          oneHour: false,
-          tenHours: false,
-          modifier: 0,
-        },
-        damageTrack: { impairment: "healthy" },
-        textFields: { background: "", notes: "" },
-      };
-      localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
-    });
-    await this.page!.reload({ waitUntil: "load" });
+      ],
+      equipment: [],
+      attacks: [],
+      specialAbilities: [],
+      recoveryRolls: {
+        action: false,
+        tenMinutes: false,
+        oneHour: false,
+        tenHours: false,
+        modifier: 0,
+      },
+      damageTrack: { impairment: "healthy" },
+      textFields: { background: "", notes: "" },
+    };
+    await this.page!.waitForTimeout(500);
+    await storageHelper.setCharacter(FULL_CHARACTER);
+    await this.page!.waitForTimeout(500);
+    await this.page!.reload();
+    await this.page!.waitForLoadState("networkidle");
+    await this.page!.waitForTimeout(200);
     await this.page!.waitForSelector('[data-testid^="ability-item-"]', { timeout: 5000 });
   }
   const cards = this.page!.locator('[data-testid^="ability-item-"]');
@@ -1344,54 +1379,57 @@ Given(
   "the character has {int} special ability card",
   async function (this: CustomWorld, count: number) {
     if (count === 2) {
-      await this.page!.evaluate(() => {
-        const FULL_CHARACTER = {
-          name: "Kael the Wanderer",
-          tier: 3,
-          type: "Glaive",
-          descriptor: "Strong",
-          focus: "Bears a Halo of Fire",
-          xp: 12,
-          shins: 47,
-          armor: 2,
-          effort: 3,
-          maxCyphers: 4,
-          stats: {
-            might: { pool: 15, edge: 2, current: 12 },
-            speed: { pool: 12, edge: 1, current: 12 },
-            intellect: { pool: 10, edge: 0, current: 8 },
+      const storageHelper = new TestStorageHelper(this.page!);
+      const FULL_CHARACTER = {
+        name: "Kael the Wanderer",
+        tier: 3,
+        type: "Glaive",
+        descriptor: "Strong",
+        focus: "Bears a Halo of Fire",
+        xp: 12,
+        shins: 47,
+        armor: 2,
+        effort: 3,
+        maxCyphers: 4,
+        stats: {
+          might: { pool: 15, edge: 2, current: 12 },
+          speed: { pool: 12, edge: 1, current: 12 },
+          intellect: { pool: 10, edge: 0, current: 8 },
+        },
+        cyphers: [],
+        artifacts: [],
+        oddities: [],
+        abilities: [],
+        equipment: [],
+        attacks: [],
+        specialAbilities: [
+          {
+            name: "Practiced in Armor",
+            source: "Type",
+            description: "You can wear armor for long periods",
           },
-          cyphers: [],
-          artifacts: [],
-          oddities: [],
-          abilities: [],
-          equipment: [],
-          attacks: [],
-          specialAbilities: [
-            {
-              name: "Practiced in Armor",
-              source: "Type",
-              description: "You can wear armor for long periods",
-            },
-            {
-              name: "Fire Affinity",
-              source: "Focus",
-              description: "You are trained in fire-based attacks",
-            },
-          ],
-          recoveryRolls: {
-            action: false,
-            tenMinutes: false,
-            oneHour: false,
-            tenHours: false,
-            modifier: 0,
+          {
+            name: "Fire Affinity",
+            source: "Focus",
+            description: "You are trained in fire-based attacks",
           },
-          damageTrack: { impairment: "healthy" },
-          textFields: { background: "", notes: "" },
-        };
-        localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
-      });
-      await this.page!.reload({ waitUntil: "load" });
+        ],
+        recoveryRolls: {
+          action: false,
+          tenMinutes: false,
+          oneHour: false,
+          tenHours: false,
+          modifier: 0,
+        },
+        damageTrack: { impairment: "healthy" },
+        textFields: { background: "", notes: "" },
+      };
+      await this.page!.waitForTimeout(500);
+      await storageHelper.setCharacter(FULL_CHARACTER);
+      await this.page!.waitForTimeout(500);
+      await this.page!.reload();
+      await this.page!.waitForLoadState("networkidle");
+      await this.page!.waitForTimeout(200);
       await this.page!.waitForSelector('[data-testid^="special-ability-item-"]', { timeout: 5000 });
     }
     const cards = this.page!.locator('[data-testid^="special-ability-item-"]');
@@ -1403,54 +1441,57 @@ Given(
   "the character has {int} special ability cards",
   async function (this: CustomWorld, count: number) {
     if (count === 2) {
-      await this.page!.evaluate(() => {
-        const FULL_CHARACTER = {
-          name: "Kael the Wanderer",
-          tier: 3,
-          type: "Glaive",
-          descriptor: "Strong",
-          focus: "Bears a Halo of Fire",
-          xp: 12,
-          shins: 47,
-          armor: 2,
-          effort: 3,
-          maxCyphers: 4,
-          stats: {
-            might: { pool: 15, edge: 2, current: 12 },
-            speed: { pool: 12, edge: 1, current: 12 },
-            intellect: { pool: 10, edge: 0, current: 8 },
+      const storageHelper = new TestStorageHelper(this.page!);
+      const FULL_CHARACTER = {
+        name: "Kael the Wanderer",
+        tier: 3,
+        type: "Glaive",
+        descriptor: "Strong",
+        focus: "Bears a Halo of Fire",
+        xp: 12,
+        shins: 47,
+        armor: 2,
+        effort: 3,
+        maxCyphers: 4,
+        stats: {
+          might: { pool: 15, edge: 2, current: 12 },
+          speed: { pool: 12, edge: 1, current: 12 },
+          intellect: { pool: 10, edge: 0, current: 8 },
+        },
+        cyphers: [],
+        artifacts: [],
+        oddities: [],
+        abilities: [],
+        equipment: [],
+        attacks: [],
+        specialAbilities: [
+          {
+            name: "Practiced in Armor",
+            source: "Type",
+            description: "You can wear armor for long periods",
           },
-          cyphers: [],
-          artifacts: [],
-          oddities: [],
-          abilities: [],
-          equipment: [],
-          attacks: [],
-          specialAbilities: [
-            {
-              name: "Practiced in Armor",
-              source: "Type",
-              description: "You can wear armor for long periods",
-            },
-            {
-              name: "Fire Affinity",
-              source: "Focus",
-              description: "You are trained in fire-based attacks",
-            },
-          ],
-          recoveryRolls: {
-            action: false,
-            tenMinutes: false,
-            oneHour: false,
-            tenHours: false,
-            modifier: 0,
+          {
+            name: "Fire Affinity",
+            source: "Focus",
+            description: "You are trained in fire-based attacks",
           },
-          damageTrack: { impairment: "healthy" },
-          textFields: { background: "", notes: "" },
-        };
-        localStorage.setItem("numenera-character-state", JSON.stringify(FULL_CHARACTER));
-      });
-      await this.page!.reload({ waitUntil: "load" });
+        ],
+        recoveryRolls: {
+          action: false,
+          tenMinutes: false,
+          oneHour: false,
+          tenHours: false,
+          modifier: 0,
+        },
+        damageTrack: { impairment: "healthy" },
+        textFields: { background: "", notes: "" },
+      };
+      await this.page!.waitForTimeout(500);
+      await storageHelper.setCharacter(FULL_CHARACTER);
+      await this.page!.waitForTimeout(500);
+      await this.page!.reload();
+      await this.page!.waitForLoadState("networkidle");
+      await this.page!.waitForTimeout(200);
       await this.page!.waitForSelector('[data-testid^="special-ability-item-"]', { timeout: 5000 });
     }
     const cards = this.page!.locator('[data-testid^="special-ability-item-"]');

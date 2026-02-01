@@ -4,7 +4,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { DOMHelpers } from "../support/dom-helpers.js";
 import { FULL_CHARACTER } from "../../../src/data/mockCharacters.js";
-import { Character } from "../../../src/types/character.js";
+import { TestStorageHelper } from "../support/testStorageHelper.js";
 
 Given("a character exists with the following equipment:", async function (dataTable) {
   const equipment = dataTable.hashes().map((row: { Name: string; Description: string }) => ({
@@ -19,16 +19,19 @@ Given("a character exists with the following equipment:", async function (dataTa
 });
 
 Given("a character exists with no equipment", async function () {
+  const storageHelper = new TestStorageHelper(this.page);
   const character = {
     ...FULL_CHARACTER,
     equipment: [],
   };
-  await this.page.evaluate(
-    ({ char }: { char: Character }) => {
-      localStorage.setItem("numenera-character-state", JSON.stringify(char));
-    },
-    { char: character }
-  );
+  await this.page.waitForTimeout(500);
+  await storageHelper.setCharacter(character);
+
+  // Reload page to pick up the changes
+  await this.page.waitForTimeout(500);
+  await this.page.reload();
+  await this.page.waitForLoadState("networkidle");
+  await this.page.waitForTimeout(200);
 });
 
 Then("each equipment item should have a light green background", async function () {

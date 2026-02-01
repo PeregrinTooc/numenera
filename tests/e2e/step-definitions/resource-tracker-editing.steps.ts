@@ -1,6 +1,7 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
+import { TestStorageHelper } from "../support/testStorageHelper.js";
 
 // ============================================================================
 // GIVEN STEPS - Setup character state with specific resource values
@@ -66,14 +67,8 @@ Given(
       [fieldKey]: value,
     };
 
-    const wrappedState = {
-      schemaVersion: 4,
-      character: character,
-    };
-
-    await this.page!.evaluate((state) => {
-      localStorage.setItem("numenera-character-state", JSON.stringify(state));
-    }, wrappedState);
+    const storageHelper = new TestStorageHelper(this.page!);
+    await storageHelper.setCharacter(character);
 
     await this.page!.reload();
     await this.page!.waitForLoadState("domcontentloaded");
@@ -130,95 +125,148 @@ function createCharacterState(fieldKey: string, value: number) {
 
 // Legacy Given steps for backward compatibility with existing feature files
 Given("the character has {int} XP", async function (this: CustomWorld, xp: number) {
-  const wrappedState = createCharacterState("xp", xp);
-  await this.page!.evaluate((state) => {
-    localStorage.setItem("numenera-character-state", JSON.stringify(state));
-  }, wrappedState);
+  const character = createCharacterState("xp", xp).character;
+  const storageHelper = new TestStorageHelper(this.page!);
+
+  // Wait before setCharacter to ensure any previous auto-save completes
+  await this.page!.waitForTimeout(500);
+  await storageHelper.setCharacter(character);
+
+  // Wait for IndexedDB save to complete before reloading
+  await this.page!.waitForTimeout(500);
+
   await this.page!.reload();
-  await this.page!.waitForLoadState("domcontentloaded");
-  // Wait for XP badge to show correct value
+  await this.page!.waitForLoadState("networkidle");
+
+  // Additional wait for character to load from IndexedDB
+  await this.page!.waitForTimeout(200);
+
+  // Wait for XP badge to show correct value (increased timeout for CI)
   await this.page!.waitForFunction(
     (expectedXp) => {
       const badge = document.querySelector('[data-testid="xp-badge"] .stat-badge-value');
       return badge?.textContent === String(expectedXp);
     },
     xp,
-    { timeout: 2000 }
+    { timeout: 10000 }
   );
 });
 
 Given("the character has {int} shins", async function (this: CustomWorld, shins: number) {
-  const wrappedState = createCharacterState("shins", shins);
-  await this.page!.evaluate((state) => {
-    localStorage.setItem("numenera-character-state", JSON.stringify(state));
-  }, wrappedState);
+  const character = createCharacterState("shins", shins).character;
+  const storageHelper = new TestStorageHelper(this.page!);
+
+  // Wait before setCharacter to ensure any previous auto-save completes
+  await this.page!.waitForTimeout(500);
+  await storageHelper.setCharacter(character);
+
+  // Wait for IndexedDB save to complete before reloading
+  await this.page!.waitForTimeout(500);
+
   await this.page!.reload();
-  await this.page!.waitForLoadState("domcontentloaded");
-  // Wait for shins badge to show correct value
+  await this.page!.waitForLoadState("networkidle");
+
+  // Additional wait for character to load from IndexedDB
+  await this.page!.waitForTimeout(200);
+
+  // Wait for shins badge to show correct value (increased timeout for CI)
   await this.page!.waitForFunction(
     (expectedShins) => {
       const badge = document.querySelector('[data-testid="shins-badge"] .stat-badge-value');
       return badge?.textContent === String(expectedShins);
     },
     shins,
-    { timeout: 2000 }
+    { timeout: 10000 }
   );
 });
 
 Given("the character has {int} armor", async function (this: CustomWorld, armor: number) {
-  const wrappedState = createCharacterState("armor", armor);
-  await this.page!.evaluate((state) => {
-    localStorage.setItem("numenera-character-state", JSON.stringify(state));
-  }, wrappedState);
+  const character = createCharacterState("armor", armor).character;
+  const storageHelper = new TestStorageHelper(this.page!);
+
+  // Wait before setCharacter to ensure any previous auto-save completes
+  await this.page!.waitForTimeout(500);
+  await storageHelper.setCharacter(character);
+
+  // Wait for IndexedDB save to complete before reloading
+  await this.page!.waitForTimeout(500);
+
   await this.page!.reload();
-  await this.page!.waitForLoadState("domcontentloaded");
-  // Wait for armor value to show correct value
+  await this.page!.waitForLoadState("networkidle");
+
+  // Additional wait for character to load from IndexedDB
+  await this.page!.waitForTimeout(200);
+
+  // Wait for armor value to show correct value (increased timeout for CI)
   await this.page!.waitForFunction(
     (expectedArmor) => {
       const element = document.querySelector('[data-testid="armor-value"]');
       return element?.textContent === String(expectedArmor);
     },
     armor,
-    { timeout: 2000 }
+    { timeout: 10000 }
   );
 });
 
 Given(
   "the character has max cyphers {int}",
   async function (this: CustomWorld, maxCyphers: number) {
-    const wrappedState = createCharacterState("maxCyphers", maxCyphers);
-    await this.page!.evaluate((state) => {
-      localStorage.setItem("numenera-character-state", JSON.stringify(state));
-    }, wrappedState);
+    const character = createCharacterState("maxCyphers", maxCyphers).character;
+    const storageHelper = new TestStorageHelper(this.page!);
+
+    // Wait before setCharacter to ensure any previous auto-save completes
+    await this.page!.waitForTimeout(500);
+    await storageHelper.setCharacter(character);
+
+    // Wait for IndexedDB save to complete before reloading
+    await this.page!.waitForTimeout(500);
+
     await this.page!.reload();
-    await this.page!.waitForLoadState("domcontentloaded");
-    // Wait for max cyphers value to show correct value
+    await this.page!.waitForLoadState("networkidle");
+
+    // Additional wait for character to load from IndexedDB
+    await this.page!.waitForTimeout(200);
+
+    // Wait for max cyphers value to show correct value (increased timeout for CI)
     await this.page!.waitForFunction(
       (expectedMaxCyphers) => {
         const element = document.querySelector('[data-testid="max-cyphers-value"]');
         return element?.textContent === String(expectedMaxCyphers);
       },
       maxCyphers,
-      { timeout: 2000 }
+      { timeout: 10000 }
     );
   }
 );
 
 Given("the character has effort {int}", async function (this: CustomWorld, effort: number) {
-  const wrappedState = createCharacterState("effort", effort);
-  await this.page!.evaluate((state) => {
-    localStorage.setItem("numenera-character-state", JSON.stringify(state));
-  }, wrappedState);
+  const character = createCharacterState("effort", effort).character;
+  const storageHelper = new TestStorageHelper(this.page!);
+
+  // Wait before setCharacter to ensure any previous auto-save completes
+  await this.page!.waitForTimeout(500);
+  await storageHelper.setCharacter(character);
+
+  // Wait for IndexedDB save to complete before reloading
+  await this.page!.waitForTimeout(500);
+
   await this.page!.reload();
-  await this.page!.waitForLoadState("domcontentloaded");
-  // Wait for effort value to show correct value
+  await this.page!.waitForLoadState("networkidle");
+
+  // Additional wait for character to load from IndexedDB
+  await this.page!.waitForTimeout(200);
+
+  // Wait for the effort element to exist first
+  await this.page!.waitForSelector('[data-testid="effort-value"]', { timeout: 10000 });
+
+  // Then wait for it to have the correct value
   await this.page!.waitForFunction(
     (expectedEffort) => {
       const element = document.querySelector('[data-testid="effort-value"]');
       return element?.textContent === String(expectedEffort);
     },
     effort,
-    { timeout: 2000 }
+    { timeout: 10000 }
   );
 });
 
@@ -274,16 +322,10 @@ Then(
   "the character data should have xp {int}",
   async function (this: CustomWorld, expectedXp: number) {
     await this.page!.waitForTimeout(200);
-    const storedData = await this.page!.evaluate(() => {
-      const data = localStorage.getItem("numenera-character-state");
-      return data ? JSON.parse(data) : null;
-    });
+    const storageHelper = new TestStorageHelper(this.page!);
+    const storedData = await storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
-    if (storedData.character) {
-      expect(storedData.character.xp).toBe(expectedXp);
-    } else {
-      expect(storedData.xp).toBe(expectedXp);
-    }
+    expect(storedData.xp).toBe(expectedXp);
   }
 );
 
@@ -291,16 +333,10 @@ Then(
   "the character data should have shins {int}",
   async function (this: CustomWorld, expectedShins: number) {
     await this.page!.waitForTimeout(200);
-    const storedData = await this.page!.evaluate(() => {
-      const data = localStorage.getItem("numenera-character-state");
-      return data ? JSON.parse(data) : null;
-    });
+    const storageHelper = new TestStorageHelper(this.page!);
+    const storedData = await storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
-    if (storedData.character) {
-      expect(storedData.character.shins).toBe(expectedShins);
-    } else {
-      expect(storedData.shins).toBe(expectedShins);
-    }
+    expect(storedData.shins).toBe(expectedShins);
   }
 );
 
@@ -308,16 +344,10 @@ Then(
   "the character data should have armor {int}",
   async function (this: CustomWorld, expectedArmor: number) {
     await this.page!.waitForTimeout(200);
-    const storedData = await this.page!.evaluate(() => {
-      const data = localStorage.getItem("numenera-character-state");
-      return data ? JSON.parse(data) : null;
-    });
+    const storageHelper = new TestStorageHelper(this.page!);
+    const storedData = await storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
-    if (storedData.character) {
-      expect(storedData.character.armor).toBe(expectedArmor);
-    } else {
-      expect(storedData.armor).toBe(expectedArmor);
-    }
+    expect(storedData.armor).toBe(expectedArmor);
   }
 );
 
@@ -325,16 +355,10 @@ Then(
   "the character data should have maxCyphers {int}",
   async function (this: CustomWorld, expectedMaxCyphers: number) {
     await this.page!.waitForTimeout(200);
-    const storedData = await this.page!.evaluate(() => {
-      const data = localStorage.getItem("numenera-character-state");
-      return data ? JSON.parse(data) : null;
-    });
+    const storageHelper = new TestStorageHelper(this.page!);
+    const storedData = await storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
-    if (storedData.character) {
-      expect(storedData.character.maxCyphers).toBe(expectedMaxCyphers);
-    } else {
-      expect(storedData.maxCyphers).toBe(expectedMaxCyphers);
-    }
+    expect(storedData.maxCyphers).toBe(expectedMaxCyphers);
   }
 );
 
@@ -342,16 +366,10 @@ Then(
   "the character data should have effort {int}",
   async function (this: CustomWorld, expectedEffort: number) {
     await this.page!.waitForTimeout(200);
-    const storedData = await this.page!.evaluate(() => {
-      const data = localStorage.getItem("numenera-character-state");
-      return data ? JSON.parse(data) : null;
-    });
+    const storageHelper = new TestStorageHelper(this.page!);
+    const storedData = await storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
-    if (storedData.character) {
-      expect(storedData.character.effort).toBe(expectedEffort);
-    } else {
-      expect(storedData.effort).toBe(expectedEffort);
-    }
+    expect(storedData.effort).toBe(expectedEffort);
   }
 );
 

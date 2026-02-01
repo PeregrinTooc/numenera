@@ -3,7 +3,6 @@
 import { html, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
 import { t } from "../i18n/index.js";
-import { saveCharacterState } from "../storage/localStorage.js";
 
 export class BottomTextFields {
   private editingField: "background" | "notes" | null = null;
@@ -29,8 +28,18 @@ export class BottomTextFields {
   }
 
   private saveField(field: "background" | "notes"): void {
-    // Save to character state
-    saveCharacterState(this.character);
+    // Dispatch character-updated event to trigger auto-save
+    const event = new CustomEvent("character-updated", {
+      detail: this.character,
+      bubbles: true,
+      composed: true,
+    });
+
+    // Find the bottom-text-fields container to dispatch from
+    const container = document.querySelector(".bottom-text-fields");
+    if (container) {
+      container.dispatchEvent(event);
+    }
 
     // Exit edit mode
     this.editingField = null;

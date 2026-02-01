@@ -24,9 +24,60 @@ Before(async function (this: CustomWorld) {
   });
   this.page = await this.context.newPage();
 
-  // Navigate to the server and clear localStorage for clean state
+  // Navigate to the server and clear both localStorage and IndexedDB for clean state
   await this.page.goto(BASE_URL);
-  await this.page.evaluate(() => localStorage.clear());
+  await this.page.evaluate(async () => {
+    localStorage.clear();
+
+    // Clear IndexedDB with retry logic
+    const dbName = "NumeneraCharacterDB";
+    let attempts = 0;
+    const maxAttempts = 3;
+
+    while (attempts < maxAttempts) {
+      try {
+        // First, try to close any open connections
+        const openRequest = indexedDB.open(dbName);
+        await new Promise<void>((resolve) => {
+          openRequest.onsuccess = () => {
+            openRequest.result.close();
+            resolve();
+          };
+          openRequest.onerror = () => resolve();
+        });
+
+        // Then delete the database
+        const deleted = await new Promise<boolean>((resolve) => {
+          const request = indexedDB.deleteDatabase(dbName);
+          request.onsuccess = () => resolve(true);
+          request.onerror = () => resolve(false);
+          request.onblocked = () => {
+            console.warn(`IndexedDB deletion blocked (attempt ${attempts + 1}/${maxAttempts})`);
+            // Wait a bit and try again
+            setTimeout(() => resolve(false), 100);
+          };
+        });
+
+        if (deleted) {
+          break;
+        }
+
+        attempts++;
+        if (attempts < maxAttempts) {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+      } catch (error) {
+        console.error(`Error clearing IndexedDB (attempt ${attempts + 1}/${maxAttempts}):`, error);
+        attempts++;
+        if (attempts < maxAttempts) {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+      }
+    }
+  });
+
+  // Wait for the page to be fully loaded after clearing storage
+  await this.page.waitForLoadState("networkidle");
 });
 
 After(async function (this: CustomWorld) {
