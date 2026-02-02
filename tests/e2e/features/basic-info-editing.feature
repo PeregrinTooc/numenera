@@ -24,7 +24,7 @@ Feature: Edit Basic Character Information
         When I click on the character name "Kael the Wanderer"
         And I clear the input field
         And I type "Kael the Wise" in the input field
-        And I click the confirm button
+        And I click the modal confirm button
         Then the modal should close
         And the character name should display "Kael the Wise"
         When I reload the page
@@ -33,7 +33,7 @@ Feature: Edit Basic Character Information
     Scenario: Cancel character name edit
         When I click on the character name "Kael the Wanderer"
         And I type "New Name" in the input field
-        And I click the cancel button
+        And I click the modal cancel button
         Then the modal should close
         And the character name should still display "Kael the Wanderer"
         When I reload the page
@@ -64,7 +64,7 @@ Feature: Edit Basic Character Information
         When I click on the tier "3"
         And I clear the input field
         And I type "5" in the input field
-        And I click the confirm button
+        And I click the modal confirm button
         Then the modal should close
         And the tier should display "5"
         When I reload the page
@@ -74,7 +74,7 @@ Feature: Edit Basic Character Information
         When I click on the tier "3"
         And I clear the input field
         And I type "7" in the input field
-        And I click the confirm button
+        And I click the modal confirm button
         Then the tier should be constrained to "6"
         And the modal should close
         And the tier should display "6"
@@ -83,7 +83,7 @@ Feature: Edit Basic Character Information
         When I click on the tier "3"
         And I clear the input field
         And I type "0" in the input field
-        And I click the confirm button
+        And I click the modal confirm button
         Then the tier should be constrained to "1"
         And the modal should close
         And the tier should display "1"
@@ -97,7 +97,7 @@ Feature: Edit Basic Character Information
         When I click on the descriptor "Strong"
         And I clear the input field
         And I type "Swift" in the input field
-        And I click the confirm button
+        And I click the modal confirm button
         Then the modal should close
         And the descriptor should display "Swift"
         When I reload the page
@@ -112,7 +112,7 @@ Feature: Edit Basic Character Information
         When I click on the focus "Bears a Halo of Fire"
         And I clear the input field
         And I type "Commands Mental Powers" in the input field
-        And I click the confirm button
+        And I click the modal confirm button
         Then the modal should close
         And the focus should display "Commands Mental Powers"
         When I reload the page
@@ -135,11 +135,11 @@ Feature: Edit Basic Character Information
     Scenario: Edit multiple fields in sequence
         When I click on the character name "Kael the Wanderer"
         And I type "Kael the Wise" in the input field
-        And I click the confirm button
+        And I click the modal confirm button
         Then the modal should close
         When I click on the tier "3"
         And I type "4" in the input field
-        And I click the confirm button
+        And I click the modal confirm button
         Then the modal should close
         And the character name should display "Kael the Wise"
         And the tier should display "4"
@@ -153,8 +153,8 @@ Feature: Edit Basic Character Information
     Scenario: Empty name is not allowed
         When I click on the character name "Kael the Wanderer"
         And I clear the input field
-        And I click the confirm button
         Then the confirm button should be disabled
+        And the modal should not close
         And an error or validation message may appear
 
     Scenario: Modal maintains focus trap
@@ -191,7 +191,7 @@ Feature: Edit Basic Character Information
         When I tap on the character name "Kael the Wanderer"
         And I clear the input field
         And I type "Kael the Wise" in the input field
-        And I tap the confirm button
+        And I tap the modal confirm button
         Then the modal should close
         And the character name should display "Kael the Wise"
         When I reload the page
@@ -205,7 +205,7 @@ Feature: Edit Basic Character Information
         And the input field should have inputmode="numeric" for mobile
         And I clear the input field
         And I type "5" in the input field
-        And I tap the confirm button
+        And I tap the modal confirm button
         Then the modal should close
         And the tier should display "5"
 

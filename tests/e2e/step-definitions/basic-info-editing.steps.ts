@@ -46,42 +46,8 @@ When("I press Tab repeatedly", async function (this: CustomWorld) {
   }
 });
 
-When("I click the confirm button", async function (this: CustomWorld) {
-  const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
-  const isDisabled = await confirmButton.isDisabled();
-
-  // Only click if button is not disabled
-  if (!isDisabled) {
-    await this.page!.click('[data-testid="modal-confirm-button"]');
-    // Wait for modal to close
-    await this.page!.waitForSelector('[data-testid="edit-modal"]', {
-      state: "hidden",
-      timeout: 2000,
-    }).catch(() => {
-      // Modal might already be hidden
-    });
-    // Wait for auto-save to complete (debounce is 300ms, wait a bit longer)
-    await this.page!.waitForTimeout(500);
-  }
-  // If button is disabled, don't click (next step will verify disabled state)
-});
-
-When("I click the cancel button", async function (this: CustomWorld) {
-  await this.page!.click('[data-testid="modal-cancel-button"]');
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "hidden" });
-});
-
-When("I tap the confirm button", async function (this: CustomWorld) {
-  await this.page!.tap('[data-testid="modal-confirm-button"]');
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
-    state: "hidden",
-    timeout: 2000,
-  }).catch(() => {
-    // Modal might already be hidden
-  });
-  // Wait for auto-save to complete (debounce is 300ms, wait a bit longer)
-  await this.page!.waitForTimeout(500);
-});
+// Note: "I click the confirm button", "I click the cancel button", and "I tap the confirm button"
+// are now handled by steps in common-steps.ts
 
 // ============================================================================
 // UNIQUE THEN STEPS - Modal Assertions

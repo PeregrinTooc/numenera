@@ -15,7 +15,7 @@ Feature: Version History (Character Time Travel)
         And all edit controls should be enabled
 
     Scenario: Creating first version shows navigator
-        When I edit the character name to "Aria"
+        When I edit the "character name" field to "Aria"
         Then the version navigator should be visible
         And the version counter should show "Version 2 of 2"
         And the backward arrow should be enabled
@@ -99,7 +99,7 @@ Feature: Version History (Character Time Travel)
     Scenario: Editing while viewing old version creates new version
         Given the character has 3 versions in history
         And I am viewing version 1
-        When I edit the character name to "Time Traveler"
+        When I edit the "character name" field to "Time Traveler"
         Then a new version should be created
         And the version counter should show "Version 4 of 4"
         And I should be viewing the latest version
@@ -111,6 +111,7 @@ Feature: Version History (Character Time Travel)
         And I am viewing that version
         Then the version description should contain "Changed name"
         And the timestamp should be in human-readable format
+
     @wip
     Scenario: Multiple changes show combined description
         Given the character has a version with multiple basic info changes
@@ -193,7 +194,7 @@ Feature: Version History (Character Time Travel)
     Scenario: Version navigator updates after new edit
         Given the character has 3 versions in history
         And I am viewing the latest version
-        When I edit the character tier to 2
+        When I edit the "tier" field to "2"
         Then the version counter should show "Version 4 of 4"
         And the version description should contain the tier change
 

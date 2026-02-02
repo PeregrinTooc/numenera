@@ -303,58 +303,27 @@ When("I refresh the browser", async function (this: CustomWorld) {
   await this.page.waitForTimeout(200);
 });
 
-When("I edit the character tier to {int}", async function (this: CustomWorld, tier: number) {
-  // Wait for page to be fully loaded
-  await this.page.waitForLoadState("networkidle");
-  await this.page.waitForTimeout(500);
-
-  // Click tier field to open modal
-  const tierField = this.page.locator('[data-testid="character-tier"]');
-  await expect(tierField).toBeVisible({ timeout: 5000 });
-  await tierField.click();
-
-  // Wait for modal to appear (using correct testid from EditFieldModal)
-  const modal = this.page.locator('[data-testid="edit-modal"]');
-  await expect(modal).toBeVisible({ timeout: 5000 });
-
-  // Enter new tier value
-  const input = this.page.locator('[data-testid="edit-modal-input"]');
-  await input.fill(tier.toString());
-
-  // Click confirm button
-  const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
-  await confirmButton.click();
-
-  // Wait for modal to close and save to complete
-  await expect(modal).toHaveCount(0, { timeout: 2000 });
-  await this.page.waitForTimeout(500);
-});
+// Note: "I edit the character tier to {int}" is now handled by the unified
+// "I edit the {string} field to {string}" step in common-steps.ts
 
 When("I create a new version by editing the name", async function (this: CustomWorld) {
-  // Wait for page to be fully loaded (especially with 99 versions)
-  await this.page.waitForLoadState("networkidle");
-  await this.page.waitForTimeout(1000);
+  // Use the unified edit step
+  const testId = "character-name";
+  const field = this.page.locator(`[data-testid="${testId}"]`);
 
-  // Click name field to open modal
-  const nameField = this.page.locator('[data-testid="character-name"]');
-  await expect(nameField).toBeVisible({ timeout: 5000 });
-  await nameField.click();
+  await field.click();
 
-  // Wait for modal to appear (using correct testid from EditFieldModal)
   const modal = this.page.locator('[data-testid="edit-modal"]');
   await expect(modal).toBeVisible({ timeout: 5000 });
 
-  // Enter new name
   const input = this.page.locator('[data-testid="edit-modal-input"]');
   await input.fill("New Version Name");
 
-  // Click confirm
   const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
   await confirmButton.click();
 
-  // Wait for modal to close and save to complete
   await expect(modal).toHaveCount(0, { timeout: 2000 });
-  await this.page.waitForTimeout(500);
+  await this.page.waitForTimeout(200);
 });
 
 // Note: "I click the export button" already exists in character-file-export.steps.ts

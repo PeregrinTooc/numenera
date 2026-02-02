@@ -215,6 +215,8 @@ When("I tap the modal confirm button", async function (this: CustomWorld) {
   }).catch(() => {
     // Modal might already be hidden
   });
+  // Wait for auto-save to complete (300ms debounce + buffer)
+  await this.page!.waitForTimeout(500);
 });
 
 When("I click the {string}", async function (this: CustomWorld, elementName: string) {
@@ -291,6 +293,39 @@ When("I type {string} in the input field", async function (this: CustomWorld, te
   const input = this.page!.locator('[data-testid="edit-modal-input"]');
   await input.fill(text);
 });
+
+// ============================================================================
+// UNIFIED EDIT FIELD STEP - Replaces duplicates across multiple files
+// ============================================================================
+
+When(
+  "I edit the {string} field to {string}",
+  async function (this: CustomWorld, fieldName: string, value: string) {
+    const testId = getTestId(fieldName);
+    const field = this.page!.locator(`[data-testid="${testId}"]`);
+
+    // Click field to open modal
+    await field.click();
+
+    // Wait for modal to appear
+    const modal = this.page!.locator('[data-testid="edit-modal"]');
+    await expect(modal).toBeVisible({ timeout: 5000 });
+
+    // Fill input with new value
+    const input = this.page!.locator('[data-testid="edit-modal-input"]');
+    await input.fill(value);
+
+    // Click confirm button
+    const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
+    await confirmButton.click();
+
+    // Wait for modal to close
+    await expect(modal).toHaveCount(0, { timeout: 2000 });
+
+    // Wait for auto-save to complete (300ms debounce + buffer)
+    await this.page!.waitForTimeout(500);
+  }
+);
 
 When("I click outside the modal on the backdrop", async function (this: CustomWorld) {
   // Click in the top-left corner which is definitely the backdrop, not the modal
