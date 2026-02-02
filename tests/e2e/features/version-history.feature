@@ -7,7 +7,7 @@ Feature: Version History (Character Time Travel)
         Given I am on the character sheet page
         And the character has no version history yet
 
-    # Phase 3: Version Navigator UI
+    # Version Navigator UI
 
     Scenario: Version navigator is hidden when no versions exist
         When I view the character sheet

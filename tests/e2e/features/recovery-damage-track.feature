@@ -1,4 +1,4 @@
-Feature: Phase 4 - Recovery Rolls and Damage Tracking
+Feature: Recovery Rolls and Damage Tracking
   As a Numenera player
   I want to track my recovery rolls and damage status
   So I can manage my character's health and recovery options

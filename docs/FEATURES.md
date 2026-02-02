@@ -69,13 +69,13 @@ All features listed below have full BDD test coverage and are verified working.
 
 ### Combat & Special Features
 
-- **Phase 3: Combat System** ([phase3-combat.feature](../tests/e2e/features/phase3-combat.feature))
+- **Combat System** ([combat.feature](../tests/e2e/features/combat.feature))
   - Attacks management (damage, modifier, range, notes)
   - Attack card creation and editing
   - Armor badge in attacks section
   - Full CRUD operations for attacks
 
-- **Phase 4: Recovery & Damage** ([phase4-recovery-damage.feature](../tests/e2e/features/phase4-recovery-damage.feature))
+- **Recovery & Damage Tracking** ([recovery-damage-track.feature](../tests/e2e/features/recovery-damage-track.feature))
   - Recovery Rolls tracker (Action, 10 min, 1 hour, 10 hours)
   - Editable recovery modifier (1d6 + modifier)
   - Damage Track (Healthy, Impaired, Debilitated)
@@ -147,7 +147,7 @@ All features listed below have full BDD test coverage and are verified working.
   - Timestamp display on save
   - Subtle, non-intrusive styling
 
-- **Phase 4: IndexedDB Storage** ([cloud-storage-phase4-indexeddb.feature](../tests/e2e/features/cloud-storage-phase4-indexeddb.feature))
+- **IndexedDB Storage** ([cloud-storage-phase4-indexeddb.feature](../tests/e2e/features/cloud-storage-phase4-indexeddb.feature))
   - IndexedDB primary storage
   - localStorage fallback
   - Data migration from localStorage
