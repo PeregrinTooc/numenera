@@ -25,6 +25,12 @@ Before(async function (this: CustomWorld) {
   });
   this.page = await this.context.newPage();
 
+  // Inject test configuration BEFORE navigation
+  // Set squash delay to 1 second for fast testing
+  await this.page.addInitScript(() => {
+    (window as any).__TEST_SQUASH_DELAY__ = 1000;
+  });
+
   // Navigate to the server and clear both localStorage and IndexedDB for clean state
   await this.page.goto(BASE_URL);
   await this.page.evaluate(async () => {

@@ -9,6 +9,12 @@ Given("the character has no version history yet", async function (this: CustomWo
   // The versionHistory manager will be initialized but empty
 });
 
+Given("I have a character loaded", async function (this: CustomWorld) {
+  // Character is already loaded from the page - no action needed
+  // This is equivalent to being on the character sheet page
+  await this.page.waitForLoadState("networkidle");
+});
+
 Given(
   "the character has {int} versions in history",
   async function (this: CustomWorld, versionCount: number) {
@@ -159,7 +165,8 @@ Given(
     };
 
     await this.storageHelper.createVersion(versionCharacter, "Changed name");
-    await this.page.waitForTimeout(100);
+    // Wait longer for version navigator to update and any squash timers to complete
+    await this.page.waitForTimeout(1500);
   }
 );
 
@@ -496,19 +503,77 @@ Then("editable fields should have reduced opacity", async function (this: Custom
   throw new Error("Step not implemented yet");
 });
 
+// Smart Squashing System step definitions
+
+When("I wait for {int} milliseconds", async function (this: CustomWorld, ms: number) {
+  await this.page.waitForTimeout(ms);
+});
+
 Then(
-  "the cursor should show {string} over edit controls",
-  async function (this: CustomWorld, _cursorType: string) {
-    // TODO: Assert cursor style
-    throw new Error("Step not implemented yet");
+  "I should see {int} version in version history",
+  async function (this: CustomWorld, expectedCount: number) {
+    const actualCount = await this.page.evaluate(async () => {
+      const versionHistory = (window as any).__testVersionHistory;
+      const versions = await versionHistory.getAllVersions();
+      return versions.length;
+    });
+    expect(actualCount).toBe(expectedCount);
   }
 );
 
 Then(
-  "the character sheet should have a visual indicator of read-only mode",
-  async function (this: CustomWorld) {
-    // TODO: Assert visual indicator present
-    throw new Error("Step not implemented yet");
+  "I should see {int} versions in version history",
+  async function (this: CustomWorld, expectedCount: number) {
+    const actualCount = await this.page.evaluate(async () => {
+      const versionHistory = (window as any).__testVersionHistory;
+      const versions = await versionHistory.getAllVersions();
+      return versions.length;
+    });
+    expect(actualCount).toBe(expectedCount);
+  }
+);
+
+Then("that version should be marked as squashed", async function (this: CustomWorld) {
+  const isSquashed = await this.page.evaluate(async () => {
+    const versionHistory = (window as any).__testVersionHistory;
+    const versions = await versionHistory.getAllVersions();
+    return versions[0]?.isSquashed === true;
+  });
+  expect(isSquashed).toBe(true);
+});
+
+Then(
+  "that version should have squashedCount of {int}",
+  async function (this: CustomWorld, expectedCount: number) {
+    const squashedCount = await this.page.evaluate(async () => {
+      const versionHistory = (window as any).__testVersionHistory;
+      const versions = await versionHistory.getAllVersions();
+      return versions[0]?.squashedCount;
+    });
+    expect(squashedCount).toBe(expectedCount);
+  }
+);
+
+Then("the latest version should be marked as squashed", async function (this: CustomWorld) {
+  const isSquashed = await this.page.evaluate(async () => {
+    const versionHistory = (window as any).__testVersionHistory;
+    const versions = await versionHistory.getAllVersions();
+    const latestVersion = versions[versions.length - 1];
+    return latestVersion?.isSquashed === true;
+  });
+  expect(isSquashed).toBe(true);
+});
+
+Then(
+  "the latest version should have squashedCount of {int}",
+  async function (this: CustomWorld, expectedCount: number) {
+    const squashedCount = await this.page.evaluate(async () => {
+      const versionHistory = (window as any).__testVersionHistory;
+      const versions = await versionHistory.getAllVersions();
+      const latestVersion = versions[versions.length - 1];
+      return latestVersion?.squashedCount;
+    });
+    expect(squashedCount).toBe(expectedCount);
   }
 );
 

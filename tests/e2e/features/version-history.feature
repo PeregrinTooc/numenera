@@ -205,3 +205,11 @@ Feature: Version History (Character Time Travel)
         Then the version counter should show "Version 99 of 99"
         And the oldest version should have been removed
         And I can still navigate to version 1 (which was previously version 2)
+
+    Scenario: Squashing after inactivity period
+        Given I have a character loaded
+        When I edit the "character name" field to "Aria"
+        And I wait for 1500 milliseconds
+        Then I should see 2 versions in version history
+        And the latest version should be marked as squashed
+        And the latest version should have squashedCount of 1

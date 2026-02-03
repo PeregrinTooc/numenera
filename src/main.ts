@@ -21,6 +21,7 @@ import { initI18n, onLanguageChanged } from "./i18n/index.js";
 import { getVersionHistory } from "./storage/storageFactory.js";
 import { detectChanges } from "./utils/changeDetection.js";
 import { VersionState } from "./services/versionState.js";
+import { VersionHistoryService } from "./services/versionHistoryService.js";
 
 // Expose storage functions on window for E2E tests
 // This allows tests to work in both dev and production builds
@@ -65,17 +66,21 @@ let versionState: VersionState | null = null;
 // Global VersionWarningBanner instance
 let versionWarningBanner: VersionWarningBanner | null = null;
 
+// Global VersionHistoryService instance
+let versionHistoryService: VersionHistoryService | null = null;
+
 // Listen for save-completed events to update indicator
 autoSaveService.on("save-completed", async (event) => {
   // Create version history entry on save
-  if (currentCharacter && previousCharacter) {
-    const versionHistory = await getVersionHistory();
+  if (currentCharacter && previousCharacter && versionHistoryService) {
     const changes = detectChanges(previousCharacter, currentCharacter);
 
     // Only create version if there are actual changes
     if (changes.length > 0) {
       const description = changes.join(", ");
-      await versionHistory.saveVersion(currentCharacter, description);
+
+      // Track change through VersionHistoryService for smart squashing
+      await versionHistoryService.trackChange(currentCharacter, description);
 
       // Update versionState's latest character
       if (versionState) {
@@ -572,6 +577,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Save the initial state as Version 1
   const versionHistory = await getVersionHistory();
   const versions = await versionHistory.getAllVersions();
+
+  // Initialize VersionHistoryService with configurable delay
+  const squashDelay =
+    typeof window !== "undefined" && (window as any).__TEST_SQUASH_DELAY__
+      ? (window as any).__TEST_SQUASH_DELAY__
+      : 5000;
+  versionHistoryService = new VersionHistoryService(versionHistory, squashDelay);
 
   // Only create initial version if no versions exist yet
   if (versions.length === 0) {
