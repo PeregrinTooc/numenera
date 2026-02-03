@@ -25,10 +25,25 @@ Before(async function (this: CustomWorld) {
   });
   this.page = await this.context.newPage();
 
+  // Capture console messages for debugging
+  this.page.on("console", (msg) => {
+    const text = msg.text();
+    // Only log messages related to version history or squashing
+    if (
+      text.includes("[VersionHistoryService]") ||
+      text.includes("[performSquash]") ||
+      text.includes("[save-completed]")
+    ) {
+      console.log(`[Browser Console] ${text}`);
+    }
+  });
+
   // Inject test configuration BEFORE navigation
-  // Set squash delay to 1 second for fast testing
+  // Set squash delay to 2500ms to allow 3 edits with 500ms waits between them
+  // Timeline: Edit1 (t=0) ’ wait 500ms ’ Edit2 (t=500) ’ wait 500ms ’ Edit3 (t=1000)
+  // Total time for 3 edits: ~1500ms + buffer for async operations = 2500ms
   await this.page.addInitScript(() => {
-    (window as any).__TEST_SQUASH_DELAY__ = 1000;
+    (window as any).__TEST_SQUASH_DELAY__ = 2500;
   });
 
   // Navigate to the server and clear both localStorage and IndexedDB for clean state

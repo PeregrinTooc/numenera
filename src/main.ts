@@ -76,7 +76,8 @@ autoSaveService.on("save-completed", async (event) => {
     const changes = detectChanges(previousCharacter, currentCharacter);
 
     // Only create version if there are actual changes
-    if (changes.length > 0) {
+    // AND we're not currently performing a squash operation
+    if (changes.length > 0 && !versionHistoryService.isSquashing()) {
       const description = changes.join(", ");
 
       // Track change through VersionHistoryService for smart squashing

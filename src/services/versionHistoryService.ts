@@ -16,6 +16,7 @@ export class VersionHistoryService {
   private squashDelayMs: number;
   private squashTimerId: number | null = null;
   private unsquashedVersionIds: string[] = [];
+  private _isSquashing = false;
 
   /**
    * Create a new VersionHistoryService
@@ -34,14 +35,20 @@ export class VersionHistoryService {
    * @param description Description of the change
    */
   async trackChange(character: Character, description: string): Promise<void> {
+    // Reset squash timer IMMEDIATELY - before any other operations
+    // This prevents the previous timer from expiring during async operations
+    this.resetTimer();
+
+    // Don't track versions created during squashing operation
+    if (this._isSquashing) {
+      return;
+    }
+
     // Save version immediately (maintains backward compatibility)
     const version = await this.manager.saveVersion(character, description);
 
     // Track this version ID as unsquashed
     this.unsquashedVersionIds.push(version.id);
-
-    // Reset squash timer
-    this.resetTimer();
   }
 
   /**
@@ -81,6 +88,9 @@ export class VersionHistoryService {
       return;
     }
 
+    // Set flag to prevent re-tracking the squashed version
+    this._isSquashing = true;
+
     try {
       // Get all unsquashed versions from storage
       const versions = await Promise.all(
@@ -93,6 +103,7 @@ export class VersionHistoryService {
       if (validVersions.length === 0) {
         this.unsquashedVersionIds = [];
         this.squashTimerId = null;
+        this._isSquashing = false;
         return;
       }
 
@@ -106,7 +117,11 @@ export class VersionHistoryService {
       // Delete all unsquashed versions from IndexedDB
       await this.deleteVersions(this.unsquashedVersionIds);
 
+      // Clear tracking array
+      this.unsquashedVersionIds = [];
+
       // Create one new squashed version
+      // The _isSquashing flag prevents trackChange from being called
       const squashedVersion = await this.manager.saveVersion(
         latestVersion.character as Character,
         combinedDescription
@@ -118,14 +133,15 @@ export class VersionHistoryService {
         squashedCount: validVersions.length,
       });
 
-      // Clear tracking arrays
-      this.unsquashedVersionIds = [];
+      // Clear timer and squashing flag
       this.squashTimerId = null;
+      this._isSquashing = false;
     } catch (error) {
       console.error("Error performing squash:", error);
       // Clear state on error to prevent stuck state
       this.unsquashedVersionIds = [];
       this.squashTimerId = null;
+      this._isSquashing = false;
     }
   }
 
@@ -213,5 +229,13 @@ export class VersionHistoryService {
    */
   isTimerActive(): boolean {
     return this.squashTimerId !== null;
+  }
+
+  /**
+   * Check if currently performing squash operation
+   * Used to prevent circular event triggering
+   */
+  isSquashing(): boolean {
+    return this._isSquashing;
   }
 }

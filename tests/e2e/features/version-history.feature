@@ -209,7 +209,20 @@ Feature: Version History (Character Time Travel)
     Scenario: Squashing after inactivity period
         Given I have a character loaded
         When I edit the "character name" field to "Aria"
-        And I wait for 1500 milliseconds
+        And I wait for 3000 milliseconds
         Then I should see 2 versions in version history
         And the latest version should be marked as squashed
         And the latest version should have squashedCount of 1
+
+    Scenario: Timer resets on subsequent edits
+        Given I have a character loaded
+        When I edit the "character name" field to "TIMER_TEST_NAME"
+        And I wait for 500 milliseconds
+        And I edit the "tier" field to "2"
+        And I wait for 500 milliseconds
+        And I edit the "descriptor" field to "TIMER_TEST_DESC"
+        And I wait for 3000 milliseconds
+        Then I should see 2 versions in version history
+        And the latest version should be marked as squashed
+        And the latest version should have squashedCount of 3
+        And the latest version description should contain all changes

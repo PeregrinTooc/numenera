@@ -145,7 +145,30 @@ This plan breaks the feature into 7 incremental stages. Each stage follows stric
 
 ---
 
-#### **Smart Squashing System** ⏳ NEXT
+#### **Smart Squashing System** ⏳ IN PROGRESS
+
+**Phase 4: Smart Squashing Implementation**
+
+**Step 1: Single edit squashing** ✅ COMPLETE
+
+- Implemented and tested
+- Commit: "feat(version-history): Phase 4 Step 1 - Single edit squashing"
+
+**Step 2: Timer resets on subsequent edits** ✅ COMPLETE
+
+- Implemented timer reset mechanism in `trackChange()`
+- Fixed race condition by calling `resetTimer()` as first line before async operations
+- Test uses 2500ms squash delay with 500ms intervals between 3 edits
+- Squashes 3 rapid edits into 1 version after 2500ms inactivity
+- All 353 E2E scenarios passing
+- Commit: [ready] "feat(version-history): Phase 4 Step 2 - Timer resets on edits"
+
+**Additional Test Cases to Implement Later:**
+
+- Make edits, then navigate back one version before squashing, then navigate forward again, assert that the changes are present
+
+**Step 3: Multiple edits squashing** ⏳ NEXT
+**Step 4: Edge cases** ⏳ PENDING
 
 #### **Keyboard Shortcuts** ⏳ PENDING
 

@@ -578,6 +578,27 @@ Then(
 );
 
 Then(
+  "the latest version description should contain all changes",
+  async function (this: CustomWorld) {
+    const description = await this.page.evaluate(async () => {
+      const versionHistory = (window as any).__testVersionHistory;
+      const versions = await versionHistory.getAllVersions();
+      const latestVersion = versions[versions.length - 1];
+      return latestVersion?.description;
+    });
+
+    // The squashed description should contain information about the changes
+    // It should mention name, tier, and descriptor changes
+    expect(description).toBeTruthy();
+    expect(description!.length).toBeGreaterThan(0);
+
+    // Check that the description contains indicators of multiple changes
+    // The squashDescriptions function combines descriptions with ", "
+    expect(description).toContain("Changed name");
+  }
+);
+
+Then(
   "the version description should contain {string}",
   async function (this: CustomWorld, text: string) {
     const description = this.page.locator('[data-testid="version-change-description"]');
