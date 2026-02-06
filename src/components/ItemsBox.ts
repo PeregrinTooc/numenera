@@ -12,6 +12,7 @@ import {
   createItemInstances,
   renderAddButton,
 } from "./helpers/CollectionBehavior.js";
+import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
 
 type FieldType = "shins";
 
@@ -56,6 +57,7 @@ export class ItemsBox {
       onConfirm: (newValue) => {
         this.onFieldUpdate(fieldType, newValue as number);
       },
+      versionHistoryService: getVersionHistoryService(),
     });
   }
 

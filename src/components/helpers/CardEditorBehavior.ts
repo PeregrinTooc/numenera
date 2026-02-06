@@ -4,6 +4,7 @@
 import { html, TemplateResult } from "lit-html";
 import { openCardEditModal } from "../CardEditModal.js";
 import { t } from "../../i18n/index.js";
+import type { VersionHistoryService } from "../../services/versionHistoryService.js";
 
 /**
  * Configuration for card editor behavior
@@ -14,6 +15,7 @@ export interface CardEditorConfig<T> {
   onUpdate?: (updated: T) => void;
   renderEditableVersion: () => TemplateResult;
   resetEditedItem: () => void;
+  versionHistoryService?: VersionHistoryService;
 }
 
 /**
@@ -35,6 +37,7 @@ export function createEditHandler<T>(config: CardEditorConfig<T>): () => void {
       onCancel: () => {
         // No action needed on cancel
       },
+      versionHistoryService: config.versionHistoryService,
     });
   };
 }

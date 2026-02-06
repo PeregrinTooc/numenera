@@ -17,12 +17,14 @@ import {
   FocusTrappingBehavior,
   renderModalButtons,
 } from "../services/modalBehavior.js";
+import type { VersionHistoryService } from "../services/versionHistoryService.js";
 
 interface EditFieldModalConfig {
   fieldType: FieldType;
   currentValue: string | number;
   onConfirm: (newValue: string | number) => void;
   onCancel: () => void;
+  versionHistoryService?: VersionHistoryService;
 }
 
 export class EditFieldModal extends ModalBehavior {
@@ -31,6 +33,7 @@ export class EditFieldModal extends ModalBehavior {
   private onConfirmWithValue: (newValue: string | number) => void;
   private inputValue: string;
   private validationError: string | null = null;
+  private versionHistoryService?: VersionHistoryService;
 
   constructor(config: EditFieldModalConfig) {
     super({
@@ -42,6 +45,7 @@ export class EditFieldModal extends ModalBehavior {
     this.currentValue = String(config.currentValue);
     this.onConfirmWithValue = config.onConfirm;
     this.inputValue = this.currentValue;
+    this.versionHistoryService = config.versionHistoryService;
 
     // Bind additional methods for event handlers
     this.handleInput = this.handleInput.bind(this);
@@ -67,6 +71,11 @@ export class EditFieldModal extends ModalBehavior {
   private handleInput(e: Event): void {
     const input = e.target as HTMLInputElement;
     this.inputValue = input.value;
+
+    // Reset version history timer on each keystroke
+    if (this.versionHistoryService) {
+      this.versionHistoryService.resetTimer();
+    }
 
     // For numeric fields, validate immediately to disable button if invalid
     if (isNumericField(this.fieldType)) {

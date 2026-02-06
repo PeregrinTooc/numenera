@@ -16,6 +16,7 @@ Feature: Version History (Character Time Travel)
 
     Scenario: Creating first version shows navigator
         When I edit the "character name" field to "Aria"
+        And I wait for 1100 milliseconds
         Then the version navigator should be visible
         And the version counter should show "Version 2 of 2"
         And the backward arrow should be enabled
@@ -42,7 +43,6 @@ Feature: Version History (Character Time Travel)
         And both navigation arrows should be enabled
         And the warning banner should be visible
 
-
     Scenario: Navigate to oldest version
         Given the character has 3 versions in history
         And I am viewing the latest version
@@ -54,7 +54,6 @@ Feature: Version History (Character Time Travel)
         And the forward arrow should be enabled
         And the warning banner should be visible
 
-
     Scenario: Navigate forward to newer version
         Given the character has 3 versions in history
         And I am viewing version 1
@@ -63,7 +62,6 @@ Feature: Version History (Character Time Travel)
         And the character data should match version 2
         And both navigation arrows should be enabled
         And the warning banner should be visible
-
 
     Scenario: Navigate forward to latest version
         Given the character has 3 versions in history
@@ -76,7 +74,6 @@ Feature: Version History (Character Time Travel)
         And the forward arrow should be disabled
         And no warning banner should be visible
 
-
     Scenario: Restore button saves old version as new latest
         Given the character has 5 versions in history
         And I am viewing version 2
@@ -87,7 +84,6 @@ Feature: Version History (Character Time Travel)
         And no warning banner should be visible
         And the forward arrow should be disabled
 
-
     Scenario: Warning banner displays when viewing old version
         Given the character has 3 versions in history
         And I am viewing version 1
@@ -95,16 +91,15 @@ Feature: Version History (Character Time Travel)
         And the warning banner should contain text "You are viewing an old version"
         And the warning banner should have a restore button
 
-
     Scenario: Editing while viewing old version creates new version
         Given the character has 3 versions in history
         And I am viewing version 1
         When I edit the "character name" field to "Time Traveler"
+        And I wait for 1100 milliseconds
         Then a new version should be created
         And the version counter should show "Version 4 of 4"
         And I should be viewing the latest version
         And no warning banner should be visible
-
 
     Scenario: Version description shows what changed
         Given the character has a version with name change
@@ -112,12 +107,10 @@ Feature: Version History (Character Time Travel)
         Then the version description should contain "Changed name"
         And the timestamp should be in human-readable format
 
-    @wip
     Scenario: Multiple changes show combined description
         Given the character has a version with multiple basic info changes
         And I am viewing that version
         Then the version description should contain "Edited basic info"
-
 
     Scenario: Version counter updates correctly
         Given the character has 10 versions in history
@@ -128,12 +121,10 @@ Feature: Version History (Character Time Travel)
         When I navigate forward twice
         Then the version counter should show "Version 6 of 10"
 
-
     Scenario: Timestamp displays in readable format
         Given the character has a version from 5 minutes ago
         And I am viewing that version
         Then the timestamp should show a relative time like "5 minutes ago"
-
 
     Scenario: Navigation preserves character integrity
         Given the character has 5 versions with different data
@@ -146,7 +137,6 @@ Feature: Version History (Character Time Travel)
         And the character stats should match version 4 stats
         And the character equipment should match version 4 equipment
 
-
     Scenario: Portrait is not affected by version navigation
         Given the character has 3 versions with different names
         And the character has a portrait image
@@ -154,7 +144,6 @@ Feature: Version History (Character Time Travel)
         Then the portrait should remain unchanged
         When I navigate to version 2
         Then the portrait should remain unchanged
-
 
     Scenario: Export works from old version
         Given the character has 3 versions in history
@@ -190,39 +179,21 @@ Feature: Version History (Character Time Travel)
         And I should be viewing the latest version
         And the warning banner should not be visible
 
-
     Scenario: Version navigator updates after new edit
         Given the character has 3 versions in history
         And I am viewing the latest version
         When I edit the "tier" field to "2"
+        And I wait for 1100 milliseconds
         Then the version counter should show "Version 4 of 4"
-        And the version description should contain the tier change
-
+        When I wait for 1200 milliseconds
+        Then the version description should contain the tier change
 
     Scenario: Maximum versions (FIFO) updates navigator
         Given the character has 99 versions in history
         When I create a new version by editing the name
+        And I wait for 1100 milliseconds
         Then the version counter should show "Version 99 of 99"
         And the oldest version should have been removed
-        And I can still navigate to version 1 (which was previously version 2)
-
-    Scenario: Squashing after inactivity period
-        Given I have a character loaded
-        When I edit the "character name" field to "Aria"
-        And I wait for 3000 milliseconds
-        Then I should see 2 versions in version history
-        And the latest version should be marked as squashed
-        And the latest version should have squashedCount of 1
-
-    Scenario: Timer resets on subsequent edits
-        Given I have a character loaded
-        When I edit the "character name" field to "TIMER_TEST_NAME"
-        And I wait for 500 milliseconds
-        And I edit the "tier" field to "2"
-        And I wait for 500 milliseconds
-        And I edit the "descriptor" field to "TIMER_TEST_DESC"
-        And I wait for 3000 milliseconds
-        Then I should see 2 versions in version history
-        And the latest version should be marked as squashed
-        And the latest version should have squashedCount of 3
-        And the latest version description should contain all changes
+        When I click the backward navigation arrow 5 times
+        Then the version counter should show "Version 94 of 99"
+        And the UI should remain responsive

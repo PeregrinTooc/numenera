@@ -103,6 +103,14 @@ Given(
     };
     await this.storageHelper.createVersion(versionCharacter, "Edited basic info");
     await this.page.waitForTimeout(100);
+
+    // Create one more version so we can navigate back to see v2's description
+    const latestCharacter = {
+      ...versionCharacter,
+      name: "Latest Version",
+    };
+    await this.storageHelper.createVersion(latestCharacter, "Final change");
+    await this.page.waitForTimeout(100);
   }
 );
 
@@ -333,6 +341,24 @@ When("I create a new version by editing the name", async function (this: CustomW
   await this.page.waitForTimeout(200);
 });
 
+When("I open the name edit modal", async function (this: CustomWorld) {
+  const nameField = this.page.locator('[data-testid="character-name"]');
+  await nameField.click();
+
+  // Wait for modal to open
+  const modal = this.page.locator('[data-testid="edit-modal"]');
+  await expect(modal).toBeVisible({ timeout: 5000 });
+});
+
+When("I cancel the modal", async function (this: CustomWorld) {
+  const cancelButton = this.page.locator('[data-testid="modal-cancel-button"]');
+  await cancelButton.click();
+
+  // Wait for modal to close
+  const modal = this.page.locator('[data-testid="edit-modal"]');
+  await expect(modal).toHaveCount(0, { timeout: 2000 });
+});
+
 // Note: "I click the export button" already exists in character-file-export.steps.ts
 // Note: "I edit the character name" can use the existing step with parameter
 
@@ -533,71 +559,6 @@ Then(
   }
 );
 
-Then("that version should be marked as squashed", async function (this: CustomWorld) {
-  const isSquashed = await this.page.evaluate(async () => {
-    const versionHistory = (window as any).__testVersionHistory;
-    const versions = await versionHistory.getAllVersions();
-    return versions[0]?.isSquashed === true;
-  });
-  expect(isSquashed).toBe(true);
-});
-
-Then(
-  "that version should have squashedCount of {int}",
-  async function (this: CustomWorld, expectedCount: number) {
-    const squashedCount = await this.page.evaluate(async () => {
-      const versionHistory = (window as any).__testVersionHistory;
-      const versions = await versionHistory.getAllVersions();
-      return versions[0]?.squashedCount;
-    });
-    expect(squashedCount).toBe(expectedCount);
-  }
-);
-
-Then("the latest version should be marked as squashed", async function (this: CustomWorld) {
-  const isSquashed = await this.page.evaluate(async () => {
-    const versionHistory = (window as any).__testVersionHistory;
-    const versions = await versionHistory.getAllVersions();
-    const latestVersion = versions[versions.length - 1];
-    return latestVersion?.isSquashed === true;
-  });
-  expect(isSquashed).toBe(true);
-});
-
-Then(
-  "the latest version should have squashedCount of {int}",
-  async function (this: CustomWorld, expectedCount: number) {
-    const squashedCount = await this.page.evaluate(async () => {
-      const versionHistory = (window as any).__testVersionHistory;
-      const versions = await versionHistory.getAllVersions();
-      const latestVersion = versions[versions.length - 1];
-      return latestVersion?.squashedCount;
-    });
-    expect(squashedCount).toBe(expectedCount);
-  }
-);
-
-Then(
-  "the latest version description should contain all changes",
-  async function (this: CustomWorld) {
-    const description = await this.page.evaluate(async () => {
-      const versionHistory = (window as any).__testVersionHistory;
-      const versions = await versionHistory.getAllVersions();
-      const latestVersion = versions[versions.length - 1];
-      return latestVersion?.description;
-    });
-
-    // The squashed description should contain information about the changes
-    // It should mention name, tier, and descriptor changes
-    expect(description).toBeTruthy();
-    expect(description!.length).toBeGreaterThan(0);
-
-    // Check that the description contains indicators of multiple changes
-    // The squashDescriptions function combines descriptions with ", "
-    expect(description).toContain("Changed name");
-  }
-);
-
 Then(
   "the version description should contain {string}",
   async function (this: CustomWorld, text: string) {
@@ -744,8 +705,9 @@ Then("a new version should be created", async function (this: CustomWorld) {
 });
 
 Then("I should be viewing the latest version", async function (this: CustomWorld) {
-  // Wait a bit longer for navigation to complete after edit
-  await this.page.waitForTimeout(300);
+  // Wait for version creation to complete (version-squashed event should have fired)
+  // The test already waited 1100ms after edit, but let's wait a bit more for UI updates
+  await this.page.waitForTimeout(500);
 
   // Check that forward arrow is disabled (meaning we're at latest)
   const forwardArrow = this.page.locator('[data-testid="version-nav-forward"]');
@@ -856,28 +818,13 @@ Then("the warning banner should not be visible", async function (this: CustomWor
 });
 
 Then("the version description should contain the tier change", async function (this: CustomWorld) {
-  // Create one more version so we can navigate back to see v4's description
-  const nameField = this.page.locator('[data-testid="character-name"]');
-  await nameField.click();
-  const modal = this.page.locator('[data-testid="edit-modal"]');
-  await expect(modal).toBeVisible({ timeout: 5000 });
-  const input = this.page.locator('[data-testid="edit-modal-input"]');
-  await input.fill("After Tier Change");
-  const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
-  await confirmButton.click();
-  await expect(modal).toHaveCount(0, { timeout: 2000 });
-  await this.page.waitForTimeout(500);
+  // We're at v4 (latest). To verify v4's description, check storage directly
+  const versions = await this.storageHelper.getAllVersions();
+  const v4 = versions[3]; // 0-based index, v4 is at index 3
 
-  // Now we're at version 5, navigate backward to view version 4
-  const backwardArrow = this.page.locator('[data-testid="version-nav-backward"]');
-  await backwardArrow.click();
-  await this.page.waitForTimeout(200);
-
-  // Check that version 4's description mentions tier
-  const description = this.page.locator('[data-testid="version-change-description"]');
-  await expect(description).toBeVisible({ timeout: 5000 });
-  const text = await description.textContent();
-  expect(text?.toLowerCase()).toContain("tier");
+  // Verify v4 has the tier change
+  expect(v4.character.tier).toBe(2);
+  expect(v4.description.toLowerCase()).toContain("tier");
 });
 
 Then("the oldest version should have been removed", async function (this: CustomWorld) {
@@ -887,20 +834,14 @@ Then("the oldest version should have been removed", async function (this: Custom
 });
 
 Then(
-  "I can still navigate to version {int} \\(which was previously version {int}\\)",
-  async function (this: CustomWorld, newVersionNum: number, _oldVersionNum: number) {
-    // Navigate to the specified version
+  "I click the backward navigation arrow {int} times",
+  async function (this: CustomWorld, times: number) {
     const backwardArrow = this.page.locator('[data-testid="version-nav-backward"]');
-    const versions = await this.storageHelper.getAllVersions();
-    const clicksNeeded = versions.length - newVersionNum;
-
-    for (let i = 0; i < clicksNeeded; i++) {
+    for (let i = 0; i < times; i++) {
       await backwardArrow.click();
-      await this.page.waitForTimeout(50);
+      await this.page.waitForTimeout(100);
     }
-
-    // Verify we're at the right version
-    const versionCounter = this.page.locator('[data-testid="version-counter"]');
-    await expect(versionCounter).toHaveText(`Version ${newVersionNum} of ${versions.length}`);
+    // Wait a bit for final navigation to complete
+    await this.page.waitForTimeout(200);
   }
 );

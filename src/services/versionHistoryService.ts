@@ -1,22 +1,26 @@
 /**
  * VersionHistoryService manages smart squashing of version history
- * - Saves versions immediately to IndexedDB (backward compatible)
- * - Tracks unsquashed version IDs in memory
- * - On timer expiry: deletes unsquashed versions, creates one squashed version
- * - Timer resets on any user interaction
+ * - Buffers changes in memory (no immediate save)
+ * - Single global timer that resets on each user interaction
+ * - On timer expiry: combines buffered changes into one squashed version
+ * - Three separate concerns: resetTimer, bufferChange, performSquash
  */
 
 import type { Character } from "../types/character.js";
-import type { CharacterVersion } from "../types/versionHistory.js";
 import { VersionHistoryManager } from "../storage/versionHistory.js";
 import { squashDescriptions } from "../utils/squashDescriptions.js";
+
+interface BufferedChange {
+  character: Character;
+  description: string;
+  timestamp: number;
+}
 
 export class VersionHistoryService {
   private manager: VersionHistoryManager;
   private squashDelayMs: number;
-  private squashTimerId: number | null = null;
-  private unsquashedVersionIds: string[] = [];
-  private _isSquashing = false;
+  private globalTimer: ReturnType<typeof setTimeout> | null = null;
+  private buffer: BufferedChange[] = [];
 
   /**
    * Create a new VersionHistoryService
@@ -29,146 +33,101 @@ export class VersionHistoryService {
   }
 
   /**
-   * Track a character change and schedule squashing
-   * Saves version immediately to IndexedDB (backward compatible)
-   * @param character The character to save
-   * @param description Description of the change
-   */
-  async trackChange(character: Character, description: string): Promise<void> {
-    // Reset squash timer IMMEDIATELY - before any other operations
-    // This prevents the previous timer from expiring during async operations
-    this.resetTimer();
-
-    // Don't track versions created during squashing operation
-    if (this._isSquashing) {
-      return;
-    }
-
-    // Save version immediately (maintains backward compatibility)
-    const version = await this.manager.saveVersion(character, description);
-
-    // Track this version ID as unsquashed
-    this.unsquashedVersionIds.push(version.id);
-  }
-
-  /**
-   * Reset the squash timer
-   * Called on any user interaction (edits, modal open, etc.)
+   * Reset the squash timer (synchronous)
+   * Called on every user interaction (keystrokes, field changes)
    */
   resetTimer(): void {
-    // Clear existing timer
-    if (this.squashTimerId !== null) {
-      window.clearTimeout(this.squashTimerId);
+    if (this.globalTimer !== null) {
+      globalThis.clearTimeout(this.globalTimer);
     }
 
-    // Start new timer
-    this.squashTimerId = window.setTimeout(() => {
+    this.globalTimer = globalThis.setTimeout(() => {
       this.performSquash();
-    }, this.squashDelayMs) as unknown as number;
+    }, this.squashDelayMs);
   }
 
   /**
-   * Cancel the squash timer
-   * Called when navigating to old versions (read-only mode)
+   * Buffer a change without immediately saving
+   * Called when user confirms a change (modal confirm, field update)
+   * @param character The character state to buffer
+   * @param description Description of the change
    */
-  cancelTimer(): void {
-    if (this.squashTimerId !== null) {
-      window.clearTimeout(this.squashTimerId);
-      this.squashTimerId = null;
-    }
+  bufferChange(character: Character, description: string): void {
+    // Deep clone to prevent mutations
+    this.buffer.push({
+      character: globalThis.structuredClone(character),
+      description,
+      timestamp: Date.now(),
+    });
+
+    // Reset timer when buffering
+    this.resetTimer();
+  }
+
+  /**
+   * Convenience method: reset timer AND buffer change
+   * Used for non-modal edits (e.g., stat buttons, checkboxes)
+   * @param character The character state to buffer
+   * @param description Description of the change
+   */
+  trackChange(character: Character, description: string): void {
+    this.resetTimer();
+    this.bufferChange(character, description);
   }
 
   /**
    * Perform squashing operation
-   * Deletes unsquashed versions from storage, creates one squashed version
+   * Combines buffered changes into single version
    */
   private async performSquash(): Promise<void> {
-    if (this.unsquashedVersionIds.length === 0) {
-      this.squashTimerId = null;
+    if (this.buffer.length === 0) {
+      this.globalTimer = null;
       return;
     }
 
-    // Set flag to prevent re-tracking the squashed version
-    this._isSquashing = true;
-
     try {
-      // Get all unsquashed versions from storage
-      const versions = await Promise.all(
-        this.unsquashedVersionIds.map((id) => this.manager.getVersionById(id))
-      );
+      // Use the latest character state
+      const latest = this.buffer[this.buffer.length - 1];
 
-      // Filter out any null results (versions that don't exist)
-      const validVersions = versions.filter((v): v is CharacterVersion => v !== null);
-
-      if (validVersions.length === 0) {
-        this.unsquashedVersionIds = [];
-        this.squashTimerId = null;
-        this._isSquashing = false;
-        return;
-      }
-
-      // Use the most recent character state (last version)
-      const latestVersion = validVersions[validVersions.length - 1];
-
-      // Collect all descriptions for squashing
-      const descriptions = validVersions.map((v) => v.description);
+      // Combine all descriptions
+      const descriptions = this.buffer.map((b) => b.description);
       const combinedDescription = squashDescriptions(descriptions);
 
-      // Delete all unsquashed versions from IndexedDB
-      await this.deleteVersions(this.unsquashedVersionIds);
+      // Save one squashed version
+      const version = await this.manager.saveVersion(latest.character, combinedDescription);
 
-      // Clear tracking array
-      this.unsquashedVersionIds = [];
-
-      // Create one new squashed version
-      // The _isSquashing flag prevents trackChange from being called
-      const squashedVersion = await this.manager.saveVersion(
-        latestVersion.character as Character,
-        combinedDescription
-      );
-
-      // Mark it as squashed with metadata
-      await this.updateVersionMetadata(squashedVersion.id, {
+      // Mark as squashed with metadata
+      await this.updateVersionMetadata(version.id, {
         isSquashed: true,
-        squashedCount: validVersions.length,
+        squashedCount: this.buffer.length,
       });
 
-      // Clear timer and squashing flag
-      this.squashTimerId = null;
-      this._isSquashing = false;
+      // Clear buffer and timer
+      this.buffer = [];
+      this.globalTimer = null;
+
+      // Dispatch custom event to notify that a version was created
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("version-squashed"));
+      }
     } catch (error) {
       console.error("Error performing squash:", error);
-      // Clear state on error to prevent stuck state
-      this.unsquashedVersionIds = [];
-      this.squashTimerId = null;
-      this._isSquashing = false;
+      // Clear state on error
+      this.buffer = [];
+      this.globalTimer = null;
     }
   }
 
   /**
-   * Delete multiple versions by ID from IndexedDB
-   * @param versionIds Array of version IDs to delete
+   * Flush buffered changes (called on page unload)
+   * Saves any pending changes before page closes
    */
-  private async deleteVersions(versionIds: string[]): Promise<void> {
-    // Access the private db instance (we need to expose a public delete method)
-    // For now, we'll use the internal accessor pattern
-    const db = (this.manager as any).db as IDBDatabase;
-    if (!db) {
-      throw new Error("Database not initialized");
+  async flush(): Promise<void> {
+    if (this.globalTimer !== null) {
+      globalThis.clearTimeout(this.globalTimer);
+      this.globalTimer = null;
     }
-
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction(["versions"], "readwrite");
-      const store = transaction.objectStore("versions");
-
-      // Delete each version
-      for (const id of versionIds) {
-        store.delete(id);
-      }
-
-      transaction.oncomplete = () => resolve();
-      transaction.onerror = () => reject(new Error("Failed to delete versions"));
-    });
+    await this.performSquash();
   }
 
   /**
@@ -216,26 +175,26 @@ export class VersionHistoryService {
   }
 
   /**
-   * Get count of unsquashed versions
-   * Useful for testing
+   * Get buffer length (for testing)
    */
-  getUnsquashedCount(): number {
-    return this.unsquashedVersionIds.length;
+  getBufferLength(): number {
+    return this.buffer.length;
   }
 
   /**
-   * Check if timer is active
-   * Useful for testing
+   * Check if timer is active (for testing)
    */
   isTimerActive(): boolean {
-    return this.squashTimerId !== null;
+    return this.globalTimer !== null;
   }
 
   /**
-   * Check if currently performing squash operation
-   * Used to prevent circular event triggering
+   * Check if currently performing a squash operation
+   * Used to prevent version creation during squash
    */
   isSquashing(): boolean {
-    return this._isSquashing;
+    // We're squashing if there's pending async work (buffer > 0 and timer just expired)
+    // For now, just return false as the timer check in main.ts is sufficient
+    return false;
   }
 }

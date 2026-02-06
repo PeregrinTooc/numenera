@@ -10,6 +10,7 @@ import {
   createItemInstances,
   renderAddButton,
 } from "./helpers/CollectionBehavior.js";
+import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
 
 type FieldType = "maxCyphers";
 
@@ -38,6 +39,7 @@ export class CyphersBox {
       onConfirm: (newValue) => {
         this.onFieldUpdate(fieldType, newValue as number);
       },
+      versionHistoryService: getVersionHistoryService(),
     });
   }
 

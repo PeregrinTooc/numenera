@@ -5,6 +5,7 @@ import { html, TemplateResult } from "lit-html";
 import { t } from "../i18n/index.js";
 import { StatPool as StatPoolType } from "../types/character.js";
 import { ModalService } from "../services/modalService.js";
+import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
 
 type FieldType =
   | "mightPool"
@@ -38,6 +39,7 @@ export class StatPool {
       onConfirm: (newValue) => {
         this.onFieldUpdate(fieldType, newValue as number);
       },
+      versionHistoryService: getVersionHistoryService(),
     });
   }
 

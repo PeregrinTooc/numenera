@@ -1,31 +1,23 @@
 /**
  * Combines multiple change descriptions into a single squashed description
- * - Removes duplicates while preserving order
- * - Filters out empty strings
- * - Limits output to top 3 descriptions
- * - Formats as comma-separated string
- *
- * @param descriptions - Array of change descriptions to squash
- * @returns Formatted string with up to 3 unique descriptions
+ * Removes duplicates and creates a concise summary
  */
 export function squashDescriptions(descriptions: string[]): string {
-  // Filter out empty strings and trim whitespace
-  const cleaned = descriptions.map((desc) => desc.trim()).filter((desc) => desc.length > 0);
+  // Trim and filter empty strings
+  const cleaned = descriptions.map((d) => d.trim()).filter((d) => d.length > 0);
 
-  // Remove duplicates while preserving order
-  const unique: string[] = [];
-  const seen = new Set<string>();
-
-  for (const desc of cleaned) {
-    if (!seen.has(desc)) {
-      seen.add(desc);
-      unique.push(desc);
-    }
+  if (cleaned.length === 0) {
+    return "";
   }
 
-  // Limit to top 3
-  const limited = unique.slice(0, 3);
+  if (cleaned.length === 1) {
+    return cleaned[0];
+  }
 
-  // Join with comma-space separator
-  return limited.join(", ");
+  // Remove duplicates while preserving order
+  const uniqueDescriptions = Array.from(new Set(cleaned));
+
+  // Always show max 3 descriptions, no "and X more"
+  const toShow = uniqueDescriptions.slice(0, 3);
+  return toShow.join(", ");
 }

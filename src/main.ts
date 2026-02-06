@@ -19,7 +19,6 @@ import { FULL_CHARACTER, NEW_CHARACTER } from "./data/mockCharacters.js";
 import { CharacterSheet } from "./components/CharacterSheet.js";
 import { initI18n, onLanguageChanged } from "./i18n/index.js";
 import { getVersionHistory } from "./storage/storageFactory.js";
-import { detectChanges } from "./utils/changeDetection.js";
 import { VersionState } from "./services/versionState.js";
 import { VersionHistoryService } from "./services/versionHistoryService.js";
 
@@ -37,6 +36,7 @@ declare global {
       getAllVersions: () => Promise<any[]>;
       clearVersions: () => Promise<void>;
     };
+    __versionHistoryService?: VersionHistoryService | null;
   }
 }
 
@@ -58,7 +58,6 @@ const saveIndicator = new SaveIndicator();
 
 // Global VersionNavigator instance
 let versionNavigator: VersionNavigator | null = null;
-let previousCharacter: Character | null = null;
 
 // Global VersionState instance
 let versionState: VersionState | null = null;
@@ -71,40 +70,22 @@ let versionHistoryService: VersionHistoryService | null = null;
 
 // Listen for save-completed events to update indicator
 autoSaveService.on("save-completed", async (event) => {
-  // Create version history entry on save
-  if (currentCharacter && previousCharacter && versionHistoryService) {
-    const changes = detectChanges(previousCharacter, currentCharacter);
+  // Version history is now handled through VersionHistoryService
+  // with smart squashing (timer-based buffering)
+  // No need to create versions here anymore
 
-    // Only create version if there are actual changes
-    // AND we're not currently performing a squash operation
-    if (changes.length > 0 && !versionHistoryService.isSquashing()) {
-      const description = changes.join(", ");
+  saveIndicator.updateTimestamp(event.timestamp);
 
-      // Track change through VersionHistoryService for smart squashing
-      await versionHistoryService.trackChange(currentCharacter, description);
-
-      // Update versionState's latest character
-      if (versionState) {
-        versionState.setLatestCharacter(currentCharacter);
-
-        // If we were viewing an old version, navigate to the new latest version
-        if (versionState.isViewingOldVersion()) {
-          await versionState.reload();
-          versionState.restoreToLatest();
-          // Re-render to update the UI (including removing warning banner)
-          const latestCharacter = versionState.getLatestCharacter();
-          await renderCharacterSheet(latestCharacter, true);
-        }
-      }
-
-      // Update version navigator with reload
-      await updateVersionNavigator(true);
+  // Check if there are versions (squashing may have occurred)
+  // Update version navigator to reflect any new versions
+  if (versionState && versionHistoryService) {
+    // Only reload if buffer is empty (meaning squash just completed)
+    if (versionHistoryService.getBufferLength() === 0 && !versionHistoryService.isTimerActive()) {
+      await versionState.reload();
+      await updateVersionNavigator(false);
     }
   }
 
-  // Store current character as previous for next comparison
-  previousCharacter = currentCharacter ? { ...currentCharacter } : null;
-  saveIndicator.updateTimestamp(event.timestamp);
   // Re-render to show updated indicator
   const app = document.getElementById("app");
   if (app && currentSheet) {
@@ -114,6 +95,23 @@ autoSaveService.on("save-completed", async (event) => {
     if (indicatorContainer) {
       render(saveIndicator.render(), indicatorContainer);
     }
+  }
+});
+
+// Listen for version-squashed events to update version navigator
+window.addEventListener("version-squashed", async () => {
+  if (versionState) {
+    const wasViewingOld = versionState.isViewingOldVersion();
+    await versionState.reload();
+
+    // If we were viewing an old version when we edited, navigate to the new latest
+    if (wasViewingOld) {
+      versionState.restoreToLatest();
+      const latestCharacter = versionState.getLatestCharacter();
+      await renderCharacterSheet(latestCharacter, true);
+    }
+
+    await updateVersionNavigator(true);
   }
 });
 
@@ -199,65 +197,91 @@ async function renderCharacterSheet(
   const handleFieldUpdate = async (field: string, value: string | number): Promise<void> => {
     // Update the character object
     const updatedCharacter = { ...character };
+    let fieldLabel = field;
+
     switch (field) {
       case "name":
         updatedCharacter.name = value as string;
+        fieldLabel = "Changed name";
         break;
       case "tier":
         updatedCharacter.tier = value as number;
+        fieldLabel = "Changed tier";
         break;
       case "descriptor":
         updatedCharacter.descriptor = value as string;
+        fieldLabel = "Changed descriptor";
         break;
       case "focus":
         updatedCharacter.focus = value as string;
+        fieldLabel = "Changed focus";
         break;
       case "xp":
         updatedCharacter.xp = value as number;
+        fieldLabel = "Changed XP";
         break;
       case "shins":
         updatedCharacter.shins = value as number;
+        fieldLabel = "Changed shins";
         break;
       case "armor":
         updatedCharacter.armor = value as number;
+        fieldLabel = "Changed armor";
         break;
       case "maxCyphers":
         updatedCharacter.maxCyphers = value as number;
+        fieldLabel = "Changed max cyphers";
         break;
       case "effort":
         updatedCharacter.effort = value as number;
+        fieldLabel = "Changed effort";
         break;
       case "mightPool":
         updatedCharacter.stats.might.pool = value as number;
+        fieldLabel = "Changed Might pool";
         break;
       case "mightEdge":
         updatedCharacter.stats.might.edge = value as number;
+        fieldLabel = "Changed Might edge";
         break;
       case "mightCurrent":
         updatedCharacter.stats.might.current = value as number;
+        fieldLabel = "Changed current Might";
         break;
       case "speedPool":
         updatedCharacter.stats.speed.pool = value as number;
+        fieldLabel = "Changed Speed pool";
         break;
       case "speedEdge":
         updatedCharacter.stats.speed.edge = value as number;
+        fieldLabel = "Changed Speed edge";
         break;
       case "speedCurrent":
         updatedCharacter.stats.speed.current = value as number;
+        fieldLabel = "Changed current Speed";
         break;
       case "intellectPool":
         updatedCharacter.stats.intellect.pool = value as number;
+        fieldLabel = "Changed Intellect pool";
         break;
       case "intellectEdge":
         updatedCharacter.stats.intellect.edge = value as number;
+        fieldLabel = "Changed Intellect edge";
         break;
       case "intellectCurrent":
         updatedCharacter.stats.intellect.current = value as number;
+        fieldLabel = "Changed current Intellect";
         break;
     }
 
     // Update currentCharacter BEFORE requesting auto-save
     currentCharacter = updatedCharacter;
+
+    // Buffer change for version history with smart squashing
+    const service = window.__versionHistoryService || versionHistoryService;
+    if (service) {
+      service.bufferChange(updatedCharacter, fieldLabel);
+    }
 
     // Request auto-save (debounced) - will now save the updated character
     autoSaveService.requestSave();
@@ -569,9 +593,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await clearCharacterState();
   }
 
-  // Initialize previousCharacter for change detection
-  previousCharacter = { ...initialCharacter };
-
   // Render the initial character sheet
   await renderCharacterSheet(initialCharacter);
 
@@ -579,12 +600,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   const versionHistory = await getVersionHistory();
   const versions = await versionHistory.getAllVersions();
 
-  // Initialize VersionHistoryService with configurable delay
+  // Initialize VersionHistoryService
+  // Use configured delay if available (for tests), otherwise default 5000ms
   const squashDelay =
-    typeof window !== "undefined" && (window as any).__TEST_SQUASH_DELAY__
-      ? (window as any).__TEST_SQUASH_DELAY__
-      : 5000;
+    (typeof window !== "undefined" && (window as any).__SQUASH_DELAY_MS__) || 5000;
   versionHistoryService = new VersionHistoryService(versionHistory, squashDelay);
+
+  // Expose versionHistoryService globally for components to access
+  window.__versionHistoryService = versionHistoryService;
+
+  // Add beforeunload handler to flush buffered changes
+  window.addEventListener("beforeunload", async () => {
+    if (versionHistoryService) {
+      // Flush any buffered changes before page unload
+      await versionHistoryService.flush();
+    }
+  });
 
   // Only create initial version if no versions exist yet
   if (versions.length === 0) {

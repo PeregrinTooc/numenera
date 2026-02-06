@@ -6,6 +6,7 @@ import { Character } from "../types/character.js";
 import { StatPool } from "./StatPool.js";
 import { ModalService } from "../services/modalService.js";
 import { t } from "../i18n/index.js";
+import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
 
 type FieldType = "effort";
 
@@ -24,6 +25,7 @@ export class Stats {
       onConfirm: (newValue) => {
         this.onFieldUpdate(fieldType, newValue as number);
       },
+      versionHistoryService: getVersionHistoryService(),
     });
   }
 

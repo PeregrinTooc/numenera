@@ -9,15 +9,18 @@ import {
   renderModalButtons,
   FocusTrappingBehavior,
 } from "../services/modalBehavior.js";
+import type { VersionHistoryService } from "../services/versionHistoryService.js";
 
 export interface CardEditModalConfig {
   content: TemplateResult; // The editable card content
   onConfirm: () => void;
   onCancel: () => void;
+  versionHistoryService?: VersionHistoryService;
 }
 
 export class CardEditModal extends ModalBehavior {
   private content: TemplateResult;
+  private versionHistoryService?: VersionHistoryService;
 
   constructor(config: CardEditModalConfig) {
     super({
@@ -26,9 +29,21 @@ export class CardEditModal extends ModalBehavior {
     });
 
     this.content = config.content;
+    this.versionHistoryService = config.versionHistoryService;
 
     // Bind handleKeyDown for Tab key trapping
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    // Bind handleInput for version history timer reset
+    this.handleInput = this.handleInput.bind(this);
+  }
+
+  /**
+   * Handle input events to reset version history timer
+   */
+  private handleInput(): void {
+    if (this.versionHistoryService) {
+      this.versionHistoryService.resetTimer();
+    }
   }
 
   /**
@@ -50,6 +65,7 @@ export class CardEditModal extends ModalBehavior {
         class="card-edit-modal-backdrop"
         @click=${this.handleBackdropClick}
         @keydown=${this.handleKeyDown}
+        @input=${this.handleInput}
         data-testid="card-modal-backdrop"
         aria-hidden="true"
       >
@@ -97,6 +113,7 @@ export function openCardEditModal(config: CardEditModalConfig): void {
       config.onCancel();
       container.remove();
     },
+    versionHistoryService: config.versionHistoryService,
   });
 
   // Render modal
