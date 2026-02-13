@@ -153,14 +153,140 @@ Feature: Version History (Character Time Travel)
         And the exported file should not contain version history
         And the exported file should use the current portrait
 
-    @wip
-    Scenario: Keyboard navigation support
+    # Keyboard Shortcuts (Ctrl+Z/Y with Buffer Support)
+
+    Scenario: Undo unsquashed changes in buffer
+        Given the character has 3 versions in history
+        When I edit the "character name" field to "First Edit"
+        And I edit the "character name" field to "Second Edit"
+        And I press "Control+Z" before the squash timer expires
+        Then the character name should be "First Edit"
+        And no new version should be created yet
+        When I press "Control+Z" again
+        Then the character name should revert to the original value
+        And I should see 3 versions in history
+
+    Scenario: Redo unsquashed changes in buffer
+        Given the character has 3 versions in history
+        And I have made buffered edits that were undone
+        When I press "Control+Y"
+        Then the changes should be reapplied
+        And no new version should be created yet
+
+    Scenario: Undo navigates through squashed versions
+    Scenario: Undo navigates through squashed versions
         Given the character has 5 versions in history
         And I am viewing the latest version
-        When I focus the backward arrow and press Enter
+        And the squash timer has completed
+        When I press "Control+Z"
         Then I should navigate to version 4
-        When I focus the forward arrow and press Space
-        Then I should navigate to version 5
+        And the warning banner should be visible
+
+
+    @wip
+    Scenario: Mixed undo/redo with buffer and versions
+        Given the character has 3 versions in history
+        When I make 2 rapid edits that are buffered
+        And I press "Control+Z" to undo buffered changes
+        And I wait for squash timer to complete
+        And I press "Control+Z" to navigate to previous version
+        Then I should be viewing version 3
+        And the warning banner should be visible
+        When I press "Control+Y"
+        Then I should navigate to version 4
+        And the warning banner should not be visible
+
+    Scenario: Card operations work with buffer undo/redo
+        Given I am on the character sheet page
+        And I should see 7 ability cards
+        When I click the add ability button
+        And I fill in the ability name with "Test Ability"
+        And I fill in the ability cost with "3"
+        And I fill in the ability pool with "Might"
+        And I fill in the ability description with "A test ability"
+        And I confirm the card edit modal
+        Then I should see 8 ability cards
+        When I press "Control+Z" before the squash timer expires
+        Then I should see 7 ability cards
+        When I press "Control+Y" before the squash timer expires
+        Then I should see 8 ability cards
+        And I should see an ability card with name "Test Ability"
+        When I press "Control+Z" before the squash timer expires
+        Then I should see 7 ability cards
+        When I press "Control+Y" before the squash timer expires
+        Then I should see 8 ability cards
+        And I should see an ability card with name "Test Ability"
+
+    Scenario: Redo changes persist correctly after reload
+        Given the character has 3 versions in history
+        When I edit the "character name" field to "First Edit"
+        And I edit the "character name" field to "Second Edit"
+        And I press "Control+Z" before the squash timer expires
+        Then the character name should be "First Edit"
+        When I press "Control+Y" before the squash timer expires
+        Then the character name should be "Second Edit"
+        When I refresh the browser
+        Then the character name should be "Second Edit"
+        And I should see 4 versions in history
+
+    Scenario: Version navigation updates UI immediately
+        Given the character has 5 versions in history
+        And I am viewing the latest version
+        And the squash timer has completed
+        When I press "Control+Z"
+        Then the character name should match version 4 name
+        And the version counter should show "Version 4 of 5"
+        When I press "Control+Z" again
+        Then the character name should match version 3 name
+        And the version counter should show "Version 3 of 5"
+
+    Scenario: Buffer undo/redo maintains state consistency
+        Given the character has 3 versions in history
+        When I edit the "character name" field to "Buffer Edit 1"
+        And I edit the "character name" field to "Buffer Edit 2"
+        And I press "Control+Z" before the squash timer expires
+        And I press "Control+Z" again before the squash timer expires
+        Then the character name should revert to the original value
+        When I press "Control+Y" before the squash timer expires
+        Then the character name should be "Buffer Edit 1"
+        When I press "Control+Y" again before the squash timer expires
+        Then the character name should be "Buffer Edit 2"
+        When I refresh the browser
+        Then the character name should be "Buffer Edit 2"
+
+    # Multi-Tab Conflict Detection
+
+    @wip
+    Scenario: Detect concurrent edit in another tab
+        Given I have the character open in two browser contexts
+        When I edit the name to "Tab1 Edit" in context 1
+        And I wait for 1100 milliseconds for the version to save
+        When I edit the name to "Tab2 Edit" in context 2
+        Then context 2 should detect a version conflict
+        And I should see a conflict warning with options
+
+    @wip
+    Scenario: Conflict resolution - accept remote changes
+        Given I have a version conflict between two contexts
+        When I choose "Load latest version" in context 2
+        Then context 2 should show "Tab1 Edit"
+        And my unsaved "Tab2 Edit" should be discarded
+        And no new version should be created
+
+    @wip
+    Scenario: Conflict resolution - force save local changes
+        Given I have a version conflict between two contexts
+        When I choose "Save my changes anyway" in context 2
+        Then a new version should be created with "Tab2 Edit"
+        And context 1 should be notified of the update
+
+    @wip
+    Scenario: Auto-reload when newer version detected
+        Given I have the character open in two contexts
+        And I am viewing an old version in context 1
+        When I edit and save in context 2
+        Then context 1 should show a notification about the newer version
+        And I should be offered to reload to the latest version
 
     # Edge Cases
 

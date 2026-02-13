@@ -351,6 +351,9 @@ cucumber-js tests/e2e/features/**/*.feature
 
 # NEVER do this - no cleanup pre-hook
 npx cucumber-js --tags "@current"
+
+# NEVER do this - doesn't run only the current tests
+npm run test:e2e -- --grep "@current"
 ```
 
 ### Why This Rule Exists:

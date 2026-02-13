@@ -1142,6 +1142,56 @@ When(
 
 // PRECONDITION STEPS
 Given("the character has {int} ability card", async function (this: CustomWorld, count: number) {
+  const storageHelper = new TestStorageHelper(this.page!);
+
+  if (count === 0) {
+    // Clear all storage first to ensure clean state
+    await this.page!.evaluate(() => {
+      localStorage.clear();
+    });
+
+    // Clear IndexedDB version history
+    await storageHelper.clearVersions();
+
+    const EMPTY_ABILITIES_CHARACTER = {
+      name: "Test Character",
+      tier: 1,
+      type: "Glaive",
+      descriptor: "Strong",
+      focus: "Test Focus",
+      xp: 0,
+      shins: 0,
+      armor: 0,
+      effort: 1,
+      maxCyphers: 2,
+      stats: {
+        might: { pool: 10, edge: 0, current: 10 },
+        speed: { pool: 10, edge: 0, current: 10 },
+        intellect: { pool: 10, edge: 0, current: 10 },
+      },
+      cyphers: [],
+      artifacts: [],
+      oddities: [],
+      abilities: [],
+      equipment: [],
+      attacks: [],
+      specialAbilities: [],
+      recoveryRolls: {
+        action: false,
+        tenMinutes: false,
+        oneHour: false,
+        tenHours: false,
+        modifier: 0,
+      },
+      damageTrack: { impairment: "healthy" },
+      textFields: { background: "", notes: "" },
+    };
+
+    await storageHelper.setCharacter(EMPTY_ABILITIES_CHARACTER);
+    await this.page!.reload();
+    await this.page!.waitForLoadState("networkidle");
+    await this.page!.waitForTimeout(500);
+  }
   if (count === 2) {
     const storageHelper = new TestStorageHelper(this.page!);
     const FULL_CHARACTER = {

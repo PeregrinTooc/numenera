@@ -22,6 +22,12 @@ Given(
     await this.page.waitForLoadState("networkidle");
     await this.page.waitForTimeout(500);
 
+    // Store the original character name before any editing (for buffer undo tests)
+    const nameField = this.page.locator('[data-testid="character-name"]');
+    const originalName = await nameField.textContent();
+    this.testContext = this.testContext || {};
+    this.testContext.originalCharacterName = originalName?.trim();
+
     // Create versions directly using the test helper to avoid timing issues
     // Get the current character as a base
     const baseCharacter = await this.storageHelper.getCharacter();
@@ -185,6 +191,69 @@ Given("I am viewing that version", async function (this: CustomWorld) {
   const backwardArrow = this.page.locator('[data-testid="version-nav-backward"]');
   await backwardArrow.click();
   await this.page.waitForTimeout(200);
+});
+
+Given("I have made buffered edits that were undone", async function (this: CustomWorld) {
+  // Make two edits to the character name
+  const testId = "character-name";
+  const field = this.page.locator(`[data-testid="${testId}"]`);
+
+  // First edit
+  await field.click();
+  const modal = this.page.locator('[data-testid="edit-modal"]');
+  await expect(modal).toBeVisible({ timeout: 5000 });
+  const input = this.page.locator('[data-testid="edit-modal-input"]');
+  await input.fill("First Edit");
+  const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
+  await confirmButton.click();
+  await expect(modal).toHaveCount(0, { timeout: 2000 });
+  await this.page.waitForTimeout(100);
+
+  // Second edit
+  await field.click();
+  await expect(modal).toBeVisible({ timeout: 5000 });
+  await input.fill("Second Edit");
+  await confirmButton.click();
+  await expect(modal).toHaveCount(0, { timeout: 2000 });
+  await this.page.waitForTimeout(100);
+
+  // Store the second edit for verification
+  this.testContext = this.testContext || {};
+  this.testContext.secondEdit = "Second Edit";
+
+  // Undo both edits using Control+Z (before squash timer expires)
+  await this.page.evaluate(() => {
+    const event1 = new KeyboardEvent("keydown", {
+      key: "z",
+      code: "KeyZ",
+      ctrlKey: true,
+      metaKey: false,
+      shiftKey: false,
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+    });
+    document.body.dispatchEvent(event1);
+  });
+  await this.page.waitForTimeout(200);
+
+  // Undo again to go back to original
+  await this.page.evaluate(() => {
+    const event2 = new KeyboardEvent("keydown", {
+      key: "z",
+      code: "KeyZ",
+      ctrlKey: true,
+      metaKey: false,
+      shiftKey: false,
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+    });
+    document.body.dispatchEvent(event2);
+  });
+  await this.page.waitForTimeout(200);
+
+  // Now we're at the original state, and redo stack has the two undone changes
 });
 
 // When steps
@@ -535,6 +604,55 @@ When("I wait for {int} milliseconds", async function (this: CustomWorld, ms: num
   await this.page.waitForTimeout(ms);
 });
 
+When("the squash timer has completed", async function (this: CustomWorld) {
+  // Wait to ensure any pending squash has completed
+  // Tests use 1000ms squash delay, so 1500ms ensures completion
+  await this.page.waitForTimeout(1500);
+});
+
+When("I press {string}", async function (this: CustomWorld, keyCombo: string) {
+  // Dispatch real KeyboardEvent to test the actual keyboard handler in main.ts
+  // We dispatch on document.body to ensure e.target is an HTMLElement
+  if (keyCombo === "Control+Z") {
+    await this.page.evaluate(() => {
+      // Create event with all necessary properties
+      const event = new KeyboardEvent("keydown", {
+        key: "z",
+        code: "KeyZ",
+        ctrlKey: true,
+        metaKey: false,
+        shiftKey: false,
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      });
+
+      // Dispatch on body (not document) so e.target is an HTMLElement
+      // The event will bubble up to document where our listener is attached
+      document.body.dispatchEvent(event);
+    });
+  } else if (keyCombo === "Control+Y") {
+    await this.page.evaluate(() => {
+      const event = new KeyboardEvent("keydown", {
+        key: "y",
+        code: "KeyY",
+        ctrlKey: true,
+        metaKey: false,
+        shiftKey: false,
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      });
+
+      // Dispatch on body (not document) so e.target is an HTMLElement
+      document.body.dispatchEvent(event);
+    });
+  }
+
+  // Wait longer for async navigation to complete and UI to update
+  await this.page.waitForTimeout(800);
+});
+
 Then(
   "I should see {int} version in version history",
   async function (this: CustomWorld, expectedCount: number) {
@@ -843,5 +961,317 @@ Then(
     }
     // Wait a bit for final navigation to complete
     await this.page.waitForTimeout(200);
+  }
+);
+
+// Buffer-based undo/redo step definitions
+
+When(
+  "I press {string} before the squash timer expires",
+  async function (this: CustomWorld, keyCombo: string) {
+    // Dispatch KeyboardEvent before squash timer expires (don't wait)
+    if (keyCombo === "Control+Z") {
+      await this.page.evaluate(() => {
+        const event = new KeyboardEvent("keydown", {
+          key: "z",
+          code: "KeyZ",
+          ctrlKey: true,
+          metaKey: false,
+          shiftKey: false,
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        });
+        document.body.dispatchEvent(event);
+      });
+    } else if (keyCombo === "Control+Y") {
+      await this.page.evaluate(() => {
+        const event = new KeyboardEvent("keydown", {
+          key: "y",
+          code: "KeyY",
+          ctrlKey: true,
+          metaKey: false,
+          shiftKey: false,
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        });
+        document.body.dispatchEvent(event);
+      });
+    }
+
+    // Wait for UI to update but NOT for squash to complete
+    await this.page.waitForTimeout(200);
+  }
+);
+
+When("I press {string} again", async function (this: CustomWorld, keyCombo: string) {
+  // Dispatch KeyboardEvent (same as regular press)
+  if (keyCombo === "Control+Z") {
+    await this.page.evaluate(() => {
+      const event = new KeyboardEvent("keydown", {
+        key: "z",
+        code: "KeyZ",
+        ctrlKey: true,
+        metaKey: false,
+        shiftKey: false,
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      });
+      document.body.dispatchEvent(event);
+    });
+  } else if (keyCombo === "Control+Y") {
+    await this.page.evaluate(() => {
+      const event = new KeyboardEvent("keydown", {
+        key: "y",
+        code: "KeyY",
+        ctrlKey: true,
+        metaKey: false,
+        shiftKey: false,
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      });
+      document.body.dispatchEvent(event);
+    });
+  }
+
+  await this.page.waitForTimeout(200);
+});
+
+When(
+  "I press {string} again before the squash timer expires",
+  async function (this: CustomWorld, keyCombo: string) {
+    // Dispatch KeyboardEvent before squash timer expires (same as "before the squash timer expires")
+    if (keyCombo === "Control+Z") {
+      await this.page.evaluate(() => {
+        const event = new KeyboardEvent("keydown", {
+          key: "z",
+          code: "KeyZ",
+          ctrlKey: true,
+          metaKey: false,
+          shiftKey: false,
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        });
+        document.body.dispatchEvent(event);
+      });
+    } else if (keyCombo === "Control+Y") {
+      await this.page.evaluate(() => {
+        const event = new KeyboardEvent("keydown", {
+          key: "y",
+          code: "KeyY",
+          ctrlKey: true,
+          metaKey: false,
+          shiftKey: false,
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        });
+        document.body.dispatchEvent(event);
+      });
+    }
+
+    // Wait for UI to update but NOT for squash to complete
+    await this.page.waitForTimeout(200);
+  }
+);
+
+Then(
+  "the character name should be {string}",
+  async function (this: CustomWorld, expectedName: string) {
+    const nameField = this.page.locator('[data-testid="character-name"]');
+    const actualName = await nameField.textContent();
+    expect(actualName?.trim()).toBe(expectedName);
+  }
+);
+
+Then("no new version should be created yet", async function (this: CustomWorld) {
+  // Version count should remain the same (no squash has occurred)
+  const versions = await this.storageHelper.getAllVersions();
+
+  // We started with 3 versions in history, should still have 3
+  // (The test context should have stored the initial count if needed)
+  expect(versions.length).toBe(3);
+});
+
+Then("the character name should revert to the original value", async function (this: CustomWorld) {
+  // Get the stored original name from test context
+  const originalName = this.testContext?.originalCharacterName;
+  expect(originalName).toBeTruthy();
+
+  const nameField = this.page.locator('[data-testid="character-name"]');
+  const actualName = await nameField.textContent();
+  expect(actualName?.trim()).toBe(originalName);
+});
+
+Then(
+  "I should see {int} versions in history",
+  async function (this: CustomWorld, expectedCount: number) {
+    const versions = await this.storageHelper.getAllVersions();
+    expect(versions.length).toBe(expectedCount);
+  }
+);
+
+Then("the changes should be reapplied", async function (this: CustomWorld) {
+  // After redo, the character name should be back to "First Edit" (the first redo)
+  // The test will press Control+Y once, which should redo the first undone change
+  const nameField = this.page.locator('[data-testid="character-name"]');
+  const actualName = await nameField.textContent();
+
+  // After first redo, we should see "First Edit"
+  expect(actualName?.trim()).toBe("First Edit");
+});
+
+// Mixed undo/redo step definitions (for buffer and version navigation interaction)
+
+When(
+  "I make {int} rapid edits that are buffered",
+  async function (this: CustomWorld, editCount: number) {
+    // Make multiple rapid edits to the character name
+    const testId = "character-name";
+    const field = this.page.locator(`[data-testid="${testId}"]`);
+
+    for (let i = 1; i <= editCount; i++) {
+      await field.click();
+      const modal = this.page.locator('[data-testid="edit-modal"]');
+      await expect(modal).toBeVisible({ timeout: 5000 });
+      const input = this.page.locator('[data-testid="edit-modal-input"]');
+      await input.fill(`Rapid Edit ${i}`);
+      const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
+      await confirmButton.click();
+      await expect(modal).toHaveCount(0, { timeout: 2000 });
+      await this.page.waitForTimeout(100);
+    }
+
+    // Store the last edit value for later verification
+    this.testContext = this.testContext || {};
+    this.testContext.lastRapidEdit = `Rapid Edit ${editCount}`;
+  }
+);
+
+When(
+  "I press {string} to undo buffered changes",
+  async function (this: CustomWorld, keyCombo: string) {
+    // This is the same as "I press Control+Z before the squash timer expires"
+    // but with explicit wording about undoing buffered changes
+    if (keyCombo === "Control+Z") {
+      // Set up listener for undo-completed event before dispatching
+      const undoCompletedPromise = this.page.evaluate(() => {
+        return new Promise<void>((resolve) => {
+          const handler = () => {
+            window.removeEventListener("undo-completed", handler);
+            resolve();
+          };
+          window.addEventListener("undo-completed", handler);
+        });
+      });
+
+      // Dispatch the keyboard event
+      await this.page.evaluate(() => {
+        const event = new KeyboardEvent("keydown", {
+          key: "z",
+          code: "KeyZ",
+          ctrlKey: true,
+          metaKey: false,
+          shiftKey: false,
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        });
+        document.body.dispatchEvent(event);
+      });
+
+      // Wait for undo-completed event
+      await undoCompletedPromise;
+    }
+
+    // Small wait for UI updates
+    await this.page.waitForTimeout(100);
+  }
+);
+
+When("I wait for squash timer to complete", async function (this: CustomWorld) {
+  // Set up listener for squash-completed event before triggering timer
+  const squashCompletedPromise = this.page.evaluate(() => {
+    return new Promise<void>((resolve) => {
+      const handler = () => {
+        window.removeEventListener("squash-completed", handler);
+        resolve();
+      };
+      window.addEventListener("squash-completed", handler);
+
+      // Trigger all pending timers after setting up listener
+      setTimeout(() => {
+        const testTimer = (window as any).__testTimer;
+        if (testTimer) {
+          testTimer.triggerAll();
+        }
+      }, 0);
+    });
+  });
+
+  // Wait for squash-completed event
+  await squashCompletedPromise;
+
+  // Small wait for UI updates
+  await this.page.waitForTimeout(200);
+});
+
+When(
+  "I press {string} to navigate to previous version",
+  async function (this: CustomWorld, keyCombo: string) {
+    // This is similar to regular "I press Control+Z" but with explicit wording
+    // about navigating through versions (after squash has completed)
+    if (keyCombo === "Control+Z") {
+      await this.page.evaluate(() => {
+        const event = new KeyboardEvent("keydown", {
+          key: "z",
+          code: "KeyZ",
+          ctrlKey: true,
+          metaKey: false,
+          shiftKey: false,
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        });
+        document.body.dispatchEvent(event);
+      });
+    } else if (keyCombo === "Control+Y") {
+      await this.page.evaluate(() => {
+        const event = new KeyboardEvent("keydown", {
+          key: "y",
+          code: "KeyY",
+          ctrlKey: true,
+          metaKey: false,
+          shiftKey: false,
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        });
+        document.body.dispatchEvent(event);
+      });
+    }
+
+    // Wait longer for async navigation to complete and UI to update
+    await this.page.waitForTimeout(800);
+  }
+);
+
+Then(
+  "I should be viewing version {int}",
+  async function (this: CustomWorld, versionNumber: number) {
+    // Check the version counter shows the correct version
+    const versionCounter = this.page.locator('[data-testid="version-counter"]');
+    const versions = await this.storageHelper.getAllVersions();
+    await expect(versionCounter).toHaveText(`Version ${versionNumber} of ${versions.length}`);
+
+    // Verify we're viewing the correct character data by checking the name matches
+    const expectedVersion = versions[versionNumber - 1];
+    const nameField = this.page.locator('[data-testid="character-name"]');
+    const displayedName = await nameField.textContent();
+    expect(displayedName?.trim()).toBe(expectedVersion.character.name);
   }
 );

@@ -38,12 +38,62 @@ Before(async function (this: CustomWorld) {
     }
   });
 
-  // Inject test configuration BEFORE navigation
-  // Set squash delay to 2500ms to allow 3 edits with 500ms waits between them
-  // Timeline: Edit1 (t=0) ’ wait 500ms ’ Edit2 (t=500) ’ wait 500ms ’ Edit3 (t=1000)
-  // Total time for 3 edits: ~1500ms + buffer for async operations = 2500ms
+  // Inject test configuration and TestTimer BEFORE navigation
+  // Set squash delay to 1000ms for faster tests
   await this.page.addInitScript(() => {
-    (window as any).__TEST_SQUASH_DELAY__ = 2500;
+    // Import and create TestTimer
+    class TestTimer {
+      private timers = new Map<number, () => void>();
+      private nextHandle = 1;
+
+      setTimeout(callback: () => void, _delay: number): number {
+        const handle = this.nextHandle++;
+        this.timers.set(handle, callback);
+
+        // Emit event for test observability
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("test-timer-scheduled", {
+              detail: { handle },
+            })
+          );
+        }
+
+        return handle;
+      }
+
+      clearTimeout(handle: number): void {
+        this.timers.delete(handle);
+      }
+
+      trigger(handle: number): void {
+        const callback = this.timers.get(handle);
+        if (callback) {
+          this.timers.delete(handle);
+          callback();
+        }
+      }
+
+      triggerAll(): void {
+        const callbacks = Array.from(this.timers.values());
+        this.timers.clear();
+        callbacks.forEach((cb) => cb());
+      }
+
+      getPendingCount(): number {
+        return this.timers.size;
+      }
+
+      clearAll(): void {
+        this.timers.clear();
+      }
+    }
+
+    // Create and expose test timer
+    (window as any).__testTimer = new TestTimer();
+
+    // Set squash delay for tests (1000ms instead of production 5000ms)
+    (window as any).__SQUASH_DELAY_MS__ = 1000;
   });
 
   // Navigate to the server and clear both localStorage and IndexedDB for clean state

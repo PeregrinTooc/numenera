@@ -21,6 +21,8 @@ import { initI18n, onLanguageChanged } from "./i18n/index.js";
 import { getVersionHistory } from "./storage/storageFactory.js";
 import { VersionState } from "./services/versionState.js";
 import { VersionHistoryService } from "./services/versionHistoryService.js";
+import { TestTimer } from "./services/timer.js";
+import type { ITimer } from "./services/timer.js";
 
 // Expose storage functions on window for E2E tests
 // This allows tests to work in both dev and production builds
@@ -37,6 +39,7 @@ declare global {
       clearVersions: () => Promise<void>;
     };
     __versionHistoryService?: VersionHistoryService | null;
+    __testTimer?: TestTimer;
   }
 }
 
@@ -46,12 +49,23 @@ let currentSheet: CharacterSheet | null = null;
 // Global ExportManager instance
 const exportManager = new ExportManager();
 
+// Create timer instance for tests (or use real timer in production)
+// Tests can set window.__testTimer before DOMContentLoaded
+let testTimer: ITimer | undefined;
+if (typeof window !== "undefined" && window.__testTimer) {
+  testTimer = window.__testTimer;
+}
+
 // Global AutoSaveService instance with 300ms debounce
-const autoSaveService = new AutoSaveService(async () => {
-  if (currentCharacter) {
-    await saveCharacterState(currentCharacter);
-  }
-}, 300);
+const autoSaveService = new AutoSaveService(
+  async () => {
+    if (currentCharacter) {
+      await saveCharacterState(currentCharacter);
+    }
+  },
+  300,
+  testTimer
+);
 
 // Global SaveIndicator instance
 const saveIndicator = new SaveIndicator();
@@ -117,6 +131,10 @@ window.addEventListener("version-squashed", async () => {
 
 // Track current character for auto-save
 let currentCharacter: Character | null = null;
+
+// Track character state before updates for version history
+// This needs to be updated whenever a new event listener might need it
+let characterBeforeUpdate: Character | null = null;
 
 // Update version navigator based on current version history state
 async function updateVersionNavigator(shouldReload = false): Promise<void> {
@@ -195,6 +213,12 @@ async function renderCharacterSheet(
 
   // Handler for field updates
   const handleFieldUpdate = async (field: string, value: string | number): Promise<void> => {
+    // Set initial state before first edit (if buffer is empty and no initial state set)
+    const service = window.__versionHistoryService || versionHistoryService;
+    if (service && service.getBufferLength() === 0) {
+      service.setInitialState(character);
+    }
+
     // Update the character object
     const updatedCharacter = { ...character };
     let fieldLabel = field;
@@ -278,7 +302,6 @@ async function renderCharacterSheet(
     currentCharacter = updatedCharacter;
 
     // Buffer change for version history with smart squashing
-    const service = window.__versionHistoryService || versionHistoryService;
     if (service) {
       service.bufferChange(updatedCharacter, fieldLabel);
     }
@@ -474,10 +497,27 @@ async function renderCharacterSheet(
     }
   }
 
+  // Update the global BEFORE state for version history tracking
+  // This must happen AFTER rendering but BEFORE any component can dispatch character-updated
+  characterBeforeUpdate = currentCharacter ? globalThis.structuredClone(currentCharacter) : null;
+
   // Listen for character-updated events and re-render + auto-save
   // Use setTimeout to ensure the event listener is added after render completes
   setTimeout(() => {
     const listener = async (_e: Event) => {
+      // Buffer the change for version history (for card operations, etc.)
+      const service = window.__versionHistoryService || versionHistoryService;
+      if (service && currentCharacter && characterBeforeUpdate) {
+        // Set initial state before first edit if buffer is empty
+        if (service.getBufferLength() === 0) {
+          service.setInitialState(characterBeforeUpdate);
+        }
+        service.bufferChange(currentCharacter, "Updated character");
+
+        // Update the BEFORE state for the next change
+        characterBeforeUpdate = globalThis.structuredClone(currentCharacter);
+      }
+
       // Trigger auto-save when character is updated
       autoSaveService.requestSave();
 
@@ -604,7 +644,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Use configured delay if available (for tests), otherwise default 5000ms
   const squashDelay =
     (typeof window !== "undefined" && (window as any).__SQUASH_DELAY_MS__) || 5000;
-  versionHistoryService = new VersionHistoryService(versionHistory, squashDelay);
+
+  // Use test timer if available (for E2E tests)
+  const timerForVersionHistory = testTimer || undefined;
+  versionHistoryService = new VersionHistoryService(
+    versionHistory,
+    squashDelay,
+    timerForVersionHistory
+  );
 
   // Expose versionHistoryService globally for components to access
   window.__versionHistoryService = versionHistoryService;
@@ -628,4 +675,84 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Update navigator after versionState is initialized
   await updateVersionNavigator(true);
+
+  // Add keyboard shortcuts for version navigation (Ctrl+Z for undo, Ctrl+Y for redo)
+  document.addEventListener("keydown", async (e: KeyboardEvent) => {
+    // Check if a modal or input is focused (don't intercept shortcuts in inputs)
+    const target = e.target as HTMLElement;
+    const isInInput =
+      target &&
+      (target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable ||
+        target.closest('[role="dialog"]'));
+
+    if (isInInput) {
+      return;
+    }
+
+    // Handle Ctrl+Z or Cmd+Z (Undo)
+    if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) {
+      e.preventDefault();
+
+      if (!versionState) return;
+
+      // Check buffer state first (before squash undo/redo takes precedence)
+      if (versionHistoryService && versionHistoryService.canUndo()) {
+        // Undo in buffer (before squash)
+        const previousState = versionHistoryService.undo();
+        if (previousState) {
+          await renderCharacterSheet(previousState, true);
+        }
+        return;
+      }
+
+      // Otherwise, navigate backward through saved versions (after squash)
+      if (versionState.getCurrentVersionIndex() > 0) {
+        await versionState.navigateBackward();
+        // Re-render with the previous version
+        const displayedCharacter = versionState.getDisplayedCharacter();
+        await renderCharacterSheet(displayedCharacter, true);
+        // Update navigator UI without reloading
+        await updateVersionNavigator(false);
+      }
+    }
+
+    // Handle Ctrl+Y, Cmd+Y, or Ctrl+Shift+Z (Redo)
+    if (
+      ((e.ctrlKey || e.metaKey) && e.key === "y") ||
+      ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "z")
+    ) {
+      e.preventDefault();
+
+      if (!versionState) return;
+
+      // Check buffer state first (before squash redo takes precedence)
+      if (versionHistoryService && versionHistoryService.canRedo()) {
+        // Redo in buffer (before squash)
+        const redoneState = versionHistoryService.redo();
+        if (redoneState) {
+          // Update currentCharacter before rendering
+          currentCharacter = redoneState;
+
+          // Render the redo'd state (this will update characterBeforeUpdate)
+          await renderCharacterSheet(redoneState, true);
+
+          // Request auto-save to persist the redo'd state to localStorage
+          autoSaveService.requestSave();
+        }
+        return;
+      }
+
+      // Otherwise, navigate forward through saved versions (after squash)
+      if (versionState.isViewingOldVersion()) {
+        await versionState.navigateForward();
+        // Re-render with the next version
+        const displayedCharacter = versionState.getDisplayedCharacter();
+        await renderCharacterSheet(displayedCharacter, true);
+        // Update navigator UI without reloading
+        await updateVersionNavigator(false);
+      }
+    }
+  });
 });

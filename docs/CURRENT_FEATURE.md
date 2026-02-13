@@ -32,7 +32,7 @@ Version history system that stores the last 99 character edits in IndexedDB, all
 **Test Coverage:**
 
 - ✅ All 514 unit tests passing
-- ✅ All 351 E2E scenarios passing (30/31 version history scenarios)
+- ✅ All 353 E2E scenarios passing (31/31 version history scenarios)
 - ✅ No regressions in existing features
 
 **Key Files:**
@@ -45,25 +45,32 @@ Version history system that stores the last 99 character edits in IndexedDB, all
 - `src/utils/squashDescriptions.ts` - Description combining logic
 - `tests/e2e/features/version-history.feature` - 31 E2E scenarios
 
+**Keyboard Shortcuts:**
+
+- Keyboard shortcuts for version navigation (Ctrl+Z backward, Ctrl+Y forward)
+- Works after squash (navigates through saved versions)
+- Prevents shortcuts when modal or input field is focused
+- E2E test dispatches real KeyboardEvents on document.body to properly test the keyboard handler
+- All tests passing (353/353 E2E scenarios)
+
 #### ⏳ Pending Features (Future Enhancements)
 
-1. **Keyboard Navigation (@wip)**
-   - Scenario: "Keyboard navigation support" (line 179-186 in version-history.feature)
-   - Missing: Step definitions for Enter/Space on focused arrows
-   - Impact: Low priority accessibility enhancement
-   - Estimated: 30 minutes
+1. **Buffer-Based Undo/Redo (Ctrl+Z/Y Before Squash)**
+   - Context-aware undo/redo:
+     - Before squash: Granular undo/redo of buffered changes
+     - After squash: Navigate through saved versions (✅ IMPLEMENTED)
+   - 3 @wip test scenarios added (lines 158-191 in version-history.feature)
+   - Impact: High priority UX enhancement
+   - Complexity: Medium-high (requires in-memory undo/redo stack in VersionHistoryService)
+   - Estimated: 3-4 hours implementation + testing
 
-2. **Keyboard Shortcuts (Not Started)**
-   - Ctrl+Z / Ctrl+Y for undo/redo
-   - Context-aware: granular before squash, opens UI after squash
-   - Impact: Medium priority UX enhancement
-   - Estimated: 2-3 hours (includes E2E tests)
-
-3. **Multi-Tab Conflict Detection (Not Started)**
-   - ETag-based conflict detection when editing in multiple tabs
-   - Infrastructure exists (`src/utils/etag.ts`) but not wired up
+2. **Multi-Tab Conflict Detection**
+   - ETag-based conflict detection when editing same character in multiple tabs
+   - Infrastructure exists (`src/utils/etag.ts`)
+   - 4 @wip test scenarios added (lines 219-249 in version-history.feature)
    - Impact: Medium priority data safety feature
-   - Estimated: 3-4 hours (includes E2E tests)
+   - Complexity: Medium (requires StorageChangeListener + conflict resolution UI)
+   - Estimated: 3-4 hours implementation + testing
 
 ### E2E Test File
 
@@ -72,8 +79,8 @@ Version history system that stores the last 99 character edits in IndexedDB, all
 **Test Summary:**
 
 - 31 scenarios defined
-- 30 passing
-- 1 marked @wip (keyboard navigation support)
+- 31 passing (including keyboard shortcut navigation through squashed versions)
+- 7 marked @wip (3 buffer-based undo/redo, 4 multi-tab conflict detection)
 
 **Covered Scenarios:**
 
@@ -90,12 +97,12 @@ Version history system that stores the last 99 character edits in IndexedDB, all
 - ✅ Export from old version
 - ✅ Rapid navigation
 - ✅ Browser refresh behavior
+- ✅ Keyboard shortcuts (Ctrl+Z/Y for version navigation)
 
 **Not Covered:**
 
-- ⏳ Keyboard navigation (Enter/Space on focused arrows) - @wip
-- ⏳ Keyboard shortcuts (Ctrl+Z/Y)
-- ⏳ Multi-tab conflict detection
+- ⏳ Buffer-based undo/redo (Ctrl+Z/Y before squash) - 3 @wip scenarios
+- ⏳ Multi-tab conflict detection - 4 @wip scenarios
 
 ### Architecture Notes
 
@@ -133,20 +140,27 @@ Version history system that stores the last 99 character edits in IndexedDB, all
 - ✅ Export from old version works
 - ✅ Portrait excluded from versions
 - ✅ All 514 unit tests pass
-- ✅ 30/31 E2E tests pass (1 @wip for future enhancement)
+- ✅ 31/31 E2E tests pass (7 @wip for future enhancements)
 - ✅ No regressions in existing features
 
 #### Future Enhancements
 
-- ⏳ Keyboard navigation (@wip scenario)
-- ⏳ Keyboard shortcuts (Ctrl+Z/Y)
+- ⏳ Buffer-based undo/redo (Ctrl+Z/Y before squash)
 - ⏳ Multi-tab conflict detection
 
-### Next Steps
+### Implementation Notes
+
+**Keyboard Shortcut Testing:**
+
+- E2E test dispatches KeyboardEvent on document.body (not document directly)
+- This ensures e.target is an HTMLElement, allowing proper input field detection
+- Tests the actual keyboard handler code path, including preventDefault() and input filtering
+- All 353 E2E scenarios passing, including keyboard shortcut test
+
+**Next Steps:**
 
 1. Move completed feature to FEATURES.md
 2. Delete this file
 3. Create new feature entries in TODO.md for:
-   - Keyboard navigation support
-   - Keyboard shortcuts (Ctrl+Z/Y)
+   - Buffer-based undo/redo (Ctrl+Z/Y before squash)
    - Multi-tab conflict detection (etag-based)
