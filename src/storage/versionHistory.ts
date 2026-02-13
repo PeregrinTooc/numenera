@@ -1,6 +1,7 @@
 import type { Character } from "../types/character.js";
 import type { CharacterVersion } from "../types/versionHistory.js";
 import { generateETag } from "../utils/etag.js";
+import { CompletionNotifier } from "../utils/completionNotifier.js";
 
 const DEFAULT_DB_NAME = "numenera-version-history-db";
 const STORE_NAME = "versions";
@@ -70,53 +71,62 @@ export class VersionHistoryManager {
    * @returns The created CharacterVersion
    */
   async saveVersion(character: Character, description: string): Promise<CharacterVersion> {
-    if (!this.db) {
-      throw new Error("VersionHistoryManager not initialized");
-    }
+    const notifier = new CompletionNotifier("version-create");
+    notifier.start();
 
-    // Deep clone character and exclude portrait
-    const { portrait: _portrait, ...characterWithoutPortrait } = character;
-    const clonedCharacter = JSON.parse(JSON.stringify(characterWithoutPortrait)) as Omit<
-      Character,
-      "portrait"
-    >;
-
-    // Generate etag
-    const etag = await generateETag(character);
-
-    // Create version object with unique timestamp
-    // Use Date.now() but ensure uniqueness by adding a small increment if needed
-    let timestamp = Date.now();
-    const existingVersions = await this.getAllVersions();
-    if (existingVersions.length > 0) {
-      const lastTimestamp = existingVersions[existingVersions.length - 1].timestamp;
-      // Ensure new timestamp is greater than the last one
-      if (timestamp <= lastTimestamp) {
-        timestamp = lastTimestamp + 1;
+    try {
+      if (!this.db) {
+        throw new Error("VersionHistoryManager not initialized");
       }
+
+      // Deep clone character and exclude portrait
+      const { portrait: _portrait, ...characterWithoutPortrait } = character;
+      const clonedCharacter = JSON.parse(JSON.stringify(characterWithoutPortrait)) as Omit<
+        Character,
+        "portrait"
+      >;
+
+      // Generate etag
+      const etag = await generateETag(character);
+
+      // Create version object with unique timestamp
+      // Use Date.now() but ensure uniqueness by adding a small increment if needed
+      let timestamp = Date.now();
+      const existingVersions = await this.getAllVersions();
+      if (existingVersions.length > 0) {
+        const lastTimestamp = existingVersions[existingVersions.length - 1].timestamp;
+        // Ensure new timestamp is greater than the last one
+        if (timestamp <= lastTimestamp) {
+          timestamp = lastTimestamp + 1;
+        }
+      }
+
+      const version: CharacterVersion = {
+        id: crypto.randomUUID(),
+        character: clonedCharacter,
+        timestamp,
+        description,
+        etag,
+      };
+
+      // Save to IndexedDB first
+      await this.saveToDb(version);
+
+      // Check version count and remove oldest if needed
+      let versions = await this.getAllVersions();
+      while (versions.length > MAX_VERSIONS) {
+        // Remove oldest version
+        await this.deleteVersion(versions[0].id);
+        // Get fresh list after deletion
+        versions = await this.getAllVersions();
+      }
+
+      notifier.complete({ versionId: version.id, description: version.description });
+      return version;
+    } catch (error) {
+      notifier.error(error);
+      throw error;
     }
-
-    const version: CharacterVersion = {
-      id: crypto.randomUUID(),
-      character: clonedCharacter,
-      timestamp,
-      description,
-      etag,
-    };
-
-    // Save to IndexedDB first
-    await this.saveToDb(version);
-
-    // Check version count and remove oldest if needed
-    let versions = await this.getAllVersions();
-    while (versions.length > MAX_VERSIONS) {
-      // Remove oldest version
-      await this.deleteVersion(versions[0].id);
-      // Get fresh list after deletion
-      versions = await this.getAllVersions();
-    }
-
-    return version;
   }
 
   /**
