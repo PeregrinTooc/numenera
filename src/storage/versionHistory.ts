@@ -92,7 +92,7 @@ export class VersionHistoryManager {
       // Create version object with unique timestamp
       // Use Date.now() but ensure uniqueness by adding a small increment if needed
       let timestamp = Date.now();
-      const existingVersions = await this.getAllVersions();
+      const existingVersions = await this.getAllVersionsInternal();
       if (existingVersions.length > 0) {
         const lastTimestamp = existingVersions[existingVersions.length - 1].timestamp;
         // Ensure new timestamp is greater than the last one
@@ -113,12 +113,12 @@ export class VersionHistoryManager {
       await this.saveToDb(version);
 
       // Check version count and remove oldest if needed
-      let versions = await this.getAllVersions();
+      let versions = await this.getAllVersionsInternal();
       while (versions.length > MAX_VERSIONS) {
         // Remove oldest version
         await this.deleteVersion(versions[0].id);
         // Get fresh list after deletion
-        versions = await this.getAllVersions();
+        versions = await this.getAllVersionsInternal();
       }
 
       notifier.complete({ versionId: version.id, description: version.description });
@@ -137,31 +137,38 @@ export class VersionHistoryManager {
     notifier.start();
 
     try {
-      if (!this.db) {
-        throw new Error("VersionHistoryManager not initialized");
-      }
-
-      const versions = await new Promise<CharacterVersion[]>((resolve, reject) => {
-        const transaction = this.db!.transaction([STORE_NAME], "readonly");
-        const store = transaction.objectStore(STORE_NAME);
-        const index = store.index("timestamp");
-        const request = index.getAll();
-
-        request.onsuccess = () => {
-          resolve(request.result || []);
-        };
-
-        request.onerror = () => {
-          reject(new Error("Failed to get all versions"));
-        };
-      });
-
+      const versions = await this.getAllVersionsInternal();
       notifier.complete({ count: versions.length });
       return versions;
     } catch (error) {
       notifier.error(error);
       throw error;
     }
+  }
+
+  /**
+   * Private helper: Get all versions without emitting events
+   * Used internally to avoid nested event emissions
+   */
+  private async getAllVersionsInternal(): Promise<CharacterVersion[]> {
+    if (!this.db) {
+      throw new Error("VersionHistoryManager not initialized");
+    }
+
+    return new Promise<CharacterVersion[]>((resolve, reject) => {
+      const transaction = this.db!.transaction([STORE_NAME], "readonly");
+      const store = transaction.objectStore(STORE_NAME);
+      const index = store.index("timestamp");
+      const request = index.getAll();
+
+      request.onsuccess = () => {
+        resolve(request.result || []);
+      };
+
+      request.onerror = () => {
+        reject(new Error("Failed to get all versions"));
+      };
+    });
   }
 
   /**

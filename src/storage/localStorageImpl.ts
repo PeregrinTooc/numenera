@@ -20,14 +20,22 @@ export class LocalStorageImpl implements ICharacterStorage {
     notifier.start();
 
     try {
-      const serialized = JSON.stringify(character);
-      localStorage.setItem(STORAGE_KEY, serialized);
+      this.saveInternal(character);
       notifier.complete({ source: "localStorage" });
     } catch (error) {
       console.error("Failed to save character state:", error);
       notifier.error(error);
       throw error;
     }
+  }
+
+  /**
+   * Internal save without event emissions
+   * Used during migration to avoid nested events
+   */
+  private saveInternal(character: any): void {
+    const serialized = JSON.stringify(character);
+    localStorage.setItem(STORAGE_KEY, serialized);
   }
 
   async load(): Promise<any | null> {
@@ -48,7 +56,7 @@ export class LocalStorageImpl implements ICharacterStorage {
         // Old format detected: extract character and re-save in new format
         console.log("Migrating from old versioned format to new raw format");
         const character = data.character;
-        await this.save(character);
+        this.saveInternal(character);
         notifier.complete({ source: "localStorage", found: true, migrated: true });
         return character;
       }

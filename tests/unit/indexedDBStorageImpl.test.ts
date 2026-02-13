@@ -208,9 +208,9 @@ describe("IndexedDBStorageImpl", () => {
       // Setup: Valid data in localStorage
       localStorage.setItem(STORAGE_KEY, JSON.stringify(mockCharacter));
 
-      // Mock IndexedDB save to fail
-      const originalSave = storage.save.bind(storage);
-      storage.save = vi.fn().mockRejectedValue(new Error("Save failed"));
+      // Mock IndexedDB saveInternal to fail
+      const originalSaveInternal = (storage as any).saveInternal.bind(storage);
+      (storage as any).saveInternal = vi.fn().mockRejectedValue(new Error("Save failed"));
 
       const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
@@ -224,7 +224,7 @@ describe("IndexedDBStorageImpl", () => {
       );
 
       // Restore
-      storage.save = originalSave;
+      (storage as any).saveInternal = originalSaveInternal;
       consoleErrorSpy.mockRestore();
     });
 

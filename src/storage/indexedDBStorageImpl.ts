@@ -37,24 +37,31 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
     notifier.start();
 
     try {
-      if (!this.db) {
-        throw new Error("IndexedDB not initialized");
-      }
-
-      await new Promise<void>((resolve, reject) => {
-        const transaction = this.db!.transaction([STORE_NAME], "readwrite");
-        const store = transaction.objectStore(STORE_NAME);
-        const request = store.put(character, CHARACTER_KEY);
-
-        request.onsuccess = () => resolve();
-        request.onerror = () => reject(new Error("Failed to save character"));
-      });
-
+      await this.saveInternal(character);
       notifier.complete({ source: "indexedDB" });
     } catch (error) {
       notifier.error(error);
       throw error;
     }
+  }
+
+  /**
+   * Internal save without event emissions
+   * Used during migration to avoid nested events
+   */
+  private async saveInternal(character: any): Promise<void> {
+    if (!this.db) {
+      throw new Error("IndexedDB not initialized");
+    }
+
+    return new Promise<void>((resolve, reject) => {
+      const transaction = this.db!.transaction([STORE_NAME], "readwrite");
+      const store = transaction.objectStore(STORE_NAME);
+      const request = store.put(character, CHARACTER_KEY);
+
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(new Error("Failed to save character"));
+    });
   }
 
   async load(): Promise<any | null> {
@@ -180,8 +187,8 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
         return; // Don't migrate corrupted data
       }
 
-      // Save to IndexedDB
-      await this.save(character);
+      // Save to IndexedDB using internal method to avoid nested events
+      await this.saveInternal(character);
 
       // Remove from localStorage after successful migration
       localStorage.removeItem(STORAGE_KEY);
