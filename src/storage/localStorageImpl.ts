@@ -3,6 +3,7 @@
 
 import { ICharacterStorage } from "./ICharacterStorage.js";
 import { STORAGE_KEY } from "./storageConstants.js";
+import { CompletionNotifier } from "../utils/completionNotifier.js";
 
 /**
  * LocalStorage-based character persistence
@@ -15,19 +16,28 @@ export class LocalStorageImpl implements ICharacterStorage {
   }
 
   async save(character: any): Promise<void> {
+    const notifier = new CompletionNotifier("character-save", { data: { source: "localStorage" } });
+    notifier.start();
+
     try {
       const serialized = JSON.stringify(character);
       localStorage.setItem(STORAGE_KEY, serialized);
+      notifier.complete({ source: "localStorage" });
     } catch (error) {
       console.error("Failed to save character state:", error);
+      notifier.error(error);
       throw error;
     }
   }
 
   async load(): Promise<any | null> {
+    const notifier = new CompletionNotifier("character-load", { data: { source: "localStorage" } });
+    notifier.start();
+
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (!stored) {
+        notifier.complete({ source: "localStorage", found: false });
         return null;
       }
 
@@ -39,13 +49,16 @@ export class LocalStorageImpl implements ICharacterStorage {
         console.log("Migrating from old versioned format to new raw format");
         const character = data.character;
         await this.save(character);
+        notifier.complete({ source: "localStorage", found: true, migrated: true });
         return character;
       }
 
       // New format: raw character data
+      notifier.complete({ source: "localStorage", found: true });
       return data;
     } catch (error) {
       console.error("Failed to load character state:", error);
+      notifier.error(error);
       // On error, clear potentially corrupted data
       await this.clear();
       return null;
