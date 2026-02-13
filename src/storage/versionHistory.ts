@@ -133,24 +133,35 @@ export class VersionHistoryManager {
    * Get all versions in chronological order (oldest first)
    */
   async getAllVersions(): Promise<CharacterVersion[]> {
-    if (!this.db) {
-      throw new Error("VersionHistoryManager not initialized");
+    const notifier = new CompletionNotifier("versions-load");
+    notifier.start();
+
+    try {
+      if (!this.db) {
+        throw new Error("VersionHistoryManager not initialized");
+      }
+
+      const versions = await new Promise<CharacterVersion[]>((resolve, reject) => {
+        const transaction = this.db!.transaction([STORE_NAME], "readonly");
+        const store = transaction.objectStore(STORE_NAME);
+        const index = store.index("timestamp");
+        const request = index.getAll();
+
+        request.onsuccess = () => {
+          resolve(request.result || []);
+        };
+
+        request.onerror = () => {
+          reject(new Error("Failed to get all versions"));
+        };
+      });
+
+      notifier.complete({ count: versions.length });
+      return versions;
+    } catch (error) {
+      notifier.error(error);
+      throw error;
     }
-
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], "readonly");
-      const store = transaction.objectStore(STORE_NAME);
-      const index = store.index("timestamp");
-      const request = index.getAll();
-
-      request.onsuccess = () => {
-        resolve(request.result || []);
-      };
-
-      request.onerror = () => {
-        reject(new Error("Failed to get all versions"));
-      };
-    });
   }
 
   /**
