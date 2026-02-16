@@ -51,20 +51,24 @@ const exportManager = new ExportManager();
 
 // Create timer instance for tests (or use real timer in production)
 // Tests can set window.__testTimer before DOMContentLoaded
+// NOTE: TestTimer is ONLY for VersionHistoryService squash timer
+// AutoSaveService should always use RealTimer so debounce works automatically
 let testTimer: ITimer | undefined;
 if (typeof window !== "undefined" && window.__testTimer) {
   testTimer = window.__testTimer;
 }
 
 // Global AutoSaveService instance with 300ms debounce
+// IMPORTANT: Always use RealTimer for auto-save debounce (not TestTimer)
+// This ensures auto-save triggers automatically after 300ms in both prod and tests
 const autoSaveService = new AutoSaveService(
   async () => {
     if (currentCharacter) {
       await saveCharacterState(currentCharacter);
     }
   },
-  300,
-  testTimer
+  300
+  // No timer parameter = uses default RealTimer
 );
 
 // Global SaveIndicator instance
@@ -88,7 +92,14 @@ autoSaveService.on("save-completed", async (event) => {
   // with smart squashing (timer-based buffering)
   // No need to create versions here anymore
 
-  saveIndicator.updateTimestamp(event.timestamp);
+  // Format timestamp for display (HH:MM:SS format)
+  const date = new Date(event.timestamp);
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const seconds = date.getSeconds().toString().padStart(2, "0");
+  const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+  saveIndicator.updateTimestamp(formattedTime);
 
   // Check if there are versions (squashing may have occurred)
   // Update version navigator to reflect any new versions

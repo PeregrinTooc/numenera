@@ -601,7 +601,20 @@ Then("editable fields should have reduced opacity", async function (this: Custom
 // Smart Squashing System step definitions
 
 When("I wait for {int} milliseconds", async function (this: CustomWorld, ms: number) {
+  // First wait the specified time
   await this.page.waitForTimeout(ms);
+
+  // Then trigger any pending TestTimer callbacks (for squash timer)
+  // This allows E2E tests to work with the TestTimer-controlled squash delay
+  await this.page.evaluate(() => {
+    const testTimer = (window as any).__testTimer;
+    if (testTimer && testTimer.getPendingCount() > 0) {
+      testTimer.triggerAll();
+    }
+  });
+
+  // Small wait for any triggered callbacks to complete
+  await this.page.waitForTimeout(100);
 });
 
 When("the squash timer has completed", async function (this: CustomWorld) {
