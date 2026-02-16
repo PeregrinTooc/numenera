@@ -18,6 +18,7 @@ import {
   renderModalButtons,
 } from "../services/modalBehavior.js";
 import type { VersionHistoryService } from "../services/versionHistoryService.js";
+import { CompletionNotifier } from "../utils/completionNotifier.js";
 
 interface EditFieldModalConfig {
   fieldType: FieldType;
@@ -34,6 +35,7 @@ export class EditFieldModal extends ModalBehavior {
   private inputValue: string;
   private validationError: string | null = null;
   private versionHistoryService?: VersionHistoryService;
+  private modalNotifier: CompletionNotifier;
 
   constructor(config: EditFieldModalConfig) {
     super({
@@ -47,8 +49,16 @@ export class EditFieldModal extends ModalBehavior {
     this.inputValue = this.currentValue;
     this.versionHistoryService = config.versionHistoryService;
 
+    // Initialize completion notifier for modal events
+    this.modalNotifier = new CompletionNotifier("modal", {
+      data: { modalType: "field", field: this.fieldType },
+    });
+
     // Bind additional methods for event handlers
     this.handleInput = this.handleInput.bind(this);
+
+    // Emit modal-opened event after construction
+    this.modalNotifier.emit("opened", { field: this.fieldType });
   }
 
   private validate(value: string): boolean {
@@ -108,21 +118,52 @@ export class EditFieldModal extends ModalBehavior {
   }
 
   private handleConfirmWithValidation(): void {
+    let newValue: string | number;
+
     if (this.fieldType === "tier") {
       // Apply tier constraints
-      const validated = validateTier(this.inputValue);
-      this.onConfirmWithValue(validated);
+      newValue = validateTier(this.inputValue);
+      this.onConfirmWithValue(newValue);
     } else if (isNumericField(this.fieldType)) {
       // Validate and convert to number
       if (this.validate(this.inputValue)) {
-        this.onConfirmWithValue(parseInt(this.inputValue, 10));
+        newValue = parseInt(this.inputValue, 10);
+        this.onConfirmWithValue(newValue);
+      } else {
+        // Validation failed, don't proceed
+        return;
       }
     } else {
       // Validate text fields
       if (this.validate(this.inputValue)) {
-        this.onConfirmWithValue(this.inputValue.trim());
+        newValue = this.inputValue.trim();
+        this.onConfirmWithValue(newValue);
+      } else {
+        // Validation failed, don't proceed
+        return;
       }
     }
+
+    // Emit field-edited event
+    const fieldNotifier = new CompletionNotifier("field", {
+      data: {
+        field: this.fieldType,
+        oldValue: this.currentValue,
+        newValue: newValue,
+      },
+    });
+    fieldNotifier.emit("edited");
+
+    // Emit modal-closed event with confirm action
+    this.modalNotifier.emit("closed", { action: "confirm" });
+  }
+
+  protected handleCancel(): void {
+    // Emit modal-closed event with cancel action
+    this.modalNotifier.emit("closed", { action: "cancel" });
+
+    // Call parent cancel handler
+    super.handleCancel();
   }
 
   protected handleKeyDown(e: KeyboardEvent): void {
