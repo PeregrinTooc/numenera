@@ -2,6 +2,7 @@
 
 import { html, TemplateResult } from "lit-html";
 import { t } from "../i18n/index.js";
+import { CompletionNotifier } from "../utils/completionNotifier.js";
 
 export interface PortraitDisplayModalConfig {
   portraitSrc: string;
@@ -9,9 +10,22 @@ export interface PortraitDisplayModalConfig {
 }
 
 export class PortraitDisplayModal {
-  constructor(private config: PortraitDisplayModalConfig) {}
+  private modalNotifier: CompletionNotifier;
+
+  constructor(private config: PortraitDisplayModalConfig) {
+    // Initialize completion notifier for modal events
+    this.modalNotifier = new CompletionNotifier("modal", {
+      data: { modalType: "portrait" },
+    });
+
+    // Emit modal-opened event after construction
+    this.modalNotifier.emit("opened");
+  }
 
   private handleClose(): void {
+    // Emit modal-closed event
+    this.modalNotifier.emit("closed", { action: "close" });
+
     this.config.onClose();
   }
 
