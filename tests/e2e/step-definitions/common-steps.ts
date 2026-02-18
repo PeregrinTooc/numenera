@@ -363,8 +363,16 @@ When("I press Escape", async function (this: CustomWorld) {
 });
 
 When("I reload the page", async function (this: CustomWorld) {
-  // Wait for debounced auto-save to complete before reloading
-  await waitForSaveComplete(this.page!);
+  // Wait for debounced auto-save to complete before reloading (if save indicator is visible)
+  const saveIndicator = this.page!.locator('[data-testid="save-indicator"]');
+  const isVisible = await saveIndicator.isVisible().catch(() => false);
+
+  if (isVisible) {
+    await waitForSaveComplete(this.page!);
+  } else {
+    // No pending saves, just wait a short time for any in-flight operations
+    await this.page!.waitForTimeout(100);
+  }
 
   await this.page!.reload();
   await this.page!.waitForLoadState("domcontentloaded");
