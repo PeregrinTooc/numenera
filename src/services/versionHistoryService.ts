@@ -350,4 +350,22 @@ export class VersionHistoryService {
   getTimerHandle(): TimerHandle | null {
     return this.globalTimer;
   }
+
+  /**
+   * Force immediate squash (for testing)
+   * Cancels any pending timer and performs squash immediately
+   * This allows tests to deterministically control when squashing occurs
+   * without waiting for timer delays
+   * @returns Promise that resolves when squash is complete
+   */
+  async forceSquash(): Promise<void> {
+    // Cancel any pending timer
+    if (this.globalTimer !== null) {
+      this.timer.clearTimeout(this.globalTimer);
+      this.globalTimer = null;
+    }
+
+    // Perform squash immediately
+    await this.performSquash();
+  }
 }

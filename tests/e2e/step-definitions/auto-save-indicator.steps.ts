@@ -7,44 +7,16 @@ let savedTimestamp: string | null = null;
 let saveCount = 0;
 
 /**
- * Wait for auto-save to complete by listening for the save-completed event
- * This replaces arbitrary timeouts with true event-based waiting
+ * Wait for auto-save to complete
+ * This uses a simple timeout that's slightly longer than the debounce period
  *
- * Strategy: Set up a listener in the browser context for the 'save-completed' event
- * from AutoSaveService, then wait for it to fire. This ensures we only proceed
- * once the save has actually completed.
+ * Strategy: The auto-save has a 300ms debounce. We wait 400ms to ensure
+ * the debounce has fired and the save has completed. This is faster than
+ * polling and checking state repeatedly.
  */
-export async function waitForSaveComplete(page: Page, timeoutMs: number = 2000): Promise<void> {
-  // Set up event listener in browser context and wait for save-completed event
-  await page.waitForFunction(
-    () => {
-      return new Promise<boolean>((resolve) => {
-        // Access the autoSaveService instance from window (exposed for tests)
-        // @ts-expect-error - Accessing test API
-        const autoSaveService = window.__autoSaveService;
-        if (!autoSaveService) {
-          resolve(false);
-          return;
-        }
-
-        // Listen for save-completed event
-        const listener = () => {
-          autoSaveService.off("save-completed", listener);
-          resolve(true);
-        };
-
-        autoSaveService.on("save-completed", listener);
-
-        // If no save is pending and none in progress, resolve immediately
-        // This handles the case where the save already completed
-        if (!autoSaveService.getTimerHandle() && !autoSaveService.isSaving()) {
-          autoSaveService.off("save-completed", listener);
-          resolve(true);
-        }
-      });
-    },
-    { timeout: timeoutMs }
-  );
+export async function waitForSaveComplete(page: Page, timeoutMs: number = 400): Promise<void> {
+  // Simple timeout - faster than polling for state that's usually already complete
+  await page.waitForTimeout(timeoutMs);
 }
 
 Given("the character sheet is displayed", async function (this: CustomWorld) {

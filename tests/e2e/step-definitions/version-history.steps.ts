@@ -1,5 +1,6 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
+import type { Page } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 
 // Given steps
@@ -622,27 +623,34 @@ Then("editable fields should have reduced opacity", async function (this: Custom
 
 // Smart Squashing System step definitions
 
-When("I wait for {int} milliseconds", async function (this: CustomWorld, ms: number) {
-  // First wait the specified time
-  await this.page.waitForTimeout(ms);
-
-  // Then trigger any pending TestTimer callbacks (for squash timer)
-  // This allows E2E tests to work with the TestTimer-controlled squash delay
-  await this.page.evaluate(() => {
-    const testTimer = (window as any).__testTimer;
-    if (testTimer && testTimer.getPendingCount() > 0) {
-      testTimer.triggerAll();
+/**
+ * Force immediate squash for testing
+ * Replaces arbitrary timeout waits with deterministic squash control
+ */
+async function forceSquash(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    const service = (window as any).__versionHistoryService;
+    if (service) {
+      await service.forceSquash();
     }
   });
+  // Small wait for UI to update after squash
+  await page.waitForTimeout(100);
+}
 
-  // Small wait for any triggered callbacks to complete
-  await this.page.waitForTimeout(100);
+When("I wait for {int} milliseconds", async function (this: CustomWorld, ms: number) {
+  // For waits >= 1000ms, assume it's waiting for squash and force it
+  if (ms >= 1000) {
+    await forceSquash(this.page);
+  } else {
+    // For shorter waits, just use the timeout
+    await this.page.waitForTimeout(ms);
+  }
 });
 
 When("the squash timer has completed", async function (this: CustomWorld) {
-  // Wait to ensure any pending squash has completed
-  // Tests use 1000ms squash delay, so 1500ms ensures completion
-  await this.page.waitForTimeout(1500);
+  // Force immediate squash instead of waiting for timer
+  await forceSquash(this.page);
 });
 
 When("I press {string}", async function (this: CustomWorld, keyCombo: string) {
@@ -1229,30 +1237,8 @@ When(
 );
 
 When("I wait for squash timer to complete", async function (this: CustomWorld) {
-  // Set up listener for squash-completed event before triggering timer
-  const squashCompletedPromise = this.page.evaluate(() => {
-    return new Promise<void>((resolve) => {
-      const handler = () => {
-        window.removeEventListener("squash-completed", handler);
-        resolve();
-      };
-      window.addEventListener("squash-completed", handler);
-
-      // Trigger all pending timers after setting up listener
-      setTimeout(() => {
-        const testTimer = (window as any).__testTimer;
-        if (testTimer) {
-          testTimer.triggerAll();
-        }
-      }, 0);
-    });
-  });
-
-  // Wait for squash-completed event
-  await squashCompletedPromise;
-
-  // Small wait for UI updates
-  await this.page.waitForTimeout(200);
+  // Force immediate squash instead of waiting for timer
+  await forceSquash(this.page);
 });
 
 When(

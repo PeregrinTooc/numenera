@@ -183,7 +183,7 @@ Feature: Version History (Character Time Travel)
         And the warning banner should be visible
 
 
-    @wip
+    @current
     Scenario: Mixed undo/redo with buffer and versions
         Given the character has 3 versions in history
         When I make 2 rapid edits that are buffered
