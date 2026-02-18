@@ -33,7 +33,7 @@ export class TestTimer implements ITimer {
   private nextHandle = 1;
 
   setTimeout(callback: () => void, _delay: number): TimerHandle {
-    const handle = this.nextHandle++ as TimerHandle;
+    const handle = this.nextHandle++ as unknown as TimerHandle;
     this.timers.set(handle, callback);
 
     // Emit event for test observability
