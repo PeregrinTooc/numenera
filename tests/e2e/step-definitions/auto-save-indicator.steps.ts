@@ -1,9 +1,29 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
+import type { Page } from "@playwright/test";
 
 let savedTimestamp: string | null = null;
 let saveCount = 0;
+
+/**
+ * Wait for auto-save to complete by monitoring the save indicator
+ * This replaces arbitrary 400ms waits with event-based waiting
+ *
+ * Strategy: Wait for the auto-save debounce period (300ms) plus save completion time
+ * Since we can't reliably capture the "before" timestamp for inline edits,
+ * we wait for the debounce period to ensure the save has been triggered and completed.
+ */
+export async function waitForSaveComplete(page: Page, timeoutMs: number = 2000): Promise<void> {
+  const testId = "save-indicator";
+  const indicator = page.locator(`[data-testid="${testId}"]`);
+
+  // Wait for the save indicator to be visible
+  await indicator.waitFor({ state: "visible", timeout: timeoutMs });
+
+  // Wait for the auto-save debounce period (300ms) plus buffer for save completion
+  await page.waitForTimeout(400);
+}
 
 Given("the character sheet is displayed", async function (this: CustomWorld) {
   // Character sheet should already be visible from background

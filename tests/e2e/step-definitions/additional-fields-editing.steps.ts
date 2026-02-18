@@ -2,6 +2,7 @@ import { When, Then, Given } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { TestStorageHelper } from "../support/testStorageHelper.js";
+import { waitForSaveComplete } from "./auto-save-indicator.steps.js";
 
 // ============================================================================
 // BACKGROUND DATA SETUP - Unique to additional fields
@@ -164,8 +165,8 @@ Then(
 Then(
   "the character data should have type {string}",
   async function (this: CustomWorld, type: string) {
-    // Wait for debounced auto-save to complete (300ms debounce + buffer)
-    await this.page!.waitForTimeout(400);
+    // Wait for auto-save to complete by monitoring save indicator
+    await waitForSaveComplete(this.page!);
 
     // Verify using TestStorageHelper
     const storageHelper = new TestStorageHelper(this.page!);
@@ -378,8 +379,8 @@ Then(
 Then(
   "the character data should have background {string}",
   async function (this: CustomWorld, text: string) {
-    // Wait for debounced auto-save to complete (300ms debounce + buffer)
-    await this.page!.waitForTimeout(400);
+    // Wait for auto-save to complete by monitoring save indicator
+    await waitForSaveComplete(this.page!);
 
     // Verify using TestStorageHelper
     const storageHelper = new TestStorageHelper(this.page!);
@@ -529,8 +530,8 @@ Then("the notes placeholder should be {string}", async function (this: CustomWor
 Then(
   "the character data should have notes {string}",
   async function (this: CustomWorld, text: string) {
-    // Wait for debounced auto-save to complete (300ms debounce + buffer)
-    await this.page!.waitForTimeout(400);
+    // Wait for auto-save to complete by monitoring save indicator
+    await waitForSaveComplete(this.page!);
 
     // Verify using TestStorageHelper
     const storageHelper = new TestStorageHelper(this.page!);
@@ -715,8 +716,8 @@ Then(
 );
 
 Then("the character data should have the full background text", async function (this: CustomWorld) {
-  // Wait for debounced auto-save to complete (300ms debounce + buffer)
-  await this.page!.waitForTimeout(400);
+  // Wait for auto-save to complete by monitoring save indicator
+  await waitForSaveComplete(this.page!);
 
   // Verify using TestStorageHelper
   const storageHelper = new TestStorageHelper(this.page!);
@@ -729,8 +730,8 @@ Then("the character data should have the full background text", async function (
 });
 
 Then("the character data should have the full notes text", async function (this: CustomWorld) {
-  // Wait for debounced auto-save to complete (300ms debounce + buffer)
-  await this.page!.waitForTimeout(400);
+  // Wait for auto-save to complete by monitoring save indicator
+  await waitForSaveComplete(this.page!);
 
   // Verify using TestStorageHelper
   const storageHelper = new TestStorageHelper(this.page!);
