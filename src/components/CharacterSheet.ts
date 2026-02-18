@@ -14,6 +14,8 @@ import { CyphersBox } from "./CyphersBox.js";
 import { ItemsBox } from "./ItemsBox.js";
 import { BottomTextFields } from "./BottomTextFields.js";
 import { saveCharacterState } from "../storage/localStorage.js";
+import { VersionNavigator } from "./VersionNavigator.js";
+import { VersionWarningBanner } from "./VersionWarningBanner.js";
 
 export class CharacterSheet {
   private header: Header;
@@ -23,6 +25,8 @@ export class CharacterSheet {
   private attacks: Attacks;
   private cyphersBox: CyphersBox;
   private stats: Stats;
+  private versionNavigator: VersionNavigator | null = null;
+  private versionWarningBanner: VersionWarningBanner | null = null;
 
   constructor(
     private character: Character,
@@ -64,6 +68,73 @@ export class CharacterSheet {
     );
     this.cyphersBox = new CyphersBox(this.character, this.onFieldUpdate);
     this.stats = new Stats(this.character, this.onFieldUpdate);
+  }
+
+  /**
+   * Mount version navigator to a container
+   */
+  mountVersionNavigator(
+    container: HTMLElement,
+    versionCount: number,
+    currentIndex: number,
+    onNavigateBackward: () => void,
+    onNavigateForward: () => void
+  ): void {
+    this.versionNavigator = new VersionNavigator({
+      versionCount,
+      currentIndex,
+      onNavigateBackward,
+      onNavigateForward,
+    });
+    this.versionNavigator.mount(container);
+  }
+
+  /**
+   * Update version navigator with new props
+   */
+  updateVersionNavigator(
+    versionCount: number,
+    currentIndex: number,
+    onNavigateBackward: () => void,
+    onNavigateForward: () => void
+  ): void {
+    if (this.versionNavigator) {
+      this.versionNavigator.update({
+        versionCount,
+        currentIndex,
+        onNavigateBackward,
+        onNavigateForward,
+      });
+    }
+  }
+
+  /**
+   * Mount version warning banner to a container
+   */
+  mountVersionWarningBanner(
+    container: HTMLElement,
+    description: string,
+    timestamp: Date,
+    onReturn: () => void,
+    onRestore: () => void
+  ): void {
+    this.versionWarningBanner = new VersionWarningBanner({
+      description,
+      timestamp,
+      onReturn,
+      onRestore,
+    });
+    this.versionWarningBanner.mount(container);
+  }
+
+  /**
+   * Unmount version warning banner
+   */
+  unmountVersionWarningBanner(): void {
+    if (this.versionWarningBanner) {
+      this.versionWarningBanner.unmount();
+      this.versionWarningBanner = null;
+    }
   }
 
   render(): TemplateResult {

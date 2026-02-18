@@ -6,12 +6,14 @@ import { EditFieldModal } from "../components/EditFieldModal.js";
 import { PortraitDisplayModal } from "../components/PortraitDisplayModal.js";
 import { FieldType } from "../utils/unified-validation.js";
 import { ModalContainer } from "./modalBehavior.js";
+import type { VersionHistoryService } from "./versionHistoryService.js";
 
 export interface ModalConfig {
   fieldType: FieldType;
   currentValue: string | number;
   onConfirm: (newValue: string | number) => void;
   onCancel?: () => void;
+  versionHistoryService?: VersionHistoryService;
 }
 
 /**
@@ -35,6 +37,7 @@ export class ModalService {
         config.onCancel?.();
         container.remove();
       },
+      versionHistoryService: config.versionHistoryService,
     });
 
     // Render modal

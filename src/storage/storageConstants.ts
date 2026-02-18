@@ -9,8 +9,8 @@
  * Version History:
  * - v1: Initial schema (base character structure)
  * - v2: Added ability enhancements (cost, pool, action) - Phase 2
- * - v3: Added attacks and specialAbilities arrays - Phase 3
- * - v4: Added recoveryRolls and damageTrack - Phase 4
+ * - v3: Added attacks and specialAbilities arrays (Combat System)
+ * - v4: Added recoveryRolls and damageTrack (Recovery & Damage Tracking)
  *
  * Used for:
  * - File export/import: Validates compatibility between exported file and current app version

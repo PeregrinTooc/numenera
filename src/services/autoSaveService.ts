@@ -1,136 +1,139 @@
 /**
- * AutoSaveService - Provides debounced auto-save functionality with timestamp tracking
- *
- * Features:
- * - Debounced save requests (300ms default)
- * - Last save timestamp tracking
- * - Event emission for UI updates
- * - Simple event system for save completion notifications
+ * AutoSaveService handles debounced auto-saving of character data
+ * Emits events for save lifecycle: save-requested, save-completed, save-error
  */
 
-type SaveCompletedEvent = {
-  timestamp: string;
-};
+import type { ITimer, TimerHandle } from "./timer.js";
+import { RealTimer } from "./timer.js";
 
-type EventCallback = (event: SaveCompletedEvent) => void;
+type SaveCallback = () => Promise<void>;
+type EventType = "save-requested" | "save-completed" | "save-error";
+type EventListener = (event: any) => void;
 
 export class AutoSaveService {
-  private debounceTimer: ReturnType<typeof setTimeout> | null = null;
-  private lastSaveTimestamp: string | null = null;
-  private saveCallback: () => void | Promise<void>;
-  private debounceTime: number;
-  private listeners: Map<string, EventCallback[]> = new Map();
+  private saveCallback: SaveCallback;
+  private debounceMs: number;
+  private timer: ITimer;
+  private timerId: TimerHandle | null = null;
+  private listeners: Map<EventType, Set<EventListener>> = new Map();
+  private savePromise: Promise<void> | null = null;
 
   /**
    * Create a new AutoSaveService
-   * @param saveCallback Function to call when save is triggered (can be async)
-   * @param debounceTime Time in milliseconds to wait before saving (default: 300ms)
+   * @param saveCallback Async function to call when saving
+   * @param debounceMs Debounce delay in milliseconds
+   * @param timer Timer implementation (defaults to RealTimer for production)
    */
-  constructor(saveCallback: () => void | Promise<void>, debounceTime: number = 300) {
+  constructor(
+    saveCallback: SaveCallback,
+    debounceMs: number = 300,
+    timer: ITimer = new RealTimer()
+  ) {
     this.saveCallback = saveCallback;
-    this.debounceTime = debounceTime;
+    this.debounceMs = debounceMs;
+    this.timer = timer;
   }
 
   /**
    * Request a save operation (debounced)
-   * Multiple rapid calls will be collapsed into a single save
+   * Multiple rapid calls will be debounced into a single save
    */
   requestSave(): void {
-    // Clear existing timer
-    if (this.debounceTimer) {
-      globalThis.clearTimeout(this.debounceTimer);
+    // Clear existing timer if any
+    if (this.timerId !== null) {
+      this.timer.clearTimeout(this.timerId);
     }
+
+    // Emit save-requested event
+    this.emit("save-requested", {});
 
     // Set new timer
-    this.debounceTimer = globalThis.setTimeout(() => {
+    this.timerId = this.timer.setTimeout(() => {
       this.performSave();
-    }, this.debounceTime);
+    }, this.debounceMs);
   }
 
   /**
-   * Perform the actual save and update timestamp
+   * Perform the actual save operation
    */
   private async performSave(): Promise<void> {
-    // Call the save callback (await if it's a promise)
-    await this.saveCallback();
+    this.timerId = null;
 
-    // Update timestamp
-    this.lastSaveTimestamp = this.formatTimestamp(new Date());
+    this.savePromise = this.saveCallback()
+      .then(() => {
+        const timestamp = Date.now();
+        this.emit("save-completed", { timestamp });
+        this.savePromise = null;
+      })
+      .catch((error) => {
+        this.emit("save-error", { error });
+        this.savePromise = null;
+      });
 
-    // Emit save-completed event
-    this.emit("save-completed", {
-      timestamp: this.lastSaveTimestamp,
-    });
-
-    // Clear timer
-    this.debounceTimer = null;
+    return this.savePromise;
   }
 
   /**
-   * Format a date as a time string
-   * @param date Date to format
-   * @returns Formatted time string (e.g., "2:45:33 PM" or "14:45:33")
+   * Flush pending saves immediately
+   * Useful for tests and page unload
    */
-  private formatTimestamp(date: Date): string {
-    return date.toLocaleTimeString(undefined, {
-      hour: "numeric",
-      minute: "2-digit",
-      second: "2-digit",
-    });
+  async flush(): Promise<void> {
+    // Clear any pending timer
+    if (this.timerId !== null) {
+      this.timer.clearTimeout(this.timerId);
+      this.timerId = null;
+    }
+
+    // If a save is in progress, wait for it
+    if (this.savePromise) {
+      await this.savePromise;
+    } else {
+      // Otherwise perform a save now
+      await this.performSave();
+    }
   }
 
   /**
-   * Get the last save timestamp
-   * @returns Formatted timestamp string, or null if never saved
+   * Add event listener
    */
-  getLastSaveTimestamp(): string | null {
-    return this.lastSaveTimestamp;
-  }
-
-  /**
-   * Check if a save has ever been performed
-   * @returns true if at least one save has occurred
-   */
-  hasEverSaved(): boolean {
-    return this.lastSaveTimestamp !== null;
-  }
-
-  /**
-   * Register an event listener
-   * @param event Event name
-   * @param callback Callback function
-   */
-  on(event: string, callback: EventCallback): void {
+  on(event: EventType, listener: EventListener): void {
     if (!this.listeners.has(event)) {
-      this.listeners.set(event, []);
+      this.listeners.set(event, new Set());
     }
-    this.listeners.get(event)!.push(callback);
+    this.listeners.get(event)!.add(listener);
   }
 
   /**
-   * Remove an event listener
-   * @param event Event name
-   * @param callback Callback function to remove
+   * Remove event listener
    */
-  off(event: string, callback: EventCallback): void {
-    const callbacks = this.listeners.get(event);
-    if (callbacks) {
-      const index = callbacks.indexOf(callback);
-      if (index > -1) {
-        callbacks.splice(index, 1);
-      }
+  off(event: EventType, listener: EventListener): void {
+    const eventListeners = this.listeners.get(event);
+    if (eventListeners) {
+      eventListeners.delete(listener);
     }
   }
 
   /**
-   * Emit an event to all registered listeners
-   * @param event Event name
-   * @param data Event data
+   * Emit an event to all listeners
    */
-  private emit(event: string, data: SaveCompletedEvent): void {
-    const callbacks = this.listeners.get(event);
-    if (callbacks) {
-      callbacks.forEach((callback) => callback(data));
+  private emit(event: EventType, data: any): void {
+    const eventListeners = this.listeners.get(event);
+    if (eventListeners) {
+      eventListeners.forEach((listener) => listener(data));
     }
+  }
+
+  /**
+   * Get the timer handle for testing
+   */
+  getTimerHandle(): TimerHandle | null {
+    return this.timerId;
+  }
+
+  /**
+   * Check if a save is currently in progress
+   */
+  isSaving(): boolean {
+    return this.savePromise !== null;
   }
 }

@@ -2,9 +2,11 @@
 
 import { html, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
-import { t } from "../i18n/index.js";
+import { FieldType as ValidationFieldType } from "../utils/unified-validation.js";
 import { ModalService } from "../services/modalService.js";
 import { saveCharacterState } from "../storage/localStorage.js";
+import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
+import { t } from "../i18n/index.js";
 
 type FieldType = "name" | "tier" | "descriptor" | "focus" | "xp";
 
@@ -98,10 +100,10 @@ export class BasicInfo {
 
   private openEditModal(fieldType: FieldType): void {
     const currentValue =
-      fieldType === "tier"
-        ? this.character.tier
-        : fieldType === "name"
-          ? this.character.name
+      fieldType === "name"
+        ? this.character.name
+        : fieldType === "tier"
+          ? this.character.tier
           : fieldType === "descriptor"
             ? this.character.descriptor
             : fieldType === "focus"
@@ -109,11 +111,12 @@ export class BasicInfo {
               : this.character.xp;
 
     ModalService.openEditModal({
-      fieldType,
+      fieldType: fieldType as ValidationFieldType,
       currentValue,
-      onConfirm: (newValue) => {
-        this.onFieldUpdate(fieldType, newValue);
+      onConfirm: async (newValue) => {
+        await this.onFieldUpdate(fieldType, newValue);
       },
+      versionHistoryService: getVersionHistoryService(),
     });
   }
 

@@ -1,4 +1,4 @@
-Feature: Phase 3 - Combat & Special Abilities
+Feature: Combat & Special Abilities
     As a Numenera player
     I want to see my attacks and special abilities
     So that I can track my combat capabilities

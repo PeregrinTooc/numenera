@@ -248,18 +248,18 @@ Feature: Card Creation
     # ITERATION 4: ODDITIES
     # ============================================================================
 
-    @current
+
     Scenario: Add button is visible for Oddities
         Then I should see an add oddity button
 
-    @current
+
     Scenario: Add Oddity button opens modal with empty fields
         When I click the add oddity button
         Then the card edit modal should be open
         And the modal should show oddity fields
         And all oddity fields should be empty
 
-    @current
+
     Scenario: Canceling oddity creation does not add a card
         Given the character has 2 oddity cards
         When I click the add oddity button
@@ -267,7 +267,7 @@ Feature: Card Creation
         And I cancel the card edit modal
         Then I should see 2 oddity cards
 
-    @current
+
     Scenario: Confirming oddity creation adds a new card
         Given the character has 2 oddity cards
         When I click the add oddity button
@@ -276,7 +276,7 @@ Feature: Card Creation
         Then I should see 3 oddity cards
         And I should see an oddity card with text "A metal sphere that whispers in the dark"
 
-    @current
+
     Scenario: New oddity persists after page reload
         Given the character has 2 oddity cards
         When I click the add oddity button
@@ -287,7 +287,7 @@ Feature: Card Creation
         Then I should see 3 oddity cards
         And I should see an oddity card with text "A translucent stone that floats in water"
 
-    @current
+
     Scenario: Multiple oddities can be added
         Given the character has 2 oddity cards
         When I click the add oddity button
@@ -299,7 +299,7 @@ Feature: Card Creation
         And I confirm the card edit modal
         Then I should see 4 oddity cards
 
-    @current
+
     Scenario: Create oddity, then edit it, verify persistence
         Given the character has 2 oddity cards
         When I click the add oddity button
@@ -319,18 +319,18 @@ Feature: Card Creation
     # ITERATION 5: ATTACKS
     # ============================================================================
 
-    @current
+
     Scenario: Add button is visible for Attacks
         Then I should see an add attack button
 
-    @current
+
     Scenario: Add Attack button opens modal with empty fields
         When I click the add attack button
         Then the card edit modal should be open
         And the modal should show attack fields
         And all attack fields should be empty
 
-    @current
+
     Scenario: Canceling attack creation does not add a card
         Given the character has 2 attack cards
         When I click the add attack button
@@ -340,7 +340,7 @@ Feature: Card Creation
         And I cancel the card edit modal
         Then I should see 2 attack cards
 
-    @current
+
     Scenario: Confirming attack creation adds a new card
         Given the character has 2 attack cards
         When I click the add attack button
@@ -351,7 +351,7 @@ Feature: Card Creation
         Then I should see 3 attack cards
         And I should see an attack card with name "Fire Bolt"
 
-    @current
+
     Scenario: New attack persists after page reload
         Given the character has 2 attack cards
         When I click the add attack button
@@ -364,7 +364,7 @@ Feature: Card Creation
         Then I should see 3 attack cards
         And I should see an attack card with name "Ice Spear"
 
-    @current
+
     Scenario: Multiple attacks can be added
         Given the character has 2 attack cards
         When I click the add attack button
@@ -380,7 +380,7 @@ Feature: Card Creation
         And I confirm the card edit modal
         Then I should see 4 attack cards
 
-    @current
+
     Scenario: Create attack, then edit it, verify persistence
         Given the character has 2 attack cards
         When I click the add attack button
@@ -406,18 +406,18 @@ Feature: Card Creation
     # ITERATION 6: ABILITIES
     # ============================================================================
 
-    @current
+
     Scenario: Add button is visible for Abilities
         Then I should see an add ability button
 
-    @current
+
     Scenario: Add Ability button opens modal with empty fields
         When I click the add ability button
         Then the card edit modal should be open
         And the modal should show ability fields
         And all ability fields should be empty
 
-    @current
+
     Scenario: Canceling ability creation does not add a card
         Given the character has 2 ability cards
         When I click the add ability button
@@ -426,7 +426,7 @@ Feature: Card Creation
         And I cancel the card edit modal
         Then I should see 2 ability cards
 
-    @current
+
     Scenario: Confirming ability creation adds a new card
         Given the character has 2 ability cards
         When I click the add ability button
@@ -438,7 +438,7 @@ Feature: Card Creation
         Then I should see 3 ability cards
         And I should see an ability card with name "Flame Strike"
 
-    @current
+
     Scenario: New ability persists after page reload
         Given the character has 2 ability cards
         When I click the add ability button
@@ -452,7 +452,7 @@ Feature: Card Creation
         Then I should see 3 ability cards
         And I should see an ability card with name "Ice Shield"
 
-    @current
+
     Scenario: Multiple abilities can be added
         Given the character has 2 ability cards
         When I click the add ability button
@@ -466,7 +466,7 @@ Feature: Card Creation
         And I confirm the card edit modal
         Then I should see 4 ability cards
 
-    @current
+
     Scenario: Create ability, then edit it, verify persistence
         Given the character has 2 ability cards
         When I click the add ability button
@@ -494,18 +494,18 @@ Feature: Card Creation
     # ITERATION 7: SPECIAL ABILITIES
     # ============================================================================
 
-    @current
+
     Scenario: Add button is visible for Special Abilities
         Then I should see an add special ability button
 
-    @current
+
     Scenario: Add Special Ability button opens modal with empty fields
         When I click the add special ability button
         Then the card edit modal should be open
         And the modal should show special ability fields
         And all special ability fields should be empty
 
-    @current
+
     Scenario: Canceling special ability creation does not add a card
         Given the character has 2 special ability cards
         When I click the add special ability button
@@ -515,7 +515,7 @@ Feature: Card Creation
         And I cancel the card edit modal
         Then I should see 2 special ability cards
 
-    @current
+
     Scenario: Confirming special ability creation adds a new card
         Given the character has 2 special ability cards
         When I click the add special ability button
@@ -526,7 +526,7 @@ Feature: Card Creation
         Then I should see 3 special ability cards
         And I should see a special ability card with name "Energy Mastery"
 
-    @current
+
     Scenario: New special ability persists after page reload
         Given the character has 2 special ability cards
         When I click the add special ability button
@@ -539,7 +539,7 @@ Feature: Card Creation
         Then I should see 3 special ability cards
         And I should see a special ability card with name "Time Manipulation"
 
-    @current
+
     Scenario: Multiple special abilities can be added
         Given the character has 2 special ability cards
         When I click the add special ability button
@@ -555,7 +555,7 @@ Feature: Card Creation
         And I confirm the card edit modal
         Then I should see 4 special ability cards
 
-    @current
+
     Scenario: Create special ability, then edit it, verify persistence
         Given the character has 2 special ability cards
         When I click the add special ability button

@@ -4,6 +4,7 @@
 import { html, TemplateResult } from "lit-html";
 import { Character } from "../../types/character.js";
 import { saveCharacterState } from "../../storage/localStorage.js";
+import { CompletionNotifier } from "../../utils/completionNotifier.js";
 
 /**
  * Configuration for creating an add handler for a collection
@@ -40,6 +41,18 @@ export function createAddHandler<T, ItemComponent extends { handleEdit: () => vo
     const tempItem = new ItemComponentClass(emptyItem, -1, (updated: T) => {
       // Add the new item to the collection
       collection.push(updated);
+
+      // Emit card-added event
+      const cardNotifier = new CompletionNotifier("card", {
+        data: {
+          cardType:
+            typeof updated === "object" && updated !== null && "name" in updated && updated.name
+              ? "item"
+              : "card",
+          cardIndex: collection.length - 1,
+        },
+      });
+      cardNotifier.emit("added");
 
       if (character) {
         // Event-based update (CyphersBox, ItemsBox pattern)
@@ -94,6 +107,19 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
       ? // Event-based update pattern (CyphersBox, ItemsBox)
         (updated: T) => {
           collection[index] = updated;
+
+          // Emit card-edited event
+          const cardNotifier = new CompletionNotifier("card", {
+            data: {
+              cardType:
+                typeof updated === "object" && updated !== null && "name" in updated && updated.name
+                  ? "item"
+                  : "card",
+              cardIndex: index,
+            },
+          });
+          cardNotifier.emit("edited");
+
           saveCharacterState(character);
           const event = new CustomEvent("character-updated");
           document.getElementById("app")?.dispatchEvent(event);
@@ -101,6 +127,21 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
       : onUpdate
         ? // Callback-based update pattern (Abilities, Attacks, SpecialAbilities)
           (updated: T) => {
+            // Emit card-edited event
+            const cardNotifier = new CompletionNotifier("card", {
+              data: {
+                cardType:
+                  typeof updated === "object" &&
+                  updated !== null &&
+                  "name" in updated &&
+                  updated.name
+                    ? "item"
+                    : "card",
+                cardIndex: index,
+              },
+            });
+            cardNotifier.emit("edited");
+
             onUpdate(index, updated);
           }
         : undefined;
@@ -109,6 +150,18 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
     const deleteHandler = character
       ? // Event-based delete pattern (CyphersBox, ItemsBox)
         () => {
+          // Emit card-deleted event before deletion
+          const cardNotifier = new CompletionNotifier("card", {
+            data: {
+              cardType:
+                typeof item === "object" && item !== null && "name" in item && item.name
+                  ? "item"
+                  : "card",
+              cardIndex: index,
+            },
+          });
+          cardNotifier.emit("deleted");
+
           // Filter out the item at this index - need to update the original array reference
           const filtered = collection.filter((_, i) => i !== index);
           collection.length = 0;
@@ -120,6 +173,18 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
       : onDelete
         ? // Callback-based delete pattern (Abilities, Attacks, SpecialAbilities)
           () => {
+            // Emit card-deleted event before deletion
+            const cardNotifier = new CompletionNotifier("card", {
+              data: {
+                cardType:
+                  typeof item === "object" && item !== null && "name" in item && item.name
+                    ? "item"
+                    : "card",
+                cardIndex: index,
+              },
+            });
+            cardNotifier.emit("deleted");
+
             onDelete(index);
           }
         : undefined;

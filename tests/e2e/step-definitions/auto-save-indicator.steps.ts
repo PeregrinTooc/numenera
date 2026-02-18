@@ -1,9 +1,23 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
+import type { Page } from "@playwright/test";
 
 let savedTimestamp: string | null = null;
 let saveCount = 0;
+
+/**
+ * Wait for auto-save to complete
+ * This uses a simple timeout that's slightly longer than the debounce period
+ *
+ * Strategy: The auto-save has a 300ms debounce. We wait 400ms to ensure
+ * the debounce has fired and the save has completed. This is faster than
+ * polling and checking state repeatedly.
+ */
+export async function waitForSaveComplete(page: Page, timeoutMs: number = 400): Promise<void> {
+  // Simple timeout - faster than polling for state that's usually already complete
+  await page.waitForTimeout(timeoutMs);
+}
 
 Given("the character sheet is displayed", async function (this: CustomWorld) {
   // Character sheet should already be visible from background
@@ -11,18 +25,8 @@ Given("the character sheet is displayed", async function (this: CustomWorld) {
   expect(name).toBeTruthy();
 });
 
-When("I edit the character name to {string}", async function (this: CustomWorld, name: string) {
-  const nameElement = this.page.locator('[data-testid="character-name"]');
-  await nameElement.click();
-  const input = this.page.locator('[data-testid="edit-modal-input"]');
-  await input.fill(name);
-  await this.page.click('[data-testid="modal-confirm-button"]');
-  await this.page.waitForSelector('[data-testid="edit-modal"]', { state: "hidden" }).catch(() => {
-    // Modal might already be hidden
-  });
-  // Wait for auto-save to complete (debounce is 300ms, wait a bit longer)
-  await this.page.waitForTimeout(500);
-});
+// Note: "I edit the character name to {string}" is now handled by the unified
+// "I edit the {string} field to {string}" step in common-steps.ts
 
 When("I note the current save timestamp", async function (this: CustomWorld) {
   const indicator = this.page.locator('[data-testid="save-indicator"]');
@@ -34,18 +38,8 @@ When("I wait for {int} second(s)", async function (this: CustomWorld, seconds: n
   await this.page.waitForTimeout(seconds * 1000);
 });
 
-When("I edit the tier to {string}", async function (this: CustomWorld, tier: string) {
-  const tierElement = this.page.locator('[data-testid="character-tier"]');
-  await tierElement.click();
-  const input = this.page.locator('[data-testid="edit-modal-input"]');
-  await input.fill(tier);
-  await this.page.click('[data-testid="modal-confirm-button"]');
-  await this.page.waitForSelector('[data-testid="edit-modal"]', { state: "hidden" }).catch(() => {
-    // Modal might already be hidden
-  });
-  // Wait for auto-save to complete (debounce is 300ms, wait a bit longer)
-  await this.page.waitForTimeout(500);
-});
+// Note: "I edit the tier to {string}" is now handled by the unified
+// "I edit the {string} field to {string}" step in common-steps.ts
 
 When("I rapidly edit the character name multiple times", async function (this: CustomWorld) {
   // Track saves by monitoring save indicator updates (MutationObserver)
@@ -106,18 +100,8 @@ When("I rapidly edit the character name multiple times", async function (this: C
   });
 });
 
-When("I edit the might pool to {string}", async function (this: CustomWorld, value: string) {
-  const mightPool = this.page.locator('[data-testid="stat-might-pool"]');
-  await mightPool.click();
-  const input = this.page.locator('[data-testid="edit-modal-input"]');
-  await input.fill(value);
-  await this.page.click('[data-testid="modal-confirm-button"]');
-  await this.page.waitForSelector('[data-testid="edit-modal"]', { state: "hidden" }).catch(() => {
-    // Modal might already be hidden
-  });
-  // Wait for auto-save to complete (debounce is 300ms, wait a bit longer)
-  await this.page.waitForTimeout(500);
-});
+// Note: "I edit the might pool to {string}" is now handled by the unified
+// "I edit the {string} field to {string}" step in common-steps.ts
 
 Then("the save indicator should be visible", async function (this: CustomWorld) {
   const indicator = this.page.locator('[data-testid="save-indicator"]');

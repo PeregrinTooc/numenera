@@ -9,15 +9,20 @@ import {
   renderModalButtons,
   FocusTrappingBehavior,
 } from "../services/modalBehavior.js";
+import type { VersionHistoryService } from "../services/versionHistoryService.js";
+import { CompletionNotifier } from "../utils/completionNotifier.js";
 
 export interface CardEditModalConfig {
   content: TemplateResult; // The editable card content
   onConfirm: () => void;
   onCancel: () => void;
+  versionHistoryService?: VersionHistoryService;
 }
 
 export class CardEditModal extends ModalBehavior {
   private content: TemplateResult;
+  private versionHistoryService?: VersionHistoryService;
+  private modalNotifier: CompletionNotifier;
 
   constructor(config: CardEditModalConfig) {
     super({
@@ -26,9 +31,45 @@ export class CardEditModal extends ModalBehavior {
     });
 
     this.content = config.content;
+    this.versionHistoryService = config.versionHistoryService;
+
+    // Initialize completion notifier for modal events
+    this.modalNotifier = new CompletionNotifier("modal", {
+      data: { modalType: "card" },
+    });
 
     // Bind handleKeyDown for Tab key trapping
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    // Bind handleInput for version history timer reset
+    this.handleInput = this.handleInput.bind(this);
+
+    // Emit modal-opened event after construction
+    this.modalNotifier.emit("opened");
+  }
+
+  protected handleConfirm(): void {
+    // Emit modal-closed event with confirm action
+    this.modalNotifier.emit("closed", { action: "confirm" });
+
+    // Call parent confirm handler
+    super.handleConfirm();
+  }
+
+  protected handleCancel(): void {
+    // Emit modal-closed event with cancel action
+    this.modalNotifier.emit("closed", { action: "cancel" });
+
+    // Call parent cancel handler
+    super.handleCancel();
+  }
+
+  /**
+   * Handle input events to reset version history timer
+   */
+  private handleInput(): void {
+    if (this.versionHistoryService) {
+      this.versionHistoryService.resetTimer();
+    }
   }
 
   /**
@@ -50,6 +91,7 @@ export class CardEditModal extends ModalBehavior {
         class="card-edit-modal-backdrop"
         @click=${this.handleBackdropClick}
         @keydown=${this.handleKeyDown}
+        @input=${this.handleInput}
         data-testid="card-modal-backdrop"
         aria-hidden="true"
       >
@@ -97,6 +139,7 @@ export function openCardEditModal(config: CardEditModalConfig): void {
       config.onCancel();
       container.remove();
     },
+    versionHistoryService: config.versionHistoryService,
   });
 
   // Render modal

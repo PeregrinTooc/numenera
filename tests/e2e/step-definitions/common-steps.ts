@@ -1,6 +1,7 @@
 import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
+import { waitForSaveComplete } from "./auto-save-indicator.steps.js";
 
 // ============================================================================
 // FIELD CONFIGURATION - Central mapping of field names to test IDs
@@ -86,8 +87,8 @@ When("I click the Confirm button", async function (this: CustomWorld) {
   }).catch(() => {
     // Modal might already be hidden
   });
-  // Wait for auto-save to complete (300ms debounce + buffer)
-  await this.page!.waitForTimeout(600);
+  // Wait for auto-save to complete
+  await waitForSaveComplete(this.page!);
 });
 
 When("I click the Cancel button", async function (this: CustomWorld) {
@@ -183,8 +184,8 @@ When("I click the modal confirm button", async function (this: CustomWorld) {
   }).catch(() => {
     // Modal might already be hidden
   });
-  // Wait for auto-save to complete (300ms debounce + buffer)
-  await this.page!.waitForTimeout(600);
+  // Wait for auto-save to complete
+  await waitForSaveComplete(this.page!);
 });
 
 When("I click the modal cancel button", async function (this: CustomWorld) {
@@ -215,6 +216,8 @@ When("I tap the modal confirm button", async function (this: CustomWorld) {
   }).catch(() => {
     // Modal might already be hidden
   });
+  // Wait for auto-save to complete
+  await waitForSaveComplete(this.page!);
 });
 
 When("I click the {string}", async function (this: CustomWorld, elementName: string) {
@@ -292,6 +295,39 @@ When("I type {string} in the input field", async function (this: CustomWorld, te
   await input.fill(text);
 });
 
+// ============================================================================
+// UNIFIED EDIT FIELD STEP - Replaces duplicates across multiple files
+// ============================================================================
+
+When(
+  "I edit the {string} field to {string}",
+  async function (this: CustomWorld, fieldName: string, value: string) {
+    const testId = getTestId(fieldName);
+    const field = this.page!.locator(`[data-testid="${testId}"]`);
+
+    // Click field to open modal
+    await field.click();
+
+    // Wait for modal to appear
+    const modal = this.page!.locator('[data-testid="edit-modal"]');
+    await expect(modal).toBeVisible({ timeout: 5000 });
+
+    // Fill input with new value
+    const input = this.page!.locator('[data-testid="edit-modal-input"]');
+    await input.fill(value);
+
+    // Click confirm button
+    const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
+    await confirmButton.click();
+
+    // Wait for modal to close
+    await expect(modal).toHaveCount(0, { timeout: 2000 });
+
+    // Wait for auto-save to complete
+    await waitForSaveComplete(this.page!);
+  }
+);
+
 When("I click outside the modal on the backdrop", async function (this: CustomWorld) {
   // Click in the top-left corner which is definitely the backdrop, not the modal
   await this.page!.click("body", { position: { x: 10, y: 10 } });
@@ -327,9 +363,16 @@ When("I press Escape", async function (this: CustomWorld) {
 });
 
 When("I reload the page", async function (this: CustomWorld) {
-  // Wait for debounced auto-save to complete before reloading
-  // (300ms debounce + buffer for async IndexedDB operations)
-  await this.page!.waitForTimeout(500);
+  // Wait for debounced auto-save to complete before reloading (if save indicator is visible)
+  const saveIndicator = this.page!.locator('[data-testid="save-indicator"]');
+  const isVisible = await saveIndicator.isVisible().catch(() => false);
+
+  if (isVisible) {
+    await waitForSaveComplete(this.page!);
+  } else {
+    // No pending saves, just wait a short time for any in-flight operations
+    await this.page!.waitForTimeout(100);
+  }
 
   await this.page!.reload();
   await this.page!.waitForLoadState("domcontentloaded");

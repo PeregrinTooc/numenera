@@ -1,6 +1,7 @@
 import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
 import { chromium, Browser } from "@playwright/test";
 import { CustomWorld } from "./world";
+import { TestStorageHelper } from "./testStorageHelper.js";
 
 let browser: Browser;
 
@@ -23,6 +24,77 @@ Before(async function (this: CustomWorld) {
     hasTouch: true,
   });
   this.page = await this.context.newPage();
+
+  // Capture console messages for debugging
+  this.page.on("console", (msg) => {
+    const text = msg.text();
+    // Only log messages related to version history or squashing
+    if (
+      text.includes("[VersionHistoryService]") ||
+      text.includes("[performSquash]") ||
+      text.includes("[save-completed]")
+    ) {
+      console.log(`[Browser Console] ${text}`);
+    }
+  });
+
+  // Inject test configuration and TestTimer BEFORE navigation
+  // Set squash delay to 1000ms for faster tests
+  await this.page.addInitScript(() => {
+    // Import and create TestTimer
+    class TestTimer {
+      private timers = new Map<number, () => void>();
+      private nextHandle = 1;
+
+      setTimeout(callback: () => void, _delay: number): number {
+        const handle = this.nextHandle++;
+        this.timers.set(handle, callback);
+
+        // Emit event for test observability
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("test-timer-scheduled", {
+              detail: { handle },
+            })
+          );
+        }
+
+        return handle;
+      }
+
+      clearTimeout(handle: number): void {
+        this.timers.delete(handle);
+      }
+
+      trigger(handle: number): void {
+        const callback = this.timers.get(handle);
+        if (callback) {
+          this.timers.delete(handle);
+          callback();
+        }
+      }
+
+      triggerAll(): void {
+        const callbacks = Array.from(this.timers.values());
+        this.timers.clear();
+        callbacks.forEach((cb) => cb());
+      }
+
+      getPendingCount(): number {
+        return this.timers.size;
+      }
+
+      clearAll(): void {
+        this.timers.clear();
+      }
+    }
+
+    // Create and expose test timer
+    (window as any).__testTimer = new TestTimer();
+
+    // Set squash delay for tests (1000ms instead of production 5000ms)
+    (window as any).__SQUASH_DELAY_MS__ = 1000;
+  });
 
   // Navigate to the server and clear both localStorage and IndexedDB for clean state
   await this.page.goto(BASE_URL);
@@ -78,6 +150,9 @@ Before(async function (this: CustomWorld) {
 
   // Wait for the page to be fully loaded after clearing storage
   await this.page.waitForLoadState("networkidle");
+
+  // Initialize storage helper
+  this.storageHelper = new TestStorageHelper(this.page);
 });
 
 After(async function (this: CustomWorld) {

@@ -2,6 +2,7 @@ import { html, TemplateResult } from "lit-html";
 import { RecoveryRolls as RecoveryRollsType } from "../types/character.js";
 import { t } from "../i18n/index.js";
 import { ModalService } from "../services/modalService.js";
+import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
 
 export class RecoveryRolls {
   constructor(
@@ -23,12 +24,13 @@ export class RecoveryRolls {
 
     ModalService.openEditModal({
       fieldType: "recoveryModifier",
-      currentValue: this.data.modifier,
+      currentValue: this.data.modifier || 0,
       onConfirm: (newValue) => {
         if (this.onFieldUpdate) {
           this.onFieldUpdate("recoveryModifier", newValue as number);
         }
       },
+      versionHistoryService: getVersionHistoryService(),
     });
   }
 

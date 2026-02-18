@@ -46,6 +46,10 @@ export default [
         // Standard browser APIs
         DOMException: "readonly",
         PermissionState: "readonly",
+        // Crypto and encoding
+        crypto: "readonly",
+        TextEncoder: "readonly",
+        Uint8Array: "readonly",
         // Node globals
         process: "readonly",
         global: "readonly",

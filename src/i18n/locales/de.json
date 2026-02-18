@@ -213,5 +213,15 @@
   },
   "autoSave": {
     "lastSaved": "Zuletzt gespeichert"
+  },
+  "versionHistory": {
+    "navigateBackward": "Zur vorherigen Version navigieren",
+    "navigateForward": "Zur nächsten Version navigieren",
+    "versionCounter": "Version {{current}} von {{total}}",
+    "warningBanner": {
+      "title": "Sie sehen eine alte Version",
+      "returnButton": "Zur aktuellen Version",
+      "restoreButton": "Version Wiederherstellen"
+    }
   }
 }

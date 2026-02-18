@@ -7,7 +7,7 @@ describe("AutoSaveService", () => {
 
   beforeEach(() => {
     vi.useFakeTimers();
-    mockSaveCallback = vi.fn();
+    mockSaveCallback = vi.fn().mockResolvedValue(undefined);
     service = new AutoSaveService(mockSaveCallback as any, 300);
   });
 
@@ -51,68 +51,11 @@ describe("AutoSaveService", () => {
       vi.advanceTimersByTime(100);
       expect(mockSaveCallback).toHaveBeenCalledTimes(1);
     });
-
-    it("should update last save timestamp after saving", async () => {
-      const beforeTimestamp = service.getLastSaveTimestamp();
-      expect(beforeTimestamp).toBeNull();
-
-      service.requestSave();
-      await vi.runAllTimersAsync();
-
-      const afterTimestamp = service.getLastSaveTimestamp();
-      expect(afterTimestamp).not.toBeNull();
-      expect(afterTimestamp).toMatch(/\d{1,2}:\d{2}:\d{2}(\s?[AP]M)?/);
-    });
-
-    it("should update timestamp on subsequent saves", async () => {
-      service.requestSave();
-      await vi.runAllTimersAsync();
-      const firstTimestamp = service.getLastSaveTimestamp();
-
-      // Advance time to ensure different timestamp
-      vi.advanceTimersByTime(1000);
-
-      service.requestSave();
-      await vi.runAllTimersAsync();
-      const secondTimestamp = service.getLastSaveTimestamp();
-
-      expect(secondTimestamp).not.toBe(firstTimestamp);
-    });
-  });
-
-  describe("getLastSaveTimestamp", () => {
-    it("should return null before first save", () => {
-      const timestamp = service.getLastSaveTimestamp();
-      expect(timestamp).toBeNull();
-    });
-
-    it("should return formatted time after save", async () => {
-      service.requestSave();
-      await vi.runAllTimersAsync();
-
-      const timestamp = service.getLastSaveTimestamp();
-      expect(timestamp).not.toBeNull();
-      // Should match time format: "2:45:33 PM" or "14:45:33"
-      expect(timestamp).toMatch(/\d{1,2}:\d{2}:\d{2}(\s?[AP]M)?/);
-    });
-  });
-
-  describe("hasEverSaved", () => {
-    it("should return false before first save", () => {
-      expect(service.hasEverSaved()).toBe(false);
-    });
-
-    it("should return true after save", async () => {
-      service.requestSave();
-      await vi.runAllTimersAsync();
-
-      expect(service.hasEverSaved()).toBe(true);
-    });
   });
 
   describe("custom debounce time", () => {
     it("should use custom debounce time", () => {
-      const customCallback = vi.fn();
+      const customCallback = vi.fn().mockResolvedValue(undefined);
       const customService = new AutoSaveService(customCallback as any, 500);
 
       customService.requestSave();
@@ -121,22 +64,6 @@ describe("AutoSaveService", () => {
 
       vi.advanceTimersByTime(200);
       expect(customCallback).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe("timestamp formatting", () => {
-    it("should format timestamp in user locale", async () => {
-      // Mock current time to a known value
-      const mockDate = new Date("2026-01-31T14:30:45");
-      vi.setSystemTime(mockDate);
-
-      service.requestSave();
-      await vi.runAllTimersAsync();
-
-      const timestamp = service.getLastSaveTimestamp();
-      expect(timestamp).toBeTruthy();
-      // Timestamp should contain hours, minutes, and seconds
-      expect(timestamp).toMatch(/\d{1,2}:\d{2}:\d{2}/);
     });
   });
 
@@ -151,7 +78,7 @@ describe("AutoSaveService", () => {
       expect(eventHandler).toHaveBeenCalledTimes(1);
       expect(eventHandler).toHaveBeenCalledWith(
         expect.objectContaining({
-          timestamp: expect.any(String),
+          timestamp: expect.any(Number),
         })
       );
     });

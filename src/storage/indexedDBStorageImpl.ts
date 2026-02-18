@@ -1,5 +1,6 @@
 import type { ICharacterStorage } from "./ICharacterStorage.js";
 import { STORAGE_KEY } from "./storageConstants.js";
+import { CompletionNotifier } from "../utils/completionNotifier.js";
 
 const DB_NAME = "numenera-character-db";
 const STORE_NAME = "characters";
@@ -32,11 +33,28 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
   }
 
   async save(character: any): Promise<void> {
+    const notifier = new CompletionNotifier("character-save", { data: { source: "indexedDB" } });
+    notifier.start();
+
+    try {
+      await this.saveInternal(character);
+      notifier.complete({ source: "indexedDB" });
+    } catch (error) {
+      notifier.error(error);
+      throw error;
+    }
+  }
+
+  /**
+   * Internal save without event emissions
+   * Used during migration to avoid nested events
+   */
+  private async saveInternal(character: any): Promise<void> {
     if (!this.db) {
       throw new Error("IndexedDB not initialized");
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const transaction = this.db!.transaction([STORE_NAME], "readwrite");
       const store = transaction.objectStore(STORE_NAME);
       const request = store.put(character, CHARACTER_KEY);
@@ -47,22 +65,33 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
   }
 
   async load(): Promise<any | null> {
-    if (!this.db) {
-      throw new Error("IndexedDB not initialized");
+    const notifier = new CompletionNotifier("character-load", { data: { source: "indexedDB" } });
+    notifier.start();
+
+    try {
+      if (!this.db) {
+        throw new Error("IndexedDB not initialized");
+      }
+
+      const result = await new Promise<any | null>((resolve, reject) => {
+        const transaction = this.db!.transaction([STORE_NAME], "readonly");
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.get(CHARACTER_KEY);
+
+        request.onsuccess = () => {
+          const result = request.result;
+          resolve(result || null);
+        };
+
+        request.onerror = () => reject(new Error("Failed to load character"));
+      });
+
+      notifier.complete({ source: "indexedDB", found: result !== null });
+      return result;
+    } catch (error) {
+      notifier.error(error);
+      throw error;
     }
-
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], "readonly");
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.get(CHARACTER_KEY);
-
-      request.onsuccess = () => {
-        const result = request.result;
-        resolve(result || null);
-      };
-
-      request.onerror = () => reject(new Error("Failed to load character"));
-    });
   }
 
   async clear(): Promise<void> {
@@ -158,8 +187,8 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
         return; // Don't migrate corrupted data
       }
 
-      // Save to IndexedDB
-      await this.save(character);
+      // Save to IndexedDB using internal method to avoid nested events
+      await this.saveInternal(character);
 
       // Remove from localStorage after successful migration
       localStorage.removeItem(STORAGE_KEY);
