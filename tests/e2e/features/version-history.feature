@@ -182,8 +182,6 @@ Feature: Version History (Character Time Travel)
         Then I should navigate to version 4
         And the warning banner should be visible
 
-
-    @current
     Scenario: Mixed undo/redo with buffer and versions
         Given the character has 3 versions in history
         When I make 2 rapid edits that are buffered
