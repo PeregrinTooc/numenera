@@ -1,6 +1,7 @@
 import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
+import { waitForSaveComplete } from "./auto-save-indicator.steps.js";
 
 // ============================================================================
 // FIELD CONFIGURATION - Central mapping of field names to test IDs
@@ -86,8 +87,8 @@ When("I click the Confirm button", async function (this: CustomWorld) {
   }).catch(() => {
     // Modal might already be hidden
   });
-  // Wait for auto-save to complete (300ms debounce + buffer)
-  await this.page!.waitForTimeout(600);
+  // Wait for auto-save to complete
+  await waitForSaveComplete(this.page!);
 });
 
 When("I click the Cancel button", async function (this: CustomWorld) {
@@ -183,8 +184,8 @@ When("I click the modal confirm button", async function (this: CustomWorld) {
   }).catch(() => {
     // Modal might already be hidden
   });
-  // Wait for auto-save to complete (300ms debounce + buffer)
-  await this.page!.waitForTimeout(600);
+  // Wait for auto-save to complete
+  await waitForSaveComplete(this.page!);
 });
 
 When("I click the modal cancel button", async function (this: CustomWorld) {
@@ -215,8 +216,8 @@ When("I tap the modal confirm button", async function (this: CustomWorld) {
   }).catch(() => {
     // Modal might already be hidden
   });
-  // Wait for auto-save to complete (300ms debounce + buffer)
-  await this.page!.waitForTimeout(500);
+  // Wait for auto-save to complete
+  await waitForSaveComplete(this.page!);
 });
 
 When("I click the {string}", async function (this: CustomWorld, elementName: string) {
@@ -322,8 +323,8 @@ When(
     // Wait for modal to close
     await expect(modal).toHaveCount(0, { timeout: 2000 });
 
-    // Wait for auto-save to complete (300ms debounce + buffer)
-    await this.page!.waitForTimeout(500);
+    // Wait for auto-save to complete
+    await waitForSaveComplete(this.page!);
   }
 );
 
@@ -363,8 +364,7 @@ When("I press Escape", async function (this: CustomWorld) {
 
 When("I reload the page", async function (this: CustomWorld) {
   // Wait for debounced auto-save to complete before reloading
-  // (300ms debounce + buffer for async IndexedDB operations)
-  await this.page!.waitForTimeout(500);
+  await waitForSaveComplete(this.page!);
 
   await this.page!.reload();
   await this.page!.waitForLoadState("domcontentloaded");
