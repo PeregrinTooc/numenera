@@ -7,22 +7,44 @@ let savedTimestamp: string | null = null;
 let saveCount = 0;
 
 /**
- * Wait for auto-save to complete by monitoring the save indicator
- * This replaces arbitrary 400ms waits with event-based waiting
+ * Wait for auto-save to complete by listening for the save-completed event
+ * This replaces arbitrary timeouts with true event-based waiting
  *
- * Strategy: Wait for the auto-save debounce period (300ms) plus save completion time
- * Since we can't reliably capture the "before" timestamp for inline edits,
- * we wait for the debounce period to ensure the save has been triggered and completed.
+ * Strategy: Set up a listener in the browser context for the 'save-completed' event
+ * from AutoSaveService, then wait for it to fire. This ensures we only proceed
+ * once the save has actually completed.
  */
 export async function waitForSaveComplete(page: Page, timeoutMs: number = 2000): Promise<void> {
-  const testId = "save-indicator";
-  const indicator = page.locator(`[data-testid="${testId}"]`);
+  // Set up event listener in browser context and wait for save-completed event
+  await page.waitForFunction(
+    () => {
+      return new Promise<boolean>((resolve) => {
+        // Access the autoSaveService instance from window (exposed for tests)
+        // @ts-expect-error - Accessing test API
+        const autoSaveService = window.__autoSaveService;
+        if (!autoSaveService) {
+          resolve(false);
+          return;
+        }
 
-  // Wait for the save indicator to be visible
-  await indicator.waitFor({ state: "visible", timeout: timeoutMs });
+        // Listen for save-completed event
+        const listener = () => {
+          autoSaveService.off("save-completed", listener);
+          resolve(true);
+        };
 
-  // Wait for the auto-save debounce period (300ms) plus buffer for save completion
-  await page.waitForTimeout(400);
+        autoSaveService.on("save-completed", listener);
+
+        // If no save is pending and none in progress, resolve immediately
+        // This handles the case where the save already completed
+        if (!autoSaveService.getTimerHandle() && !autoSaveService.isSaving()) {
+          autoSaveService.off("save-completed", listener);
+          resolve(true);
+        }
+      });
+    },
+    { timeout: timeoutMs }
+  );
 }
 
 Given("the character sheet is displayed", async function (this: CustomWorld) {

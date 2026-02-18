@@ -40,6 +40,7 @@ declare global {
     };
     __versionHistoryService?: VersionHistoryService | null;
     __testTimer?: TestTimer;
+    __autoSaveService?: AutoSaveService;
   }
 }
 
@@ -596,6 +597,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       await updateVersionNavigator(true);
     },
   };
+
+  // Expose autoSaveService for E2E tests
+  window.__autoSaveService = autoSaveService;
 
   // Initialize i18n first
   await initI18n();

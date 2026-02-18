@@ -293,8 +293,10 @@ When("I click outside the background textarea", async function (this: CustomWorl
   const textarea = this.page!.locator('[data-testid="character-background"]');
   await textarea.blur();
 
-  // Give the blur handler time to execute
+  // Give the blur handler time to execute and trigger auto-save
   await this.page!.waitForTimeout(100);
+  // Wait for auto-save to complete
+  await waitForSaveComplete(this.page!);
 });
 
 When("I click outside the background field", async function (this: CustomWorld) {
@@ -479,7 +481,10 @@ When("I type {string} in the notes textarea", async function (this: CustomWorld,
 When("I click outside the notes textarea", async function (this: CustomWorld) {
   const textarea = this.page!.locator('[data-testid="character-notes"]');
   await textarea.blur();
+  // Give the blur handler time to execute and trigger auto-save
   await this.page!.waitForTimeout(100);
+  // Wait for auto-save to complete
+  await waitForSaveComplete(this.page!);
 });
 
 When("I click outside the notes field", async function (this: CustomWorld) {
