@@ -10,7 +10,7 @@
  * only when visual regression is critical.
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render } from "lit-html";
 import { CypherItem } from "../../src/components/CypherItem.js";
 import { ArtifactItem } from "../../src/components/ArtifactItem.js";
@@ -21,114 +21,32 @@ import { ItemsBox } from "../../src/components/ItemsBox.js";
 import { Stats } from "../../src/components/Stats.js";
 import { StatPool } from "../../src/components/StatPool.js";
 import { BottomTextFields } from "../../src/components/BottomTextFields.js";
-import type { Character, Cypher, Artifact, Oddity } from "../../src/types/character.js";
-
-// Create mock character with items
-function createMockCharacter(): Character {
-  return {
-    name: "Test Character",
-    type: "Glaive",
-    descriptor: "Strong",
-    focus: "Bears a Halo of Fire",
-    tier: 3,
-    xp: 5,
-    effort: 2,
-    stats: {
-      might: { pool: 12, edge: 1, current: 10 },
-      speed: { pool: 10, edge: 0, current: 10 },
-      intellect: { pool: 14, edge: 2, current: 14 },
-    },
-    armor: 2,
-    shins: 50,
-    maxCyphers: 3,
-    cyphers: [{ name: "Detonation", level: "1d6+2", effect: "Explodes" }],
-    artifacts: [
-      { name: "Lightning Rod", level: "6", depletion: "1 in 1d20", effect: "Shoots lightning" },
-    ],
-    oddities: [{ description: "A glowing cube" }],
-    equipment: ["Sword", "Shield"],
-    abilities: [],
-    specialAbilities: [],
-    attacks: [],
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: { impairment: "healthy" },
-    textFields: { background: "A mysterious past", notes: "Remember stuff" },
-  };
-}
-
-// Create empty character for empty state styling tests
-function createEmptyCharacter(): Character {
-  return {
-    name: "",
-    type: "Jack",
-    descriptor: "",
-    focus: "",
-    tier: 1,
-    xp: 0,
-    effort: 1,
-    stats: {
-      might: { pool: 10, edge: 0, current: 10 },
-      speed: { pool: 10, edge: 0, current: 10 },
-      intellect: { pool: 10, edge: 0, current: 10 },
-    },
-    armor: 0,
-    shins: 0,
-    maxCyphers: 2,
-    cyphers: [],
-    artifacts: [],
-    oddities: [],
-    equipment: [],
-    abilities: [],
-    specialAbilities: [],
-    attacks: [],
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: { impairment: "healthy" },
-    textFields: { background: "", notes: "" },
-  };
-}
+import type { Cypher, Artifact, Oddity } from "../../src/types/character.js";
+import {
+  setupTestContainer,
+  createMockCharacter,
+  createEmptyCharacter,
+} from "./helpers/testSetup.js";
 
 describe("Visual Styling Tests", () => {
-  let container: HTMLElement;
-
-  beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
-
-  afterEach(() => {
-    if (container.parentNode) {
-      container.parentNode.removeChild(container);
-    }
-  });
+  const getContainer = setupTestContainer();
 
   describe("Cypher Items - Blue Theme", () => {
     it("should apply cypher-item-card class to cypher cards", () => {
       const cypher: Cypher = { name: "Test Cypher", level: "5", effect: "Test effect" };
       const cypherItem = new CypherItem(cypher, 0);
-      render(cypherItem.render(), container);
+      render(cypherItem.render(), getContainer());
 
-      const card = container.querySelector('[data-testid="cypher-item"]');
+      const card = getContainer().querySelector('[data-testid="cypher-item"]');
       expect(card?.classList.contains("cypher-item-card")).toBe(true);
     });
 
     it("should render ONE-USE warning badge", () => {
       const cypher: Cypher = { name: "Test Cypher", level: "5", effect: "Test effect" };
       const cypherItem = new CypherItem(cypher, 0);
-      render(cypherItem.render(), container);
+      render(cypherItem.render(), getContainer());
 
-      const warningBadge = container.querySelector('[data-testid="cypher-warning"]');
+      const warningBadge = getContainer().querySelector('[data-testid="cypher-warning"]');
       expect(warningBadge).toBeTruthy();
       expect(warningBadge?.classList.contains("cypher-warning")).toBe(true);
       expect(warningBadge?.textContent).toContain("ONE-USE");
@@ -137,9 +55,9 @@ describe("Visual Styling Tests", () => {
     it("should render cypher level badge with correct class", () => {
       const cypher: Cypher = { name: "Test Cypher", level: "5", effect: "Test effect" };
       const cypherItem = new CypherItem(cypher, 0);
-      render(cypherItem.render(), container);
+      render(cypherItem.render(), getContainer());
 
-      const levelBadge = container.querySelector(".cypher-level-badge");
+      const levelBadge = getContainer().querySelector(".cypher-level-badge");
       expect(levelBadge).toBeTruthy();
     });
   });
@@ -153,10 +71,10 @@ describe("Visual Styling Tests", () => {
         effect: "Test effect",
       };
       const artifactItem = new ArtifactItem(artifact, 0);
-      render(artifactItem.render(), container);
+      render(artifactItem.render(), getContainer());
 
       // Artifact items use dynamic testid with name
-      const card = container.querySelector('[data-testid="artifact-item-Test Artifact"]');
+      const card = getContainer().querySelector('[data-testid="artifact-item-Test Artifact"]');
       expect(card?.classList.contains("artifact-item-card")).toBe(true);
     });
 
@@ -168,9 +86,9 @@ describe("Visual Styling Tests", () => {
         effect: "Test effect",
       };
       const artifactItem = new ArtifactItem(artifact, 0);
-      render(artifactItem.render(), container);
+      render(artifactItem.render(), getContainer());
 
-      const nameEl = container.querySelector(".artifact-name");
+      const nameEl = getContainer().querySelector(".artifact-name");
       expect(nameEl).toBeTruthy();
     });
 
@@ -182,9 +100,9 @@ describe("Visual Styling Tests", () => {
         effect: "Test effect",
       };
       const artifactItem = new ArtifactItem(artifact, 0);
-      render(artifactItem.render(), container);
+      render(artifactItem.render(), getContainer());
 
-      const levelBadge = container.querySelector(".artifact-level-badge");
+      const levelBadge = getContainer().querySelector(".artifact-level-badge");
       expect(levelBadge).toBeTruthy();
     });
   });
@@ -193,9 +111,9 @@ describe("Visual Styling Tests", () => {
     it("should apply oddity-item-card class to oddity cards", () => {
       const oddity: Oddity = { description: "A glowing cube" };
       const oddityItem = new OddityItem(oddity, 0);
-      render(oddityItem.render(), container);
+      render(oddityItem.render(), getContainer());
 
-      const card = container.querySelector('[data-testid="oddity-item"]');
+      const card = getContainer().querySelector('[data-testid="oddity-item"]');
       expect(card?.classList.contains("oddity-item-card")).toBe(true);
     });
   });
@@ -204,10 +122,10 @@ describe("Visual Styling Tests", () => {
     it("should apply equipment-item-card class to equipment cards", () => {
       // EquipmentItem expects an object with name property
       const equipmentItem = new EquipmentItem({ name: "Sword" }, 0);
-      render(equipmentItem.render(), container);
+      render(equipmentItem.render(), getContainer());
 
       // Equipment items use dynamic testid with name
-      const card = container.querySelector('[data-testid="equipment-item-Sword"]');
+      const card = getContainer().querySelector('[data-testid="equipment-item-Sword"]');
       expect(card?.classList.contains("equipment-item-card")).toBe(true);
     });
   });
@@ -216,36 +134,36 @@ describe("Visual Styling Tests", () => {
     it("should apply empty-cyphers-styled class when no cyphers", () => {
       const character = createEmptyCharacter();
       const cyphersBox = new CyphersBox(character, vi.fn());
-      render(cyphersBox.render(), container);
+      render(cyphersBox.render(), getContainer());
 
-      const emptyState = container.querySelector('[data-testid="empty-cyphers"]');
+      const emptyState = getContainer().querySelector('[data-testid="empty-cyphers"]');
       expect(emptyState?.classList.contains("empty-cyphers-styled")).toBe(true);
     });
 
     it("should apply empty-artifacts-styled class when no artifacts", () => {
       const character = createEmptyCharacter();
       const itemsBox = new ItemsBox(character, vi.fn());
-      render(itemsBox.render(), container);
+      render(itemsBox.render(), getContainer());
 
-      const emptyState = container.querySelector('[data-testid="empty-artifacts"]');
+      const emptyState = getContainer().querySelector('[data-testid="empty-artifacts"]');
       expect(emptyState?.classList.contains("empty-artifacts-styled")).toBe(true);
     });
 
     it("should apply empty-oddities-styled class when no oddities", () => {
       const character = createEmptyCharacter();
       const itemsBox = new ItemsBox(character, vi.fn());
-      render(itemsBox.render(), container);
+      render(itemsBox.render(), getContainer());
 
-      const emptyState = container.querySelector('[data-testid="empty-oddities"]');
+      const emptyState = getContainer().querySelector('[data-testid="empty-oddities"]');
       expect(emptyState?.classList.contains("empty-oddities-styled")).toBe(true);
     });
 
     it("should apply empty-equipment-styled class when no equipment", () => {
       const character = createEmptyCharacter();
       const itemsBox = new ItemsBox(character, vi.fn());
-      render(itemsBox.render(), container);
+      render(itemsBox.render(), getContainer());
 
-      const emptyState = container.querySelector('[data-testid="empty-equipment"]');
+      const emptyState = getContainer().querySelector('[data-testid="empty-equipment"]');
       expect(emptyState?.classList.contains("empty-equipment-styled")).toBe(true);
     });
   });
@@ -254,7 +172,9 @@ describe("Visual Styling Tests", () => {
     it("should apply stat-pool-card class to stat pool containers", () => {
       const character = createMockCharacter();
       const stats = new Stats(character, vi.fn());
-      render(stats.render(), container);
+      render(stats.render(), getContainer());
+
+      const container = getContainer();
 
       // All three stat pools should have the card class
       const mightPool = container.querySelector('[data-testid="stat-might"]');
@@ -269,9 +189,9 @@ describe("Visual Styling Tests", () => {
     it("should apply stat-badge class to effort badge", () => {
       const character = createMockCharacter();
       const stats = new Stats(character, vi.fn());
-      render(stats.render(), container);
+      render(stats.render(), getContainer());
 
-      const effortBadge = container.querySelector('[data-testid="effort-badge"]');
+      const effortBadge = getContainer().querySelector('[data-testid="effort-badge"]');
       // The effort badge uses stat-badge class, not effort-badge
       expect(effortBadge?.classList.contains("stat-badge")).toBe(true);
     });
@@ -279,7 +199,9 @@ describe("Visual Styling Tests", () => {
     it("should render stat values as editable fields", () => {
       const character = createMockCharacter();
       const stats = new Stats(character, vi.fn());
-      render(stats.render(), container);
+      render(stats.render(), getContainer());
+
+      const container = getContainer();
 
       // Check that stat values have editable-field class
       const mightPool = container.querySelector('[data-testid="stat-might-pool"]');
@@ -296,8 +218,9 @@ describe("Visual Styling Tests", () => {
     it("should apply parchment-field class to text field containers", () => {
       const character = createMockCharacter();
       const textFields = new BottomTextFields(character);
-      render(textFields.render(), container);
+      render(textFields.render(), getContainer());
 
+      const container = getContainer();
       const backgroundField = container.querySelector('[data-testid="character-background"]');
       const notesField = container.querySelector('[data-testid="character-notes"]');
 
@@ -309,8 +232,9 @@ describe("Visual Styling Tests", () => {
     it("should apply inline-edit-textarea class to text areas", () => {
       const character = createMockCharacter();
       const textFields = new BottomTextFields(character);
-      render(textFields.render(), container);
+      render(textFields.render(), getContainer());
 
+      const container = getContainer();
       const backgroundField = container.querySelector('[data-testid="character-background"]');
       const notesField = container.querySelector('[data-testid="character-notes"]');
 
@@ -323,9 +247,9 @@ describe("Visual Styling Tests", () => {
     it("should apply stat-pool-card class to might stat pool", () => {
       const character = createMockCharacter();
       const statPool = new StatPool("might", character.stats.might, vi.fn());
-      render(statPool.render(), container);
+      render(statPool.render(), getContainer());
 
-      const pool = container.querySelector('[data-testid="stat-might"]');
+      const pool = getContainer().querySelector('[data-testid="stat-might"]');
       // StatPool uses stat-pool-card class for all stat types
       expect(pool?.classList.contains("stat-pool-card")).toBe(true);
     });
@@ -333,36 +257,36 @@ describe("Visual Styling Tests", () => {
     it("should apply stat-pool-card class to speed stat pool", () => {
       const character = createMockCharacter();
       const statPool = new StatPool("speed", character.stats.speed, vi.fn());
-      render(statPool.render(), container);
+      render(statPool.render(), getContainer());
 
-      const pool = container.querySelector('[data-testid="stat-speed"]');
+      const pool = getContainer().querySelector('[data-testid="stat-speed"]');
       expect(pool?.classList.contains("stat-pool-card")).toBe(true);
     });
 
     it("should apply stat-pool-card class to intellect stat pool", () => {
       const character = createMockCharacter();
       const statPool = new StatPool("intellect", character.stats.intellect, vi.fn());
-      render(statPool.render(), container);
+      render(statPool.render(), getContainer());
 
-      const pool = container.querySelector('[data-testid="stat-intellect"]');
+      const pool = getContainer().querySelector('[data-testid="stat-intellect"]');
       expect(pool?.classList.contains("stat-pool-card")).toBe(true);
     });
 
     it("should render stat pool label with correct class", () => {
       const character = createMockCharacter();
       const statPool = new StatPool("might", character.stats.might, vi.fn());
-      render(statPool.render(), container);
+      render(statPool.render(), getContainer());
 
-      const label = container.querySelector('[data-testid="stat-might-label"]');
+      const label = getContainer().querySelector('[data-testid="stat-might-label"]');
       expect(label?.classList.contains("stat-pool-label")).toBe(true);
     });
 
     it("should render stat pool number with correct class", () => {
       const character = createMockCharacter();
       const statPool = new StatPool("might", character.stats.might, vi.fn());
-      render(statPool.render(), container);
+      render(statPool.render(), getContainer());
 
-      const poolNumber = container.querySelector('[data-testid="stat-might-pool"]');
+      const poolNumber = getContainer().querySelector('[data-testid="stat-might-pool"]');
       expect(poolNumber?.classList.contains("stat-pool-number")).toBe(true);
     });
   });
