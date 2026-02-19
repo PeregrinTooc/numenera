@@ -16,7 +16,7 @@ Feature: Version History (Character Time Travel)
 
     Scenario: Creating first version shows navigator
         When I edit the "character name" field to "Aria"
-        And I wait for 1100 milliseconds
+        And I wait for squash timer to complete
         Then the version navigator should be visible
         And the version counter should show "Version 2 of 2"
         And the backward arrow should be enabled
@@ -174,7 +174,6 @@ Feature: Version History (Character Time Travel)
         And no new version should be created yet
 
     Scenario: Undo navigates through squashed versions
-    Scenario: Undo navigates through squashed versions
         Given the character has 5 versions in history
         And I am viewing the latest version
         And the squash timer has completed
@@ -214,6 +213,20 @@ Feature: Version History (Character Time Travel)
         When I press "Control+Y" before the squash timer expires
         Then I should see 8 ability cards
         And I should see an ability card with name "Test Ability"
+
+    Scenario: Deleting a card creates a version
+        Given I am on the character sheet page
+        And I should see 2 cypher cards
+        When I click the delete button on the first cypher card
+        Then I should see 1 cypher card
+        When I press "Control+Z" before the squash timer expires
+        Then I should see 2 cypher cards
+        When I press "Control+Y" before the squash timer expires
+        Then I should see 1 cypher card
+        When I wait for squash timer to complete
+        Then the version navigator should be visible
+        And the version counter should show "Version 2 of 2"
+
 
     Scenario: Redo changes persist correctly after reload
         Given the character has 3 versions in history
