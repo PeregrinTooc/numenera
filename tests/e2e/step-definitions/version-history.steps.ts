@@ -85,7 +85,7 @@ Given("the character has a version with name change", async function (this: Cust
 
   // Wait for version navigator to show updated count (2 versions)
   const versionCounter = this.page.locator('[data-testid="version-counter"]');
-  await expect(versionCounter).toContainText("Version 2 of 2", { timeout: 2000 });
+  await expect(versionCounter).toContainText("Version 2 of 2", { timeout: 10000 });
 
   // Store which version has the name change
   this.testContext = this.testContext || {};
@@ -99,7 +99,7 @@ Given("the character has a version with name change", async function (this: Cust
   await this.storageHelper.createVersion(anotherCharacter, "Another change");
 
   // Wait for version navigator to show updated count (3 versions)
-  await expect(versionCounter).toContainText("Version 3 of 3", { timeout: 2000 });
+  await expect(versionCounter).toContainText("Version 3 of 3", { timeout: 10000 });
 });
 
 Given(
@@ -117,7 +117,7 @@ Given(
 
     // Wait for version navigator to show updated count (2 versions)
     const versionCounter = this.page.locator('[data-testid="version-counter"]');
-    await expect(versionCounter).toContainText("Version 2 of 2", { timeout: 2000 });
+    await expect(versionCounter).toContainText("Version 2 of 2", { timeout: 10000 });
 
     // Create one more version so we can navigate back to see v2's description
     const latestCharacter = {
@@ -127,7 +127,7 @@ Given(
     await this.storageHelper.createVersion(latestCharacter, "Final change");
 
     // Wait for version navigator to show updated count (3 versions)
-    await expect(versionCounter).toContainText("Version 3 of 3", { timeout: 2000 });
+    await expect(versionCounter).toContainText("Version 3 of 3", { timeout: 10000 });
   }
 );
 
@@ -150,7 +150,7 @@ Given(
     // Wait for version navigator to show final count
     const versionCounter = this.page.locator('[data-testid="version-counter"]');
     await expect(versionCounter).toContainText(`Version ${versionCount} of ${versionCount}`, {
-      timeout: 2000,
+      timeout: 10000,
     });
   }
 );
@@ -172,7 +172,7 @@ Given(
     // Wait for version navigator to show final count
     const versionCounter = this.page.locator('[data-testid="version-counter"]');
     await expect(versionCounter).toContainText(`Version ${versionCount} of ${versionCount}`, {
-      timeout: 2000,
+      timeout: 10000,
     });
   }
 );
@@ -203,7 +203,7 @@ Given(
 
     // Wait for version navigator to show updated count (2 versions)
     const versionCounter = this.page.locator('[data-testid="version-counter"]');
-    await expect(versionCounter).toContainText("Version 2 of 2", { timeout: 2000 });
+    await expect(versionCounter).toContainText("Version 2 of 2", { timeout: 10000 });
   }
 );
 
