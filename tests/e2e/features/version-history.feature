@@ -243,7 +243,6 @@ Feature: Version History (Character Time Travel)
         Then the version navigator should be visible
         And the version counter should show "Version 2 of 2"
 
-    @current
     Scenario: Import button is disabled when viewing old version
         Given the character has 3 versions in history
         And I am viewing the latest version
