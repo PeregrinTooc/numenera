@@ -362,6 +362,13 @@ When("I press Escape", async function (this: CustomWorld) {
   await this.page!.keyboard.press("Escape");
 });
 
+When("I click the new button", async function (this: CustomWorld) {
+  const newButton = this.page!.locator('[data-testid="new-button"]');
+  await newButton.click();
+  // Wait for the page to update
+  await this.page!.waitForTimeout(100);
+});
+
 When("I reload the page", async function (this: CustomWorld) {
   // Wait for debounced auto-save to complete before reloading (if save indicator is visible)
   const saveIndicator = this.page!.locator('[data-testid="save-indicator"]');
