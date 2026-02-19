@@ -168,6 +168,13 @@ When("I click the delete button on the first cypher", async function (this: Cust
   await this.page.waitForTimeout(100);
 });
 
+When("I click the delete button on the first cypher card", async function (this: CustomWorld) {
+  const deleteButton = this.page.locator(getDeleteButtonSelector("cypher", 0));
+  await deleteButton.click();
+  // Wait a bit for the deletion to process
+  await this.page.waitForTimeout(100);
+});
+
 When("I click the delete button on the first cypher again", async function (this: CustomWorld) {
   const deleteButton = this.page.locator(getDeleteButtonSelector("cypher", 0));
   await deleteButton.click();
