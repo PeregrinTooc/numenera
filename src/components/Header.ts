@@ -6,6 +6,7 @@ import { t } from "../i18n/index.js";
 export class Header {
   private hasRememberedLocation: boolean = false;
   private supportsFileSystemAccess: boolean = false;
+  private isViewingOldVersion: boolean = false;
 
   constructor(
     private onLoad: () => void,
@@ -33,6 +34,10 @@ export class Header {
     this.hasRememberedLocation = hasLocation;
   }
 
+  setIsViewingOldVersion(isViewing: boolean): void {
+    this.isViewingOldVersion = isViewing;
+  }
+
   render(): TemplateResult {
     return html`
       <div data-testid="character-header" class="character-header">
@@ -42,7 +47,12 @@ export class Header {
           <button data-testid="load-button" @click=${this.onLoad} class="btn-load">
             ${t("buttons.load")}
           </button>
-          <button data-testid="import-button" @click=${this.onImport} class="btn-import">
+          <button
+            data-testid="import-button"
+            @click=${this.onImport}
+            class="btn-import"
+            ?disabled=${this.isViewingOldVersion}
+          >
             ${t("buttons.import")}
           </button>
           ${this.renderExportButtons()}

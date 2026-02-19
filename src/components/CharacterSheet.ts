@@ -1,6 +1,6 @@
 // CharacterSheet component - Main container that composes all sections
 
-import { html, TemplateResult } from "lit-html";
+import { html, render, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
 import { Header } from "./Header.js";
 import { BasicInfo } from "./BasicInfo.js";
@@ -134,6 +134,19 @@ export class CharacterSheet {
     if (this.versionWarningBanner) {
       this.versionWarningBanner.unmount();
       this.versionWarningBanner = null;
+    }
+  }
+
+  /**
+   * Set whether the user is viewing an old version
+   * Triggers a re-render to update the header buttons
+   */
+  setIsViewingOldVersion(isViewing: boolean): void {
+    this.header.setIsViewingOldVersion(isViewing);
+    // Trigger re-render to update button state
+    const app = document.getElementById("app");
+    if (app) {
+      render(this.render(), app);
     }
   }
 

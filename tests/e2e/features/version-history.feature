@@ -226,7 +226,32 @@ Feature: Version History (Character Time Travel)
         When I wait for squash timer to complete
         Then the version navigator should be visible
         And the version counter should show "Version 2 of 2"
+        When I click the backward navigation arrow
+        Then the version counter should show "Version 1 of 2"
+        And the warning banner should be visible
+        And I should see 2 cypher cards
+        When I click the restore button in the warning banner
+        Then I should see 2 cypher cards
+        And the version counter should show "Version 3 of 3"
+        And no warning banner should be visible
 
+    Scenario: Importing a character creates a version
+        Given I am on the character sheet page
+        And the character has no version history yet
+        When I import a valid character file "test-hero.numenera"
+        And I wait for squash timer to complete
+        Then the version navigator should be visible
+        And the version counter should show "Version 2 of 2"
+
+    @current
+    Scenario: Import button is disabled when viewing old version
+        Given the character has 3 versions in history
+        And I am viewing the latest version
+        Then the import button should be enabled
+        When I click the backward navigation arrow
+        Then the import button should be disabled
+        When I click the forward navigation arrow
+        Then the import button should be enabled
 
     Scenario: Redo changes persist correctly after reload
         Given the character has 3 versions in history

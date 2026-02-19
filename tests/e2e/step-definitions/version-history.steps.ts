@@ -1296,3 +1296,15 @@ Then(
     expect(displayedName?.trim()).toBe(expectedVersion.character.name);
   }
 );
+
+// Import button state step definitions
+
+Then("the import button should be enabled", async function (this: CustomWorld) {
+  const importButton = this.page.locator('[data-testid="import-button"]');
+  await expect(importButton).toBeEnabled();
+});
+
+Then("the import button should be disabled", async function (this: CustomWorld) {
+  const importButton = this.page.locator('[data-testid="import-button"]');
+  await expect(importButton).toBeDisabled();
+});

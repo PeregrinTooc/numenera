@@ -330,6 +330,12 @@ async function renderCharacterSheet(
     try {
       const importedCharacter = await importCharacterFromFile();
       if (importedCharacter) {
+        // Buffer change for version history
+        const service = window.__versionHistoryService || versionHistoryService;
+        if (service) {
+          service.bufferChange(importedCharacter, "Imported character");
+        }
+
         renderCharacterSheet(importedCharacter);
       }
       // If null, user cancelled - do nothing
@@ -442,6 +448,11 @@ async function renderCharacterSheet(
   // Handle version warning banner and read-only mode
   if (versionState) {
     const isViewingOldVersion = versionState.isViewingOldVersion();
+
+    // Update import button state based on viewing mode
+    if (currentSheet) {
+      currentSheet.setIsViewingOldVersion(isViewingOldVersion);
+    }
 
     // Show/hide warning banner
     let bannerContainer = document.getElementById("version-warning-banner-container");
