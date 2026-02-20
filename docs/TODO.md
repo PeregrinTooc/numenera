@@ -44,13 +44,35 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ## 📊 Current Status
 
-**Implemented Features**: 24 fully tested features  
-**Test Coverage**: 323 unit tests + 317 E2E scenarios (2090 steps) - 100% passing  
+**Implemented Features**: 25 fully tested features  
+**Test Coverage**: 620 unit tests + 330 E2E scenarios (2326 steps) - 100% passing  
 **Documentation**: See [FEATURES.md](./FEATURES.md) for complete feature list
 
 ---
 
 ## 📋 Feature Backlog
+
+### Buffer-Based Undo/Redo
+
+**Overview**  
+Add granular undo/redo functionality (Ctrl+Z/Y) that works with the buffered changes before they are squashed into a saved version.
+
+**Goals**
+
+- Allow undo/redo of individual edits before 5-second squash timer
+- Context-aware behavior:
+  - Before squash: Granular undo/redo of buffered changes
+  - After squash: Navigate through saved versions (already implemented)
+- Improve editing experience for users who make mistakes
+- In-memory undo/redo stack in VersionHistoryService
+
+**E2E Tests**
+
+- File: `tests/e2e/features/version-history.feature` (3 @wip scenarios exist)
+- Scenarios:
+  - Undo change before squash timer fires
+  - Redo change before squash timer fires
+  - Undo stack is cleared when squash timer fires
 
 ### Data Validation Enhancement
 

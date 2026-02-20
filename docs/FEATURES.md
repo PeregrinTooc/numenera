@@ -163,6 +163,26 @@ All features listed below have full BDD test coverage and are verified working.
   - Translated UI labels and messages
   - Localized date/time formats
 
+### Version History
+
+- **Version History (Character Time Travel)** ([version-history.feature](../tests/e2e/features/version-history.feature))
+  - Store up to 99 character versions in IndexedDB
+  - Navigate through version history with arrow buttons
+  - Restore any previous version
+  - Smart squashing (buffers edits, saves after 5s inactivity)
+  - Combined descriptions for squashed versions
+  - Version Navigator UI (version counter, navigation buttons)
+  - Warning banner when viewing old versions
+  - Edit from old version creates new version (no read-only mode)
+  - Portrait excluded from versioning
+  - Export from old version works
+  - Keyboard shortcuts for version navigation (Ctrl+Z/Y after squash)
+  - Multi-tab conflict detection infrastructure (unit tested)
+    - BroadcastChannel API for cross-tab communication
+    - ETag-based conflict detection
+    - Conflict resolution modal UI
+    - 51 unit tests (ConflictDetectionService + ConflictWarningModal)
+
 ---
 
 ## Related Documentation
