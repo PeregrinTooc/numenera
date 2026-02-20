@@ -331,57 +331,53 @@ E2E tests MUST be executed using npm scripts, NOT by calling `cucumber-js` direc
 
 ```bash
 # Run all E2E tests
-npm run test:e2e
+npm run test:e2e -- tests/e2e/features/**/*.feature
+
+# Run specific feature file
+npm run test:e2e -- tests/e2e/features/basic-info-editing.feature
+
+# Run multiple specific feature files
+npm run test:e2e -- tests/e2e/features/version-history.feature tests/e2e/features/basic-info-editing.feature
 
 # Run tests tagged @current
 npm run test:e2e:current
 
 # Run production build tests
 npm run test:e2e:prod
-
-# Run specific feature file
-npm run test:e2e:cucumber -- tests/e2e/features/basic-info-editing.feature
 ```
 
 ### ❌ INCORRECT:
 
 ```bash
-# NEVER do this - bypasses cleanup hooks
+# NEVER do this - bypasses server startup
 cucumber-js tests/e2e/features/**/*.feature
 
-# NEVER do this - no cleanup pre-hook
+# NEVER do this - no server running
 npx cucumber-js --tags "@current"
-
-# NEVER do this - doesn't run only the current tests
-npm run test:e2e -- --grep "@current"
 ```
 
 ### Why This Rule Exists:
 
-The npm scripts include **critical cleanup pre-hooks** that:
+The npm scripts handle:
 
-1. Remove stale coordination files (`.test-server-port`, `.test-worker-count`)
-2. Ensure clean test state before execution
-3. Prevent `ERR_CONNECTION_REFUSED` errors from previous failed runs
-4. Enable proper parallel test execution with 6 workers
+1. Starting the development server via `concurrently`
+2. Waiting for the server to be ready via `wait-on`
+3. Running cucumber-js with the correct configuration
+4. Cleaning up processes when tests complete
 
-**Calling cucumber-js directly bypasses these hooks and WILL cause test failures.**
+**Calling cucumber-js directly bypasses server management and WILL cause test failures.**
 
-### Implementation Details:
+### Usage Pattern:
 
-```json
-// package.json
-{
-  "scripts": {
-    "test:e2e:clean": "rm -f .test-server-port .test-worker-count",
-    "test:e2e": "npm run test:e2e:clean && npm run test:e2e:cucumber",
-    "test:e2e:current": "npm run test:e2e:clean && cucumber-js tests/e2e/features/**/*.feature --tags \"@current\"",
-    "test:e2e:prod": "npm run test:e2e:clean && npm run build && TEST_PROD=true npm run test:e2e:cucumber",
-    "posttest:e2e": "npm run test:e2e:clean",
-    "posttest:e2e:current": "npm run test:e2e:clean",
-    "posttest:e2e:prod": "npm run test:e2e:clean"
-  }
-}
+Pass feature files or cucumber-js options after `--`:
+
+```bash
+# Pattern: npm run test:e2e -- [feature-files] [options]
+
+# Examples:
+npm run test:e2e -- tests/e2e/features/**/*.feature
+npm run test:e2e -- tests/e2e/features/my-feature.feature
+npm run test:e2e -- tests/e2e/features/**/*.feature --tags '@smoke'
 ```
 
 **This rule is ABSOLUTE and NON-NEGOTIABLE.**
@@ -399,17 +395,20 @@ npm run test:unit
 # Run unit tests in watch mode
 npm run test:unit -- --watch
 
-# Run all E2E tests (see Rule #11 above)
-npm run test:e2e
+# Run all E2E tests
+npm run test:e2e -- tests/e2e/features/**/*.feature
+
+# Run specific E2E feature file
+npm run test:e2e -- tests/e2e/features/basic-info-editing.feature
+
+# Run multiple E2E feature files
+npm run test:e2e -- tests/e2e/features/version-history.feature tests/e2e/features/basic-info-editing.feature
 
 # Run E2E tests tagged @current
 npm run test:e2e:current
 
 # Run production build E2E tests
 npm run test:e2e:prod
-
-# Run specific E2E feature file
-npm run test:e2e:cucumber -- tests/e2e/features/basic-info-editing.feature
 
 # Run specific unit test file
 npm run test:unit src/components/StatPool.test.ts
@@ -443,13 +442,10 @@ When implementing a new feature with BDD scenarios:
 
 ```bash
 # Run only new feature scenarios
-npm run test:e2e:cucumber -- tests/e2e/features/new-feature.feature
+npm run test:e2e -- tests/e2e/features/new-feature.feature
 
 # After new tests pass, run full suite
-npm run test:e2e
-
-# Or for specific features
-npm run test:e2e -- --grep="feature-name"
+npm run test:e2e -- tests/e2e/features/**/*.feature
 ```
 
 ### Benefits:
@@ -465,11 +461,11 @@ npm run test:e2e -- --grep="feature-name"
 ```bash
 # 1. Implement new feature with BDD scenarios
 # 2. Run only new scenarios
-npm run test:e2e:cucumber -- tests/e2e/features/basic-info-editing.feature
+npm run test:e2e -- tests/e2e/features/basic-info-editing.feature
 
 # 3. Fix until all pass (100%)
 # 4. Then run full suite to check for regressions
-npm run test:e2e
+npm run test:e2e -- tests/e2e/features/**/*.feature
 
 # 5. Commit only when both pass
 ```

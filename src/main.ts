@@ -21,6 +21,8 @@ import { initI18n, onLanguageChanged } from "./i18n/index.js";
 import { getVersionHistory } from "./storage/storageFactory.js";
 import { VersionState } from "./services/versionState.js";
 import { VersionHistoryService } from "./services/versionHistoryService.js";
+import { ConflictDetectionService } from "./services/conflictDetectionService.js";
+import { ConflictWarningModal } from "./components/ConflictWarningModal.js";
 import { TestTimer } from "./services/timer.js";
 import type { ITimer } from "./services/timer.js";
 
@@ -39,6 +41,7 @@ declare global {
       clearVersions: () => Promise<void>;
     };
     __versionHistoryService?: VersionHistoryService | null;
+    __conflictDetectionService?: ConflictDetectionService | null;
     __testTimer?: TestTimer;
     __autoSaveService?: AutoSaveService;
   }
@@ -229,6 +232,12 @@ async function renderCharacterSheet(
     const service = window.__versionHistoryService || versionHistoryService;
     if (service && service.getBufferLength() === 0) {
       service.setInitialState(character);
+    }
+
+    // Mark as dirty for conflict detection (before making changes)
+    const conflictService = window.__conflictDetectionService;
+    if (conflictService) {
+      conflictService.markDirty(character);
     }
 
     // Update the character object
@@ -701,6 +710,39 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Update navigator after versionState is initialized
   await updateVersionNavigator(true);
+
+  // Initialize ConflictDetectionService for multi-tab conflict detection
+  const conflictDetectionService = new ConflictDetectionService();
+  window.__conflictDetectionService = conflictDetectionService;
+
+  // Set initial ETag for conflict detection
+  await conflictDetectionService.setCurrentEtag(initialCharacter);
+
+  // Initialize ConflictWarningModal
+  const app = document.getElementById("app");
+  if (app) {
+    new ConflictWarningModal(app);
+  }
+
+  // Listen for conflict resolution events
+  window.addEventListener("conflict-resolved", async (event: Event) => {
+    const customEvent = event as CustomEvent<{ resolution: string; remoteEtag: string }>;
+    const { resolution } = customEvent.detail;
+
+    if (resolution === "load-remote") {
+      // Reload the page to get the latest version
+      window.location.reload();
+    }
+    // For "save-local", the save will proceed normally
+  });
+
+  // Notify conflict detection service when versions are saved and clear dirty flag
+  window.addEventListener("version-squashed", async () => {
+    if (currentCharacter && conflictDetectionService) {
+      await conflictDetectionService.notifyVersionSaved(currentCharacter);
+      conflictDetectionService.clearDirty();
+    }
+  });
 
   // Add keyboard shortcuts for version navigation (Ctrl+Z for undo, Ctrl+Y for redo)
   document.addEventListener("keydown", async (e: KeyboardEvent) => {

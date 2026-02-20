@@ -1308,3 +1308,308 @@ Then("the import button should be disabled", async function (this: CustomWorld) 
   const importButton = this.page.locator('[data-testid="import-button"]');
   await expect(importButton).toBeDisabled();
 });
+
+// Multi-tab conflict detection step definitions
+
+Given("I have the character open in two browser contexts", async function (this: CustomWorld) {
+  // Store the first page as context 1
+  this.testContext = this.testContext || {};
+  this.testContext.context1 = this.page;
+
+  // Create a second page in the SAME browser context
+  // This is critical - BroadcastChannel only works within the same browser context
+  const context = this.page.context();
+  const page2 = await context.newPage();
+
+  // Navigate to the same URL
+  const url = this.page.url();
+  await page2.goto(url);
+  await page2.waitForLoadState("networkidle");
+
+  // Wait for conflict detection service to initialize
+  await page2.waitForTimeout(500);
+
+  // Store context 2 page (no separate context needed)
+  this.testContext.context2Page = page2;
+});
+
+When(
+  "I edit the name to {string} in context {int}",
+  async function (this: CustomWorld, name: string, contextNum: number) {
+    const page = contextNum === 1 ? this.testContext!.context1 : this.testContext!.context2Page;
+
+    // Click on the name field to open modal
+    const nameField = page.locator('[data-testid="character-name"]');
+    await nameField.click();
+
+    // Wait for modal
+    const modal = page.locator('[data-testid="edit-modal"]');
+    await expect(modal).toBeVisible({ timeout: 5000 });
+
+    // Fill in the new name
+    const input = page.locator('[data-testid="edit-modal-input"]');
+    await input.fill(name);
+
+    // Confirm the edit
+    const confirmButton = page.locator('[data-testid="modal-confirm-button"]');
+    await confirmButton.click();
+
+    // Wait for modal to close
+    await expect(modal).toHaveCount(0, { timeout: 2000 });
+  }
+);
+
+Then(
+  "context {int} should detect a version conflict",
+  async function (this: CustomWorld, contextNum: number) {
+    const page = contextNum === 1 ? this.testContext!.context1 : this.testContext!.context2Page;
+
+    // Wait for conflict modal to appear
+    const conflictModal = page.locator('[data-testid="conflict-modal"]');
+    await expect(conflictModal).toBeVisible({ timeout: 10000 });
+  }
+);
+
+Then("I should see a conflict warning with options", async function (this: CustomWorld) {
+  const page = this.testContext!.context2Page;
+
+  // Check that both resolution options are present
+  const loadRemoteButton = page.locator('[data-testid="conflict-load-remote"]');
+  const saveLocalButton = page.locator('[data-testid="conflict-save-local"]');
+
+  await expect(loadRemoteButton).toBeVisible();
+  await expect(saveLocalButton).toBeVisible();
+});
+
+Given("I have a version conflict between two contexts", async function (this: CustomWorld) {
+  // Set up two pages in the same browser context with a conflict
+  // Context 1 has saved, context 2 has unsaved changes
+  this.testContext = this.testContext || {};
+  this.testContext.context1 = this.page;
+
+  // Create page 2 in the SAME browser context (BroadcastChannel requires this)
+  const context = this.page.context();
+  const page2 = await context.newPage();
+
+  const url = this.page.url();
+  await page2.goto(url);
+  await page2.waitForLoadState("networkidle");
+
+  // Wait for conflict detection service to initialize
+  await page2.waitForTimeout(500);
+
+  this.testContext.context2Page = page2;
+
+  // Edit in context 1 and wait for save (force squash)
+  const nameField1 = this.page.locator('[data-testid="character-name"]');
+  await nameField1.click();
+  const modal1 = this.page.locator('[data-testid="edit-modal"]');
+  await expect(modal1).toBeVisible({ timeout: 5000 });
+  const input1 = this.page.locator('[data-testid="edit-modal-input"]');
+  await input1.fill("Tab1 Edit");
+  const confirmButton1 = this.page.locator('[data-testid="modal-confirm-button"]');
+  await confirmButton1.click();
+  await expect(modal1).toHaveCount(0, { timeout: 2000 });
+
+  // Force squash to complete and notify other tabs
+  await forceSquash(this.page);
+
+  // Wait a bit for BroadcastChannel message to propagate
+  await this.page.waitForTimeout(200);
+
+  // Edit in context 2 (should trigger conflict since context 1 saved)
+  const nameField2 = page2.locator('[data-testid="character-name"]');
+  await nameField2.click();
+  const modal2 = page2.locator('[data-testid="edit-modal"]');
+  await expect(modal2).toBeVisible({ timeout: 5000 });
+  const input2 = page2.locator('[data-testid="edit-modal-input"]');
+  await input2.fill("Tab2 Edit");
+  const confirmButton2 = page2.locator('[data-testid="modal-confirm-button"]');
+  await confirmButton2.click();
+  await expect(modal2).toHaveCount(0, { timeout: 2000 });
+});
+
+When(
+  "I choose {string} in context {int}",
+  async function (this: CustomWorld, option: string, contextNum: number) {
+    const page = contextNum === 1 ? this.testContext!.context1 : this.testContext!.context2Page;
+
+    if (option === "Load latest version") {
+      const loadButton = page.locator('[data-testid="conflict-load-remote"]');
+      await loadButton.click();
+    } else if (option === "Save my changes anyway") {
+      const saveButton = page.locator('[data-testid="conflict-save-local"]');
+      await saveButton.click();
+    }
+
+    await page.waitForTimeout(500);
+  }
+);
+
+Then(
+  "context {int} should show {string}",
+  async function (this: CustomWorld, contextNum: number, expectedName: string) {
+    const page = contextNum === 1 ? this.testContext!.context1 : this.testContext!.context2Page;
+
+    // Wait for page to reload if needed
+    await page.waitForTimeout(500);
+
+    const nameField = page.locator('[data-testid="character-name"]');
+    const actualName = await nameField.textContent();
+    expect(actualName?.trim()).toBe(expectedName);
+  }
+);
+
+Then(
+  "my unsaved {string} should be discarded",
+  async function (this: CustomWorld, discardedName: string) {
+    // The unsaved changes were discarded - context 2 should not show the discarded name
+    const page = this.testContext!.context2Page;
+    const nameField = page.locator('[data-testid="character-name"]');
+    const actualName = await nameField.textContent();
+    expect(actualName?.trim()).not.toBe(discardedName);
+  }
+);
+
+Then(
+  "context {int} should be notified of the update",
+  async function (this: CustomWorld, contextNum: number) {
+    const page = contextNum === 1 ? this.testContext!.context1 : this.testContext!.context2Page;
+
+    // Context 1 should see a newer version banner notification
+    const newerVersionBanner = page.locator('[data-testid="newer-version-banner"]');
+    await expect(newerVersionBanner).toBeVisible({ timeout: 10000 });
+  }
+);
+
+Given("I have the character open in two contexts", async function (this: CustomWorld) {
+  // Same as "I have the character open in two browser contexts"
+  // Use same browser context for BroadcastChannel to work
+  this.testContext = this.testContext || {};
+  this.testContext.context1 = this.page;
+
+  // Create page 2 in the SAME browser context
+  const context = this.page.context();
+  const page2 = await context.newPage();
+
+  const url = this.page.url();
+  await page2.goto(url);
+  await page2.waitForLoadState("networkidle");
+
+  // Wait for conflict detection service to initialize
+  await page2.waitForTimeout(500);
+
+  this.testContext.context2Page = page2;
+});
+
+Given(
+  "I am viewing an old version in context {int}",
+  async function (this: CustomWorld, contextNum: number) {
+    const page = contextNum === 1 ? this.testContext!.context1 : this.testContext!.context2Page;
+
+    // First create some versions
+    const nameField = page.locator('[data-testid="character-name"]');
+    await nameField.click();
+    const modal = page.locator('[data-testid="edit-modal"]');
+    await expect(modal).toBeVisible({ timeout: 5000 });
+    const input = page.locator('[data-testid="edit-modal-input"]');
+    await input.fill("Version 2");
+    const confirmButton = page.locator('[data-testid="modal-confirm-button"]');
+    await confirmButton.click();
+    await expect(modal).toHaveCount(0, { timeout: 2000 });
+    await page.waitForTimeout(1500); // Wait for squash
+
+    // Navigate backward to view old version
+    const backwardArrow = page.locator('[data-testid="version-nav-backward"]');
+    await backwardArrow.click();
+    await page.waitForTimeout(200);
+  }
+);
+
+When("I edit and save in context {int}", async function (this: CustomWorld, contextNum: number) {
+  const page = contextNum === 1 ? this.testContext!.context1 : this.testContext!.context2Page;
+
+  // Edit the name
+  const nameField = page.locator('[data-testid="character-name"]');
+  await nameField.click();
+  const modal = page.locator('[data-testid="edit-modal"]');
+  await expect(modal).toBeVisible({ timeout: 5000 });
+  const input = page.locator('[data-testid="edit-modal-input"]');
+  await input.fill("New Edit from Context " + contextNum);
+  const confirmButton = page.locator('[data-testid="modal-confirm-button"]');
+  await confirmButton.click();
+  await expect(modal).toHaveCount(0, { timeout: 2000 });
+  await page.waitForTimeout(1500); // Wait for squash
+});
+
+Then(
+  "context {int} should show a notification about the newer version",
+  async function (this: CustomWorld, contextNum: number) {
+    const page = contextNum === 1 ? this.testContext!.context1 : this.testContext!.context2Page;
+
+    // Should show newer version banner
+    const newerVersionBanner = page.locator('[data-testid="newer-version-banner"]');
+    await expect(newerVersionBanner).toBeVisible({ timeout: 10000 });
+  }
+);
+
+Then("I should be offered to reload to the latest version", async function (this: CustomWorld) {
+  const page = this.testContext!.context1;
+
+  // Check for reload button in the banner
+  const reloadButton = page.locator('[data-testid="newer-version-reload"]');
+  await expect(reloadButton).toBeVisible();
+});
+
+Then(
+  "a new version should be created with {string}",
+  async function (this: CustomWorld, expectedName: string) {
+    // Wait for squash to complete
+    await this.page.waitForTimeout(500);
+
+    // Check that version count has increased and the latest version has the expected name
+    const versions = await this.storageHelper.getAllVersions();
+    expect(versions.length).toBeGreaterThan(1);
+
+    // Get the latest version
+    const latestVersion = versions[versions.length - 1];
+    expect(latestVersion.character.name).toBe(expectedName);
+  }
+);
+
+Then("no new version should be created", async function (this: CustomWorld) {
+  // Get the current version count
+  const versions = await this.storageHelper.getAllVersions();
+
+  // Store initial count if not already stored
+  if (this.testContext?.initialVersionCount === undefined) {
+    // Assume we started with 2 versions (Initial + Tab1 Edit)
+    expect(versions.length).toBe(2);
+  } else {
+    expect(versions.length).toBe(this.testContext.initialVersionCount);
+  }
+});
+
+// Cleanup step for multi-tab tests
+import { After } from "@cucumber/cucumber";
+
+After(async function (this: CustomWorld) {
+  // Clean up second page if it exists (for multi-tab tests)
+  if (this.testContext?.context2Page) {
+    try {
+      await this.testContext.context2Page.close();
+    } catch {
+      // Page may already be closed
+    }
+    this.testContext.context2Page = undefined;
+  }
+  // Note: We don't close context2 separately anymore since we use the same browser context
+  if (this.testContext?.context2) {
+    try {
+      await this.testContext.context2.close();
+    } catch {
+      // Context may already be closed
+    }
+    this.testContext.context2 = undefined;
+  }
+});

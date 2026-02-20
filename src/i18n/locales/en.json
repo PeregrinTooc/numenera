@@ -223,5 +223,27 @@
       "returnButton": "Return to Current Version",
       "restoreButton": "Restore Version"
     }
+  },
+  "conflict": {
+    "title": "Version Conflict Detected",
+    "message": "Another tab has saved changes to this character while you were editing. Your unsaved changes may be lost.",
+    "hint": "Choose how to resolve this conflict:",
+    "loadRemote": {
+      "label": "Load latest version",
+      "aria": "Discard your changes and load the latest version from the other tab"
+    },
+    "saveLocal": {
+      "label": "Save my changes anyway",
+      "aria": "Override the other changes and save your version"
+    },
+    "newerVersionAvailable": "A newer version of this character is available.",
+    "reload": {
+      "label": "Reload",
+      "aria": "Reload the page to load the latest version"
+    },
+    "dismiss": {
+      "label": "Dismiss",
+      "aria": "Dismiss this notification"
+    }
   }
 }

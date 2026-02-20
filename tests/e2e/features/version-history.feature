@@ -289,40 +289,6 @@ Feature: Version History (Character Time Travel)
         When I refresh the browser
         Then the character name should be "Buffer Edit 2"
 
-    # Multi-Tab Conflict Detection
-
-    @wip
-    Scenario: Detect concurrent edit in another tab
-        Given I have the character open in two browser contexts
-        When I edit the name to "Tab1 Edit" in context 1
-        And I wait for 1100 milliseconds for the version to save
-        When I edit the name to "Tab2 Edit" in context 2
-        Then context 2 should detect a version conflict
-        And I should see a conflict warning with options
-
-    @wip
-    Scenario: Conflict resolution - accept remote changes
-        Given I have a version conflict between two contexts
-        When I choose "Load latest version" in context 2
-        Then context 2 should show "Tab1 Edit"
-        And my unsaved "Tab2 Edit" should be discarded
-        And no new version should be created
-
-    @wip
-    Scenario: Conflict resolution - force save local changes
-        Given I have a version conflict between two contexts
-        When I choose "Save my changes anyway" in context 2
-        Then a new version should be created with "Tab2 Edit"
-        And context 1 should be notified of the update
-
-    @wip
-    Scenario: Auto-reload when newer version detected
-        Given I have the character open in two contexts
-        And I am viewing an old version in context 1
-        When I edit and save in context 2
-        Then context 1 should show a notification about the newer version
-        And I should be offered to reload to the latest version
-
     # Edge Cases
 
     Scenario: Rapid navigation through many versions

@@ -223,5 +223,27 @@
       "returnButton": "Zur aktuellen Version",
       "restoreButton": "Version Wiederherstellen"
     }
+  },
+  "conflict": {
+    "title": "Versionskonflikt erkannt",
+    "message": "Ein anderer Tab hat Änderungen an diesem Charakter gespeichert, während Sie bearbeitet haben. Ihre ungespeicherten Änderungen könnten verloren gehen.",
+    "hint": "Wählen Sie, wie der Konflikt gelöst werden soll:",
+    "loadRemote": {
+      "label": "Neueste Version laden",
+      "aria": "Ihre Änderungen verwerfen und die neueste Version aus dem anderen Tab laden"
+    },
+    "saveLocal": {
+      "label": "Meine Änderungen trotzdem speichern",
+      "aria": "Die anderen Änderungen überschreiben und Ihre Version speichern"
+    },
+    "newerVersionAvailable": "Eine neuere Version dieses Charakters ist verfügbar.",
+    "reload": {
+      "label": "Neu laden",
+      "aria": "Seite neu laden, um die neueste Version zu laden"
+    },
+    "dismiss": {
+      "label": "Schließen",
+      "aria": "Diese Benachrichtigung schließen"
+    }
   }
 }

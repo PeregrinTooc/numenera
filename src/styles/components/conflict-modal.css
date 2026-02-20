@@ -1,0 +1,254 @@
+/* Conflict Warning Modal Styles */
+
+.conflict-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.conflict-modal {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  max-width: 450px;
+  width: 90%;
+  overflow: hidden;
+  animation: slideIn 0.2s ease-out;
+}
+
+.conflict-modal-header {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+  padding: 1rem 1.5rem;
+}
+
+.conflict-modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.conflict-modal-body {
+  padding: 1.5rem;
+}
+
+.conflict-modal-message {
+  margin: 0 0 1rem 0;
+  color: #333;
+  line-height: 1.5;
+}
+
+.conflict-modal-hint {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.conflict-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.conflict-btn {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.conflict-btn-load {
+  background: #1a5490;
+  color: white;
+}
+
+.conflict-btn-load:hover {
+  background: #154078;
+}
+
+.conflict-btn-load:focus {
+  outline: 3px solid #1a549080;
+  outline-offset: 2px;
+}
+
+.conflict-btn-save {
+  background: #f8f9fa;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.conflict-btn-save:hover {
+  background: #e9ecef;
+  border-color: #ccc;
+}
+
+.conflict-btn-save:focus {
+  outline: 3px solid #33333380;
+  outline-offset: 2px;
+}
+
+/* Newer Version Banner */
+
+.newer-version-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #17a2b8, #138496);
+  color: white;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  z-index: 9998;
+  animation: slideDown 0.3s ease-out;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.newer-version-message {
+  flex: 1;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.newer-version-reload-btn {
+  background: white;
+  color: #17a2b8;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.newer-version-reload-btn:hover {
+  background: #f0f0f0;
+}
+
+.newer-version-dismiss-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.newer-version-dismiss-btn:hover {
+  opacity: 1;
+}
+
+/* Animations */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+
+@media (max-width: 480px) {
+  .conflict-modal {
+    width: 95%;
+    margin: 1rem;
+  }
+
+  .conflict-modal-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .conflict-modal-title {
+    font-size: 1.1rem;
+  }
+
+  .conflict-modal-body {
+    padding: 1rem;
+  }
+
+  .conflict-modal-actions {
+    padding: 0 1rem 1rem;
+  }
+
+  .newer-version-banner {
+    flex-wrap: wrap;
+    padding: 0.5rem;
+  }
+
+  .newer-version-message {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Dark mode support (if needed in future) */
+
+@media (prefers-color-scheme: dark) {
+  .conflict-modal {
+    background: #2d2d2d;
+    color: #f0f0f0;
+  }
+
+  .conflict-modal-message {
+    color: #e0e0e0;
+  }
+
+  .conflict-modal-hint {
+    color: #aaa;
+  }
+
+  .conflict-btn-save {
+    background: #3d3d3d;
+    color: #f0f0f0;
+    border-color: #555;
+  }
+
+  .conflict-btn-save:hover {
+    background: #4d4d4d;
+    border-color: #666;
+  }
+}
