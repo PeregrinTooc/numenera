@@ -1,18 +1,8 @@
 import type { Character } from "../types/character";
 import { generateETag } from "../utils/etag";
 
-// Global type declarations for BroadcastChannel API
-declare class BroadcastChannel {
-  constructor(name: string);
-  name: string;
-  onmessage: ((event: MessageEvent) => void) | null;
-  postMessage(message: unknown): void;
-  close(): void;
-}
-
-declare class MessageEvent<T = unknown> {
-  readonly data: T;
-}
+// BroadcastChannel and MessageEvent are DOM globals
+/* eslint-disable no-undef */
 
 /**
  * Message types for cross-tab communication
@@ -66,8 +56,8 @@ export class ConflictDetectionService {
     this.channel = new BroadcastChannel("numenera-character-sync");
 
     // Set up message handler
-    this.channel.onmessage = (event: MessageEvent<ConflictMessage>) => {
-      this.handleMessage(event.data);
+    this.channel.onmessage = (event: MessageEvent) => {
+      this.handleMessage(event.data as ConflictMessage);
     };
 
     // Announce tab opened
