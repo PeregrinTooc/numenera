@@ -60,6 +60,8 @@ Given("I have opened the settings panel", async function (this: CustomWorld) {
   const dom = new DOMHelpers(this.page!);
   await dom.getByTestId("settings-gear-button").click();
   await expect(dom.getByTestId("settings-panel")).toBeVisible();
+  // Wait for document event listeners to be attached (they're added with setTimeout(0))
+  await this.page!.waitForTimeout(50);
 });
 
 When("I click outside the settings panel", async function (this: CustomWorld) {
