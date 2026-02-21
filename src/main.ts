@@ -746,9 +746,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   await conflictDetectionService.setCurrentEtag(initialCharacter);
 
   // Initialize ConflictWarningModal
-  const app = document.getElementById("app");
-  if (app) {
-    new ConflictWarningModal(app);
+  const appEl = document.getElementById("app");
+  if (appEl) {
+    new ConflictWarningModal(appEl);
+
+    // Listen for settings updates (e.g., settings panel open/close)
+    appEl.addEventListener("settings-updated", () => {
+      // Re-render the current sheet to update settings panel visibility
+      if (currentSheet && currentCharacter) {
+        render(currentSheet.render(), appEl);
+      }
+    });
   }
 
   // Listen for conflict resolution events

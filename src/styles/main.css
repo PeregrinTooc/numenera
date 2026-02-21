@@ -20,6 +20,7 @@
 @import "./components/card-edit-modal.css";
 @import "./components/portrait-display-modal.css";
 @import "./components/conflict-modal.css";
+@import "./components/settings-gear.css";
 
 /* Utility styles */
 @import "./utilities/animations.css";

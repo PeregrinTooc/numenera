@@ -11,6 +11,18 @@
     "new": "Neu",
     "close": "Schließen"
   },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "resetLayout": "Layout zurücksetzen",
+    "resetLayoutDisabled": "Layout-Anpassung kommt bald",
+    "aria": {
+      "openSettings": "Einstellungen öffnen",
+      "closeSettings": "Einstellungen schließen",
+      "selectEnglish": "Zu Englisch wechseln",
+      "selectGerman": "Zu Deutsch wechseln"
+    }
+  },
   "character": {
     "name": "Name",
     "tier": "Stufe",

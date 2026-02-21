@@ -52,27 +52,6 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ## 📋 Feature Backlog
 
-### Re-arrange Sections
-
-**Overview**  
-Allow users to drag and drop character sheet sections to customize their layout preferences.
-
-**Goals**
-
-- Personalize character sheet layout
-- Save custom layout preferences
-- Support different play styles and preferences
-- Make frequently-used sections easily accessible
-
-**E2E Tests**
-
-- File: `tests/e2e/features/section-rearrangement.feature`
-- Scenarios:
-  - Drag section to new position
-  - Section order is saved
-  - Layout persists after page reload
-  - Reset to default layout option
-
 ### Multiple Images
 
 **Overview**  
@@ -135,27 +114,6 @@ Share characters with other players via export links or shareable JSON.
   - Import character from shared link
   - Preview shared character
 
-### Print-Friendly View
-
-**Overview**  
-Add print-optimized view and PDF export for printing physical character sheets.
-
-**Goals**
-
-- Generate print-friendly character sheet layout
-- Export character sheet as PDF
-- Support printer-friendly styling
-- Include all character information
-
-**E2E Tests**
-
-- File: `tests/e2e/features/print-export.feature`
-- Scenarios:
-  - View print-friendly layout
-  - Export character sheet as PDF
-  - Print character sheet maintains formatting
-  - All character data included in printout
-
 ### PWA Support
 
 **Overview**  
@@ -176,6 +134,16 @@ Add Progressive Web App support for installing the app and offline functionality
   - Access app while offline
   - Character data persists offline
   - Sync when coming back online
+
+### Multiple Characters
+
+**Overview**
+Add the option to have multiple characters, switch between them and also store them in one file on export
+
+### Import/Export Cards
+
+**Overview**
+Let the gamemaster prepare cards (cyphers, artifacts...) and export them as files by dragging them onto the desktop or the explorer/finder. Let players import them by dropping them into the character sheet (auto-detect type)
 
 ## 🔗 Related Documentation
 

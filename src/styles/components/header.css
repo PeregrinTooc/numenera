@@ -8,12 +8,27 @@
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
+  position: relative;
 
   /* Centered content (portrait moved to BasicInfo) */
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+}
+
+/* Settings row - positions settings gear in top-right */
+.header-settings-row {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  align-items: center;
+  z-index: 50;
+}
+
+.header-settings-spacer {
+  flex: 1;
 }
 
 /* Page title - large, elegant serif */

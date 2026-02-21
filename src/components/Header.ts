@@ -2,11 +2,13 @@
 
 import { html, TemplateResult } from "lit-html";
 import { t } from "../i18n/index.js";
+import { SettingsGear } from "./SettingsGear.js";
 
 export class Header {
   private hasRememberedLocation: boolean = false;
   private supportsFileSystemAccess: boolean = false;
   private isViewingOldVersion: boolean = false;
+  private settingsGear: SettingsGear;
 
   constructor(
     private onLoad: () => void,
@@ -14,8 +16,19 @@ export class Header {
     private onImport: () => void,
     private onExport: () => void,
     private onQuickExport?: () => void,
-    private onSaveAs?: () => void
+    private onSaveAs?: () => void,
+    onLanguageChange?: (lang: string) => void
   ) {
+    // Create settings gear component
+    this.settingsGear = new SettingsGear(onLanguageChange || (() => {}));
+
+    // Set up re-render callback for settings gear state changes
+    this.settingsGear.setRerenderCallback(() => {
+      // Dispatch event to trigger full app re-render
+      const event = new CustomEvent("settings-updated");
+      document.getElementById("app")?.dispatchEvent(event);
+    });
+
     // Initialize feature detection state
     this.supportsFileSystemAccess = "showSaveFilePicker" in window;
 
@@ -41,6 +54,10 @@ export class Header {
   render(): TemplateResult {
     return html`
       <div data-testid="character-header" class="character-header">
+        <div class="header-settings-row">
+          <div class="header-settings-spacer"></div>
+          ${this.settingsGear.render()}
+        </div>
         <h1 data-testid="page-title" class="page-title">${t("app.title")}</h1>
         <div class="title-underline"></div>
         <div class="header-buttons">
@@ -62,6 +79,20 @@ export class Header {
         </div>
       </div>
     `;
+  }
+
+  /**
+   * Handle keyboard events for settings panel
+   */
+  handleKeyDown(event: KeyboardEvent): void {
+    this.settingsGear.handleKeyDown(event);
+  }
+
+  /**
+   * Close settings panel (e.g., when clicking outside)
+   */
+  closeSettings(): void {
+    this.settingsGear.close();
   }
 
   private renderExportButtons(): TemplateResult {

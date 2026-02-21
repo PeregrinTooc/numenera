@@ -35,15 +35,7 @@ describe("DOM Structure Tests", () => {
       expect(getContainer().querySelector('[data-testid="new-button"]')).toBeTruthy();
       expect(getContainer().querySelector('[data-testid="import-button"]')).toBeTruthy();
       expect(getContainer().querySelector('[data-testid="export-button"]')).toBeTruthy();
-    });
-
-    it("should have exactly 4 buttons in header", () => {
-      const header = new Header(vi.fn(), vi.fn(), vi.fn(), vi.fn());
-      render(header.render(), getContainer());
-
-      const headerEl = getContainer().querySelector('[data-testid="character-header"]');
-      const buttons = headerEl?.querySelectorAll("button");
-      expect(buttons?.length).toBe(4);
+      expect(getContainer().querySelector('[data-testid="settings-gear-button"]')).toBeTruthy();
     });
 
     it("should render page title", () => {
@@ -51,6 +43,13 @@ describe("DOM Structure Tests", () => {
       render(header.render(), getContainer());
 
       expect(getContainer().querySelector('[data-testid="page-title"]')).toBeTruthy();
+    });
+
+    it("should render settings gear container", () => {
+      const header = new Header(vi.fn(), vi.fn(), vi.fn(), vi.fn());
+      render(header.render(), getContainer());
+
+      expect(getContainer().querySelector('[data-testid="settings-container"]')).toBeTruthy();
     });
   });
 

@@ -11,6 +11,18 @@
     "new": "New",
     "close": "Close"
   },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "resetLayout": "Reset Layout",
+    "resetLayoutDisabled": "Layout customization coming soon",
+    "aria": {
+      "openSettings": "Open settings",
+      "closeSettings": "Close settings",
+      "selectEnglish": "Switch to English",
+      "selectGerman": "Switch to German"
+    }
+  },
   "character": {
     "name": "Name",
     "tier": "Tier",

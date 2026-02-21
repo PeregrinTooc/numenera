@@ -16,6 +16,7 @@ import { BottomTextFields } from "./BottomTextFields.js";
 import { saveCharacterState } from "../storage/localStorage.js";
 import { VersionNavigator } from "./VersionNavigator.js";
 import { VersionWarningBanner } from "./VersionWarningBanner.js";
+import { changeLanguage } from "../i18n/index.js";
 
 export class CharacterSheet {
   private header: Header;
@@ -45,7 +46,8 @@ export class CharacterSheet {
       this.onImport,
       this.onExport,
       this.onQuickExport,
-      this.onSaveAs
+      this.onSaveAs,
+      (lang: string) => changeLanguage(lang)
     );
     this.basicInfo = new BasicInfo(this.character, this.onFieldUpdate);
     this.bottomTextFields = new BottomTextFields(this.character);
