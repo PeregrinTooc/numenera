@@ -88,7 +88,12 @@ export class CypherItem {
 
   render(): TemplateResult {
     return html`
-      <div data-testid="cypher-item" class="cypher-item-card relative">
+      <div
+        data-testid="cypher-item"
+        data-index="${this.index}"
+        class="cypher-item-card relative"
+        draggable="true"
+      >
         ${renderCardButtons({
           index: this.index,
           onEdit: this.onUpdate ? () => this.handleEdit() : undefined,

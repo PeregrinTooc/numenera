@@ -11,11 +11,13 @@ import {
   renderAddButton,
 } from "./helpers/CollectionBehavior.js";
 import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
+import { reorderArray } from "./helpers/DragDropBehavior.js";
 
 type FieldType = "maxCyphers";
 
 export class CyphersBox {
   private handleAddCypher: () => void;
+  private draggedIndex: number | null = null;
 
   constructor(
     private character: Character,
@@ -28,6 +30,45 @@ export class CyphersBox {
       collection: this.character.cyphers,
       character: this.character,
     });
+  }
+
+  private handleDragStart(e: Event): void {
+    const dragEvent = e as globalThis.DragEvent;
+    const target = dragEvent.target as HTMLElement;
+    const cypherItem = target.closest("[data-testid='cypher-item']") as HTMLElement;
+    if (cypherItem) {
+      const index = parseInt(cypherItem.dataset.index || "0", 10);
+      this.draggedIndex = index;
+      dragEvent.dataTransfer?.setData("text/plain", index.toString());
+    }
+  }
+
+  private handleDragOver(e: Event): void {
+    e.preventDefault(); // Allow drop
+  }
+
+  private handleDrop(e: Event): void {
+    e.preventDefault();
+    if (this.draggedIndex === null) return;
+
+    const target = e.target as HTMLElement;
+    const cypherItem = target.closest("[data-testid='cypher-item']") as HTMLElement;
+    if (!cypherItem) return;
+
+    const targetIndex = parseInt(cypherItem.dataset.index || "0", 10);
+    if (this.draggedIndex === targetIndex) return;
+
+    // Reorder the cyphers array
+    const newCyphers = reorderArray(this.character.cyphers, this.draggedIndex, targetIndex);
+
+    // Update character and dispatch event to trigger save and re-render
+    this.character.cyphers = newCyphers;
+    const appElement = document.getElementById("app");
+    if (appElement) {
+      appElement.dispatchEvent(new CustomEvent("character-updated"));
+    }
+
+    this.draggedIndex = null;
   }
 
   private openEditModal(fieldType: FieldType): void {
@@ -87,7 +128,13 @@ export class CyphersBox {
               </div>
             `
           : html`
-              <div data-testid="cyphers-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div
+                data-testid="cyphers-list"
+                class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                @dragstart=${(e: Event) => this.handleDragStart(e)}
+                @dragover=${(e: Event) => this.handleDragOver(e)}
+                @drop=${(e: Event) => this.handleDrop(e)}
+              >
                 ${cypherItems.map((item) => item.render())}
               </div>
             `}
