@@ -146,12 +146,19 @@ When("I import a character file with invalid field types", async function (this:
 When(
   "I import a valid character file with matching schema version",
   async function (this: CustomWorld) {
-    // Set valid character through storage API
-    await this.storageHelper.setCharacter(VALID_CHARACTER);
+    // Set up mock file importer to return the valid character
+    await this.storageHelper.setMockFileImporter(VALID_CHARACTER);
 
-    // Reload to show imported character
-    await this.page.reload();
-    await this.page.waitForLoadState("networkidle");
+    // Click the import button - this will use the mock importer
+    const importButton = this.page.locator('[data-testid="import-button"]');
+    await importButton.click();
+
+    // Wait for the character name to update to the imported character
+    const nameElement = this.page.locator('[data-testid="character-name"]');
+    await nameElement.waitFor({ state: "visible" });
+
+    // Reset the file importer to the real implementation for other tests
+    await this.storageHelper.resetFileImporter();
   }
 );
 

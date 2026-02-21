@@ -1,5 +1,11 @@
 import { Page } from "@playwright/test";
 
+// Type for import result from file importer
+interface ImportResult {
+  character: any;
+  warnings: string[];
+}
+
 // Type declaration for test storage API exposed by main.ts
 declare global {
   interface Window {
@@ -12,6 +18,10 @@ declare global {
       createVersion: (character: any, description: string) => Promise<void>;
       getAllVersions: () => Promise<any[]>;
       clearVersions: () => Promise<void>;
+    };
+    __testFileImporter?: {
+      setFileImporter: (importer: { importCharacter: () => Promise<ImportResult | null> }) => void;
+      resetFileImporter: () => void;
     };
   }
 }
@@ -137,6 +147,46 @@ export class TestStorageHelper {
         throw new Error("Test version history API not available. Make sure the app has loaded.");
       }
       await window.__testVersionHistory.clearVersions();
+    });
+  }
+
+  /**
+   * Set a mock file importer that returns the specified character
+   * Use this to simulate file import without actual file picker dialog
+   *
+   * @param character Character to return from import, or null to simulate cancel
+   * @param warnings Optional array of warning messages
+   */
+  async setMockFileImporter(character: any | null, warnings: string[] = []): Promise<void> {
+    await this.page.evaluate(
+      ({ char, warns }) => {
+        if (!window.__testFileImporter) {
+          throw new Error("Test file importer API not available. Make sure the app has loaded.");
+        }
+        // Create a mock importer that returns the specified character
+        const mockImporter = {
+          importCharacter: async () => {
+            if (char === null) {
+              return null; // Simulate user cancelled
+            }
+            return { character: char, warnings: warns };
+          },
+        };
+        window.__testFileImporter.setFileImporter(mockImporter);
+      },
+      { char: character, warns: warnings }
+    );
+  }
+
+  /**
+   * Reset the file importer to the real implementation
+   */
+  async resetFileImporter(): Promise<void> {
+    await this.page.evaluate(() => {
+      if (!window.__testFileImporter) {
+        throw new Error("Test file importer API not available. Make sure the app has loaded.");
+      }
+      window.__testFileImporter.resetFileImporter();
     });
   }
 }
