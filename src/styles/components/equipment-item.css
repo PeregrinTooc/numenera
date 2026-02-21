@@ -1,5 +1,17 @@
 /* Equipment Item Styling - Light green theme for equipment cards */
 
+/* Dragging states for equipment items */
+.equipment-item-card[data-dragging="true"] {
+  opacity: 0.5;
+  transform: scale(0.98);
+  border-style: dashed;
+}
+
+.equipment-item-card.drag-over {
+  border-color: #4ade80;
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+}
+
 .equipment-item-card {
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
   border: 2px solid #86efac;

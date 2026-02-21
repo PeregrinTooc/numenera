@@ -95,6 +95,11 @@
   line-height: 1.5;
 }
 
+/* Reordering transition - hide during DOM replacement */
+[data-testid="cyphers-section"].reordering [data-testid="cyphers-list"] {
+  visibility: hidden;
+}
+
 /* Empty cyphers state - blue themed */
 .empty-cyphers-styled {
   background: linear-gradient(135deg, #f5e6d3 0%, #e8f4f8 100%);
@@ -106,4 +111,13 @@
   font-family: serif;
   font-size: 0.875rem;
   font-style: italic;
+}
+
+/* Dragging visual state - transparent ghost effect */
+.cypher-item-card[data-dragging="true"] {
+  opacity: 0.5;
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(26, 84, 144, 0.4);
+  border-color: #3a8bc0;
+  z-index: 100;
 }

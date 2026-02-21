@@ -1,5 +1,17 @@
 /* Ability Item Styling - Purple/Indigo theme */
 
+/* Dragging states for ability items */
+.ability-item-card[data-dragging="true"] {
+  opacity: 0.5;
+  transform: scale(0.98);
+  border-style: dashed;
+}
+
+.ability-item-card.drag-over {
+  border-color: #818cf8;
+  background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+}
+
 /* Ability name - user data with handwritten font */
 .ability-item-card .ability-name {
   font-family: "Caveat", "Patrick Hand", cursive;

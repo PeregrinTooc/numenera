@@ -3,7 +3,6 @@
 import { html, TemplateResult } from "lit-html";
 import { SpecialAbility } from "../types/character.js";
 import { t } from "../i18n/index.js";
-import { sanitizeForTestId } from "../utils/testHelpers.js";
 import { createEditHandler, renderCardButtons } from "./helpers/CardEditorBehavior.js";
 
 export class SpecialAbilityItem {
@@ -82,12 +81,12 @@ export class SpecialAbilityItem {
   }
 
   render(): TemplateResult {
-    const testIdBase = sanitizeForTestId(this.specialAbility.name);
-
     return html`
       <div
-        data-testid="special-ability-item-${testIdBase}"
+        data-testid="special-ability-item"
+        data-index="${this.index}"
         class="special-ability-item-card bg-gradient-to-br from-cyan-50 to-teal-50 border-2 border-teal-200 rounded-lg p-4 shadow-sm hover:shadow-md hover:border-teal-300 transition-all relative pr-8 pl-8"
+        draggable="true"
       >
         ${renderCardButtons({
           index: this.index,
@@ -100,13 +99,13 @@ export class SpecialAbilityItem {
 
         <div class="special-ability-header flex justify-between items-start mb-2 pr-8">
           <h4
-            data-testid="special-ability-name-${this.index}"
+            data-testid="special-ability-name-${this.specialAbility.name}"
             class="special-ability-name font-bold text-lg text-teal-900"
           >
             ${this.specialAbility.name}
           </h4>
           <span
-            data-testid="special-ability-source-${testIdBase}"
+            data-testid="special-ability-source-${this.index}"
             class="special-ability-badge px-2 py-1 bg-teal-100 border border-teal-300 rounded text-xs font-semibold text-teal-900"
             title="${t("specialAbilities.source")}"
           >

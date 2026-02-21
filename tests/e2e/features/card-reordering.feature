@@ -36,18 +36,19 @@ Feature: Card Reordering
     Then the cyphers should be in order "First", "Third", "Second"
 
   # ============================================================================
-  # VISUAL FEEDBACK - Implement after basic drag works
+  # VISUAL FEEDBACK - Live reorder preview during drag
   # ============================================================================
 
-  # Scenario: Dragging card shows visual lift effect
-  #   Given the character has 2 cyphers named "Card1", "Card2"
-  #   When I start dragging cypher "Card1"
-  #   Then the cypher "Card1" should have a dragging visual state
+  Scenario: Items reorder in real-time while dragging
+    Given the character has 3 cyphers named "Alpha", "Beta", "Gamma"
+    When I start dragging cypher "Gamma"
+    And I hover over cypher "Alpha"
+    Then the cyphers should be visually in order "Gamma", "Alpha", "Beta"
 
-  # Scenario: Drop zones appear when dragging
-  #   Given the character has 2 cyphers named "Card1", "Card2"
-  #   When I start dragging cypher "Card1"
-  #   Then I should see drop zone indicators
+  Scenario: Dragging card shows transparent ghost effect
+    Given the character has 2 cyphers named "Card1", "Card2"
+    When I start dragging cypher "Card1"
+    Then the cypher "Card1" should have a dragging visual state
 
   # ============================================================================
   # CANCEL DRAG
@@ -58,3 +59,33 @@ Feature: Card Reordering
   #   When I start dragging cypher "Alpha"
   #   And I press the Escape key
   #   Then the cyphers should be in order "Alpha", "Beta", "Gamma"
+
+  # ============================================================================
+  # ABILITY REORDERING
+  # ============================================================================
+
+  Scenario: Abilities display in array order
+    Given the character has 3 abilities named "Bash", "Charge", "Defend"
+    Then the abilities should be in order "Bash", "Charge", "Defend"
+
+  Scenario: Reorder abilities by dragging on desktop
+    Given the character has 3 abilities named "First", "Second", "Third"
+    When I drag ability "Third" before ability "First"
+    Then the abilities should be in order "Third", "First", "Second"
+
+  Scenario: Ability order persists after page reload
+    Given the character has 3 abilities named "Alpha", "Beta", "Gamma"
+    When I drag ability "Gamma" before ability "Alpha"
+    And I reload the page
+    Then the abilities should be in order "Gamma", "Alpha", "Beta"
+
+  # ============================================================================
+  # CROSS-SECTION DRAG PREVENTION
+  # ============================================================================
+
+  Scenario: Cannot drag cypher into abilities section
+    Given the character has 2 cyphers named "Cypher1", "Cypher2"
+    And the character has 2 abilities named "Ability1", "Ability2"
+    When I drag cypher "Cypher1" into the abilities section
+    Then the cyphers should be in order "Cypher1", "Cypher2"
+    And the abilities should be in order "Ability1", "Ability2"

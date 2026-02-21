@@ -82,7 +82,12 @@ export class ArtifactItem {
 
   render(): TemplateResult {
     return html`
-      <div data-testid="artifact-item-${this.artifact.name}" class="artifact-item-card relative">
+      <div
+        data-testid="artifact-item"
+        data-index="${this.index}"
+        class="artifact-item-card relative"
+        draggable="true"
+      >
         ${renderCardButtons({
           index: this.index,
           onEdit: this.onUpdate ? () => this.handleEdit() : undefined,

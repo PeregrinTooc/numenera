@@ -1,5 +1,17 @@
 /* Oddity Item Card Styling - Brown Theme (Curious Collectibles) */
 
+/* Dragging states for oddity items */
+.oddity-item-card[data-dragging="true"] {
+  opacity: 0.5;
+  transform: scale(0.98);
+  border-style: dashed;
+}
+
+.oddity-item-card.drag-over {
+  border-color: #a0522d;
+  background: #faf0e6;
+}
+
 .oddity-item-card {
   /* Light parchment background */
   background: #f5e6d3;

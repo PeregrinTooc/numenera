@@ -53,7 +53,12 @@ export class OddityItem {
 
   render(): TemplateResult {
     return html`
-      <div data-testid="oddity-item" class="oddity-item-card relative">
+      <div
+        data-testid="oddity-item"
+        data-index="${this.index}"
+        class="oddity-item-card relative"
+        draggable="true"
+      >
         ${renderCardButtons({
           index: this.index,
           onEdit: this.onUpdate ? () => this.handleEdit() : undefined,

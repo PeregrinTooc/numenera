@@ -26,6 +26,8 @@ export class CharacterSheet {
   private attacks: Attacks;
   private cyphersBox: CyphersBox;
   private stats: Stats;
+  private abilities: Abilities;
+  private specialAbilities: SpecialAbilities;
   private versionNavigator: VersionNavigator | null = null;
   private versionWarningBanner: VersionWarningBanner | null = null;
 
@@ -70,6 +72,39 @@ export class CharacterSheet {
     );
     this.cyphersBox = new CyphersBox(this.character, this.onFieldUpdate);
     this.stats = new Stats(this.character, this.onFieldUpdate);
+
+    // Create abilities and specialAbilities as stateful components
+    this.abilities = new Abilities(
+      this.character.abilities,
+      (index, updated) => {
+        this.character.abilities[index] = updated;
+        saveCharacterState(this.character);
+        const event = new CustomEvent("character-updated");
+        document.getElementById("app")?.dispatchEvent(event);
+      },
+      (index) => {
+        this.character.abilities.splice(index, 1);
+        saveCharacterState(this.character);
+        const event = new CustomEvent("character-updated");
+        document.getElementById("app")?.dispatchEvent(event);
+      }
+    );
+
+    this.specialAbilities = new SpecialAbilities(
+      this.character.specialAbilities,
+      (index, updated) => {
+        this.character.specialAbilities[index] = updated;
+        saveCharacterState(this.character);
+        const event = new CustomEvent("character-updated");
+        document.getElementById("app")?.dispatchEvent(event);
+      },
+      (index) => {
+        this.character.specialAbilities.splice(index, 1);
+        saveCharacterState(this.character);
+        const event = new CustomEvent("character-updated");
+        document.getElementById("app")?.dispatchEvent(event);
+      }
+    );
   }
 
   /**
@@ -165,42 +200,7 @@ export class CharacterSheet {
     });
     const damageTrack = new DamageTrack(this.character.damageTrack);
 
-    // Collection update handlers that save directly to localStorage
-    const abilities = new Abilities(
-      this.character.abilities,
-      (index, updated) => {
-        this.character.abilities[index] = updated;
-        saveCharacterState(this.character);
-        // Trigger re-render via character-updated event
-        const event = new CustomEvent("character-updated");
-        document.getElementById("app")?.dispatchEvent(event);
-      },
-      (index) => {
-        this.character.abilities.splice(index, 1);
-        saveCharacterState(this.character);
-        // Trigger re-render via character-updated event
-        const event = new CustomEvent("character-updated");
-        document.getElementById("app")?.dispatchEvent(event);
-      }
-    );
-
-    const specialAbilities = new SpecialAbilities(
-      this.character.specialAbilities,
-      (index, updated) => {
-        this.character.specialAbilities[index] = updated;
-        saveCharacterState(this.character);
-        // Trigger re-render via character-updated event
-        const event = new CustomEvent("character-updated");
-        document.getElementById("app")?.dispatchEvent(event);
-      },
-      (index) => {
-        this.character.specialAbilities.splice(index, 1);
-        saveCharacterState(this.character);
-        // Trigger re-render via character-updated event
-        const event = new CustomEvent("character-updated");
-        document.getElementById("app")?.dispatchEvent(event);
-      }
-    );
+    // Note: abilities and specialAbilities are now stateful components created in constructor
 
     return html`
       <div class="min-h-screen p-4">
@@ -209,9 +209,9 @@ export class CharacterSheet {
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             ${recoveryRolls.render()} ${damageTrack.render()}
           </div>
-          ${abilities.render()}
+          ${this.abilities.render()}
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            ${specialAbilities.render()} ${this.attacks.render()}
+            ${this.specialAbilities.render()} ${this.attacks.render()}
           </div>
           ${this.cyphersBox.render()} ${this.itemsBox.render()}
           <div data-testid="text-fields-section" class="mt-8">

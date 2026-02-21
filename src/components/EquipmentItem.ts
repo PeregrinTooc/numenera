@@ -69,8 +69,10 @@ export class EquipmentItem {
   render(): TemplateResult {
     return html`
       <div
-        data-testid="equipment-item-${this.item.name}"
+        data-testid="equipment-item"
+        data-index="${this.index}"
         class="equipment-item equipment-item-card relative"
+        draggable="true"
       >
         ${renderCardButtons({
           index: this.index,

@@ -21,7 +21,7 @@ import { ItemsBox } from "../../src/components/ItemsBox.js";
 import { Stats } from "../../src/components/Stats.js";
 import { StatPool } from "../../src/components/StatPool.js";
 import { BottomTextFields } from "../../src/components/BottomTextFields.js";
-import type { Cypher, Artifact, Oddity } from "../../src/types/character.js";
+import type { Cypher, Artifact } from "../../src/types/character.js";
 import {
   setupTestContainer,
   createMockCharacter,
@@ -73,8 +73,8 @@ describe("Visual Styling Tests", () => {
       const artifactItem = new ArtifactItem(artifact, 0);
       render(artifactItem.render(), getContainer());
 
-      // Artifact items use dynamic testid with name
-      const card = getContainer().querySelector('[data-testid="artifact-item-Test Artifact"]');
+      // Artifact items use standardized testid (no name suffix)
+      const card = getContainer().querySelector('[data-testid="artifact-item"]');
       expect(card?.classList.contains("artifact-item-card")).toBe(true);
     });
 
@@ -109,8 +109,8 @@ describe("Visual Styling Tests", () => {
 
   describe("Oddity Items - Brown Theme", () => {
     it("should apply oddity-item-card class to oddity cards", () => {
-      const oddity: Oddity = { description: "A glowing cube" };
-      const oddityItem = new OddityItem(oddity, 0);
+      // OddityItem expects a string, not an object
+      const oddityItem = new OddityItem("A glowing cube", 0);
       render(oddityItem.render(), getContainer());
 
       const card = getContainer().querySelector('[data-testid="oddity-item"]');
@@ -124,8 +124,8 @@ describe("Visual Styling Tests", () => {
       const equipmentItem = new EquipmentItem({ name: "Sword" }, 0);
       render(equipmentItem.render(), getContainer());
 
-      // Equipment items use dynamic testid with name
-      const card = getContainer().querySelector('[data-testid="equipment-item-Sword"]');
+      // Equipment items use standardized testid (no name suffix)
+      const card = getContainer().querySelector('[data-testid="equipment-item"]');
       expect(card?.classList.contains("equipment-item-card")).toBe(true);
     });
   });

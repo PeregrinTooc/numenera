@@ -1,5 +1,17 @@
 /* Artifact Item Card Styling - Gold Theme (Permanent Treasure) */
 
+/* Dragging states for artifact items */
+.artifact-item-card[data-dragging="true"] {
+  opacity: 0.5;
+  transform: scale(0.98);
+  border-style: dashed;
+}
+
+.artifact-item-card.drag-over {
+  border-color: #e4bf47;
+  background: #f5ecd5;
+}
+
 .artifact-item-card {
   /* Rich parchment background */
   background: #ede1cf;

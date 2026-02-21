@@ -12,14 +12,39 @@ import {
   createItemInstances,
   renderAddButton,
 } from "./helpers/CollectionBehavior.js";
+import { reorderArray } from "./helpers/DragDropBehavior.js";
 import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
 
 type FieldType = "shins";
+type ItemSection = "equipment" | "artifacts" | "oddities";
 
 export class ItemsBox {
   private handleAddEquipment: () => void;
   private handleAddArtifact: () => void;
   private handleAddOddity: () => void;
+
+  // Drag state for each section
+  private dragState: {
+    equipment: {
+      draggedIndex: number | null;
+      previewOrder: number[] | null;
+      currentTargetIndex: number | null;
+    };
+    artifacts: {
+      draggedIndex: number | null;
+      previewOrder: number[] | null;
+      currentTargetIndex: number | null;
+    };
+    oddities: {
+      draggedIndex: number | null;
+      previewOrder: number[] | null;
+      currentTargetIndex: number | null;
+    };
+  } = {
+    equipment: { draggedIndex: null, previewOrder: null, currentTargetIndex: null },
+    artifacts: { draggedIndex: null, previewOrder: null, currentTargetIndex: null },
+    oddities: { draggedIndex: null, previewOrder: null, currentTargetIndex: null },
+  };
 
   constructor(
     private character: Character,
@@ -58,6 +83,162 @@ export class ItemsBox {
         this.onFieldUpdate(fieldType, newValue as number);
       },
       versionHistoryService: getVersionHistoryService(),
+    });
+  }
+
+  // ============================================================================
+  // DRAG AND DROP HANDLERS (generic for all 3 sections)
+  // ============================================================================
+
+  private handleDragStart(e: Event, section: ItemSection, testIdSelector: string): void {
+    const dragEvent = e as globalThis.DragEvent;
+    const target = dragEvent.target as HTMLElement;
+    const item = target.closest(`[data-testid='${testIdSelector}']`) as HTMLElement;
+    if (item) {
+      const index = parseInt(item.dataset.index || "0", 10);
+      this.dragState[section].draggedIndex = index;
+      this.dragState[section].previewOrder = null;
+      dragEvent.dataTransfer?.setData("text/plain", index.toString());
+      dragEvent.dataTransfer?.setData("application/x-section", section);
+      item.setAttribute("data-dragging", "true");
+    }
+  }
+
+  private handleDragOver(e: Event, section: ItemSection, testIdSelector: string): void {
+    e.preventDefault();
+    const state = this.dragState[section];
+    if (state.draggedIndex === null) return;
+
+    const target = e.target as HTMLElement;
+    const item = target.closest(`[data-testid='${testIdSelector}']`) as HTMLElement;
+    if (!item) return;
+
+    const targetIndex = parseInt(item.dataset.index || "0", 10);
+    if (state.draggedIndex === targetIndex) return;
+
+    state.currentTargetIndex = targetIndex;
+
+    const collection = this.getCollection(section);
+    const newOrder = this.calculatePreviewOrder(state.draggedIndex, targetIndex, collection.length);
+    if (!this.previewOrderEquals(state.previewOrder, newOrder)) {
+      state.previewOrder = newOrder;
+      this.applyPreviewOrder(section, testIdSelector);
+    }
+  }
+
+  private handleDrop(e: Event, section: ItemSection, testIdSelector: string): void {
+    e.preventDefault();
+    const dragEvent = e as globalThis.DragEvent;
+    const state = this.dragState[section];
+
+    // Check section to prevent cross-section drops
+    const sourceSection = dragEvent.dataTransfer?.getData("application/x-section");
+    if (sourceSection !== section) {
+      this.handleDragEnd(e, section, testIdSelector);
+      return;
+    }
+
+    let draggedIndex = state.draggedIndex;
+    if (draggedIndex === null) {
+      const transferData = dragEvent.dataTransfer?.getData("text/plain");
+      if (transferData) {
+        draggedIndex = parseInt(transferData, 10);
+      }
+    }
+
+    if (draggedIndex === null || isNaN(draggedIndex)) {
+      this.handleDragEnd(e, section, testIdSelector);
+      return;
+    }
+
+    let targetIndex = state.currentTargetIndex;
+    if (targetIndex === null) {
+      const target = e.target as HTMLElement;
+      const item = target.closest(`[data-testid='${testIdSelector}']`) as HTMLElement;
+      if (!item) {
+        this.handleDragEnd(e, section, testIdSelector);
+        return;
+      }
+      targetIndex = parseInt(item.dataset.index || "0", 10);
+    }
+
+    if (draggedIndex === targetIndex) {
+      this.handleDragEnd(e, section, testIdSelector);
+      return;
+    }
+
+    // Reorder the array
+    const collection = this.getCollection(section);
+    const newItems = reorderArray(collection, draggedIndex, targetIndex);
+    collection.length = 0;
+    collection.push(...newItems);
+
+    this.handleDragEnd(e, section, testIdSelector, true);
+
+    // Dispatch collection-updated for targeted re-render
+    // Dispatch character-updated for save
+    const appElement = document.getElementById("app");
+    if (appElement) {
+      appElement.dispatchEvent(new CustomEvent("collection-updated", { detail: { section } }));
+      appElement.dispatchEvent(new CustomEvent("character-updated"));
+    }
+  }
+
+  private handleDragEnd(
+    _e: Event,
+    section: ItemSection,
+    testIdSelector: string,
+    keepOrder: boolean = false
+  ): void {
+    const items = document.querySelectorAll(`[data-testid='${testIdSelector}']`);
+    items.forEach((item) => {
+      item.removeAttribute("data-dragging");
+      if (!keepOrder) {
+        (item as HTMLElement).style.order = "";
+      }
+    });
+    this.dragState[section] = { draggedIndex: null, previewOrder: null, currentTargetIndex: null };
+  }
+
+  private getCollection(section: ItemSection): unknown[] {
+    switch (section) {
+      case "equipment":
+        return this.character.equipment;
+      case "artifacts":
+        return this.character.artifacts;
+      case "oddities":
+        return this.character.oddities;
+    }
+  }
+
+  private calculatePreviewOrder(fromIndex: number, toIndex: number, length: number): number[] {
+    const indices = Array.from({ length }, (_, i) => i);
+    const [removed] = indices.splice(fromIndex, 1);
+    indices.splice(toIndex, 0, removed);
+    return indices;
+  }
+
+  private previewOrderEquals(current: number[] | null, newOrder: number[]): boolean {
+    if (!current) return false;
+    return current.every((val, i) => val === newOrder[i]);
+  }
+
+  private applyPreviewOrder(section: ItemSection, testIdSelector: string): void {
+    const state = this.dragState[section];
+    if (!state.previewOrder) return;
+
+    const listSelector = `[data-testid='${section}-list']`;
+    const container = document.querySelector(listSelector);
+    if (!container) return;
+
+    const items = Array.from(container.querySelectorAll(`[data-testid='${testIdSelector}']`));
+    state.previewOrder.forEach((originalIndex, visualPosition) => {
+      const item = items.find(
+        (el) => parseInt((el as HTMLElement).dataset.index || "0", 10) === originalIndex
+      );
+      if (item) {
+        (item as HTMLElement).style.order = visualPosition.toString();
+      }
     });
   }
 
@@ -122,7 +303,14 @@ export class ItemsBox {
                 </div>
               `
             : html`
-                <div data-testid="equipment-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div
+                  data-testid="equipment-list"
+                  class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                  @dragstart=${(e: Event) => this.handleDragStart(e, "equipment", "equipment-item")}
+                  @dragover=${(e: Event) => this.handleDragOver(e, "equipment", "equipment-item")}
+                  @drop=${(e: Event) => this.handleDrop(e, "equipment", "equipment-item")}
+                  @dragend=${(e: Event) => this.handleDragEnd(e, "equipment", "equipment-item")}
+                >
                   ${equipmentItems.map((item) => item.render())}
                 </div>
               `}
@@ -153,7 +341,15 @@ export class ItemsBox {
                   </div>
                 `
               : html`
-                  <div data-testid="artifacts-list" class="space-y-4">
+                  <div
+                    data-testid="artifacts-list"
+                    class="space-y-4"
+                    @dragstart=${(e: Event) =>
+                      this.handleDragStart(e, "artifacts", "artifact-item")}
+                    @dragover=${(e: Event) => this.handleDragOver(e, "artifacts", "artifact-item")}
+                    @drop=${(e: Event) => this.handleDrop(e, "artifacts", "artifact-item")}
+                    @dragend=${(e: Event) => this.handleDragEnd(e, "artifacts", "artifact-item")}
+                  >
                     ${artifactItems.map((item) => item.render())}
                   </div>
                 `}
@@ -179,7 +375,14 @@ export class ItemsBox {
                   </div>
                 `
               : html`
-                  <div data-testid="oddities-list" class="space-y-3">
+                  <div
+                    data-testid="oddities-list"
+                    class="space-y-3"
+                    @dragstart=${(e: Event) => this.handleDragStart(e, "oddities", "oddity-item")}
+                    @dragover=${(e: Event) => this.handleDragOver(e, "oddities", "oddity-item")}
+                    @drop=${(e: Event) => this.handleDrop(e, "oddities", "oddity-item")}
+                    @dragend=${(e: Event) => this.handleDragEnd(e, "oddities", "oddity-item")}
+                  >
                     ${oddityItems.map((item) => item.render())}
                   </div>
                 `}

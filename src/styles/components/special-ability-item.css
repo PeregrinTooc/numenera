@@ -1,5 +1,17 @@
 /* Special Ability Item Styling - Teal/Cyan theme */
 
+/* Dragging states for special ability items */
+.special-ability-item-card[data-dragging="true"] {
+  opacity: 0.5;
+  transform: scale(0.98);
+  border-style: dashed;
+}
+
+.special-ability-item-card.drag-over {
+  border-color: #2dd4bf;
+  background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);
+}
+
 /* Special ability name - user data with handwritten font */
 .special-ability-item-card .special-ability-name {
   font-family: "Caveat", "Patrick Hand", cursive;

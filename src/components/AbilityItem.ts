@@ -126,7 +126,9 @@ export class AbilityItem {
     return html`
       <div
         data-testid="ability-item-${testIdBase}"
+        data-index="${this.index}"
         class="ability-item-card bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-lg p-4 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all relative pr-8 pl-8"
+        draggable="true"
       >
         ${renderCardButtons({
           index: this.index,
@@ -139,7 +141,7 @@ export class AbilityItem {
 
         <div class="ability-header flex justify-between items-start mb-2 pr-8">
           <h4
-            data-testid="ability-name-${this.index}"
+            data-testid="ability-name-${this.ability.name}"
             class="ability-name font-bold text-lg text-indigo-900"
           >
             ${this.ability.name}

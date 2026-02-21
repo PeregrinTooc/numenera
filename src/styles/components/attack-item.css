@@ -1,5 +1,17 @@
 /* Attack Item Styling - Red/Combat theme */
 
+/* Dragging states for attack items */
+.attack-item-card[data-dragging="true"] {
+  opacity: 0.5;
+  transform: scale(0.98);
+  border-style: dashed;
+}
+
+.attack-item-card.drag-over {
+  border-color: #f87171;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+}
+
 /* Attack name - user data with handwritten font */
 .attack-item-card .attack-name {
   font-family: "Caveat", "Patrick Hand", cursive;

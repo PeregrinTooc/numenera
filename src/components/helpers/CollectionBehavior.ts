@@ -57,6 +57,10 @@ export function createAddHandler<T, ItemComponent extends { handleEdit: () => vo
       if (character) {
         // Event-based update (CyphersBox, ItemsBox pattern)
         saveCharacterState(character);
+        // Dispatch cyphers-updated for targeted cypher re-render
+        const cyphersEvent = new CustomEvent("cyphers-updated");
+        document.getElementById("app")?.dispatchEvent(cyphersEvent);
+        // Dispatch character-updated for save and other updates
         const event = new CustomEvent("character-updated");
         document.getElementById("app")?.dispatchEvent(event);
       } else if (onUpdate) {
@@ -146,6 +150,10 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
           cardNotifier.emit("edited");
 
           saveCharacterState(character);
+          // Dispatch cyphers-updated for targeted cypher re-render
+          const cyphersEvent = new CustomEvent("cyphers-updated");
+          document.getElementById("app")?.dispatchEvent(cyphersEvent);
+          // Dispatch character-updated for save and other updates
           const event = new CustomEvent("character-updated");
           document.getElementById("app")?.dispatchEvent(event);
         }
@@ -200,6 +208,10 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
           }
 
           saveCharacterState(character);
+          // Dispatch cyphers-updated for targeted cypher re-render
+          const cyphersEvent = new CustomEvent("cyphers-updated");
+          document.getElementById("app")?.dispatchEvent(cyphersEvent);
+          // Dispatch character-updated for save and other updates
           const event = new CustomEvent("character-updated");
           document.getElementById("app")?.dispatchEvent(event);
         }
