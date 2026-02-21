@@ -163,6 +163,29 @@ All features listed below have full BDD test coverage and are verified working.
   - Translated UI labels and messages
   - Localized date/time formats
 
+### Data Validation
+
+- **Data Validation Enhancement** ([data-validation.feature](../tests/e2e/features/data-validation.feature))
+  - Semantic versioning for schema (1.0.0 format)
+  - Lenient import: accepts files with different schema versions
+  - Character sanitization: fixes invalid data instead of rejecting
+  - Default values for all missing fields
+  - Warning messages for corrected values
+  - Graceful handling of corrupted/manually edited files
+  - i18n support for validation warnings
+  - 43+ unit tests for sanitization logic
+
+### Storage Robustness
+
+- **IndexedDB Auto-Recovery**
+  - Detects corrupted IndexedDB databases
+  - Automatically deletes and recreates corrupted databases
+  - Validates object store existence before operations
+  - Graceful fallback to localStorage if IndexedDB recreation fails
+  - Prevents app crashes from Safari/browser storage corruption
+  - Migration skips gracefully when database is not ready
+  - 4 unit tests for object store validation
+
 ### Version History
 
 - **Version History (Character Time Travel)** ([version-history.feature](../tests/e2e/features/version-history.feature))
@@ -176,7 +199,12 @@ All features listed below have full BDD test coverage and are verified working.
   - Edit from old version creates new version (no read-only mode)
   - Portrait excluded from versioning
   - Export from old version works
-  - Keyboard shortcuts for version navigation (Ctrl+Z/Y after squash)
+  - **Buffer-Based Undo/Redo (Ctrl+Z/Y)**:
+    - Undo/redo buffered changes before squash timer fires
+    - Granular undo of individual edits within the 5s buffer window
+    - Redo stack for undone changes
+    - After squash: Ctrl+Z/Y navigates through saved versions
+    - Works with all edit types (fields, cards, stats)
   - Multi-tab conflict detection infrastructure (unit tested)
     - BroadcastChannel API for cross-tab communication
     - ETag-based conflict detection
@@ -193,4 +221,4 @@ All features listed below have full BDD test coverage and are verified working.
 
 ---
 
-**Last Updated**: January 30, 2026
+**Last Updated**: February 21, 2026

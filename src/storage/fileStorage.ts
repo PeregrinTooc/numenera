@@ -3,60 +3,82 @@
 
 import { Character } from "../types/character.js";
 import { SCHEMA_VERSION } from "./storageConstants.js";
-import { validateCharacter } from "../utils/unified-validation.js";
+import { sanitizeCharacter } from "../utils/unified-validation.js";
 
 /**
  * File format structure for exported characters
  */
 export interface CharacterFileData {
   version: string;
-  schemaVersion: number;
+  schemaVersion: string;
   exportDate: string;
   character: Character;
 }
 
 /**
- * Parse and validate character data from file content
- * @param text - Raw text content from file
- * @returns Validated character object
- * @throws Error if file is invalid or character data is corrupted
+ * Result of importing a character file
  */
-function parseAndValidateCharacter(text: string): Character {
+export interface ImportResult {
+  character: Character;
+  warnings: string[];
+}
+
+/**
+ * Parse and sanitize character data from file content.
+ * Uses lenient approach: sanitizes invalid data instead of rejecting it.
+ *
+ * @param text - Raw text content from file
+ * @returns Sanitized character with any warnings
+ * @throws Error only for completely invalid JSON or missing character data
+ */
+function parseAndSanitizeCharacter(text: string): ImportResult {
+  const warnings: string[] = [];
+
   // Parse JSON
-  let data: any;
+  let data: unknown;
   try {
     data = JSON.parse(text);
   } catch {
     throw new Error("Invalid JSON in file");
   }
 
-  // Validate file structure
-  if (!data.character) {
+  // Check if data is an object
+  if (data === null || typeof data !== "object") {
+    throw new Error("File does not contain valid data");
+  }
+
+  const fileData = data as Record<string, unknown>;
+
+  // Validate file structure - must have character field
+  if (!fileData.character) {
     throw new Error("File does not contain character data");
   }
 
-  // Check schema version
-  if (data.schemaVersion !== undefined && data.schemaVersion !== SCHEMA_VERSION) {
-    throw new Error(
-      `Incompatible schema version: file has version ${data.schemaVersion}, but current version is ${SCHEMA_VERSION}`
+  // Check schema version - warn but don't reject
+  if (fileData.schemaVersion !== undefined && fileData.schemaVersion !== SCHEMA_VERSION) {
+    warnings.push(
+      `File has different schema version (${fileData.schemaVersion}), current version is ${SCHEMA_VERSION}. Data may have been adjusted.`
     );
   }
 
-  // Validate character data
-  const validation = validateCharacter(data.character);
-  if (!validation.valid) {
-    throw new Error(`Invalid character data: ${validation.errors.join(", ")}`);
-  }
+  // Sanitize character data - fix invalid fields instead of rejecting
+  const sanitizeResult = sanitizeCharacter(fileData.character);
 
-  return validation.character;
+  // Combine warnings
+  const allWarnings = [...warnings, ...sanitizeResult.warnings];
+
+  return {
+    character: sanitizeResult.character,
+    warnings: allWarnings,
+  };
 }
 
 /**
  * Import using File System Access API (Chrome/Edge/Opera)
- * @returns The imported character, or null if user cancels
- * @throws Error if file is invalid or character data is corrupted
+ * @returns Import result with character and warnings, or null if user cancels
+ * @throws Error only for invalid JSON or missing character data
  */
-async function importWithFileSystemAPI(): Promise<Character | null> {
+async function importWithFileSystemAPI(): Promise<ImportResult | null> {
   try {
     // Open file picker
     const [fileHandle] = await (window as any).showOpenFilePicker({
@@ -75,7 +97,7 @@ async function importWithFileSystemAPI(): Promise<Character | null> {
     const file = await fileHandle.getFile();
     const text = await file.text();
 
-    return parseAndValidateCharacter(text);
+    return parseAndSanitizeCharacter(text);
   } catch (error: any) {
     // User cancelled the file picker
     if (error.name === "AbortError") {
@@ -89,10 +111,10 @@ async function importWithFileSystemAPI(): Promise<Character | null> {
 
 /**
  * Import using <input type="file"> element (Safari/Firefox fallback)
- * @returns The imported character, or null if user cancels
- * @throws Error if file is invalid or character data is corrupted
+ * @returns Import result with character and warnings, or null if user cancels
+ * @throws Error only for invalid JSON or missing character data
  */
-async function importWithInputElement(): Promise<Character | null> {
+async function importWithInputElement(): Promise<ImportResult | null> {
   return new Promise((resolve, reject) => {
     // Create hidden input element
     const input = document.createElement("input");
@@ -113,8 +135,8 @@ async function importWithInputElement(): Promise<Character | null> {
 
       try {
         const text = await file.text();
-        const character = parseAndValidateCharacter(text);
-        resolve(character);
+        const result = parseAndSanitizeCharacter(text);
+        resolve(result);
       } catch (error) {
         reject(error);
       }
@@ -132,12 +154,14 @@ async function importWithInputElement(): Promise<Character | null> {
 }
 
 /**
- * Import a character from a JSON file
- * Uses File System Access API for Chromium browsers, falls back to input element for others
- * @returns The imported character, or null if user cancels
- * @throws Error if file is invalid or character data is corrupted
+ * Import a character from a JSON file.
+ * Uses lenient approach: sanitizes invalid data instead of rejecting it.
+ * Uses File System Access API for Chromium browsers, falls back to input element for others.
+ *
+ * @returns Import result with character and warnings, or null if user cancels
+ * @throws Error only for invalid JSON or missing character data
  */
-export async function importCharacterFromFile(): Promise<Character | null> {
+export async function importCharacterFromFile(): Promise<ImportResult | null> {
   // Try modern API first (Chrome/Edge/Opera)
   if ("showOpenFilePicker" in window) {
     return await importWithFileSystemAPI();

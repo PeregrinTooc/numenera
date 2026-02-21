@@ -44,56 +44,13 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ## 📊 Current Status
 
-**Implemented Features**: 25 fully tested features  
-**Test Coverage**: 620 unit tests + 330 E2E scenarios (2326 steps) - 100% passing  
+**Implemented Features**: 26 fully tested features  
+**Test Coverage**: 658 unit tests + 330 E2E scenarios (2326 steps) - 100% passing  
 **Documentation**: See [FEATURES.md](./FEATURES.md) for complete feature list
 
 ---
 
 ## 📋 Feature Backlog
-
-### Buffer-Based Undo/Redo
-
-**Overview**  
-Add granular undo/redo functionality (Ctrl+Z/Y) that works with the buffered changes before they are squashed into a saved version.
-
-**Goals**
-
-- Allow undo/redo of individual edits before 5-second squash timer
-- Context-aware behavior:
-  - Before squash: Granular undo/redo of buffered changes
-  - After squash: Navigate through saved versions (already implemented)
-- Improve editing experience for users who make mistakes
-- In-memory undo/redo stack in VersionHistoryService
-
-**E2E Tests**
-
-- File: `tests/e2e/features/version-history.feature` (3 @wip scenarios exist)
-- Scenarios:
-  - Undo change before squash timer fires
-  - Redo change before squash timer fires
-  - Undo stack is cleared when squash timer fires
-
-### Data Validation Enhancement
-
-**Overview**  
-Strengthen validation for imported and loaded character data to prevent corrupt data and improve error recovery.
-
-**Goals**
-
-- Prevent invalid character data from being loaded
-- Provide clear error messages when data is corrupt
-- Enable graceful schema migration for format changes
-- Improve user experience when importing characters
-
-**E2E Tests**
-
-- File: `tests/e2e/features/data-validation.feature`
-- Scenarios:
-  - Import character with invalid data shows error
-  - Import character with missing required fields
-  - Import character with wrong data types
-  - Migrate character from old schema version
 
 ### Re-arrange Sections
 
@@ -229,4 +186,4 @@ Add Progressive Web App support for installing the app and offline functionality
 
 ---
 
-**Last Updated**: January 30, 2026
+**Last Updated**: February 21, 2026

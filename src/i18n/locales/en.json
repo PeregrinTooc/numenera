@@ -196,6 +196,14 @@
     },
     "intellectCurrent": {
       "invalid": "Current Intellect must be a number between 0 and 9999"
+    },
+    "sanitize": {
+      "nullInput": "Input data is null or undefined",
+      "invalidType": "Input data is not an object",
+      "missingField": "Missing field '{{field}}' - using default value",
+      "wrongType": "Field '{{field}}' has wrong type - expected {{expected}}",
+      "invalidValue": "Field '{{field}}' has invalid value - using default",
+      "invalidArrayItem": "Invalid item at index {{index}} in '{{field}}' - removed"
     }
   },
   "textFields": {

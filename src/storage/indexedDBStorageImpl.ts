@@ -54,6 +54,11 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
       throw new Error("IndexedDB not initialized");
     }
 
+    // Verify object store exists before creating transaction
+    if (!this.db.objectStoreNames.contains(STORE_NAME)) {
+      throw new Error(`Object store '${STORE_NAME}' not found in database`);
+    }
+
     return new Promise<void>((resolve, reject) => {
       const transaction = this.db!.transaction([STORE_NAME], "readwrite");
       const store = transaction.objectStore(STORE_NAME);
@@ -71,6 +76,11 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
     try {
       if (!this.db) {
         throw new Error("IndexedDB not initialized");
+      }
+
+      // Verify object store exists before creating transaction
+      if (!this.db.objectStoreNames.contains(STORE_NAME)) {
+        throw new Error(`Object store '${STORE_NAME}' not found in database`);
       }
 
       const result = await new Promise<any | null>((resolve, reject) => {
@@ -97,6 +107,11 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
   async clear(): Promise<void> {
     if (!this.db) {
       throw new Error("IndexedDB not initialized");
+    }
+
+    // Verify object store exists before creating transaction
+    if (!this.db.objectStoreNames.contains(STORE_NAME)) {
+      throw new Error(`Object store '${STORE_NAME}' not found in database`);
     }
 
     return new Promise((resolve, reject) => {
@@ -165,6 +180,12 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
    */
   async migrateFromLocalStorage(): Promise<void> {
     try {
+      // Verify database and object store are ready
+      if (!this.db || !this.db.objectStoreNames.contains(STORE_NAME)) {
+        console.warn("IndexedDB not ready for migration, skipping localStorage migration");
+        return;
+      }
+
       const stored = localStorage.getItem(STORAGE_KEY);
       if (!stored) {
         return; // Nothing to migrate

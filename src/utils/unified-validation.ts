@@ -1,5 +1,5 @@
 // Unified validation system for Numenera Character Sheet
-// Consolidates field validation, character validation, and business rules
+// Consolidates field validation, character validation, sanitization, and business rules
 
 import { Character } from "../types/character.js";
 import { t } from "../i18n/index.js";
@@ -493,4 +493,355 @@ function validateNumberField(obj: any, fieldName: string, path: string, errors: 
   } else if (typeof obj[fieldName] !== "number") {
     errors.push(`Field '${path}' must be a number`);
   }
+}
+
+// ============================================================================
+// CHARACTER SANITIZATION
+// ============================================================================
+
+/**
+ * Default values for character fields
+ * Used when sanitizing imported data with missing or invalid fields
+ */
+export const CHARACTER_DEFAULTS: Character = {
+  name: "",
+  tier: 1,
+  type: "",
+  descriptor: "",
+  focus: "",
+  xp: 0,
+  shins: 0,
+  armor: 0,
+  effort: 1,
+  maxCyphers: 2,
+  stats: {
+    might: { pool: 10, edge: 0, current: 10 },
+    speed: { pool: 10, edge: 0, current: 10 },
+    intellect: { pool: 10, edge: 0, current: 10 },
+  },
+  cyphers: [],
+  artifacts: [],
+  oddities: [],
+  abilities: [],
+  equipment: [],
+  attacks: [],
+  specialAbilities: [],
+  recoveryRolls: {
+    action: false,
+    tenMinutes: false,
+    oneHour: false,
+    tenHours: false,
+    modifier: 0,
+  },
+  damageTrack: { impairment: "healthy" },
+  textFields: { background: "", notes: "" },
+};
+
+/**
+ * Result of character sanitization
+ */
+export interface SanitizeResult {
+  character: Character;
+  warnings: string[];
+}
+
+/**
+ * Sanitizes character data by fixing invalid types and filling missing fields.
+ * Instead of rejecting invalid data, this function corrects it and reports warnings.
+ *
+ * @param data - Raw character data (potentially invalid)
+ * @returns Sanitized character with list of corrections made
+ */
+export function sanitizeCharacter(data: unknown): SanitizeResult {
+  const warnings: string[] = [];
+
+  // Handle null/undefined input
+  if (data === null || data === undefined) {
+    warnings.push(t("validation.sanitize.nullInput"));
+    return { character: globalThis.structuredClone(CHARACTER_DEFAULTS), warnings };
+  }
+
+  // Handle non-object input
+  if (typeof data !== "object") {
+    warnings.push(t("validation.sanitize.invalidType"));
+    return { character: globalThis.structuredClone(CHARACTER_DEFAULTS), warnings };
+  }
+
+  const input = data as Record<string, unknown>;
+
+  // Build sanitized character
+  const character: Character = {
+    name: sanitizeString(input, "name", CHARACTER_DEFAULTS.name, warnings),
+    type: sanitizeString(input, "type", CHARACTER_DEFAULTS.type, warnings),
+    descriptor: sanitizeString(input, "descriptor", CHARACTER_DEFAULTS.descriptor, warnings),
+    focus: sanitizeString(input, "focus", CHARACTER_DEFAULTS.focus, warnings),
+    tier: sanitizeNumber(input, "tier", CHARACTER_DEFAULTS.tier, warnings, 1, 6),
+    xp: sanitizeNumber(input, "xp", CHARACTER_DEFAULTS.xp, warnings, 0),
+    shins: sanitizeNumber(input, "shins", CHARACTER_DEFAULTS.shins, warnings, 0),
+    armor: sanitizeNumber(input, "armor", CHARACTER_DEFAULTS.armor, warnings, 0),
+    effort: sanitizeNumber(input, "effort", CHARACTER_DEFAULTS.effort, warnings, 1, 6),
+    maxCyphers: sanitizeNumber(input, "maxCyphers", CHARACTER_DEFAULTS.maxCyphers, warnings, 0),
+    stats: sanitizeStats(input.stats, warnings),
+    recoveryRolls: sanitizeRecoveryRolls(input.recoveryRolls, warnings),
+    damageTrack: sanitizeDamageTrack(input.damageTrack, warnings),
+    textFields: sanitizeTextFields(input.textFields, warnings),
+    cyphers: sanitizeArrayField(input, "cyphers", warnings),
+    artifacts: sanitizeArrayField(input, "artifacts", warnings),
+    oddities: sanitizeArrayField(input, "oddities", warnings),
+    abilities: sanitizeArrayField(input, "abilities", warnings),
+    equipment: sanitizeArrayField(input, "equipment", warnings),
+    attacks: sanitizeArrayField(input, "attacks", warnings),
+    specialAbilities: sanitizeArrayField(input, "specialAbilities", warnings),
+  };
+
+  // Copy portrait if present and valid
+  if (typeof input.portrait === "string") {
+    (character as unknown as Record<string, unknown>).portrait = input.portrait;
+  }
+
+  return { character, warnings };
+}
+
+// ============================================================================
+// SANITIZATION HELPERS
+// ============================================================================
+
+function sanitizeString(
+  input: Record<string, unknown>,
+  field: string,
+  defaultValue: string,
+  warnings: string[]
+): string {
+  if (input[field] === undefined) {
+    warnings.push(t("validation.sanitize.missingField", { field }));
+    return defaultValue;
+  }
+  if (typeof input[field] !== "string") {
+    warnings.push(t("validation.sanitize.wrongType", { field, expected: "string" }));
+    return defaultValue;
+  }
+  return input[field] as string;
+}
+
+function sanitizeNumber(
+  input: Record<string, unknown>,
+  field: string,
+  defaultValue: number,
+  warnings: string[],
+  min?: number,
+  max?: number
+): number {
+  if (input[field] === undefined) {
+    warnings.push(t("validation.sanitize.missingField", { field }));
+    return defaultValue;
+  }
+  if (typeof input[field] !== "number" || isNaN(input[field] as number)) {
+    warnings.push(t("validation.sanitize.wrongType", { field, expected: "number" }));
+    return defaultValue;
+  }
+
+  let value = input[field] as number;
+
+  if (min !== undefined && value < min) {
+    value = min;
+  }
+  if (max !== undefined && value > max) {
+    value = max;
+  }
+
+  return value;
+}
+
+function sanitizeStats(data: unknown, warnings: string[]): Character["stats"] {
+  const defaults = CHARACTER_DEFAULTS.stats;
+
+  if (data === undefined || data === null || typeof data !== "object") {
+    if (data !== undefined) {
+      warnings.push(t("validation.sanitize.wrongType", { field: "stats", expected: "object" }));
+    } else {
+      warnings.push(t("validation.sanitize.missingField", { field: "stats" }));
+    }
+    return globalThis.structuredClone(defaults);
+  }
+
+  const input = data as Record<string, unknown>;
+
+  return {
+    might: sanitizeStatPool(input.might, "stats.might", defaults.might, warnings),
+    speed: sanitizeStatPool(input.speed, "stats.speed", defaults.speed, warnings),
+    intellect: sanitizeStatPool(input.intellect, "stats.intellect", defaults.intellect, warnings),
+  };
+}
+
+function sanitizeStatPool(
+  data: unknown,
+  path: string,
+  defaults: { pool: number; edge: number; current: number },
+  warnings: string[]
+): { pool: number; edge: number; current: number } {
+  if (data === undefined || data === null || typeof data !== "object") {
+    if (data !== undefined) {
+      warnings.push(t("validation.sanitize.wrongType", { field: path, expected: "object" }));
+    } else {
+      warnings.push(t("validation.sanitize.missingField", { field: path }));
+    }
+    return { ...defaults };
+  }
+
+  const input = data as Record<string, unknown>;
+
+  const sanitizePoolNum = (field: string, def: number): number => {
+    const fullPath = `${path}.${field}`;
+    if (input[field] === undefined) {
+      warnings.push(t("validation.sanitize.missingField", { field: fullPath }));
+      return def;
+    }
+    if (typeof input[field] !== "number" || isNaN(input[field] as number)) {
+      warnings.push(t("validation.sanitize.wrongType", { field: fullPath, expected: "number" }));
+      return def;
+    }
+    const val = input[field] as number;
+    return val < 0 ? 0 : val;
+  };
+
+  return {
+    pool: sanitizePoolNum("pool", defaults.pool),
+    edge: sanitizePoolNum("edge", defaults.edge),
+    current: sanitizePoolNum("current", defaults.current),
+  };
+}
+
+function sanitizeRecoveryRolls(data: unknown, warnings: string[]): Character["recoveryRolls"] {
+  const defaults = CHARACTER_DEFAULTS.recoveryRolls;
+
+  if (data === undefined || data === null || typeof data !== "object") {
+    if (data !== undefined) {
+      warnings.push(
+        t("validation.sanitize.wrongType", { field: "recoveryRolls", expected: "object" })
+      );
+    } else {
+      warnings.push(t("validation.sanitize.missingField", { field: "recoveryRolls" }));
+    }
+    return { ...defaults };
+  }
+
+  const input = data as Record<string, unknown>;
+
+  const sanitizeBool = (field: string, def: boolean): boolean => {
+    const fullPath = `recoveryRolls.${field}`;
+    if (input[field] === undefined) {
+      warnings.push(t("validation.sanitize.missingField", { field: fullPath }));
+      return def;
+    }
+    if (typeof input[field] !== "boolean") {
+      warnings.push(t("validation.sanitize.wrongType", { field: fullPath, expected: "boolean" }));
+      return def;
+    }
+    return input[field] as boolean;
+  };
+
+  const sanitizeNum = (field: string, def: number): number => {
+    const fullPath = `recoveryRolls.${field}`;
+    if (input[field] === undefined) {
+      warnings.push(t("validation.sanitize.missingField", { field: fullPath }));
+      return def;
+    }
+    if (typeof input[field] !== "number" || isNaN(input[field] as number)) {
+      warnings.push(t("validation.sanitize.wrongType", { field: fullPath, expected: "number" }));
+      return def;
+    }
+    return input[field] as number;
+  };
+
+  return {
+    action: sanitizeBool("action", defaults.action),
+    tenMinutes: sanitizeBool("tenMinutes", defaults.tenMinutes),
+    oneHour: sanitizeBool("oneHour", defaults.oneHour),
+    tenHours: sanitizeBool("tenHours", defaults.tenHours),
+    modifier: sanitizeNum("modifier", defaults.modifier),
+  };
+}
+
+function sanitizeDamageTrack(data: unknown, warnings: string[]): Character["damageTrack"] {
+  const defaults = CHARACTER_DEFAULTS.damageTrack;
+
+  if (data === undefined || data === null || typeof data !== "object") {
+    if (data !== undefined) {
+      warnings.push(
+        t("validation.sanitize.wrongType", { field: "damageTrack", expected: "object" })
+      );
+    } else {
+      warnings.push(t("validation.sanitize.missingField", { field: "damageTrack" }));
+    }
+    return { ...defaults };
+  }
+
+  const input = data as Record<string, unknown>;
+
+  if (typeof input.impairment !== "string") {
+    warnings.push(
+      t("validation.sanitize.wrongType", { field: "damageTrack.impairment", expected: "string" })
+    );
+    return { impairment: defaults.impairment };
+  }
+
+  const validImpairments = ["healthy", "impaired", "debilitated"];
+  if (!validImpairments.includes(input.impairment)) {
+    warnings.push(t("validation.sanitize.invalidValue", { field: "damageTrack.impairment" }));
+    return { impairment: defaults.impairment };
+  }
+
+  return { impairment: input.impairment as "healthy" | "impaired" | "debilitated" };
+}
+
+function sanitizeTextFields(data: unknown, warnings: string[]): Character["textFields"] {
+  const defaults = CHARACTER_DEFAULTS.textFields;
+
+  if (data === undefined || data === null || typeof data !== "object") {
+    if (data !== undefined) {
+      warnings.push(
+        t("validation.sanitize.wrongType", { field: "textFields", expected: "object" })
+      );
+    } else {
+      warnings.push(t("validation.sanitize.missingField", { field: "textFields" }));
+    }
+    return { ...defaults };
+  }
+
+  const input = data as Record<string, unknown>;
+
+  return {
+    background: typeof input.background === "string" ? input.background : defaults.background,
+    notes: typeof input.notes === "string" ? input.notes : defaults.notes,
+  };
+}
+
+function sanitizeArrayField<T>(
+  input: Record<string, unknown>,
+  field: string,
+  warnings: string[]
+): T[] {
+  if (input[field] === undefined) {
+    warnings.push(t("validation.sanitize.missingField", { field }));
+    return [];
+  }
+  if (!Array.isArray(input[field])) {
+    warnings.push(t("validation.sanitize.wrongType", { field, expected: "array" }));
+    return [];
+  }
+
+  // Filter out non-object items from arrays
+  const arr = input[field] as unknown[];
+  const result: T[] = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    const item = arr[i];
+    if (item !== null && typeof item === "object") {
+      result.push(item as T);
+    } else {
+      warnings.push(t("validation.sanitize.invalidArrayItem", { field, index: i }));
+    }
+  }
+
+  return result;
 }

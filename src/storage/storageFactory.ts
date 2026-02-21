@@ -10,6 +10,29 @@ import { VersionHistoryManager } from "./versionHistory.js";
 let storageInstance: ICharacterStorage | null = null;
 let versionHistoryInstance: VersionHistoryManager | null = null;
 
+const DB_NAME = "numenera-character-db";
+
+/**
+ * Delete the IndexedDB database to clean up corrupted state
+ */
+async function deleteCorruptedIndexedDB(): Promise<void> {
+  return new Promise((resolve) => {
+    const request = indexedDB.deleteDatabase(DB_NAME);
+    request.onsuccess = () => {
+      console.log("Deleted corrupted IndexedDB, will recreate fresh");
+      resolve();
+    };
+    request.onerror = () => {
+      console.warn("Failed to delete corrupted IndexedDB");
+      resolve(); // Continue anyway
+    };
+    request.onblocked = () => {
+      console.warn("IndexedDB deletion blocked, will use localStorage");
+      resolve(); // Continue anyway
+    };
+  });
+}
+
 /**
  * Get the storage instance (singleton pattern)
  * Tries IndexedDB first, falls back to localStorage if unavailable
@@ -22,12 +45,33 @@ export async function getStorage(): Promise<ICharacterStorage> {
   }
 
   // Try IndexedDB first
-  const indexedDB = new IndexedDBStorageImpl();
+  let indexedDB = new IndexedDBStorageImpl();
   const isIndexedDBAvailable = await indexedDB.isAvailable();
 
   if (isIndexedDBAvailable) {
     try {
       await indexedDB.init();
+
+      // Verify IndexedDB is fully operational by attempting a test load
+      // This catches cases where the database exists but object stores don't
+      try {
+        await indexedDB.load();
+      } catch (loadError) {
+        console.warn("IndexedDB not fully operational, cleaning up:", loadError);
+        indexedDB.close();
+
+        // Auto-cleanup: Delete the corrupted database and try again
+        await deleteCorruptedIndexedDB();
+
+        // Try to initialize IndexedDB fresh
+        indexedDB = new IndexedDBStorageImpl();
+        await indexedDB.init();
+
+        // Verify again after recreation
+        await indexedDB.load();
+        console.log("IndexedDB recreated successfully");
+      }
+
       // Migrate data from localStorage if it exists
       await indexedDB.migrateFromLocalStorage();
       storageInstance = indexedDB;

@@ -17,7 +17,7 @@ Feature: Character File Export
         When I click the export button
         Then the exported file should contain all character properties
         And the exported file should have version "1.0"
-        And the exported file should have schemaVersion 4
+        And the exported file should have schemaVersion "1.0.0"
         And the exported file should have an exportDate
 
     Scenario: Export handles special characters in character name

@@ -29,9 +29,9 @@ export async function initI18n(): Promise<void> {
     });
 }
 
-// Export t function for translations
-export const t = (key: string): string => {
-  return i18next.t(key);
+// Export t function for translations with optional interpolation
+export const t = (key: string, options?: Record<string, unknown>): string => {
+  return i18next.t(key, options);
 };
 
 // Export language change function

@@ -196,6 +196,14 @@
     },
     "intellectCurrent": {
       "invalid": "Aktueller Intellekt muss eine Zahl zwischen 0 und 9999 sein"
+    },
+    "sanitize": {
+      "nullInput": "Eingabedaten sind null oder undefiniert",
+      "invalidType": "Eingabedaten sind kein Objekt",
+      "missingField": "Fehlendes Feld '{{field}}' - Standardwert verwendet",
+      "wrongType": "Feld '{{field}}' hat falschen Typ - erwartet {{expected}}",
+      "invalidValue": "Feld '{{field}}' hat ungültigen Wert - Standardwert verwendet",
+      "invalidArrayItem": "Ungültiges Element an Index {{index}} in '{{field}}' - entfernt"
     }
   },
   "textFields": {

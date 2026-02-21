@@ -158,8 +158,8 @@ Then("the exported file should have version {string}", async function (expectedV
 });
 
 Then(
-  "the exported file should have schemaVersion {int}",
-  async function (expectedSchemaVersion: number) {
+  "the exported file should have schemaVersion {string}",
+  async function (expectedSchemaVersion: string) {
     expect(exportedFileData).toBeTruthy();
     expect(exportedFileData.schemaVersion).toBe(expectedSchemaVersion);
   }

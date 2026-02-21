@@ -2,21 +2,26 @@
 // Centralized to avoid duplication between localStorage and file storage
 
 /**
- * SCHEMA VERSION
+ * SCHEMA VERSION (Semantic Versioning)
  *
- * RULE: Increment this version number whenever the Character type changes in src/types/character.ts
+ * Format: "MAJOR.MINOR.PATCH"
+ * - MAJOR: Breaking changes requiring migration
+ * - MINOR: New fields added (backward compatible)
+ * - PATCH: Bug fixes, no schema change
  *
  * Version History:
- * - v1: Initial schema (base character structure)
- * - v2: Added ability enhancements (cost, pool, action) - Phase 2
- * - v3: Added attacks and specialAbilities arrays (Combat System)
- * - v4: Added recoveryRolls and damageTrack (Recovery & Damage Tracking)
+ * - 1.0.0: Initial release schema (February 2026)
+ *          Full character structure with stats, abilities, items, etc.
  *
- * Used for:
- * - File export/import: Validates compatibility between exported file and current app version
- * - Migration: Helps identify when data needs to be transformed
+ * Migration Strategy:
+ * - Files with different versions are NOT rejected outright
+ * - Import attempts to sanitize data to current schema
+ * - Missing fields get defaults, invalid types get corrected
+ * - Warnings are shown for any corrections made
+ *
+ * See ARCHITECTURE.md for migration guidelines when adding breaking changes.
  */
-export const SCHEMA_VERSION = 4;
+export const SCHEMA_VERSION = "1.0.0";
 
 /**
  * localStorage key for character state

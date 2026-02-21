@@ -337,8 +337,24 @@ async function renderCharacterSheet(
   // Handler for importing character from file
   const handleLoadFromFile = async (): Promise<void> => {
     try {
-      const importedCharacter = await importCharacterFromFile();
-      if (importedCharacter) {
+      const importResult = await importCharacterFromFile();
+      if (importResult) {
+        const { character: importedCharacter, warnings } = importResult;
+
+        // Log any warnings from sanitization
+        if (warnings.length > 0) {
+          console.warn("Character import warnings:", warnings);
+          // Show warning to user if there were significant corrections
+          if (warnings.length > 0) {
+            const warningMessage =
+              warnings.length === 1
+                ? `Note: ${warnings[0]}`
+                : `Note: ${warnings.length} adjustments were made during import. Check console for details.`;
+            // Use setTimeout to avoid blocking the import
+            setTimeout(() => alert(warningMessage), 100);
+          }
+        }
+
         // Buffer change for version history
         const service = window.__versionHistoryService || versionHistoryService;
         if (service) {

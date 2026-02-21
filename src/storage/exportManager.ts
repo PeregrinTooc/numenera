@@ -21,7 +21,7 @@ interface SaveFilePickerOptions {
  */
 interface CharacterFileData {
   version: string;
-  schemaVersion: number;
+  schemaVersion: string;
   exportDate: string;
   character: Character;
 }

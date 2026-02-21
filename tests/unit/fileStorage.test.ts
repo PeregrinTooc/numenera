@@ -15,7 +15,7 @@ describe("fileStorage", () => {
   });
 
   describe("importCharacterFromFile", () => {
-    it("should import a valid character from file", async () => {
+    it("should import a valid character from file with no warnings", async () => {
       const character: Character = {
         name: "Test Hero",
         tier: 3,
@@ -75,7 +75,9 @@ describe("fileStorage", () => {
 
       const result = await importCharacterFromFile();
 
-      expect(result).toEqual(character);
+      expect(result).not.toBeNull();
+      expect(result!.character).toEqual(character);
+      expect(result!.warnings).toEqual([]);
       expect(global.showOpenFilePicker).toHaveBeenCalledWith({
         types: [
           {
@@ -114,12 +116,44 @@ describe("fileStorage", () => {
       await expect(importCharacterFromFile()).rejects.toThrow("Invalid JSON in file");
     });
 
-    it("should throw error for incompatible schema version", async () => {
+    it("should import with warning for different schema version", async () => {
       const fileContent = {
         version: "1.0",
-        schemaVersion: 2, // Old version
+        schemaVersion: 2, // Old version - should warn but not reject
         exportDate: "2026-01-27T12:00:00Z",
-        character: { name: "Test" },
+        character: {
+          name: "Test",
+          tier: 1,
+          type: "Glaive",
+          descriptor: "Strong",
+          focus: "Masters Defense",
+          xp: 10,
+          shins: 50,
+          armor: 2,
+          effort: 1,
+          maxCyphers: 2,
+          stats: {
+            might: { pool: 10, edge: 0, current: 10 },
+            speed: { pool: 10, edge: 0, current: 10 },
+            intellect: { pool: 10, edge: 0, current: 10 },
+          },
+          cyphers: [],
+          artifacts: [],
+          oddities: [],
+          abilities: [],
+          equipment: [],
+          attacks: [],
+          specialAbilities: [],
+          recoveryRolls: {
+            action: false,
+            tenMinutes: false,
+            oneHour: false,
+            tenHours: false,
+            modifier: 0,
+          },
+          damageTrack: { impairment: "healthy" },
+          textFields: { background: "", notes: "" },
+        },
       };
 
       const mockFile = {
@@ -132,9 +166,13 @@ describe("fileStorage", () => {
 
       global.showOpenFilePicker = vi.fn().mockResolvedValue([mockFileHandle]);
 
-      await expect(importCharacterFromFile()).rejects.toThrow(
-        "Incompatible schema version: file has version 2, but current version is 4"
-      );
+      const result = await importCharacterFromFile();
+
+      expect(result).not.toBeNull();
+      expect(result!.character.name).toBe("Test");
+      // Should have a warning about schema version
+      expect(result!.warnings.length).toBeGreaterThan(0);
+      expect(result!.warnings[0]).toContain("different schema version");
     });
 
     it("should throw error for missing character data", async () => {
@@ -160,14 +198,14 @@ describe("fileStorage", () => {
       );
     });
 
-    it("should throw error for invalid character structure", async () => {
+    it("should sanitize incomplete character structure with warnings", async () => {
       const fileContent = {
         version: "1.0",
         schemaVersion: SCHEMA_VERSION,
         exportDate: "2026-01-27T12:00:00Z",
         character: {
           name: "Test",
-          // Missing required fields
+          // Missing most fields - should be filled with defaults
         },
       };
 
@@ -181,7 +219,17 @@ describe("fileStorage", () => {
 
       global.showOpenFilePicker = vi.fn().mockResolvedValue([mockFileHandle]);
 
-      await expect(importCharacterFromFile()).rejects.toThrow("Invalid character data");
+      const result = await importCharacterFromFile();
+
+      // Should not throw, should return sanitized character
+      expect(result).not.toBeNull();
+      expect(result!.character.name).toBe("Test");
+      // Missing fields should be filled with defaults
+      expect(result!.character.tier).toBe(1); // Default tier
+      expect(result!.character.stats).toBeDefined();
+      expect(result!.character.cyphers).toEqual([]);
+      // Should have warnings about missing fields
+      expect(result!.warnings.length).toBeGreaterThan(0);
     });
 
     it("should handle other picker errors", async () => {
