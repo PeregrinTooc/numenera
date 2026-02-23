@@ -71,6 +71,16 @@ export function createAddHandler<T, ItemComponent extends { handleEdit: () => vo
   };
 }
 
+/** Keys on Character that hold collection arrays */
+export type CharacterCollectionKey =
+  | "cyphers"
+  | "artifacts"
+  | "oddities"
+  | "equipment"
+  | "abilities"
+  | "attacks"
+  | "specialAbilities";
+
 /**
  * Configuration for creating item instances with update/delete handlers
  */
@@ -86,6 +96,8 @@ export interface ItemInstancesConfig<T, ItemComponent> {
   ) => ItemComponent;
   /** Character reference (for event-based updates) */
   character?: Character;
+  /** Key identifying which collection on character to update (required with character) */
+  collectionKey?: CharacterCollectionKey;
   /** Callback-based update handler (alternative to character) */
   onUpdate?: (index: number, updated: T) => void;
   /** Callback-based delete handler (alternative to character) */
@@ -95,18 +107,31 @@ export interface ItemInstancesConfig<T, ItemComponent> {
 /**
  * Creates item component instances with standardized update/delete handlers
  * Supports both event-based (character) and callback-based update patterns
+ *
+ * IMPORTANT: When using event-based pattern (character), collectionKey MUST be provided
+ * to enable immutable updates. This is critical for version history undo to work correctly.
  */
 export function createItemInstances<T, ItemComponent extends { render: () => TemplateResult }>(
   config: ItemInstancesConfig<T, ItemComponent>
 ): ItemComponent[] {
-  const { collection, ItemComponentClass, character, onUpdate, onDelete } = config;
+  const { collection, ItemComponentClass, character, collectionKey, onUpdate, onDelete } = config;
 
   return collection.map((item, index) => {
     // Determine update handler based on pattern
     const updateHandler = character
       ? // Event-based update pattern (CyphersBox, ItemsBox)
         (updated: T) => {
-          collection[index] = updated;
+          // IMMUTABLE UPDATE: Create new array with updated item
+          // This ensures version history snapshots don't share array references
+          if (collectionKey) {
+            const newCollection = [...collection];
+            newCollection[index] = updated;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (character as any)[collectionKey] = newCollection;
+          } else {
+            // Fallback to mutation if collectionKey not provided (legacy support)
+            collection[index] = updated;
+          }
 
           // Emit card-edited event
           const cardNotifier = new CompletionNotifier("card", {
@@ -162,10 +187,18 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
           });
           cardNotifier.emit("deleted");
 
-          // Filter out the item at this index - need to update the original array reference
+          // IMMUTABLE DELETE: Create new filtered array and assign to character
+          // This ensures version history snapshots don't share array references
           const filtered = collection.filter((_, i) => i !== index);
-          collection.length = 0;
-          collection.push(...filtered);
+          if (collectionKey) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (character as any)[collectionKey] = filtered;
+          } else {
+            // Fallback to mutation if collectionKey not provided (legacy support)
+            collection.length = 0;
+            collection.push(...filtered);
+          }
+
           saveCharacterState(character);
           const event = new CustomEvent("character-updated");
           document.getElementById("app")?.dispatchEvent(event);

@@ -86,10 +86,12 @@ export class CyphersBox {
 
   render(): TemplateResult {
     // Create cypher item instances using CollectionBehavior helper (event-based pattern)
+    // collectionKey enables immutable updates for proper version history undo support
     const cypherItems = createItemInstances({
       collection: this.character.cyphers,
       ItemComponentClass: CypherItem,
       character: this.character,
+      collectionKey: "cyphers",
     });
 
     return html`

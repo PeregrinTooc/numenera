@@ -63,22 +63,26 @@ export class ItemsBox {
 
   render(): TemplateResult {
     // Create item instances using CollectionBehavior helper (event-based pattern)
+    // collectionKey enables immutable updates for proper version history undo support
     const equipmentItems = createItemInstances({
       collection: this.character.equipment,
       ItemComponentClass: EquipmentItem,
       character: this.character,
+      collectionKey: "equipment",
     });
 
     const artifactItems = createItemInstances({
       collection: this.character.artifacts,
       ItemComponentClass: ArtifactItem,
       character: this.character,
+      collectionKey: "artifacts",
     });
 
     const oddityItems = createItemInstances({
       collection: this.character.oddities,
       ItemComponentClass: OddityItem,
       character: this.character,
+      collectionKey: "oddities",
     });
 
     return html`
