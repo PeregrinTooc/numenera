@@ -2,55 +2,20 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { Attacks } from "../../src/components/Attacks";
 import { Abilities } from "../../src/components/Abilities";
 import { SpecialAbilities } from "../../src/components/SpecialAbilities";
-import type { Character, Ability, SpecialAbility } from "../../src/types/character";
+import type { Character } from "../../src/types/character";
 import { render } from "lit-html";
+import { createMockCharacter } from "./helpers/containerTestSuite";
 
 describe("Collection Components", () => {
   let container: HTMLElement;
   let mockCharacter: Character;
-  let onUpdate: ReturnType<typeof vi.fn>;
-  let onDelete: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     container = document.createElement("div");
+    container.id = "app";
     document.body.appendChild(container);
 
-    mockCharacter = {
-      name: "Test",
-      type: "Glaive",
-      descriptor: "Strong",
-      focus: "Focus",
-      tier: 3,
-      xp: 0,
-      effort: 1,
-      stats: {
-        might: { pool: 10, edge: 0, current: 10 },
-        speed: { pool: 10, edge: 0, current: 10 },
-        intellect: { pool: 10, edge: 0, current: 10 },
-      },
-      armor: 0,
-      shins: 0,
-      maxCyphers: 2,
-      cyphers: [],
-      abilities: [],
-      specialAbilities: [],
-      equipment: [],
-      artifacts: [],
-      oddities: [],
-      attacks: [],
-      recoveryRolls: {
-        action: false,
-        tenMinutes: false,
-        oneHour: false,
-        tenHours: false,
-        modifier: 0,
-      },
-      damageTrack: { impairment: "healthy" },
-      textFields: { background: "", notes: "" },
-    };
-
-    onUpdate = vi.fn();
-    onDelete = vi.fn();
+    mockCharacter = createMockCharacter();
   });
 
   afterEach(() => {
@@ -59,8 +24,9 @@ describe("Collection Components", () => {
 
   describe("Attacks Component", () => {
     it("should display empty state when no attacks", () => {
+      mockCharacter.attacks = [];
       const onFieldUpdate = vi.fn();
-      const attacks = new Attacks(mockCharacter, onFieldUpdate, undefined, undefined);
+      const attacks = new Attacks(mockCharacter, onFieldUpdate);
       render(attacks.render(), container);
 
       const emptyState = container.querySelector('[data-testid="empty-attacks"]') as HTMLElement;
@@ -73,7 +39,7 @@ describe("Collection Components", () => {
       ];
 
       const onFieldUpdate = vi.fn();
-      const attacks = new Attacks(mockCharacter, onFieldUpdate, undefined, undefined);
+      const attacks = new Attacks(mockCharacter, onFieldUpdate);
       render(attacks.render(), container);
 
       const emptyState = container.querySelector('[data-testid="empty-attacks"]');
@@ -82,7 +48,7 @@ describe("Collection Components", () => {
 
     it("should render add attack button", () => {
       const onFieldUpdate = vi.fn();
-      const attacks = new Attacks(mockCharacter, onFieldUpdate, onUpdate, onDelete);
+      const attacks = new Attacks(mockCharacter, onFieldUpdate);
       render(attacks.render(), container);
 
       const addButton = container.querySelector(
@@ -118,7 +84,7 @@ describe("Collection Components", () => {
 
     it("should render armor field as editable", () => {
       const onFieldUpdate = vi.fn();
-      const attacks = new Attacks(mockCharacter, onFieldUpdate, undefined, undefined);
+      const attacks = new Attacks(mockCharacter, onFieldUpdate);
       render(attacks.render(), container);
 
       const armorBadge = container.querySelector('[data-testid="armor-badge"]') as HTMLElement;
@@ -128,14 +94,9 @@ describe("Collection Components", () => {
   });
 
   describe("Abilities Component", () => {
-    let abilities: Ability[];
-
-    beforeEach(() => {
-      abilities = [];
-    });
-
     it("should display empty state when no abilities", () => {
-      const abilitiesComp = new Abilities(abilities, undefined, undefined);
+      mockCharacter.abilities = [];
+      const abilitiesComp = new Abilities(mockCharacter);
       render(abilitiesComp.render(), container);
 
       const emptyState = container.querySelector('[data-testid="empty-abilities"]') as HTMLElement;
@@ -143,17 +104,17 @@ describe("Collection Components", () => {
     });
 
     it("should display abilities when they exist", () => {
-      abilities = [{ name: "Bash", description: "Hit hard" }];
-
-      const abilitiesComp = new Abilities(abilities, undefined, undefined);
+      mockCharacter.abilities = [{ name: "Bash", description: "Hit hard" }];
+      const abilitiesComp = new Abilities(mockCharacter);
       render(abilitiesComp.render(), container);
 
       const emptyState = container.querySelector('[data-testid="empty-abilities"]');
       expect(emptyState).toBeFalsy();
     });
 
-    it("should render add ability button when onUpdate provided", () => {
-      const abilitiesComp = new Abilities(abilities, onUpdate, onDelete);
+    it("should render add ability button (event-based pattern)", () => {
+      mockCharacter.abilities = [];
+      const abilitiesComp = new Abilities(mockCharacter);
       render(abilitiesComp.render(), container);
 
       const addButton = container.querySelector(
@@ -162,40 +123,37 @@ describe("Collection Components", () => {
       expect(addButton).toBeTruthy();
     });
 
-    it("should not render add button when onUpdate not provided", () => {
-      const abilitiesComp = new Abilities(abilities, undefined, undefined);
+    it("should always render add button in event-based pattern", () => {
+      mockCharacter.abilities = [];
+      const abilitiesComp = new Abilities(mockCharacter);
       render(abilitiesComp.render(), container);
 
       const addButton = container.querySelector('[data-testid="add-ability-button"]');
-      expect(addButton).toBeFalsy();
+      // Event-based pattern always renders add button
+      expect(addButton).toBeTruthy();
     });
 
     it("should handle ability update at index", () => {
-      abilities = [{ name: "Bash", description: "Hit hard" }];
+      mockCharacter.abilities = [{ name: "Bash", description: "Hit hard" }];
 
       const updated = { name: "Super Bash", description: "Hit harder" };
-      abilities[0] = updated;
+      mockCharacter.abilities[0] = updated;
 
-      expect(abilities[0].name).toBe("Super Bash");
+      expect(mockCharacter.abilities[0].name).toBe("Super Bash");
     });
 
     it("should calculate new index correctly when adding", () => {
-      abilities = [{ name: "Bash", description: "Hit" }];
+      mockCharacter.abilities = [{ name: "Bash", description: "Hit" }];
 
-      const newIndex = abilities.length - 1;
+      const newIndex = mockCharacter.abilities.length - 1;
       expect(newIndex).toBe(0);
     });
   });
 
   describe("SpecialAbilities Component", () => {
-    let specialAbilities: SpecialAbility[];
-
-    beforeEach(() => {
-      specialAbilities = [];
-    });
-
     it("should display empty state when no special abilities", () => {
-      const specialAbilitiesComp = new SpecialAbilities(specialAbilities, undefined, undefined);
+      mockCharacter.specialAbilities = [];
+      const specialAbilitiesComp = new SpecialAbilities(mockCharacter);
       render(specialAbilitiesComp.render(), container);
 
       const emptyState = container.querySelector(
@@ -205,17 +163,19 @@ describe("Collection Components", () => {
     });
 
     it("should display special abilities when they exist", () => {
-      specialAbilities = [{ name: "Fleet of Foot", source: "Type", description: "Move faster" }];
-
-      const specialAbilitiesComp = new SpecialAbilities(specialAbilities, undefined, undefined);
+      mockCharacter.specialAbilities = [
+        { name: "Fleet of Foot", source: "Type", description: "Move faster" },
+      ];
+      const specialAbilitiesComp = new SpecialAbilities(mockCharacter);
       render(specialAbilitiesComp.render(), container);
 
       const emptyState = container.querySelector('[data-testid="empty-special-abilities"]');
       expect(emptyState).toBeFalsy();
     });
 
-    it("should render add button when onUpdate provided", () => {
-      const specialAbilitiesComp = new SpecialAbilities(specialAbilities, onUpdate, onDelete);
+    it("should render add button (event-based pattern)", () => {
+      mockCharacter.specialAbilities = [];
+      const specialAbilitiesComp = new SpecialAbilities(mockCharacter);
       render(specialAbilitiesComp.render(), container);
 
       const addButton = container.querySelector(
@@ -224,30 +184,32 @@ describe("Collection Components", () => {
       expect(addButton).toBeTruthy();
     });
 
-    it("should not render add button without onUpdate", () => {
-      const specialAbilitiesComp = new SpecialAbilities(specialAbilities, undefined, undefined);
+    it("should always render add button in event-based pattern", () => {
+      mockCharacter.specialAbilities = [];
+      const specialAbilitiesComp = new SpecialAbilities(mockCharacter);
       render(specialAbilitiesComp.render(), container);
 
       const addButton = container.querySelector('[data-testid="add-special-ability-button"]');
-      expect(addButton).toBeFalsy();
+      // Event-based pattern always renders add button
+      expect(addButton).toBeTruthy();
     });
 
     it("should handle special ability deletion", () => {
-      specialAbilities = [
+      mockCharacter.specialAbilities = [
         { name: "Fleet", source: "Type", description: "Fast" },
         { name: "Strong", source: "Descriptor", description: "Powerful" },
       ];
 
-      specialAbilities = specialAbilities.filter((_, i) => i !== 0);
+      mockCharacter.specialAbilities = mockCharacter.specialAbilities.filter((_, i) => i !== 0);
 
-      expect(specialAbilities.length).toBe(1);
-      expect(specialAbilities[0].name).toBe("Strong");
+      expect(mockCharacter.specialAbilities.length).toBe(1);
+      expect(mockCharacter.specialAbilities[0].name).toBe("Strong");
     });
 
     it("should calculate array length minus one for new index", () => {
-      specialAbilities = [{ name: "Fleet", source: "Type", description: "Fast" }];
+      mockCharacter.specialAbilities = [{ name: "Fleet", source: "Type", description: "Fast" }];
 
-      const newIndex = specialAbilities.length - 1;
+      const newIndex = mockCharacter.specialAbilities.length - 1;
       expect(newIndex).toBe(0);
     });
   });

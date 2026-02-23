@@ -1,7 +1,7 @@
 // SpecialAbilities component - Displays character special abilities in grid
 
 import { html, TemplateResult } from "lit-html";
-import { SpecialAbility } from "../types/character.js";
+import { Character } from "../types/character.js";
 import { SpecialAbilityItem } from "./SpecialAbilityItem.js";
 import { t } from "../i18n/index.js";
 import {
@@ -17,17 +17,14 @@ export class SpecialAbilities {
   private previewOrder: number[] | null = null;
   private currentTargetIndex: number | null = null;
 
-  constructor(
-    private specialAbilities: SpecialAbility[],
-    private onUpdate?: (index: number, updated: SpecialAbility) => void,
-    private onDelete?: (index: number) => void
-  ) {
-    // Create add handler using CollectionBehavior helper
+  constructor(private character: Character) {
+    // Create add handler using CollectionBehavior helper (event-based pattern)
     this.handleAddSpecialAbility = createAddHandler({
       emptyItem: { name: "", source: "", description: "" },
       ItemComponentClass: SpecialAbilityItem,
-      collection: this.specialAbilities,
-      onUpdate: this.onUpdate,
+      collection: this.character.specialAbilities,
+      character: this.character,
+      collectionKey: "specialAbilities",
     });
   }
 
@@ -109,10 +106,9 @@ export class SpecialAbilities {
       return;
     }
 
-    // Reorder the specialAbilities array
-    const newItems = reorderArray(this.specialAbilities, draggedIndex, targetIndex);
-    this.specialAbilities.length = 0;
-    this.specialAbilities.push(...newItems);
+    // Reorder the specialAbilities array (immutable update for version history)
+    const newItems = reorderArray(this.character.specialAbilities, draggedIndex, targetIndex);
+    this.character.specialAbilities = newItems;
 
     this.handleDragEnd(e, true);
 
@@ -141,7 +137,7 @@ export class SpecialAbilities {
   }
 
   private calculatePreviewOrder(fromIndex: number, toIndex: number): number[] {
-    const indices = this.specialAbilities.map((_, i) => i);
+    const indices = this.character.specialAbilities.map((_, i) => i);
     const [removed] = indices.splice(fromIndex, 1);
     indices.splice(toIndex, 0, removed);
     return indices;
@@ -169,16 +165,17 @@ export class SpecialAbilities {
   }
 
   render(): TemplateResult {
-    const isEmpty = !this.specialAbilities || this.specialAbilities.length === 0;
+    const isEmpty = this.character.specialAbilities.length === 0;
 
-    // Create special ability item instances using CollectionBehavior helper
+    // Create special ability item instances using CollectionBehavior helper (event-based pattern)
+    // collectionKey enables immutable updates for proper version history undo support
     const specialAbilityItems = isEmpty
       ? []
       : createItemInstances({
-          collection: this.specialAbilities,
+          collection: this.character.specialAbilities,
           ItemComponentClass: SpecialAbilityItem,
-          onUpdate: this.onUpdate,
-          onDelete: this.onDelete,
+          character: this.character,
+          collectionKey: "specialAbilities",
         });
 
     return html`
@@ -187,14 +184,12 @@ export class SpecialAbilities {
           <h2 class="text-2xl font-serif font-bold text-gray-700">
             ${t("specialAbilities.title")} ✨
           </h2>
-          ${this.onUpdate
-            ? renderAddButton({
-                onClick: this.handleAddSpecialAbility,
-                testId: "add-special-ability-button",
-                colorTheme: "teal",
-                ariaLabel: "Add Special Ability",
-              })
-            : ""}
+          ${renderAddButton({
+            onClick: this.handleAddSpecialAbility,
+            testId: "add-special-ability-button",
+            colorTheme: "teal",
+            ariaLabel: "Add Special Ability",
+          })}
         </div>
         ${isEmpty
           ? html`

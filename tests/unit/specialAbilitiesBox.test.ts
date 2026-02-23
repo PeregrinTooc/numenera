@@ -6,18 +6,11 @@ import { testContainerAddButton } from "./helpers/containerTestSuite.js";
 // Use shared test suite for add button functionality
 testContainerAddButton<SpecialAbility>({
   componentName: "SpecialAbilities",
-  createComponent: (items, onUpdate, onDelete) => new SpecialAbilities(items, onUpdate, onDelete),
+  createComponent: (character) => new SpecialAbilities(character),
   addButtonTestId: "add-special-ability-button",
+  collectionKey: "specialAbilities",
   mockItems: [
-    {
-      name: "Practiced in Armor",
-      source: "Type",
-      description: "You can wear armor for long periods",
-    },
-    {
-      name: "Fire Affinity",
-      source: "Focus",
-      description: "You are trained in fire-based attacks",
-    },
+    { name: "Mind Shield", source: "Nano Ability", description: "Protect your mind" },
+    { name: "Fire Blast", source: "Focus", description: "Unleash fire at enemies" },
   ],
 });

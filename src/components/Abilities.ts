@@ -1,7 +1,8 @@
 // Abilities component - Displays character abilities in two-column grid
 
 import { html, TemplateResult } from "lit-html";
-import { Ability } from "../types/character.js";
+import { repeat } from "lit-html/directives/repeat.js";
+import { Character } from "../types/character.js";
 import { AbilityItem } from "./AbilityItem.js";
 import { t } from "../i18n/index.js";
 import {
@@ -17,17 +18,14 @@ export class Abilities {
   private previewOrder: number[] | null = null;
   private currentTargetIndex: number | null = null;
 
-  constructor(
-    private abilities: Ability[],
-    private onUpdate?: (index: number, updated: Ability) => void,
-    private onDelete?: (index: number) => void
-  ) {
-    // Create add handler using CollectionBehavior helper
+  constructor(private character: Character) {
+    // Create add handler using CollectionBehavior helper (event-based pattern)
     this.handleAddAbility = createAddHandler({
       emptyItem: { name: "", description: "" },
       ItemComponentClass: AbilityItem,
-      collection: this.abilities,
-      onUpdate: this.onUpdate,
+      collection: this.character.abilities,
+      character: this.character,
+      collectionKey: "abilities",
     });
   }
 
@@ -110,9 +108,8 @@ export class Abilities {
     }
 
     // Reorder the abilities array
-    const newAbilities = reorderArray(this.abilities, draggedIndex, targetIndex);
-    this.abilities.length = 0;
-    this.abilities.push(...newAbilities);
+    const newAbilities = reorderArray(this.character.abilities, draggedIndex, targetIndex);
+    this.character.abilities = newAbilities;
 
     this.handleDragEnd(e, true);
 
@@ -141,7 +138,7 @@ export class Abilities {
   }
 
   private calculatePreviewOrder(fromIndex: number, toIndex: number): number[] {
-    const indices = this.abilities.map((_, i) => i);
+    const indices = this.character.abilities.map((_, i) => i);
     const [removed] = indices.splice(fromIndex, 1);
     indices.splice(toIndex, 0, removed);
     return indices;
@@ -169,30 +166,29 @@ export class Abilities {
   }
 
   render(): TemplateResult {
-    const isEmpty = this.abilities.length === 0;
+    const isEmpty = this.character.abilities.length === 0;
 
-    // Create ability item instances using CollectionBehavior helper
+    // Create ability item instances using CollectionBehavior helper (event-based pattern)
+    // collectionKey enables immutable updates for proper version history undo support
     const abilityItems = isEmpty
       ? []
       : createItemInstances({
-          collection: this.abilities,
+          collection: this.character.abilities,
           ItemComponentClass: AbilityItem,
-          onUpdate: this.onUpdate,
-          onDelete: this.onDelete,
+          character: this.character,
+          collectionKey: "abilities",
         });
 
     return html`
       <div data-testid="abilities-section" class="mt-8">
         <div class="flex items-center gap-3 mb-4">
           <h2 class="text-2xl font-serif font-bold text-gray-700">${t("abilities.heading")} ⚡</h2>
-          ${this.onUpdate
-            ? renderAddButton({
-                onClick: this.handleAddAbility,
-                testId: "add-ability-button",
-                colorTheme: "indigo",
-                ariaLabel: "Add Ability",
-              })
-            : ""}
+          ${renderAddButton({
+            onClick: this.handleAddAbility,
+            testId: "add-ability-button",
+            colorTheme: "indigo",
+            ariaLabel: "Add Ability",
+          })}
         </div>
         ${isEmpty
           ? html`
@@ -209,7 +205,12 @@ export class Abilities {
                 @drop=${(e: Event) => this.handleDrop(e)}
                 @dragend=${(e: Event) => this.handleDragEnd(e)}
               >
-                ${abilityItems.map((item) => item.render())}
+                ${repeat(
+                  abilityItems,
+                  (_item, index) =>
+                    `ability-${index}-${this.character.abilities[index]?.name || index}`,
+                  (item) => item.render()
+                )}
               </div>
             `}
       </div>

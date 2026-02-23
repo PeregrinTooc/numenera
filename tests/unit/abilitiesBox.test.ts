@@ -6,8 +6,9 @@ import { testContainerAddButton } from "./helpers/containerTestSuite.js";
 // Use shared test suite for add button functionality
 testContainerAddButton<Ability>({
   componentName: "Abilities",
-  createComponent: (items, onUpdate, onDelete) => new Abilities(items, onUpdate, onDelete),
+  createComponent: (character) => new Abilities(character),
   addButtonTestId: "add-ability-button",
+  collectionKey: "abilities",
   mockItems: [
     { name: "Bash", cost: 1, pool: "might", description: "Strike a foe with your weapon" },
     { name: "Fleet of Foot", cost: 1, pool: "speed", description: "Move a short distance" },

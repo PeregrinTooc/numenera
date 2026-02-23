@@ -19,10 +19,12 @@ export interface AddHandlerConfig<T, ItemComponent> {
     onUpdate?: (updated: T) => void,
     onDelete?: () => void
   ) => ItemComponent;
-  /** Collection array to add to */
+  /** Collection array to add to (only used for callback-based pattern) */
   collection: T[];
   /** Character reference (for event-based updates) */
   character?: Character;
+  /** Key identifying which collection on character to update (required with character) */
+  collectionKey?: CharacterCollectionKey;
   /** Callback-based update handler (alternative to character) */
   onUpdate?: (index: number, updated: T) => void;
 }
@@ -35,38 +37,73 @@ export function createAddHandler<T, ItemComponent extends { handleEdit: () => vo
   config: AddHandlerConfig<T, ItemComponent>
 ): () => void {
   return () => {
-    const { emptyItem, ItemComponentClass, collection, character, onUpdate } = config;
+    const { emptyItem, ItemComponentClass, collection, character, collectionKey, onUpdate } =
+      config;
 
     // Create temporary item component with onUpdate callback that adds to collection
     const tempItem = new ItemComponentClass(emptyItem, -1, (updated: T) => {
-      // Add the new item to the collection
-      collection.push(updated);
+      if (character && collectionKey) {
+        // Event-based update - IMMUTABLE: create new array with added item
+        // Read current collection from character (not captured reference)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const currentCollection = (character as any)[collectionKey] as T[];
+        const newCollection = [...currentCollection, updated];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (character as any)[collectionKey] = newCollection;
 
-      // Emit card-added event
-      const cardNotifier = new CompletionNotifier("card", {
-        data: {
-          cardType:
-            typeof updated === "object" && updated !== null && "name" in updated && updated.name
-              ? "item"
-              : "card",
-          cardIndex: collection.length - 1,
-        },
-      });
-      cardNotifier.emit("added");
+        // Emit card-added event
+        const cardNotifier = new CompletionNotifier("card", {
+          data: {
+            cardType:
+              typeof updated === "object" && updated !== null && "name" in updated && updated.name
+                ? "item"
+                : "card",
+            cardIndex: newCollection.length - 1,
+          },
+        });
+        cardNotifier.emit("added");
 
-      if (character) {
-        // Event-based update (CyphersBox, ItemsBox pattern)
         saveCharacterState(character);
-        // Dispatch cyphers-updated for targeted cypher re-render
-        const cyphersEvent = new CustomEvent("cyphers-updated");
-        document.getElementById("app")?.dispatchEvent(cyphersEvent);
-        // Dispatch character-updated for save and other updates
-        const event = new CustomEvent("character-updated");
-        document.getElementById("app")?.dispatchEvent(event);
-      } else if (onUpdate) {
-        // Callback-based update (Abilities, Attacks, SpecialAbilities pattern)
-        const newIndex = collection.length - 1;
-        onUpdate(newIndex, updated);
+        // Dispatch targeted re-render event based on collection type
+        const appElement = document.getElementById("app");
+        if (appElement) {
+          if (collectionKey === "cyphers") {
+            appElement.dispatchEvent(new CustomEvent("cyphers-updated"));
+          } else if (
+            collectionKey === "equipment" ||
+            collectionKey === "artifacts" ||
+            collectionKey === "oddities" ||
+            collectionKey === "abilities" ||
+            collectionKey === "specialAbilities" ||
+            collectionKey === "attacks"
+          ) {
+            appElement.dispatchEvent(
+              new CustomEvent("collection-updated", { detail: { section: collectionKey } })
+            );
+          }
+          // Always dispatch character-updated for save
+          appElement.dispatchEvent(new CustomEvent("character-updated"));
+        }
+      } else {
+        // Callback-based update (legacy pattern) - mutate collection
+        collection.push(updated);
+
+        // Emit card-added event
+        const cardNotifier = new CompletionNotifier("card", {
+          data: {
+            cardType:
+              typeof updated === "object" && updated !== null && "name" in updated && updated.name
+                ? "item"
+                : "card",
+            cardIndex: collection.length - 1,
+          },
+        });
+        cardNotifier.emit("added");
+
+        if (onUpdate) {
+          const newIndex = collection.length - 1;
+          onUpdate(newIndex, updated);
+        }
       }
     });
 
@@ -150,12 +187,26 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
           cardNotifier.emit("edited");
 
           saveCharacterState(character);
-          // Dispatch cyphers-updated for targeted cypher re-render
-          const cyphersEvent = new CustomEvent("cyphers-updated");
-          document.getElementById("app")?.dispatchEvent(cyphersEvent);
-          // Dispatch character-updated for save and other updates
-          const event = new CustomEvent("character-updated");
-          document.getElementById("app")?.dispatchEvent(event);
+          // Dispatch targeted re-render event based on collection type
+          const appElement = document.getElementById("app");
+          if (appElement) {
+            if (collectionKey === "cyphers") {
+              appElement.dispatchEvent(new CustomEvent("cyphers-updated"));
+            } else if (
+              collectionKey === "equipment" ||
+              collectionKey === "artifacts" ||
+              collectionKey === "oddities" ||
+              collectionKey === "abilities" ||
+              collectionKey === "specialAbilities" ||
+              collectionKey === "attacks"
+            ) {
+              appElement.dispatchEvent(
+                new CustomEvent("collection-updated", { detail: { section: collectionKey } })
+              );
+            }
+            // Always dispatch character-updated for save
+            appElement.dispatchEvent(new CustomEvent("character-updated"));
+          }
         }
       : onUpdate
         ? // Callback-based update pattern (Abilities, Attacks, SpecialAbilities)
@@ -208,12 +259,26 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
           }
 
           saveCharacterState(character);
-          // Dispatch cyphers-updated for targeted cypher re-render
-          const cyphersEvent = new CustomEvent("cyphers-updated");
-          document.getElementById("app")?.dispatchEvent(cyphersEvent);
-          // Dispatch character-updated for save and other updates
-          const event = new CustomEvent("character-updated");
-          document.getElementById("app")?.dispatchEvent(event);
+          // Dispatch targeted re-render event based on collection type
+          const appElement = document.getElementById("app");
+          if (appElement) {
+            if (collectionKey === "cyphers") {
+              appElement.dispatchEvent(new CustomEvent("cyphers-updated"));
+            } else if (
+              collectionKey === "equipment" ||
+              collectionKey === "artifacts" ||
+              collectionKey === "oddities" ||
+              collectionKey === "abilities" ||
+              collectionKey === "specialAbilities" ||
+              collectionKey === "attacks"
+            ) {
+              appElement.dispatchEvent(
+                new CustomEvent("collection-updated", { detail: { section: collectionKey } })
+              );
+            }
+            // Always dispatch character-updated for save
+            appElement.dispatchEvent(new CustomEvent("character-updated"));
+          }
         }
       : onDelete
         ? // Callback-based delete pattern (Abilities, Attacks, SpecialAbilities)

@@ -172,7 +172,56 @@ async function updateVersionNavigator(shouldReload = false): Promise<void> {
     await versionState.navigateBackward();
     // Re-render with displayed character
     const displayedCharacter = versionState.getDisplayedCharacter();
+
+    // Force a fresh render by clearing the currentSheet
+    // This ensures a new CharacterSheet is created with the correct character
+    currentSheet = null;
+    currentCharacter = displayedCharacter;
+
     await renderCharacterSheet(displayedCharacter, true);
+
+    // Force re-render of all collection sections to ensure DOM is updated
+    const cyphersSection = document.querySelector("[data-testid='cyphers-section']");
+    if (cyphersSection && currentSheet && (currentSheet as any).cyphersBox) {
+      const cyphersBox = (currentSheet as any).cyphersBox;
+      render(cyphersBox.render(), cyphersSection.parentElement!, { renderBefore: cyphersSection });
+      cyphersSection.remove();
+    }
+
+    const abilitiesSection = document.querySelector("[data-testid='abilities-section']");
+    if (abilitiesSection && currentSheet && (currentSheet as any).abilities) {
+      const abilities = (currentSheet as any).abilities;
+      render(abilities.render(), abilitiesSection.parentElement!, {
+        renderBefore: abilitiesSection,
+      });
+      abilitiesSection.remove();
+    }
+
+    const specialAbilitiesSection = document.querySelector(
+      "[data-testid='special-abilities-section']"
+    );
+    if (specialAbilitiesSection && currentSheet && (currentSheet as any).specialAbilities) {
+      const specialAbilities = (currentSheet as any).specialAbilities;
+      render(specialAbilities.render(), specialAbilitiesSection.parentElement!, {
+        renderBefore: specialAbilitiesSection,
+      });
+      specialAbilitiesSection.remove();
+    }
+
+    const attacksSection = document.querySelector("[data-testid='attacks-section']");
+    if (attacksSection && currentSheet && (currentSheet as any).attacks) {
+      const attacks = (currentSheet as any).attacks;
+      render(attacks.render(), attacksSection.parentElement!, { renderBefore: attacksSection });
+      attacksSection.remove();
+    }
+
+    const itemsSection = document.querySelector("[data-testid='items-section']");
+    if (itemsSection && currentSheet && (currentSheet as any).itemsBox) {
+      const itemsBox = (currentSheet as any).itemsBox;
+      render(itemsBox.render(), itemsSection.parentElement!, { renderBefore: itemsSection });
+      itemsSection.remove();
+    }
+
     // Update navigator UI without reloading
     await updateVersionNavigator(false);
   };
@@ -182,7 +231,55 @@ async function updateVersionNavigator(shouldReload = false): Promise<void> {
     await versionState.navigateForward();
     // Re-render with displayed character
     const displayedCharacter = versionState.getDisplayedCharacter();
+
+    // Force a fresh render by clearing the currentSheet
+    currentSheet = null;
+    currentCharacter = displayedCharacter;
+
     await renderCharacterSheet(displayedCharacter, true);
+
+    // Force re-render of all collection sections to ensure DOM is updated
+    const cyphersSection = document.querySelector("[data-testid='cyphers-section']");
+    if (cyphersSection && currentSheet && (currentSheet as any).cyphersBox) {
+      const cyphersBox = (currentSheet as any).cyphersBox;
+      render(cyphersBox.render(), cyphersSection.parentElement!, { renderBefore: cyphersSection });
+      cyphersSection.remove();
+    }
+
+    const abilitiesSection = document.querySelector("[data-testid='abilities-section']");
+    if (abilitiesSection && currentSheet && (currentSheet as any).abilities) {
+      const abilities = (currentSheet as any).abilities;
+      render(abilities.render(), abilitiesSection.parentElement!, {
+        renderBefore: abilitiesSection,
+      });
+      abilitiesSection.remove();
+    }
+
+    const specialAbilitiesSection = document.querySelector(
+      "[data-testid='special-abilities-section']"
+    );
+    if (specialAbilitiesSection && currentSheet && (currentSheet as any).specialAbilities) {
+      const specialAbilities = (currentSheet as any).specialAbilities;
+      render(specialAbilities.render(), specialAbilitiesSection.parentElement!, {
+        renderBefore: specialAbilitiesSection,
+      });
+      specialAbilitiesSection.remove();
+    }
+
+    const attacksSection = document.querySelector("[data-testid='attacks-section']");
+    if (attacksSection && currentSheet && (currentSheet as any).attacks) {
+      const attacks = (currentSheet as any).attacks;
+      render(attacks.render(), attacksSection.parentElement!, { renderBefore: attacksSection });
+      attacksSection.remove();
+    }
+
+    const itemsSection = document.querySelector("[data-testid='items-section']");
+    if (itemsSection && currentSheet && (currentSheet as any).itemsBox) {
+      const itemsBox = (currentSheet as any).itemsBox;
+      render(itemsBox.render(), itemsSection.parentElement!, { renderBefore: itemsSection });
+      itemsSection.remove();
+    }
+
     // Update navigator UI without reloading
     await updateVersionNavigator(false);
   };
@@ -872,7 +969,68 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Undo in buffer (before squash)
         const previousState = versionHistoryService.undo();
         if (previousState) {
+          // Force a fresh render by clearing the currentSheet
+          // This ensures a new CharacterSheet is created with the correct character
+          currentSheet = null;
+
+          // Update currentCharacter BEFORE rendering
+          currentCharacter = previousState;
+
           await renderCharacterSheet(previousState, true);
+
+          // Force re-render of all collection sections to ensure DOM is updated
+          // This is necessary because the targeted re-render pattern creates new DOM nodes
+          // that aren't tracked by lit-html's template system
+
+          // Force re-render cyphers section
+          const cyphersSection = document.querySelector("[data-testid='cyphers-section']");
+          if (cyphersSection && currentSheet && (currentSheet as any).cyphersBox) {
+            const cyphersBox = (currentSheet as any).cyphersBox;
+            render(cyphersBox.render(), cyphersSection.parentElement!, {
+              renderBefore: cyphersSection,
+            });
+            cyphersSection.remove();
+          }
+
+          // Force re-render abilities section
+          const abilitiesSection = document.querySelector("[data-testid='abilities-section']");
+          if (abilitiesSection && currentSheet && (currentSheet as any).abilities) {
+            const abilities = (currentSheet as any).abilities;
+            render(abilities.render(), abilitiesSection.parentElement!, {
+              renderBefore: abilitiesSection,
+            });
+            abilitiesSection.remove();
+          }
+
+          // Force re-render special abilities section
+          const specialAbilitiesSection = document.querySelector(
+            "[data-testid='special-abilities-section']"
+          );
+          if (specialAbilitiesSection && currentSheet && (currentSheet as any).specialAbilities) {
+            const specialAbilities = (currentSheet as any).specialAbilities;
+            render(specialAbilities.render(), specialAbilitiesSection.parentElement!, {
+              renderBefore: specialAbilitiesSection,
+            });
+            specialAbilitiesSection.remove();
+          }
+
+          // Force re-render attacks section
+          const attacksSection = document.querySelector("[data-testid='attacks-section']");
+          if (attacksSection && currentSheet && (currentSheet as any).attacks) {
+            const attacks = (currentSheet as any).attacks;
+            render(attacks.render(), attacksSection.parentElement!, {
+              renderBefore: attacksSection,
+            });
+            attacksSection.remove();
+          }
+
+          // Force re-render items section (equipment, artifacts, oddities)
+          const itemsSection = document.querySelector("[data-testid='items-section']");
+          if (itemsSection && currentSheet && (currentSheet as any).itemsBox) {
+            const itemsBox = (currentSheet as any).itemsBox;
+            render(itemsBox.render(), itemsSection.parentElement!, { renderBefore: itemsSection });
+            itemsSection.remove();
+          }
         }
         return;
       }
@@ -902,11 +1060,68 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Redo in buffer (before squash)
         const redoneState = versionHistoryService.redo();
         if (redoneState) {
+          // Force a fresh render by clearing the currentSheet
+          currentSheet = null;
+
           // Update currentCharacter before rendering
           currentCharacter = redoneState;
 
           // Render the redo'd state (this will update characterBeforeUpdate)
           await renderCharacterSheet(redoneState, true);
+
+          // Force re-render of all collection sections to ensure DOM is updated
+          // This is necessary because the targeted re-render pattern creates new DOM nodes
+          // that aren't tracked by lit-html's template system
+
+          // Force re-render cyphers section
+          const cyphersSection = document.querySelector("[data-testid='cyphers-section']");
+          if (cyphersSection && currentSheet && (currentSheet as any).cyphersBox) {
+            const cyphersBox = (currentSheet as any).cyphersBox;
+            render(cyphersBox.render(), cyphersSection.parentElement!, {
+              renderBefore: cyphersSection,
+            });
+            cyphersSection.remove();
+          }
+
+          // Force re-render abilities section
+          const abilitiesSection = document.querySelector("[data-testid='abilities-section']");
+          if (abilitiesSection && currentSheet && (currentSheet as any).abilities) {
+            const abilities = (currentSheet as any).abilities;
+            render(abilities.render(), abilitiesSection.parentElement!, {
+              renderBefore: abilitiesSection,
+            });
+            abilitiesSection.remove();
+          }
+
+          // Force re-render special abilities section
+          const specialAbilitiesSection = document.querySelector(
+            "[data-testid='special-abilities-section']"
+          );
+          if (specialAbilitiesSection && currentSheet && (currentSheet as any).specialAbilities) {
+            const specialAbilities = (currentSheet as any).specialAbilities;
+            render(specialAbilities.render(), specialAbilitiesSection.parentElement!, {
+              renderBefore: specialAbilitiesSection,
+            });
+            specialAbilitiesSection.remove();
+          }
+
+          // Force re-render attacks section
+          const attacksSection = document.querySelector("[data-testid='attacks-section']");
+          if (attacksSection && currentSheet && (currentSheet as any).attacks) {
+            const attacks = (currentSheet as any).attacks;
+            render(attacks.render(), attacksSection.parentElement!, {
+              renderBefore: attacksSection,
+            });
+            attacksSection.remove();
+          }
+
+          // Force re-render items section (equipment, artifacts, oddities)
+          const itemsSection = document.querySelector("[data-testid='items-section']");
+          if (itemsSection && currentSheet && (currentSheet as any).itemsBox) {
+            const itemsBox = (currentSheet as any).itemsBox;
+            render(itemsBox.render(), itemsSection.parentElement!, { renderBefore: itemsSection });
+            itemsSection.remove();
+          }
 
           // Request auto-save to persist the redo'd state to localStorage
           autoSaveService.requestSave();

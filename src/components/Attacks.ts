@@ -1,7 +1,7 @@
 // Attacks component - Displays character attacks in grid
 
 import { html, TemplateResult } from "lit-html";
-import { Character, Attack } from "../types/character.js";
+import { Character } from "../types/character.js";
 import { AttackItem } from "./AttackItem.js";
 import { ModalService } from "../services/modalService.js";
 import { t } from "../i18n/index.js";
@@ -23,16 +23,15 @@ export class Attacks {
 
   constructor(
     private character: Character,
-    private onFieldUpdate: (field: FieldType, value: number) => void,
-    private onAttackUpdate?: (index: number, updated: Attack) => void,
-    private onAttackDelete?: (index: number) => void
+    private onFieldUpdate: (field: FieldType, value: number) => void
   ) {
-    // Create add handler using CollectionBehavior helper
+    // Create add handler using CollectionBehavior helper (event-based pattern)
     this.handleAddAttack = createAddHandler({
       emptyItem: { name: "", damage: 0, modifier: 0, range: "" },
       ItemComponentClass: AttackItem,
       collection: this.character.attacks,
-      onUpdate: this.onAttackUpdate,
+      character: this.character,
+      collectionKey: "attacks",
     });
   }
 
@@ -114,10 +113,9 @@ export class Attacks {
       return;
     }
 
-    // Reorder the attacks array
+    // Reorder the attacks array (immutable update for version history)
     const newItems = reorderArray(this.character.attacks, draggedIndex, targetIndex);
-    this.character.attacks.length = 0;
-    this.character.attacks.push(...newItems);
+    this.character.attacks = newItems;
 
     this.handleDragEnd(e, true);
 
@@ -187,16 +185,17 @@ export class Attacks {
   }
 
   render(): TemplateResult {
-    const isEmpty = !this.character.attacks || this.character.attacks.length === 0;
+    const isEmpty = this.character.attacks.length === 0;
 
-    // Create attack item instances using CollectionBehavior helper
+    // Create attack item instances using CollectionBehavior helper (event-based pattern)
+    // collectionKey enables immutable updates for proper version history undo support
     const attackItems = isEmpty
       ? []
       : createItemInstances({
           collection: this.character.attacks,
           ItemComponentClass: AttackItem,
-          onUpdate: this.onAttackUpdate,
-          onDelete: this.onAttackDelete,
+          character: this.character,
+          collectionKey: "attacks",
         });
 
     return html`
@@ -204,14 +203,12 @@ export class Attacks {
         <div class="flex justify-between items-center mb-4">
           <div class="flex items-center gap-3">
             <h2 class="text-2xl font-serif font-bold text-gray-700">${t("attacks.title")} ⚔️</h2>
-            ${this.onAttackUpdate
-              ? renderAddButton({
-                  onClick: this.handleAddAttack,
-                  testId: "add-attack-button",
-                  colorTheme: "red",
-                  ariaLabel: "Add Attack",
-                })
-              : ""}
+            ${renderAddButton({
+              onClick: this.handleAddAttack,
+              testId: "add-attack-button",
+              colorTheme: "red",
+              ariaLabel: "Add Attack",
+            })}
           </div>
           <div
             data-testid="armor-badge"

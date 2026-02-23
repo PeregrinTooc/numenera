@@ -28,11 +28,16 @@ Before(async function (this: CustomWorld) {
   // Capture console messages for debugging
   this.page.on("console", (msg) => {
     const text = msg.text();
-    // Only log messages related to version history or squashing
+    // Only log messages related to version history or squashing or debug
     if (
       text.includes("[VersionHistoryService]") ||
       text.includes("[performSquash]") ||
-      text.includes("[save-completed]")
+      text.includes("[save-completed]") ||
+      text.includes("[UNDO]") ||
+      text.includes("[renderCharacterSheet]") ||
+      text.includes("[character-updated]") ||
+      text.includes("[Abilities.render]") ||
+      text.includes("[collection-updated]")
     ) {
       console.log(`[Browser Console] ${text}`);
     }

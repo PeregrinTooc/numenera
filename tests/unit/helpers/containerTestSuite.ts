@@ -2,31 +2,62 @@
 // Promotes DRY principles and consistent testing across all container types
 
 import { render } from "lit-html";
+import { Character } from "../../../src/types/character.js";
+
+// Mock character data factory for tests
+export function createMockCharacter(overrides: Partial<Character> = {}): Character {
+  return {
+    name: "Test Character",
+    descriptor: "Strong",
+    type: "Glaive",
+    focus: "Fights Dirty",
+    tier: 1,
+    effort: 1,
+    xp: 0,
+    might: { pool: 10, edge: 0, current: 10 },
+    speed: { pool: 10, edge: 0, current: 10 },
+    intellect: { pool: 10, edge: 0, current: 10 },
+    armor: 1,
+    recoveryRolls: { available: 4, modifier: 0 },
+    damageTrack: { status: "hale" },
+    cyphers: [],
+    equipment: [],
+    artifacts: [],
+    oddities: [],
+    abilities: [],
+    specialAbilities: [],
+    attacks: [],
+    skills: "",
+    background: "",
+    notes: "",
+    portrait: "",
+    ...overrides,
+  };
+}
 
 export interface ContainerTestConfig<T> {
   componentName: string;
-  createComponent: (items: T[], onUpdate?: any, onDelete?: any) => any;
+  /** Function to create component - now takes Character */
+  createComponent: (character: Character) => { render: () => any };
   addButtonTestId: string;
   mockItems: T[];
+  /** Key on Character that holds the items array */
+  collectionKey: keyof Character;
 }
 
 /**
  * Generic test suite for container "Add Button" functionality
  * Tests that all containers should implement consistently
+ * Updated to use event-based pattern with Character object
  */
 export function testContainerAddButton<T>(config: ContainerTestConfig<T>): void {
   describe(`${config.componentName} - Add Button`, () => {
     let container: HTMLElement;
-    let mockOnUpdate: ReturnType<typeof vi.fn>;
-    let mockOnDelete: ReturnType<typeof vi.fn>;
 
     beforeEach(() => {
       container = document.createElement("div");
       container.id = "app";
       document.body.appendChild(container);
-
-      mockOnUpdate = vi.fn();
-      mockOnDelete = vi.fn();
     });
 
     afterEach(() => {
@@ -34,7 +65,10 @@ export function testContainerAddButton<T>(config: ContainerTestConfig<T>): void 
     });
 
     it("should render add button", () => {
-      const component = config.createComponent(config.mockItems, mockOnUpdate, mockOnDelete);
+      const character = createMockCharacter({
+        [config.collectionKey]: config.mockItems,
+      } as Partial<Character>);
+      const component = config.createComponent(character);
       render(component.render(), container);
 
       const addButton = container.querySelector(`[data-testid="${config.addButtonTestId}"]`);
@@ -42,7 +76,10 @@ export function testContainerAddButton<T>(config: ContainerTestConfig<T>): void 
     });
 
     it("should render add button even when items array is empty", () => {
-      const component = config.createComponent([], mockOnUpdate, mockOnDelete);
+      const character = createMockCharacter({
+        [config.collectionKey]: [],
+      } as Partial<Character>);
+      const component = config.createComponent(character);
       render(component.render(), container);
 
       const addButton = container.querySelector(`[data-testid="${config.addButtonTestId}"]`);
@@ -50,7 +87,10 @@ export function testContainerAddButton<T>(config: ContainerTestConfig<T>): void 
     });
 
     it("should have correct test id for add button", () => {
-      const component = config.createComponent(config.mockItems, mockOnUpdate, mockOnDelete);
+      const character = createMockCharacter({
+        [config.collectionKey]: config.mockItems,
+      } as Partial<Character>);
+      const component = config.createComponent(character);
       render(component.render(), container);
 
       const addButton = container.querySelector(`[data-testid="${config.addButtonTestId}"]`);
@@ -58,7 +98,10 @@ export function testContainerAddButton<T>(config: ContainerTestConfig<T>): void 
     });
 
     it("should render add button in header section", () => {
-      const component = config.createComponent(config.mockItems, mockOnUpdate, mockOnDelete);
+      const character = createMockCharacter({
+        [config.collectionKey]: config.mockItems,
+      } as Partial<Character>);
+      const component = config.createComponent(character);
       render(component.render(), container);
 
       const header = container.querySelector("h2");
@@ -68,16 +111,25 @@ export function testContainerAddButton<T>(config: ContainerTestConfig<T>): void 
       expect(addButton).toBeTruthy();
     });
 
-    it("should not render add button if onUpdate callback is not provided", () => {
-      const component = config.createComponent(config.mockItems, undefined, mockOnDelete);
+    // Note: Event-based pattern always renders the add button since components
+    // always have access to character object. This test is kept for compatibility
+    // but now simply verifies the button is rendered.
+    it("should always render add button in event-based pattern", () => {
+      const character = createMockCharacter({
+        [config.collectionKey]: config.mockItems,
+      } as Partial<Character>);
+      const component = config.createComponent(character);
       render(component.render(), container);
 
       const addButton = container.querySelector(`[data-testid="${config.addButtonTestId}"]`);
-      expect(addButton).toBeNull();
+      expect(addButton).toBeTruthy();
     });
 
     it("should be clickable when rendered", () => {
-      const component = config.createComponent(config.mockItems, mockOnUpdate, mockOnDelete);
+      const character = createMockCharacter({
+        [config.collectionKey]: config.mockItems,
+      } as Partial<Character>);
+      const component = config.createComponent(character);
       render(component.render(), container);
 
       const addButton = container.querySelector(`[data-testid="${config.addButtonTestId}"]`);

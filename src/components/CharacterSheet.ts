@@ -54,57 +54,16 @@ export class CharacterSheet {
     this.basicInfo = new BasicInfo(this.character, this.onFieldUpdate);
     this.bottomTextFields = new BottomTextFields(this.character);
     this.itemsBox = new ItemsBox(this.character, this.onFieldUpdate);
-    this.attacks = new Attacks(
-      this.character,
-      this.onFieldUpdate,
-      (index, updated) => {
-        this.character.attacks[index] = updated;
-        saveCharacterState(this.character);
-        const event = new CustomEvent("character-updated");
-        document.getElementById("app")?.dispatchEvent(event);
-      },
-      (index) => {
-        this.character.attacks = this.character.attacks.filter((_, i) => i !== index);
-        saveCharacterState(this.character);
-        const event = new CustomEvent("character-updated");
-        document.getElementById("app")?.dispatchEvent(event);
-      }
-    );
+    // Attacks component uses event-based pattern for updates/deletes
+    this.attacks = new Attacks(this.character, this.onFieldUpdate);
     this.cyphersBox = new CyphersBox(this.character, this.onFieldUpdate);
     this.stats = new Stats(this.character, this.onFieldUpdate);
 
-    // Create abilities and specialAbilities as stateful components
-    this.abilities = new Abilities(
-      this.character.abilities,
-      (index, updated) => {
-        this.character.abilities[index] = updated;
-        saveCharacterState(this.character);
-        const event = new CustomEvent("character-updated");
-        document.getElementById("app")?.dispatchEvent(event);
-      },
-      (index) => {
-        this.character.abilities.splice(index, 1);
-        saveCharacterState(this.character);
-        const event = new CustomEvent("character-updated");
-        document.getElementById("app")?.dispatchEvent(event);
-      }
-    );
-
-    this.specialAbilities = new SpecialAbilities(
-      this.character.specialAbilities,
-      (index, updated) => {
-        this.character.specialAbilities[index] = updated;
-        saveCharacterState(this.character);
-        const event = new CustomEvent("character-updated");
-        document.getElementById("app")?.dispatchEvent(event);
-      },
-      (index) => {
-        this.character.specialAbilities.splice(index, 1);
-        saveCharacterState(this.character);
-        const event = new CustomEvent("character-updated");
-        document.getElementById("app")?.dispatchEvent(event);
-      }
-    );
+    // Create abilities and specialAbilities using event-based pattern
+    // These use CollectionBehavior helpers which handle immutable updates
+    // for proper version history undo support
+    this.abilities = new Abilities(this.character);
+    this.specialAbilities = new SpecialAbilities(this.character);
   }
 
   /**
