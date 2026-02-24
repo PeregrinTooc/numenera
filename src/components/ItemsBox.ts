@@ -56,6 +56,7 @@ export class ItemsBox {
       ItemComponentClass: EquipmentItem,
       collection: this.character.equipment,
       character: this.character,
+      collectionKey: "equipment",
     });
 
     this.handleAddArtifact = createAddHandler({
@@ -63,6 +64,7 @@ export class ItemsBox {
       ItemComponentClass: ArtifactItem,
       collection: this.character.artifacts,
       character: this.character,
+      collectionKey: "artifacts",
     });
 
     this.handleAddOddity = createAddHandler({
@@ -70,6 +72,7 @@ export class ItemsBox {
       ItemComponentClass: OddityItem,
       collection: this.character.oddities,
       character: this.character,
+      collectionKey: "oddities",
     });
   }
 

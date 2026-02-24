@@ -715,10 +715,25 @@ async function renderCharacterSheet(
     app.addEventListener("collection-updated", collectionListener as EventListener);
   }, 0);
 
+  // Listen for recovery-updated events for targeted re-render of recovery section
+  // Since RecoveryRolls is created fresh in render(), we need to re-render the full sheet
+  setTimeout(() => {
+    const recoveryListener = async (_e: Event) => {
+      // Re-render the full sheet to update recovery display
+      if (currentSheet && currentCharacter) {
+        render(currentSheet.render(), app);
+      }
+    };
+
+    app.removeEventListener("recovery-updated", recoveryListener as EventListener);
+    app.addEventListener("recovery-updated", recoveryListener as EventListener);
+  }, 0);
+
   // Listen for character-updated events and trigger auto-save
   // Re-rendering is handled by specific event listeners:
   // - cyphers-updated for cyphers
   // - collection-updated for abilities, specialAbilities, attacks, equipment, artifacts, oddities
+  // - recovery-updated for recovery modifier
   // Use setTimeout to ensure the event listener is added after render completes
   setTimeout(() => {
     const listener = async (_e: Event) => {

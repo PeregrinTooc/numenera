@@ -152,9 +152,13 @@ export class CharacterSheet {
       if (field === "recoveryModifier") {
         this.character.recoveryRolls.modifier = value;
         saveCharacterState(this.character);
-        // Trigger re-render via character-updated event
-        const event = new CustomEvent("character-updated");
-        document.getElementById("app")?.dispatchEvent(event);
+        // Dispatch character-updated for auto-save
+        const app = document.getElementById("app");
+        if (app) {
+          app.dispatchEvent(new CustomEvent("character-updated"));
+          // Dispatch recovery-updated for targeted re-render
+          app.dispatchEvent(new CustomEvent("recovery-updated"));
+        }
       }
     });
     const damageTrack = new DamageTrack(this.character.damageTrack);

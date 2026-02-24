@@ -2,11 +2,6 @@ import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { DOMHelpers } from "../support/dom-helpers.js";
 
-// Helper function to sanitize names for testid
-function sanitizeForTestId(name: string): string {
-  return name.toLowerCase().replace(/\s+/g, "-");
-}
-
 // Attack step definitions
 
 Given("the character has an attack {string} with:", async function (attackName: string, dataTable) {
@@ -30,17 +25,23 @@ Given("the character has no attacks", async function () {
 });
 
 Then("I should see the attack {string}", async function (attackName: string) {
-  const dom = new DOMHelpers(this.page);
-  const testId = `attack-item-${sanitizeForTestId(attackName)}`;
-  await expect(dom.getByTestId(testId)).toBeVisible();
+  // Attack items use generic data-testid="attack-item" without name suffix
+  // Find the attack by looking for the name element inside
+  const attackItem = this.page.locator(
+    `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
+  );
+  await expect(attackItem).toBeVisible();
 });
 
 Then(
   "the attack {string} should show damage {string}",
   async function (attackName: string, damage: string) {
-    const dom = new DOMHelpers(this.page);
-    const testId = `attack-damage-${sanitizeForTestId(attackName)}`;
-    const damageElement = dom.getByTestId(testId);
+    // Attack items use index-based data-testid for sub-elements
+    // Find the attack by name, then locate the damage element within it
+    const attackItem = this.page.locator(
+      `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
+    );
+    const damageElement = attackItem.locator('[data-testid^="attack-damage-"]');
     await expect(damageElement).toBeVisible();
     await expect(damageElement).toContainText(damage);
   }
@@ -49,9 +50,12 @@ Then(
 Then(
   "the attack {string} should show modifier {string}",
   async function (attackName: string, modifier: string) {
-    const dom = new DOMHelpers(this.page);
-    const testId = `attack-modifier-${sanitizeForTestId(attackName)}`;
-    const modifierElement = dom.getByTestId(testId);
+    // Attack items use index-based data-testid for sub-elements
+    // Find the attack by name, then locate the modifier element within it
+    const attackItem = this.page.locator(
+      `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
+    );
+    const modifierElement = attackItem.locator('[data-testid^="attack-modifier-"]');
     await expect(modifierElement).toBeVisible();
     await expect(modifierElement).toContainText(modifier);
   }
@@ -60,9 +64,12 @@ Then(
 Then(
   "the attack {string} should show range {string}",
   async function (attackName: string, range: string) {
-    const dom = new DOMHelpers(this.page);
-    const testId = `attack-range-${sanitizeForTestId(attackName)}`;
-    const rangeElement = dom.getByTestId(testId);
+    // Attack items use index-based data-testid for sub-elements
+    // Find the attack by name, then locate the range element within it
+    const attackItem = this.page.locator(
+      `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
+    );
+    const rangeElement = attackItem.locator('[data-testid^="attack-range-"]');
     await expect(rangeElement).toBeVisible();
     await expect(rangeElement).toContainText(range);
   }
@@ -71,29 +78,37 @@ Then(
 Then(
   "the attack {string} should show notes {string}",
   async function (attackName: string, notes: string) {
-    const dom = new DOMHelpers(this.page);
-    const testId = `attack-notes-${sanitizeForTestId(attackName)}`;
-    const notesElement = dom.getByTestId(testId);
+    // Attack items use index-based data-testid for sub-elements
+    // Find the attack by name, then locate the notes element within it
+    const attackItem = this.page.locator(
+      `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
+    );
+    const notesElement = attackItem.locator('[data-testid^="attack-notes-"]');
     await expect(notesElement).toBeVisible();
     await expect(notesElement).toContainText(notes);
   }
 );
 
 Then("the attack {string} should not show notes", async function (attackName: string) {
-  const dom = new DOMHelpers(this.page);
-  const testId = `attack-notes-${sanitizeForTestId(attackName)}`;
-  const notesElement = dom.getByTestId(testId);
+  // Attack items use index-based data-testid for sub-elements
+  // Find the attack by name, then check notes element is not visible
+  const attackItem = this.page.locator(
+    `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
+  );
+  const notesElement = attackItem.locator('[data-testid^="attack-notes-"]');
   await expect(notesElement).not.toBeVisible();
 });
 
 Then(
   "the attack {string} should have red combat theme styling",
   async function (attackName: string) {
-    const dom = new DOMHelpers(this.page);
-    const testId = `attack-item-${sanitizeForTestId(attackName)}`;
-
-    const hasRedTheme = await dom.hasClass(testId, "from-red-50");
-    expect(hasRedTheme).toBe(true);
+    // Attack items use generic data-testid="attack-item" without name suffix
+    // Find the attack by looking for the name element inside
+    const attackItem = this.page.locator(
+      `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
+    );
+    const classAttr = await attackItem.first().getAttribute("class");
+    expect(classAttr).toContain("from-red-50");
   }
 );
 
@@ -134,9 +149,12 @@ Given("the character has no special abilities", async function () {
 });
 
 Then("I should see the special ability {string}", async function (abilityName: string) {
-  const dom = new DOMHelpers(this.page);
-  const testId = `special-ability-item-${sanitizeForTestId(abilityName)}`;
-  await expect(dom.getByTestId(testId)).toBeVisible();
+  // Special ability items use generic data-testid="special-ability-item" without name suffix
+  // Find the special ability by looking for the name element inside
+  const specialAbilityItem = this.page.locator(
+    `[data-testid="special-ability-item"]:has([data-testid="special-ability-name-${abilityName}"])`
+  );
+  await expect(specialAbilityItem).toBeVisible();
 });
 
 Then(
@@ -154,9 +172,12 @@ Then(
 Then(
   "the special ability {string} should show source {string}",
   async function (abilityName: string, source: string) {
-    const dom = new DOMHelpers(this.page);
-    const testId = `special-ability-source-${sanitizeForTestId(abilityName)}`;
-    const sourceElement = dom.getByTestId(testId);
+    // Special ability items use index-based data-testid for sub-elements
+    // Find the special ability by name, then locate the source element within it
+    const specialAbilityItem = this.page.locator(
+      `[data-testid="special-ability-item"]:has([data-testid="special-ability-name-${abilityName}"])`
+    );
+    const sourceElement = specialAbilityItem.locator('[data-testid^="special-ability-source-"]');
     await expect(sourceElement).toBeVisible();
     await expect(sourceElement).toContainText(source);
   }
@@ -165,11 +186,13 @@ Then(
 Then(
   "the special ability {string} should have teal theme styling",
   async function (abilityName: string) {
-    const dom = new DOMHelpers(this.page);
-    const testId = `special-ability-item-${sanitizeForTestId(abilityName)}`;
-
-    const hasTealTheme = await dom.hasClass(testId, "from-cyan-50");
-    expect(hasTealTheme).toBe(true);
+    // Special ability items use generic data-testid="special-ability-item" without name suffix
+    // Find the special ability by looking for the name element inside
+    const specialAbilityItem = this.page.locator(
+      `[data-testid="special-ability-item"]:has([data-testid="special-ability-name-${abilityName}"])`
+    );
+    const classAttr = await specialAbilityItem.first().getAttribute("class");
+    expect(classAttr).toContain("from-cyan-50");
   }
 );
 

@@ -95,7 +95,7 @@ export const CARD_CONFIGS: Record<string, CardTypeConfig> = {
   },
 
   equipment: {
-    itemTestId: '[data-testid^="equipment-item-"]',
+    itemTestId: '[data-testid="equipment-item"]',
     addButtonTestId: '[data-testid="add-equipment-button"]',
     editButtonPrefix: "equipment-edit-button-",
     fieldTestIds: {
@@ -112,7 +112,7 @@ export const CARD_CONFIGS: Record<string, CardTypeConfig> = {
   },
 
   artifact: {
-    itemTestId: '[data-testid^="artifact-item-"]',
+    itemTestId: '[data-testid="artifact-item"]',
     addButtonTestId: '[data-testid="add-artifact-button"]',
     editButtonPrefix: "artifact-edit-button-",
     fieldTestIds: {
@@ -142,7 +142,7 @@ export const CARD_CONFIGS: Record<string, CardTypeConfig> = {
   },
 
   attack: {
-    itemTestId: '[data-testid^="attack-item-"]',
+    itemTestId: '[data-testid="attack-item"]',
     addButtonTestId: '[data-testid="add-attack-button"]',
     editButtonPrefix: "attack-edit-button-",
     fieldTestIds: {
@@ -181,7 +181,7 @@ export const CARD_CONFIGS: Record<string, CardTypeConfig> = {
   },
 
   "special-ability": {
-    itemTestId: '[data-testid^="special-ability-item-"]',
+    itemTestId: '[data-testid="special-ability-item"]',
     addButtonTestId: '[data-testid="add-special-ability-button"]',
     editButtonPrefix: "special-ability-edit-button-",
     fieldTestIds: {
