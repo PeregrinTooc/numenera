@@ -74,6 +74,10 @@ Given("I am viewing version {int}", async function (this: CustomWorld, versionNu
 });
 
 Given("the character has a version with name change", async function (this: CustomWorld) {
+  // Wait for page to be fully loaded before creating versions
+  await this.page.waitForLoadState("networkidle");
+  await this.page.waitForTimeout(500);
+
   // Create a version with a name change
   // Note: Version 1 is "Initial state", so this creates version 2 with "Changed name"
   const baseCharacter = await this.storageHelper.getCharacter();
