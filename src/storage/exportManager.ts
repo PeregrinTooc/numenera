@@ -1,5 +1,7 @@
 import type { Character } from "../types/character";
+import type { Layout } from "../types/layout";
 import { SCHEMA_VERSION } from "./storageConstants";
+import { loadLayout } from "./layoutStorage";
 
 // Type declarations for File System Access API
 declare global {
@@ -24,6 +26,7 @@ interface CharacterFileData {
   schemaVersion: string;
   exportDate: string;
   character: Character;
+  layout?: Layout;
 }
 
 /**
@@ -200,6 +203,7 @@ export class ExportManager {
       schemaVersion: SCHEMA_VERSION,
       exportDate: new Date().toISOString(),
       character: character,
+      layout: loadLayout(),
     };
   }
 

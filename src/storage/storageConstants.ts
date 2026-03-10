@@ -27,3 +27,9 @@ export const SCHEMA_VERSION = "1.0.0";
  * localStorage key for character state
  */
 export const STORAGE_KEY = "numenera-character-state";
+
+/**
+ * localStorage key for layout preferences
+ * Stored separately from character data as it's a user preference
+ */
+export const LAYOUT_STORAGE_KEY = "numenera-layout";

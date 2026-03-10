@@ -1,0 +1,207 @@
+/* Layout Editor Styles */
+
+/* Floating Edit Layout Button */
+.edit-layout-button {
+  position: fixed;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background-color: var(--color-numenera-primary, #1a5490);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease-in-out;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.edit-layout-button:hover {
+  background-color: var(--color-numenera-secondary, #8b4513);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.edit-layout-button:focus {
+  outline: 2px solid var(--color-numenera-accent, #d4af37);
+  outline-offset: 2px;
+}
+
+.edit-layout-button--active {
+  background-color: var(--color-numenera-accent, #d4af37);
+  color: #1a1a1a;
+}
+
+.edit-layout-button--active:hover {
+  background-color: #c4a030;
+}
+
+.edit-layout-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.edit-layout-text {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+/* Layout Edit Mode - Container */
+.layout-edit-mode {
+  position: relative;
+}
+
+.layout-edit-mode::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 2px dashed var(--color-numenera-accent, #d4af37);
+  border-radius: 0.75rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Layout Edit Mode - Section Indicators */
+.layout-edit-mode .layout-section,
+.layout-edit-mode .layout-grid {
+  position: relative;
+  transition: all 0.2s ease-in-out;
+}
+
+.layout-edit-mode .layout-draggable {
+  cursor: grab;
+}
+
+.layout-edit-mode .layout-draggable:hover {
+  outline: 2px solid var(--color-numenera-primary, #1a5490);
+  outline-offset: 4px;
+  border-radius: 0.5rem;
+}
+
+.layout-edit-mode .layout-draggable::before {
+  content: "⋮⋮";
+  position: absolute;
+  left: -1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.25rem;
+  color: var(--color-numenera-primary, #1a5490);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.layout-edit-mode .layout-draggable:hover::before {
+  opacity: 1;
+}
+
+/* Drag state */
+.layout-edit-mode .layout-draggable.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+/* Drop zone indicators */
+.layout-edit-mode .layout-drop-zone {
+  position: relative;
+}
+
+.layout-edit-mode .layout-drop-zone::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(26, 84, 144, 0.1);
+  border: 2px dashed var(--color-numenera-primary, #1a5490);
+  border-radius: 0.5rem;
+  pointer-events: none;
+}
+
+.layout-edit-mode .layout-drop-zone--active::after {
+  background-color: rgba(212, 175, 55, 0.2);
+  border-color: var(--color-numenera-accent, #d4af37);
+}
+
+/* Grid merge indicator */
+.layout-edit-mode .layout-merge-indicator {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(212, 175, 55, 0.3);
+  border: 3px solid var(--color-numenera-accent, #d4af37);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.layout-edit-mode .layout-merge-indicator::after {
+  content: "Merge into grid";
+  padding: 0.5rem 1rem;
+  background-color: var(--color-numenera-accent, #d4af37);
+  color: #1a1a1a;
+  font-weight: 600;
+  border-radius: 0.25rem;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .edit-layout-button {
+    right: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .edit-layout-text {
+    display: none;
+  }
+
+  .edit-layout-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .layout-edit-mode .layout-draggable::before {
+    left: -1rem;
+    font-size: 1rem;
+  }
+}
+
+/* Tablet and up - show text label */
+@media (min-width: 769px) {
+  .edit-layout-button {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Large screens - position further from edge */
+@media (min-width: 1280px) {
+  .edit-layout-button {
+    right: 2rem;
+  }
+}
+
+/* Animation for entering/exiting edit mode */
+@keyframes layoutEditPulse {
+  0%,
+  100% {
+    border-color: var(--color-numenera-accent, #d4af37);
+  }
+  50% {
+    border-color: var(--color-numenera-primary, #1a5490);
+  }
+}
+
+.layout-edit-mode::before {
+  animation: layoutEditPulse 2s ease-in-out infinite;
+}

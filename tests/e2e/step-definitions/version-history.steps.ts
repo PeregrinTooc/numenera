@@ -158,6 +158,10 @@ Given(
 Given(
   "the character has {int} versions with different names",
   async function (this: CustomWorld, versionCount: number) {
+    // Wait for page to be fully loaded before creating versions
+    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForTimeout(500);
+
     // Create versions with different names
     const baseCharacter = await this.storageHelper.getCharacter();
 
@@ -168,6 +172,9 @@ Given(
       };
       await this.storageHelper.createVersion(versionCharacter, `Changed name`);
     }
+
+    // Wait a bit for the navigator to update after last version
+    await this.page.waitForTimeout(200);
 
     // Wait for version navigator to show final count
     const versionCounter = this.page.locator('[data-testid="version-counter"]');

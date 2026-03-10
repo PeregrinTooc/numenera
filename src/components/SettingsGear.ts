@@ -2,14 +2,23 @@
 
 import { html, TemplateResult, nothing } from "lit-html";
 import { t } from "../i18n/index.js";
+import { hasCustomLayout } from "../storage/layoutStorage.js";
 
 export class SettingsGear {
   private _isOpen: boolean = false;
   private onRerender: (() => void) | null = null;
   private boundHandleDocumentClick: ((e: MouseEvent) => void) | null = null;
   private boundHandleDocumentKeydown: ((e: KeyboardEvent) => void) | null = null;
+  private onResetLayout: (() => void) | null = null;
 
   constructor(private onLanguageChange: (lang: string) => void) {}
+
+  /**
+   * Set callback for resetting layout
+   */
+  setResetLayoutCallback(callback: () => void): void {
+    this.onResetLayout = callback;
+  }
 
   /**
    * Set callback for triggering re-renders
@@ -95,6 +104,22 @@ export class SettingsGear {
     this.close();
   }
 
+  private handleResetLayout(): void {
+    if (this.onResetLayout) {
+      // Dispatch event for reset confirmation
+      const event = new CustomEvent("layout-reset-requested", {
+        bubbles: true,
+        composed: true,
+      });
+      document.dispatchEvent(event);
+
+      // For now, just call the reset callback directly
+      // In a full implementation, this would show a confirmation dialog first
+      this.onResetLayout();
+      this.close();
+    }
+  }
+
   private handleGearClick(): void {
     this.toggle();
   }
@@ -161,8 +186,11 @@ export class SettingsGear {
           <button
             data-testid="settings-reset-layout"
             class="settings-reset-button"
-            disabled
-            title=${t("settings.resetLayoutDisabled")}
+            ?disabled=${!hasCustomLayout()}
+            title=${hasCustomLayout()
+              ? t("settings.resetLayout")
+              : t("settings.resetLayoutDisabled")}
+            @click=${() => this.handleResetLayout()}
           >
             ${t("settings.resetLayout")}
           </button>

@@ -294,7 +294,30 @@ describe("DOM Structure Tests", () => {
       expect(container.querySelector('[data-testid="cyphers-section"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="artifacts-section"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="oddities-section"]')).toBeTruthy();
-      expect(container.querySelector('[data-testid="text-fields-section"]')).toBeTruthy();
+      // Background and notes are now rendered as separate sections via layout system
+      expect(container.querySelector('[data-testid="character-background"]')).toBeTruthy();
+      expect(container.querySelector('[data-testid="character-notes"]')).toBeTruthy();
+    });
+
+    it("should render edit layout button", () => {
+      const character = createMockCharacter();
+      const sheet = new CharacterSheet(character, vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
+      render(sheet.render(), getContainer());
+
+      expect(getContainer().querySelector('[data-testid="edit-layout-button"]')).toBeTruthy();
+    });
+
+    it("should render layout sections with data-section-id attributes", () => {
+      const character = createMockCharacter();
+      const sheet = new CharacterSheet(character, vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
+      render(sheet.render(), getContainer());
+
+      const container = getContainer();
+
+      // Verify layout section wrappers exist
+      expect(container.querySelector('[data-testid="layout-section-basicInfo"]')).toBeTruthy();
+      expect(container.querySelector('[data-testid="layout-section-stats"]')).toBeTruthy();
+      expect(container.querySelector('[data-testid="layout-section-recoveryDamage"]')).toBeTruthy();
     });
   });
 });

@@ -2,8 +2,10 @@
 // Uses File System Access API for Chromium browsers, falls back to input element for others
 
 import { Character } from "../types/character.js";
+import { Layout, isValidLayout } from "../types/layout.js";
 import { SCHEMA_VERSION } from "./storageConstants.js";
 import { sanitizeCharacter } from "../utils/unified-validation.js";
+import { loadLayout } from "./layoutStorage.js";
 
 /**
  * File format structure for exported characters
@@ -13,6 +15,7 @@ export interface CharacterFileData {
   schemaVersion: string;
   exportDate: string;
   character: Character;
+  layout?: Layout;
 }
 
 /**
@@ -21,6 +24,8 @@ export interface CharacterFileData {
 export interface ImportResult {
   character: Character;
   warnings: string[];
+  layout?: Layout;
+  hasLayoutDifference?: boolean;
 }
 
 /**
@@ -67,9 +72,28 @@ function parseAndSanitizeCharacter(text: string): ImportResult {
   // Combine warnings
   const allWarnings = [...warnings, ...sanitizeResult.warnings];
 
+  // Process layout if present
+  let importedLayout: Layout | undefined;
+  let hasLayoutDifference = false;
+
+  if (fileData.layout && Array.isArray(fileData.layout)) {
+    if (isValidLayout(fileData.layout)) {
+      importedLayout = fileData.layout;
+      // Check if imported layout differs from current layout
+      const currentLayout = loadLayout();
+      hasLayoutDifference = JSON.stringify(importedLayout) !== JSON.stringify(currentLayout);
+    } else {
+      allWarnings.push(
+        "Imported file contains invalid layout configuration. Using current layout."
+      );
+    }
+  }
+
   return {
     character: sanitizeResult.character,
     warnings: allWarnings,
+    layout: importedLayout,
+    hasLayoutDifference,
   };
 }
 
@@ -272,6 +296,7 @@ export async function exportCharacterToFile(character: Character): Promise<void>
     schemaVersion: SCHEMA_VERSION,
     exportDate: new Date().toISOString(),
     character: character,
+    layout: loadLayout(),
   };
 
   // Try modern API first (Chrome/Edge/Opera)

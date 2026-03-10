@@ -17,7 +17,8 @@ export class Header {
     private onExport: () => void,
     private onQuickExport?: () => void,
     private onSaveAs?: () => void,
-    onLanguageChange?: (lang: string) => void
+    onLanguageChange?: (lang: string) => void,
+    onResetLayout?: () => void
   ) {
     // Create settings gear component
     this.settingsGear = new SettingsGear(onLanguageChange || (() => {}));
@@ -28,6 +29,11 @@ export class Header {
       const event = new CustomEvent("settings-updated");
       document.getElementById("app")?.dispatchEvent(event);
     });
+
+    // Set up reset layout callback
+    if (onResetLayout) {
+      this.settingsGear.setResetLayoutCallback(onResetLayout);
+    }
 
     // Initialize feature detection state
     this.supportsFileSystemAccess = "showSaveFilePicker" in window;

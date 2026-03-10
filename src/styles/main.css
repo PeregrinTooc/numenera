@@ -21,6 +21,7 @@
 @import "./components/portrait-display-modal.css";
 @import "./components/conflict-modal.css";
 @import "./components/settings-gear.css";
+@import "./components/layout-editor.css";
 
 /* Utility styles */
 @import "./utilities/animations.css";

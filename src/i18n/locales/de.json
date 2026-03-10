@@ -16,11 +16,46 @@
     "language": "Sprache",
     "resetLayout": "Layout zurücksetzen",
     "resetLayoutDisabled": "Layout-Anpassung kommt bald",
+    "resetLayoutConfirm": "Sind Sie sicher, dass Sie das Layout auf Standard zurücksetzen möchten?",
     "aria": {
       "openSettings": "Einstellungen öffnen",
       "closeSettings": "Einstellungen schließen",
       "selectEnglish": "Zu Englisch wechseln",
       "selectGerman": "Zu Deutsch wechseln"
+    }
+  },
+  "layout": {
+    "editButton": {
+      "edit": "Layout bearbeiten",
+      "exit": "Fertig"
+    },
+    "editMode": {
+      "active": "Layout-Bearbeitungsmodus",
+      "instructions": "Bereiche ziehen um neu anzuordnen. Einen Bereich auf einen anderen ziehen, um ein 2-Spalten-Raster zu erstellen.",
+      "cannotMerge": "Diese Bereiche können nicht zu einem Raster zusammengefügt werden"
+    },
+    "sections": {
+      "basicInfo": "Basisinfo",
+      "stats": "Attribute",
+      "recoveryDamage": "Erholung & Schaden",
+      "abilities": "Fähigkeiten",
+      "specialAbilities": "Spezialfähigkeiten",
+      "attacks": "Angriffe",
+      "cyphers": "Cypher",
+      "items": "Besitztümer",
+      "background": "Hintergrund",
+      "notes": "Notizen"
+    },
+    "import": {
+      "layoutDiffers": "Die importierte Datei hat ein anderes Layout als Ihr aktuelles Layout.",
+      "keepCurrent": "Aktuelles Layout behalten",
+      "useImported": "Importiertes Layout verwenden"
+    },
+    "aria": {
+      "editLayout": "Charakterbogen-Layout bearbeiten",
+      "exitEditLayout": "Layout-Bearbeitungsmodus beenden",
+      "dragSection": "Ziehen um Bereich neu anzuordnen",
+      "dropZone": "Bereich hier ablegen"
     }
   },
   "character": {

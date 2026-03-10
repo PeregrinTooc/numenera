@@ -16,11 +16,46 @@
     "language": "Language",
     "resetLayout": "Reset Layout",
     "resetLayoutDisabled": "Layout customization coming soon",
+    "resetLayoutConfirm": "Are you sure you want to reset the layout to default?",
     "aria": {
       "openSettings": "Open settings",
       "closeSettings": "Close settings",
       "selectEnglish": "Switch to English",
       "selectGerman": "Switch to German"
+    }
+  },
+  "layout": {
+    "editButton": {
+      "edit": "Edit Layout",
+      "exit": "Done"
+    },
+    "editMode": {
+      "active": "Layout Edit Mode",
+      "instructions": "Drag sections to reorder. Drop one section onto another to create a 2-column grid.",
+      "cannotMerge": "These sections cannot be merged into a grid"
+    },
+    "sections": {
+      "basicInfo": "Basic Info",
+      "stats": "Stats",
+      "recoveryDamage": "Recovery & Damage",
+      "abilities": "Abilities",
+      "specialAbilities": "Special Abilities",
+      "attacks": "Attacks",
+      "cyphers": "Cyphers",
+      "items": "Items",
+      "background": "Background",
+      "notes": "Notes"
+    },
+    "import": {
+      "layoutDiffers": "The imported file has a different layout than your current layout.",
+      "keepCurrent": "Keep current layout",
+      "useImported": "Use imported layout"
+    },
+    "aria": {
+      "editLayout": "Edit character sheet layout",
+      "exitEditLayout": "Exit layout edit mode",
+      "dragSection": "Drag to reorder section",
+      "dropZone": "Drop section here"
     }
   },
   "character": {

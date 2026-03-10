@@ -50,6 +50,39 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ---
 
+## 🚨 Must-Have (Technical Debt)
+
+### Automated Drag/Drop E2E Tests
+
+**Overview**  
+The section re-arrangement feature has drag/drop functionality that currently cannot be reliably automated with Playwright. These tests are marked with `@skip` and require manual testing until a solution is found.
+
+**Goals**
+
+- Find a reliable way to automate HTML5 drag and drop events in Playwright
+- Implement automated tests for all drag/drop scenarios
+- Remove `@skip` tags once tests are reliable
+
+**Skipped Tests** (see `tests/e2e/features/section-rearrangement.feature`)
+
+- Reorder sections by dragging
+- Merge sections into grid by dragging onto another section
+- Cannot merge non-eligible sections into grid
+- Split sections from grid by dragging out
+- Section dragging works on mobile with long-tap
+- Import with different layout shows prompt
+- Keep existing layout on import
+- Use imported layout on import
+- Import with same layout does not show prompt
+
+**Research Needed**
+
+- Playwright's `dragTo()` method behavior with HTML5 drag events
+- Alternative approaches: programmatic drag simulation, custom data transfer
+- Consider if drag/drop should use a different library (sortable.js, drag-drop libraries)
+
+---
+
 ## 📋 Feature Backlog
 
 ### Multiple Images

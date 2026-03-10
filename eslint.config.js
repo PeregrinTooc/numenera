@@ -30,6 +30,7 @@ export default [
         Event: "readonly",
         KeyboardEvent: "readonly",
         MouseEvent: "readonly",
+        DragEvent: "readonly",
         CustomEvent: "readonly",
         FileReader: "readonly",
         Blob: "readonly",
@@ -43,6 +44,7 @@ export default [
         IDBDatabase: "readonly",
         IDBOpenDBRequest: "readonly",
         indexedDB: "readonly",
+        Storage: "readonly",
         // Standard browser APIs
         DOMException: "readonly",
         PermissionState: "readonly",
@@ -53,6 +55,7 @@ export default [
         // Node globals
         process: "readonly",
         global: "readonly",
+        Buffer: "readonly",
         // Vitest globals
         globalThis: "readonly",
         describe: "readonly",
