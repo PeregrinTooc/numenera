@@ -7,18 +7,21 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Least privilege by default; the deploy job widens this for itself only.
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
-  build-test-deploy:
+  build-test:
+    name: Build and test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    # Pull requests from forks share the "pages" concurrency group with main
+    # otherwise, so key on the ref instead and let deploys serialise separately.
+    concurrency:
+      group: build-test-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,6 +49,9 @@ jobs:
       - name: Run format check
         run: npm run format:check
 
+      - name: Check translation coverage
+        run: npm run check:i18n
+
       - name: Run unit tests
         run: npm run test:unit
 
@@ -53,17 +59,37 @@ jobs:
         if: hashFiles('tests/e2e/**/*.ts') != ''
         run: npx playwright install --with-deps
 
-      - name: Build and Run E2E tests
+      # Also produces ./dist, which the deploy job publishes.
+      - name: Build and run E2E tests
         run: npm run test:e2e:prod
 
       - name: Setup Pages
+        if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v4
 
       - name: Upload artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: "./dist"
 
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build-test
+    runs-on: ubuntu-latest
+    # Only ever publish the default branch. Pull requests run the full test
+    # suite above but must never reach production.
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
