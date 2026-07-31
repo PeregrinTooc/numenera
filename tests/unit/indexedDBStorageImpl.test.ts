@@ -125,6 +125,23 @@ describe("IndexedDBStorageImpl", () => {
   });
 
   describe("migrateFromLocalStorage", () => {
+    it("should not overwrite an existing IndexedDB record with stale localStorage data", async () => {
+      // Setup: IndexedDB already holds the authoritative character...
+      await storage.save({ ...mockCharacter, xp: 50 });
+      // ...while a stale copy lingers in localStorage from an earlier session.
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...mockCharacter, xp: 5 }));
+
+      // Execute migration, as happens on every page load
+      await storage.migrateFromLocalStorage();
+
+      // Verify: the newer IndexedDB record wins
+      const loaded = await storage.load();
+      expect(loaded.xp).toBe(50);
+
+      // Verify: the stale copy is cleared so it cannot resurface
+      expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+    });
+
     it("should migrate data from localStorage to IndexedDB (new format)", async () => {
       // Setup: Store data in localStorage (new raw format)
       localStorage.setItem(STORAGE_KEY, JSON.stringify(mockCharacter));
@@ -239,9 +256,12 @@ describe("IndexedDBStorageImpl", () => {
       // Execute migration
       await storage.migrateFromLocalStorage();
 
-      // Verify: localStorage data should overwrite IndexedDB data
+      // Verify: IndexedDB is authoritative once populated. This assertion was
+      // previously inverted — it expected localStorage to win, which is the
+      // data-loss path: migration runs on every page load, so a stale
+      // localStorage entry would silently revert newer IndexedDB data.
       const loaded = await storage.load();
-      expect(loaded.name).toBe("From localStorage");
+      expect(loaded.name).toBe("Existing in IndexedDB");
 
       // Verify: localStorage data should be removed
       expect(localStorage.getItem(STORAGE_KEY)).toBeNull();

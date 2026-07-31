@@ -3,6 +3,7 @@
 // Future: IndexedDB, remote server
 
 import { ICharacterStorage } from "./ICharacterStorage.js";
+import type { Character } from "../types/character.js";
 import { IndexedDBStorageImpl } from "./indexedDBStorageImpl.js";
 import { LocalStorageImpl } from "./localStorageImpl.js";
 import { VersionHistoryManager } from "./versionHistory.js";
@@ -98,6 +99,25 @@ export async function getStorage(): Promise<ICharacterStorage> {
 export async function saveCharacterState(character: any): Promise<void> {
   const storage = await getStorage();
   await storage.save(character);
+}
+
+/**
+ * Fire-and-forget variant of saveCharacterState for synchronous call sites.
+ *
+ * Components render synchronously and cannot await a save. Use this rather than
+ * reaching for the raw localStorage module: writing to localStorage directly
+ * creates a second copy of the character that diverges from the real backend
+ * (Rule #11).
+ *
+ * Failures are logged rather than thrown — the caller has no way to react — but
+ * they are never silently discarded.
+ *
+ * @param character The character object to save
+ */
+export function persistCharacterState(character: Character): void {
+  void saveCharacterState(character).catch((error) => {
+    console.error("Failed to persist character state:", { character, error });
+  });
 }
 
 /**

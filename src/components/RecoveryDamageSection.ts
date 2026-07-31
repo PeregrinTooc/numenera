@@ -5,7 +5,7 @@ import { html, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
 import { RecoveryRolls } from "./RecoveryRolls.js";
 import { DamageTrack } from "./DamageTrack.js";
-import { saveCharacterState } from "../storage/localStorage.js";
+import { persistCharacterState } from "../storage/storageFactory.js";
 
 export class RecoveryDamageSection {
   private recoveryRolls: RecoveryRolls;
@@ -16,7 +16,7 @@ export class RecoveryDamageSection {
     this.recoveryRolls = new RecoveryRolls(this.character.recoveryRolls, (field, value) => {
       if (field === "recoveryModifier") {
         this.character.recoveryRolls.modifier = value;
-        saveCharacterState(this.character);
+        persistCharacterState(this.character);
         // Dispatch character-updated for auto-save
         const app = document.getElementById("app");
         if (app) {

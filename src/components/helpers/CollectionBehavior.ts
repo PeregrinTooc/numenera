@@ -3,7 +3,7 @@
 
 import { html, TemplateResult } from "lit-html";
 import { Character } from "../../types/character.js";
-import { saveCharacterState } from "../../storage/localStorage.js";
+import { persistCharacterState } from "../../storage/storageFactory.js";
 import { CompletionNotifier } from "../../utils/completionNotifier.js";
 
 /**
@@ -63,7 +63,7 @@ export function createAddHandler<T, ItemComponent extends { handleEdit: () => vo
         });
         cardNotifier.emit("added");
 
-        saveCharacterState(character);
+        persistCharacterState(character);
         // Dispatch targeted re-render event based on collection type
         const appElement = document.getElementById("app");
         if (appElement) {
@@ -186,7 +186,7 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
           });
           cardNotifier.emit("edited");
 
-          saveCharacterState(character);
+          persistCharacterState(character);
           // Dispatch targeted re-render event based on collection type
           const appElement = document.getElementById("app");
           if (appElement) {
@@ -258,7 +258,7 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
             collection.push(...filtered);
           }
 
-          saveCharacterState(character);
+          persistCharacterState(character);
           // Dispatch targeted re-render event based on collection type
           const appElement = document.getElementById("app");
           if (appElement) {
