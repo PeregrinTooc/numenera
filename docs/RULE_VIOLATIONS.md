@@ -4,19 +4,28 @@ Places where the codebase currently breaks a rule from `CLAUDE.md` /
 `docs/rules/`. **The rules are correct; the code is wrong.** Fix the code.
 
 Do not resolve an entry by relaxing the rule. If a rule looks genuinely
-impossible or self-contradictory, raise it with the maintainer — two such cases
-are listed at the bottom under _Needs a decision_.
+impossible or self-contradictory, raise it with the maintainer rather than
+editing the rule to match the code.
+
+> **Scope note.** This file is for rule violations only. Ordinary bugs belong in
+> `docs/PROJECT_REVIEW.md` and `docs/IMPLEMENTATION_PLAN.md`. An earlier revision
+> listed the oddity-import bug here on the grounds that `numenera.md` sketched a
+> different data model; that was a stretch — the descriptive data-model section
+> of a rules file is not a rule, and the bug stood on its own. It is fixed and
+> tracked as review §2.3.
 
 ---
 
 ## Fixed
 
-| Rule                                  | Violation                                                                                                                                                                                                           | Fixed in                                                                                                                                                                    |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| #11 Storage through adapters only     | `CollectionBehavior.ts`, `BasicInfo.ts` and `RecoveryDamageSection.ts` imported `saveCharacterState` from `src/storage/localStorage.ts`, bypassing the factory and writing a second diverging copy of the character | routed through `persistCharacterState()` in `storageFactory.ts`                                                                                                             |
-| #11 (consequence)                     | `migrateFromLocalStorage()` ran on every page load and overwrote newer IndexedDB data with the stale localStorage copy                                                                                              | now adopts localStorage only when IndexedDB is empty; test `should handle migration when IndexedDB already has data` had asserted the data-loss behaviour and was corrected |
-| Architecture — responsive breakpoints | `xs: 480px` was documented but did not exist: Tailwind v4 never read `tailwind.config.js`                                                                                                                           | declared as `--breakpoint-xs: 30rem` in the `@theme` block of `src/styles/main.css`                                                                                         |
-| Architecture — theme fonts            | `edit-modal.css` consumed `var(--font-handwritten)`, which resolved to nothing                                                                                                                                      | `--font-sans`, `--font-serif`, `--font-handwritten` declared in `@theme`                                                                                                    |
+| Rule                                   | Violation                                                                                                                                                                                                           | Fixed in                                                                                                                                                                    |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| #11 Storage through adapters only      | `CollectionBehavior.ts`, `BasicInfo.ts` and `RecoveryDamageSection.ts` imported `saveCharacterState` from `src/storage/localStorage.ts`, bypassing the factory and writing a second diverging copy of the character | routed through `persistCharacterState()` in `storageFactory.ts`                                                                                                             |
+| #11 (consequence)                      | `migrateFromLocalStorage()` ran on every page load and overwrote newer IndexedDB data with the stale localStorage copy                                                                                              | now adopts localStorage only when IndexedDB is empty; test `should handle migration when IndexedDB already has data` had asserted the data-loss behaviour and was corrected |
+| Architecture — responsive breakpoints  | `xs: 480px` was documented but did not exist: Tailwind v4 never read `tailwind.config.js`                                                                                                                           | declared as `--breakpoint-xs: 30rem` in the `@theme` block of `src/styles/main.css`                                                                                         |
+| Architecture — theme fonts             | `edit-modal.css` consumed `var(--font-handwritten)`, which resolved to nothing                                                                                                                                      | `--font-sans`, `--font-serif`, `--font-handwritten` declared in `@theme`                                                                                                    |
+| Code quality — one formatting standard | `code-quality.md` said "No semicolons (Prettier default)" while `.prettierrc` set `"semi": true` and the whole codebase used them — and the parenthetical was wrong, since Prettier's default _is_ semicolons       | the rule now restates `.prettierrc` in a table and names `.prettierrc` as authoritative, so the two cannot drift again                                                      |
+| Dead code                              | `tailwind.config.js` was never read by Tailwind v4, and `src/storage/localStorage.ts` had no importers left in `src/` after the Rule #11 fix — while remaining an easy way to re-enter that violation               | both deleted, with `localStorage.test.ts`; `cyphersBox.test.ts` now asserts persistence goes through the factory instead of mocking the deleted module                      |
 
 ---
 
@@ -80,10 +89,13 @@ despite `Character` existing.
 
 **Rule:** "Never swallow errors silently."
 
-`src/storage/localStorage.ts` and `src/storage/layoutStorage.ts` catch write
-failures and only `console.error`, so a `QuotaExceededError` (very reachable —
-portraits are stored as base64 in the character) leaves the save indicator
-showing success while nothing was written.
+`src/storage/layoutStorage.ts` catches write failures and only `console.error`,
+so the caller believes the layout was saved. `LocalStorageImpl.clear()` does the
+same.
+
+A `QuotaExceededError` is very reachable here — portraits are stored as base64
+inside the character — and when it happens the save indicator still reports
+success while nothing was written.
 
 ### 5. Git checklist — `console.log` in production code
 
@@ -94,56 +106,21 @@ showing success while nothing was written.
 
 ---
 
-## Needs a decision
+## 6. Test architecture — the E2E import path cannot cover validation
 
-These two cannot be resolved without knowing the intent, and guessing would
-either churn the whole codebase or change stored data.
+Not a rule violation, but it hid one of the bugs above and is worth fixing.
 
-### A. Prettier: semicolons
+`TestStorageHelper.setMockFileImporter` replaces `IFileImporter.importCharacter()`
+wholesale and returns `{ character, warnings }` verbatim. The real implementation
+routes through `fileStorage.parseAndSanitizeCharacter` → `sanitizeCharacter`, so
+**no E2E scenario ever executes the sanitizer**. The other import step
+(`character-file-import.steps.ts`) is worse: it writes straight to storage and
+reloads.
 
-`docs/rules/code-quality.md` says **"No semicolons (Prettier default)"**, but
-`.prettierrc` sets `"semi": true` and the entire codebase is written with
-semicolons.
+That is why the oddity-deleting bug survived a suite with 359 scenarios. A
+Gherkin scenario for it today would pass whether or not the bug exists, which is
+worse than no scenario — so the regression coverage is unit-level for now.
 
-The parenthetical is factually wrong either way — Prettier's default _is_
-semicolons — so it is unclear which half was intended:
-
-- **The rule is right** → set `"semi": false` and reformat every file. Large but
-  purely mechanical diff.
-- **The config is right** → correct the rule text to "Semicolons required".
-
-The doc currently still reads "Semicolons required", which is my edit. If the
-rule was meant literally, revert that line and reformat instead.
-
-### B. Oddities: `string[]` vs `OddityItem`
-
-`docs/rules/numenera.md` originally modelled oddities as
-`OddityItem { name: string; description: string }`. The code has
-`oddities: string[]` (`src/types/character.ts:79`).
-
-This is not cosmetic. `sanitizeArrayField` in `unified-validation.ts` drops every
-non-object array item, so **importing a character file currently deletes all
-oddities** (see `docs/PROJECT_REVIEW.md` §2.3). If the rule's object model is the
-intent, that bug disappears as a side effect of conforming to it.
-
-- **Conform to the rule** → change the type to `OddityItem`, update
-  `OddityItem.ts`, `ItemsBox.ts`, the mock characters, and add a stored-data
-  migration for existing `string[]` values.
-- **Keep `string[]`** → correct `numenera.md`, and fix `sanitizeArrayField`
-  separately to preserve strings.
-
-I have documented the current `string[]` shape in `numenera.md` rather than
-assume; say which way you want it and I will make the code and the rule agree.
-
----
-
-## Also worth deciding
-
-- **`tailwind.config.js` is now inert.** Theme values live in the `@theme` block
-  of `src/styles/main.css`, which is the only thing Tailwind v4 reads. The config
-  file is never loaded, and leaving it in place is what made the `xs` breakpoint
-  appear configured while doing nothing. Either delete it or add a comment
-  saying it is unused.
-- **`src/storage/localStorage.ts` has no importers in `src/` any more** — only
-  its own unit test. Deleting it would remove the trap that caused violation #11
-  in the first place.
+**Fix:** have the mock importer accept raw file _content_ and run it through the
+real parse/sanitize path, so import scenarios exercise validation as production
+does.

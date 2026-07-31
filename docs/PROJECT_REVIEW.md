@@ -90,7 +90,7 @@ This also violates the project's own Rule #11.
 
 ### 2.3 Importing a character file deletes every oddity
 
-**verified**
+**verified — FIXED**
 
 `Character.oddities` is `string[]` (`src/types/character.ts:79`), but
 `sanitizeArrayField` in `src/utils/unified-validation.ts` discards any array item
@@ -101,6 +101,10 @@ warning per entry.
 ODDITIES AFTER SANITIZE: []
 WARNINGS: ["Invalid item at index 0 in oddities...", ...]
 ```
+
+Fixed: `sanitizeArrayField` now takes an expected item kind, and `oddities` asks
+for `"string"`. Object collections keep their previous behaviour. Covered by
+three unit tests in `characterValidation.test.ts`.
 
 ### 2.4 ETag ignores all nested data
 

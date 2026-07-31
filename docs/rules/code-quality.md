@@ -109,10 +109,19 @@ type Character = {
 
 ### Configuration Standards:
 
-- 2 spaces indentation
-- Semicolons required (`"semi": true`)
-- Double quotes
-- 100 character line length
+`.prettierrc` is authoritative — these are restated here for convenience, and
+must match it:
+
+| Setting      | Value    | `.prettierrc` key                   |
+| ------------ | -------- | ----------------------------------- |
+| Indentation  | 2 spaces | `"tabWidth": 2`, `"useTabs": false` |
+| Semicolons   | required | `"semi": true`                      |
+| Quotes       | double   | `"singleQuote": false`              |
+| Line length  | 100      | `"printWidth": 100`                 |
+| Line endings | LF       | `"endOfLine": "lf"`                 |
+
+Never hand-format to a different style — run `npm run format`. If this table and
+`.prettierrc` ever disagree, `.prettierrc` wins and this table is the bug.
 
 ### Pre-commit Hook:
 

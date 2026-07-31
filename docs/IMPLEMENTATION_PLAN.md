@@ -68,7 +68,7 @@ without it, behaviour is exactly as today.
 
 ## Phase 1 — Data loss and corruption
 
-### 1.1 Route all persistence through the storage factory
+### 1.1 Route all persistence through the storage factory — DONE
 
 **Defect:** §2.2 (verified). Three modules write straight to localStorage, and
 `migrateFromLocalStorage()` replays that stale copy over IndexedDB on the next
@@ -101,7 +101,7 @@ Plus an E2E scenario: add a cypher, edit XP, reload, assert XP survived.
 
 **Depends on:** 0.1 (the scenario needs real isolation).
 
-### 1.2 Preserve oddities on import
+### 1.2 Preserve oddities on import — DONE
 
 **Defect:** §2.3 (verified). `sanitizeArrayField` drops non-object array items,
 and `Character.oddities` is `string[]`, so every import wipes them.
@@ -111,8 +111,11 @@ and `Character.oddities` is `string[]`, so every import wipes them.
 genuinely the wrong type.
 
 **Verify:** unit test — sanitising a character with two string oddities returns
-both and produces no warnings. Extend
-`tests/e2e/features/character-file-import.feature` with an oddity round-trip.
+both and produces no warnings.
+
+The planned E2E round-trip was **not** added: both import step definitions mock
+past `sanitizeCharacter` entirely, so the scenario would pass with or without the
+fix. See `docs/RULE_VIOLATIONS.md` §6 — fix the harness first, then add it.
 
 ### 1.3 Make the ETag reflect the whole character
 
