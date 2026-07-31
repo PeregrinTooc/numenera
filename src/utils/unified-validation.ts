@@ -587,7 +587,7 @@ export function sanitizeCharacter(data: unknown): SanitizeResult {
     textFields: sanitizeTextFields(input.textFields, warnings),
     cyphers: sanitizeArrayField(input, "cyphers", warnings),
     artifacts: sanitizeArrayField(input, "artifacts", warnings),
-    oddities: sanitizeArrayField(input, "oddities", warnings),
+    oddities: sanitizeArrayField(input, "oddities", warnings, "string"),
     abilities: sanitizeArrayField(input, "abilities", warnings),
     equipment: sanitizeArrayField(input, "equipment", warnings),
     attacks: sanitizeArrayField(input, "attacks", warnings),
@@ -816,10 +816,20 @@ function sanitizeTextFields(data: unknown, warnings: string[]): Character["textF
   };
 }
 
+/**
+ * Kind of item a collection holds.
+ *
+ * Most character collections are arrays of objects, but `oddities` is a plain
+ * `string[]` (see src/types/character.ts). Assuming "object" for every
+ * collection silently deleted every oddity on import.
+ */
+type ArrayItemKind = "object" | "string";
+
 function sanitizeArrayField<T>(
   input: Record<string, unknown>,
   field: string,
-  warnings: string[]
+  warnings: string[],
+  itemKind: ArrayItemKind = "object"
 ): T[] {
   if (input[field] === undefined) {
     warnings.push(t("validation.sanitize.missingField", { field }));
@@ -830,13 +840,16 @@ function sanitizeArrayField<T>(
     return [];
   }
 
-  // Filter out non-object items from arrays
+  // Keep only items of the expected kind; warn about anything else
   const arr = input[field] as unknown[];
   const result: T[] = [];
 
+  const isExpectedKind = (item: unknown): boolean =>
+    itemKind === "string" ? typeof item === "string" : item !== null && typeof item === "object";
+
   for (let i = 0; i < arr.length; i++) {
     const item = arr[i];
-    if (item !== null && typeof item === "object") {
+    if (isExpectedKind(item)) {
       result.push(item as T);
     } else {
       warnings.push(t("validation.sanitize.invalidArrayItem", { field, index: i }));

@@ -468,6 +468,38 @@ describe("characterValidation", () => {
         expect(result.character.abilities).toEqual([]);
       });
 
+      it("should preserve oddities, which are plain strings", () => {
+        const input = {
+          oddities: ["A glowing cube that hums when near water", "A piece of cold metal"],
+        };
+
+        const result = sanitizeCharacter(input);
+
+        expect(result.character.oddities).toEqual([
+          "A glowing cube that hums when near water",
+          "A piece of cold metal",
+        ]);
+        expect(result.warnings.filter((w) => w.includes("oddities"))).toEqual([]);
+      });
+
+      it("should drop non-string oddities and warn", () => {
+        const input = { oddities: ["valid", 42, null, { name: "object" }] };
+
+        const result = sanitizeCharacter(input);
+
+        expect(result.character.oddities).toEqual(["valid"]);
+        expect(result.warnings.filter((w) => w.includes("oddities"))).toHaveLength(3);
+      });
+
+      it("should drop non-object items from object collections and warn", () => {
+        const input = { cyphers: ["not an object", { name: "Detonation" }] };
+
+        const result = sanitizeCharacter(input);
+
+        expect(result.character.cyphers).toEqual([{ name: "Detonation" }]);
+        expect(result.warnings.filter((w) => w.includes("cyphers"))).toHaveLength(1);
+      });
+
       it("should sanitize non-array fields", () => {
         const input = {
           cyphers: "not an array",
