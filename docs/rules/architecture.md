@@ -106,18 +106,18 @@ Do not follow this pattern in new code. The fix is tracked in
 ### Responsive Breakpoints:
 
 ```css
-/* Tailwind v4 default breakpoints */
+/* Tailwind breakpoints */
+xs: 480px   /* small phones */
 sm: 640px   /* phones */
 md: 768px   /* tablets */
 lg: 1024px  /* desktops */
 xl: 1280px  /* large desktops */
 ```
 
-> `tailwind.config.js` declares an extra `xs: 480px` breakpoint, but Tailwind v4
-> does not read that file (there is no `@config` directive in
-> `src/styles/main.css`), so **`xs:` variants do not exist**. Theme extensions
-> must be declared as custom properties in the `@theme` block of
-> `src/styles/main.css`.
+> Declared in the `@theme` block of `src/styles/main.css` as `--breakpoint-*`
+> custom properties, in `rem` so they scale with the browser font size.
+> Tailwind v4 reads theme values from `@theme`, **not** from
+> `tailwind.config.js`.
 
 ### Example:
 

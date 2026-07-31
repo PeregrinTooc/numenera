@@ -14,20 +14,22 @@
 - NO `any` types (use `unknown` if truly needed)
 - Explicit return types for exported functions
 - Interface over type for object shapes
-- Import style: relative paths with an explicit `.js` extension (see note below)
+- Use path aliases: `@/` prefix for src imports
 - Exception: **None.** Linter enforces this.
 
 ### Good vs Bad Examples:
 
 ```typescript
 // ✅ GOOD
-import { Character } from "../types/character.js";
+import { Character } from "@/types/character";
 
 export function createCharacter(name: string): Character {
     return { name, tier: 1, ... };
 }
 
 // ❌ BAD
+import { Character } from "../../types/character.js";
+
 export function createCharacter(name: any) {
     return { name, tier: 1, ... };
 }
@@ -35,22 +37,23 @@ export function createCharacter(name: any) {
 
 ### Import Paths:
 
-The codebase uses **relative paths with an explicit `.js` extension**, even in
-`.ts` files:
+Use the `@/` alias for anything under `src/`. Aliases are configured in three
+places and must stay in sync:
+
+| File               | Key                     |
+| ------------------ | ----------------------- |
+| `tsconfig.json`    | `compilerOptions.paths` |
+| `vite.config.ts`   | `resolve.alias`         |
+| `vitest.config.ts` | `resolve.alias`         |
 
 ```typescript
-import { t } from "../i18n/index.js";
-import { Character } from "../types/character.js";
+import { t } from "@/i18n/index";
+import { Character } from "@/types/character";
 ```
 
-The `.js` extension is required: the project is native ESM
-(`"type": "module"`), and the Cucumber suite loads step definitions through
-`ts-node/esm`, which resolves specifiers literally.
-
-`@/*` path aliases are configured in both `tsconfig.json` and `vite.config.ts`,
-but **no source file currently uses them**. Match the surrounding code and use
-relative imports. If the project ever migrates to aliases, do it as one
-deliberate sweep rather than mixing both styles.
+Aliased specifiers take no file extension — the bundler resolves them. Relative
+imports within the same directory are fine (`./helpers/CollectionBehavior`), but
+anything that reaches across directories with `../` should use the alias.
 
 ### When Type is Unknown:
 
