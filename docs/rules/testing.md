@@ -319,7 +319,7 @@ Before considering tests complete:
 
 ---
 
-## Rule #11: 🚨 ALWAYS Use NPM Scripts for E2E Tests
+## Testing Rule: 🚨 ALWAYS Use NPM Scripts for E2E Tests
 
 **NEVER call cucumber-js directly. ALWAYS use npm scripts.**
 
@@ -425,7 +425,7 @@ npm run test:unit -- --coverage
 
 ---
 
-## Rule #10: 🧪 Test New Features in Isolation First
+## Testing Rule: 🧪 Test New Features in Isolation First
 
 **Run new scenario tests independently before running the full test suite.**
 

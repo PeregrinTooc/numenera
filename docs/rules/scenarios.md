@@ -144,8 +144,8 @@ You:
 3. Present summary of changes to user
 4. Wait for explicit approval
 5. Choose commit format:
-   - Simple (≤256 chars): Single `-m` flag
-   - Complex (>256 chars): Multiple `-m` flags
+   - Simple (≤128 chars): Single `-m` flag
+   - Complex (>128 chars): Multiple `-m` flags
 6. Execute git command
 7. Confirm push completed
 
@@ -291,7 +291,7 @@ You:
    See numenera.md for complete mechanics."
 ```
 
-**Reference:** All rule files in `.cline/rules/`
+**Reference:** All rule files in `docs/rules/`
 
 ---
 
@@ -299,29 +299,28 @@ You:
 
 ### Steps:
 
-1. Use `ask_followup_question` tool
-2. Provide specific options if helpful
-3. Wait for clarification
+1. Use the `AskUserQuestion` tool
+2. Offer specific options; put your recommendation first
+3. Wait for the answer
 4. Proceed once clear
+
+Reserve this for decisions you genuinely cannot resolve from the request, the
+code, or a sensible default. If one reading is obviously right, take it, say so,
+and keep going.
 
 ### Example:
 
 ```
 User: "Make it better"
 
-You:
-<ask_followup_question>
-<question>What aspect would you like improved?</question>
-<options>[
-  "UI/styling improvements",
-  "Performance optimization",
-  "Code refactoring",
-  "New features"
-]</options>
-</ask_followup_question>
+You: [AskUserQuestion]
+  question: "What would you like improved?"
+  options:
+    - "UI/styling"           — visual polish and layout
+    - "Performance"          — rendering and save throughput
+    - "Code structure"       — refactoring for maintainability
+    - "New features"         — pick the next item from TODO.md
 ```
-
-**Reference:** System rules on `ask_followup_question`
 
 ---
 
@@ -345,4 +344,4 @@ You:
 
 ---
 
-**For detailed guidance, see the specific rule files in `.cline/rules/`**
+**For detailed guidance, see the specific rule files in `docs/rules/`**

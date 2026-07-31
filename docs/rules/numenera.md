@@ -227,7 +227,7 @@ Recovers 6 points:
 
 ### Damage Track
 
-- **Hale**: All pools above 0
+- **Hale** (modelled as `"healthy"`): All pools above 0
 - **Impaired**: One pool at 0 (disadvantaged)
 - **Debilitated**: Two pools at 0 (barely functional)
 - **Dead**: All three pools at 0
@@ -262,64 +262,69 @@ Recovers 6 points:
 
 ### Character Properties (TypeScript):
 
+The authoritative definition lives in `src/types/character.ts`. How the game
+concepts above map onto it:
+
 ```typescript
-interface NumeneraCharacter {
-  // Core Identity
-  id: string;
+interface Cypher {
   name: string;
-  tier: number; // 1-6
-  type: string; // 'Glaive' | 'Nano' | 'Jack'
-  descriptor: string; // e.g., 'Strong'
-  focus: string; // e.g., 'Bears a Halo of Fire'
-
-  // Stats
-  might: StatPool;
-  speed: StatPool;
-  intellect: StatPool;
-
-  // Items
-  cyphers: CypherItem[]; // Max 2-3
-  artifacts: ArtifactItem[];
-  oddities: OddityItem[];
-
-  // Images
-  portrait: string | null;
-  additionalImages: string[];
-
-  // Text Fields
-  background: string;
-  notes: string;
-  equipment: string; // Non-artifact equipment
-  abilities: string; // Special abilities description
-
-  // Metadata
-  lastModified: number;
-}
-
-interface StatPool {
-  pool: number; // Maximum points
-  edge: number; // Cost reduction
-  current: number; // Available points
-}
-
-interface CypherItem {
-  name: string;
-  level: number;
+  level: string; // string, not number
   effect: string;
 }
 
-interface ArtifactItem {
+interface Artifact {
   name: string;
-  level: number;
-  depletion: string; // e.g., "1 in 1d20"
+  level: string;
   effect: string;
+  // NOTE: depletion is not modelled yet; record it in `effect` for now
 }
 
-interface OddityItem {
+// Oddities are plain strings — there is no OddityItem type.
+type Oddity = string;
+
+interface Ability {
   name: string;
   description: string;
+  cost?: number;
+  pool?: "might" | "speed" | "intellect";
+  action?: string;
+}
+
+interface Attack {
+  name: string;
+  damage: number;
+  modifier: number;
+  range: string;
+  notes?: string;
+}
+
+interface SpecialAbility {
+  name: string;
+  description: string;
+  source: string;
+}
+
+interface RecoveryRolls {
+  action: boolean; // false = available, true = used
+  tenMinutes: boolean;
+  oneHour: boolean;
+  tenHours: boolean;
+  modifier: number; // 1d6 + modifier
+}
+
+interface DamageTrack {
+  impairment: "healthy" | "impaired" | "debilitated";
 }
 ```
+
+Divergences from the tabletop rules worth knowing:
+
+- **Artifact depletion is not modelled.** The rules describe it (see Artifacts
+  above) but `Artifact` has no `depletion` field.
+- **The damage track uses `"healthy"`**, not the rulebook's "Hale". There is no
+  `"dead"` state in the model.
+- **The cypher limit is `maxCyphers` on the character** and is displayed, not
+  enforced — nothing prevents exceeding it.
 
 ---
 

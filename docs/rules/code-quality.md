@@ -14,26 +14,43 @@
 - NO `any` types (use `unknown` if truly needed)
 - Explicit return types for exported functions
 - Interface over type for object shapes
-- Use path aliases: `@/` prefix for src imports
+- Import style: relative paths with an explicit `.js` extension (see note below)
 - Exception: **None.** Linter enforces this.
 
 ### Good vs Bad Examples:
 
 ```typescript
 // ✅ GOOD
-import { Character } from "@/types/character";
+import { Character } from "../types/character.js";
 
 export function createCharacter(name: string): Character {
     return { name, tier: 1, ... };
 }
 
 // ❌ BAD
-import { Character } from "../../types/character";
-
 export function createCharacter(name: any) {
     return { name, tier: 1, ... };
 }
 ```
+
+### Import Paths:
+
+The codebase uses **relative paths with an explicit `.js` extension**, even in
+`.ts` files:
+
+```typescript
+import { t } from "../i18n/index.js";
+import { Character } from "../types/character.js";
+```
+
+The `.js` extension is required: the project is native ESM
+(`"type": "module"`), and the Cucumber suite loads step definitions through
+`ts-node/esm`, which resolves specifiers literally.
+
+`@/*` path aliases are configured in both `tsconfig.json` and `vite.config.ts`,
+but **no source file currently uses them**. Match the surrounding code and use
+relative imports. If the project ever migrates to aliases, do it as one
+deliberate sweep rather than mixing both styles.
 
 ### When Type is Unknown:
 
@@ -90,7 +107,7 @@ type Character = {
 ### Configuration Standards:
 
 - 2 spaces indentation
-- No semicolons (Prettier default)
+- Semicolons required (`"semi": true`)
 - Double quotes
 - 100 character line length
 

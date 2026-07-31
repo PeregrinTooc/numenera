@@ -10,44 +10,73 @@
 
 ### Requirements:
 
-- Use the StorageAdapter interface
-- Implementation in `src/storage/localStorage.ts`
+- Go through `src/storage/storageFactory.ts` — never `localStorage` directly
+- The factory picks the backend at runtime and caches it as a singleton
 - Enables future cloud storage migration
-- Maintains consistent API
+- Maintains a consistent async API
 - Exception: **None.** Architecture requirement.
 
-### Storage Adapter Pattern:
+### The Layers:
+
+```
+component / service
+        │
+        ▼
+storageFactory.ts          saveCharacterState / loadCharacterState / clearCharacterState
+        │
+        ▼
+ICharacterStorage          the adapter interface
+        │
+        ├── IndexedDBStorageImpl    (preferred; db "numenera-character-db")
+        └── LocalStorageImpl        (fallback when IndexedDB is unavailable)
+```
+
+`src/storage/ICharacterStorage.ts` defines the contract:
 
 ```typescript
-interface StorageAdapter<T> {
-  save(data: T): Promise<void>;
-  load(id: string): Promise<T | null>;
-  delete(id: string): Promise<void>;
+interface ICharacterStorage {
+  init(): Promise<void>;
+  save(character: Character): Promise<void>;
+  load(): Promise<Character | null>;
+  clear(): Promise<void>;
+  isAvailable(): Promise<boolean>;
 }
 ```
 
 ### Implementation:
 
 ```typescript
-// ✅ GOOD - Using adapter
-import { characterStorage } from "@/storage/localStorage";
+// ✅ GOOD - Through the factory
+import { saveCharacterState } from "../storage/storageFactory.js";
 
-async function saveCharacter(character: Character): Promise<void> {
-  await characterStorage.save(character);
+async function persist(character: Character): Promise<void> {
+  await saveCharacterState(character);
 }
 
-// ❌ BAD - Direct localStorage access
-function saveCharacter(character: Character): void {
-  localStorage.setItem("character", JSON.stringify(character));
-}
+// ❌ BAD - Bypassing the factory, straight to the localStorage module
+import { saveCharacterState } from "../storage/localStorage.js";
+
+// ❌ WORSE - Direct localStorage access
+localStorage.setItem("character", JSON.stringify(character));
 ```
 
 ### Why This Matters:
 
-- **Phase 1**: localStorage only
-- **Phase 2+**: Cloud storage adapters
-- **All storage through adapter interface**
-- **Easy to swap implementations**
+- One source of truth for where the character lives
+- IndexedDB today, cloud adapters later, without touching components
+- Easy to swap implementations and to fake in tests
+
+### ⚠️ Known Violation
+
+`src/components/helpers/CollectionBehavior.ts`, `src/components/BasicInfo.ts` and
+`src/components/RecoveryDamageSection.ts` import `saveCharacterState` directly
+from `src/storage/localStorage.js`. That writes a second copy of the character to
+localStorage which `IndexedDBStorageImpl.migrateFromLocalStorage()` later replays
+over the IndexedDB record on the next page load, silently reverting any edit made
+after the last card operation.
+
+Do not follow this pattern in new code. The fix is tracked in
+`docs/IMPLEMENTATION_PLAN.md`.
 
 ### Future Storage Options:
 
@@ -77,13 +106,18 @@ function saveCharacter(character: Character): void {
 ### Responsive Breakpoints:
 
 ```css
-/* Tailwind breakpoints */
-xs: 480px   /* small phones */
+/* Tailwind v4 default breakpoints */
 sm: 640px   /* phones */
 md: 768px   /* tablets */
 lg: 1024px  /* desktops */
 xl: 1280px  /* large desktops */
 ```
+
+> `tailwind.config.js` declares an extra `xs: 480px` breakpoint, but Tailwind v4
+> does not read that file (there is no `@config` directive in
+> `src/styles/main.css`), so **`xs:` variants do not exist**. Theme extensions
+> must be declared as custom properties in the `@theme` block of
+> `src/styles/main.css`.
 
 ### Example:
 
@@ -150,7 +184,7 @@ src/styles/
 ### Current Approach:
 
 - Simple class-based approach
-- localStorage for persistence
+- IndexedDB (localStorage fallback) for persistence, behind the storage adapter
 - No global state library yet
 - Direct component state
 
@@ -193,47 +227,45 @@ Each component is a class that:
 
 ### Example Structure:
 
+Components are plain classes with a `render()` method returning a lit-html
+`TemplateResult`. They do **not** own a container element and do **not** write
+`innerHTML`; the parent composes their templates and a single `render()` call
+patches the DOM.
+
 ```typescript
+import { html, TemplateResult } from "lit-html";
+import { t } from "../i18n/index.js";
+
 export class StatPool {
-  private element: HTMLElement;
-  private pool: number;
-  private edge: number;
-  private current: number;
+  constructor(
+    private name: string,
+    private stats: StatPoolData,
+    private onFieldUpdate: (field: string, value: number) => void
+  ) {}
 
-  constructor(container: HTMLElement, stats: StatData) {
-    this.element = container;
-    this.pool = stats.pool;
-    this.edge = stats.edge;
-    this.current = stats.current;
-
-    this.render();
-    this.attachEventListeners();
-  }
-
-  private render(): void {
-    this.element.innerHTML = this.template();
-  }
-
-  private template(): string {
-    return `
-      <div class="stat-pool">
-        <div class="pool">${this.pool}</div>
-        <div class="edge">${this.edge}</div>
-        <div class="current">${this.current}</div>
+  render(): TemplateResult {
+    return html`
+      <div class="stat-pool" data-testid="stat-pool-${this.name}">
+        <h3>${t(`stats.${this.name}`)}</h3>
+        <div class="pool">${this.stats.pool}</div>
+        <div class="edge">${this.stats.edge}</div>
+        <div
+          class="current editable-field"
+          @click=${() => this.openEditModal()}
+          role="button"
+          tabindex="0"
+        >
+          ${this.stats.current}
+        </div>
       </div>
     `;
   }
-
-  private attachEventListeners(): void {
-    // Event handling
-  }
-
-  public spend(points: number): void {
-    // Business logic
-    this.render();
-  }
 }
 ```
+
+Event handlers are bound declaratively in the template (`@click=${...}`), not
+attached imperatively after render. See `docs/ARCHITECTURE.md` for why
+LitElement and shadow DOM were tried and reverted.
 
 ### Principles:
 
@@ -335,38 +367,48 @@ src/
 
 ### Character Properties:
 
+The authoritative definition is `src/types/character.ts`. Read it before
+touching character data — this is a summary, not a second source of truth.
+
 ```typescript
-interface NumeneraCharacter {
+interface Character {
   // Core Identity
-  id: string;
   name: string;
   tier: number; // 1-6
-  type: string; // Glaive, Nano, Jack
+  type: string; // "Nano" | "Glaive" | "Jack"
   descriptor: string;
   focus: string;
+  portrait?: string; // base64 data URL
+
+  // Resources
+  xp: number;
+  shins: number;
+  armor: number;
+  effort: number;
+  maxCyphers: number;
 
   // Stats
-  might: StatPool;
-  speed: StatPool;
-  intellect: StatPool;
+  stats: {
+    might: StatPool;
+    speed: StatPool;
+    intellect: StatPool;
+  };
 
-  // Items
-  cyphers: CypherItem[]; // Max 2-3
-  artifacts: ArtifactItem[];
-  oddities: OddityItem[];
+  // Collections
+  cyphers: Cypher[];
+  artifacts: Artifact[];
+  oddities: string[]; // plain strings, NOT objects
+  abilities: Ability[];
+  equipment: EquipmentItem[];
+  attacks: Attack[];
+  specialAbilities: SpecialAbility[];
 
-  // Images
-  portrait: string | null;
-  additionalImages: string[];
+  // Condition
+  recoveryRolls: RecoveryRolls;
+  damageTrack: DamageTrack; // { impairment: "healthy" | "impaired" | "debilitated" }
 
-  // Text Fields
-  background: string;
-  notes: string;
-  equipment: string;
-  abilities: string;
-
-  // Metadata
-  lastModified: number;
+  // Text
+  textFields: { background: string; notes: string };
 }
 
 interface StatPool {
@@ -375,6 +417,16 @@ interface StatPool {
   current: number; // Available points
 }
 ```
+
+Things that trip people up:
+
+- **`oddities` is `string[]`**, not an array of objects. Any code that treats
+  collections uniformly must special-case it.
+- **There is no `id` and no `lastModified`.** A single character is stored under
+  a fixed key; version history provides the change record.
+- **Stats are nested under `stats`**, not top-level.
+- **`portrait` is excluded from version history** (`src/storage/versionHistory.ts`)
+  and from ETag generation.
 
 **Reference:** See `numenera.md` for game mechanics
 
@@ -435,7 +487,7 @@ export function createCharacter(name: string, type: CharacterType): Character {
 - **Build**: Vite
 - **Styling**: Tailwind CSS
 - **Testing**: Vitest (unit), Playwright (E2E)
-- **i18n**: Custom implementation
+- **i18n**: i18next + i18next-browser-languagedetector
 - **Linting**: ESLint + Prettier
 
 ---

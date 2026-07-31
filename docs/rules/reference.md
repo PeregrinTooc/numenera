@@ -44,7 +44,10 @@
 ### ❌ Pitfall 8: Accessing localStorage Directly
 
 **Why:** Seems simpler than using adapter  
-**Recovery:** Refactor to use storage adapter interface from `src/storage/localStorage.ts`
+**Recovery:** Refactor to go through `src/storage/storageFactory.ts`
+(`saveCharacterState` / `loadCharacterState` / `clearCharacterState`). Importing
+those names from `src/storage/localStorage.ts` is the same mistake — it looks
+like the adapter but bypasses it.
 
 ---
 
@@ -89,10 +92,10 @@ describe("ComponentOrModule", () => {
 ### Git Commands
 
 ```bash
-# Simple commit (≤256 chars)
+# Simple commit (≤128 chars)
 git add -A && git commit -m "feat(scope): description" && git push
 
-# Complex commit (>256 chars)
+# Complex commit (>128 chars)
 git add -A && \
 git commit \
   -m "feat(scope): subject line" \
@@ -202,13 +205,13 @@ git commit -m "feat: thing" -m "Body"
 
 ```
 Question about...
-├─ Workflow process → rules/workflow.md
-├─ Code standards → rules/code-quality.md
-├─ Translations → rules/i18n.md
-├─ Git/commits → rules/git.md
-├─ Testing → rules/testing.md
-├─ Architecture → rules/architecture.md
-└─ Game mechanics → rules/numenera.md
+├─ Workflow process → workflow.md
+├─ Code standards → code-quality.md
+├─ Translations → i18n.md
+├─ Git/commits → git.md
+├─ Testing → testing.md
+├─ Architecture → architecture.md
+└─ Game mechanics → numenera.md
 ```
 
 ### Which Test to Write?
@@ -225,44 +228,47 @@ What are you implementing?
 
 ```
 Message length?
-├─ ≤ 256 chars → Single -m flag
-└─ > 256 chars → Multiple -m flags
+├─ ≤ 128 chars → Single -m flag
+└─ > 128 chars → Multiple -m flags
 ```
 
 ---
 
 ## Tool Selection Guide
 
+For Claude Code:
+
 ```
 Need to...
-├─ Understand structure → list_files (recursive: true)
-├─ Find usage → search_files (regex)
-├─ See code API → list_code_definition_names
-├─ Read file → read_file
-├─ Create/replace file → write_to_file
-├─ Edit parts → replace_in_file (preferred)
-├─ Run command → execute_command
-├─ Test web UI → browser_action
-├─ Ask user → ask_followup_question
-└─ Complete task → attempt_completion (after user review!)
+├─ Understand structure → Glob (e.g. "src/**/*.ts")
+├─ Find usage → Grep (regex, ripgrep syntax)
+├─ Read a file → Read
+├─ Create/replace a file → Write (must Read an existing file first)
+├─ Edit part of a file → Edit (preferred over Write for changes)
+├─ Run a command → Bash
+├─ Ask the user to decide → AskUserQuestion
+└─ Broad multi-file search → Explore / general-purpose agent
 ```
+
+Prefer the dedicated tools over shell equivalents: `Grep` rather than
+`grep`/`rg`, `Read` rather than `cat`, `Glob` rather than `find`.
 
 ---
 
 ## File Reference Map
 
-| Need              | File                    | Section              |
-| ----------------- | ----------------------- | -------------------- |
-| Core 11 rules     | `golden_rules.md`       | All rules            |
-| BDD/TDD process   | `rules/workflow.md`     | Development Workflow |
-| Code standards    | `rules/code-quality.md` | TypeScript, Linting  |
-| Translation setup | `rules/i18n.md`         | i18n Requirements    |
-| Git workflow      | `rules/git.md`          | Commit Standards     |
-| Test structure    | `rules/testing.md`      | Test Requirements    |
-| System design     | `rules/architecture.md` | Patterns             |
-| Game mechanics    | `rules/numenera.md`     | Domain Knowledge     |
-| Common scenarios  | `quick/scenarios.md`    | 10 scenarios         |
-| This reference    | `quick/reference.md`    | Quick lookup         |
+| Need              | File              | Section              |
+| ----------------- | ----------------- | -------------------- |
+| Core 11 rules     | `../../CLAUDE.md` | All rules            |
+| BDD/TDD process   | `workflow.md`     | Development Workflow |
+| Code standards    | `code-quality.md` | TypeScript, Linting  |
+| Translation setup | `i18n.md`         | i18n Requirements    |
+| Git workflow      | `git.md`          | Commit Standards     |
+| Test structure    | `testing.md`      | Test Requirements    |
+| System design     | `architecture.md` | Patterns             |
+| Game mechanics    | `numenera.md`     | Domain Knowledge     |
+| Common scenarios  | `scenarios.md`    | 10 scenarios         |
+| This reference    | `reference.md`    | Quick lookup         |
 
 ---
 
@@ -270,7 +276,7 @@ Need to...
 
 **When in doubt:**
 
-1. Check `golden_rules.md` for the 11 core rules
+1. Check `../../CLAUDE.md` for the 11 core rules
 2. Read relevant rule file for details
 3. Check this quick reference for syntax
 4. Ask user if still unclear

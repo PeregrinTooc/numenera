@@ -423,7 +423,7 @@ git push
 
 ## For AI Development
 
-When AI tools (like Cline) need to commit code:
+When an AI assistant needs to commit code:
 
 1. Use `git add -A` to stage all changes
 2. Build commit message with multiple `-m` flags
