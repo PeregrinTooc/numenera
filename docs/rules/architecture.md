@@ -115,9 +115,9 @@ xl: 1280px  /* large desktops */
 ```
 
 > Declared in the `@theme` block of `src/styles/main.css` as `--breakpoint-*`
-> custom properties, in `rem` so they scale with the browser font size.
-> Tailwind v4 reads theme values from `@theme`, **not** from
-> `tailwind.config.js`.
+> custom properties, in `rem` so they scale with the browser font size. That
+> block is the single source of truth for the theme — Tailwind v4 reads it
+> directly, and the project has no `tailwind.config.js`.
 
 ### Example:
 

@@ -188,9 +188,9 @@ Starting a task?
   `import { t } from "@/i18n/index";`. Aliases are configured in
   `tsconfig.json`, `vite.config.ts` and `vitest.config.ts`.
 - **Formatting is Prettier's job.** Run `npm run format`; don't hand-format.
-- **Tailwind theme extensions live in `tailwind.config.js`**, which
-  `src/styles/main.css` loads via `@config`. Tailwind v4 ignores that file
-  without the directive, so keep it.
+- **Tailwind theme values live in the `@theme` block of `src/styles/main.css`**
+  as `--color-*`, `--breakpoint-*` and `--font-*` custom properties. That is the
+  only place Tailwind v4 reads; there is no `tailwind.config.js`.
 - **Tailwind class names must be literal.** Constructing them
   (`` `bg-${theme}-100` ``) means the class is never generated in the production
   build, because Tailwind scans source for literal strings.
