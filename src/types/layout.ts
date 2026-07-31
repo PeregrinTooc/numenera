@@ -46,6 +46,19 @@ export const SINGLE_ONLY_SECTIONS: readonly SectionId[] = [
 ] as const;
 
 /**
+ * Sections that cannot be dragged/reordered
+ * These remain fixed in their position at all times
+ */
+export const FIXED_SECTIONS: readonly SectionId[] = ["basicInfo"] as const;
+
+/**
+ * Check if a section is fixed (cannot be dragged)
+ */
+export function isFixedSection(sectionId: SectionId): boolean {
+  return FIXED_SECTIONS.includes(sectionId);
+}
+
+/**
  * A single section displayed in its own row
  */
 export interface SingleLayoutItem {

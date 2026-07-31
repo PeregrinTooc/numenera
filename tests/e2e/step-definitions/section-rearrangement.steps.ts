@@ -82,6 +82,68 @@ Then("the visual indicators should be removed", async function (this: CustomWorl
 });
 
 // ============================================
+// Fixed Section Steps
+// ============================================
+
+Then(
+  "the {string} section should not be draggable",
+  async function (this: CustomWorld, sectionName: string) {
+    const page = this.page!;
+
+    const sectionIdMap: Record<string, string> = {
+      "Basic Info": "basicInfo",
+      Stats: "stats",
+      "Recovery & Damage": "recoveryDamage",
+    };
+
+    const sectionId = sectionIdMap[sectionName];
+    if (!sectionId) {
+      throw new Error(`Unknown section: ${sectionName}`);
+    }
+
+    const section = page.locator(`[data-section-id="${sectionId}"]`);
+
+    // Check that the section does NOT have the layout-draggable class
+    const hasDraggableClass = await section.evaluate((el) => {
+      return el.classList.contains("layout-draggable");
+    });
+
+    expect(hasDraggableClass).toBe(false);
+
+    // Also verify draggable attribute is not set to true
+    const draggableAttr = await section.getAttribute("draggable");
+    expect(draggableAttr).not.toBe("true");
+  }
+);
+
+Then(
+  "the {string} section should not have drag handles",
+  async function (this: CustomWorld, sectionName: string) {
+    const page = this.page!;
+
+    const sectionIdMap: Record<string, string> = {
+      "Basic Info": "basicInfo",
+      Stats: "stats",
+      "Recovery & Damage": "recoveryDamage",
+    };
+
+    const sectionId = sectionIdMap[sectionName];
+    if (!sectionId) {
+      throw new Error(`Unknown section: ${sectionName}`);
+    }
+
+    const section = page.locator(`[data-section-id="${sectionId}"]`);
+
+    // Check that the section has the fixed class (no drag handles via CSS ::before)
+    const hasFixedClass = await section.evaluate((el) => {
+      return el.classList.contains("layout-fixed");
+    });
+
+    expect(hasFixedClass).toBe(true);
+  }
+);
+
+// ============================================
 // Section Reordering Steps
 // ============================================
 
@@ -258,13 +320,58 @@ When(
       throw new Error(`Unknown section: ${sourceSection} or ${targetSection}`);
     }
 
-    // Get the source and target elements
-    const sourceElement = page.locator(`[data-section-id="${sourceId}"]`);
+    // Get the source section and its drag handle, and target element
+    const sourceSection$ = page.locator(`[data-section-id="${sourceId}"]`);
+    const sourceDragHandle = sourceSection$.locator(".layout-drag-handle");
     const targetElement = page.locator(`[data-section-id="${targetId}"]`);
 
-    // Use Playwright's native dragTo for proper HTML5 drag events
-    await sourceElement.dragTo(targetElement, {
-      targetPosition: { x: 10, y: 10 }, // Drop near the top of target
+    // Dispatch HTML5 drag events manually for reliable testing
+    // First, dispatch dragstart on the drag handle (this is what triggers drag in real usage)
+    await sourceDragHandle.evaluate((el, sId) => {
+      const dataTransfer = new DataTransfer();
+      dataTransfer.setData("text/plain", sId);
+      const dragStartEvent = new DragEvent("dragstart", {
+        bubbles: true,
+        cancelable: true,
+        dataTransfer,
+      });
+      el.dispatchEvent(dragStartEvent);
+    }, sourceId);
+
+    // Wait a bit for dragstart to process
+    await page.waitForTimeout(50);
+
+    // Then dispatch dragover on target section wrapper
+    await targetElement.evaluate((el) => {
+      const dragOverEvent = new DragEvent("dragover", {
+        bubbles: true,
+        cancelable: true,
+      });
+      el.dispatchEvent(dragOverEvent);
+    });
+
+    // Wait a bit for dragover to process
+    await page.waitForTimeout(50);
+
+    // Finally dispatch drop on target
+    await targetElement.evaluate((el, sId) => {
+      const dataTransfer = new DataTransfer();
+      dataTransfer.setData("text/plain", sId);
+      const dropEvent = new DragEvent("drop", {
+        bubbles: true,
+        cancelable: true,
+        dataTransfer,
+      });
+      el.dispatchEvent(dropEvent);
+    }, sourceId);
+
+    // Dispatch dragend on the drag handle to clean up
+    await sourceDragHandle.evaluate((el) => {
+      const dragEndEvent = new DragEvent("dragend", {
+        bubbles: true,
+        cancelable: true,
+      });
+      el.dispatchEvent(dragEndEvent);
     });
 
     // Wait for re-render

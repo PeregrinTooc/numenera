@@ -81,18 +81,14 @@
   transition: all 0.2s ease-in-out;
 }
 
-.layout-edit-mode .layout-draggable {
-  cursor: grab;
-}
-
 .layout-edit-mode .layout-draggable:hover {
   outline: 2px solid var(--color-numenera-primary, #1a5490);
   outline-offset: 4px;
   border-radius: 0.5rem;
 }
 
-.layout-edit-mode .layout-draggable::before {
-  content: "⋮⋮";
+/* Drag handle element - the actual draggable trigger */
+.layout-drag-handle {
   position: absolute;
   left: -1.5rem;
   top: 50%;
@@ -100,17 +96,49 @@
   font-size: 1.25rem;
   color: var(--color-numenera-primary, #1a5490);
   opacity: 0.6;
-  pointer-events: none;
+  cursor: grab;
+  padding: 0.5rem 0.25rem;
+  user-select: none;
+  z-index: 10;
 }
 
-.layout-edit-mode .layout-draggable:hover::before {
+.layout-drag-handle:hover {
   opacity: 1;
 }
 
-/* Drag state */
-.layout-edit-mode .layout-draggable.dragging {
-  opacity: 0.5;
+.layout-drag-handle:active {
   cursor: grabbing;
+}
+
+.layout-drag-handle--fixed {
+  cursor: default;
+  opacity: 0.5;
+  font-size: 0.875rem;
+}
+
+/* Drag state - Visual preview with lift effect, shadow, and scale */
+.layout-edit-mode .layout-draggable.dragging {
+  opacity: 0.7;
+  cursor: grabbing;
+  transform: scale(1.02);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.2),
+    0 10px 10px -5px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 0.5rem;
+}
+
+/* Fixed sections - Cannot be dragged */
+.layout-edit-mode .layout-fixed {
+  cursor: default;
+  opacity: 0.8;
+}
+
+.layout-edit-mode .layout-fixed:hover {
+  /* No outline for fixed sections - they can't be dragged */
+  outline: none;
 }
 
 /* Drop zone indicators */
@@ -171,7 +199,7 @@
     height: 28px;
   }
 
-  .layout-edit-mode .layout-draggable::before {
+  .layout-drag-handle {
     left: -1rem;
     font-size: 1rem;
   }

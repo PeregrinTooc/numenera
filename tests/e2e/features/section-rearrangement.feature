@@ -25,12 +25,16 @@ Feature: Section Re-arrangement
     Then the layout should be saved
     And the sections should remain in the new order
 
-  # Section Reordering - Drag/Drop tests skipped for now (manual testing required)
-  @skip
+  # Section Reordering
   Scenario: Reorder sections by dragging
     Given layout edit mode is active
     When I drag the "Cyphers" section above the "Abilities" section
     Then the "Cyphers" section should appear before the "Abilities" section
+
+  Scenario: Basic Info section cannot be dragged
+    Given layout edit mode is active
+    Then the "Basic Info" section should not be draggable
+    And the "Basic Info" section should not have drag handles
 
   Scenario: Layout persists after page reload
     Given layout edit mode is active

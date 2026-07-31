@@ -56,7 +56,8 @@
       "exitEditLayout": "Exit layout edit mode",
       "dragSection": "Drag to reorder section",
       "dropZone": "Drop section here"
-    }
+    },
+    "dragHandle": "Drag handle - click and drag to reorder this section"
   },
   "character": {
     "name": "Name",

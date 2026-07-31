@@ -56,7 +56,8 @@
       "exitEditLayout": "Layout-Bearbeitungsmodus beenden",
       "dragSection": "Ziehen um Bereich neu anzuordnen",
       "dropZone": "Bereich hier ablegen"
-    }
+    },
+    "dragHandle": "Ziehgriff - klicken und ziehen um diesen Bereich neu anzuordnen"
   },
   "character": {
     "name": "Name",

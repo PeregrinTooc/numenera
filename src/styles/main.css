@@ -45,6 +45,8 @@
 /* Container that always uses parchment (regardless of dark/light mode) */
 .parchment-container {
   background: linear-gradient(to bottom, #f5e6d3, #ede1cf);
+  display: flex;
+  flex-direction: column;
 }
 
 /* Custom theme configuration */
