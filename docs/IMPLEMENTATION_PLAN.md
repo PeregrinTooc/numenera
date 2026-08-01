@@ -17,52 +17,71 @@ before commit (Rule #1).
 
 Nothing else can be verified with confidence until this is done.
 
-### 0.1 Fix the IndexedDB names used by test cleanup
+### 0.1 Fix the IndexedDB names used by test cleanup — DONE
 
 **Defect:** §2.11. `tests/e2e/support/hooks.ts:110` and `src/main.ts:776,799`
-target `NumeneraCharacterDB`. The real databases are `numenera-character-db` and
-`numenera-version-history-db`, so cleanup deletes nothing and character state and
-version history leak between scenarios.
+targeted `NumeneraCharacterDB`. The real databases are `numenera-character-db`
+and `numenera-version-history-db`, so cleanup deleted nothing and character
+state and version history leaked between scenarios.
 
 **Change**
 
-- Export the database names as constants from `src/storage/storageConstants.ts`
-  and import them in `indexedDBStorageImpl.ts`, `versionHistory.ts` and the test
-  helpers, so the names can never drift apart again.
-- `window.__testStorage.clearCharacterState` should call the adapter's `clear()`
-  through `storageFactory` rather than deleting a database by name.
-- `window.__testVersionHistory.clearVersions` should call
-  `VersionHistoryManager.clear()`, which already exists, instead of hand-rolling
-  a transaction against a hardcoded name.
-- Update the `Before` hook to delete both real databases.
+- Database names centralized as `CHARACTER_DB_NAME`, `VERSION_HISTORY_DB_NAME`,
+  `FILE_HANDLES_DB_NAME` in `src/storage/storageConstants.ts`, imported by
+  `indexedDBStorageImpl.ts`, `storageFactory.ts`, `versionHistory.ts` and
+  `exportManager.ts` in place of local literals.
+- `window.__testStorage.clearCharacterState` now calls the real
+  `clearCharacterState()` from `storageFactory` instead of deleting a database
+  by the wrong name.
+- `window.__testVersionHistory.clearVersions` now calls
+  `VersionHistoryManager.clear()` instead of hand-rolling a transaction against
+  a hardcoded name and a `"versions"` store that database never had.
 
-**Verify:** add a scenario that creates a cypher, then asserts in a following
-scenario that the sheet starts empty. It must fail before the fix.
+**What actually shipped in the `Before` hook is not what was planned.** The
+original plan called for the hook to `indexedDB.deleteDatabase()` the two real
+names directly. That was implemented first and broke every scenario: the page
+the hook just navigated to has already booted the app, which holds its own open
+connections to exactly those databases, so `deleteDatabase()` against them
+fires `blocked` instead of succeeding, and the retry loop exhausted its budget
+at a 30s hook timeout — failing all 15 scenarios in the smoke-test run. Fixed
+by clearing through the app's own already-open-connection APIs
+(`window.__testStorage.clearCharacterState()` /
+`window.__testVersionHistory.clearVersions()`) instead of deleting the
+databases from outside the page. The original wrong-name code never hit this
+because nothing had ever opened `NumeneraCharacterDB`.
 
-**Risk:** low. May expose scenarios that were passing only because of leaked
-state — that is the point, and any such failure is a real defect to log.
+**Verified:** `character-display.feature` + `section-rearrangement.feature` (15
+scenarios) now pass in full, including the previously-failing "1 artifact
+displayed" scenario.
 
-### 0.2 Raise the Cucumber step timeout
+### 0.2 Raise the Cucumber step timeout — RETRACTED, was never a real bug
 
-**Defect:** §2.11. `cucumber.cjs:10` sets `timeout: 300` — 300 ms per step.
+**This item was wrong.** `cucumber.cjs`'s `timeout: 300` key is not a
+recognized cucumber-js configuration option — see `IConfiguration` in
+`@cucumber/cucumber`'s type definitions — so it was silently ignored the entire
+time, not applied at 300ms or any other value. The real per-step/hook timeout
+has always been `setDefaultTimeout(30000)` in `tests/e2e/support/world.ts`,
+which is generous and was never the problem. The dead `timeout` key is removed
+from `cucumber.cjs` with a comment explaining why, so it can't mislead again.
+The `failFast: false` comment is corrected to match its actual meaning (run all
+scenarios even after a failure — Cucumber's `failFast` stops the run on the
+first failure when `true`).
 
-**Change:** raise to `15000`. Correct the `failFast: false // Stop on first
-failure` comment, which contradicts its value.
+The `waitForTimeout` calls added in `885cf75`, `b175258` and `e299f56` were
+never about this dead config and are not touched here.
 
-**Verify:** the suite still passes and stops needing the `waitForTimeout` calls
-added in `885cf75`, `b175258` and `e299f56`. Remove those once green.
-
-### 0.3 Make the E2E browser resolvable
+### 0.3 Make the E2E browser resolvable — DONE
 
 **Defect:** the pre-push hook and `npm run test:e2e:*` fail outright in any
 environment that cannot download Playwright's pinned browser build.
 
-**Change:** honour an optional `PW_EXEC_PATH` environment variable in
-`tests/e2e/support/hooks.ts` when launching Chromium. Unset in CI and for normal
-local use, so default behaviour is unchanged.
+**Change:** `tests/e2e/support/hooks.ts` now honours an optional `PW_EXEC_PATH`
+environment variable when launching Chromium, defaulting to `undefined` (using
+Playwright's own resolved browser) when unset.
 
-**Verify:** `PW_EXEC_PATH=/path/to/chromium npm run test:e2e:all` runs the suite;
-without it, behaviour is exactly as today.
+**Verified:** `PW_EXEC_PATH=/opt/pw-browsers/.../headless_shell npm run
+test:e2e -- <feature>` runs the suite in this container, where Playwright's
+pinned browser download is unreachable.
 
 ---
 
@@ -168,32 +187,24 @@ edits a card operation fires N buffer writes and N save requests.
 one `character-updated`, assert `bufferChange` was called exactly once. Fails
 before the fix.
 
-### 2.2 Fix the `getVersionHistory()` singleton race
+### 2.2 Fix the `getVersionHistory()` singleton race — DONE
 
-**Defect:** §2.8 (verified — fails in CI). The instance is published before
-`init()` resolves, so a concurrent caller gets `db === null`.
+**Defect:** §2.8 (verified — fails in CI). The instance was published before
+`init()` resolved, so a concurrent caller could get `db === null`.
 
-**Change:** cache the in-flight promise rather than the instance, mirroring what
-`getStorage()` already does:
+**Change:** `getVersionHistory()` now caches the in-flight promise rather than
+the instance, mirroring `getStorage()`, and clears the cached promise on
+failure so a transient error is retryable.
 
-```ts
-let versionHistoryPromise: Promise<VersionHistoryManager> | null = null;
+**Verify:** `tests/unit/storageFactory.test.ts` stubs `VersionHistoryManager.init()`
+behind a controlled gate and asserts neither of two concurrent callers settles
+before it resolves — confirmed RED against the original code, GREEN after the
+fix. A plain `Promise.all` on two immediate calls was tried first and passed
+even against the buggy code, since fake-indexeddb's `init()` timing didn't
+reliably reproduce the interleaving; the gated version does.
 
-export function getVersionHistory(): Promise<VersionHistoryManager> {
-  versionHistoryPromise ??= (async () => {
-    const m = new VersionHistoryManager();
-    await m.init();
-    return m;
-  })();
-  return versionHistoryPromise;
-}
-```
-
-Reset the promise on failure so a transient error is retryable.
-
-**Verify:** unit test — two concurrent `getVersionHistory()` calls both resolve
-to an initialised manager. The scenario _Multiple changes show combined
-description_ must then pass.
+`version-history.feature`'s _Multiple changes show combined description_,
+which failed on this in the original run, now passes.
 
 ### 2.3 Keep `VersionState.latestCharacter` current
 
@@ -227,18 +238,27 @@ persists. Then implement.
 **Note:** this is a genuine feature gap, not a regression. `docs/FEATURES.md`
 claims it works and should be corrected either way.
 
-### 2.5 Stop clobbering the stored layout on edit-mode exit
+### 2.5 Stop clobbering the stored layout on edit-mode exit — DONE
 
 **Defect:** §2.9 (verified — fails in CI). `toggleLayoutEditMode()` always
-re-saves the layout the instance read at construction.
+re-saved the layout the instance read at construction.
 
-**Change:** only save when the layout actually changed during the edit session —
-track a dirty flag set by `reorderSections` / `mergeSections` / `splitGrid`.
-Reload from storage on entering edit mode so a single instance cannot hold a
-stale copy.
+**Change shipped, simpler than planned:** the plan called for a dirty flag set
+by `reorderSections` / `mergeSections` / `splitGrid`, saving on exit only when
+dirty. That machinery turned out to be unnecessary: all three of those methods
+already call `saveLayout()` immediately when they mutate `this.layout`, so the
+exit-time save was pure redundancy on every real path, and actively wrong
+whenever storage had changed since the session started. The fix simply removes
+the exit-time save. Entering edit mode now reloads from storage
+(`this.layout = loadLayout()`), so a long-lived instance can't hold a stale
+copy across a session either.
 
-**Verify:** the existing scenario _Layout persists after page reload_
-(`section-rearrangement.feature:35`) must go green.
+**Verify:** `tests/unit/characterSheetLayout.test.ts` enters edit mode, writes
+a different layout to storage (as the "moved section to top" E2E step does,
+since drag-and-drop can't be reliably automated), exits, and asserts storage
+still holds the write rather than the stale in-memory snapshot — RED against
+the original code, GREEN after the fix. `section-rearrangement.feature`'s
+_Layout persists after page reload_ now passes.
 
 ### 2.6 Fix Ctrl+Shift+Z
 
@@ -349,10 +369,54 @@ as any)` casts in `main.ts` and in test files. Giving `CharacterSheet` real
   buffered change is best-effort by construction. A real fix means writing
   synchronously on unload or accepting the loss. Worth a deliberate decision
   rather than a patch.
-- **The two remaining flaky E2E failures** (`character-display` finding 0
-  artifacts; _Execution context was destroyed_ during Ctrl+Z). These are expected
-  to be fixed by 0.1 and 0.2. Re-run the suite after Phase 0 and only investigate
-  further if they survive.
+
+## Resolved without a code fix
+
+- **The two remaining flaky E2E failures.** Both are confirmed fixed/non-issues,
+  not "expected to be fixed by 0.1/0.2" as originally guessed:
+  - `character-display` finding 0 artifacts: fixed by 0.1 (the `Before` hook now
+    actually isolates scenarios).
+  - `version-history`'s _Execution context was destroyed_ during Ctrl+Z: **not
+    an app bug**. See review §2.15 — it's Vite's dev-server client
+    (`/@vite/client`, injected only outside `vite preview`/production builds)
+    occasionally reloading the page independent of source edits. Verified by
+    reproducing the identical scenario against a fresh production build
+    (`test:e2e:prod`'s path), where it passed repeatedly. CI already runs
+    `test:e2e:prod`, so this never reaches it. No code change applied; a
+    `server.hmr: false` attempt was tried and confirmed ineffective (the
+    client still opens its own WebSocket regardless) before concluding there
+    is no clean fix short of not using the dev server for E2E HTML responses.
+
+## Found and fixed during final verification
+
+- **"Navigation preserves character integrity" race.** A confirmation run of
+  the three previously-problematic feature files together surfaced a new,
+  previously-unseen failure: version navigation showing version 1's data
+  ("Kael the Wanderer") where version 2's ("Character V2") was expected. Root
+  cause: the step `"the character has {int} versions with different data"`
+  was missing the `waitForLoadState("networkidle")` + `waitForTimeout(500)`
+  wait its two sibling steps already had, letting its first `createVersion()`
+  call race the app's own initial-version save on `DOMContentLoaded`. See
+  review §2.16. Fixed by adding the same wait; not an application defect.
+  Two more version-history `Given` steps had the identical gap (`"...version
+with multiple basic info changes"`, `"...version from {int} minutes ago"`)
+  and got the same fix for consistency.
+- **"Layout persists after page reload" flake.** Same root cause, different
+  step: the shared `"I reload the page"` step only waited for
+  `domcontentloaded`; its sibling reload flow already waited for
+  `[data-testid="character-name"]`. Brought into line — see review §2.16.
+
+## Found, not fixed — out of scope (see review §2.17)
+
+Three more E2E flakes in `card-reordering.feature` and
+`recovery-damage-track.feature` surfaced during the full-suite confirmation
+run and reproduced again in isolation. None were part of this cycle's four
+original failures, and neither step file was touched this cycle. They look
+like the same missing-synchronization pattern just fixed in
+`version-history.steps.ts` and `common-steps.ts` (a bare navigation or DOM
+read with no wait for the app's async render), but confirming that and fixing
+it is a separate piece of work. Left for a follow-up pass rather than
+expanding this cycle's scope.
 
 ---
 

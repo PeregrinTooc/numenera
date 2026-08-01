@@ -156,9 +156,9 @@ never wired up.
 
 ### 2.8 `getVersionHistory()` singleton race
 
-**verified — causes a real E2E failure**
+**verified — FIXED, caused a real E2E failure**
 
-`src/storage/storageFactory.ts:129`:
+`src/storage/storageFactory.ts:129` (as originally reviewed):
 
 ```ts
 if (versionHistoryInstance) return versionHistoryInstance; // may be uninitialised
@@ -166,8 +166,8 @@ versionHistoryInstance = new VersionHistoryManager();
 await versionHistoryInstance.init();
 ```
 
-The module-level variable is assigned **before** `init()` is awaited, so a
-concurrent second caller receives the instance with `db === null`:
+The module-level variable was assigned **before** `init()` was awaited, so a
+concurrent second caller could receive the instance with `db === null`:
 
 ```
 ✖ Given the character has a version with multiple basic info changes
@@ -175,22 +175,42 @@ concurrent second caller receives the instance with `db === null`:
         at VersionHistoryManager.saveVersion (versionHistory.ts:61)
 ```
 
-`getStorage()` immediately above does this correctly, assigning only after
-`init()` resolves.
+`getStorage()` immediately above did this correctly, assigning only after
+`init()` resolved.
+
+Fixed: `getVersionHistory()` now caches the in-flight promise instead of the
+instance, mirroring `getStorage()`, and clears the cached promise on failure so
+a transient error is retryable. Covered by a unit test
+(`tests/unit/storageFactory.test.ts`) that deterministically forces the
+interleaving via a controlled `init()` gate — a `Promise.all` on two immediate
+calls doesn't reliably reproduce the race under fake-indexeddb's timing, so the
+test stubs `init()` to prove neither caller resolves before it does.
+`version-history.feature`'s "Multiple changes show combined description"
+scenario, which failed on this, now passes.
 
 ### 2.9 Exiting layout edit mode clobbers the stored layout
 
-**verified — causes a real E2E failure**
+**verified — FIXED, caused a real E2E failure**
 
 `CharacterSheet.toggleLayoutEditMode()` (`src/components/CharacterSheet.ts:363`)
-unconditionally calls `saveLayout(this.layout)` on exit, where `this.layout` was
-read by `loadLayout()` in the constructor. Any newer layout written since is
-overwritten.
+unconditionally called `saveLayout(this.layout)` on exit, where `this.layout`
+was read by `loadLayout()` in the constructor. Any newer layout written since
+was overwritten.
 
-This fails `section-rearrangement.feature:35` — _Layout persists after page
-reload_, which is **not** `@skip`ped. It compounds with a new `CharacterSheet`
-being constructed on every field edit (`src/main.ts:521`), each re-reading the
-layout, so instances can diverge and the last one to exit edit mode wins.
+This failed `section-rearrangement.feature:35` — _Layout persists after page
+reload_, which is **not** `@skip`ped.
+
+Fixed: the exit branch no longer re-saves. `reorderSections`, `mergeSections`
+and `splitGrid` already persist immediately when they mutate `this.layout`, so
+the exit-time save was redundant on every real path and actively wrong on any
+path where storage changed since the session started (exactly what the failing
+scenario's "moved section to top" step does — it writes `numenera-layout`
+directly, since drag-and-drop can't be reliably automated in Playwright).
+Entering edit mode now also reloads from storage
+(`this.layout = loadLayout()`), so a long-lived instance can't hold a stale
+snapshot across a session. Covered by
+`tests/unit/characterSheetLayout.test.ts`, which reproduces the exact
+clobber and confirms the fix. The E2E scenario now passes.
 
 ### 2.10 Ctrl+Shift+Z redo never fires
 
@@ -202,21 +222,48 @@ the step definitions.
 
 ### 2.11 E2E scenarios do not isolate
 
-`tests/e2e/support/hooks.ts:110` and `src/main.ts:776,799` delete and open a
+**verified — FIXED**
+
+`tests/e2e/support/hooks.ts:110` and `src/main.ts:776,799` deleted and opened a
 database named `NumeneraCharacterDB`. The real names are
 `numenera-character-db` (`src/storage/indexedDBStorageImpl.ts:5`) and
 `numenera-version-history-db` (`src/storage/versionHistory.ts:6`). The cleanup
-deletes a database that does not exist and _creates_ an empty one;
-`clearVersions()` then opens a `"versions"` store on it that was never created.
-Character state and version history leak between scenarios.
+deleted a database that did not exist and _created_ an empty one;
+`clearVersions()` then opened a `"versions"` store on it that was never
+created. Character state and version history leaked between scenarios.
 
-Related: `cucumber.cjs:10` sets `timeout: 300` — 300 **milliseconds** per step
-(Cucumber's default is 5000). And `failFast: false` carries the comment
-`// Stop on first failure`, which contradicts the value.
+**Correction to the original review:** it also named `cucumber.cjs`'s
+`timeout: 300` as a 300ms-per-step bug. That was wrong — `timeout` is not a
+recognized cucumber-js configuration key at all (see `IConfiguration` in
+`@cucumber/cucumber`), so it was silently ignored the entire time. The real
+per-step/hook timeout has always been `setDefaultTimeout(30000)` in
+`tests/e2e/support/world.ts`. The dead key is removed from `cucumber.cjs`.
 
-These two together are the most likely cause of the remaining flaky failures:
-`character-display` seeding an artifact then finding 0, and a version-history
-step dying with _Execution context was destroyed_.
+Fixed: database names are centralized as `CHARACTER_DB_NAME`,
+`VERSION_HISTORY_DB_NAME` and `FILE_HANDLES_DB_NAME` in
+`src/storage/storageConstants.ts`, imported everywhere a name was previously a
+local literal (`indexedDBStorageImpl.ts`, `storageFactory.ts`,
+`versionHistory.ts`, `exportManager.ts`). `main.ts`'s test helpers
+(`window.__testStorage.clearCharacterState`, `window.__testVersionHistory.clearVersions`)
+now call the real adapter/manager `clear()` methods instead of hand-rolling a
+transaction against the wrong name.
+
+**A regression surfaced and was fixed during this work.** The first version of
+the `hooks.ts` fix made the `Before` hook call `indexedDB.deleteDatabase()`
+directly against the (now-correct) real names — but the page has already
+booted the app by that point, and the app holds its own open connections to
+exactly those databases. `deleteDatabase()` against a database with a live
+connection fires `blocked` rather than succeeding; the retry loop exhausted
+its budget and the hook timed out at 30s, failing every scenario. The original
+(wrong-name) code never hit this because nothing had ever opened
+`NumeneraCharacterDB`. Fixed by clearing through the app's own
+already-open-connection APIs (`window.__testStorage.clearCharacterState()` /
+`window.__testVersionHistory.clearVersions()`) instead of deleting the
+databases from outside the page.
+
+With both fixes, `character-display.feature` and `section-rearrangement.feature`
+(15 scenarios) pass in full, including the "1 artifact displayed" scenario that
+previously found 0 and "Layout persists after page reload".
 
 ### 2.12 Add-button colours are purged from the production CSS
 
@@ -248,6 +295,122 @@ the documented "Tab key cycles through modal inputs / accessibility compliance".
 `VersionState.navigateToVersion` assigns that portrait-less object to
 `displayedCharacter`, and `restoreCurrentVersion()` promotes it to
 `latestCharacter`. Restoring permanently drops the image.
+
+### 2.15 The fourth original E2E failure was never an app bug — verified
+
+**"Mixed undo/redo with buffer and versions"** (`version-history.feature:184`)
+failed identically on every dev-server run with `page.evaluate: Execution
+context was destroyed, most likely because of a navigation` at the "I press
+Control+Z to undo buffered changes" step, whether run standalone or as part of
+the full suite. The original review attributed this (along with the artifact-
+count flake) to the E2E database-name/isolation bug in §2.11. That attribution
+was wrong.
+
+**Investigation.** Diagnostic logging added temporarily to the keydown handler
+and `VersionHistoryService` showed the buffer-undo path executing completely
+correctly every time: `canUndo()` true, `undo()` invoked, the timer
+bookkeeping consistent throughout. The app logic was never at fault. A stack
+trace inside the mystery early `performSquash()` call pointed at a source line
+that, on inspection, was a doc-comment in the current file — proof the dev
+server was serving the browser a **stale cached bundle** relative to the
+on-disk source, making that specific trace worthless. Rebuilding fresh and
+running the identical scenario against a **static production build**
+(`npm run test:e2e:prod`'s path) passed **12/12 steps, repeatedly**. The same
+scenario, same code, same test — passes under `vite preview`, fails
+intermittently under `vite`'s dev server.
+
+**Root cause.** Vite's dev server injects a live client
+(`<script src="/@vite/client">`) into every HTML response; `vite preview`
+(serving the static `dist/` build) injects nothing. That client unconditionally
+opens its own WebSocket back to the dev server — confirmed by fetching
+`/@vite/client` directly and finding `new WebSocket(...)` calls with no feature
+flag gating them, including a `"vite-ping"` reconnect socket separate from
+HMR itself. Setting `server.hmr: false` in `vite.config.ts` was tried and does
+**not** stop this: the client still fetches and still opens a socket,
+confirmed by fetching the client script with the flag set and finding the same
+unconditional `createWebSocketModuleRunnerTransport` call. This mechanism can
+trigger a full page reload independent of any source edit (e.g. on its own
+connection/ping handshake). If that reload lands while a step is mid-`await`
+inside `page.evaluate()`, Playwright reports exactly "Execution context was
+destroyed, most likely because of a navigation" — indistinguishable from a
+real app bug from the failure message alone.
+
+**Disposition: not a code defect, no fix applied.** There is no supported way
+to strip Vite's injected client from dev-server responses short of not using
+the dev server for HTML at all — which is precisely what `vite preview`
+already is. The project's own CI (`.github/workflows/deploy.yml`) runs
+`npm run test:e2e:prod`, never the dev-server path, so this flake **does not
+occur in CI**. `docs/rules/testing.md` should note that a scenario failing only
+under `npm run test:e2e`/`test:e2e:all` (dev server) with this exact error
+should be re-verified against `npm run test:e2e:prod` before being treated as
+a regression.
+
+### 2.16 "Navigation preserves character integrity" — missing step synchronization, verified fixed
+
+A confirmation run of the three previously-problematic feature files together
+(47 scenarios, production build) surfaced a **new** failure not among the
+original four: "Navigation preserves character integrity"
+(`version-history.feature:129`) expected `"Character V2"` after navigating to
+version 2, but got `"Kael the Wanderer"` — the default mock character's name,
+i.e. version 1's data.
+
+**Root cause.** The step `"the character has {int} versions with different
+data"` (`version-history.steps.ts:139`) started creating versions immediately,
+with no wait for the page to settle first. Its two sibling steps —
+`"...versions in history"` and `"...versions with different names"` — both
+call `page.waitForLoadState("networkidle")` plus a `waitForTimeout(500)`
+before their loops; this one didn't. On `DOMContentLoaded`, `main.ts` exposes
+`window.__testVersionHistory` synchronously, but doesn't save the "Initial
+state" version until later in the same async bootstrap (after
+`renderCharacterSheet()` and a `getVersionHistory()`/`getAllVersions()` round
+trip). Without the wait, the test's first `createVersion()` call can race the
+app's own initial-version save — both write to the same IndexedDB `versions`
+store, and whichever timestamp lands where determines the resulting order.
+Under the light load of an isolated single-feature run this window rarely
+lost the race; under the heavier concurrent load of a 47-scenario/6-worker
+run it did.
+
+**Fix.** Added the same `waitForLoadState("networkidle")` +
+`waitForTimeout(500)` pair to this step, matching its two siblings.
+
+**Disposition: fixed, verified.** Not a defect in application code — a test
+step missing synchronization that its own siblings already had.
+
+A second, same-shaped gap surfaced in the same verification pass: the shared
+`"I reload the page"` step (`common-steps.ts:372`) only waited for
+`domcontentloaded`, which fires before the app's own async render pipeline
+produces DOM content — too weak for anything asserting on rendered state right
+after. Its sibling reload flow in `section-rearrangement.steps.ts` already
+waits for `[data-testid="character-name"]` after reload; this step now does
+too. This surfaced as "Layout persists after page reload" intermittently
+showing the pre-reload DOM. Fixed the same way, verified with a repeat run.
+
+### 2.17 Three more pre-existing E2E flakes found, not fixed — out of scope
+
+Running the **entire** suite (all 359 scenarios, `test:e2e:prod`) to confirm
+the §2.16 fixes didn't regress anything else surfaced three additional
+failures, none of which are among the original four this review cycle was
+scoped to, and none touching any file changed this cycle:
+
+- `card-reordering.feature`: "Dragging card shows transparent ghost effect"
+  and "Ability order persists after page reload" / "Reorder abilities by
+  dragging on desktop" — `locator.dragTo()` timing out at 30s waiting for the
+  dragged element's ancestor locator.
+- `recovery-damage-track.feature`: "Display recovery rolls section", "Display
+  damage track section" and "Show debilitated status" — `page.textContent
+("body")` immediately after `"I am on the character sheet page"` (a bare
+  `page.goto()` with no post-load wait) sometimes catches a loading
+  placeholder (`"·····················"`) instead of rendered text; one
+  scenario also hit a 2000ms `waitForFunction` timeout.
+
+All three reproduced again in an isolated two-feature-file run, so this isn't
+purely a full-suite resource-contention artifact — `card-reordering.steps.ts`
+and `recovery-damage-track.steps.ts` look like they have the same class of
+missing-synchronization bug fixed in §2.16 (bare navigation/DOM reads with no
+wait for the app's async render to finish), but neither was part of this
+review's original scope and neither was touched by any change in this cycle.
+Logged here rather than fixed so scope stays bounded to what was asked;
+tracked in `docs/IMPLEMENTATION_PLAN.md` for a follow-up pass.
 
 ---
 

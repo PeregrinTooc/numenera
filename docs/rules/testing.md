@@ -638,6 +638,23 @@ const character = createTestCharacter({ name: "Custom Name" });
 - Race conditions (use proper async/await)
 - Time-dependent code (mock time)
 - Random data (use fixed seeds)
+- **`page.evaluate: Execution context was destroyed, most likely because of a
+navigation`, seen only under `npm run test:e2e`/`test:e2e:all` (the dev
+  server), never under `npm run test:e2e:prod`:** this is Vite's dev-server
+  client (`/@vite/client`, injected into every dev-served page) reloading the
+  page on its own connection/ping handshake, independent of any source edit —
+  not present at all in a production build (`vite preview` injects nothing).
+  Re-run the specific scenario against `npm run test:e2e:prod` before treating
+  it as a regression; CI runs that path exclusively, so this class of flake
+  never reaches it.
+- **A step that navigates (`page.goto`, `page.reload`) or calls a test API
+  right after navigation, then immediately reads DOM/storage state:** the app's
+  render pipeline (loading character/version data, i18n, etc.) runs
+  asynchronously after `domcontentloaded`/`load` fires, so a step with no wait
+  in between can race it. Check whether a near-identical sibling step already
+  waits (`waitForLoadState("networkidle")` + a short `waitForTimeout`, or
+  `waitForSelector` on a baseline element like `[data-testid="character-name"]`)
+  and bring the flaky one in line rather than inventing a new pattern.
 
 **Slow tests:**
 
