@@ -362,10 +362,16 @@ export class CharacterSheet {
    */
   toggleLayoutEditMode(): void {
     this.isLayoutEditMode = !this.isLayoutEditMode;
-    if (!this.isLayoutEditMode) {
-      // Save layout when exiting edit mode
-      saveLayout(this.layout);
+    if (this.isLayoutEditMode) {
+      // Re-sync with storage on entry so a long-lived instance (or one whose
+      // layout changed elsewhere, e.g. import or another tab) starts the
+      // session from the real persisted state rather than a stale snapshot.
+      this.layout = loadLayout();
     }
+    // No save on exit: reorderSections/mergeSections/splitGrid already persist
+    // immediately when they mutate this.layout. Re-saving here used to
+    // overwrite storage with this instance's (possibly stale) in-memory copy
+    // whenever the persisted layout had changed since edit mode was entered.
     this.rerender();
   }
 
