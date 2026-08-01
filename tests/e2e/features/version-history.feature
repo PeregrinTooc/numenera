@@ -145,6 +145,13 @@ Feature: Version History (Character Time Travel)
         When I navigate to version 2
         Then the portrait should remain unchanged
 
+    Scenario: Restoring an old version keeps the current portrait
+        Given the character has 3 versions with different names
+        And the character has a portrait image
+        And I am viewing version 1
+        When I click the restore button in the warning banner
+        Then the portrait should remain unchanged
+
     Scenario: Export works from old version
         Given the character has 3 versions in history
         And I am viewing version 1

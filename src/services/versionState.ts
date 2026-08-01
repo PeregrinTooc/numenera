@@ -88,7 +88,15 @@ export class VersionState {
 
     this.currentVersionIndex = index;
     const version = this.allVersions[index];
-    this.displayedCharacter = version.character as Character;
+    // Versions never store a portrait (see versionHistory.ts saveVersion),
+    // so re-attach the current one rather than letting it disappear while
+    // viewing an old version — and, since restoreCurrentVersion() promotes
+    // displayedCharacter to latestCharacter, this also keeps a restore from
+    // permanently dropping the image.
+    this.displayedCharacter = {
+      ...(version.character as Character),
+      portrait: this.latestCharacter.portrait,
+    };
   }
 
   /**

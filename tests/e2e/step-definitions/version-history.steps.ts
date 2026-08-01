@@ -203,10 +203,13 @@ Given(
 
 Given("the character has a portrait image", async function (this: CustomWorld) {
   // Set a portrait on the character (base64 encoded 1x1 pixel)
-  const character = await this.storageHelper.getCharacter();
-  character.portrait =
+  const portrait =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+  const character = await this.storageHelper.getCharacter();
+  character.portrait = portrait;
   await this.storageHelper.setCharacter(character);
+  this.testContext = this.testContext || {};
+  this.testContext.uploadedPortrait = portrait;
   await this.page.reload();
   await this.page.waitForTimeout(100);
 });
@@ -828,9 +831,15 @@ Then(
 );
 
 Then("the portrait should remain unchanged", async function (this: CustomWorld) {
-  // Check that portrait is still visible (portraits don't change with version navigation)
-  const portrait = this.page.locator('[data-testid="character-portrait"]');
-  await expect(portrait).toBeVisible();
+  // The outer container renders regardless of whether a portrait is set, so
+  // assert on the actual <img> and its src rather than just container
+  // visibility, or this would pass even if the portrait had been dropped.
+  const portraitImage = this.page.locator('[data-testid="portrait-image-clickable"]');
+  await expect(portraitImage).toBeVisible();
+  const uploadedPortrait = this.testContext?.uploadedPortrait;
+  if (uploadedPortrait) {
+    await expect(portraitImage).toHaveAttribute("src", uploadedPortrait);
+  }
 });
 
 Then(

@@ -68,6 +68,7 @@ describe("VersionState", () => {
     mockCharacter = createMockCharacter("Test Character");
     mockVersionHistory = {
       getAllVersions: vi.fn(),
+      saveVersion: vi.fn().mockResolvedValue(undefined),
     } as any;
 
     versionState = new VersionState(mockCharacter, mockVersionHistory);
@@ -191,6 +192,15 @@ describe("VersionState", () => {
       await expect(versionState.navigateToVersion(-1)).rejects.toThrow("Invalid version index");
       await expect(versionState.navigateToVersion(999)).rejects.toThrow("Invalid version index");
     });
+
+    it("should keep the current portrait when navigating to a version (versions never store one)", async () => {
+      versionState.setLatestCharacter({ ...mockCharacter, portrait: "data:image/png;base64,AAAA" });
+
+      await versionState.navigateToVersion(0);
+
+      expect(versionState.getDisplayedCharacter().portrait).toBe("data:image/png;base64,AAAA");
+      expect(versionState.getDisplayedCharacter().name).toBe("Version 1");
+    });
   });
 
   describe("restoreToLatest", () => {
@@ -210,6 +220,25 @@ describe("VersionState", () => {
 
       expect(versionState.isViewingOldVersion()).toBe(false);
       expect(versionState.getCurrentVersionIndex()).toBe(1);
+    });
+  });
+
+  describe("restoreCurrentVersion", () => {
+    it("should keep the current portrait on the new latest character", async () => {
+      versionState.setLatestCharacter({ ...mockCharacter, portrait: "data:image/png;base64,AAAA" });
+      const timestamp = Date.now();
+      const mockVersions = [
+        createMockVersion("Version 1", "Initial", timestamp),
+        createMockVersion("Version 2", "Edit 1", timestamp),
+      ];
+      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
+      await versionState.init();
+      await versionState.navigateBackward();
+
+      await versionState.restoreCurrentVersion();
+
+      expect(versionState.getLatestCharacter().portrait).toBe("data:image/png;base64,AAAA");
+      expect(versionState.getLatestCharacter().name).toBe("Version 1");
     });
   });
 
