@@ -15,6 +15,10 @@ BeforeAll({ timeout: 60000 }, async function () {
   // Just launch the browser
   browser = await chromium.launch({
     headless: !process.env.HEADED,
+    // Optional escape hatch for environments where Playwright's pinned
+    // browser download isn't reachable. Unset by default (undefined), so
+    // normal local/CI runs are unaffected and use Playwright's own browser.
+    executablePath: process.env.PW_EXEC_PATH || undefined,
   });
 });
 
@@ -101,56 +105,22 @@ Before(async function (this: CustomWorld) {
     (window as any).__SQUASH_DELAY_MS__ = 1000;
   });
 
-  // Navigate to the server and clear both localStorage and IndexedDB for clean state
+  // Navigate to the server and clear both localStorage and IndexedDB for clean state.
+  //
+  // This clears through the app's own test APIs (window.__testStorage /
+  // window.__testVersionHistory) rather than indexedDB.deleteDatabase(),
+  // because the page we just navigated to has already booted the app and
+  // opened its own connections to these exact databases. A delete request
+  // against a database the same page holds open fires "blocked" instead of
+  // succeeding, and previously that was masked only because the delete
+  // targeted the wrong database name ("NumeneraCharacterDB", which nothing
+  // ever opens) and so never actually blocked. Clearing through the already-
+  // open connections avoids the blocked-delete problem entirely.
   await this.page.goto(BASE_URL);
   await this.page.evaluate(async () => {
     localStorage.clear();
-
-    // Clear IndexedDB with retry logic
-    const dbName = "NumeneraCharacterDB";
-    let attempts = 0;
-    const maxAttempts = 3;
-
-    while (attempts < maxAttempts) {
-      try {
-        // First, try to close any open connections
-        const openRequest = indexedDB.open(dbName);
-        await new Promise<void>((resolve) => {
-          openRequest.onsuccess = () => {
-            openRequest.result.close();
-            resolve();
-          };
-          openRequest.onerror = () => resolve();
-        });
-
-        // Then delete the database
-        const deleted = await new Promise<boolean>((resolve) => {
-          const request = indexedDB.deleteDatabase(dbName);
-          request.onsuccess = () => resolve(true);
-          request.onerror = () => resolve(false);
-          request.onblocked = () => {
-            console.warn(`IndexedDB deletion blocked (attempt ${attempts + 1}/${maxAttempts})`);
-            // Wait a bit and try again
-            setTimeout(() => resolve(false), 100);
-          };
-        });
-
-        if (deleted) {
-          break;
-        }
-
-        attempts++;
-        if (attempts < maxAttempts) {
-          await new Promise((resolve) => setTimeout(resolve, 100));
-        }
-      } catch (error) {
-        console.error(`Error clearing IndexedDB (attempt ${attempts + 1}/${maxAttempts}):`, error);
-        attempts++;
-        if (attempts < maxAttempts) {
-          await new Promise((resolve) => setTimeout(resolve, 100));
-        }
-      }
-    }
+    await window.__testStorage?.clearCharacterState();
+    await window.__testVersionHistory?.clearVersions();
   });
 
   // Wait for the page to be fully loaded after clearing storage

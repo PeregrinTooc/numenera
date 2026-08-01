@@ -1,9 +1,9 @@
 import type { ICharacterStorage } from "./ICharacterStorage.js";
-import { STORAGE_KEY } from "./storageConstants.js";
+import { STORAGE_KEY, CHARACTER_DB_NAME } from "./storageConstants.js";
 import { CompletionNotifier } from "../utils/completionNotifier.js";
 import type { Character } from "../types/character.js";
 
-const DB_NAME = "numenera-character-db";
+const DB_NAME = CHARACTER_DB_NAME;
 const STORE_NAME = "characters";
 const DB_VERSION = 1;
 const CHARACTER_KEY = "current";

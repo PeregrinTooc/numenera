@@ -1,6 +1,6 @@
 import type { Character } from "../types/character";
 import type { Layout } from "../types/layout";
-import { SCHEMA_VERSION } from "./storageConstants";
+import { SCHEMA_VERSION, FILE_HANDLES_DB_NAME } from "./storageConstants";
 import { loadLayout } from "./layoutStorage";
 
 // Type declarations for File System Access API
@@ -271,7 +271,7 @@ export class ExportManager {
 
   private openHandleDB(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open("FileHandles", 1);
+      const request = indexedDB.open(FILE_HANDLES_DB_NAME, 1);
 
       request.onerror = () => reject(request.error);
       request.onsuccess = () => resolve(request.result);

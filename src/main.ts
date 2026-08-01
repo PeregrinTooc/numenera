@@ -773,12 +773,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadCharacterState,
     clearCharacterState: async () => {
       localStorage.clear();
-      const dbName = "NumeneraCharacterDB";
-      await new Promise<void>((resolve, reject) => {
-        const request = indexedDB.deleteDatabase(dbName);
-        request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
-      });
+      // Go through the real adapter rather than deleting a database by name:
+      // this targets whichever backend is actually active (IndexedDB or the
+      // localStorage fallback) under its real name, instead of a hardcoded
+      // "NumeneraCharacterDB" that never matched the real
+      // "numenera-character-db" database.
+      await clearCharacterState();
     },
   };
 
@@ -795,23 +795,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       return await versionHistory.getAllVersions();
     },
     clearVersions: async () => {
-      // Clear all versions from IndexedDB
-      const dbName = "NumeneraCharacterDB";
-      const db = await new Promise<IDBDatabase>((resolve, reject) => {
-        const request = indexedDB.open(dbName, 1);
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-
-      const transaction = db.transaction(["versions"], "readwrite");
-      const store = transaction.objectStore("versions");
-      await new Promise<void>((resolve, reject) => {
-        const request = store.clear();
-        request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
-      });
-
-      db.close();
+      // Go through the real manager's own clear(), targeting the actual
+      // "numenera-version-history-db" database and "versions" store, rather
+      // than hand-rolling a transaction against a hardcoded, wrong DB name
+      // ("NumeneraCharacterDB") that has no "versions" store at all.
+      const versionHistory = await getVersionHistory();
+      await versionHistory.clear();
 
       // Update navigator to reflect cleared state (reload to get updated list)
       await updateVersionNavigator(true);

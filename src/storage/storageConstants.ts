@@ -33,3 +33,16 @@ export const STORAGE_KEY = "numenera-character-state";
  * Stored separately from character data as it's a user preference
  */
 export const LAYOUT_STORAGE_KEY = "numenera-layout";
+
+/**
+ * IndexedDB database names.
+ *
+ * Centralized here so the app code, the storage layer, and the E2E test
+ * harness cannot drift apart. They previously did: main.ts's E2E test hooks
+ * and tests/e2e/support/hooks.ts both hardcoded "NumeneraCharacterDB", which
+ * matches none of the databases below — so test cleanup silently deleted
+ * nothing and version-clearing threw ("versions" store not found).
+ */
+export const CHARACTER_DB_NAME = "numenera-character-db";
+export const VERSION_HISTORY_DB_NAME = "numenera-version-history-db";
+export const FILE_HANDLES_DB_NAME = "FileHandles";

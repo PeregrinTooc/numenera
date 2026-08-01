@@ -7,11 +7,12 @@ import type { Character } from "../types/character.js";
 import { IndexedDBStorageImpl } from "./indexedDBStorageImpl.js";
 import { LocalStorageImpl } from "./localStorageImpl.js";
 import { VersionHistoryManager } from "./versionHistory.js";
+import { CHARACTER_DB_NAME } from "./storageConstants.js";
 
 let storageInstance: ICharacterStorage | null = null;
-let versionHistoryInstance: VersionHistoryManager | null = null;
+let versionHistoryPromise: Promise<VersionHistoryManager> | null = null;
 
-const DB_NAME = "numenera-character-db";
+const DB_NAME = CHARACTER_DB_NAME;
 
 /**
  * Delete the IndexedDB database to clean up corrupted state
@@ -144,14 +145,24 @@ export async function clearCharacterState(): Promise<void> {
  * Get the version history manager instance (singleton pattern)
  * Initializes on first access
  *
+ * Caches the in-flight promise rather than the instance. Publishing the
+ * instance before init() resolved meant a concurrent second caller could
+ * receive a manager with db === null, failing with
+ * "VersionHistoryManager not initialized".
+ *
  * @returns Initialized version history manager
  */
-export async function getVersionHistory(): Promise<VersionHistoryManager> {
-  if (versionHistoryInstance) {
-    return versionHistoryInstance;
+export function getVersionHistory(): Promise<VersionHistoryManager> {
+  if (!versionHistoryPromise) {
+    versionHistoryPromise = (async () => {
+      const manager = new VersionHistoryManager();
+      await manager.init();
+      return manager;
+    })().catch((error) => {
+      // Allow a retry on the next call rather than caching a permanent failure.
+      versionHistoryPromise = null;
+      throw error;
+    });
   }
-
-  versionHistoryInstance = new VersionHistoryManager();
-  await versionHistoryInstance.init();
-  return versionHistoryInstance;
+  return versionHistoryPromise;
 }
