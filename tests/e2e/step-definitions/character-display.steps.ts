@@ -1,6 +1,7 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { DOMHelpers } from "../support/dom-helpers.js";
+import { waitForCharacterSheetReady } from "../support/app-ready.js";
 
 Given("a character exists with the following data:", function (_dataTable) {
   // Test data is defined in the feature file Background
@@ -10,6 +11,7 @@ Given("a character exists with the following data:", function (_dataTable) {
 
 Given("I am on the character sheet page", async function () {
   await this.page.goto(this.getBaseUrl() + "");
+  await waitForCharacterSheetReady(this.page);
 });
 
 Then("I should see the character name {string}", async function (name: string) {

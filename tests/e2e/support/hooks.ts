@@ -23,9 +23,15 @@ BeforeAll({ timeout: 60000 }, async function () {
 });
 
 Before(async function (this: CustomWorld) {
-  // Create a new context and page for each test
+  // Create a new context and page for each test.
+  // Locale is pinned to en-US: i18next's LanguageDetector falls back to
+  // navigator.language, which otherwise inherits the host OS locale. Step
+  // definitions assert on hardcoded English strings, so an unpinned locale
+  // makes every scenario fail deterministically on a non-English machine
+  // (doesn't show up in CI, which already runs en-US).
   this.context = await browser.newContext({
     hasTouch: true,
+    locale: "en-US",
   });
   this.page = await this.context.newPage();
 
