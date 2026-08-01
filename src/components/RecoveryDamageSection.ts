@@ -15,20 +15,30 @@ export class RecoveryDamageSection {
     // Create RecoveryRolls with field update handler
     this.recoveryRolls = new RecoveryRolls(this.character.recoveryRolls, (field, value) => {
       if (field === "recoveryModifier") {
-        this.character.recoveryRolls.modifier = value;
-        persistCharacterState(this.character);
-        // Dispatch character-updated for auto-save
-        const app = document.getElementById("app");
-        if (app) {
-          app.dispatchEvent(new CustomEvent("character-updated"));
-          // Dispatch recovery-updated for targeted re-render
-          app.dispatchEvent(new CustomEvent("recovery-updated"));
-        }
+        this.character.recoveryRolls.modifier = value as number;
+      } else {
+        this.character.recoveryRolls[field] = value as boolean;
       }
+      this.notifyUpdated();
     });
 
-    // Create DamageTrack
-    this.damageTrack = new DamageTrack(this.character.damageTrack);
+    // Create DamageTrack with field update handler
+    this.damageTrack = new DamageTrack(this.character.damageTrack, (impairment) => {
+      this.character.damageTrack.impairment = impairment;
+      this.notifyUpdated();
+    });
+  }
+
+  private notifyUpdated(): void {
+    persistCharacterState(this.character);
+    const app = document.getElementById("app");
+    if (app) {
+      // Dispatch character-updated for auto-save
+      app.dispatchEvent(new CustomEvent("character-updated"));
+      // Dispatch recovery-updated for a targeted re-render (also covers
+      // damage-track changes: its handler re-renders the full sheet)
+      app.dispatchEvent(new CustomEvent("recovery-updated"));
+    }
   }
 
   render(): TemplateResult {

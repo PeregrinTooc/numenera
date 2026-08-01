@@ -2,6 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { DOMHelpers } from "../support/dom-helpers.js";
 import { TestStorageHelper } from "../support/testStorageHelper.js";
+import { waitForSaveComplete } from "./auto-save-indicator.steps.js";
 
 // Recovery Rolls step definitions
 
@@ -221,4 +222,22 @@ When("I confirm the edit", async function () {
   const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
   await confirmButton.click();
   await this.page.waitForTimeout(200);
+});
+
+// Persistence step definitions
+
+When("I click the {string} recovery checkbox", async function (rollType: string) {
+  const dom = new DOMHelpers(this.page);
+  const sanitized = rollType.toLowerCase().replace(/\s+/g, "-");
+  const checkbox = dom.getByTestId(`recovery-${sanitized}`);
+  await checkbox.click();
+  await waitForSaveComplete(this.page);
+});
+
+When("I select the {string} damage status", async function (status: string) {
+  const dom = new DOMHelpers(this.page);
+  const sanitized = status.toLowerCase();
+  const radio = dom.getByTestId(`damage-${sanitized}`);
+  await radio.click();
+  await waitForSaveComplete(this.page);
 });

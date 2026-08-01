@@ -76,3 +76,13 @@ Feature: Recovery Rolls and Damage Tracking
     When I enter "5" in the modifier field
     And I confirm the edit
     Then I should see "1d6 + 5" in the recovery section
+
+  Scenario: Ticking a recovery roll persists after reload
+    When I click the "Action" recovery checkbox
+    And I reload the page
+    Then the "Action" recovery checkbox should be checked
+
+  Scenario: Selecting a damage status persists after reload
+    When I select the "Impaired" damage status
+    And I reload the page
+    Then the "Impaired" radio button should be selected

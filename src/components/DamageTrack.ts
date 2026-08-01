@@ -3,7 +3,10 @@ import { DamageTrack as DamageTrackType } from "../types/character.js";
 import { t } from "../i18n/index.js";
 
 export class DamageTrack {
-  constructor(private data: DamageTrackType) {
+  constructor(
+    private data: DamageTrackType,
+    private onFieldUpdate?: (impairment: DamageTrackType["impairment"]) => void
+  ) {
     // Defensive: provide defaults if data is undefined (shouldn't happen with schema v4)
     this.data = data ?? {
       impairment: "healthy",
@@ -32,6 +35,7 @@ export class DamageTrack {
               data-testid="damage-healthy"
               value="healthy"
               ?checked=${impairment === "healthy"}
+              @change=${() => this.onFieldUpdate?.("healthy")}
               class="damage-radio mt-1 w-5 h-5 text-green-600 border-green-400 focus:ring-green-500"
             />
             <div class="flex-1">
@@ -51,6 +55,7 @@ export class DamageTrack {
               data-testid="damage-impaired"
               value="impaired"
               ?checked=${impairment === "impaired"}
+              @change=${() => this.onFieldUpdate?.("impaired")}
               class="damage-radio mt-1 w-5 h-5 text-yellow-600 border-yellow-400 focus:ring-yellow-500"
             />
             <div class="flex-1">
@@ -73,6 +78,7 @@ export class DamageTrack {
               data-testid="damage-debilitated"
               value="debilitated"
               ?checked=${impairment === "debilitated"}
+              @change=${() => this.onFieldUpdate?.("debilitated")}
               class="damage-radio mt-1 w-5 h-5 text-red-600 border-red-400 focus:ring-red-500"
             />
             <div class="flex-1">

@@ -4,10 +4,15 @@ import { t } from "../i18n/index.js";
 import { ModalService } from "../services/modalService.js";
 import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
 
+type RecoveryRollField = "action" | "tenMinutes" | "oneHour" | "tenHours";
+
 export class RecoveryRolls {
   constructor(
     private data: RecoveryRollsType,
-    private onFieldUpdate?: (field: "recoveryModifier", value: number) => void
+    private onFieldUpdate?: (
+      field: "recoveryModifier" | RecoveryRollField,
+      value: number | boolean
+    ) => void
   ) {
     // Defensive: provide defaults if data is undefined (shouldn't happen with schema v4)
     this.data = data ?? {
@@ -17,6 +22,10 @@ export class RecoveryRolls {
       tenHours: false,
       modifier: 0,
     };
+  }
+
+  private handleRollToggle(field: RecoveryRollField, e: Event): void {
+    this.onFieldUpdate?.(field, (e.target as HTMLInputElement).checked);
   }
 
   private openEditModal(): void {
@@ -72,6 +81,7 @@ export class RecoveryRolls {
               data-testid="recovery-action"
               data-recovery-roll="action"
               ?checked=${action}
+              @change=${(e: Event) => this.handleRollToggle("action", e)}
               class="recovery-checkbox w-5 h-5 text-green-600 border-green-300 rounded focus:ring-green-500"
             />
             <span class="font-serif text-sm text-green-900">
@@ -89,6 +99,7 @@ export class RecoveryRolls {
               data-testid="recovery-ten-minutes"
               data-recovery-roll="tenMinutes"
               ?checked=${tenMinutes}
+              @change=${(e: Event) => this.handleRollToggle("tenMinutes", e)}
               class="recovery-checkbox w-5 h-5 text-green-600 border-green-300 rounded focus:ring-green-500"
             />
             <span class="font-serif text-sm text-green-900">
@@ -106,6 +117,7 @@ export class RecoveryRolls {
               data-testid="recovery-one-hour"
               data-recovery-roll="oneHour"
               ?checked=${oneHour}
+              @change=${(e: Event) => this.handleRollToggle("oneHour", e)}
               class="recovery-checkbox w-5 h-5 text-green-600 border-green-300 rounded focus:ring-green-500"
             />
             <span class="font-serif text-sm text-green-900">
@@ -123,6 +135,7 @@ export class RecoveryRolls {
               data-testid="recovery-ten-hours"
               data-recovery-roll="tenHours"
               ?checked=${tenHours}
+              @change=${(e: Event) => this.handleRollToggle("tenHours", e)}
               class="recovery-checkbox w-5 h-5 text-green-600 border-green-300 rounded focus:ring-green-500"
             />
             <span class="font-serif text-sm text-green-900">
