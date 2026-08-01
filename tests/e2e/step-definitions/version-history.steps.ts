@@ -109,6 +109,12 @@ Given("the character has a version with name change", async function (this: Cust
 Given(
   "the character has a version with multiple basic info changes",
   async function (this: CustomWorld) {
+    // Wait for the app's own bootstrap (which saves the initial version) to
+    // finish before creating more, or this step's first created version can
+    // race the app's initial-version save for the same IndexedDB store.
+    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForTimeout(500);
+
     // Create a version with multiple basic info changes
     const baseCharacter = await this.storageHelper.getCharacter();
     const versionCharacter = {
@@ -138,6 +144,13 @@ Given(
 Given(
   "the character has {int} versions with different data",
   async function (this: CustomWorld, versionCount: number) {
+    // Wait for the app's own bootstrap (which saves the initial version) to
+    // finish before creating more, or the two races for the same IndexedDB
+    // "versions" store and this step's first created version can overwrite
+    // the initial one instead of following it.
+    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForTimeout(500);
+
     // Create versions with different character data
     const baseCharacter = await this.storageHelper.getCharacter();
 
@@ -201,6 +214,12 @@ Given("the character has a portrait image", async function (this: CustomWorld) {
 Given(
   "the character has a version from {int} minutes ago",
   async function (this: CustomWorld, _minutes: number) {
+    // Wait for the app's own bootstrap (which saves the initial version) to
+    // finish before creating more, or this step's first created version can
+    // race the app's initial-version save for the same IndexedDB store.
+    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForTimeout(500);
+
     // Create version with timestamp from specified minutes ago
     // Note: We create a version now and the test will check if the timestamp is displayed in readable format
     // The actual timestamp manipulation would require exposing more test APIs
