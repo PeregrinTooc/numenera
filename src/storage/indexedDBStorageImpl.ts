@@ -1,8 +1,9 @@
 import type { ICharacterStorage } from "./ICharacterStorage.js";
-import { STORAGE_KEY } from "./storageConstants.js";
+import { STORAGE_KEY, CHARACTER_DB_NAME } from "./storageConstants.js";
 import { CompletionNotifier } from "../utils/completionNotifier.js";
+import type { Character } from "../types/character.js";
 
-const DB_NAME = "numenera-character-db";
+const DB_NAME = CHARACTER_DB_NAME;
 const STORE_NAME = "characters";
 const DB_VERSION = 1;
 const CHARACTER_KEY = "current";
@@ -83,18 +84,7 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
         throw new Error(`Object store '${STORE_NAME}' not found in database`);
       }
 
-      const result = await new Promise<any | null>((resolve, reject) => {
-        const transaction = this.db!.transaction([STORE_NAME], "readonly");
-        const store = transaction.objectStore(STORE_NAME);
-        const request = store.get(CHARACTER_KEY);
-
-        request.onsuccess = () => {
-          const result = request.result;
-          resolve(result || null);
-        };
-
-        request.onerror = () => reject(new Error("Failed to load character"));
-      });
+      const result = await this.loadInternal();
 
       notifier.complete({ source: "indexedDB", found: result !== null });
       return result;
@@ -102,6 +92,29 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
       notifier.error(error);
       throw error;
     }
+  }
+
+  /**
+   * Internal load without event emissions
+   * Used during migration to avoid nested events
+   */
+  private async loadInternal(): Promise<Character | null> {
+    if (!this.db) {
+      throw new Error("IndexedDB not initialized");
+    }
+
+    if (!this.db.objectStoreNames.contains(STORE_NAME)) {
+      throw new Error(`Object store '${STORE_NAME}' not found in database`);
+    }
+
+    return new Promise<Character | null>((resolve, reject) => {
+      const transaction = this.db!.transaction([STORE_NAME], "readonly");
+      const store = transaction.objectStore(STORE_NAME);
+      const request = store.get(CHARACTER_KEY);
+
+      request.onsuccess = () => resolve(request.result || null);
+      request.onerror = () => reject(new Error("Failed to load character"));
+    });
   }
 
   async clear(): Promise<void> {
@@ -189,6 +202,17 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (!stored) {
         return; // Nothing to migrate
+      }
+
+      // Migration is one-way and one-time: adopt the localStorage copy only when
+      // IndexedDB is genuinely empty. This runs on every page load, so without
+      // the guard a stale localStorage entry is replayed over newer IndexedDB
+      // data and silently reverts the user's most recent edits.
+      const existing = await this.loadInternal();
+      if (existing !== null) {
+        localStorage.removeItem(STORAGE_KEY);
+        console.log("IndexedDB already populated; discarded stale localStorage copy");
+        return;
       }
 
       let character;

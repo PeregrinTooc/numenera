@@ -2,8 +2,9 @@ import type { Character } from "../types/character.js";
 import type { CharacterVersion } from "../types/versionHistory.js";
 import { generateETag } from "../utils/etag.js";
 import { CompletionNotifier } from "../utils/completionNotifier.js";
+import { VERSION_HISTORY_DB_NAME } from "./storageConstants.js";
 
-const DEFAULT_DB_NAME = "numenera-version-history-db";
+const DEFAULT_DB_NAME = VERSION_HISTORY_DB_NAME;
 const STORE_NAME = "versions";
 const DB_VERSION = 1;
 const MAX_VERSIONS = 99;

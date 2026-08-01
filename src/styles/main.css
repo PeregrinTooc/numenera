@@ -47,7 +47,12 @@
   background: linear-gradient(to bottom, #f5e6d3, #ede1cf);
 }
 
-/* Custom theme configuration */
+/* Custom theme configuration — the single source of truth for the theme.
+   Tailwind v4 reads theme values from this block. Do not reintroduce a
+   tailwind.config.js: loading one needs an @config directive, and @config
+   cannot go here because CSS requires @import to precede other at-rules, so
+   placing it above the component imports silently drops all of them from the
+   bundle without any build error. */
 @theme {
   --color-numenera-primary: #1a5490;
   --color-numenera-secondary: #8b4513;
@@ -58,4 +63,14 @@
   --color-parchment-dark: #e5d4be;
 
   --color-brown-900: #2d2416;
+
+  /* Small-phone breakpoint. Expressed in rem to match Tailwind v4's other
+     breakpoints, so all of them scale with the browser's font size. */
+  --breakpoint-xs: 30rem; /* 480px at the default 16px root */
+
+  /* Font stacks. edit-modal.css consumes --font-handwritten via var(), which
+     resolved to nothing until these were declared. */
+  --font-sans: "Cinzel", Georgia, serif;
+  --font-serif: "Cinzel", Georgia, serif;
+  --font-handwritten: "Caveat", "Patrick Hand", cursive;
 }

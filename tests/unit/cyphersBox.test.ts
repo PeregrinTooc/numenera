@@ -2,9 +2,11 @@
 
 import { render } from "lit-html";
 import { CyphersBox } from "../../src/components/CyphersBox.js";
-import { Character } from "../../src/types/character.js";
+import { Character, Cypher } from "../../src/types/character.js";
+import { CypherItem } from "../../src/components/CypherItem.js";
+import { createItemInstances } from "../../src/components/helpers/CollectionBehavior.js";
 
-vi.mock("../../src/storage/localStorage.js");
+vi.mock("../../src/storage/storageFactory.js");
 
 describe("CyphersBox", () => {
   let container: HTMLElement;
@@ -200,18 +202,27 @@ describe("CyphersBox", () => {
     expect(mockCharacter.cyphers[2]).toEqual(newCypher);
   });
 
-  it("should save character state after adding cypher", async () => {
-    const { saveCharacterState } = await import("../../src/storage/localStorage.js");
+  it("should persist through the storage adapter when a cypher is edited", async () => {
+    const { persistCharacterState } = await import("../../src/storage/storageFactory.js");
+    vi.mocked(persistCharacterState).mockClear();
+
     const component = new CyphersBox(mockCharacter, mockOnFieldUpdate);
     render(component.render(), container);
 
-    // Simulate adding a cypher
-    const newCypher = { name: "New Cypher", level: "1d6", effect: "Test effect" };
-    mockCharacter.cyphers.push(newCypher);
+    // Drive the real update path: createItemInstances wires an onUpdate handler
+    // onto each rendered cypher, and that handler is what persists.
+    const items = createItemInstances<Cypher, CypherItem>({
+      collection: mockCharacter.cyphers,
+      ItemComponentClass: CypherItem,
+      character: mockCharacter,
+      collectionKey: "cyphers",
+    });
+    const updated = { ...mockCharacter.cyphers[0], name: "Renamed Cypher" };
+    (items[0] as unknown as { onUpdate?: (c: Cypher) => void }).onUpdate?.(updated);
 
-    // The implementation should call saveCharacterState
-    // We'll verify this through the mock
-    expect(saveCharacterState).toBeDefined();
+    // Rule #11: persistence goes through the factory, never localStorage directly
+    expect(persistCharacterState).toHaveBeenCalledWith(mockCharacter);
+    expect(mockCharacter.cyphers[0].name).toBe("Renamed Cypher");
   });
 
   it("should dispatch character-updated event after adding cypher", () => {

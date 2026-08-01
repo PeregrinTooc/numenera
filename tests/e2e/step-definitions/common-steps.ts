@@ -382,7 +382,12 @@ When("I reload the page", async function (this: CustomWorld) {
   }
 
   await this.page!.reload();
-  await this.page!.waitForLoadState("domcontentloaded");
+  // "domcontentloaded" fires before the app's own async render pipeline
+  // (loadLayout/loadCharacterState, etc.) has produced any DOM content.
+  // Wait for a baseline element every character sheet render always
+  // includes, so callers checking rendered state right after don't race
+  // the app's own bootstrap.
+  await this.page!.waitForSelector('[data-testid="character-name"]');
 });
 
 // ============================================================================

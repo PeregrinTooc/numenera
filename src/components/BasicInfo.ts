@@ -4,7 +4,7 @@ import { html, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
 import { FieldType as ValidationFieldType } from "../utils/unified-validation.js";
 import { ModalService } from "../services/modalService.js";
-import { saveCharacterState } from "../storage/localStorage.js";
+import { persistCharacterState } from "../storage/storageFactory.js";
 import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
 import { t } from "../i18n/index.js";
 
@@ -39,7 +39,7 @@ export class BasicInfo {
     reader.onload = () => {
       const base64 = reader.result as string;
       this.character.portrait = base64;
-      saveCharacterState(this.character);
+      persistCharacterState(this.character);
 
       // Dispatch character-updated event
       const event = new CustomEvent("character-updated", {
@@ -58,7 +58,7 @@ export class BasicInfo {
 
   private handlePortraitRemove(): void {
     this.character.portrait = undefined;
-    saveCharacterState(this.character);
+    persistCharacterState(this.character);
 
     // Dispatch character-updated event
     const event = new CustomEvent("character-updated", {
@@ -82,7 +82,7 @@ export class BasicInfo {
   private handleTypeChange(e: Event): void {
     const select = e.target as HTMLSelectElement;
     this.character.type = select.value as "Nano" | "Glaive" | "Jack";
-    saveCharacterState(this.character);
+    persistCharacterState(this.character);
 
     // Dispatch character-updated event
     const event = new CustomEvent("character-updated", {

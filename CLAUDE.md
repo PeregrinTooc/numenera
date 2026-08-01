@@ -82,10 +82,15 @@ docs/
 
 ## The 11 Rules
 
-These are the project's standing rules. Rules 2, 3, 6 and 10 describe how the
-maintainer wants features built; follow them for feature work unless the user
-asks for something different in the moment — an explicit instruction from the
-user always wins over this file.
+**These rules are ABSOLUTE and NON-NEGOTIABLE.** Each one states
+`Exception: None` in its detail file, and that is meant literally.
+
+Where the codebase currently violates a rule, the **code** is wrong, not the
+rule. Fix the violation; do not relax the rule and do not copy the violating
+pattern. Outstanding violations are tracked in `docs/RULE_VIOLATIONS.md`.
+
+If a rule ever appears genuinely impossible or self-contradictory, raise it with
+the maintainer rather than quietly working around it.
 
 ### 1. Present changes for review before committing
 
@@ -179,19 +184,16 @@ Starting a task?
 
 ## Gotchas
 
-- **Imports use relative paths with an explicit `.js` extension**
-  (`import { t } from "../i18n/index.js"`), even in `.ts` files. The `@/*`
-  aliases are configured in both `tsconfig.json` and `vite.config.ts` but no
-  source file uses them today. Match the surrounding code: relative + `.js`.
-- **Prettier uses semicolons** (`"semi": true`), double quotes, 100-column width,
-  2-space indent. Run `npm run format` rather than hand-formatting.
-- **Tailwind v4 reads `@theme` in `src/styles/main.css`**, not `tailwind.config.js`
-  (there is no `@config` directive). Custom colours must be declared as
-  `--color-*` custom properties there.
+- **Use `@/` path aliases for src imports** (Rule 5), e.g.
+  `import { t } from "@/i18n/index";`. Aliases are configured in
+  `tsconfig.json`, `vite.config.ts` and `vitest.config.ts`.
+- **Formatting is Prettier's job.** Run `npm run format`; don't hand-format.
+- **Tailwind theme values live in the `@theme` block of `src/styles/main.css`**
+  as `--color-*`, `--breakpoint-*` and `--font-*` custom properties. That is the
+  only place Tailwind v4 reads; there is no `tailwind.config.js`.
 - **Tailwind class names must be literal.** Constructing them
   (`` `bg-${theme}-100` ``) means the class is never generated in the production
-  build. `src/components/helpers/CollectionBehavior.ts` does this today and the
-  add-buttons lose their colours in `dist/`.
+  build, because Tailwind scans source for literal strings.
 - **Version history excludes the portrait** — see `src/storage/versionHistory.ts`.
 - **Where docs live:** `docs/FEATURES.md` is completed work, `docs/TODO.md` is the
   backlog, `docs/CURRENT_FEATURE.md` is the feature in flight. Move entries
