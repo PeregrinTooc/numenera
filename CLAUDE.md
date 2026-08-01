@@ -177,13 +177,6 @@ Never touch `localStorage` directly from a component. Go through
 `clearCharacterState`), which selects IndexedDB or localStorage at runtime.
 → `docs/rules/architecture.md`
 
-> **Known violation.** `src/components/helpers/CollectionBehavior.ts`,
-> `src/components/BasicInfo.ts` and `src/components/RecoveryDamageSection.ts`
-> currently import `saveCharacterState` straight from `src/storage/localStorage.ts`,
-> bypassing the factory. This writes a second, diverging copy of the character
-> that `migrateFromLocalStorage()` later replays over the IndexedDB record. Do not
-> copy this pattern; see `docs/IMPLEMENTATION_PLAN.md`.
-
 ---
 
 ## Decision Tree
