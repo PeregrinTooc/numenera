@@ -81,6 +81,15 @@ export default [
     },
   },
   {
-    ignores: ["node_modules", "dist", "build", "coverage", "*.config.js", "scripts", "stryker-tmp"],
+    ignores: [
+      "node_modules",
+      "dist",
+      "build",
+      "coverage",
+      "*.config.js",
+      "scripts",
+      "stryker-tmp",
+      ".claude",
+    ],
   },
 ];
