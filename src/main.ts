@@ -646,123 +646,115 @@ async function renderCharacterSheet(
   // Update the global BEFORE state for version history tracking
   // This must happen AFTER rendering but BEFORE any component can dispatch character-updated
   characterBeforeUpdate = currentCharacter ? globalThis.structuredClone(currentCharacter) : null;
+}
 
-  // Listen for cyphers-updated events for targeted cypher re-render (smooth, no flash)
-  setTimeout(() => {
-    const cyphersListener = async (_e: Event) => {
-      // Find the cyphers section and re-render it directly
-      const section = document.querySelector("[data-testid='cyphers-section']");
-      if (section && currentSheet && (currentSheet as any).cyphersBox) {
-        const cyphersBox = (currentSheet as any).cyphersBox;
-        render(cyphersBox.render(), section.parentElement!, { renderBefore: section });
-        section.remove();
-      }
-    };
+// Listen for cyphers-updated events for targeted cypher re-render (smooth, no flash)
+function handleCyphersUpdated(_e: Event): void {
+  // Find the cyphers section and re-render it directly
+  const app = document.getElementById("app");
+  const section = document.querySelector("[data-testid='cyphers-section']");
+  if (app && section && currentSheet && (currentSheet as any).cyphersBox) {
+    const cyphersBox = (currentSheet as any).cyphersBox;
+    render(cyphersBox.render(), section.parentElement!, { renderBefore: section });
+    section.remove();
+  }
+}
 
-    // Remove any existing listeners to avoid duplicates
-    app.removeEventListener("cyphers-updated", cyphersListener as EventListener);
-    app.addEventListener("cyphers-updated", cyphersListener as EventListener);
-  }, 0);
+// Listen for collection-updated events for targeted re-render of collection sections
+// Uses same pattern as cyphers-updated: find section, render component, remove old section
+function handleCollectionUpdated(e: Event): void {
+  const customEvent = e as CustomEvent<{ section: string }>;
+  const sectionName = customEvent.detail?.section;
 
-  // Listen for collection-updated events for targeted re-render of collection sections
-  // Uses same pattern as cyphers-updated: find section, render component, remove old section
-  setTimeout(() => {
-    const collectionListener = async (e: Event) => {
-      const customEvent = e as CustomEvent<{ section: string }>;
-      const sectionName = customEvent.detail?.section;
+  if (sectionName === "abilities") {
+    // Targeted re-render abilities section (same pattern as cyphers)
+    const section = document.querySelector("[data-testid='abilities-section']");
+    if (section && currentSheet && (currentSheet as any).abilities) {
+      const abilities = (currentSheet as any).abilities;
+      render(abilities.render(), section.parentElement!, { renderBefore: section });
+      section.remove();
+    }
+  } else if (sectionName === "specialAbilities") {
+    // Targeted re-render special abilities section
+    const section = document.querySelector("[data-testid='special-abilities-section']");
+    if (section && currentSheet && (currentSheet as any).specialAbilities) {
+      const specialAbilities = (currentSheet as any).specialAbilities;
+      render(specialAbilities.render(), section.parentElement!, { renderBefore: section });
+      section.remove();
+    }
+  } else if (sectionName === "attacks") {
+    // Targeted re-render attacks section
+    const section = document.querySelector("[data-testid='attacks-section']");
+    if (section && currentSheet && (currentSheet as any).attacks) {
+      const attacks = (currentSheet as any).attacks;
+      render(attacks.render(), section.parentElement!, { renderBefore: section });
+      section.remove();
+    }
+  } else if (
+    sectionName === "equipment" ||
+    sectionName === "artifacts" ||
+    sectionName === "oddities"
+  ) {
+    // Targeted re-render items section
+    const section = document.querySelector("[data-testid='items-section']");
+    if (section && currentSheet && (currentSheet as any).itemsBox) {
+      const itemsBox = (currentSheet as any).itemsBox;
+      render(itemsBox.render(), section.parentElement!, { renderBefore: section });
+      section.remove();
+    }
+  }
+  // Add more sections here as we implement them
+}
 
-      if (sectionName === "abilities") {
-        // Targeted re-render abilities section (same pattern as cyphers)
-        const section = document.querySelector("[data-testid='abilities-section']");
-        if (section && currentSheet && (currentSheet as any).abilities) {
-          const abilities = (currentSheet as any).abilities;
-          render(abilities.render(), section.parentElement!, { renderBefore: section });
-          section.remove();
-        }
-      } else if (sectionName === "specialAbilities") {
-        // Targeted re-render special abilities section
-        const section = document.querySelector("[data-testid='special-abilities-section']");
-        if (section && currentSheet && (currentSheet as any).specialAbilities) {
-          const specialAbilities = (currentSheet as any).specialAbilities;
-          render(specialAbilities.render(), section.parentElement!, { renderBefore: section });
-          section.remove();
-        }
-      } else if (sectionName === "attacks") {
-        // Targeted re-render attacks section
-        const section = document.querySelector("[data-testid='attacks-section']");
-        if (section && currentSheet && (currentSheet as any).attacks) {
-          const attacks = (currentSheet as any).attacks;
-          render(attacks.render(), section.parentElement!, { renderBefore: section });
-          section.remove();
-        }
-      } else if (
-        sectionName === "equipment" ||
-        sectionName === "artifacts" ||
-        sectionName === "oddities"
-      ) {
-        // Targeted re-render items section
-        const section = document.querySelector("[data-testid='items-section']");
-        if (section && currentSheet && (currentSheet as any).itemsBox) {
-          const itemsBox = (currentSheet as any).itemsBox;
-          render(itemsBox.render(), section.parentElement!, { renderBefore: section });
-          section.remove();
-        }
-      }
-      // Add more sections here as we implement them
-    };
+// Listen for recovery-updated events for targeted re-render of recovery section
+// Since RecoveryRolls is created fresh in render(), we need to re-render the full sheet
+function handleRecoveryUpdated(_e: Event): void {
+  const app = document.getElementById("app");
+  if (app && currentSheet && currentCharacter) {
+    render(currentSheet.render(), app);
+  }
+}
 
-    app.removeEventListener("collection-updated", collectionListener as EventListener);
-    app.addEventListener("collection-updated", collectionListener as EventListener);
-  }, 0);
+// Listen for character-updated events and trigger auto-save
+// Re-rendering is handled by specific event listeners:
+// - cyphers-updated for cyphers
+// - collection-updated for abilities, specialAbilities, attacks, equipment, artifacts, oddities
+// - recovery-updated for recovery modifier
+function handleCharacterUpdated(_e: Event): void {
+  // Buffer the change for version history (for card operations, etc.)
+  const service = window.__versionHistoryService || versionHistoryService;
+  if (service && currentCharacter && characterBeforeUpdate) {
+    // Set initial state before first edit if buffer is empty
+    if (service.getBufferLength() === 0) {
+      service.setInitialState(characterBeforeUpdate);
+    }
+    service.bufferChange(currentCharacter, "Updated character");
 
-  // Listen for recovery-updated events for targeted re-render of recovery section
-  // Since RecoveryRolls is created fresh in render(), we need to re-render the full sheet
-  setTimeout(() => {
-    const recoveryListener = async (_e: Event) => {
-      // Re-render the full sheet to update recovery display
-      if (currentSheet && currentCharacter) {
-        render(currentSheet.render(), app);
-      }
-    };
+    // Update the BEFORE state for the next change
+    characterBeforeUpdate = globalThis.structuredClone(currentCharacter);
+  }
 
-    app.removeEventListener("recovery-updated", recoveryListener as EventListener);
-    app.addEventListener("recovery-updated", recoveryListener as EventListener);
-  }, 0);
+  // Trigger auto-save when character is updated
+  autoSaveService.requestSave();
 
-  // Listen for character-updated events and trigger auto-save
-  // Re-rendering is handled by specific event listeners:
+  // NOTE: No re-render here - specific event listeners handle rendering:
   // - cyphers-updated for cyphers
-  // - collection-updated for abilities, specialAbilities, attacks, equipment, artifacts, oddities
-  // - recovery-updated for recovery modifier
-  // Use setTimeout to ensure the event listener is added after render completes
-  setTimeout(() => {
-    const listener = async (_e: Event) => {
-      // Buffer the change for version history (for card operations, etc.)
-      const service = window.__versionHistoryService || versionHistoryService;
-      if (service && currentCharacter && characterBeforeUpdate) {
-        // Set initial state before first edit if buffer is empty
-        if (service.getBufferLength() === 0) {
-          service.setInitialState(characterBeforeUpdate);
-        }
-        service.bufferChange(currentCharacter, "Updated character");
+  // - collection-updated for other collections
+  // This prevents double re-render (flash) when collections are reordered
+}
 
-        // Update the BEFORE state for the next change
-        characterBeforeUpdate = globalThis.structuredClone(currentCharacter);
-      }
-
-      // Trigger auto-save when character is updated
-      autoSaveService.requestSave();
-
-      // NOTE: No re-render here - specific event listeners handle rendering:
-      // - cyphers-updated for cyphers
-      // - collection-updated for other collections
-      // This prevents double re-render (flash) when collections are reordered
-    };
-
-    // Remove any existing listeners to avoid duplicates
-    app.removeEventListener("character-updated", listener as EventListener);
-    app.addEventListener("character-updated", listener as EventListener);
-  }, 0);
+// Register the four app-level listeners exactly once. They read
+// currentSheet/currentCharacter/etc. from module state at fire time, so a
+// single registration handles every render — no per-render re-registration
+// needed (and no accumulation: registering inside renderCharacterSheet, once
+// per render, built a new closure each time whose removeEventListener call
+// could never match a previously-added one, so listeners piled up and a
+// single event dispatch fired the handler once per prior render).
+function registerAppEventListeners(app: HTMLElement): void {
+  app.addEventListener("cyphers-updated", handleCyphersUpdated);
+  app.addEventListener("collection-updated", handleCollectionUpdated);
+  app.addEventListener("recovery-updated", handleRecoveryUpdated);
+  app.addEventListener("character-updated", handleCharacterUpdated);
 }
 
 // Initialize on page load
@@ -861,6 +853,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.warn("Stored character data is incomplete or corrupted, using default character");
     // Clear the corrupted data
     await clearCharacterState();
+  }
+
+  // Register the app-level event listeners once, before the first render
+  const appElement = document.getElementById("app");
+  if (appElement) {
+    registerAppEventListeners(appElement);
   }
 
   // Render the initial character sheet

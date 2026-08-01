@@ -671,6 +671,17 @@ async function forceSquash(page: Page): Promise<void> {
   await page.waitForTimeout(100);
 }
 
+Then(
+  "the undo buffer should contain exactly {int} changes",
+  async function (this: CustomWorld, expectedLength: number) {
+    const bufferLength = await this.page.evaluate(() => {
+      const service = (window as any).__versionHistoryService;
+      return service ? service.getBufferLength() : -1;
+    });
+    expect(bufferLength).toBe(expectedLength);
+  }
+);
+
 When("I wait for {int} milliseconds", async function (this: CustomWorld, ms: number) {
   // For waits >= 1000ms, assume it's waiting for squash and force it
   if (ms >= 1000) {

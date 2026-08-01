@@ -178,6 +178,17 @@ Feature: Version History (Character Time Travel)
         And I have made buffered edits that were undone
         When I press "Control+Y"
         Then the changes should be reapplied
+
+    Scenario: Adding a card after prior edits does not duplicate buffer entries
+        Given the character has 3 versions in history
+        When I edit the "character name" field to "Edit 1"
+        And I edit the "character name" field to "Edit 2"
+        And I click the add cypher button
+        And I fill in the cypher name with "Test Cypher"
+        And I fill in the cypher level with "1d6"
+        And I fill in the cypher effect with "Test effect"
+        And I confirm the card edit modal
+        Then the undo buffer should contain exactly 3 changes
         And no new version should be created yet
 
     Scenario: Undo navigates through squashed versions
