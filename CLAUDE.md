@@ -52,6 +52,25 @@ npm run check:i18n       # verify every t() key exists in en.json AND de.json
 `concurrently`, wait for it with `wait-on`, and tear it down afterwards. Calling
 `cucumber-js` yourself runs the suite against nothing and every scenario fails.
 
+### Filtering test runs
+
+Every `test:unit*` and `test:e2e*` script accepts extra arguments after `--`,
+which are forwarded to the underlying test runner — narrow a run to a file, a
+name pattern, or both instead of running the whole suite.
+
+```bash
+# Vitest: positional filepath pattern, -t for a test-name pattern
+npm run test:unit -- tests/unit/abilitiesBox.test.ts
+npm run test:unit -- -t "renders correctly"
+npm run test:unit:watch -- tests/unit/abilitiesBox.test.ts
+
+# Cucumber: --name for a scenario-name pattern, plus any cucumber-js CLI flag
+npm run test:e2e -- tests/e2e/features/some.feature --name "some scenario"
+npm run test:e2e:all -- --name "some scenario"
+npm run test:e2e:current -- --name "some scenario"
+npm run test:e2e:prod -- --name "some scenario"
+```
+
 ---
 
 ## Layout
