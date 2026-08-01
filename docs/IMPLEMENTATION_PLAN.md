@@ -16,22 +16,19 @@ before commit (Rule #1).
 
 ## Phase 3 — Unfinished features and honest documentation
 
-### 3.1 Decide the fate of grid merge/split and the import-layout prompt
+### 3.1 Grid merge/split and the import-layout prompt — decided: build it
 
 **Defect:** §2.7. `mergeSections`, `splitGrid`, `updateLayout` and `getLayout`
 have no callers; the imported layout returned by `fileStorage` is discarded.
 
-**This needs a product decision before any code.** Two options:
-
-- **Finish it** — wire merge/split into `handleDrop` (drop onto a section centre
-  merges, drag out splits) and add the import prompt in `main.ts`'s
-  `handleLoadFromFile` using the `hasLayoutDifference` flag that already exists.
-- **Remove it** — delete the dead methods and the unused `fileStorage` return
-  fields, and delete the `@skip`ped scenarios that describe them.
-
-Either way, correct `docs/TODO.md`: the entry attributes these skips to
-Playwright's drag-and-drop limitations, when the features were never wired up.
-That framing is what allowed the gap to persist.
+**Decision:** finish wiring it up rather than delete the dead code. Tracked as
+a proper feature in `docs/TODO.md` under "Grid Merge/Split & Import-Layout
+Conflict Prompt", with the implementation sketch and known risk (this
+project's Playwright drag/drop automation limitation will likely apply to the
+merge/split scenarios too). `docs/TODO.md`'s "Automated Drag/Drop E2E Tests"
+entry has been corrected — it previously misattributed these 7 `@skip`ped
+scenarios to that limitation, when the real reason was that the feature was
+never wired up.
 
 ### 3.2 Restore Tailwind colours on the add buttons
 

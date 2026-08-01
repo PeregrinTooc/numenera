@@ -22,15 +22,18 @@ what remains is the unfinished-feature/documentation work (§2.7, §2.12,
 
 ### 2.7 Grid merge/split and the import-layout prompt are unreachable
 
+**decided: build it — tracked in `docs/TODO.md`**
+
 `CharacterSheet.mergeSections()`, `splitGrid()`, `updateLayout()` and
 `getLayout()` have zero call sites; `handleDrop` only ever calls
 `reorderSections`. Separately, `src/storage/fileStorage.ts` computes `layout` and
 `hasLayoutDifference` on import but `src/main.ts:435-471` reads only `character`
 and `warnings`, so the imported layout is dropped and no prompt exists.
 
-The matching scenarios are `@skip`ped and `docs/TODO.md` attributes this to
-Playwright's drag-and-drop limitations, which obscures that the features were
-never wired up.
+The matching scenarios are `@skip`ped; `docs/TODO.md` previously attributed
+this to Playwright's drag-and-drop limitations, which obscured that the
+features were never wired up. Corrected — see `docs/TODO.md`'s "Grid
+Merge/Split & Import-Layout Conflict Prompt" for the implementation plan.
 
 ### 2.12 Add-button colours are purged from the production CSS
 
