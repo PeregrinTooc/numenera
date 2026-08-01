@@ -1060,7 +1060,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Handle Ctrl+Y, Cmd+Y, or Ctrl+Shift+Z (Redo)
     if (
       ((e.ctrlKey || e.metaKey) && e.key === "y") ||
-      ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "z")
+      ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "z")
     ) {
       e.preventDefault();
 

@@ -187,6 +187,12 @@ Feature: Version History (Character Time Travel)
         When I press "Control+Y"
         Then the changes should be reapplied
 
+    Scenario: Redo with Ctrl+Shift+Z
+        Given the character has 3 versions in history
+        And I have made buffered edits that were undone
+        When I press "Control+Shift+Z"
+        Then the changes should be reapplied
+
     Scenario: Adding a card after prior edits does not duplicate buffer entries
         Given the character has 3 versions in history
         When I edit the "character name" field to "Edit 1"

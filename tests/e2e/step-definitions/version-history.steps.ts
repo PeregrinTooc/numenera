@@ -740,6 +740,24 @@ When("I press {string}", async function (this: CustomWorld, keyCombo: string) {
       // Dispatch on body (not document) so e.target is an HTMLElement
       document.body.dispatchEvent(event);
     });
+  } else if (keyCombo === "Control+Shift+Z") {
+    await this.page.evaluate(() => {
+      // Browsers report KeyboardEvent.key as "Z" (uppercase) when Shift is
+      // held, not "z" - match that here rather than the lowercase used for
+      // plain Ctrl+Z above.
+      const event = new KeyboardEvent("keydown", {
+        key: "Z",
+        code: "KeyZ",
+        ctrlKey: true,
+        metaKey: false,
+        shiftKey: true,
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      });
+
+      document.body.dispatchEvent(event);
+    });
   }
 
   // Wait longer for async navigation to complete and UI to update
