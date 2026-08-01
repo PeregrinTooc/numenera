@@ -323,6 +323,15 @@ async function renderCharacterSheet(
   // Update current character for auto-save
   currentCharacter = character;
 
+  // Keep VersionState's latestCharacter current so "Return to latest" and
+  // the post-squash auto-navigate reflect the session's edits instead of
+  // falling back to the character loaded at page load (setLatestCharacter
+  // otherwise has no call sites). Skip while viewing a historical version -
+  // `character` here is that old version's data, not a live edit.
+  if (versionState && !versionState.isViewingOldVersion()) {
+    versionState.setLatestCharacter(character);
+  }
+
   // Handler for field updates
   const handleFieldUpdate = async (field: string, value: string | number): Promise<void> => {
     // Set initial state before first edit (if buffer is empty and no initial state set)

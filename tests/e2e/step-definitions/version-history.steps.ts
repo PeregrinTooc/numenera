@@ -334,6 +334,12 @@ When("I click the backward navigation arrow again", async function (this: Custom
   await this.page.waitForTimeout(100);
 });
 
+When("I click the return to latest button", async function (this: CustomWorld) {
+  const returnButton = this.page.locator('[data-testid="version-return-button"]');
+  await returnButton.click();
+  await this.page.waitForTimeout(100);
+});
+
 When("I click the forward navigation arrow", async function (this: CustomWorld) {
   const forwardArrow = this.page.locator('[data-testid="version-nav-forward"]');
   await forwardArrow.click();

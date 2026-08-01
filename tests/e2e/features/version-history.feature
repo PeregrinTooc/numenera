@@ -101,6 +101,14 @@ Feature: Version History (Character Time Travel)
         And I should be viewing the latest version
         And no warning banner should be visible
 
+    Scenario: Return to latest shows edits made before navigating back
+        Given the character has 3 versions in history
+        When I edit the "character name" field to "Edited Before Navigating"
+        And I wait for squash timer to complete
+        And I click the backward navigation arrow
+        And I click the return to latest button
+        Then the character name should be "Edited Before Navigating"
+
     Scenario: Version description shows what changed
         Given the character has a version with name change
         And I am viewing that version

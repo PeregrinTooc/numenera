@@ -160,14 +160,15 @@ export class VersionState {
    */
   async reload(): Promise<void> {
     this.allVersions = await this.versionHistory.getAllVersions();
-    // Update index to latest
+    // Every current caller reloads specifically because a new version was
+    // just created (squash, restore, explicit save), so jumping to it and
+    // showing it is always the right outcome here - there's no "were we
+    // viewing latest" case to preserve, since currentVersionIndex is set to
+    // the newest index unconditionally just below.
     if (this.allVersions.length > 0) {
       this.currentVersionIndex = this.allVersions.length - 1;
     }
-    // If we were viewing latest, update displayed character
-    if (!this.isViewingOldVersion()) {
-      this.displayedCharacter = this.latestCharacter;
-    }
+    this.displayedCharacter = this.latestCharacter;
   }
 
   /**
