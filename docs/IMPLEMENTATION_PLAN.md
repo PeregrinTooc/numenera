@@ -102,8 +102,17 @@ Low risk, no behaviour change. Suitable for filling gaps between larger items.
   now — wiring it up requires ~20 new i18n keys and is feature work, not
   cleanup. Deferred as "Wire Up `detectChanges` for Meaningful Version
   Descriptions" in `docs/TODO.md`; the code and its tests are left as-is.
-- **Keep test-only code out of the bundle** — `TestTimer` and
-  `src/utils/testHelpers.ts` are reachable from `src/main.ts`.
+- ~~**Keep test-only code out of the bundle** — `TestTimer` and
+  `src/utils/testHelpers.ts` are reachable from `src/main.ts`.~~ Verified
+  against the actual built bundle (`npm run build`, then grepped
+  `dist/assets/*.js` for `TestTimer`-specific strings like
+  `test-timer-scheduled`): `TestTimer` was already absent — Rollup's
+  tree-shaking eliminates it since `main.ts` only ever referenced it in a
+  type position. Tightened the import to `import type` anyway, so this stays
+  true regardless of future changes to how it's referenced.
+  `src/utils/testHelpers.ts`'s only export, `sanitizeForTestId`, turned out
+  to be a false positive — it's used by `AbilityItem.ts` to generate real
+  `data-testid` attributes in production, not test-only code.
 - **Guard `performSquash` against re-entrancy**, so `flush()` racing the timer
   cannot write the buffer twice.
 - ~~**Reduce the `no-explicit-any` warnings**, concentrated in the `(currentSheet
