@@ -128,6 +128,50 @@ but discards. Decided: build this rather than delete the dead code — see
   - Use imported layout on import
   - Import with same layout does not show prompt
 
+### Wire Up `detectChanges` for Meaningful Version Descriptions
+
+**Overview**  
+`src/utils/changeDetection.ts` (184 lines, unit-tested) computes a
+human-readable description of what changed between two character versions
+(e.g. "Changed name", "Updated might", "Added cypher") but has no callers —
+`detectChanges` is dead code, which is why every card edit and field change
+in version history is recorded as the generic "Updated character". See
+`docs/PROJECT_REVIEW.md` §3 and `docs/IMPLEMENTATION_PLAN.md` Phase 4 for
+the original defect writeup; decided to defer rather than delete or wire up
+during the Phase 4 cleanup pass, since wiring it up is feature work, not
+cleanup.
+
+**Goals**
+
+- Call `detectChanges(oldCharacter, newCharacter)` from wherever version
+  descriptions are currently generated (buffered edits via
+  `VersionHistoryService`, and the squash/save path) instead of the
+  hardcoded "Updated character" fallback
+- Translate its ~20 hardcoded English strings ("Changed name", "Updated
+  might", "Added cypher", ...) into proper i18n keys in both `en.json` and
+  `de.json`, per Rule #4 — `detectChanges` currently returns raw English
+  strings, which the project's pre-commit i18n check would reject if they
+  reached the UI as-is
+- Decide how per-item collection changes should read for German ("Added
+  cypher" doesn't pluralize/gender the same way) — likely needs a
+  parameterized key rather than string concatenation
+
+**E2E Tests**
+
+- File: `tests/e2e/features/version-history.feature` (extend existing
+  "Version description shows what changed" / "Multiple changes show
+  combined description" scenarios, or add new ones)
+- Scenarios:
+  - Editing the character name shows "Changed name" as the version
+    description (already covered for the generic case — extend to assert
+    the specific text)
+  - Editing a stat shows "Updated <stat>" as the description
+  - Adding/removing/modifying a card shows the correct collection change
+    description
+  - Multiple changes in the same category combine into one description
+    ("Edited basic info", "Updated stats", ...)
+  - Descriptions render correctly in both English and German
+
 ### Multiple Images
 
 **Overview**  
@@ -230,4 +274,4 @@ Let the gamemaster prepare cards (cyphers, artifacts...) and export them as file
 
 ---
 
-**Last Updated**: August 1, 2026
+**Last Updated**: August 2, 2026

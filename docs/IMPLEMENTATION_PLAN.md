@@ -96,9 +96,12 @@ Low risk, no behaviour change. Suitable for filling gaps between larger items.
   `setTimeout` handle, and `removeDocumentListeners` cancels it if the panel
   closes before it fires. Covered by a unit test with fake timers proving no
   document listener survives an open→close within one tick.
-- **Wire up or delete `detectChanges`.** 184 lines of tested-but-unused code is
-  why every card edit is described as `"Updated character"`. Wiring it in would
-  give version history meaningful descriptions.
+- ~~**Wire up or delete `detectChanges`.** 184 lines of tested-but-unused code
+  is why every card edit is described as `"Updated character"`. Wiring it in
+  would give version history meaningful descriptions.~~ Decided: neither, for
+  now — wiring it up requires ~20 new i18n keys and is feature work, not
+  cleanup. Deferred as "Wire Up `detectChanges` for Meaningful Version
+  Descriptions" in `docs/TODO.md`; the code and its tests are left as-is.
 - **Keep test-only code out of the bundle** — `TestTimer` and
   `src/utils/testHelpers.ts` are reachable from `src/main.ts`.
 - **Guard `performSquash` against re-entrancy**, so `flush()` racing the timer
