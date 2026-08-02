@@ -76,6 +76,43 @@ describe("ItemsBox", () => {
     });
   });
 
+  describe("Drag and Drop Reordering", () => {
+    it("reassigns the collection immutably instead of mutating it in place", () => {
+      mockCharacter.equipment = [
+        { name: "Sword", description: "Sharp" },
+        { name: "Shield", description: "Strong" },
+        { name: "Bow", description: "Long range" },
+      ];
+      const originalArray = mockCharacter.equipment;
+
+      const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
+      render(itemsBox.render(), container);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const internal = itemsBox as any;
+      internal.dragState.equipment.draggedIndex = 0;
+      internal.dragState.equipment.currentTargetIndex = 2;
+
+      const dragEvent = {
+        preventDefault: vi.fn(),
+        dataTransfer: {
+          getData: (type: string) => (type === "application/x-section" ? "equipment" : ""),
+        },
+        target: document.createElement("div"),
+      };
+
+      internal.handleDrop(dragEvent, "equipment", "equipment-item");
+
+      expect(mockCharacter.equipment).not.toBe(originalArray);
+      expect(originalArray).toEqual([
+        { name: "Sword", description: "Sharp" },
+        { name: "Shield", description: "Strong" },
+        { name: "Bow", description: "Long range" },
+      ]);
+      expect(mockCharacter.equipment.map((i) => i.name)).toEqual(["Shield", "Bow", "Sword"]);
+    });
+  });
+
   describe("Equipment Management", () => {
     it("should display empty state when no equipment", () => {
       const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
