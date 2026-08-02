@@ -18,6 +18,14 @@ describe("storageFactory", () => {
       expect(result.currentXp).toBe(12);
       expect(result.totalXp).toBe(12);
     });
+
+    it("returns null without sanitizing when nothing is stored", async () => {
+      vi.spyOn(IndexedDBStorageImpl.prototype, "load").mockResolvedValue(null);
+
+      const result = await loadCharacterState();
+
+      expect(result).toBeNull();
+    });
   });
 
   describe("getVersionHistory", () => {
