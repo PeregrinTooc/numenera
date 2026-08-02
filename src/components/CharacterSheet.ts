@@ -28,6 +28,7 @@ export class CharacterSheet {
   private stats: Stats;
   private abilities: Abilities;
   private specialAbilities: SpecialAbilities;
+  private recoveryDamageSection: RecoveryDamageSection;
   private versionNavigator: VersionNavigator | null = null;
   private versionWarningBanner: VersionWarningBanner | null = null;
   private layout: Layout;
@@ -69,6 +70,7 @@ export class CharacterSheet {
     // for proper version history undo support
     this.abilities = new Abilities(this.character);
     this.specialAbilities = new SpecialAbilities(this.character);
+    this.recoveryDamageSection = new RecoveryDamageSection(this.character);
 
     // Load layout from storage
     this.layout = loadLayout();
@@ -78,15 +80,13 @@ export class CharacterSheet {
    * Get the template for a specific section
    */
   private getSectionTemplate(sectionId: SectionId): TemplateResult {
-    const recoveryDamageSection = new RecoveryDamageSection(this.character);
-
     switch (sectionId) {
       case "basicInfo":
         return this.basicInfo.render();
       case "stats":
         return this.stats.render();
       case "recoveryDamage":
-        return recoveryDamageSection.render();
+        return this.recoveryDamageSection.render();
       case "abilities":
         return this.abilities.render();
       case "specialAbilities":

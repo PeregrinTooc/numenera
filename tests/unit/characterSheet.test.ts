@@ -6,6 +6,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { CharacterSheet } from "../../src/components/CharacterSheet.js";
 import { Character } from "../../src/types/character.js";
 import { render } from "lit-html";
+import * as RecoveryDamageSectionModule from "../../src/components/RecoveryDamageSection.js";
 
 describe("CharacterSheet - Version History Integration", () => {
   let container: HTMLElement;
@@ -141,6 +142,37 @@ describe("CharacterSheet - Version History Integration", () => {
     it("does nothing if the section isn't currently in the DOM", () => {
       // Nothing rendered into container yet, so no [data-testid="cyphers-section"] exists.
       expect(() => characterSheet.rerenderSection("cyphers")).not.toThrow();
+    });
+  });
+
+  describe("getSectionTemplate", () => {
+    it("constructs RecoveryDamageSection once per sheet, not once per render", () => {
+      const OriginalRecoveryDamageSection = RecoveryDamageSectionModule.RecoveryDamageSection;
+      const constructorSpy = vi
+        .spyOn(RecoveryDamageSectionModule, "RecoveryDamageSection")
+        .mockImplementation(function (
+          ...args: ConstructorParameters<typeof OriginalRecoveryDamageSection>
+        ) {
+          return new OriginalRecoveryDamageSection(...args);
+        });
+
+      const sheet = new CharacterSheet(
+        mockCharacter,
+        vi.fn(),
+        vi.fn(),
+        vi.fn(),
+        vi.fn(),
+        vi.fn(),
+        vi.fn(),
+        vi.fn()
+      );
+      const callsAfterConstruction = constructorSpy.mock.calls.length;
+      expect(callsAfterConstruction).toBeGreaterThan(0);
+
+      render(sheet.render(), container);
+      render(sheet.render(), container);
+
+      expect(constructorSpy.mock.calls.length).toBe(callsAfterConstruction);
     });
   });
 });

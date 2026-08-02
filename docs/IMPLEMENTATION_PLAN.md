@@ -87,8 +87,10 @@ Low risk, no behaviour change. Suitable for filling gaps between larger items.
   with a `setCollection()` reassignment, matching Cyphers/Abilities/Attacks/
   SpecialAbilities. Covered by a unit test asserting the array reference
   changes and the original array is untouched.
-- **Hoist `RecoveryDamageSection`** out of `getSectionTemplate` — it is
-  constructed ten times per render.
+- ~~**Hoist `RecoveryDamageSection`** out of `getSectionTemplate` — it is
+  constructed ten times per render.~~ Done: constructed once in
+  `CharacterSheet`'s constructor, matching every other section component.
+  Covered by a unit test spying on the constructor.
 - **Fix the `SettingsGear` listener leak** — track the pending `setTimeout` and
   cancel it in `close()`.
 - **Wire up or delete `detectChanges`.** 184 lines of tested-but-unused code is
