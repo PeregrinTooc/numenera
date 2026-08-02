@@ -11,7 +11,8 @@ function createBaseCharacter(): Character {
     descriptor: "Strong",
     focus: "Battles",
     portrait: "data:image/png;base64,test",
-    xp: 0,
+    currentXp: 0,
+    totalXp: 0,
     shins: 10,
     armor: 1,
     effort: 1,
@@ -377,10 +378,20 @@ describe("Change Detection", () => {
   });
 
   describe("Resource Tracker Changes", () => {
-    it("should detect XP change", () => {
+    it("should detect currentXp change", () => {
       const char1 = createBaseCharacter();
       const char2 = createBaseCharacter();
-      char2.xp = 5;
+      char2.currentXp = 5;
+
+      const changes = detectChanges(char1, char2);
+
+      expect(changes).toContain("Updated XP");
+    });
+
+    it("should detect totalXp change", () => {
+      const char1 = createBaseCharacter();
+      const char2 = createBaseCharacter();
+      char2.totalXp = 20;
 
       const changes = detectChanges(char1, char2);
 
@@ -410,7 +421,7 @@ describe("Change Detection", () => {
     it("should combine resource changes", () => {
       const char1 = createBaseCharacter();
       const char2 = createBaseCharacter();
-      char2.xp = 5;
+      char2.currentXp = 5;
       char2.shins = 20;
       char2.armor = 2;
 

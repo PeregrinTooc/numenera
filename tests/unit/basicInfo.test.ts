@@ -18,7 +18,8 @@ describe("BasicInfo", () => {
       descriptor: "Strong",
       focus: "Bears a Halo of Fire",
       tier: 3,
-      xp: 5,
+      currentXp: 5,
+      totalXp: 45,
       effort: 1,
       stats: {
         might: { pool: 10, edge: 0, current: 10 },
@@ -313,14 +314,22 @@ describe("BasicInfo", () => {
       expect(focusField.classList.contains("editable-field")).toBe(true);
     });
 
-    it("should render XP as editable badge", () => {
+    it("should render current and total XP as independently editable cells", () => {
       const basicInfo = new BasicInfo(mockCharacter, onFieldUpdate);
       render(basicInfo.render(), container);
 
-      const xpBadge = container.querySelector('[data-testid="xp-badge"]') as HTMLElement;
-      expect(xpBadge).toBeTruthy();
-      expect(xpBadge.textContent).toContain("5");
-      expect(xpBadge.classList.contains("editable-field")).toBe(true);
+      const currentCell = container.querySelector(
+        '[data-testid="xp-badge-current"]'
+      ) as HTMLElement;
+      const totalCell = container.querySelector('[data-testid="xp-badge-total"]') as HTMLElement;
+
+      expect(currentCell).toBeTruthy();
+      expect(currentCell.textContent).toContain("5");
+      expect(currentCell.classList.contains("editable-field")).toBe(true);
+
+      expect(totalCell).toBeTruthy();
+      expect(totalCell.textContent).toContain("45");
+      expect(totalCell.classList.contains("editable-field")).toBe(true);
     });
   });
 

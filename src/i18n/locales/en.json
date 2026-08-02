@@ -79,6 +79,10 @@
     "portraitChange": "Change Portrait",
     "portraitView": "View Portrait",
     "xp": "XP",
+    "xpCurrent": "Current",
+    "xpTotal": "Total",
+    "editCurrentXp": "Edit Current XP",
+    "editTotalXp": "Edit Total XP",
     "shins": "Shins"
   },
   "resourceTracker": {

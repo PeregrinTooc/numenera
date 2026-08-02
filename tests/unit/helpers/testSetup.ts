@@ -56,7 +56,8 @@ export function createMockCharacter(overrides: Partial<Character> = {}): Charact
     descriptor: "Strong",
     focus: "Bears a Halo of Fire",
     tier: 3,
-    xp: 5,
+    currentXp: 5,
+    totalXp: 5,
     effort: 2,
     stats: {
       might: { pool: 12, edge: 1, current: 10 },
@@ -96,7 +97,8 @@ export function createEmptyCharacter(overrides: Partial<Character> = {}): Charac
     descriptor: "",
     focus: "",
     tier: 1,
-    xp: 0,
+    currentXp: 0,
+    totalXp: 0,
     effort: 1,
     stats: {
       might: { pool: 10, edge: 0, current: 10 },

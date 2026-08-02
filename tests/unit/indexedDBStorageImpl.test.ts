@@ -10,7 +10,8 @@ const mockCharacter = {
   focus: "Battles Robots",
   tier: 3,
   effort: 3,
-  xp: 5,
+  currentXp: 5,
+  totalXp: 5,
   statPools: {
     might: { current: 10, max: 12, edge: 1 },
     speed: { current: 8, max: 10, edge: 2 },
@@ -127,16 +128,16 @@ describe("IndexedDBStorageImpl", () => {
   describe("migrateFromLocalStorage", () => {
     it("should not overwrite an existing IndexedDB record with stale localStorage data", async () => {
       // Setup: IndexedDB already holds the authoritative character...
-      await storage.save({ ...mockCharacter, xp: 50 });
+      await storage.save({ ...mockCharacter, currentXp: 50 });
       // ...while a stale copy lingers in localStorage from an earlier session.
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...mockCharacter, xp: 5 }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...mockCharacter, currentXp: 5 }));
 
       // Execute migration, as happens on every page load
       await storage.migrateFromLocalStorage();
 
       // Verify: the newer IndexedDB record wins
       const loaded = await storage.load();
-      expect(loaded.xp).toBe(50);
+      expect(loaded.currentXp).toBe(50);
 
       // Verify: the stale copy is cleared so it cannot resurface
       expect(localStorage.getItem(STORAGE_KEY)).toBeNull();

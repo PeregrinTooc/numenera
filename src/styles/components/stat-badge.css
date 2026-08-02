@@ -54,12 +54,38 @@
   z-index: 10;
 }
 
-/* Legacy support - XP Badge in BasicInfo */
+/* XP Badge in BasicInfo - rectangular, two-column current/total layout */
 .xp-badge {
   position: absolute;
   top: 1rem;
   left: 1rem;
   z-index: 10;
+  display: flex;
+  flex-direction: row;
+  border: 3px solid #d4af37;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.xp-badge-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.75rem;
+  min-width: 3.5rem;
+  min-height: 3.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.xp-badge-cell:hover {
+  background-color: rgba(212, 175, 55, 0.2);
+}
+
+.xp-badge-cell + .xp-badge-cell {
+  border-left: 2px solid #d4af37;
 }
 
 /* Shins Badge container - centered between sections */

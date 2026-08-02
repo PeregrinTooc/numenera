@@ -18,7 +18,8 @@ describe("ItemsBox", () => {
       descriptor: "Strong",
       focus: "Bears a Halo of Fire",
       tier: 3,
-      xp: 0,
+      currentXp: 0,
+      totalXp: 0,
       effort: 1,
       stats: {
         might: { pool: 10, edge: 0, current: 10 },

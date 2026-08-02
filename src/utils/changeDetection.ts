@@ -116,7 +116,9 @@ function detectStatChanges(oldChar: Character, newChar: Character): string[] {
 function detectResourceChanges(oldChar: Character, newChar: Character): string[] {
   const changes: string[] = [];
 
-  if (oldChar.xp !== newChar.xp) changes.push("Updated XP");
+  if (oldChar.currentXp !== newChar.currentXp || oldChar.totalXp !== newChar.totalXp) {
+    changes.push("Updated XP");
+  }
   if (oldChar.shins !== newChar.shins) changes.push("Updated shins");
   if (oldChar.armor !== newChar.armor) changes.push("Updated armor");
   if (oldChar.effort !== newChar.effort) changes.push("Updated effort");

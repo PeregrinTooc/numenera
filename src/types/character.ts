@@ -64,7 +64,8 @@ export interface Character {
   descriptor: string;
   focus: string;
   portrait?: string; // Base64 encoded image data
-  xp: number;
+  currentXp: number;
+  totalXp: number;
   shins: number;
   armor: number;
   effort: number;

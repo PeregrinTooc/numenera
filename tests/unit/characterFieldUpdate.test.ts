@@ -14,7 +14,8 @@ function makeCharacter(): Character {
     focus: "Who Controls Beasts",
     tier: 1,
     effort: 1,
-    xp: 0,
+    currentXp: 0,
+    totalXp: 0,
     shins: 0,
     armor: 0,
     maxCyphers: 3,
@@ -58,10 +59,13 @@ describe("applyFieldUpdate", () => {
 
   it("updates a top-level numeric field", () => {
     const character = makeCharacter();
-    const result = applyFieldUpdate(character, "xp", 5);
+    const currentResult = applyFieldUpdate(character, "currentXp", 5);
+    expect(currentResult.character.currentXp).toBe(5);
+    expect(currentResult.label).toBe("Changed current XP");
 
-    expect(result.character.xp).toBe(5);
-    expect(result.label).toBe("Changed XP");
+    const totalResult = applyFieldUpdate(character, "totalXp", 20);
+    expect(totalResult.character.totalXp).toBe(20);
+    expect(totalResult.label).toBe("Changed total XP");
   });
 
   it("updates a nested stat field", () => {

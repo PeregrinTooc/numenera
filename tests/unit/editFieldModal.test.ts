@@ -20,7 +20,7 @@ describe("EditFieldModal", () => {
       const onCancel = vi.fn();
 
       const modal = new EditFieldModal({
-        fieldType: "xp",
+        fieldType: "currentXp",
         currentValue: 5,
         onConfirm,
         onCancel,
@@ -35,7 +35,7 @@ describe("EditFieldModal", () => {
 
     it("should display modal with backdrop", () => {
       const modal = new EditFieldModal({
-        fieldType: "xp",
+        fieldType: "currentXp",
         currentValue: 5,
         onConfirm: vi.fn(),
         onCancel: vi.fn(),
@@ -55,7 +55,7 @@ describe("EditFieldModal", () => {
     it("should validate numeric fields within min/max bounds", () => {
       const onConfirm = vi.fn();
       const modal = new EditFieldModal({
-        fieldType: "xp",
+        fieldType: "currentXp",
         currentValue: 5,
         onConfirm,
         onCancel: vi.fn(),
@@ -77,7 +77,7 @@ describe("EditFieldModal", () => {
 
     it("should reject values below minimum", () => {
       const modal = new EditFieldModal({
-        fieldType: "xp",
+        fieldType: "currentXp",
         currentValue: 5,
         onConfirm: vi.fn(),
         onCancel: vi.fn(),
@@ -121,7 +121,7 @@ describe("EditFieldModal", () => {
 
     it("should reject non-integer numbers", () => {
       const modal = new EditFieldModal({
-        fieldType: "xp",
+        fieldType: "currentXp",
         currentValue: 5,
         onConfirm: vi.fn(),
         onCancel: vi.fn(),
@@ -143,7 +143,7 @@ describe("EditFieldModal", () => {
 
     it("should reject empty input", () => {
       const modal = new EditFieldModal({
-        fieldType: "xp",
+        fieldType: "currentXp",
         currentValue: 5,
         onConfirm: vi.fn(),
         onCancel: vi.fn(),
@@ -164,7 +164,7 @@ describe("EditFieldModal", () => {
 
     it("should disable button for invalid input (validation logic)", () => {
       const modal = new EditFieldModal({
-        fieldType: "xp",
+        fieldType: "currentXp",
         currentValue: 5,
         onConfirm: vi.fn(),
         onCancel: vi.fn(),
@@ -230,7 +230,7 @@ describe("EditFieldModal", () => {
     it("should confirm on Enter key", () => {
       const onConfirm = vi.fn();
       const modal = new EditFieldModal({
-        fieldType: "xp",
+        fieldType: "currentXp",
         currentValue: 5,
         onConfirm,
         onCancel: vi.fn(),
@@ -254,7 +254,7 @@ describe("EditFieldModal", () => {
     it("should cancel on Escape key", () => {
       const onCancel = vi.fn();
       const modal = new EditFieldModal({
-        fieldType: "xp",
+        fieldType: "currentXp",
         currentValue: 5,
         onConfirm: vi.fn(),
         onCancel,
@@ -271,7 +271,7 @@ describe("EditFieldModal", () => {
 
     it("should trap focus with Tab key - handler is called but on wrong element", () => {
       const modal = new EditFieldModal({
-        fieldType: "xp",
+        fieldType: "currentXp",
         currentValue: 5,
         onConfirm: vi.fn(),
         onCancel: vi.fn(),
@@ -309,7 +309,7 @@ describe("EditFieldModal", () => {
 
     it("should have keydown handler on modal content for proper focus trapping", () => {
       const modal = new EditFieldModal({
-        fieldType: "xp",
+        fieldType: "currentXp",
         currentValue: 5,
         onConfirm: vi.fn(),
         onCancel: vi.fn(),
@@ -353,7 +353,7 @@ describe("EditFieldModal", () => {
     it("should close on backdrop click", () => {
       const onCancel = vi.fn();
       const modal = new EditFieldModal({
-        fieldType: "xp",
+        fieldType: "currentXp",
         currentValue: 5,
         onConfirm: vi.fn(),
         onCancel,
@@ -376,7 +376,7 @@ describe("EditFieldModal", () => {
     it("should not close on modal content click", () => {
       const onCancel = vi.fn();
       const modal = new EditFieldModal({
-        fieldType: "xp",
+        fieldType: "currentXp",
         currentValue: 5,
         onConfirm: vi.fn(),
         onCancel,
@@ -394,7 +394,7 @@ describe("EditFieldModal", () => {
 
     it("should enable confirm button only with valid input", () => {
       const modal = new EditFieldModal({
-        fieldType: "xp",
+        fieldType: "currentXp",
         currentValue: 5,
         onConfirm: vi.fn(),
         onCancel: vi.fn(),

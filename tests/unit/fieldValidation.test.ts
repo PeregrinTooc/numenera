@@ -46,8 +46,17 @@ describe("fieldValidation", () => {
       });
     });
 
-    it("should have configuration for xp field", () => {
-      expect(FIELD_CONFIGS.xp).toEqual({
+    it("should have configuration for currentXp field", () => {
+      expect(FIELD_CONFIGS.currentXp).toEqual({
+        inputType: "number",
+        inputMode: "numeric",
+        min: 0,
+        max: 9999,
+      });
+    });
+
+    it("should have configuration for totalXp field", () => {
+      expect(FIELD_CONFIGS.totalXp).toEqual({
         inputType: "number",
         inputMode: "numeric",
         min: 0,
@@ -184,28 +193,28 @@ describe("fieldValidation", () => {
         expect(result.valid).toBe(false);
       });
 
-      it("should accept valid xp value", () => {
-        const result = validateField("xp", "100");
+      it("should accept valid currentXp value", () => {
+        const result = validateField("currentXp", "100");
         expect(result.valid).toBe(true);
       });
 
-      it("should accept xp at minimum (0)", () => {
-        const result = validateField("xp", "0");
+      it("should accept currentXp at minimum (0)", () => {
+        const result = validateField("currentXp", "0");
         expect(result.valid).toBe(true);
       });
 
-      it("should accept xp at maximum (9999)", () => {
-        const result = validateField("xp", "9999");
+      it("should accept currentXp at maximum (9999)", () => {
+        const result = validateField("currentXp", "9999");
         expect(result.valid).toBe(true);
       });
 
-      it("should reject negative xp", () => {
-        const result = validateField("xp", "-1");
+      it("should reject negative currentXp", () => {
+        const result = validateField("currentXp", "-1");
         expect(result.valid).toBe(false);
       });
 
-      it("should reject xp above maximum", () => {
-        const result = validateField("xp", "10000");
+      it("should reject currentXp above maximum", () => {
+        const result = validateField("currentXp", "10000");
         expect(result.valid).toBe(false);
       });
 
@@ -302,7 +311,7 @@ describe("fieldValidation", () => {
 
     it("should return 'number' for numeric fields", () => {
       expect(getInputType("tier")).toBe("number");
-      expect(getInputType("xp")).toBe("number");
+      expect(getInputType("currentXp")).toBe("number");
       expect(getInputType("armor")).toBe("number");
       expect(getInputType("mightPool")).toBe("number");
     });
@@ -317,7 +326,7 @@ describe("fieldValidation", () => {
 
     it("should return 'numeric' for numeric fields", () => {
       expect(getInputMode("tier")).toBe("numeric");
-      expect(getInputMode("xp")).toBe("numeric");
+      expect(getInputMode("currentXp")).toBe("numeric");
       expect(getInputMode("armor")).toBe("numeric");
       expect(getInputMode("mightPool")).toBe("numeric");
     });
@@ -334,8 +343,8 @@ describe("fieldValidation", () => {
       expect(getMinValue("tier")).toBe(1);
     });
 
-    it("should return correct minimum for xp (0)", () => {
-      expect(getMinValue("xp")).toBe(0);
+    it("should return correct minimum for currentXp (0)", () => {
+      expect(getMinValue("currentXp")).toBe(0);
     });
 
     it("should return correct minimum for recoveryModifier (-10)", () => {
@@ -360,8 +369,8 @@ describe("fieldValidation", () => {
       expect(getMaxValue("tier")).toBe(6);
     });
 
-    it("should return correct maximum for xp (9999)", () => {
-      expect(getMaxValue("xp")).toBe(9999);
+    it("should return correct maximum for currentXp (9999)", () => {
+      expect(getMaxValue("currentXp")).toBe(9999);
     });
 
     it("should return correct maximum for shins (999999)", () => {
@@ -398,7 +407,7 @@ describe("fieldValidation", () => {
 
     it("should return undefined for numeric fields", () => {
       expect(getMaxLength("tier")).toBeUndefined();
-      expect(getMaxLength("xp")).toBeUndefined();
+      expect(getMaxLength("currentXp")).toBeUndefined();
       expect(getMaxLength("armor")).toBeUndefined();
       expect(getMaxLength("mightPool")).toBeUndefined();
     });
@@ -414,7 +423,7 @@ describe("fieldValidation", () => {
     it("should return true for numeric fields", () => {
       expect(isNumericField("tier")).toBe(true);
       expect(isNumericField("effort")).toBe(true);
-      expect(isNumericField("xp")).toBe(true);
+      expect(isNumericField("currentXp")).toBe(true);
       expect(isNumericField("shins")).toBe(true);
       expect(isNumericField("armor")).toBe(true);
       expect(isNumericField("maxCyphers")).toBe(true);

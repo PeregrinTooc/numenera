@@ -79,6 +79,10 @@
     "portraitChange": "Portrait ändern",
     "portraitView": "Portrait anzeigen",
     "xp": "EP",
+    "xpCurrent": "Aktuell",
+    "xpTotal": "Gesamt",
+    "editCurrentXp": "Aktuelle EP bearbeiten",
+    "editTotalXp": "Gesamt-EP bearbeiten",
     "shins": "Shins"
   },
   "resourceTracker": {

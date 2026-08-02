@@ -8,7 +8,7 @@ import { persistCharacterState } from "../storage/storageFactory.js";
 import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
 import { t } from "../i18n/index.js";
 
-type FieldType = "name" | "tier" | "descriptor" | "focus" | "xp";
+type FieldType = "name" | "tier" | "descriptor" | "focus" | "currentXp" | "totalXp";
 
 export class BasicInfo {
   constructor(
@@ -108,7 +108,9 @@ export class BasicInfo {
             ? this.character.descriptor
             : fieldType === "focus"
               ? this.character.focus
-              : this.character.xp;
+              : fieldType === "currentXp"
+                ? this.character.currentXp
+                : this.character.totalXp;
 
     ModalService.openEditModal({
       fieldType: fieldType as ValidationFieldType,
@@ -123,17 +125,30 @@ export class BasicInfo {
   render(): TemplateResult {
     return html`
       <div data-testid="basic-info" class="basic-info-card">
-        <!-- XP Badge - top-left corner -->
-        <div
-          class="xp-badge stat-badge editable-field"
-          data-testid="xp-badge"
-          @click=${() => this.openEditModal("xp")}
-          role="button"
-          tabindex="0"
-          aria-label="Edit XP"
-        >
-          <span class="stat-badge-value">${this.character.xp}</span>
-          <span class="stat-badge-label">${t("character.xp")}</span>
+        <!-- XP Badge - top-left corner - two independently-editable cells -->
+        <div class="xp-badge" data-testid="xp-badge">
+          <div
+            class="xp-badge-cell editable-field"
+            data-testid="xp-badge-current"
+            @click=${() => this.openEditModal("currentXp")}
+            role="button"
+            tabindex="0"
+            aria-label=${t("character.editCurrentXp")}
+          >
+            <span class="stat-badge-value">${this.character.currentXp}</span>
+            <span class="stat-badge-label">${t("character.xpCurrent")}</span>
+          </div>
+          <div
+            class="xp-badge-cell editable-field"
+            data-testid="xp-badge-total"
+            @click=${() => this.openEditModal("totalXp")}
+            role="button"
+            tabindex="0"
+            aria-label=${t("character.editTotalXp")}
+          >
+            <span class="stat-badge-value">${this.character.totalXp}</span>
+            <span class="stat-badge-label">${t("character.xpTotal")}</span>
+          </div>
         </div>
 
         <!-- Character info content - left side -->
