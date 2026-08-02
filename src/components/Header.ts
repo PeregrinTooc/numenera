@@ -37,16 +37,6 @@ export class Header {
 
     // Initialize feature detection state
     this.supportsFileSystemAccess = "showSaveFilePicker" in window;
-
-    // Listen for export handle updates
-    window.addEventListener("export-handle-updated", () => {
-      this.updateButtonState();
-    });
-  }
-
-  updateButtonState(): void {
-    // This will be called externally when the export manager state changes
-    // The component will be re-rendered by the parent
   }
 
   setHasRememberedLocation(hasLocation: boolean): void {
