@@ -323,6 +323,9 @@ Feature: Card Creation
     Scenario: Add button is visible for Attacks
         Then I should see an add attack button
 
+    Scenario: Add attack button has its themed background color
+        Then the add attack button should have a non-transparent background
+
 
     Scenario: Add Attack button opens modal with empty fields
         When I click the add attack button

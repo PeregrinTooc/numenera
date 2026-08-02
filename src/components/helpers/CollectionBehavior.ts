@@ -304,6 +304,26 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
 }
 
 /**
+ * Color themes available for the add button.
+ */
+export type AddButtonColorTheme = "indigo" | "purple" | "red" | "green" | "teal";
+
+/**
+ * Complete, literal Tailwind class strings per color theme. Tailwind only
+ * generates CSS for class names it finds as literal text during its
+ * build-time scan - `` `bg-${colorTheme}-100` `` never produces generated
+ * CSS no matter what colorTheme is at runtime, so every combination needed
+ * has to appear here in full.
+ */
+const ADD_BUTTON_THEME_CLASSES: Record<AddButtonColorTheme, string> = {
+  indigo: "bg-indigo-100 hover:bg-indigo-200 text-indigo-700",
+  purple: "bg-purple-100 hover:bg-purple-200 text-purple-700",
+  red: "bg-red-100 hover:bg-red-200 text-red-700",
+  green: "bg-green-100 hover:bg-green-200 text-green-700",
+  teal: "bg-teal-100 hover:bg-teal-200 text-teal-700",
+};
+
+/**
  * Configuration for rendering an add button
  */
 export interface AddButtonConfig {
@@ -311,8 +331,8 @@ export interface AddButtonConfig {
   onClick: () => void;
   /** Test ID for the button */
   testId: string;
-  /** Color theme (e.g., 'indigo', 'red', 'purple', 'teal', 'green') */
-  colorTheme?: string;
+  /** Color theme */
+  colorTheme?: AddButtonColorTheme;
   /** Accessible label for screen readers */
   ariaLabel: string;
 }
@@ -327,7 +347,7 @@ export function renderAddButton(config: AddButtonConfig): TemplateResult {
   return html`
     <button
       @click=${onClick}
-      class="add-button p-2 bg-${colorTheme}-100 hover:bg-${colorTheme}-200 text-${colorTheme}-700 rounded-full transition-colors"
+      class="add-button p-2 ${ADD_BUTTON_THEME_CLASSES[colorTheme]} rounded-full transition-colors"
       data-testid="${testId}"
       aria-label="${ariaLabel}"
       title="${ariaLabel}"

@@ -1,4 +1,11 @@
-@import "tailwindcss";
+/* Scope Tailwind's automatic class-usage scan to src/. Without this it scans
+   the whole project by default (respecting .gitignore), so a literal
+   Tailwind-class-shaped string anywhere in docs/ or tests/ - e.g. a code
+   example, or a unit test's list of expected class names - silently
+   generates real CSS for it, masking a genuine dynamic-class bug (Tailwind
+   only generates CSS for literal strings; `` `bg-${x}-100` `` never works)
+   instead of catching it. */
+@import "tailwindcss" source("../");
 
 /* Component styles - must import before @theme */
 @import "./components/stat-pool.css";

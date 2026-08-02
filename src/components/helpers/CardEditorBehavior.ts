@@ -43,6 +43,36 @@ export function createEditHandler<T>(config: CardEditorConfig<T>): () => void {
 }
 
 /**
+ * Color themes available for card edit/delete buttons.
+ */
+export type CardButtonColorTheme = "indigo" | "purple" | "green" | "orange" | "blue" | "red";
+
+/**
+ * Complete, literal Tailwind class strings per color theme. Tailwind only
+ * generates CSS for class names it finds as literal text during its
+ * build-time scan - `` `text-${colorTheme}-600` `` never produces generated
+ * CSS no matter what colorTheme is at runtime, so every combination needed
+ * has to appear here in full.
+ */
+const DELETE_BUTTON_TEXT_CLASSES: Record<CardButtonColorTheme, string> = {
+  indigo: "text-indigo-600",
+  purple: "text-purple-600",
+  green: "text-green-600",
+  orange: "text-orange-600",
+  blue: "text-blue-600",
+  red: "text-red-600",
+};
+
+const EDIT_BUTTON_THEME_CLASSES: Record<CardButtonColorTheme, string> = {
+  indigo: "text-indigo-600 hover:text-indigo-800 hover:bg-indigo-100",
+  purple: "text-purple-600 hover:text-purple-800 hover:bg-purple-100",
+  green: "text-green-600 hover:text-green-800 hover:bg-green-100",
+  orange: "text-orange-600 hover:text-orange-800 hover:bg-orange-100",
+  blue: "text-blue-600 hover:text-blue-800 hover:bg-blue-100",
+  red: "text-red-600 hover:text-red-800 hover:bg-red-100",
+};
+
+/**
  * Button configuration for rendering edit/delete buttons
  */
 export interface CardButtonConfig {
@@ -51,7 +81,7 @@ export interface CardButtonConfig {
   onDelete?: () => void;
   editButtonTestId: string;
   deleteButtonTestId: string;
-  colorTheme: "indigo" | "purple" | "green" | "orange" | "blue" | "red";
+  colorTheme: CardButtonColorTheme;
 }
 
 /**
@@ -66,7 +96,9 @@ export function renderCardButtons(config: CardButtonConfig): TemplateResult {
       ? html`
           <button
             @click=${() => onDelete()}
-            class="absolute top-2 left-2 p-2 text-${colorTheme}-600 hover:text-red-600 hover:bg-red-100 rounded-full transition-colors"
+            class="absolute top-2 left-2 p-2 ${DELETE_BUTTON_TEXT_CLASSES[
+              colorTheme
+            ]} hover:text-red-600 hover:bg-red-100 rounded-full transition-colors"
             data-testid="${deleteButtonTestId}"
             aria-label="${t("cards.delete")}"
           >
@@ -92,7 +124,9 @@ export function renderCardButtons(config: CardButtonConfig): TemplateResult {
       ? html`
           <button
             @click=${() => onEdit()}
-            class="absolute top-2 right-2 p-2 text-${colorTheme}-600 hover:text-${colorTheme}-800 hover:bg-${colorTheme}-100 rounded-full transition-colors"
+            class="absolute top-2 right-2 p-2 ${EDIT_BUTTON_THEME_CLASSES[
+              colorTheme
+            ]} rounded-full transition-colors"
             data-testid="${editButtonTestId}"
             aria-label="${t("cards.edit")}"
           >

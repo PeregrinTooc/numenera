@@ -161,6 +161,23 @@ Then("I should see an add attack button", async function (this: CustomWorld) {
   await expect(this.page!.locator(CARD_CONFIGS.attack.addButtonTestId)).toBeVisible();
 });
 
+Then(
+  "the add attack button should have a non-transparent background",
+  async function (this: CustomWorld) {
+    // Tailwind only generates CSS for class names it finds as literal text
+    // during its build-time scan, so a `bg-${colorTheme}-100`-style
+    // interpolated class silently produces no rule and the button renders
+    // fully transparent - a plain "is the class present" check can't catch
+    // this, only the actual computed style can.
+    const button = this.page!.locator(CARD_CONFIGS.attack.addButtonTestId);
+    const bgColor = await button.evaluate(
+      (el: HTMLElement) => window.getComputedStyle(el).backgroundColor
+    );
+    expect(bgColor).not.toBe("rgba(0, 0, 0, 0)");
+    expect(bgColor).not.toBe("transparent");
+  }
+);
+
 Then("I should see an add ability button", async function (this: CustomWorld) {
   await expect(this.page!.locator(CARD_CONFIGS.ability.addButtonTestId)).toBeVisible();
 });
