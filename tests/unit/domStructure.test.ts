@@ -280,7 +280,7 @@ describe("DOM Structure Tests", () => {
     it("should render all major sections", () => {
       const character = createMockCharacter();
       const sheet = new CharacterSheet(character, vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
-      render(sheet.render(), getContainer());
+      sheet.mount(getContainer());
 
       const container = getContainer();
 
@@ -302,7 +302,7 @@ describe("DOM Structure Tests", () => {
     it("should render edit layout button", () => {
       const character = createMockCharacter();
       const sheet = new CharacterSheet(character, vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
-      render(sheet.render(), getContainer());
+      sheet.mount(getContainer());
 
       expect(getContainer().querySelector('[data-testid="edit-layout-button"]')).toBeTruthy();
     });
@@ -310,7 +310,7 @@ describe("DOM Structure Tests", () => {
     it("should render layout sections with data-section-id attributes", () => {
       const character = createMockCharacter();
       const sheet = new CharacterSheet(character, vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
-      render(sheet.render(), getContainer());
+      sheet.mount(getContainer());
 
       const container = getContainer();
 
