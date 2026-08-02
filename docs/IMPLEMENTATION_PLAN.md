@@ -74,8 +74,14 @@ Low risk, no behaviour change. Suitable for filling gaps between larger items.
   object URL is revoked via `setTimeout(..., 0)` instead of synchronously.
   Covered by unit tests asserting append/click/remove ordering and that
   revocation happens on a later tick.
-- **Bounds-check `reorderArray`**; fix the length comparison in
-  `previewOrderEquals`.
+- ~~**Bounds-check `reorderArray`**; fix the length comparison in
+  `previewOrderEquals`.~~ Done: `reorderArray` now returns an unchanged copy
+  for an out-of-range `fromIndex`/`toIndex`. `previewOrderEquals` was
+  copy-pasted, with the same length bug, into `Abilities`, `Attacks`,
+  `CyphersBox`, `SpecialAbilities` and `ItemsBox` — extracted one exported,
+  length-checked implementation into `DragDropBehavior.ts` and pointed all
+  five at it. Covered by unit tests for both functions, verified to fail
+  against the old behaviour.
 - **Make `ItemsBox.handleDrop` immutable**, matching the other collections.
 - **Hoist `RecoveryDamageSection`** out of `getSectionTemplate` — it is
   constructed ten times per render.
