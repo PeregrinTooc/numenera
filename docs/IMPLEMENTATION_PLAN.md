@@ -54,8 +54,13 @@ Low risk, no behaviour change. Suitable for filling gaps between larger items.
   reference, and an E2E scenario ("Editing a stat while viewing an old
   version does not corrupt other versions' cached stats") confirmed to fail
   against the old code and pass against the fix.
-- **Remove the `Header` window-listener leak** (`src/components/Header.ts:42`);
-  the handler is a no-op, so deleting it is sufficient.
+- ~~**Remove the `Header` window-listener leak** (`src/components/Header.ts:42`);
+  the handler is a no-op, so deleting it is sufficient.~~ Done: deleted the
+  `export-handle-updated` listener and the dead `updateButtonState()` method
+  it called. Button state is already kept in sync by
+  `main.ts`'s `updateHeaderButtonState()`, which re-renders directly after
+  export operations — the event was redundant. Covered by a unit test
+  asserting `Header` never registers that listener.
 - **Clear the remembered export handle from IndexedDB** in
   `clearRememberedLocation`, not just localStorage.
 - **Fix `downloadFile`** — append the link to the document and revoke the object
