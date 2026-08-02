@@ -44,8 +44,16 @@ Low risk, no behaviour change. Suitable for filling gaps between larger items.
   adding `CharacterSheet.isForCharacter()` and
   `CharacterSheet.setHeaderHasRememberedLocation()` accessors — this also
   covers the `no-explicit-any` bullet below for `main.ts`.
-- **Fix the shallow copy** in `handleFieldUpdate` (`src/main.ts:341`) — clone
-  `stats` before assigning into it.
+- ~~**Fix the shallow copy** in `handleFieldUpdate` (`src/main.ts:341`) — clone
+  `stats` before assigning into it.~~ Done: extracted the field-update switch
+  into a pure `applyFieldUpdate()` (`src/utils/characterFieldUpdate.ts`) that
+  clones `stats` and each stat group unconditionally, so the result never
+  shares a reference with the input — which matters because the input can be
+  `VersionState.getDisplayedCharacter()`, itself only shallow-copied from a
+  cached version snapshot. Covered by a unit test asserting no shared
+  reference, and an E2E scenario ("Editing a stat while viewing an old
+  version does not corrupt other versions' cached stats") confirmed to fail
+  against the old code and pass against the fix.
 - **Remove the `Header` window-listener leak** (`src/components/Header.ts:42`);
   the handler is a no-op, so deleting it is sufficient.
 - **Clear the remembered export handle from IndexedDB** in

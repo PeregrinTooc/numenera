@@ -160,6 +160,10 @@ Given(
         name: `Character V${i + 1}`,
         tier: i + 1,
         equipment: [{ name: `Item ${i + 1}`, description: `Description ${i + 1}` }],
+        stats: {
+          ...baseCharacter.stats,
+          might: { ...baseCharacter.stats.might, pool: 10 + i },
+        },
       };
       await this.storageHelper.createVersion(versionCharacter, `Modified data`);
     }
