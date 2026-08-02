@@ -195,9 +195,13 @@ export class ExportManager {
     const link = document.createElement("a");
     link.href = url;
     link.download = filename;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
 
-    URL.revokeObjectURL(url);
+    // Revoke on the next tick, not synchronously - Firefox needs the object
+    // URL to still be valid when it starts the download after click().
+    setTimeout(() => URL.revokeObjectURL(url), 0);
   }
 
   private createFileData(character: Character): CharacterFileData {

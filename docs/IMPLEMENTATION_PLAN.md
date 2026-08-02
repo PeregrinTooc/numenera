@@ -68,8 +68,12 @@ Low risk, no behaviour change. Suitable for filling gaps between larger items.
   `clearRememberedLocation()`. Covered by a unit test that clears the
   location and then constructs a fresh `ExportManager` to confirm it no
   longer reloads the handle from IndexedDB.
-- **Fix `downloadFile`** — append the link to the document and revoke the object
-  URL asynchronously, so the Firefox fallback works.
+- ~~**Fix `downloadFile`** — append the link to the document and revoke the
+  object URL asynchronously, so the Firefox fallback works.~~ Done: the link
+  is now appended to `document.body` before `click()` and removed after; the
+  object URL is revoked via `setTimeout(..., 0)` instead of synchronously.
+  Covered by unit tests asserting append/click/remove ordering and that
+  revocation happens on a later tick.
 - **Bounds-check `reorderArray`**; fix the length comparison in
   `previewOrderEquals`.
 - **Make `ItemsBox.handleDrop` immutable**, matching the other collections.
