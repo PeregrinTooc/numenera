@@ -107,6 +107,39 @@ export class CharacterSheet {
   }
 
   /**
+   * Re-render a single collection section in place, without a full sheet
+   * re-render. Necessary because lit-html's part tracking doesn't follow
+   * DOM nodes that were created by a separate targeted render call (see
+   * the "force re-render collection sections" workaround in main.ts).
+   */
+  rerenderSection(sectionId: SectionId): void {
+    type CollectionSectionId = "cyphers" | "abilities" | "specialAbilities" | "attacks" | "items";
+
+    const collectionSections: Record<
+      CollectionSectionId,
+      { testId: string; render: () => TemplateResult }
+    > = {
+      cyphers: { testId: "cyphers-section", render: () => this.cyphersBox.render() },
+      abilities: { testId: "abilities-section", render: () => this.abilities.render() },
+      specialAbilities: {
+        testId: "special-abilities-section",
+        render: () => this.specialAbilities.render(),
+      },
+      attacks: { testId: "attacks-section", render: () => this.attacks.render() },
+      items: { testId: "items-section", render: () => this.itemsBox.render() },
+    };
+
+    if (!(sectionId in collectionSections)) return;
+
+    const { testId, render: renderSection } = collectionSections[sectionId as CollectionSectionId];
+    const element = document.querySelector(`[data-testid="${testId}"]`);
+    if (!element || !element.parentElement) return;
+
+    render(renderSection(), element.parentElement, { renderBefore: element });
+    element.remove();
+  }
+
+  /**
    * Render a layout item (single or grid)
    */
   private renderLayoutItem(item: LayoutItem): TemplateResult {
@@ -403,6 +436,21 @@ export class CharacterSheet {
    */
   isInLayoutEditMode(): boolean {
     return this.isLayoutEditMode;
+  }
+
+  /**
+   * Check whether this sheet was built for the given character instance,
+   * used by main.ts to decide whether a fresh CharacterSheet is needed.
+   */
+  isForCharacter(character: Character): boolean {
+    return this.character === character;
+  }
+
+  /**
+   * Forward the export handle state to the Header, without exposing it directly.
+   */
+  setHeaderHasRememberedLocation(hasLocation: boolean): void {
+    this.header.setHasRememberedLocation(hasLocation);
   }
 
   /**

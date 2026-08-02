@@ -25,6 +25,7 @@ import { ConflictDetectionService } from "./services/conflictDetectionService.js
 import { ConflictWarningModal } from "./components/ConflictWarningModal.js";
 import { TestTimer } from "./services/timer.js";
 import type { ITimer } from "./services/timer.js";
+import type { SectionId } from "./types/layout.js";
 
 // Expose storage functions on window for E2E tests
 // This allows tests to work in both dev and production builds
@@ -53,6 +54,23 @@ declare global {
 
 // Global CharacterSheet instance to preserve state across re-renders
 let currentSheet: CharacterSheet | null = null;
+
+// Sections rendered via a separate CollectionBehavior-backed component whose
+// DOM nodes aren't tracked by lit-html's part system when only the parent
+// sheet re-renders; each needs an explicit targeted re-render.
+const COLLECTION_SECTION_IDS: SectionId[] = [
+  "cyphers",
+  "abilities",
+  "specialAbilities",
+  "attacks",
+  "items",
+];
+
+function rerenderCollectionSections(): void {
+  for (const sectionId of COLLECTION_SECTION_IDS) {
+    currentSheet?.rerenderSection(sectionId);
+  }
+}
 
 // Global ExportManager instance
 const exportManager = new ExportManager();
@@ -181,46 +199,7 @@ async function updateVersionNavigator(shouldReload = false): Promise<void> {
     await renderCharacterSheet(displayedCharacter, true);
 
     // Force re-render of all collection sections to ensure DOM is updated
-    const cyphersSection = document.querySelector("[data-testid='cyphers-section']");
-    if (cyphersSection && currentSheet && (currentSheet as any).cyphersBox) {
-      const cyphersBox = (currentSheet as any).cyphersBox;
-      render(cyphersBox.render(), cyphersSection.parentElement!, { renderBefore: cyphersSection });
-      cyphersSection.remove();
-    }
-
-    const abilitiesSection = document.querySelector("[data-testid='abilities-section']");
-    if (abilitiesSection && currentSheet && (currentSheet as any).abilities) {
-      const abilities = (currentSheet as any).abilities;
-      render(abilities.render(), abilitiesSection.parentElement!, {
-        renderBefore: abilitiesSection,
-      });
-      abilitiesSection.remove();
-    }
-
-    const specialAbilitiesSection = document.querySelector(
-      "[data-testid='special-abilities-section']"
-    );
-    if (specialAbilitiesSection && currentSheet && (currentSheet as any).specialAbilities) {
-      const specialAbilities = (currentSheet as any).specialAbilities;
-      render(specialAbilities.render(), specialAbilitiesSection.parentElement!, {
-        renderBefore: specialAbilitiesSection,
-      });
-      specialAbilitiesSection.remove();
-    }
-
-    const attacksSection = document.querySelector("[data-testid='attacks-section']");
-    if (attacksSection && currentSheet && (currentSheet as any).attacks) {
-      const attacks = (currentSheet as any).attacks;
-      render(attacks.render(), attacksSection.parentElement!, { renderBefore: attacksSection });
-      attacksSection.remove();
-    }
-
-    const itemsSection = document.querySelector("[data-testid='items-section']");
-    if (itemsSection && currentSheet && (currentSheet as any).itemsBox) {
-      const itemsBox = (currentSheet as any).itemsBox;
-      render(itemsBox.render(), itemsSection.parentElement!, { renderBefore: itemsSection });
-      itemsSection.remove();
-    }
+    rerenderCollectionSections();
 
     // Update navigator UI without reloading
     await updateVersionNavigator(false);
@@ -239,46 +218,7 @@ async function updateVersionNavigator(shouldReload = false): Promise<void> {
     await renderCharacterSheet(displayedCharacter, true);
 
     // Force re-render of all collection sections to ensure DOM is updated
-    const cyphersSection = document.querySelector("[data-testid='cyphers-section']");
-    if (cyphersSection && currentSheet && (currentSheet as any).cyphersBox) {
-      const cyphersBox = (currentSheet as any).cyphersBox;
-      render(cyphersBox.render(), cyphersSection.parentElement!, { renderBefore: cyphersSection });
-      cyphersSection.remove();
-    }
-
-    const abilitiesSection = document.querySelector("[data-testid='abilities-section']");
-    if (abilitiesSection && currentSheet && (currentSheet as any).abilities) {
-      const abilities = (currentSheet as any).abilities;
-      render(abilities.render(), abilitiesSection.parentElement!, {
-        renderBefore: abilitiesSection,
-      });
-      abilitiesSection.remove();
-    }
-
-    const specialAbilitiesSection = document.querySelector(
-      "[data-testid='special-abilities-section']"
-    );
-    if (specialAbilitiesSection && currentSheet && (currentSheet as any).specialAbilities) {
-      const specialAbilities = (currentSheet as any).specialAbilities;
-      render(specialAbilities.render(), specialAbilitiesSection.parentElement!, {
-        renderBefore: specialAbilitiesSection,
-      });
-      specialAbilitiesSection.remove();
-    }
-
-    const attacksSection = document.querySelector("[data-testid='attacks-section']");
-    if (attacksSection && currentSheet && (currentSheet as any).attacks) {
-      const attacks = (currentSheet as any).attacks;
-      render(attacks.render(), attacksSection.parentElement!, { renderBefore: attacksSection });
-      attacksSection.remove();
-    }
-
-    const itemsSection = document.querySelector("[data-testid='items-section']");
-    if (itemsSection && currentSheet && (currentSheet as any).itemsBox) {
-      const itemsBox = (currentSheet as any).itemsBox;
-      render(itemsBox.render(), itemsSection.parentElement!, { renderBefore: itemsSection });
-      itemsSection.remove();
-    }
+    rerenderCollectionSections();
 
     // Update navigator UI without reloading
     await updateVersionNavigator(false);
@@ -481,8 +421,8 @@ async function renderCharacterSheet(
 
   // Helper to update header button state after export operations
   const updateHeaderButtonState = (): void => {
-    if (currentSheet && (currentSheet as any).header) {
-      (currentSheet as any).header.setHasRememberedLocation(exportManager.hasRememberedLocation());
+    if (currentSheet) {
+      currentSheet.setHeaderHasRememberedLocation(exportManager.hasRememberedLocation());
       // Trigger re-render to show new buttons
       if (app) {
         render(currentSheet.render(), app);
@@ -527,7 +467,7 @@ async function renderCharacterSheet(
 
   // Create new sheet only if we don't have one yet, or if it's a different character
   // (e.g., Load or New button clicked)
-  const needsNewSheet = !currentSheet || (currentSheet as any).character !== character;
+  const needsNewSheet = !currentSheet || !currentSheet.isForCharacter(character);
 
   if (needsNewSheet) {
     currentSheet = new CharacterSheet(
@@ -551,8 +491,8 @@ async function renderCharacterSheet(
   }
 
   // Update header with current export manager state
-  if (currentSheet && (currentSheet as any).header) {
-    (currentSheet as any).header.setHasRememberedLocation(exportManager.hasRememberedLocation());
+  if (currentSheet) {
+    currentSheet.setHeaderHasRememberedLocation(exportManager.hasRememberedLocation());
   }
 
   if (currentSheet) {
@@ -659,60 +599,26 @@ async function renderCharacterSheet(
 
 // Listen for cyphers-updated events for targeted cypher re-render (smooth, no flash)
 function handleCyphersUpdated(_e: Event): void {
-  // Find the cyphers section and re-render it directly
-  const app = document.getElementById("app");
-  const section = document.querySelector("[data-testid='cyphers-section']");
-  if (app && section && currentSheet && (currentSheet as any).cyphersBox) {
-    const cyphersBox = (currentSheet as any).cyphersBox;
-    render(cyphersBox.render(), section.parentElement!, { renderBefore: section });
-    section.remove();
-  }
+  currentSheet?.rerenderSection("cyphers");
 }
 
+const COLLECTION_UPDATED_SECTION_IDS: Record<string, SectionId> = {
+  abilities: "abilities",
+  specialAbilities: "specialAbilities",
+  attacks: "attacks",
+  equipment: "items",
+  artifacts: "items",
+  oddities: "items",
+};
+
 // Listen for collection-updated events for targeted re-render of collection sections
-// Uses same pattern as cyphers-updated: find section, render component, remove old section
 function handleCollectionUpdated(e: Event): void {
   const customEvent = e as CustomEvent<{ section: string }>;
   const sectionName = customEvent.detail?.section;
-
-  if (sectionName === "abilities") {
-    // Targeted re-render abilities section (same pattern as cyphers)
-    const section = document.querySelector("[data-testid='abilities-section']");
-    if (section && currentSheet && (currentSheet as any).abilities) {
-      const abilities = (currentSheet as any).abilities;
-      render(abilities.render(), section.parentElement!, { renderBefore: section });
-      section.remove();
-    }
-  } else if (sectionName === "specialAbilities") {
-    // Targeted re-render special abilities section
-    const section = document.querySelector("[data-testid='special-abilities-section']");
-    if (section && currentSheet && (currentSheet as any).specialAbilities) {
-      const specialAbilities = (currentSheet as any).specialAbilities;
-      render(specialAbilities.render(), section.parentElement!, { renderBefore: section });
-      section.remove();
-    }
-  } else if (sectionName === "attacks") {
-    // Targeted re-render attacks section
-    const section = document.querySelector("[data-testid='attacks-section']");
-    if (section && currentSheet && (currentSheet as any).attacks) {
-      const attacks = (currentSheet as any).attacks;
-      render(attacks.render(), section.parentElement!, { renderBefore: section });
-      section.remove();
-    }
-  } else if (
-    sectionName === "equipment" ||
-    sectionName === "artifacts" ||
-    sectionName === "oddities"
-  ) {
-    // Targeted re-render items section
-    const section = document.querySelector("[data-testid='items-section']");
-    if (section && currentSheet && (currentSheet as any).itemsBox) {
-      const itemsBox = (currentSheet as any).itemsBox;
-      render(itemsBox.render(), section.parentElement!, { renderBefore: section });
-      section.remove();
-    }
+  const sectionId = sectionName ? COLLECTION_UPDATED_SECTION_IDS[sectionName] : undefined;
+  if (sectionId) {
+    currentSheet?.rerenderSection(sectionId);
   }
-  // Add more sections here as we implement them
 }
 
 // Listen for recovery-updated events for targeted re-render of recovery section
@@ -990,58 +896,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           await renderCharacterSheet(previousState, true);
 
           // Force re-render of all collection sections to ensure DOM is updated
-          // This is necessary because the targeted re-render pattern creates new DOM nodes
-          // that aren't tracked by lit-html's template system
-
-          // Force re-render cyphers section
-          const cyphersSection = document.querySelector("[data-testid='cyphers-section']");
-          if (cyphersSection && currentSheet && (currentSheet as any).cyphersBox) {
-            const cyphersBox = (currentSheet as any).cyphersBox;
-            render(cyphersBox.render(), cyphersSection.parentElement!, {
-              renderBefore: cyphersSection,
-            });
-            cyphersSection.remove();
-          }
-
-          // Force re-render abilities section
-          const abilitiesSection = document.querySelector("[data-testid='abilities-section']");
-          if (abilitiesSection && currentSheet && (currentSheet as any).abilities) {
-            const abilities = (currentSheet as any).abilities;
-            render(abilities.render(), abilitiesSection.parentElement!, {
-              renderBefore: abilitiesSection,
-            });
-            abilitiesSection.remove();
-          }
-
-          // Force re-render special abilities section
-          const specialAbilitiesSection = document.querySelector(
-            "[data-testid='special-abilities-section']"
-          );
-          if (specialAbilitiesSection && currentSheet && (currentSheet as any).specialAbilities) {
-            const specialAbilities = (currentSheet as any).specialAbilities;
-            render(specialAbilities.render(), specialAbilitiesSection.parentElement!, {
-              renderBefore: specialAbilitiesSection,
-            });
-            specialAbilitiesSection.remove();
-          }
-
-          // Force re-render attacks section
-          const attacksSection = document.querySelector("[data-testid='attacks-section']");
-          if (attacksSection && currentSheet && (currentSheet as any).attacks) {
-            const attacks = (currentSheet as any).attacks;
-            render(attacks.render(), attacksSection.parentElement!, {
-              renderBefore: attacksSection,
-            });
-            attacksSection.remove();
-          }
-
-          // Force re-render items section (equipment, artifacts, oddities)
-          const itemsSection = document.querySelector("[data-testid='items-section']");
-          if (itemsSection && currentSheet && (currentSheet as any).itemsBox) {
-            const itemsBox = (currentSheet as any).itemsBox;
-            render(itemsBox.render(), itemsSection.parentElement!, { renderBefore: itemsSection });
-            itemsSection.remove();
-          }
+          rerenderCollectionSections();
         }
         return;
       }
@@ -1081,58 +936,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           await renderCharacterSheet(redoneState, true);
 
           // Force re-render of all collection sections to ensure DOM is updated
-          // This is necessary because the targeted re-render pattern creates new DOM nodes
-          // that aren't tracked by lit-html's template system
-
-          // Force re-render cyphers section
-          const cyphersSection = document.querySelector("[data-testid='cyphers-section']");
-          if (cyphersSection && currentSheet && (currentSheet as any).cyphersBox) {
-            const cyphersBox = (currentSheet as any).cyphersBox;
-            render(cyphersBox.render(), cyphersSection.parentElement!, {
-              renderBefore: cyphersSection,
-            });
-            cyphersSection.remove();
-          }
-
-          // Force re-render abilities section
-          const abilitiesSection = document.querySelector("[data-testid='abilities-section']");
-          if (abilitiesSection && currentSheet && (currentSheet as any).abilities) {
-            const abilities = (currentSheet as any).abilities;
-            render(abilities.render(), abilitiesSection.parentElement!, {
-              renderBefore: abilitiesSection,
-            });
-            abilitiesSection.remove();
-          }
-
-          // Force re-render special abilities section
-          const specialAbilitiesSection = document.querySelector(
-            "[data-testid='special-abilities-section']"
-          );
-          if (specialAbilitiesSection && currentSheet && (currentSheet as any).specialAbilities) {
-            const specialAbilities = (currentSheet as any).specialAbilities;
-            render(specialAbilities.render(), specialAbilitiesSection.parentElement!, {
-              renderBefore: specialAbilitiesSection,
-            });
-            specialAbilitiesSection.remove();
-          }
-
-          // Force re-render attacks section
-          const attacksSection = document.querySelector("[data-testid='attacks-section']");
-          if (attacksSection && currentSheet && (currentSheet as any).attacks) {
-            const attacks = (currentSheet as any).attacks;
-            render(attacks.render(), attacksSection.parentElement!, {
-              renderBefore: attacksSection,
-            });
-            attacksSection.remove();
-          }
-
-          // Force re-render items section (equipment, artifacts, oddities)
-          const itemsSection = document.querySelector("[data-testid='items-section']");
-          if (itemsSection && currentSheet && (currentSheet as any).itemsBox) {
-            const itemsBox = (currentSheet as any).itemsBox;
-            render(itemsBox.render(), itemsSection.parentElement!, { renderBefore: itemsSection });
-            itemsSection.remove();
-          }
+          rerenderCollectionSections();
 
           // Request auto-save to persist the redo'd state to localStorage
           autoSaveService.requestSave();
