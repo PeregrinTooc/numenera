@@ -145,6 +145,9 @@ export class ExportManager {
   clearRememberedLocation(): void {
     this.fileHandle = null;
     localStorage.removeItem(this.HANDLE_STORAGE_KEY);
+    this.deleteHandle().catch((error) => {
+      console.warn("Failed to delete persisted file handle:", error);
+    });
     window.dispatchEvent(new CustomEvent("export-handle-updated"));
   }
 
@@ -235,6 +238,17 @@ export class ExportManager {
     } catch (error) {
       console.warn("Failed to persist file handle:", error);
     }
+  }
+
+  private async deleteHandle(): Promise<void> {
+    const db = await this.openHandleDB();
+    const tx = db.transaction("handles", "readwrite");
+    const store = tx.objectStore("handles");
+    store.delete(this.HANDLE_STORAGE_KEY);
+    await new Promise<void>((resolve, reject) => {
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
   }
 
   private async loadPersistedHandle(): Promise<void> {

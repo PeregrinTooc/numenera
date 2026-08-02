@@ -61,8 +61,13 @@ Low risk, no behaviour change. Suitable for filling gaps between larger items.
   `main.ts`'s `updateHeaderButtonState()`, which re-renders directly after
   export operations — the event was redundant. Covered by a unit test
   asserting `Header` never registers that listener.
-- **Clear the remembered export handle from IndexedDB** in
-  `clearRememberedLocation`, not just localStorage.
+- ~~**Clear the remembered export handle from IndexedDB** in
+  `clearRememberedLocation`, not just localStorage.~~ Done: added
+  `deleteHandle()`, mirroring `persistHandle()`, and call it (best-effort,
+  matching the existing fire-and-forget persistence pattern) from
+  `clearRememberedLocation()`. Covered by a unit test that clears the
+  location and then constructs a fresh `ExportManager` to confirm it no
+  longer reloads the handle from IndexedDB.
 - **Fix `downloadFile`** — append the link to the document and revoke the object
   URL asynchronously, so the Firefox fallback works.
 - **Bounds-check `reorderArray`**; fix the length comparison in
