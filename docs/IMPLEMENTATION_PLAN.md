@@ -34,11 +34,18 @@ apply to the merge/split scenarios too).
 Low risk, no behaviour change. Suitable for filling gaps between larger items.
 
 - ~~**Deduplicate `src/main.ts`.** The "force re-render collection sections" block
-  appears four times (~200 lines). Extract one function.~~ Done: added
-  `CharacterSheet.rerenderSection(sectionId)`, which owns the targeted-render
-  workaround; `main.ts` now calls it from a shared `rerenderCollectionSections()`
-  helper (backward/forward nav, undo, redo) and from the `cyphers-updated` /
-  `collection-updated` event handlers instead of duplicating the DOM lookup.
+  appears four times (~200 lines). Extract one function.~~ Done, and the
+  workaround it encapsulated has since been removed: `rerenderSection` used to
+  render a section into a fresh lit-html root placed inside the region the
+  sheet's own template owned, then delete the node that template had rendered.
+  That detached the region from the sheet's part, so every later sheet render
+  updated orphaned DOM — visible as the Shins badge freezing after any item card
+  was added, and the reason `rerenderCollectionSections()` had to force the
+  sections after navigation, undo and redo. Collection sections now mount into a
+  stable `[data-section-host]` element that the sheet's template leaves empty, so
+  the two lit-html roots never overlap. `rerenderSection` still re-renders one
+  section and nothing else; `CharacterSheet.mount()` renders the sheet and fills
+  the hosts, and `rerenderCollectionSections()` is gone.
   Also removed the remaining `(currentSheet as any)` casts in `main.ts` by
   adding `CharacterSheet.isForCharacter()` and
   `CharacterSheet.setHeaderHasRememberedLocation()` accessors — this also

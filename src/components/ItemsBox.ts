@@ -175,9 +175,9 @@ export class ItemsBox {
     const newItems = reorderArray(collection, draggedIndex, targetIndex);
     this.setCollection(section, newItems);
 
-    this.handleDragEnd(e, section, testIdSelector, true);
+    this.handleDragEnd(e, section, testIdSelector);
 
-    // Dispatch collection-updated for targeted re-render
+    // Dispatch collection-updated to re-render the sheet
     // Dispatch character-updated for save
     const appElement = document.getElementById("app");
     if (appElement) {
@@ -186,18 +186,14 @@ export class ItemsBox {
     }
   }
 
-  private handleDragEnd(
-    _e: Event,
-    section: ItemSection,
-    testIdSelector: string,
-    keepOrder: boolean = false
-  ): void {
+  private handleDragEnd(_e: Event, section: ItemSection, testIdSelector: string): void {
     const items = document.querySelectorAll(`[data-testid='${testIdSelector}']`);
     items.forEach((item) => {
       item.removeAttribute("data-dragging");
-      if (!keepOrder) {
-        (item as HTMLElement).style.order = "";
-      }
+      // Always drop the preview `order`: the sheet re-renders into these same
+      // nodes in the new array order, so a leftover override would keep
+      // showing the pre-drop arrangement.
+      (item as HTMLElement).style.order = "";
     });
     this.dragState[section] = { draggedIndex: null, previewOrder: null, currentTargetIndex: null };
   }

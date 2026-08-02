@@ -132,6 +132,16 @@ Feature: Resource Tracker Fields Editing
         When I tap the Shins badge
         Then the edit modal should open
 
+    Scenario: Editing Shins still updates the badge after an item card was added
+        Given the character has 100 shins
+        When I click the add equipment button
+        And I fill in the equipment name with "Sword"
+        And I confirm the card edit modal
+        And I click the Shins badge
+        And I type "250" in the modal input
+        And I click the modal confirm button
+        Then the Shins badge should show "250"
+
     # ============================================================================
     # ARMOR EDITING SCENARIOS
     # ============================================================================

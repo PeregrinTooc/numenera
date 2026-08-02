@@ -18,6 +18,25 @@ import { changeLanguage, t } from "../i18n/index.js";
 import { Layout, LayoutItem, SectionId, isGridEligible, cloneLayout } from "../types/layout.js";
 import { loadLayout, saveLayout, resetLayout } from "../storage/layoutStorage.js";
 
+/**
+ * Sections backed by a CollectionBehavior component. Each one is mounted into
+ * its own lit-html root so it can be re-rendered on its own, without diffing
+ * the rest of the sheet.
+ */
+const COLLECTION_SECTION_IDS = [
+  "cyphers",
+  "abilities",
+  "specialAbilities",
+  "attacks",
+  "items",
+] as const;
+
+type CollectionSectionId = (typeof COLLECTION_SECTION_IDS)[number];
+
+function isCollectionSection(sectionId: SectionId): sectionId is CollectionSectionId {
+  return (COLLECTION_SECTION_IDS as readonly SectionId[]).includes(sectionId);
+}
+
 export class CharacterSheet {
   private header: Header;
   private basicInfo: BasicInfo;
@@ -35,6 +54,7 @@ export class CharacterSheet {
   private isLayoutEditMode: boolean = false;
   private draggedSectionId: SectionId | null = null;
   private dropTargetId: SectionId | null = null;
+  private container: HTMLElement | null = null;
 
   constructor(
     private character: Character,
@@ -77,9 +97,18 @@ export class CharacterSheet {
   }
 
   /**
-   * Get the template for a specific section
+   * Get the template for a specific section.
+   *
+   * Collection sections contribute an empty host element instead of their
+   * content: `mountCollectionSections()` fills each host from its own
+   * lit-html root, so the sheet's template never owns those nodes. `contents`
+   * keeps the host out of the layout entirely.
    */
   private getSectionTemplate(sectionId: SectionId): TemplateResult {
+    if (isCollectionSection(sectionId)) {
+      return html`<div class="contents" data-section-host=${sectionId}></div>`;
+    }
+
     switch (sectionId) {
       case "basicInfo":
         return this.basicInfo.render();
@@ -87,16 +116,6 @@ export class CharacterSheet {
         return this.stats.render();
       case "recoveryDamage":
         return this.recoveryDamageSection.render();
-      case "abilities":
-        return this.abilities.render();
-      case "specialAbilities":
-        return this.specialAbilities.render();
-      case "attacks":
-        return this.attacks.render();
-      case "cyphers":
-        return this.cyphersBox.render();
-      case "items":
-        return this.itemsBox.render();
       case "background":
         return this.bottomTextFields.renderBackground();
       case "notes":
@@ -107,36 +126,51 @@ export class CharacterSheet {
   }
 
   /**
-   * Re-render a single collection section in place, without a full sheet
-   * re-render. Necessary because lit-html's part tracking doesn't follow
-   * DOM nodes that were created by a separate targeted render call (see
-   * the "force re-render collection sections" workaround in main.ts).
+   * Get the template for a collection section's content.
+   */
+  private getCollectionSectionTemplate(sectionId: CollectionSectionId): TemplateResult {
+    switch (sectionId) {
+      case "cyphers":
+        return this.cyphersBox.render();
+      case "abilities":
+        return this.abilities.render();
+      case "specialAbilities":
+        return this.specialAbilities.render();
+      case "attacks":
+        return this.attacks.render();
+      case "items":
+        return this.itemsBox.render();
+    }
+  }
+
+  /**
+   * Re-render a single collection section, leaving the rest of the sheet's DOM
+   * untouched.
+   *
+   * The section is rendered into its host element, which the sheet's template
+   * leaves empty. That host is the boundary between the two lit-html roots:
+   * rendering a section anywhere inside the region the sheet's own template
+   * owns detaches those nodes from the sheet's part, after which every later
+   * sheet render silently updates orphaned DOM.
    */
   rerenderSection(sectionId: SectionId): void {
-    type CollectionSectionId = "cyphers" | "abilities" | "specialAbilities" | "attacks" | "items";
+    if (!isCollectionSection(sectionId)) return;
 
-    const collectionSections: Record<
-      CollectionSectionId,
-      { testId: string; render: () => TemplateResult }
-    > = {
-      cyphers: { testId: "cyphers-section", render: () => this.cyphersBox.render() },
-      abilities: { testId: "abilities-section", render: () => this.abilities.render() },
-      specialAbilities: {
-        testId: "special-abilities-section",
-        render: () => this.specialAbilities.render(),
-      },
-      attacks: { testId: "attacks-section", render: () => this.attacks.render() },
-      items: { testId: "items-section", render: () => this.itemsBox.render() },
-    };
+    const root = this.container ?? document;
+    const host = root.querySelector<HTMLElement>(`[data-section-host="${sectionId}"]`);
+    if (!host) return;
 
-    if (!(sectionId in collectionSections)) return;
+    render(this.getCollectionSectionTemplate(sectionId), host);
+  }
 
-    const { testId, render: renderSection } = collectionSections[sectionId as CollectionSectionId];
-    const element = document.querySelector(`[data-testid="${testId}"]`);
-    if (!element || !element.parentElement) return;
-
-    render(renderSection(), element.parentElement, { renderBefore: element });
-    element.remove();
+  /**
+   * Fill every collection section's host. Called after each sheet render, since
+   * a layout change can replace the host elements.
+   */
+  private mountCollectionSections(): void {
+    for (const sectionId of COLLECTION_SECTION_IDS) {
+      this.rerenderSection(sectionId);
+    }
   }
 
   /**
@@ -454,12 +488,22 @@ export class CharacterSheet {
   }
 
   /**
-   * Trigger a re-render
+   * Render the sheet into `container` and fill the collection-section hosts.
+   * The container is remembered so later re-renders target the same element.
    */
-  private rerender(): void {
-    const app = document.getElementById("app");
-    if (app) {
-      render(this.render(), app);
+  mount(container: HTMLElement): void {
+    this.container = container;
+    render(this.render(), container);
+    this.mountCollectionSections();
+  }
+
+  /**
+   * Re-render the whole sheet in place.
+   */
+  rerender(): void {
+    const container = this.container ?? document.getElementById("app");
+    if (container) {
+      this.mount(container);
     }
   }
 
@@ -537,10 +581,7 @@ export class CharacterSheet {
   setIsViewingOldVersion(isViewing: boolean): void {
     this.header.setIsViewingOldVersion(isViewing);
     // Trigger re-render to update button state
-    const app = document.getElementById("app");
-    if (app) {
-      render(this.render(), app);
-    }
+    this.rerender();
   }
 
   /**

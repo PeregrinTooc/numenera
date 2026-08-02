@@ -35,7 +35,7 @@ export class RecoveryDamageSection {
     if (app) {
       // Dispatch character-updated for auto-save
       app.dispatchEvent(new CustomEvent("character-updated"));
-      // Dispatch recovery-updated for a targeted re-render (also covers
+      // Dispatch recovery-updated to re-render the sheet (also covers
       // damage-track changes: its handler re-renders the full sheet)
       app.dispatchEvent(new CustomEvent("recovery-updated"));
     }

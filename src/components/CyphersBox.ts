@@ -76,15 +76,15 @@ export class CyphersBox {
     }
   }
 
-  private handleDragEnd(_e: Event, keepOrder: boolean = false): void {
+  private handleDragEnd(_e: Event): void {
     // Remove dragging visual state from all items
     const items = document.querySelectorAll("[data-testid='cypher-item']");
     items.forEach((item) => {
       item.removeAttribute("data-dragging");
-      // Only clear CSS order if not keeping it (for smooth transition after successful drop)
-      if (!keepOrder) {
-        (item as HTMLElement).style.order = "";
-      }
+      // Always drop the preview `order`: the sheet re-renders into these same
+      // nodes in the new array order, so a leftover override would keep
+      // showing the pre-drop arrangement.
+      (item as HTMLElement).style.order = "";
     });
 
     // Reset preview state
@@ -165,11 +165,10 @@ export class CyphersBox {
     // Update character data immediately
     this.character.cyphers = newCyphers;
 
-    // Clean up drag state but keep CSS order to prevent flash
-    this.handleDragEnd(e, true);
+    this.handleDragEnd(e);
 
-    // Dispatch cyphers-updated for targeted re-render (smooth, no flash)
-    // Dispatch character-updated for save (but won't re-render cyphers)
+    // Dispatch cyphers-updated to re-render the sheet
+    // Dispatch character-updated for save (re-rendering is handled above)
     const appElement = document.getElementById("app");
     if (appElement) {
       appElement.dispatchEvent(new CustomEvent("cyphers-updated"));

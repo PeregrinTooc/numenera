@@ -111,9 +111,9 @@ export class Abilities {
     const newAbilities = reorderArray(this.character.abilities, draggedIndex, targetIndex);
     this.character.abilities = newAbilities;
 
-    this.handleDragEnd(e, true);
+    this.handleDragEnd(e);
 
-    // Dispatch collection-updated for targeted re-render
+    // Dispatch collection-updated to re-render the sheet
     // Dispatch character-updated for save
     const appElement = document.getElementById("app");
     if (appElement) {
@@ -124,13 +124,14 @@ export class Abilities {
     }
   }
 
-  private handleDragEnd(_e: Event, keepOrder: boolean = false): void {
+  private handleDragEnd(_e: Event): void {
     const items = document.querySelectorAll("[data-testid^='ability-item']");
     items.forEach((item) => {
       item.removeAttribute("data-dragging");
-      if (!keepOrder) {
-        (item as HTMLElement).style.order = "";
-      }
+      // Always drop the preview `order`: the sheet re-renders into these same
+      // nodes in the new array order, so a leftover override would keep
+      // showing the pre-drop arrangement.
+      (item as HTMLElement).style.order = "";
     });
     this.previewOrder = null;
     this.draggedIndex = null;

@@ -261,7 +261,7 @@ describe("State Management Components", () => {
     it("should render all major sections", () => {
       const onFieldUpdate = vi.fn();
       const sheet = new CharacterSheet(mockCharacter, onFieldUpdate);
-      render(sheet.render(), container);
+      sheet.mount(container);
 
       // Check for major sections
       const basicInfo = container.querySelector('[data-testid="basic-info"]');

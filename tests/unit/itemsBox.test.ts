@@ -111,6 +111,45 @@ describe("ItemsBox", () => {
       ]);
       expect(mockCharacter.equipment.map((i) => i.name)).toEqual(["Shield", "Bow", "Sword"]);
     });
+
+    it("clears the preview order on drop so the re-rendered DOM order wins", () => {
+      mockCharacter.equipment = [
+        { name: "Sword", description: "Sharp" },
+        { name: "Shield", description: "Strong" },
+        { name: "Bow", description: "Long range" },
+      ];
+
+      const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
+      render(itemsBox.render(), container);
+
+      const items = Array.from(
+        container.querySelectorAll<HTMLElement>('[data-testid="equipment-item"]')
+      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const internal = itemsBox as any;
+      const dataTransfer = {
+        setData: vi.fn(),
+        getData: (type: string) => (type === "application/x-section" ? "equipment" : ""),
+      };
+
+      internal.handleDragStart({ target: items[0], dataTransfer }, "equipment", "equipment-item");
+      internal.handleDragOver(
+        { preventDefault: vi.fn(), target: items[2] },
+        "equipment",
+        "equipment-item"
+      );
+      expect(items.some((item) => item.style.order !== "")).toBe(true);
+
+      internal.handleDrop(
+        { preventDefault: vi.fn(), target: items[2], dataTransfer },
+        "equipment",
+        "equipment-item"
+      );
+
+      // The sheet re-renders into these very nodes, so a leftover flex `order`
+      // would keep showing the pre-drop arrangement.
+      expect(items.every((item) => item.style.order === "")).toBe(true);
+    });
   });
 
   describe("Equipment Management", () => {

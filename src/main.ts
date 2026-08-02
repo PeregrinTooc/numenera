@@ -55,23 +55,6 @@ declare global {
 // Global CharacterSheet instance to preserve state across re-renders
 let currentSheet: CharacterSheet | null = null;
 
-// Sections rendered via a separate CollectionBehavior-backed component whose
-// DOM nodes aren't tracked by lit-html's part system when only the parent
-// sheet re-renders; each needs an explicit targeted re-render.
-const COLLECTION_SECTION_IDS: SectionId[] = [
-  "cyphers",
-  "abilities",
-  "specialAbilities",
-  "attacks",
-  "items",
-];
-
-function rerenderCollectionSections(): void {
-  for (const sectionId of COLLECTION_SECTION_IDS) {
-    currentSheet?.rerenderSection(sectionId);
-  }
-}
-
 // Global ExportManager instance
 const exportManager = new ExportManager();
 
@@ -198,9 +181,6 @@ async function updateVersionNavigator(shouldReload = false): Promise<void> {
 
     await renderCharacterSheet(displayedCharacter, true);
 
-    // Force re-render of all collection sections to ensure DOM is updated
-    rerenderCollectionSections();
-
     // Update navigator UI without reloading
     await updateVersionNavigator(false);
   };
@@ -216,9 +196,6 @@ async function updateVersionNavigator(shouldReload = false): Promise<void> {
     currentCharacter = displayedCharacter;
 
     await renderCharacterSheet(displayedCharacter, true);
-
-    // Force re-render of all collection sections to ensure DOM is updated
-    rerenderCollectionSections();
 
     // Update navigator UI without reloading
     await updateVersionNavigator(false);
@@ -353,7 +330,7 @@ async function renderCharacterSheet(
       currentSheet.setHeaderHasRememberedLocation(exportManager.hasRememberedLocation());
       // Trigger re-render to show new buttons
       if (app) {
-        render(currentSheet.render(), app);
+        currentSheet.mount(app);
       }
     }
   };
@@ -424,7 +401,7 @@ async function renderCharacterSheet(
   }
 
   if (currentSheet) {
-    render(currentSheet.render(), app);
+    currentSheet.mount(app);
   }
 
   // Save character state to localStorage after rendering
@@ -525,7 +502,7 @@ async function renderCharacterSheet(
   characterBeforeUpdate = currentCharacter ? globalThis.structuredClone(currentCharacter) : null;
 }
 
-// Listen for cyphers-updated events for targeted cypher re-render (smooth, no flash)
+// Listen for cyphers-updated events for a targeted cypher re-render
 function handleCyphersUpdated(_e: Event): void {
   currentSheet?.rerenderSection("cyphers");
 }
@@ -539,7 +516,7 @@ const COLLECTION_UPDATED_SECTION_IDS: Record<string, SectionId> = {
   oddities: "items",
 };
 
-// Listen for collection-updated events for targeted re-render of collection sections
+// Listen for collection-updated events for a targeted re-render of that section
 function handleCollectionUpdated(e: Event): void {
   const customEvent = e as CustomEvent<{ section: string }>;
   const sectionName = customEvent.detail?.section;
@@ -549,13 +526,10 @@ function handleCollectionUpdated(e: Event): void {
   }
 }
 
-// Listen for recovery-updated events for targeted re-render of recovery section
-// Since RecoveryRolls is created fresh in render(), we need to re-render the full sheet
+// Listen for recovery-updated events. RecoveryRolls has no host of its own, so
+// the whole sheet is re-rendered; lit-html diffs, so only changed bindings move.
 function handleRecoveryUpdated(_e: Event): void {
-  const app = document.getElementById("app");
-  if (app && currentSheet && currentCharacter) {
-    render(currentSheet.render(), app);
-  }
+  currentSheet?.rerender();
 }
 
 // Listen for character-updated events and trigger auto-save
@@ -763,7 +737,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     appEl.addEventListener("settings-updated", () => {
       // Re-render the current sheet to update settings panel visibility
       if (currentSheet && currentCharacter) {
-        render(currentSheet.render(), appEl);
+        currentSheet.mount(appEl);
       }
     });
   }
@@ -822,9 +796,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           currentCharacter = previousState;
 
           await renderCharacterSheet(previousState, true);
-
-          // Force re-render of all collection sections to ensure DOM is updated
-          rerenderCollectionSections();
         }
         return;
       }
@@ -862,9 +833,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           // Render the redo'd state (this will update characterBeforeUpdate)
           await renderCharacterSheet(redoneState, true);
-
-          // Force re-render of all collection sections to ensure DOM is updated
-          rerenderCollectionSections();
 
           // Request auto-save to persist the redo'd state to localStorage
           autoSaveService.requestSave();

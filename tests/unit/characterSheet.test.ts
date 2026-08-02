@@ -5,7 +5,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { CharacterSheet } from "../../src/components/CharacterSheet.js";
 import { Character } from "../../src/types/character.js";
-import { render } from "lit-html";
 import * as RecoveryDamageSectionModule from "../../src/components/RecoveryDamageSection.js";
 
 describe("CharacterSheet - Version History Integration", () => {
@@ -14,8 +13,10 @@ describe("CharacterSheet - Version History Integration", () => {
   let characterSheet: CharacterSheet;
 
   beforeEach(() => {
-    // Create container
+    // Create container. The id matters: components re-render themselves into
+    // #app, the same element main.ts renders the sheet into.
     container = document.createElement("div");
+    container.id = "app";
     document.body.appendChild(container);
 
     // Create mock character
@@ -78,8 +79,7 @@ describe("CharacterSheet - Version History Integration", () => {
   });
 
   it("should render successfully", () => {
-    const template = characterSheet.render();
-    render(template, container);
+    characterSheet.mount(container);
 
     expect(container.querySelector(".parchment-container")).toBeTruthy();
   });
@@ -106,7 +106,7 @@ describe("CharacterSheet - Version History Integration", () => {
 
   describe("rerenderSection", () => {
     it("re-renders the cyphers section in place to reflect a data change", () => {
-      render(characterSheet.render(), container);
+      characterSheet.mount(container);
       expect(container.querySelector('[data-testid="cyphers-section"]')?.textContent).not.toContain(
         "New Cypher"
       );
@@ -120,7 +120,7 @@ describe("CharacterSheet - Version History Integration", () => {
     });
 
     it("re-renders the abilities section in place to reflect a data change", () => {
-      render(characterSheet.render(), container);
+      characterSheet.mount(container);
 
       mockCharacter.abilities.push({ name: "New Ability", description: "Test" });
       characterSheet.rerenderSection("abilities");
@@ -130,8 +130,23 @@ describe("CharacterSheet - Version History Integration", () => {
       );
     });
 
-    it("does nothing for a section with no dedicated collection DOM (e.g. basicInfo)", () => {
-      render(characterSheet.render(), container);
+    it("leaves the rest of the sheet alone", () => {
+      characterSheet.mount(container);
+      const attacksBefore = container.querySelector('[data-testid="attacks-section"]');
+      const basicInfoBefore = container.querySelector('[data-testid="basic-info"]');
+      expect(attacksBefore).toBeTruthy();
+      expect(basicInfoBefore).toBeTruthy();
+
+      mockCharacter.cyphers.push({ name: "New Cypher", level: "1d6", effect: "Test effect" });
+      characterSheet.rerenderSection("cyphers");
+
+      // Same DOM nodes, not replacements: only the cyphers host was rendered into.
+      expect(container.querySelector('[data-testid="attacks-section"]')).toBe(attacksBefore);
+      expect(container.querySelector('[data-testid="basic-info"]')).toBe(basicInfoBefore);
+    });
+
+    it("does nothing for a section with no host of its own (e.g. basicInfo)", () => {
+      characterSheet.mount(container);
       const before = container.innerHTML;
 
       characterSheet.rerenderSection("basicInfo");
@@ -140,8 +155,20 @@ describe("CharacterSheet - Version History Integration", () => {
     });
 
     it("does nothing if the section isn't currently in the DOM", () => {
-      // Nothing rendered into container yet, so no [data-testid="cyphers-section"] exists.
+      // Nothing mounted yet, so no [data-section-host="cyphers"] exists.
       expect(() => characterSheet.rerenderSection("cyphers")).not.toThrow();
+    });
+
+    it("leaves later sheet renders able to update the section it re-rendered", () => {
+      characterSheet.mount(container);
+
+      mockCharacter.equipment.push({ name: "Sword", description: "" });
+      characterSheet.rerenderSection("items");
+
+      mockCharacter.shins = 250;
+      characterSheet.mount(container);
+
+      expect(container.querySelector('[data-testid="shins-badge"]')?.textContent).toContain("250");
     });
   });
 
@@ -169,8 +196,8 @@ describe("CharacterSheet - Version History Integration", () => {
       const callsAfterConstruction = constructorSpy.mock.calls.length;
       expect(callsAfterConstruction).toBeGreaterThan(0);
 
-      render(sheet.render(), container);
-      render(sheet.render(), container);
+      sheet.mount(container);
+      sheet.mount(container);
 
       expect(constructorSpy.mock.calls.length).toBe(callsAfterConstruction);
     });
