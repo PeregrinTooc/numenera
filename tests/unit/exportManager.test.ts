@@ -70,7 +70,13 @@ function setupDownloadTest() {
     href: "",
   };
   createElementSpy.mockReturnValue(mockLink as any);
-  return { mockLink, createElementSpy };
+  const appendChildSpy = vi
+    .spyOn(document.body, "appendChild")
+    .mockImplementation((node) => node as any);
+  const removeChildSpy = vi
+    .spyOn(document.body, "removeChild")
+    .mockImplementation((node) => node as any);
+  return { mockLink, createElementSpy, appendChildSpy, removeChildSpy };
 }
 
 // Helper to verify valid file structure
@@ -298,6 +304,37 @@ describe("ExportManager", () => {
 
       expect(mockLink.click).toHaveBeenCalled();
       expect(mockLink.download).toBe("glaive-warrior.numenera");
+    });
+
+    it("appends the download link to the document before clicking and removes it after, for the Firefox fallback", async () => {
+      const { mockLink, appendChildSpy, removeChildSpy } = setupDownloadTest();
+
+      await exportManager.export(mockCharacter);
+
+      expect(appendChildSpy).toHaveBeenCalledWith(mockLink);
+      expect(removeChildSpy).toHaveBeenCalledWith(mockLink);
+
+      const appendOrder = appendChildSpy.mock.invocationCallOrder[0];
+      const clickOrder = mockLink.click.mock.invocationCallOrder[0];
+      const removeOrder = removeChildSpy.mock.invocationCallOrder[0];
+      expect(appendOrder).toBeLessThan(clickOrder);
+      expect(clickOrder).toBeLessThan(removeOrder);
+    });
+
+    it("revokes the object URL asynchronously, so Firefox has time to start the download", async () => {
+      vi.useFakeTimers();
+      try {
+        const revokeSpy = vi.spyOn(URL, "revokeObjectURL");
+        setupDownloadTest();
+
+        await exportManager.export(mockCharacter);
+
+        expect(revokeSpy).not.toHaveBeenCalled();
+        vi.runAllTimers();
+        expect(revokeSpy).toHaveBeenCalled();
+      } finally {
+        vi.useRealTimers();
+      }
     });
   });
 
