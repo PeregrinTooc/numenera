@@ -34,8 +34,16 @@ apply to the merge/split scenarios too).
 
 Low risk, no behaviour change. Suitable for filling gaps between larger items.
 
-- **Deduplicate `src/main.ts`.** The "force re-render collection sections" block
-  appears four times (~200 lines). Extract one function.
+- ~~**Deduplicate `src/main.ts`.** The "force re-render collection sections" block
+  appears four times (~200 lines). Extract one function.~~ Done: added
+  `CharacterSheet.rerenderSection(sectionId)`, which owns the targeted-render
+  workaround; `main.ts` now calls it from a shared `rerenderCollectionSections()`
+  helper (backward/forward nav, undo, redo) and from the `cyphers-updated` /
+  `collection-updated` event handlers instead of duplicating the DOM lookup.
+  Also removed the remaining `(currentSheet as any)` casts in `main.ts` by
+  adding `CharacterSheet.isForCharacter()` and
+  `CharacterSheet.setHeaderHasRememberedLocation()` accessors — this also
+  covers the `no-explicit-any` bullet below for `main.ts`.
 - **Fix the shallow copy** in `handleFieldUpdate` (`src/main.ts:341`) — clone
   `stats` before assigning into it.
 - **Remove the `Header` window-listener leak** (`src/components/Header.ts:42`);
@@ -58,9 +66,9 @@ Low risk, no behaviour change. Suitable for filling gaps between larger items.
   `src/utils/testHelpers.ts` are reachable from `src/main.ts`.
 - **Guard `performSquash` against re-entrancy**, so `flush()` racing the timer
   cannot write the buffer twice.
-- **Reduce the `no-explicit-any` warnings**, concentrated in the `(currentSheet
-as any)` casts in `main.ts` and in test files. Giving `CharacterSheet` real
-  accessors for its child components would remove most of them.
+- ~~**Reduce the `no-explicit-any` warnings**, concentrated in the `(currentSheet
+as any)` casts in `main.ts` and in test files.~~ `main.ts`'s casts are gone
+  (see above); remaining warnings are in test files (255 → 200).
 
 ---
 

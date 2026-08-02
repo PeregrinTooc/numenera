@@ -102,4 +102,45 @@ describe("CharacterSheet - Version History Integration", () => {
     expect(characterSheet).toHaveProperty("unmountVersionWarningBanner");
     expect(typeof characterSheet.unmountVersionWarningBanner).toBe("function");
   });
+
+  describe("rerenderSection", () => {
+    it("re-renders the cyphers section in place to reflect a data change", () => {
+      render(characterSheet.render(), container);
+      expect(container.querySelector('[data-testid="cyphers-section"]')?.textContent).not.toContain(
+        "New Cypher"
+      );
+
+      mockCharacter.cyphers.push({ name: "New Cypher", level: "1d6", effect: "Test effect" });
+      characterSheet.rerenderSection("cyphers");
+
+      expect(container.querySelector('[data-testid="cyphers-section"]')?.textContent).toContain(
+        "New Cypher"
+      );
+    });
+
+    it("re-renders the abilities section in place to reflect a data change", () => {
+      render(characterSheet.render(), container);
+
+      mockCharacter.abilities.push({ name: "New Ability", description: "Test" });
+      characterSheet.rerenderSection("abilities");
+
+      expect(container.querySelector('[data-testid="abilities-section"]')?.textContent).toContain(
+        "New Ability"
+      );
+    });
+
+    it("does nothing for a section with no dedicated collection DOM (e.g. basicInfo)", () => {
+      render(characterSheet.render(), container);
+      const before = container.innerHTML;
+
+      characterSheet.rerenderSection("basicInfo");
+
+      expect(container.innerHTML).toBe(before);
+    });
+
+    it("does nothing if the section isn't currently in the DOM", () => {
+      // Nothing rendered into container yet, so no [data-testid="cyphers-section"] exists.
+      expect(() => characterSheet.rerenderSection("cyphers")).not.toThrow();
+    });
+  });
 });
