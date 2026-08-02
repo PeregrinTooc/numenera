@@ -9,6 +9,7 @@ export class SettingsGear {
   private onRerender: (() => void) | null = null;
   private boundHandleDocumentClick: ((e: MouseEvent) => void) | null = null;
   private boundHandleDocumentKeydown: ((e: KeyboardEvent) => void) | null = null;
+  private pendingListenerTimeout: ReturnType<typeof setTimeout> | null = null;
   private onResetLayout: (() => void) | null = null;
 
   constructor(private onLanguageChange: (lang: string) => void) {}
@@ -51,7 +52,8 @@ export class SettingsGear {
 
   private addDocumentListeners(): void {
     // Use setTimeout to avoid the current click event from immediately closing the panel
-    setTimeout(() => {
+    this.pendingListenerTimeout = setTimeout(() => {
+      this.pendingListenerTimeout = null;
       this.boundHandleDocumentClick = (e: MouseEvent) => this.handleDocumentClick(e);
       this.boundHandleDocumentKeydown = (e: KeyboardEvent) => this.handleDocumentKeydown(e);
       document.addEventListener("click", this.boundHandleDocumentClick);
@@ -60,6 +62,12 @@ export class SettingsGear {
   }
 
   private removeDocumentListeners(): void {
+    // Cancel the deferred attach if close() runs before it fires, or the
+    // listeners get attached anyway with no way left to remove them.
+    if (this.pendingListenerTimeout !== null) {
+      clearTimeout(this.pendingListenerTimeout);
+      this.pendingListenerTimeout = null;
+    }
     if (this.boundHandleDocumentClick) {
       document.removeEventListener("click", this.boundHandleDocumentClick);
       this.boundHandleDocumentClick = null;

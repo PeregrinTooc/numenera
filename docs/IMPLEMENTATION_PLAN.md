@@ -91,8 +91,11 @@ Low risk, no behaviour change. Suitable for filling gaps between larger items.
   constructed ten times per render.~~ Done: constructed once in
   `CharacterSheet`'s constructor, matching every other section component.
   Covered by a unit test spying on the constructor.
-- **Fix the `SettingsGear` listener leak** — track the pending `setTimeout` and
-  cancel it in `close()`.
+- ~~**Fix the `SettingsGear` listener leak** — track the pending `setTimeout`
+  and cancel it in `close()`.~~ Done: `addDocumentListeners` now stores the
+  `setTimeout` handle, and `removeDocumentListeners` cancels it if the panel
+  closes before it fires. Covered by a unit test with fake timers proving no
+  document listener survives an open→close within one tick.
 - **Wire up or delete `detectChanges`.** 184 lines of tested-but-unused code is
   why every card edit is described as `"Updated character"`. Wiring it in would
   give version history meaningful descriptions.
