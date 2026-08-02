@@ -10,11 +10,10 @@ Reviewed at commit `885cf75`.
 Everything this review flagged as data-losing, already-failing-CI, or
 compounding (§2.1–§2.6, §2.8–§2.11, §2.14–§2.17, all of Phase 0/1/2 in
 `docs/IMPLEMENTATION_PLAN.md`) has since landed on `main` and is confirmed
-green in CI — `npm run test:unit` (754 tests) and the full `npm run
-test:e2e:prod` suite (365/365 scenarios). Those entries are removed below;
-what remains is the unfinished-feature/documentation work (§2.7, §2.12,
-§2.13) and the low-risk cleanup items in section 3, both tracked in
-`docs/IMPLEMENTATION_PLAN.md` Phase 3/4.
+green in CI, along with the Tailwind colour and modal-focus-trap fixes
+(§2.12, §2.13 — Phase 3.2/3.3). What remains is §2.7 below (decided, not yet
+built — tracked in `docs/TODO.md`) and the low-risk cleanup items in
+section 3, both tracked in `docs/IMPLEMENTATION_PLAN.md` Phase 3.1/4.
 
 ---
 
@@ -34,30 +33,6 @@ The matching scenarios are `@skip`ped; `docs/TODO.md` previously attributed
 this to Playwright's drag-and-drop limitations, which obscured that the
 features were never wired up. Corrected — see `docs/TODO.md`'s "Grid
 Merge/Split & Import-Layout Conflict Prompt" for the implementation plan.
-
-### 2.12 Add-button colours are purged from the production CSS
-
-**verified**
-
-`renderAddButton` (`src/components/helpers/CollectionBehavior.ts:330`) builds
-class names as `` `bg-${colorTheme}-100 hover:bg-${colorTheme}-200` ``. Tailwind
-scans for literal strings, so these are never generated. Against a real build:
-
-```
-bg-green-100    0
-bg-purple-100   0
-bg-indigo-100   0
-```
-
-Every "+" button renders unstyled in `dist/`.
-
-### 2.13 Modal focus trap skips textareas
-
-`FocusTrappingBehavior.handleTabKey` (`src/services/modalBehavior.ts:76`) queries
-only `input` and `button`. Nine card components use `<textarea>`, and
-`CardEditModal` calls `e.preventDefault()` on Tab unconditionally — so the
-textarea is unreachable by keyboard inside a card edit modal. This contradicts
-the documented "Tab key cycles through modal inputs / accessibility compliance".
 
 ---
 
@@ -116,5 +91,5 @@ the documented "Tab key cycles through modal inputs / accessibility compliance".
 
 ## 5. Suggested order of work
 
-See `docs/IMPLEMENTATION_PLAN.md` Phase 3 (§2.7, §2.12, §2.13 above) and Phase
-4 (section 3 above).
+See `docs/IMPLEMENTATION_PLAN.md` Phase 3.1 (§2.7 above) and Phase 4
+(section 3 above).

@@ -4,9 +4,10 @@ Companion to `docs/PROJECT_REVIEW.md`. Each item states the defect, the change,
 how to prove it, and what it depends on.
 
 Phases 0, 1 and 2 (test-suite isolation, data loss/corruption, and core-flow
-correctness) are complete — all items landed on `main`, verified by CI. What
-remains is Phase 3 (unfinished features and documentation that misleads) and
-Phase 4 (low-risk cleanup with no behaviour change).
+correctness) are complete — all items landed on `main`, verified by CI. Of
+Phase 3, 3.2, 3.3 and 3.4 are also done; 3.1 is decided but not yet built —
+see below. What remains is finishing 3.1 and Phase 4 (low-risk cleanup with
+no behaviour change).
 
 Every item follows the project's own rules: a Gherkin scenario or unit test comes
 first (Rules #2, #3), one test at a time (Rule #10), and the work is presented
@@ -21,52 +22,11 @@ before commit (Rule #1).
 **Defect:** §2.7. `mergeSections`, `splitGrid`, `updateLayout` and `getLayout`
 have no callers; the imported layout returned by `fileStorage` is discarded.
 
-**Decision:** finish wiring it up rather than delete the dead code. Tracked as
-a proper feature in `docs/TODO.md` under "Grid Merge/Split & Import-Layout
-Conflict Prompt", with the implementation sketch and known risk (this
-project's Playwright drag/drop automation limitation will likely apply to the
-merge/split scenarios too). `docs/TODO.md`'s "Automated Drag/Drop E2E Tests"
-entry has been corrected — it previously misattributed these 7 `@skip`ped
-scenarios to that limitation, when the real reason was that the feature was
-never wired up.
-
-### 3.2 Restore Tailwind colours on the add buttons
-
-**Defect:** §2.12 (verified). Dynamic class names are never generated.
-
-**Change:** map the theme to complete literal class strings —
-
-```ts
-const THEMES = {
-  green: "bg-green-100 hover:bg-green-200 text-green-700",
-  purple: "bg-purple-100 hover:bg-purple-200 text-purple-700",
-  // ...
-} as const;
-```
-
-**Verify:** a build assertion that `bg-green-100` and friends appear in the
-emitted CSS. This is the kind of regression a unit test cannot catch.
-
-### 3.3 Include textareas in the modal focus trap
-
-**Defect:** §2.13. Textareas are unreachable by keyboard in card edit modals.
-
-**Change:** extend the selector in `modalBehavior.ts:76` to
-`input, textarea, select, button, [href], [tabindex]:not([tabindex="-1"])`, all
-with `:not([disabled])`.
-
-**Verify:** extend `card-modal-focus-trap.feature` to tab from the name field to
-the description textarea.
-
-### 3.4 Bring the documentation back in line
-
-- Move Settings Gear, Card Reordering and Section Re-arrangement from
-  `docs/CURRENT_FEATURE.md` into `docs/FEATURES.md`; delete
-  `CURRENT_FEATURE.md` per the documented workflow.
-- Correct the counts in `docs/TODO.md` to the current numbers (`npm run
-test:unit` / `npm run test:e2e:prod` totals).
-- Either write `docs/DEPLOYMENT.md` or remove the three links to it.
-- Correct the recovery/damage entry in `docs/FEATURES.md` — 2.4 has landed.
+**Decision:** finish wiring it up rather than delete the dead code. Not yet
+built — tracked as a proper feature in `docs/TODO.md` under "Grid Merge/Split
+& Import-Layout Conflict Prompt", with the implementation sketch and known
+risk (this project's Playwright drag/drop automation limitation will likely
+apply to the merge/split scenarios too).
 
 ---
 

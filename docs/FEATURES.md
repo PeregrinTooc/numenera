@@ -120,6 +120,41 @@ All features listed below have full BDD test coverage and are verified working.
   - Edit state indicators
   - Focus and hover states
 
+### Layout & Customization
+
+- **Settings Gear** ([settings-gear.feature](../tests/e2e/features/settings-gear.feature))
+  - Settings panel accessible from the Header
+  - Runtime language switching (English/German) via flag icons
+  - Remains clickable alongside the Version Navigator
+
+- **Card Reordering** ([card-reordering.feature](../tests/e2e/features/card-reordering.feature))
+  - Drag-and-drop reordering within a section (Cyphers, Equipment, Artifacts,
+    Oddities, Abilities, Special Abilities, Attacks)
+  - Card order persists with the character
+  - Desktop click-and-drag; mobile long-tap activation
+  - The drag gesture itself isn't covered by automated E2E (see note below) —
+    manually verified
+
+- **Section Re-arrangement** ([section-rearrangement.feature](../tests/e2e/features/section-rearrangement.feature))
+  - Toggle a dedicated layout edit mode from the Header
+  - Drag sections into a new order
+  - Layout persists independently of character data and survives reload
+  - Reset to the default layout from Settings
+  - Layout included in character export
+  - The drag gesture itself isn't covered by automated E2E (see note below) —
+    manually verified
+  - **Not implemented**: creating or splitting a two-column grid pairing by
+    drag, and a conflict prompt on importing a character with a different
+    layout — the underlying `CharacterSheet` methods exist and are unit
+    tested, but nothing calls them yet. Tracked as a backlog feature in
+    `docs/TODO.md` ("Grid Merge/Split & Import-Layout Conflict Prompt").
+
+> **Drag-and-drop E2E coverage.** HTML5 drag-and-drop cannot currently be
+> automated reliably with Playwright in this project. The scenarios that
+> exercise an actual drag gesture are `@skip`ped and verified manually
+> instead — see `docs/TODO.md`'s "Automated Drag/Drop E2E Tests" for the
+> specific list and the investigation notes.
+
 ### File Management
 
 - **Character File Export** ([character-file-export.feature](../tests/e2e/features/character-file-export.feature))
