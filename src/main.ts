@@ -23,8 +23,7 @@ import { VersionState } from "./services/versionState.js";
 import { VersionHistoryService } from "./services/versionHistoryService.js";
 import { ConflictDetectionService } from "./services/conflictDetectionService.js";
 import { ConflictWarningModal } from "./components/ConflictWarningModal.js";
-import { TestTimer } from "./services/timer.js";
-import type { ITimer } from "./services/timer.js";
+import type { TestTimer, ITimer } from "./services/timer.js";
 import type { SectionId } from "./types/layout.js";
 import { applyFieldUpdate } from "./utils/characterFieldUpdate.js";
 
