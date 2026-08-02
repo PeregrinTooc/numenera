@@ -33,7 +33,8 @@ Given(
       type: "Nano",
       descriptor: "Strong",
       focus: "Controls Beasts",
-      xp: 0,
+      currentXp: 0,
+      totalXp: 0,
       shins: 0,
       armor: 0,
       effort: 1,
@@ -83,7 +84,8 @@ function createCharacterState(fieldKey: string, value: number) {
     type: "Nano",
     descriptor: "Strong",
     focus: "Controls Beasts",
-    xp: 0,
+    currentXp: 0,
+    totalXp: 0,
     shins: 0,
     armor: 0,
     effort: 1,
@@ -123,34 +125,82 @@ function createCharacterState(fieldKey: string, value: number) {
   };
 }
 
-// Legacy Given steps for backward compatibility with existing feature files
-Given("the character has {int} XP", async function (this: CustomWorld, xp: number) {
-  const character = createCharacterState("xp", xp).character;
-  const storageHelper = new TestStorageHelper(this.page!);
+Given(
+  "the character has {int} current XP and {int} total XP",
+  async function (this: CustomWorld, currentXp: number, totalXp: number) {
+    const character = { ...createCharacterState("currentXp", currentXp).character, totalXp };
+    const storageHelper = new TestStorageHelper(this.page!);
 
-  // Wait before setCharacter to ensure any previous auto-save completes
-  await this.page!.waitForTimeout(500);
-  await storageHelper.setCharacter(character);
+    // Wait before setCharacter to ensure any previous auto-save completes
+    await this.page!.waitForTimeout(500);
+    await storageHelper.setCharacter(character);
 
-  // Wait for IndexedDB save to complete before reloading
-  await this.page!.waitForTimeout(500);
+    // Wait for IndexedDB save to complete before reloading
+    await this.page!.waitForTimeout(500);
 
-  await this.page!.reload();
-  await this.page!.waitForLoadState("networkidle");
+    await this.page!.reload();
+    await this.page!.waitForLoadState("networkidle");
 
-  // Additional wait for character to load from IndexedDB
-  await this.page!.waitForTimeout(200);
+    // Additional wait for character to load from IndexedDB
+    await this.page!.waitForTimeout(200);
 
-  // Wait for XP badge to show correct value (increased timeout for CI)
-  await this.page!.waitForFunction(
-    (expectedXp) => {
-      const badge = document.querySelector('[data-testid="xp-badge"] .stat-badge-value');
-      return badge?.textContent === String(expectedXp);
-    },
-    xp,
-    { timeout: 10000 }
-  );
-});
+    // Wait for both XP cells to show the correct values (increased timeout for CI)
+    await this.page!.waitForFunction(
+      ({ expectedCurrent, expectedTotal }) => {
+        const currentCell = document.querySelector(
+          '[data-testid="xp-badge-current"] .stat-badge-value'
+        );
+        const totalCell = document.querySelector(
+          '[data-testid="xp-badge-total"] .stat-badge-value'
+        );
+        return (
+          currentCell?.textContent === String(expectedCurrent) &&
+          totalCell?.textContent === String(expectedTotal)
+        );
+      },
+      { expectedCurrent: currentXp, expectedTotal: totalXp },
+      { timeout: 10000 }
+    );
+  }
+);
+
+Given(
+  "the character was saved with a single legacy XP value of {int}",
+  async function (this: CustomWorld, legacyXp: number) {
+    const {
+      currentXp: _currentXp,
+      totalXp: _totalXp,
+      ...rest
+    } = createCharacterState("currentXp", legacyXp).character as any;
+    const character = { ...rest, xp: legacyXp };
+    const storageHelper = new TestStorageHelper(this.page!);
+
+    await this.page!.waitForTimeout(500);
+    await storageHelper.setCharacter(character);
+    await this.page!.waitForTimeout(500);
+
+    await this.page!.reload();
+    await this.page!.waitForLoadState("networkidle");
+    await this.page!.waitForTimeout(200);
+
+    await this.page!.waitForFunction(
+      ({ expectedCurrent, expectedTotal }) => {
+        const currentCell = document.querySelector(
+          '[data-testid="xp-badge-current"] .stat-badge-value'
+        );
+        const totalCell = document.querySelector(
+          '[data-testid="xp-badge-total"] .stat-badge-value'
+        );
+        return (
+          currentCell?.textContent === String(expectedCurrent) &&
+          totalCell?.textContent === String(expectedTotal)
+        );
+      },
+      { expectedCurrent: legacyXp, expectedTotal: legacyXp },
+      { timeout: 10000 }
+    );
+  }
+);
 
 Given("the character has {int} shins", async function (this: CustomWorld, shins: number) {
   const character = createCharacterState("shins", shins).character;
@@ -275,10 +325,18 @@ Given("the character has effort {int}", async function (this: CustomWorld, effor
 // ============================================================================
 
 Then(
-  "the XP badge should show {string}",
+  "the Current XP badge should show {string}",
   async function (this: CustomWorld, expectedValue: string) {
-    const xpBadgeValue = this.page!.locator('[data-testid="xp-badge"] .stat-badge-value');
-    await expect(xpBadgeValue).toHaveText(expectedValue);
+    const currentXpValue = this.page!.locator('[data-testid="xp-badge-current"] .stat-badge-value');
+    await expect(currentXpValue).toHaveText(expectedValue);
+  }
+);
+
+Then(
+  "the Total XP badge should show {string}",
+  async function (this: CustomWorld, expectedValue: string) {
+    const totalXpValue = this.page!.locator('[data-testid="xp-badge-total"] .stat-badge-value');
+    await expect(totalXpValue).toHaveText(expectedValue);
   }
 );
 
@@ -319,13 +377,24 @@ Then(
 // ============================================================================
 
 Then(
-  "the character data should have xp {int}",
-  async function (this: CustomWorld, expectedXp: number) {
+  "the character data should have currentXp {int}",
+  async function (this: CustomWorld, expectedCurrentXp: number) {
     await this.page!.waitForTimeout(200);
     const storageHelper = new TestStorageHelper(this.page!);
     const storedData = await storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
-    expect(storedData.xp).toBe(expectedXp);
+    expect(storedData.currentXp).toBe(expectedCurrentXp);
+  }
+);
+
+Then(
+  "the character data should have totalXp {int}",
+  async function (this: CustomWorld, expectedTotalXp: number) {
+    await this.page!.waitForTimeout(200);
+    const storageHelper = new TestStorageHelper(this.page!);
+    const storedData = await storageHelper.getCharacter();
+    expect(storedData).toBeTruthy();
+    expect(storedData.totalXp).toBe(expectedTotalXp);
   }
 );
 

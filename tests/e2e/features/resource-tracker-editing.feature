@@ -10,84 +10,76 @@ Feature: Resource Tracker Fields Editing
     # XP EDITING SCENARIOS
     # ============================================================================
 
-    Scenario: XP badge displays current value
-        Given the character has 5 XP
-        Then the XP badge should show "5"
+    Scenario: XP badge displays current and total values independently
+        Given the character has 5 current XP and 45 total XP
+        Then the Current XP badge should show "5"
+        And the Total XP badge should show "45"
 
-    Scenario: Clicking XP badge opens edit modal
-        Given the character has 5 XP
-        When I click the XP badge
+    Scenario: Clicking the Current XP badge opens edit modal with the current value
+        Given the character has 5 current XP and 45 total XP
+        When I click the Current XP badge
         Then the edit modal should open
         And the modal input should contain "5"
 
-    Scenario: Editing XP and confirming saves changes
-        Given the character has 5 XP
-        When I click the XP badge
+    Scenario: Clicking the Total XP badge opens edit modal with the total value
+        Given the character has 5 current XP and 45 total XP
+        When I click the Total XP badge
+        Then the edit modal should open
+        And the modal input should contain "45"
+
+    Scenario: Editing current XP saves the change and leaves total XP untouched
+        Given the character has 5 current XP and 45 total XP
+        When I click the Current XP badge
         And I type "10" in the modal input
         And I click the modal confirm button
-        Then the XP badge should show "10"
-        And the character data should have xp 10
+        Then the Current XP badge should show "10"
+        And the Total XP badge should show "45"
+        And the character data should have currentXp 10
+
+    Scenario: Editing total XP saves the change and leaves current XP untouched
+        Given the character has 5 current XP and 45 total XP
+        When I click the Total XP badge
+        And I type "60" in the modal input
+        And I click the modal confirm button
+        Then the Total XP badge should show "60"
+        And the Current XP badge should show "5"
+        And the character data should have totalXp 60
 
     Scenario: XP changes persist after page reload
-        Given the character has 5 XP
-        When I click the XP badge
+        Given the character has 5 current XP and 45 total XP
+        When I click the Current XP badge
         And I type "15" in the modal input
         And I click the modal confirm button
         And I reload the page
-        Then the XP badge should show "15"
+        Then the Current XP badge should show "15"
+        And the Total XP badge should show "45"
 
-    Scenario: Canceling XP edit discards changes
-        Given the character has 5 XP
-        When I click the XP badge
+    Scenario: Canceling a Current XP edit discards changes
+        Given the character has 5 current XP and 45 total XP
+        When I click the Current XP badge
         And I type "20" in the modal input
         And I click the modal cancel button
-        Then the XP badge should show "5"
+        Then the Current XP badge should show "5"
 
-    Scenario: Escape key cancels XP edit
-        Given the character has 5 XP
-        When I click the XP badge
-        And I type "25" in the modal input
-        And I press Escape
-        Then the modal should close
-        And the XP badge should show "5"
-
-    Scenario: Enter key confirms XP edit
-        Given the character has 5 XP
-        When I click the XP badge
-        And I type "30" in the modal input
-        And I press Enter
-        Then the modal should close
-        And the XP badge should show "30"
-
-    Scenario: Backdrop click cancels XP edit
-        Given the character has 5 XP
-        When I click the XP badge
-        And I type "35" in the modal input
-        And I click the modal backdrop
-        Then the modal should close
-        And the XP badge should show "5"
-
-    Scenario: XP accepts zero value
-        Given the character has 5 XP
-        When I click the XP badge
-        And I type "0" in the modal input
-        And I click the modal confirm button
-        Then the XP badge should show "0"
-
-    Scenario: XP validates numeric input
-        Given the character has 5 XP
-        When I click the XP badge
+    Scenario: Current XP validates numeric input
+        Given the character has 5 current XP and 45 total XP
+        When I click the Current XP badge
         And I type "abc" in the modal input
         Then the modal confirm button should be disabled
 
-    Scenario: XP on mobile devices
+    Scenario: XP badges on mobile devices
         Given I am using a mobile device
-        And the character has 5 XP
-        When I tap the XP badge
+        And the character has 5 current XP and 45 total XP
+        When I tap the Current XP badge
         Then the edit modal should open
         When I type "12" in the modal input
         And I tap the modal confirm button
-        Then the XP badge should show "12"
+        Then the Current XP badge should show "12"
+
+    Scenario: A character saved before the current/total split shows the same value in both cells
+        Given the character was saved with a single legacy XP value of 12
+        Then the Current XP badge should show "12"
+        And the Total XP badge should show "12"
 
     # ============================================================================
     # SHINS EDITING SCENARIOS

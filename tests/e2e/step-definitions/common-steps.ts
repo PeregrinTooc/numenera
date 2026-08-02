@@ -30,14 +30,14 @@ const FIELD_TEST_IDS: Record<string, string> = {
   "Intellect Current": "stat-intellect-current",
 
   // Resource trackers (badges)
-  "XP badge": "xp-badge",
+  "Current XP badge": "xp-badge-current",
+  "Total XP badge": "xp-badge-total",
   "Shins badge": "shins-badge",
   "Armor badge": "armor-badge",
   "Max Cyphers badge": "max-cyphers-badge",
   "Effort badge": "effort-badge",
 
   // Resource trackers (legacy - for backward compatibility)
-  XP: "xp-badge",
   Shins: "shins-badge",
   Armor: "armor-badge",
   "Max Cyphers": "max-cyphers-badge",
@@ -102,8 +102,13 @@ When("I click the Cancel button", async function (this: CustomWorld) {
 });
 
 // Individual badge click steps
-When("I click the XP badge", async function (this: CustomWorld) {
-  await this.page!.locator('[data-testid="xp-badge"]').click();
+When("I click the Current XP badge", async function (this: CustomWorld) {
+  await this.page!.locator('[data-testid="xp-badge-current"]').click();
+  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
+});
+
+When("I click the Total XP badge", async function (this: CustomWorld) {
+  await this.page!.locator('[data-testid="xp-badge-total"]').click();
   await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
 });
 
@@ -127,8 +132,8 @@ When("I click the Effort badge", async function (this: CustomWorld) {
   await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
 });
 
-When("I tap the XP badge", async function (this: CustomWorld) {
-  await this.page!.locator('[data-testid="xp-badge"]').tap();
+When("I tap the Current XP badge", async function (this: CustomWorld) {
+  await this.page!.locator('[data-testid="xp-badge-current"]').tap();
   await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
 });
 
