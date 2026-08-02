@@ -97,6 +97,26 @@ describe("SettingsGear", () => {
       settingsGear.close();
       expect(settingsGear.isOpen).toBe(false);
     });
+
+    it("should not leak a document listener when closed before the deferred setTimeout fires", () => {
+      vi.useFakeTimers();
+      try {
+        const addEventListenerSpy = vi.spyOn(document, "addEventListener");
+
+        // open() schedules attaching document listeners via setTimeout(0);
+        // closing again before that timer fires must cancel it, or the
+        // listeners get attached anyway with no way left to remove them.
+        settingsGear.open();
+        settingsGear.close();
+
+        vi.runAllTimers();
+
+        expect(addEventListenerSpy).not.toHaveBeenCalledWith("click", expect.any(Function));
+        expect(addEventListenerSpy).not.toHaveBeenCalledWith("keydown", expect.any(Function));
+      } finally {
+        vi.useRealTimers();
+      }
+    });
   });
 
   describe("language selection", () => {

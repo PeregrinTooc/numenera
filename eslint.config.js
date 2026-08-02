@@ -24,6 +24,7 @@ export default [
         HTMLSelectElement: "readonly",
         HTMLTextAreaElement: "readonly",
         setTimeout: "readonly",
+        clearTimeout: "readonly",
         window: "readonly",
         URLSearchParams: "readonly",
         File: "readonly",
