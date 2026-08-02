@@ -83,4 +83,66 @@ describe("reorderArray", () => {
       expect(result).toEqual([{ id: 3 }, { id: 1 }, { id: 2 }]);
     });
   });
+
+  describe("out-of-range indices", () => {
+    it("should return an unchanged copy when fromIndex is negative", () => {
+      const array = ["A", "B", "C"];
+      const result = reorderArray(array, -1, 1);
+      expect(result).toEqual(["A", "B", "C"]);
+    });
+
+    it("should return an unchanged copy when fromIndex is past the end", () => {
+      const array = ["A", "B", "C"];
+      const result = reorderArray(array, 5, 1);
+      expect(result).toEqual(["A", "B", "C"]);
+    });
+
+    it("should return an unchanged copy when toIndex is negative", () => {
+      const array = ["A", "B", "C"];
+      const result = reorderArray(array, 0, -1);
+      expect(result).toEqual(["A", "B", "C"]);
+    });
+
+    it("should return an unchanged copy when toIndex is past the end", () => {
+      const array = ["A", "B", "C"];
+      const result = reorderArray(array, 0, 5);
+      expect(result).toEqual(["A", "B", "C"]);
+    });
+
+    it("should not insert undefined into the array for an out-of-range fromIndex", () => {
+      const array = ["A", "B", "C"];
+      const result = reorderArray(array, 10, 1);
+      expect(result).not.toContain(undefined);
+      expect(result).toHaveLength(3);
+    });
+  });
+});
+
+describe("previewOrderEquals", () => {
+  let previewOrderEquals: (current: number[] | null, newOrder: number[]) => boolean;
+
+  beforeEach(async () => {
+    const module = await import("../../src/components/helpers/DragDropBehavior.js");
+    previewOrderEquals = module.previewOrderEquals;
+  });
+
+  it("returns false when current is null", () => {
+    expect(previewOrderEquals(null, [0, 1, 2])).toBe(false);
+  });
+
+  it("returns true for identical orders", () => {
+    expect(previewOrderEquals([0, 1, 2], [0, 1, 2])).toBe(true);
+  });
+
+  it("returns false for different orders of the same length", () => {
+    expect(previewOrderEquals([0, 1, 2], [2, 1, 0])).toBe(false);
+  });
+
+  it("returns false when newOrder is longer than current", () => {
+    expect(previewOrderEquals([0, 1], [0, 1, 2])).toBe(false);
+  });
+
+  it("returns false when newOrder is shorter than current", () => {
+    expect(previewOrderEquals([0, 1, 2], [0, 1])).toBe(false);
+  });
 });

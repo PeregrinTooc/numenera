@@ -11,7 +11,7 @@ import {
   renderAddButton,
 } from "./helpers/CollectionBehavior.js";
 import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
-import { reorderArray } from "./helpers/DragDropBehavior.js";
+import { reorderArray, previewOrderEquals } from "./helpers/DragDropBehavior.js";
 
 type FieldType = "maxCyphers";
 
@@ -70,7 +70,7 @@ export class CyphersBox {
     const newOrder = this.calculatePreviewOrder(this.draggedIndex, targetIndex);
 
     // Only re-render if order changed
-    if (!this.previewOrderEquals(newOrder)) {
+    if (!previewOrderEquals(this.previewOrder, newOrder)) {
       this.previewOrder = newOrder;
       this.applyPreviewOrder();
     }
@@ -98,11 +98,6 @@ export class CyphersBox {
     const [removed] = indices.splice(fromIndex, 1);
     indices.splice(toIndex, 0, removed);
     return indices;
-  }
-
-  private previewOrderEquals(newOrder: number[]): boolean {
-    if (!this.previewOrder) return false;
-    return this.previewOrder.every((val, i) => val === newOrder[i]);
   }
 
   private applyPreviewOrder(): void {

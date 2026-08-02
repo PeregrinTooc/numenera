@@ -12,7 +12,7 @@ import {
   createItemInstances,
   renderAddButton,
 } from "./helpers/CollectionBehavior.js";
-import { reorderArray } from "./helpers/DragDropBehavior.js";
+import { reorderArray, previewOrderEquals } from "./helpers/DragDropBehavior.js";
 import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
 
 type FieldType = "shins";
@@ -123,7 +123,7 @@ export class ItemsBox {
 
     const collection = this.getCollection(section);
     const newOrder = this.calculatePreviewOrder(state.draggedIndex, targetIndex, collection.length);
-    if (!this.previewOrderEquals(state.previewOrder, newOrder)) {
+    if (!previewOrderEquals(state.previewOrder, newOrder)) {
       state.previewOrder = newOrder;
       this.applyPreviewOrder(section, testIdSelector);
     }
@@ -219,11 +219,6 @@ export class ItemsBox {
     const [removed] = indices.splice(fromIndex, 1);
     indices.splice(toIndex, 0, removed);
     return indices;
-  }
-
-  private previewOrderEquals(current: number[] | null, newOrder: number[]): boolean {
-    if (!current) return false;
-    return current.every((val, i) => val === newOrder[i]);
   }
 
   private applyPreviewOrder(section: ItemSection, testIdSelector: string): void {
