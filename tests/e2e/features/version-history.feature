@@ -101,6 +101,17 @@ Feature: Version History (Character Time Travel)
         And I should be viewing the latest version
         And no warning banner should be visible
 
+    Scenario: Editing a stat while viewing an old version does not corrupt other versions' cached stats
+        Given the character has 3 versions with different data
+        When I navigate to version 2
+        And I click on the "Might Pool" value
+        And I clear the input field
+        And I type "77" into the input field
+        And I click the Confirm button
+        And I navigate to version 3
+        And I navigate to version 2
+        Then the "Might Pool" value should display "11"
+
     Scenario: Return to latest shows edits made before navigating back
         Given the character has 3 versions in history
         When I edit the "character name" field to "Edited Before Navigating"

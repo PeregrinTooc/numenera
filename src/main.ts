@@ -26,6 +26,7 @@ import { ConflictWarningModal } from "./components/ConflictWarningModal.js";
 import { TestTimer } from "./services/timer.js";
 import type { ITimer } from "./services/timer.js";
 import type { SectionId } from "./types/layout.js";
+import { applyFieldUpdate } from "./utils/characterFieldUpdate.js";
 
 // Expose storage functions on window for E2E tests
 // This allows tests to work in both dev and production builds
@@ -287,83 +288,11 @@ async function renderCharacterSheet(
     }
 
     // Update the character object
-    const updatedCharacter = { ...character };
-    let fieldLabel = field;
-
-    switch (field) {
-      case "name":
-        updatedCharacter.name = value as string;
-        fieldLabel = "Changed name";
-        break;
-      case "tier":
-        updatedCharacter.tier = value as number;
-        fieldLabel = "Changed tier";
-        break;
-      case "descriptor":
-        updatedCharacter.descriptor = value as string;
-        fieldLabel = "Changed descriptor";
-        break;
-      case "focus":
-        updatedCharacter.focus = value as string;
-        fieldLabel = "Changed focus";
-        break;
-      case "xp":
-        updatedCharacter.xp = value as number;
-        fieldLabel = "Changed XP";
-        break;
-      case "shins":
-        updatedCharacter.shins = value as number;
-        fieldLabel = "Changed shins";
-        break;
-      case "armor":
-        updatedCharacter.armor = value as number;
-        fieldLabel = "Changed armor";
-        break;
-      case "maxCyphers":
-        updatedCharacter.maxCyphers = value as number;
-        fieldLabel = "Changed max cyphers";
-        break;
-      case "effort":
-        updatedCharacter.effort = value as number;
-        fieldLabel = "Changed effort";
-        break;
-      case "mightPool":
-        updatedCharacter.stats.might.pool = value as number;
-        fieldLabel = "Changed Might pool";
-        break;
-      case "mightEdge":
-        updatedCharacter.stats.might.edge = value as number;
-        fieldLabel = "Changed Might edge";
-        break;
-      case "mightCurrent":
-        updatedCharacter.stats.might.current = value as number;
-        fieldLabel = "Changed current Might";
-        break;
-      case "speedPool":
-        updatedCharacter.stats.speed.pool = value as number;
-        fieldLabel = "Changed Speed pool";
-        break;
-      case "speedEdge":
-        updatedCharacter.stats.speed.edge = value as number;
-        fieldLabel = "Changed Speed edge";
-        break;
-      case "speedCurrent":
-        updatedCharacter.stats.speed.current = value as number;
-        fieldLabel = "Changed current Speed";
-        break;
-      case "intellectPool":
-        updatedCharacter.stats.intellect.pool = value as number;
-        fieldLabel = "Changed Intellect pool";
-        break;
-      case "intellectEdge":
-        updatedCharacter.stats.intellect.edge = value as number;
-        fieldLabel = "Changed Intellect edge";
-        break;
-      case "intellectCurrent":
-        updatedCharacter.stats.intellect.current = value as number;
-        fieldLabel = "Changed current Intellect";
-        break;
-    }
+    const { character: updatedCharacter, label: fieldLabel } = applyFieldUpdate(
+      character,
+      field,
+      value
+    );
 
     // Update currentCharacter BEFORE requesting auto-save
     currentCharacter = updatedCharacter;
