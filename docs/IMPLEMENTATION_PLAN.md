@@ -3,11 +3,10 @@
 Companion to `docs/PROJECT_REVIEW.md`. Each item states the defect, the change,
 how to prove it, and what it depends on.
 
-Phases 0, 1 and 2 (test-suite isolation, data loss/corruption, and core-flow
-correctness) are complete — all items landed on `main`, verified by CI. Of
-Phase 3, 3.2, 3.3 and 3.4 are also done; 3.1 is decided but not yet built —
-see below. What remains is finishing 3.1 and Phase 4 (low-risk cleanup with
-no behaviour change).
+Phases 0, 1, 2 and 4 are complete — all items landed on `main`, verified by
+CI. Of Phase 3, 3.2, 3.3 and 3.4 are also done; 3.1 is decided but not yet
+built — see below. What remains is 3.1, tracked as a proper feature in
+`docs/TODO.md`.
 
 Every item follows the project's own rules: a Gherkin scenario or unit test comes
 first (Rules #2, #3), one test at a time (Rule #10), and the work is presented
@@ -113,8 +112,15 @@ Low risk, no behaviour change. Suitable for filling gaps between larger items.
   `src/utils/testHelpers.ts`'s only export, `sanitizeForTestId`, turned out
   to be a false positive — it's used by `AbilityItem.ts` to generate real
   `data-testid` attributes in production, not test-only code.
-- **Guard `performSquash` against re-entrancy**, so `flush()` racing the timer
-  cannot write the buffer twice.
+- ~~**Guard `performSquash` against re-entrancy**, so `flush()` racing the
+  timer cannot write the buffer twice.~~ Done: added an `isSquashInProgress`
+  flag, checked first and cleared in a `finally`, so a second call while one
+  is already awaiting `saveVersion` returns immediately instead of saving
+  the same buffer again. Also wired the existing (previously dead, always
+  returned `false`) public `isSquashing()` stub to this real state. Covered
+  by a unit test reproducing the exact race — `flush()` called while a
+  timer-triggered squash is still awaiting its save — confirmed to fail
+  (double save) against the old code and pass against the fix.
 - ~~**Reduce the `no-explicit-any` warnings**, concentrated in the `(currentSheet
 as any)` casts in `main.ts` and in test files.~~ `main.ts`'s casts are gone
   (see above); remaining warnings are in test files (255 → 200).

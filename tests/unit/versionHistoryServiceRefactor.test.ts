@@ -388,6 +388,38 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
 
       expect(mockManager.saveVersion).not.toHaveBeenCalled();
     });
+
+    it("should not double-save when flush() races an in-flight timer-triggered squash", async () => {
+      // Make saveVersion controllable so we can catch the window between the
+      // timer-triggered squash starting and it actually finishing.
+      let resolveSave: (value: unknown) => void = () => {};
+      const pendingSave = new Promise((resolve) => {
+        resolveSave = resolve;
+      });
+      mockManager.saveVersion.mockReturnValue(pendingSave);
+
+      service.bufferChange(mockCharacter, "Change 1");
+
+      // Fire the squash timer - performSquash() starts and suspends on the
+      // still-pending saveVersion call, leaving the buffer not yet cleared.
+      vi.advanceTimersByTime(1000);
+      await Promise.resolve();
+
+      // flush() (e.g. from beforeunload) races in while that first squash is
+      // still in flight and sees a non-empty buffer.
+      const flushPromise = service.flush();
+
+      resolveSave({
+        id: "version-123",
+        character: mockCharacter,
+        description: "Change 1",
+        timestamp: Date.now(),
+      });
+      await flushPromise;
+      await vi.runAllTimersAsync();
+
+      expect(mockManager.saveVersion).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe("Integration Scenario: Multiple Quick Edits", () => {
