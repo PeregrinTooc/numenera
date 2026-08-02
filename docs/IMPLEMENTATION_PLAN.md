@@ -82,7 +82,11 @@ Low risk, no behaviour change. Suitable for filling gaps between larger items.
   length-checked implementation into `DragDropBehavior.ts` and pointed all
   five at it. Covered by unit tests for both functions, verified to fail
   against the old behaviour.
-- **Make `ItemsBox.handleDrop` immutable**, matching the other collections.
+- ~~**Make `ItemsBox.handleDrop` immutable**, matching the other
+  collections.~~ Done: replaced `collection.length = 0; collection.push(...)`
+  with a `setCollection()` reassignment, matching Cyphers/Abilities/Attacks/
+  SpecialAbilities. Covered by a unit test asserting the array reference
+  changes and the original array is untouched.
 - **Hoist `RecoveryDamageSection`** out of `getSectionTemplate` — it is
   constructed ten times per render.
 - **Fix the `SettingsGear` listener leak** — track the pending `setTimeout` and

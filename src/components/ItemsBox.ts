@@ -170,11 +170,10 @@ export class ItemsBox {
       return;
     }
 
-    // Reorder the array
+    // Reorder the array immutably, matching the other collections
     const collection = this.getCollection(section);
     const newItems = reorderArray(collection, draggedIndex, targetIndex);
-    collection.length = 0;
-    collection.push(...newItems);
+    this.setCollection(section, newItems);
 
     this.handleDragEnd(e, section, testIdSelector, true);
 
@@ -211,6 +210,20 @@ export class ItemsBox {
         return this.character.artifacts;
       case "oddities":
         return this.character.oddities;
+    }
+  }
+
+  private setCollection(section: ItemSection, items: unknown[]): void {
+    switch (section) {
+      case "equipment":
+        this.character.equipment = items as Character["equipment"];
+        break;
+      case "artifacts":
+        this.character.artifacts = items as Character["artifacts"];
+        break;
+      case "oddities":
+        this.character.oddities = items as Character["oddities"];
+        break;
     }
   }
 
