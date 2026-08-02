@@ -1,8 +1,25 @@
-import { describe, it, expect, vi } from "vitest";
-import { getVersionHistory } from "../../src/storage/storageFactory.js";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { getVersionHistory, loadCharacterState } from "../../src/storage/storageFactory.js";
 import { VersionHistoryManager } from "../../src/storage/versionHistory.js";
+import { IndexedDBStorageImpl } from "../../src/storage/indexedDBStorageImpl.js";
 
 describe("storageFactory", () => {
+  describe("loadCharacterState", () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it("migrates a legacy xp-only character to currentXp/totalXp on load", async () => {
+      const legacyCharacter = { xp: 12 } as any;
+      vi.spyOn(IndexedDBStorageImpl.prototype, "load").mockResolvedValue(legacyCharacter);
+
+      const result = await loadCharacterState();
+
+      expect(result.currentXp).toBe(12);
+      expect(result.totalXp).toBe(12);
+    });
+  });
+
   describe("getVersionHistory", () => {
     it("does not hand a concurrent caller a manager before init() resolves", async () => {
       let resolveInit!: () => void;
