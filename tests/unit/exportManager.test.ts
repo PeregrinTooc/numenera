@@ -123,6 +123,19 @@ function setupIndexedDBMock() {
                 });
                 return request;
               }),
+              delete: vi.fn().mockImplementation((key: string) => {
+                store.delete(key);
+                const request = {
+                  onsuccess: null as any,
+                  onerror: null as any,
+                };
+                Promise.resolve().then(() => {
+                  if (request.onsuccess) {
+                    request.onsuccess();
+                  }
+                });
+                return request;
+              }),
             }),
             oncomplete: null as any,
             onerror: null as any,
@@ -459,6 +472,25 @@ describe("ExportManager", () => {
       exportManager.clearRememberedLocation();
 
       expect(eventSpy).toHaveBeenCalled();
+    });
+
+    it("should remove the persisted handle from IndexedDB, not just localStorage", async () => {
+      setupExportTest();
+
+      await exportManager.export(mockCharacter);
+      expect(idbStore.has("lastExportFileHandle")).toBe(true);
+
+      exportManager.clearRememberedLocation();
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(idbStore.has("lastExportFileHandle")).toBe(false);
+
+      // A fresh manager reloading from IndexedDB should no longer see it.
+      const reloaded = new ExportManager();
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(reloaded.hasRememberedLocation()).toBe(false);
     });
   });
 
