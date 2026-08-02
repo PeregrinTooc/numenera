@@ -74,7 +74,7 @@ export class FocusTrappingBehavior {
     if (!modalContent) return;
 
     const focusableElements = modalContent.querySelectorAll(
-      "input:not([disabled]), button:not([disabled])"
+      'input:not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])'
     );
     const focusableArray = Array.from(focusableElements) as HTMLElement[];
 

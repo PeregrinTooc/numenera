@@ -145,6 +145,21 @@ Then("the active element should not be the document body", async function () {
   expect(isBody).toBe(false);
 });
 
+Then("focus should be on the description textarea", async function () {
+  // FocusTrappingBehavior.handleTabKey used to only collect input/button
+  // elements, so Tab could never land on a textarea - it isn't in the
+  // trap's own focusable list at all, not just skipped in order.
+  const focused = await this.page.evaluate(() => {
+    const activeElement = document.activeElement;
+    return {
+      tagName: activeElement?.tagName,
+      testId: activeElement?.getAttribute("data-testid"),
+    };
+  });
+  expect(focused.tagName).toBe("TEXTAREA");
+  expect(focused.testId).toBe("edit-ability-description");
+});
+
 Then("the active element should not be the browser chrome", async function () {
   const isInDocument = await this.page.evaluate(() => {
     const activeElement = document.activeElement;

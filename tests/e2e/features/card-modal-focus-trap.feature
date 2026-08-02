@@ -56,3 +56,9 @@ Feature: Card Modal Focus Trap
         When I press the Tab key 15 times
         Then focus should still be within the card modal
         And focus should never escape to the page body or address bar
+
+    Scenario: Tab key reaches the description textarea in the ability card modal
+        When I click the add ability button
+        Then the card edit modal should be open
+        When I press the Tab key 4 times
+        Then focus should be on the description textarea
