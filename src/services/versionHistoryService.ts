@@ -26,6 +26,7 @@ export class VersionHistoryService {
   private buffer: BufferedChange[] = [];
   private redoStack: BufferedChange[] = [];
   private initialState: Character | null = null;
+  private isSquashInProgress: boolean = false;
 
   /**
    * Create a new VersionHistoryService
@@ -94,10 +95,19 @@ export class VersionHistoryService {
    * Combines buffered changes into single version
    */
   private async performSquash(): Promise<void> {
+    // flush() can race an in-flight timer-triggered squash - without this
+    // guard, the second call would still see the not-yet-cleared buffer and
+    // save it again as a duplicate version.
+    if (this.isSquashInProgress) {
+      return;
+    }
+
     if (this.buffer.length === 0) {
       this.globalTimer = null;
       return;
     }
+
+    this.isSquashInProgress = true;
 
     // Emit squash-started event
     if (typeof window !== "undefined") {
@@ -145,6 +155,8 @@ export class VersionHistoryService {
       if (typeof window !== "undefined") {
         window.dispatchEvent(new CustomEvent("squash-error", { detail: { error } }));
       }
+    } finally {
+      this.isSquashInProgress = false;
     }
   }
 
@@ -223,9 +235,7 @@ export class VersionHistoryService {
    * Used to prevent version creation during squash
    */
   isSquashing(): boolean {
-    // We're squashing if there's pending async work (buffer > 0 and timer just expired)
-    // For now, just return false as the timer check in main.ts is sufficient
-    return false;
+    return this.isSquashInProgress;
   }
 
   /**
