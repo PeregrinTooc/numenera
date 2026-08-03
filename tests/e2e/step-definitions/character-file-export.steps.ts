@@ -134,7 +134,8 @@ Then("the exported file should contain all character properties", async function
   expect(character).toHaveProperty("type");
   expect(character).toHaveProperty("descriptor");
   expect(character).toHaveProperty("focus");
-  expect(character).toHaveProperty("xp");
+  expect(character).toHaveProperty("currentXp");
+  expect(character).toHaveProperty("totalXp");
   expect(character).toHaveProperty("shins");
   expect(character).toHaveProperty("armor");
   expect(character).toHaveProperty("effort");
