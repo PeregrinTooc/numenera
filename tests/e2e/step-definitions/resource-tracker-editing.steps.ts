@@ -447,6 +447,16 @@ Then("the modal confirm button should be disabled", async function (this: Custom
   await expect(confirmButton).toBeDisabled();
 });
 
+Then(
+  "the modal should show a real validation error, not a raw translation key",
+  async function (this: CustomWorld) {
+    const errorElement = this.page!.locator(".edit-modal-error");
+    const errorText = await errorElement.textContent();
+    expect(errorText).toBeTruthy();
+    expect(errorText).not.toMatch(/^validation\./);
+  }
+);
+
 // ============================================================================
 // NOTE: The following steps are now handled by common-steps.ts:
 // - When I click the XP/Shins/Armor/Max Cyphers/Effort badge

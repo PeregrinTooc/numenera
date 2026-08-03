@@ -209,6 +209,12 @@
     "xp": {
       "invalid": "XP must be a number between 0 and 9999"
     },
+    "currentXp": {
+      "invalid": "Current XP must be a number between 0 and 9999"
+    },
+    "totalXp": {
+      "invalid": "Total XP must be a number between 0 and 9999"
+    },
     "shins": {
       "invalid": "Shins must be a number between 0 and 999999"
     },

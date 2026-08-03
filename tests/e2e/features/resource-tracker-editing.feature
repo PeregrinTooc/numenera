@@ -66,6 +66,7 @@ Feature: Resource Tracker Fields Editing
         When I click the Current XP badge
         And I type "abc" in the modal input
         Then the modal confirm button should be disabled
+        And the modal should show a real validation error, not a raw translation key
 
     Scenario: XP badges on mobile devices
         Given I am using a mobile device

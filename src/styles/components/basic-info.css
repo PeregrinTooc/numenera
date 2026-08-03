@@ -273,4 +273,13 @@
     padding: 8px 12px;
     margin: -8px -12px;
   }
+
+  /* .xp-badge-cell already clears the 44px tap target via its own
+     min-width/min-height (stat-badge.css), so the negative-margin
+     tap-target trick above is unnecessary here — and actively harmful,
+     since it pulls the two side-by-side cells into each other and gets
+     clipped by .xp-badge's overflow: hidden. */
+  .xp-badge-cell {
+    margin: 0;
+  }
 }

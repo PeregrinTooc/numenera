@@ -209,6 +209,12 @@
     "xp": {
       "invalid": "EP muss eine Zahl zwischen 0 und 9999 sein"
     },
+    "currentXp": {
+      "invalid": "Aktuelle EP muss eine Zahl zwischen 0 und 9999 sein"
+    },
+    "totalXp": {
+      "invalid": "Gesamt-EP muss eine Zahl zwischen 0 und 9999 sein"
+    },
     "shins": {
       "invalid": "Shins muss eine Zahl zwischen 0 und 999999 sein"
     },

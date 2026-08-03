@@ -398,6 +398,17 @@ describe("Change Detection", () => {
       expect(changes).toContain("Updated XP");
     });
 
+    it("should detect currentXp and totalXp changing together as a single Updated XP entry", () => {
+      const char1 = createBaseCharacter();
+      const char2 = createBaseCharacter();
+      char2.currentXp = 5;
+      char2.totalXp = 20;
+
+      const changes = detectChanges(char1, char2);
+
+      expect(changes.filter((c) => c === "Updated XP")).toHaveLength(1);
+    });
+
     it("should detect shins change", () => {
       const char1 = createBaseCharacter();
       const char2 = createBaseCharacter();
