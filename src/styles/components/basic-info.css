@@ -255,6 +255,14 @@
     height: 160px;
   }
 
+  /* Clear the absolutely-positioned .xp-badge overlaid at the card's
+     top-left corner - without this, the badge's ~66px height sits
+     directly on top of the character name's tap target on narrow
+     viewports, since .xp-badge is taken out of grid/flex flow. */
+  .character-info-content {
+    margin-top: 4.5rem;
+  }
+
   .character-name {
     font-size: 1.5rem;
   }
