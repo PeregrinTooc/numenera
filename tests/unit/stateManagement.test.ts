@@ -23,7 +23,8 @@ describe("State Management Components", () => {
       descriptor: "Strong",
       focus: "Focus",
       tier: 3,
-      xp: 0,
+      currentXp: 0,
+      totalXp: 0,
       effort: 1,
       stats: {
         might: { pool: 10, edge: 0, current: 10 },

@@ -6,6 +6,7 @@
 import { Character } from "../types/character.js";
 import { VersionHistoryManager } from "../storage/versionHistory.js";
 import { CharacterVersion } from "../types/versionHistory.js";
+import { sanitizeCharacter } from "../utils/unified-validation.js";
 
 export class VersionState {
   private latestCharacter: Character;
@@ -88,13 +89,17 @@ export class VersionState {
 
     this.currentVersionIndex = index;
     const version = this.allVersions[index];
+    // Snapshots are persisted in IndexedDB and can predate later Character
+    // shape changes (e.g. the xp -> currentXp/totalXp split), so sanitize
+    // on the way in rather than trusting the raw stored shape.
+    const { character: sanitizedCharacter } = sanitizeCharacter(version.character);
     // Versions never store a portrait (see versionHistory.ts saveVersion),
     // so re-attach the current one rather than letting it disappear while
     // viewing an old version — and, since restoreCurrentVersion() promotes
     // displayedCharacter to latestCharacter, this also keeps a restore from
     // permanently dropping the image.
     this.displayedCharacter = {
-      ...(version.character as Character),
+      ...sanitizedCharacter,
       portrait: this.latestCharacter.portrait,
     };
   }

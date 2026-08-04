@@ -15,7 +15,8 @@ describe("VersionState", () => {
     type: "Glaive",
     descriptor: "Strong",
     focus: "Bears a Halo of Fire",
-    xp: 0,
+    currentXp: 0,
+    totalXp: 0,
     shins: 0,
     armor: 0,
     effort: 1,
@@ -186,6 +187,30 @@ describe("VersionState", () => {
 
       expect(versionState.getCurrentVersionIndex()).toBe(0);
       expect(versionState.getDisplayedCharacter().name).toBe("Version 1");
+    });
+
+    describe("legacy version migration", () => {
+      it("should migrate a version snapshot saved before the currentXp/totalXp split", async () => {
+        const legacyCharacter = { ...createMockCharacter("Legacy Character"), xp: 12 } as any;
+        delete legacyCharacter.currentXp;
+        delete legacyCharacter.totalXp;
+
+        const legacyVersion = {
+          id: "version-legacy",
+          character: legacyCharacter,
+          timestamp: Date.now(),
+          description: "Old save",
+          etag: "etag-legacy",
+        };
+        vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue([legacyVersion]);
+
+        await versionState.init();
+        await versionState.navigateToVersion(0);
+
+        const displayed = versionState.getDisplayedCharacter();
+        expect(displayed.currentXp).toBe(12);
+        expect(displayed.totalXp).toBe(12);
+      });
     });
 
     it("should throw error for invalid version index", async () => {

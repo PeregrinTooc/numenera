@@ -8,6 +8,7 @@ import { IndexedDBStorageImpl } from "./indexedDBStorageImpl.js";
 import { LocalStorageImpl } from "./localStorageImpl.js";
 import { VersionHistoryManager } from "./versionHistory.js";
 import { CHARACTER_DB_NAME } from "./storageConstants.js";
+import { sanitizeCharacter } from "../utils/unified-validation.js";
 
 let storageInstance: ICharacterStorage | null = null;
 let versionHistoryPromise: Promise<VersionHistoryManager> | null = null;
@@ -125,11 +126,21 @@ export function persistCharacterState(character: Character): void {
  * Load character state from storage
  * Maintains same API as original localStorage.ts for backward compatibility
  *
+ * Runs the raw stored data through sanitizeCharacter so every caller gets
+ * migrated data automatically — in particular, saves persisted before the
+ * currentXp/totalXp split (which only have a legacy `xp` field) come back
+ * with both new fields populated from it, the same way file import and
+ * version-history navigation already migrate legacy data.
+ *
  * @returns The stored character object, or null if not found
  */
 export async function loadCharacterState(): Promise<any | null> {
   const storage = await getStorage();
-  return await storage.load();
+  const raw = await storage.load();
+  if (!raw) {
+    return null;
+  }
+  return sanitizeCharacter(raw).character;
 }
 
 /**

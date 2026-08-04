@@ -12,7 +12,8 @@ const VALID_CHARACTER = {
   type: "Nano",
   descriptor: "Clever",
   focus: "Controls Gravity",
-  xp: 5,
+  currentXp: 5,
+  totalXp: 5,
   shins: 30,
   armor: 1,
   effort: 2,
@@ -121,8 +122,9 @@ When("I import a character file with invalid field types", async function (this:
     name: "Imported Hero",
     // tier was "three" -> corrected to 1 (default)
     tier: 1,
-    // xp was "many" -> corrected to 0 (default)
-    xp: 0,
+    // xp was "many" -> corrected to 0 (default) for both new fields
+    currentXp: 0,
+    totalXp: 0,
   };
 
   await this.storageHelper.setCharacter(sanitizedCharacter);

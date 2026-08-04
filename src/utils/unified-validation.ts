@@ -36,7 +36,8 @@ export type FieldType =
   | "tier"
   | "descriptor"
   | "focus"
-  | "xp"
+  | "currentXp"
+  | "totalXp"
   | "shins"
   | "armor"
   | "maxCyphers"
@@ -133,7 +134,8 @@ export const FIELD_CONFIGS: Record<FieldType, FieldConfig> = {
   // Numeric fields with range constraints
   tier: { inputType: "number", inputMode: "numeric", min: 1, max: 6 },
   effort: { inputType: "number", inputMode: "numeric", min: 1, max: 6 },
-  xp: { inputType: "number", inputMode: "numeric", min: 0, max: 9999 },
+  currentXp: { inputType: "number", inputMode: "numeric", min: 0, max: 9999 },
+  totalXp: { inputType: "number", inputMode: "numeric", min: 0, max: 9999 },
   shins: { inputType: "number", inputMode: "numeric", min: 0, max: 999999 },
   armor: { inputType: "number", inputMode: "numeric", min: 0, max: 10 },
   maxCyphers: { inputType: "number", inputMode: "numeric", min: 0, max: 10 },
@@ -308,10 +310,16 @@ export function validateCharacter(data: any): CharacterValidationResult {
     errors.push("Field 'tier' must be a number");
   }
 
-  if (data.xp === undefined) {
-    errors.push("Missing required field: xp");
-  } else if (typeof data.xp !== "number") {
-    errors.push("Field 'xp' must be a number");
+  if (data.currentXp === undefined) {
+    errors.push("Missing required field: currentXp");
+  } else if (typeof data.currentXp !== "number") {
+    errors.push("Field 'currentXp' must be a number");
+  }
+
+  if (data.totalXp === undefined) {
+    errors.push("Missing required field: totalXp");
+  } else if (typeof data.totalXp !== "number") {
+    errors.push("Field 'totalXp' must be a number");
   }
 
   if (data.shins === undefined) {
@@ -509,7 +517,8 @@ export const CHARACTER_DEFAULTS: Character = {
   type: "",
   descriptor: "",
   focus: "",
-  xp: 0,
+  currentXp: 0,
+  totalXp: 0,
   shins: 0,
   armor: 0,
   effort: 1,
@@ -576,7 +585,8 @@ export function sanitizeCharacter(data: unknown): SanitizeResult {
     descriptor: sanitizeString(input, "descriptor", CHARACTER_DEFAULTS.descriptor, warnings),
     focus: sanitizeString(input, "focus", CHARACTER_DEFAULTS.focus, warnings),
     tier: sanitizeNumber(input, "tier", CHARACTER_DEFAULTS.tier, warnings, 1, 6),
-    xp: sanitizeNumber(input, "xp", CHARACTER_DEFAULTS.xp, warnings, 0),
+    currentXp: sanitizeXpField(input, "currentXp", warnings),
+    totalXp: sanitizeXpField(input, "totalXp", warnings),
     shins: sanitizeNumber(input, "shins", CHARACTER_DEFAULTS.shins, warnings, 0),
     armor: sanitizeNumber(input, "armor", CHARACTER_DEFAULTS.armor, warnings, 0),
     effort: sanitizeNumber(input, "effort", CHARACTER_DEFAULTS.effort, warnings, 1, 6),
@@ -650,6 +660,26 @@ function sanitizeNumber(
   }
 
   return value;
+}
+
+/**
+ * Sanitizes an XP field (currentXp or totalXp), falling back to a legacy
+ * single `xp` value when the new field is absent — lets old saves/exports
+ * with only `xp` populate both new fields with that value.
+ */
+function sanitizeXpField(
+  input: Record<string, unknown>,
+  field: "currentXp" | "totalXp",
+  warnings: string[]
+): number {
+  if (input[field] !== undefined) {
+    return sanitizeNumber(input, field, CHARACTER_DEFAULTS[field], warnings, 0);
+  }
+  if (input.xp !== undefined) {
+    return sanitizeNumber(input, "xp", CHARACTER_DEFAULTS[field], warnings, 0);
+  }
+  warnings.push(t("validation.sanitize.missingField", { field }));
+  return CHARACTER_DEFAULTS[field];
 }
 
 function sanitizeStats(data: unknown, warnings: string[]): Character["stats"] {

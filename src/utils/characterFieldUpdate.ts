@@ -12,7 +12,8 @@ const FIELD_LABELS: Record<string, string> = {
   tier: "Changed tier",
   descriptor: "Changed descriptor",
   focus: "Changed focus",
-  xp: "Changed XP",
+  currentXp: "Changed current XP",
+  totalXp: "Changed total XP",
   shins: "Changed shins",
   armor: "Changed armor",
   maxCyphers: "Changed max cyphers",
@@ -62,8 +63,11 @@ export function applyFieldUpdate(
     case "focus":
       updatedCharacter.focus = value as string;
       break;
-    case "xp":
-      updatedCharacter.xp = value as number;
+    case "currentXp":
+      updatedCharacter.currentXp = value as number;
+      break;
+    case "totalXp":
+      updatedCharacter.totalXp = value as number;
       break;
     case "shins":
       updatedCharacter.shins = value as number;

@@ -15,7 +15,8 @@ describe("characterValidation", () => {
         type: "Glaive",
         descriptor: "Strong",
         focus: "Masters Defense",
-        xp: 10,
+        currentXp: 10,
+        totalXp: 10,
         shins: 50,
         armor: 2,
         effort: 3,
@@ -148,7 +149,8 @@ describe("characterValidation", () => {
         type: "",
         descriptor: "",
         focus: "",
-        xp: 0,
+        currentXp: 0,
+        totalXp: 0,
         shins: 0,
         armor: 0,
         effort: 0,
@@ -281,13 +283,43 @@ describe("characterValidation", () => {
 
       it("should handle NaN values", () => {
         const input = {
-          xp: NaN,
+          currentXp: NaN,
+          totalXp: NaN,
         };
 
         const result = sanitizeCharacter(input);
 
-        expect(result.character.xp).toBe(CHARACTER_DEFAULTS.xp);
-        expect(result.warnings).toContainEqual(expect.stringContaining("xp"));
+        expect(result.character.currentXp).toBe(CHARACTER_DEFAULTS.currentXp);
+        expect(result.character.totalXp).toBe(CHARACTER_DEFAULTS.totalXp);
+        expect(result.warnings).toContainEqual(expect.stringContaining("currentXp"));
+        expect(result.warnings).toContainEqual(expect.stringContaining("totalXp"));
+      });
+    });
+
+    describe("legacy xp migration", () => {
+      it("should populate both currentXp and totalXp from a legacy single xp value", () => {
+        const input = { xp: 12 };
+
+        const result = sanitizeCharacter(input);
+
+        expect(result.character.currentXp).toBe(12);
+        expect(result.character.totalXp).toBe(12);
+      });
+
+      it("should prefer currentXp/totalXp over a legacy xp value when both are present", () => {
+        const input = { xp: 12, currentXp: 3, totalXp: 20 };
+
+        const result = sanitizeCharacter(input);
+
+        expect(result.character.currentXp).toBe(3);
+        expect(result.character.totalXp).toBe(20);
+      });
+
+      it("should default to 0 when neither legacy xp nor the new fields are present", () => {
+        const result = sanitizeCharacter({});
+
+        expect(result.character.currentXp).toBe(0);
+        expect(result.character.totalXp).toBe(0);
       });
     });
 
@@ -622,7 +654,8 @@ describe("characterValidation", () => {
           type: "Glaive",
           descriptor: "Strong",
           focus: "Masters Defense",
-          xp: 10,
+          currentXp: 10,
+          totalXp: 10,
           shins: 50,
           armor: 2,
           effort: 3,
