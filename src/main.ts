@@ -17,7 +17,7 @@ import { VersionWarningBanner } from "./components/VersionWarningBanner.js";
 import { Character } from "./types/character.js";
 import { FULL_CHARACTER, NEW_CHARACTER } from "./data/mockCharacters.js";
 import { CharacterSheet } from "./components/CharacterSheet.js";
-import { initI18n, onLanguageChanged } from "./i18n/index.js";
+import { initI18n, onLanguageChanged, t } from "./i18n/index.js";
 import { getVersionHistory } from "./storage/storageFactory.js";
 import { VersionState } from "./services/versionState.js";
 import { VersionHistoryService } from "./services/versionHistoryService.js";
@@ -26,6 +26,7 @@ import { ConflictWarningModal } from "./components/ConflictWarningModal.js";
 import type { TestTimer, ITimer } from "./services/timer.js";
 import type { SectionId } from "./types/layout.js";
 import { applyFieldUpdate } from "./utils/characterFieldUpdate.js";
+import { detectChanges } from "./utils/changeDetection.js";
 
 // Expose storage functions on window for E2E tests
 // This allows tests to work in both dev and production builds
@@ -545,7 +546,10 @@ function handleCharacterUpdated(_e: Event): void {
     if (service.getBufferLength() === 0) {
       service.setInitialState(characterBeforeUpdate);
     }
-    service.bufferChange(currentCharacter, "Updated character");
+    const changeKeys = detectChanges(characterBeforeUpdate, currentCharacter);
+    const description =
+      changeKeys.length > 0 ? changeKeys.map((key) => t(key)).join(", ") : "Updated character";
+    service.bufferChange(currentCharacter, description);
 
     // Update the BEFORE state for the next change
     characterBeforeUpdate = globalThis.structuredClone(currentCharacter);
