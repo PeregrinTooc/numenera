@@ -287,6 +287,72 @@
       "title": "Sie sehen eine alte Version",
       "returnButton": "Zur aktuellen Version",
       "restoreButton": "Version Wiederherstellen"
+    },
+    "changes": {
+      "basicInfo": {
+        "name": "Name geändert",
+        "tier": "Stufe geändert",
+        "type": "Typ geändert",
+        "descriptor": "Deskriptor geändert",
+        "focus": "Fokus geändert",
+        "combined": "Basisdaten bearbeitet"
+      },
+      "stats": {
+        "might": "Macht aktualisiert",
+        "speed": "Geschwindigkeit aktualisiert",
+        "intellect": "Intellekt aktualisiert",
+        "combined": "Werte aktualisiert"
+      },
+      "resources": {
+        "xp": "EP aktualisiert",
+        "shins": "Shins aktualisiert",
+        "armor": "Rüstung aktualisiert",
+        "effort": "Anstrengung aktualisiert",
+        "maxCyphers": "Maximale Zyphern aktualisiert",
+        "combined": "Ressourcen aktualisiert"
+      },
+      "collections": {
+        "cypher": {
+          "added": "Zypher hinzugefügt",
+          "removed": "Zypher entfernt",
+          "modified": "Zypher geändert"
+        },
+        "artifact": {
+          "added": "Artefakt hinzugefügt",
+          "removed": "Artefakt entfernt",
+          "modified": "Artefakt geändert"
+        },
+        "equipment": {
+          "added": "Ausrüstung hinzugefügt",
+          "removed": "Ausrüstung entfernt",
+          "modified": "Ausrüstung geändert"
+        },
+        "attack": {
+          "added": "Angriff hinzugefügt",
+          "removed": "Angriff entfernt",
+          "modified": "Angriff geändert"
+        },
+        "ability": {
+          "added": "Fähigkeit hinzugefügt",
+          "removed": "Fähigkeit entfernt",
+          "modified": "Fähigkeit geändert"
+        },
+        "specialAbility": {
+          "added": "Spezialfähigkeit hinzugefügt",
+          "removed": "Spezialfähigkeit entfernt",
+          "modified": "Spezialfähigkeit geändert"
+        },
+        "oddity": {
+          "added": "Kuriosität hinzugefügt",
+          "removed": "Kuriosität entfernt",
+          "modified": "Kuriosität geändert"
+        }
+      },
+      "textFields": {
+        "background": "Hintergrund aktualisiert",
+        "notes": "Notizen aktualisiert",
+        "combined": "Textfelder aktualisiert"
+      }
     }
   },
   "conflict": {

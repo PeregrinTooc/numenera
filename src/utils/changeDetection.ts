@@ -1,7 +1,10 @@
 import type { Character } from "../types/character.js";
 
 /**
- * Detects changes between two character versions and returns descriptions
+ * Detects changes between two character versions and returns i18n key
+ * strings describing what changed (e.g. "versionHistory.changes.basicInfo.name").
+ * Callers translate these with `t()` — this stays a pure, dependency-free
+ * util so it's trivially unit-testable.
  * Priority: Basic info > Stats > Resources > Collections > Text fields
  * Limits output to top 3 changes maximum
  */
@@ -53,13 +56,13 @@ export function detectChanges(oldChar: Character, newChar: Character): string[] 
   // If all changes are in same category and there are multiple, combine them
   if (allSameCategory && changes.length > 1) {
     if (firstCategory === "basicInfo") {
-      return ["Edited basic info"];
+      return ["versionHistory.changes.basicInfo.combined"];
     } else if (firstCategory === "stats") {
-      return ["Updated stats"];
+      return ["versionHistory.changes.stats.combined"];
     } else if (firstCategory === "resources") {
-      return ["Updated resources"];
+      return ["versionHistory.changes.resources.combined"];
     } else if (firstCategory === "textFields") {
-      return ["Updated text fields"];
+      return ["versionHistory.changes.textFields.combined"];
     }
     // For collections, don't combine - fall through to individual changes
   }
@@ -71,11 +74,12 @@ export function detectChanges(oldChar: Character, newChar: Character): string[] 
 function detectBasicInfoChanges(oldChar: Character, newChar: Character): string[] {
   const changes: string[] = [];
 
-  if (oldChar.name !== newChar.name) changes.push("Changed name");
-  if (oldChar.tier !== newChar.tier) changes.push("Changed tier");
-  if (oldChar.type !== newChar.type) changes.push("Changed type");
-  if (oldChar.descriptor !== newChar.descriptor) changes.push("Changed descriptor");
-  if (oldChar.focus !== newChar.focus) changes.push("Changed focus");
+  if (oldChar.name !== newChar.name) changes.push("versionHistory.changes.basicInfo.name");
+  if (oldChar.tier !== newChar.tier) changes.push("versionHistory.changes.basicInfo.tier");
+  if (oldChar.type !== newChar.type) changes.push("versionHistory.changes.basicInfo.type");
+  if (oldChar.descriptor !== newChar.descriptor)
+    changes.push("versionHistory.changes.basicInfo.descriptor");
+  if (oldChar.focus !== newChar.focus) changes.push("versionHistory.changes.basicInfo.focus");
 
   return changes;
 }
@@ -89,7 +93,7 @@ function detectStatChanges(oldChar: Character, newChar: Character): string[] {
     oldChar.stats.might.edge !== newChar.stats.might.edge ||
     oldChar.stats.might.current !== newChar.stats.might.current
   ) {
-    changes.push("Updated might");
+    changes.push("versionHistory.changes.stats.might");
   }
 
   // Check speed
@@ -98,7 +102,7 @@ function detectStatChanges(oldChar: Character, newChar: Character): string[] {
     oldChar.stats.speed.edge !== newChar.stats.speed.edge ||
     oldChar.stats.speed.current !== newChar.stats.speed.current
   ) {
-    changes.push("Updated speed");
+    changes.push("versionHistory.changes.stats.speed");
   }
 
   // Check intellect
@@ -107,7 +111,7 @@ function detectStatChanges(oldChar: Character, newChar: Character): string[] {
     oldChar.stats.intellect.edge !== newChar.stats.intellect.edge ||
     oldChar.stats.intellect.current !== newChar.stats.intellect.current
   ) {
-    changes.push("Updated intellect");
+    changes.push("versionHistory.changes.stats.intellect");
   }
 
   return changes;
@@ -116,13 +120,13 @@ function detectStatChanges(oldChar: Character, newChar: Character): string[] {
 function detectResourceChanges(oldChar: Character, newChar: Character): string[] {
   const changes: string[] = [];
 
-  if (oldChar.currentXp !== newChar.currentXp || oldChar.totalXp !== newChar.totalXp) {
-    changes.push("Updated XP");
-  }
-  if (oldChar.shins !== newChar.shins) changes.push("Updated shins");
-  if (oldChar.armor !== newChar.armor) changes.push("Updated armor");
-  if (oldChar.effort !== newChar.effort) changes.push("Updated effort");
-  if (oldChar.maxCyphers !== newChar.maxCyphers) changes.push("Updated max cyphers");
+  if (oldChar.currentXp !== newChar.currentXp || oldChar.totalXp !== newChar.totalXp)
+    changes.push("versionHistory.changes.resources.xp");
+  if (oldChar.shins !== newChar.shins) changes.push("versionHistory.changes.resources.shins");
+  if (oldChar.armor !== newChar.armor) changes.push("versionHistory.changes.resources.armor");
+  if (oldChar.effort !== newChar.effort) changes.push("versionHistory.changes.resources.effort");
+  if (oldChar.maxCyphers !== newChar.maxCyphers)
+    changes.push("versionHistory.changes.resources.maxCyphers");
 
   return changes;
 }
@@ -133,17 +137,17 @@ function detectResourceChanges(oldChar: Character, newChar: Character): string[]
 function detectCollectionChange(
   oldCollection: unknown[],
   newCollection: unknown[],
-  itemName: string
+  itemKey: string
 ): string | null {
   if (oldCollection.length < newCollection.length) {
-    return `Added ${itemName}`;
+    return `versionHistory.changes.collections.${itemKey}.added`;
   } else if (oldCollection.length > newCollection.length) {
-    return `Removed ${itemName}`;
+    return `versionHistory.changes.collections.${itemKey}.removed`;
   } else if (oldCollection.length > 0 && newCollection.length > 0) {
     const oldStr = JSON.stringify(oldCollection);
     const newStr = JSON.stringify(newCollection);
     if (oldStr !== newStr) {
-      return `Modified ${itemName}`;
+      return `versionHistory.changes.collections.${itemKey}.modified`;
     }
   }
   return null;
@@ -153,17 +157,17 @@ function detectCollectionChanges(oldChar: Character, newChar: Character): string
   const changes: string[] = [];
 
   const collectionChecks = [
-    { old: oldChar.cyphers, new: newChar.cyphers, name: "cypher" },
-    { old: oldChar.artifacts, new: newChar.artifacts, name: "artifact" },
-    { old: oldChar.equipment, new: newChar.equipment, name: "equipment" },
-    { old: oldChar.attacks, new: newChar.attacks, name: "attack" },
-    { old: oldChar.abilities, new: newChar.abilities, name: "ability" },
-    { old: oldChar.specialAbilities, new: newChar.specialAbilities, name: "special ability" },
-    { old: oldChar.oddities, new: newChar.oddities, name: "oddity" },
+    { old: oldChar.cyphers, new: newChar.cyphers, key: "cypher" },
+    { old: oldChar.artifacts, new: newChar.artifacts, key: "artifact" },
+    { old: oldChar.equipment, new: newChar.equipment, key: "equipment" },
+    { old: oldChar.attacks, new: newChar.attacks, key: "attack" },
+    { old: oldChar.abilities, new: newChar.abilities, key: "ability" },
+    { old: oldChar.specialAbilities, new: newChar.specialAbilities, key: "specialAbility" },
+    { old: oldChar.oddities, new: newChar.oddities, key: "oddity" },
   ];
 
   for (const check of collectionChecks) {
-    const change = detectCollectionChange(check.old, check.new, check.name);
+    const change = detectCollectionChange(check.old, check.new, check.key);
     if (change) {
       changes.push(change);
     }
@@ -175,12 +179,10 @@ function detectCollectionChanges(oldChar: Character, newChar: Character): string
 function detectTextFieldChanges(oldChar: Character, newChar: Character): string[] {
   const changes: string[] = [];
 
-  if (oldChar.textFields.background !== newChar.textFields.background) {
-    changes.push("Updated background");
-  }
-  if (oldChar.textFields.notes !== newChar.textFields.notes) {
-    changes.push("Updated notes");
-  }
+  if (oldChar.textFields.background !== newChar.textFields.background)
+    changes.push("versionHistory.changes.textFields.background");
+  if (oldChar.textFields.notes !== newChar.textFields.notes)
+    changes.push("versionHistory.changes.textFields.notes");
 
   return changes;
 }

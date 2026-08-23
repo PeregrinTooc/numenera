@@ -287,6 +287,72 @@
       "title": "You are viewing an old version",
       "returnButton": "Return to Current Version",
       "restoreButton": "Restore Version"
+    },
+    "changes": {
+      "basicInfo": {
+        "name": "Changed name",
+        "tier": "Changed tier",
+        "type": "Changed type",
+        "descriptor": "Changed descriptor",
+        "focus": "Changed focus",
+        "combined": "Edited basic info"
+      },
+      "stats": {
+        "might": "Updated might",
+        "speed": "Updated speed",
+        "intellect": "Updated intellect",
+        "combined": "Updated stats"
+      },
+      "resources": {
+        "xp": "Updated XP",
+        "shins": "Updated shins",
+        "armor": "Updated armor",
+        "effort": "Updated effort",
+        "maxCyphers": "Updated max cyphers",
+        "combined": "Updated resources"
+      },
+      "collections": {
+        "cypher": {
+          "added": "Added cypher",
+          "removed": "Removed cypher",
+          "modified": "Modified cypher"
+        },
+        "artifact": {
+          "added": "Added artifact",
+          "removed": "Removed artifact",
+          "modified": "Modified artifact"
+        },
+        "equipment": {
+          "added": "Added equipment",
+          "removed": "Removed equipment",
+          "modified": "Modified equipment"
+        },
+        "attack": {
+          "added": "Added attack",
+          "removed": "Removed attack",
+          "modified": "Modified attack"
+        },
+        "ability": {
+          "added": "Added ability",
+          "removed": "Removed ability",
+          "modified": "Modified ability"
+        },
+        "specialAbility": {
+          "added": "Added special ability",
+          "removed": "Removed special ability",
+          "modified": "Modified special ability"
+        },
+        "oddity": {
+          "added": "Added oddity",
+          "removed": "Removed oddity",
+          "modified": "Modified oddity"
+        }
+      },
+      "textFields": {
+        "background": "Updated background",
+        "notes": "Updated notes",
+        "combined": "Updated text fields"
+      }
     }
   },
   "conflict": {

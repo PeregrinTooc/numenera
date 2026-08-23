@@ -71,7 +71,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Changed name");
+      expect(changes).toContain("versionHistory.changes.basicInfo.name");
     });
 
     it("should detect tier change", () => {
@@ -81,7 +81,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Changed tier");
+      expect(changes).toContain("versionHistory.changes.basicInfo.tier");
     });
 
     it("should detect type change", () => {
@@ -91,7 +91,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Changed type");
+      expect(changes).toContain("versionHistory.changes.basicInfo.type");
     });
 
     it("should detect descriptor change", () => {
@@ -101,7 +101,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Changed descriptor");
+      expect(changes).toContain("versionHistory.changes.basicInfo.descriptor");
     });
 
     it("should detect focus change", () => {
@@ -111,7 +111,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Changed focus");
+      expect(changes).toContain("versionHistory.changes.basicInfo.focus");
     });
 
     it("should combine multiple basic info changes", () => {
@@ -123,10 +123,10 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Edited basic info");
-      expect(changes).not.toContain("Changed name");
-      expect(changes).not.toContain("Changed tier");
-      expect(changes).not.toContain("Changed type");
+      expect(changes).toContain("versionHistory.changes.basicInfo.combined");
+      expect(changes).not.toContain("versionHistory.changes.basicInfo.name");
+      expect(changes).not.toContain("versionHistory.changes.basicInfo.tier");
+      expect(changes).not.toContain("versionHistory.changes.basicInfo.type");
     });
   });
 
@@ -138,7 +138,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Updated might");
+      expect(changes).toContain("versionHistory.changes.stats.might");
     });
 
     it("should detect speed pool change", () => {
@@ -148,7 +148,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Updated speed");
+      expect(changes).toContain("versionHistory.changes.stats.speed");
     });
 
     it("should detect intellect pool change", () => {
@@ -158,7 +158,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Updated intellect");
+      expect(changes).toContain("versionHistory.changes.stats.intellect");
     });
 
     it("should detect edge changes", () => {
@@ -168,7 +168,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Updated might");
+      expect(changes).toContain("versionHistory.changes.stats.might");
     });
 
     it("should detect current value changes", () => {
@@ -178,7 +178,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Updated might");
+      expect(changes).toContain("versionHistory.changes.stats.might");
     });
 
     it("should combine multiple stat changes", () => {
@@ -190,10 +190,10 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Updated stats");
-      expect(changes).not.toContain("Updated might");
-      expect(changes).not.toContain("Updated speed");
-      expect(changes).not.toContain("Updated intellect");
+      expect(changes).toContain("versionHistory.changes.stats.combined");
+      expect(changes).not.toContain("versionHistory.changes.stats.might");
+      expect(changes).not.toContain("versionHistory.changes.stats.speed");
+      expect(changes).not.toContain("versionHistory.changes.stats.intellect");
     });
   });
 
@@ -205,7 +205,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Added cypher");
+      expect(changes).toContain("versionHistory.changes.collections.cypher.added");
     });
 
     it("should detect removed cypher", () => {
@@ -215,7 +215,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Removed cypher");
+      expect(changes).toContain("versionHistory.changes.collections.cypher.removed");
     });
 
     it("should detect modified cypher", () => {
@@ -226,7 +226,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Modified cypher");
+      expect(changes).toContain("versionHistory.changes.collections.cypher.modified");
     });
   });
 
@@ -238,7 +238,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Added equipment");
+      expect(changes).toContain("versionHistory.changes.collections.equipment.added");
     });
 
     it("should detect removed equipment", () => {
@@ -248,7 +248,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Removed equipment");
+      expect(changes).toContain("versionHistory.changes.collections.equipment.removed");
     });
 
     it("should detect modified equipment", () => {
@@ -259,7 +259,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Modified equipment");
+      expect(changes).toContain("versionHistory.changes.collections.equipment.modified");
     });
   });
 
@@ -271,7 +271,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Added attack");
+      expect(changes).toContain("versionHistory.changes.collections.attack.added");
     });
   });
 
@@ -283,7 +283,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Added ability");
+      expect(changes).toContain("versionHistory.changes.collections.ability.added");
     });
   });
 
@@ -295,7 +295,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Updated background");
+      expect(changes).toContain("versionHistory.changes.textFields.background");
     });
 
     it("should detect notes change", () => {
@@ -305,7 +305,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Updated notes");
+      expect(changes).toContain("versionHistory.changes.textFields.notes");
     });
 
     it("should combine text field changes", () => {
@@ -316,9 +316,9 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Updated text fields");
-      expect(changes).not.toContain("Updated background");
-      expect(changes).not.toContain("Updated notes");
+      expect(changes).toContain("versionHistory.changes.textFields.combined");
+      expect(changes).not.toContain("versionHistory.changes.textFields.background");
+      expect(changes).not.toContain("versionHistory.changes.textFields.notes");
     });
   });
 
@@ -331,8 +331,8 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes[0]).toBe("Changed name");
-      expect(changes[1]).toBe("Updated might");
+      expect(changes[0]).toBe("versionHistory.changes.basicInfo.name");
+      expect(changes[1]).toBe("versionHistory.changes.stats.might");
     });
 
     it("should prioritize basic info over collections", () => {
@@ -343,8 +343,8 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes[0]).toBe("Changed tier");
-      expect(changes[1]).toBe("Added cypher");
+      expect(changes[0]).toBe("versionHistory.changes.basicInfo.tier");
+      expect(changes[1]).toBe("versionHistory.changes.collections.cypher.added");
     });
 
     it("should prioritize stats over text fields", () => {
@@ -355,8 +355,8 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes[0]).toBe("Updated might");
-      expect(changes[1]).toBe("Updated notes");
+      expect(changes[0]).toBe("versionHistory.changes.stats.might");
+      expect(changes[1]).toBe("versionHistory.changes.textFields.notes");
     });
 
     it("should limit to top 3 changes when many changes occur", () => {
@@ -371,9 +371,9 @@ describe("Change Detection", () => {
       const changes = detectChanges(char1, char2);
 
       expect(changes).toHaveLength(3);
-      expect(changes[0]).toBe("Changed name");
-      expect(changes[1]).toBe("Changed tier");
-      expect(changes[2]).toBe("Updated might");
+      expect(changes[0]).toBe("versionHistory.changes.basicInfo.name");
+      expect(changes[1]).toBe("versionHistory.changes.basicInfo.tier");
+      expect(changes[2]).toBe("versionHistory.changes.stats.might");
     });
   });
 
@@ -385,7 +385,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Updated XP");
+      expect(changes).toContain("versionHistory.changes.resources.xp");
     });
 
     it("should detect totalXp change", () => {
@@ -395,7 +395,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Updated XP");
+      expect(changes).toContain("versionHistory.changes.resources.xp");
     });
 
     it("should detect currentXp and totalXp changing together as a single Updated XP entry", () => {
@@ -406,7 +406,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes.filter((c) => c === "Updated XP")).toHaveLength(1);
+      expect(changes.filter((c) => c === "versionHistory.changes.resources.xp")).toHaveLength(1);
     });
 
     it("should detect shins change", () => {
@@ -416,7 +416,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Updated shins");
+      expect(changes).toContain("versionHistory.changes.resources.shins");
     });
 
     it("should detect armor change", () => {
@@ -426,7 +426,7 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Updated armor");
+      expect(changes).toContain("versionHistory.changes.resources.armor");
     });
 
     it("should combine resource changes", () => {
@@ -438,9 +438,9 @@ describe("Change Detection", () => {
 
       const changes = detectChanges(char1, char2);
 
-      expect(changes).toContain("Updated resources");
-      expect(changes).not.toContain("Updated XP");
-      expect(changes).not.toContain("Updated shins");
+      expect(changes).toContain("versionHistory.changes.resources.combined");
+      expect(changes).not.toContain("versionHistory.changes.resources.xp");
+      expect(changes).not.toContain("versionHistory.changes.resources.shins");
     });
   });
 });
