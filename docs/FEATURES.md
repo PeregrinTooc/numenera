@@ -229,6 +229,9 @@ All features listed below have full BDD test coverage and are verified working.
   - Restore any previous version
   - Smart squashing (buffers edits, saves after 5s inactivity)
   - Combined descriptions for squashed versions
+  - Meaningful, translated version descriptions for card/collection edits
+    (e.g. "Added cypher", "Removed ability", "Modified equipment") instead
+    of a generic "Updated character", via `detectChanges`
   - Version Navigator UI (version counter, navigation buttons)
   - Warning banner when viewing old versions
   - Edit from old version creates new version (no read-only mode)
