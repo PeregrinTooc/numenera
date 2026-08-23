@@ -332,6 +332,81 @@ Feature: Version History (Character Time Travel)
         When I refresh the browser
         Then the character name should be "Buffer Edit 2"
 
+    # Meaningful Version Descriptions (detectChanges wiring)
+
+    # These scenarios each create one extra trailing version (a name edit)
+    # after the change under test, so the change under test is no longer the
+    # latest version — its description only renders in the (non-latest)
+    # warning banner, per "Version description shows what changed" above.
+
+    Scenario: Adding a card shows a specific description
+        Given I am on the character sheet page
+        When I click the add cypher button
+        And I fill in the cypher name with "Test Cypher"
+        And I fill in the cypher level with "1d6"
+        And I fill in the cypher effect with "Test effect"
+        And I confirm the card edit modal
+        And I wait for squash timer to complete
+        And I edit the "character name" field to "Another Change"
+        And I wait for squash timer to complete
+        And I click the backward navigation arrow
+        Then the version description should contain "Added cypher"
+
+    Scenario: Removing a card shows a specific description
+        Given I am on the character sheet page
+        And I should see 2 cypher cards
+        When I click the delete button on the first cypher card
+        And I wait for squash timer to complete
+        And I edit the "character name" field to "Another Change"
+        And I wait for squash timer to complete
+        And I click the backward navigation arrow
+        Then the version description should contain "Removed cypher"
+
+    Scenario: Modifying a card shows a specific description
+        Given I am on the character sheet page
+        When I click the edit button on cypher "Detonation (Cell)"
+        And I fill in the cypher effect with "Updated effect text"
+        And I confirm the card edit modal
+        And I wait for squash timer to complete
+        And I edit the "character name" field to "Another Change"
+        And I wait for squash timer to complete
+        And I click the backward navigation arrow
+        Then the version description should contain "Modified cypher"
+
+    Scenario: Different collection changes in one squash window list individually
+        Given I am on the character sheet page
+        When I click the add cypher button
+        And I fill in the cypher name with "Test Cypher"
+        And I fill in the cypher level with "1d6"
+        And I fill in the cypher effect with "Test effect"
+        And I confirm the card edit modal
+        And I click the add ability button
+        And I fill in the ability name with "Test Ability"
+        And I fill in the ability cost with "3"
+        And I fill in the ability pool with "Might"
+        And I fill in the ability description with "A test ability"
+        And I confirm the card edit modal
+        And I wait for squash timer to complete
+        And I edit the "character name" field to "Another Change"
+        And I wait for squash timer to complete
+        And I click the backward navigation arrow
+        Then the version description should contain "Added cypher"
+        And the version description should contain "Added ability"
+
+    Scenario: Version descriptions render in German
+        Given I have opened the settings panel
+        And I click the German flag icon
+        When I click the add cypher button
+        And I fill in the cypher name with "Test Cypher"
+        And I fill in the cypher level with "1d6"
+        And I fill in the cypher effect with "Test effect"
+        And I confirm the card edit modal
+        And I wait for squash timer to complete
+        And I edit the "character name" field to "Another Change"
+        And I wait for squash timer to complete
+        And I click the backward navigation arrow
+        Then the version description should contain "Zypher hinzugefügt"
+
     # Edge Cases
 
     Scenario: Rapid navigation through many versions
