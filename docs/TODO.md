@@ -85,49 +85,6 @@ require manual testing until a solution is found.
 
 ## 📋 Feature Backlog
 
-### Grid Merge/Split & Import-Layout Conflict Prompt
-
-**Overview**  
-`CharacterSheet.mergeSections()`, `splitGrid()`, `updateLayout()` and `getLayout()`
-are implemented and unit-tested in isolation, but have zero callers — `handleDrop`
-only ever calls `reorderSections`. Separately, `fileStorage.ts` already computes a
-`hasLayoutDifference` flag on import that `main.ts`'s `handleLoadFromFile` reads
-but discards. Decided: build this rather than delete the dead code — see
-`docs/PROJECT_REVIEW.md` §2.7 for the original defect writeup.
-
-**Goals**
-
-- Let users create a new side-by-side grid pairing by dragging one section onto
-  another (needs drop-position disambiguation in `handleDrop`/`handleDragOver`:
-  centre of target = merge, edge = reorder, plus matching drop-zone CSS)
-- Let users split an existing grid pairing back into two single-column sections
-  by dragging one out of it
-- Warn on import when the imported file's layout differs from the current one,
-  offering "Keep current layout" / "Use imported layout" via a new prompt,
-  wired to the existing `hasLayoutDifference` flag
-
-**Implementation notes**
-
-- The four `CharacterSheet` methods above already exist and persist correctly
-  once called — the missing piece is gesture wiring and the import prompt
-  component, not the underlying layout logic.
-- This project has a known, unresolved Playwright limitation automating HTML5
-  drag/drop (see "Automated Drag/Drop E2E Tests" above). The merge/split
-  scenarios below will likely hit the same wall — plan for `@skip` and manual
-  verification unless that's solved first.
-
-**E2E Tests**
-
-- File: `tests/e2e/features/section-rearrangement.feature` (scenarios already
-  written, currently `@skip`ped)
-  - Merge sections into grid by dragging onto another section
-  - Cannot merge non-eligible sections into grid
-  - Split sections from grid by dragging out
-  - Import with different layout shows prompt
-  - Keep existing layout on import
-  - Use imported layout on import
-  - Import with same layout does not show prompt
-
 ### Wire Up `detectChanges` for Meaningful Version Descriptions
 
 **Overview**  
@@ -171,6 +128,49 @@ cleanup.
   - Multiple changes in the same category combine into one description
     ("Edited basic info", "Updated stats", ...)
   - Descriptions render correctly in both English and German
+
+### Grid Merge/Split & Import-Layout Conflict Prompt
+
+**Overview**  
+`CharacterSheet.mergeSections()`, `splitGrid()`, `updateLayout()` and `getLayout()`
+are implemented and unit-tested in isolation, but have zero callers — `handleDrop`
+only ever calls `reorderSections`. Separately, `fileStorage.ts` already computes a
+`hasLayoutDifference` flag on import that `main.ts`'s `handleLoadFromFile` reads
+but discards. Decided: build this rather than delete the dead code — see
+`docs/PROJECT_REVIEW.md` §2.7 for the original defect writeup.
+
+**Goals**
+
+- Let users create a new side-by-side grid pairing by dragging one section onto
+  another (needs drop-position disambiguation in `handleDrop`/`handleDragOver`:
+  centre of target = merge, edge = reorder, plus matching drop-zone CSS)
+- Let users split an existing grid pairing back into two single-column sections
+  by dragging one out of it
+- Warn on import when the imported file's layout differs from the current one,
+  offering "Keep current layout" / "Use imported layout" via a new prompt,
+  wired to the existing `hasLayoutDifference` flag
+
+**Implementation notes**
+
+- The four `CharacterSheet` methods above already exist and persist correctly
+  once called — the missing piece is gesture wiring and the import prompt
+  component, not the underlying layout logic.
+- This project has a known, unresolved Playwright limitation automating HTML5
+  drag/drop (see "Automated Drag/Drop E2E Tests" above). The merge/split
+  scenarios below will likely hit the same wall — plan for `@skip` and manual
+  verification unless that's solved first.
+
+**E2E Tests**
+
+- File: `tests/e2e/features/section-rearrangement.feature` (scenarios already
+  written, currently `@skip`ped)
+  - Merge sections into grid by dragging onto another section
+  - Cannot merge non-eligible sections into grid
+  - Split sections from grid by dragging out
+  - Import with different layout shows prompt
+  - Keep existing layout on import
+  - Use imported layout on import
+  - Import with same layout does not show prompt
 
 ### Multiple Images
 
