@@ -196,6 +196,21 @@ export class VersionHistoryManager {
   }
 
   /**
+   * Update an existing version's description in place. Not used by the
+   * normal save/squash flow (saveVersion covers that) — this exists for the
+   * legacy-description migration, which needs to rewrite a stored
+   * description after recomputing it from the version's own snapshot.
+   */
+  async updateVersionDescription(id: string, description: string): Promise<void> {
+    const existing = await this.getVersionById(id);
+    if (!existing) {
+      throw new Error(`Version ${id} not found`);
+    }
+
+    await this.saveToDb({ ...existing, description });
+  }
+
+  /**
    * Clear all versions from storage
    */
   async clear(): Promise<void> {

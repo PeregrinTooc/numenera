@@ -289,6 +289,7 @@
       "restoreButton": "Restore Version"
     },
     "changes": {
+      "generic": "Updated character",
       "basicInfo": {
         "name": "Changed name",
         "tier": "Changed tier",
