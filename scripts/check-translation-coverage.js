@@ -3,8 +3,9 @@
 /**
  * Translation Coverage Check
  *
- * Verifies that all t() function calls in components have corresponding
- * translation keys in both en.json and de.json locale files.
+ * Verifies that all t() function calls anywhere in src/ (components,
+ * services, utils, main.ts, ...) have corresponding translation keys in
+ * both en.json and de.json locale files.
  *
  * Fails pre-commit if any keys are missing.
  */
@@ -109,17 +110,19 @@ async function checkTranslationCoverage() {
   const enTranslations = loadLocale(enPath);
   const deTranslations = loadLocale(dePath);
 
-  // Find all component files
-  const componentsDir = path.join(projectRoot, "src/components");
-  const componentFiles = findTsFiles(componentsDir);
+  // Find all source files - not just src/components. t() is called from
+  // services and utils too (e.g. versionDescriptions.ts, unified-validation.ts),
+  // and this check missed those entirely when it only scanned components.
+  const srcDir = path.join(projectRoot, "src");
+  const sourceFiles = findTsFiles(srcDir);
 
-  console.log(`📂 Checking ${componentFiles.length} component files...\n`);
+  console.log(`📂 Checking ${sourceFiles.length} source files...\n`);
 
   let missingKeys = [];
   let checkedKeys = new Set();
 
-  // Check each component file
-  for (const file of componentFiles) {
+  // Check each source file
+  for (const file of sourceFiles) {
     const relativePath = path.relative(projectRoot, file);
     const content = fs.readFileSync(file, "utf-8");
     const keys = extractTranslationKeys(content);
