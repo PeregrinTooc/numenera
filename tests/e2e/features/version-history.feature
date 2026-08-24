@@ -407,6 +407,23 @@ Feature: Version History (Character Time Travel)
         And I click the backward navigation arrow
         Then the version description should contain "Zypher hinzugefügt"
 
+    # Legacy Description Migration
+
+    Scenario: Reloading the app upgrades an old "Updated character" description
+        Given I am on the character sheet page
+        And the character has a legacy version with an "Updated character" description for an added cypher
+        When I refresh the browser
+        And I click the backward navigation arrow
+        Then the version description should contain "Added cypher"
+
+    Scenario: Reloading the app upgrades a squashed description containing "Updated character"
+        Given I am on the character sheet page
+        And the character has a legacy version with a "Changed name, Updated character" description for a name change and an added ability
+        When I refresh the browser
+        And I click the backward navigation arrow
+        Then the version description should contain "Changed name"
+        And the version description should contain "Added ability"
+
     # Edge Cases
 
     Scenario: Rapid navigation through many versions

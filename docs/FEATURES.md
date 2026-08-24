@@ -232,6 +232,10 @@ All features listed below have full BDD test coverage and are verified working.
   - Meaningful, translated version descriptions for card/collection edits
     (e.g. "Added cypher", "Removed ability", "Modified equipment") instead
     of a generic "Updated character", via `detectChanges`
+  - Legacy version descriptions still carrying the old "Updated character"
+    literal (bare or as part of a squashed/compound description) are
+    automatically backfilled on app boot, recomputed from each version's
+    own stored snapshot diff — safe to re-run every load, no migration flag
   - Version Navigator UI (version counter, navigation buttons)
   - Warning banner when viewing old versions
   - Edit from old version creates new version (no read-only mode)

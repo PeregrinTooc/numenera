@@ -142,6 +142,68 @@ Given(
 );
 
 Given(
+  "the character has a legacy version with an {string} description for an added cypher",
+  async function (this: CustomWorld, description: string) {
+    // Reproduces pre-migration stored data: a version whose description is the
+    // old hardcoded literal, created by bypassing the live detectChanges path
+    // (same as the other legacy-description Given step below).
+    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForTimeout(500);
+
+    const baseCharacter = await this.storageHelper.getCharacter();
+    const versionCharacter = {
+      ...baseCharacter,
+      cyphers: [
+        ...baseCharacter.cyphers,
+        { name: "Legacy Test Cypher", level: "3", effect: "Test effect" },
+      ],
+    };
+    await this.storageHelper.createVersion(versionCharacter, description);
+
+    const versionCounter = this.page.locator('[data-testid="version-counter"]');
+    await expect(versionCounter).toContainText("Version 2 of 2", { timeout: 10000 });
+
+    // Create one more version so we can navigate back to see this legacy
+    // version's (now migrated, after reload) description.
+    await this.storageHelper.createVersion(
+      { ...versionCharacter, name: "Latest Version" },
+      "Another change"
+    );
+    await expect(versionCounter).toContainText("Version 3 of 3", { timeout: 10000 });
+  }
+);
+
+Given(
+  "the character has a legacy version with a {string} description for a name change and an added ability",
+  async function (this: CustomWorld, description: string) {
+    // Reproduces a real squashDescriptions() output: a compound description
+    // with the legacy literal as one of its comma-separated segments.
+    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForTimeout(500);
+
+    const baseCharacter = await this.storageHelper.getCharacter();
+    const versionCharacter = {
+      ...baseCharacter,
+      name: "Changed Name",
+      abilities: [
+        ...baseCharacter.abilities,
+        { name: "Legacy Test Ability", cost: 1, description: "Test ability" },
+      ],
+    };
+    await this.storageHelper.createVersion(versionCharacter, description);
+
+    const versionCounter = this.page.locator('[data-testid="version-counter"]');
+    await expect(versionCounter).toContainText("Version 2 of 2", { timeout: 10000 });
+
+    await this.storageHelper.createVersion(
+      { ...versionCharacter, name: "Latest Version" },
+      "Another change"
+    );
+    await expect(versionCounter).toContainText("Version 3 of 3", { timeout: 10000 });
+  }
+);
+
+Given(
   "the character has {int} versions with different data",
   async function (this: CustomWorld, versionCount: number) {
     // Wait for the app's own bootstrap (which saves the initial version) to

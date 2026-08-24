@@ -17,7 +17,7 @@ import { VersionWarningBanner } from "./components/VersionWarningBanner.js";
 import { Character } from "./types/character.js";
 import { FULL_CHARACTER, NEW_CHARACTER } from "./data/mockCharacters.js";
 import { CharacterSheet } from "./components/CharacterSheet.js";
-import { initI18n, onLanguageChanged, t } from "./i18n/index.js";
+import { initI18n, onLanguageChanged } from "./i18n/index.js";
 import { getVersionHistory } from "./storage/storageFactory.js";
 import { VersionState } from "./services/versionState.js";
 import { VersionHistoryService } from "./services/versionHistoryService.js";
@@ -26,7 +26,8 @@ import { ConflictWarningModal } from "./components/ConflictWarningModal.js";
 import type { TestTimer, ITimer } from "./services/timer.js";
 import type { SectionId } from "./types/layout.js";
 import { applyFieldUpdate } from "./utils/characterFieldUpdate.js";
-import { detectChanges } from "./utils/changeDetection.js";
+import { describeCharacterChange } from "./services/versionDescriptions.js";
+import { migrateLegacyVersionDescriptions } from "./services/versionDescriptionMigration.js";
 
 // Expose storage functions on window for E2E tests
 // This allows tests to work in both dev and production builds
@@ -546,9 +547,7 @@ function handleCharacterUpdated(_e: Event): void {
     if (service.getBufferLength() === 0) {
       service.setInitialState(characterBeforeUpdate);
     }
-    const changeKeys = detectChanges(characterBeforeUpdate, currentCharacter);
-    const description =
-      changeKeys.length > 0 ? changeKeys.map((key) => t(key)).join(", ") : "Updated character";
+    const description = describeCharacterChange(characterBeforeUpdate, currentCharacter);
     service.bufferChange(currentCharacter, description);
 
     // Update the BEFORE state for the next change
@@ -688,6 +687,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Save the initial state as Version 1
   const versionHistory = await getVersionHistory();
   const versions = await versionHistory.getAllVersions();
+
+  // Backfill any stored descriptions still carrying the old hardcoded
+  // "Updated character" literal from before detectChanges was wired up.
+  // Must complete before VersionState is constructed below so it sees
+  // already-migrated descriptions on this same load.
+  await migrateLegacyVersionDescriptions(versionHistory, versions);
 
   // Initialize VersionHistoryService
   // Use configured delay if available (for tests), otherwise default 5000ms
