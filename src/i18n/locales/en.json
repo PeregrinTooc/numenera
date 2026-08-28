@@ -17,6 +17,8 @@
     "resetLayout": "Reset Layout",
     "resetLayoutDisabled": "Layout customization coming soon",
     "resetLayoutConfirm": "Are you sure you want to reset the layout to default?",
+    "comparisonView": "Enable version comparison view",
+    "comparisonViewUnavailableOnPhone": "Unavailable on small screens",
     "aria": {
       "openSettings": "Open settings",
       "closeSettings": "Close settings",
@@ -354,6 +356,14 @@
         "notes": "Updated notes",
         "combined": "Updated text fields"
       }
+    },
+    "compareView": {
+      "leftPaneLabel": "Older version",
+      "rightPaneLabel": "Newer version",
+      "exitButton": "Return to Editing",
+      "noDifferences": "No differences between these versions",
+      "changesSummaryTitle": "What changed",
+      "resourcesHeading": "Resources"
     }
   },
   "conflict": {

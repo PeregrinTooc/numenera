@@ -80,14 +80,16 @@ export class VersionState {
   }
 
   /**
-   * Navigate to a specific version by index
+   * Builds the Character for a stored version, without touching any
+   * navigation state. Shared by navigateToVersion (which does mutate state)
+   * and getCharacterAtVersion (which deliberately doesn't), so both apply
+   * the same sanitize + portrait re-attachment.
    */
-  async navigateToVersion(index: number): Promise<void> {
+  private buildCharacterFromVersion(index: number): Character {
     if (index < 0 || index >= this.allVersions.length) {
       throw new Error(`Invalid version index: ${index}`);
     }
 
-    this.currentVersionIndex = index;
     const version = this.allVersions[index];
     // Snapshots are persisted in IndexedDB and can predate later Character
     // shape changes (e.g. the xp -> currentXp/totalXp split), so sanitize
@@ -98,10 +100,48 @@ export class VersionState {
     // viewing an old version — and, since restoreCurrentVersion() promotes
     // displayedCharacter to latestCharacter, this also keeps a restore from
     // permanently dropping the image.
-    this.displayedCharacter = {
+    return {
       ...sanitizedCharacter,
       portrait: this.latestCharacter.portrait,
     };
+  }
+
+  /**
+   * Navigate to a specific version by index
+   */
+  async navigateToVersion(index: number): Promise<void> {
+    const character = this.buildCharacterFromVersion(index);
+    this.currentVersionIndex = index;
+    this.displayedCharacter = character;
+  }
+
+  /**
+   * Pure accessor: returns the Character snapshot at the given index
+   * without touching currentVersionIndex/displayedCharacter. Used by
+   * Comparison View's independent panes, which each track their own index
+   * locally instead of sharing the single-pointer navigation state above.
+   */
+  getCharacterAtVersion(index: number): Character {
+    return this.buildCharacterFromVersion(index);
+  }
+
+  /**
+   * Stable id for the version at an index, and the reverse lookup. A pane
+   * in Comparison View should track a version by this id rather than a raw
+   * index, since versions are FIFO-capped at 99 (versionHistory.ts) — a
+   * restore or new save can evict the oldest version and shift every later
+   * index down by one, silently pointing a cached raw index at the wrong
+   * version.
+   */
+  getVersionIdAtIndex(index: number): string {
+    if (index < 0 || index >= this.allVersions.length) {
+      throw new Error(`Invalid version index: ${index}`);
+    }
+    return this.allVersions[index].id;
+  }
+
+  findVersionIndexById(id: string): number {
+    return this.allVersions.findIndex((version) => version.id === id);
   }
 
   /**
@@ -158,6 +198,27 @@ export class VersionState {
     // Navigate to the new latest version
     this.currentVersionIndex = this.allVersions.length - 1;
     this.displayedCharacter = this.latestCharacter;
+  }
+
+  /**
+   * Restore the version at an explicit index by saving it as a new version
+   * at the end - a generalization of restoreCurrentVersion() for Comparison
+   * View, where the version to restore is whichever pane's button was
+   * clicked, not necessarily "the" displayed/current version.
+   */
+  async restoreVersionAtIndex(index: number): Promise<void> {
+    if (index === this.allVersions.length - 1) {
+      // Already the latest version, nothing to restore.
+      return;
+    }
+
+    const character = this.buildCharacterFromVersion(index);
+    const version = this.allVersions[index];
+    const description = `Restored: ${version.description}`;
+    await this.versionHistory.saveVersion(character, description);
+
+    this.latestCharacter = character;
+    await this.reload();
   }
 
   /**

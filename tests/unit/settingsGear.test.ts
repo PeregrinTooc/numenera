@@ -210,6 +210,53 @@ describe("SettingsGear", () => {
     });
   });
 
+  describe("comparison view toggle", () => {
+    beforeEach(() => {
+      localStorage.clear();
+    });
+
+    afterEach(() => {
+      localStorage.clear();
+    });
+
+    it("is unchecked by default", () => {
+      settingsGear.open();
+      render(settingsGear.render(), container);
+
+      const toggle = container.querySelector(
+        '[data-testid="settings-comparison-view-toggle"]'
+      ) as HTMLInputElement;
+      expect(toggle.checked).toBe(false);
+    });
+
+    it("persists the preference and notifies the callback when toggled on", () => {
+      const onComparisonViewChange = vi.fn();
+      settingsGear.setComparisonViewChangeCallback(onComparisonViewChange);
+      settingsGear.open();
+      render(settingsGear.render(), container);
+
+      const toggle = container.querySelector(
+        '[data-testid="settings-comparison-view-toggle"]'
+      ) as HTMLInputElement;
+      toggle.checked = true;
+      toggle.dispatchEvent(new Event("change"));
+
+      expect(localStorage.getItem("numenera-comparison-view-enabled")).toBe("true");
+      expect(onComparisonViewChange).toHaveBeenCalledWith(true);
+    });
+
+    it("reflects a previously-saved enabled preference on render", () => {
+      localStorage.setItem("numenera-comparison-view-enabled", "true");
+      settingsGear.open();
+      render(settingsGear.render(), container);
+
+      const toggle = container.querySelector(
+        '[data-testid="settings-comparison-view-toggle"]'
+      ) as HTMLInputElement;
+      expect(toggle.checked).toBe(true);
+    });
+  });
+
   describe("keyboard navigation", () => {
     it("should close panel when Escape key is pressed", () => {
       settingsGear.open();

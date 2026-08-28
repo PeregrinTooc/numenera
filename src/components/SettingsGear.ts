@@ -3,6 +3,11 @@
 import { html, TemplateResult, nothing } from "lit-html";
 import { t } from "../i18n/index.js";
 import { hasCustomLayout } from "../storage/layoutStorage.js";
+import {
+  loadComparisonViewEnabled,
+  saveComparisonViewEnabled,
+} from "../storage/comparisonViewPreference.js";
+import { isPhoneViewport } from "../utils/viewport.js";
 
 export class SettingsGear {
   private _isOpen: boolean = false;
@@ -11,8 +16,16 @@ export class SettingsGear {
   private boundHandleDocumentKeydown: ((e: KeyboardEvent) => void) | null = null;
   private pendingListenerTimeout: ReturnType<typeof setTimeout> | null = null;
   private onResetLayout: (() => void) | null = null;
+  private onComparisonViewChange: ((enabled: boolean) => void) | null = null;
 
   constructor(private onLanguageChange: (lang: string) => void) {}
+
+  /**
+   * Set callback fired when the comparison-view preference toggle changes
+   */
+  setComparisonViewChangeCallback(callback: (enabled: boolean) => void): void {
+    this.onComparisonViewChange = callback;
+  }
 
   /**
    * Set callback for resetting layout
@@ -112,6 +125,15 @@ export class SettingsGear {
     this.close();
   }
 
+  private handleComparisonViewToggle(e: Event): void {
+    const enabled = (e.target as HTMLInputElement).checked;
+    saveComparisonViewEnabled(enabled);
+    if (this.onComparisonViewChange) {
+      this.onComparisonViewChange(enabled);
+    }
+    this.triggerRerender();
+  }
+
   private handleResetLayout(): void {
     if (this.onResetLayout) {
       // Dispatch event for reset confirmation
@@ -189,6 +211,23 @@ export class SettingsGear {
                 <span class="flag-emoji" role="img" aria-hidden="true">🇩🇪</span>
               </button>
             </div>
+          </div>
+          <div class="settings-divider"></div>
+          <div class="settings-section">
+            <label class="settings-toggle-row">
+              <input
+                type="checkbox"
+                data-testid="settings-comparison-view-toggle"
+                .checked=${loadComparisonViewEnabled()}
+                @change=${(e: Event) => this.handleComparisonViewToggle(e)}
+              />
+              <span class="settings-label">${t("settings.comparisonView")}</span>
+            </label>
+            ${isPhoneViewport()
+              ? html`<span class="settings-hint" data-testid="settings-comparison-view-hint">
+                  ${t("settings.comparisonViewUnavailableOnPhone")}
+                </span>`
+              : nothing}
           </div>
           <div class="settings-divider"></div>
           <button

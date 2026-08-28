@@ -90,6 +90,21 @@
   color: #5c4033;
 }
 
+/* Comparison view toggle */
+.settings-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.settings-hint {
+  display: block;
+  font-size: 0.6875rem;
+  color: #9ca3af;
+  margin-top: 0.25rem;
+}
+
 /* Language flag buttons */
 .settings-language-flags {
   display: flex;

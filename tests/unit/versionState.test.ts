@@ -324,6 +324,97 @@ describe("VersionState", () => {
     });
   });
 
+  describe("getCharacterAtVersion", () => {
+    beforeEach(async () => {
+      const timestamp = Date.now();
+      const mockVersions = [
+        createMockVersion("Version 1", "Initial", timestamp),
+        createMockVersion("Version 2", "Edit 1", timestamp),
+        createMockVersion("Version 3", "Edit 2", timestamp),
+      ];
+      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
+      await versionState.init();
+    });
+
+    it("returns the character snapshot at the given index without mutating state", () => {
+      const character = versionState.getCharacterAtVersion(0);
+
+      expect(character.name).toBe("Version 1");
+      expect(versionState.getCurrentVersionIndex()).toBe(2); // unchanged (still latest)
+      expect(versionState.getDisplayedCharacter().name).toBe("Test Character"); // unchanged
+    });
+
+    it("re-attaches the current portrait, since versions never store one", () => {
+      versionState.setLatestCharacter({ ...mockCharacter, portrait: "data:image/png;base64,AAAA" });
+
+      const character = versionState.getCharacterAtVersion(1);
+
+      expect(character.portrait).toBe("data:image/png;base64,AAAA");
+      expect(character.name).toBe("Version 2");
+    });
+
+    it("throws for an invalid index", () => {
+      expect(() => versionState.getCharacterAtVersion(-1)).toThrow("Invalid version index");
+      expect(() => versionState.getCharacterAtVersion(999)).toThrow("Invalid version index");
+    });
+  });
+
+  describe("getVersionIdAtIndex / findVersionIndexById", () => {
+    beforeEach(async () => {
+      const timestamp = Date.now();
+      const mockVersions = [
+        createMockVersion("Version 1", "Initial", timestamp),
+        createMockVersion("Version 2", "Edit 1", timestamp),
+      ];
+      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
+      await versionState.init();
+    });
+
+    it("round-trips an index through its stable id", () => {
+      const id = versionState.getVersionIdAtIndex(0);
+
+      expect(versionState.findVersionIndexById(id)).toBe(0);
+    });
+
+    it("returns -1 for an id that no longer exists (e.g. evicted by FIFO cap)", () => {
+      expect(versionState.findVersionIndexById("some-evicted-id")).toBe(-1);
+    });
+  });
+
+  describe("restoreVersionAtIndex", () => {
+    it("saves the character at the given index as a new latest version", async () => {
+      const timestamp = Date.now();
+      const mockVersions = [
+        createMockVersion("Version 1", "Initial", timestamp),
+        createMockVersion("Version 2", "Edit 1", timestamp),
+      ];
+      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
+      await versionState.init();
+
+      await versionState.restoreVersionAtIndex(0);
+
+      expect(mockVersionHistory.saveVersion).toHaveBeenCalledWith(
+        expect.objectContaining({ name: "Version 1" }),
+        "Restored: Initial"
+      );
+      expect(versionState.getLatestCharacter().name).toBe("Version 1");
+    });
+
+    it("is a no-op when the index already is the latest version", async () => {
+      const timestamp = Date.now();
+      const mockVersions = [
+        createMockVersion("Version 1", "Initial", timestamp),
+        createMockVersion("Version 2", "Edit 1", timestamp),
+      ];
+      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
+      await versionState.init();
+
+      await versionState.restoreVersionAtIndex(1);
+
+      expect(mockVersionHistory.saveVersion).not.toHaveBeenCalled();
+    });
+  });
+
   describe("getCurrentVersionMetadata", () => {
     it("should return metadata for current version", async () => {
       const timestamp = Date.now();

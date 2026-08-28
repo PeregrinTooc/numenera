@@ -28,6 +28,9 @@ import type { SectionId } from "./types/layout.js";
 import { applyFieldUpdate } from "./utils/characterFieldUpdate.js";
 import { describeCharacterChange } from "./services/versionDescriptions.js";
 import { migrateLegacyVersionDescriptions } from "./services/versionDescriptionMigration.js";
+import { CompareView } from "./components/CompareView.js";
+import { loadComparisonViewEnabled } from "./storage/comparisonViewPreference.js";
+import { isPhoneViewport } from "./utils/viewport.js";
 
 // Expose storage functions on window for E2E tests
 // This allows tests to work in both dev and production builds
@@ -96,6 +99,45 @@ let versionWarningBanner: VersionWarningBanner | null = null;
 
 // Global VersionHistoryService instance
 let versionHistoryService: VersionHistoryService | null = null;
+
+// Global CompareView instance (Comparison View, opt-in via settings)
+let compareView: CompareView | null = null;
+
+function openCompareView(): void {
+  if (!versionState) return;
+
+  const rightIndex = versionState.getCurrentVersionIndex();
+  const leftIndex = Math.max(0, rightIndex - 1);
+
+  compareView = new CompareView({
+    versionState,
+    initialLeftIndex: leftIndex,
+    initialRightIndex: rightIndex,
+    onExit: closeCompareView,
+    onRestored: () => {
+      // A restore inside Comparison View creates a new version in storage
+      // without touching versionState's own single-pointer position, so the
+      // navigator/banner behind this overlay would otherwise show a stale
+      // version count once revealed again.
+      void updateVersionNavigator(true);
+    },
+  });
+
+  let compareViewContainer = document.getElementById("compare-view-container");
+  if (!compareViewContainer) {
+    compareViewContainer = document.createElement("div");
+    compareViewContainer.id = "compare-view-container";
+    document.body.appendChild(compareViewContainer);
+  }
+  compareView.mount(compareViewContainer);
+}
+
+function closeCompareView(): void {
+  if (compareView) {
+    compareView.unmount();
+    compareView = null;
+  }
+}
 
 // Listen for save-completed events to update indicator
 autoSaveService.on("save-completed", async (event) => {
@@ -172,6 +214,18 @@ async function updateVersionNavigator(shouldReload = false): Promise<void> {
   // Navigation handlers
   const handleNavigateBackward = async () => {
     if (!versionState) return;
+
+    // Comparison View is opt-in (settings) and unavailable on phone-width
+    // viewports (two full sheets side by side don't fit there) - falls
+    // back to the single-pane flow below in either of those cases. It
+    // deliberately never calls versionState.navigateBackward()/reads
+    // displayedCharacter, so opening/closing it never disturbs this
+    // single-pane position.
+    if (loadComparisonViewEnabled() && !isPhoneViewport()) {
+      openCompareView();
+      return;
+    }
+
     await versionState.navigateBackward();
     // Re-render with displayed character
     const displayedCharacter = versionState.getDisplayedCharacter();

@@ -49,6 +49,7 @@ export default [
         // Standard browser APIs
         DOMException: "readonly",
         PermissionState: "readonly",
+        MediaQueryList: "readonly",
         // Crypto and encoding
         crypto: "readonly",
         TextEncoder: "readonly",

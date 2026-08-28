@@ -17,6 +17,8 @@
     "resetLayout": "Layout zurücksetzen",
     "resetLayoutDisabled": "Layout-Anpassung kommt bald",
     "resetLayoutConfirm": "Sind Sie sicher, dass Sie das Layout auf Standard zurücksetzen möchten?",
+    "comparisonView": "Versionsvergleich aktivieren",
+    "comparisonViewUnavailableOnPhone": "Auf kleinen Bildschirmen nicht verfügbar",
     "aria": {
       "openSettings": "Einstellungen öffnen",
       "closeSettings": "Einstellungen schließen",
@@ -354,6 +356,14 @@
         "notes": "Notizen aktualisiert",
         "combined": "Textfelder aktualisiert"
       }
+    },
+    "compareView": {
+      "leftPaneLabel": "Ältere Version",
+      "rightPaneLabel": "Neuere Version",
+      "exitButton": "Zurück zur Bearbeitung",
+      "noDifferences": "Keine Unterschiede zwischen diesen Versionen",
+      "changesSummaryTitle": "Was sich geändert hat",
+      "resourcesHeading": "Ressourcen"
     }
   },
   "conflict": {

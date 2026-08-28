@@ -29,6 +29,7 @@
 @import "./components/conflict-modal.css";
 @import "./components/settings-gear.css";
 @import "./components/layout-editor.css";
+@import "./components/compare-view.css";
 
 /* Utility styles */
 @import "./utilities/animations.css";

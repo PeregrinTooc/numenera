@@ -35,6 +35,12 @@ export const STORAGE_KEY = "numenera-character-state";
 export const LAYOUT_STORAGE_KEY = "numenera-layout";
 
 /**
+ * localStorage key for the Comparison View on/off preference.
+ * Stored separately from character data as it's a user preference.
+ */
+export const COMPARISON_VIEW_STORAGE_KEY = "numenera-comparison-view-enabled";
+
+/**
  * IndexedDB database names.
  *
  * Centralized here so the app code, the storage layer, and the E2E test
