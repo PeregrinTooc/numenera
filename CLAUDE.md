@@ -224,8 +224,6 @@ Starting a task?
 | Test structure, viewports, mocking        | `docs/rules/testing.md`      |
 | Storage, styling, components, data model  | `docs/rules/architecture.md` |
 | Numenera game mechanics and validation    | `docs/rules/numenera.md`     |
-| Step-by-step responses to 10 situations   | `docs/rules/scenarios.md`    |
-| Pitfalls, cheatsheets, troubleshooting    | `docs/rules/reference.md`    |
 
 Project documentation (not rules): `docs/ARCHITECTURE.md`, `docs/FEATURES.md`,
 `docs/TODO.md`, `docs/CURRENT_FEATURE.md`, `docs/I18N.md`,

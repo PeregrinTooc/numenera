@@ -1,14 +1,11 @@
 # Git & Version Control Rules
 
-**Context:** Git workflow, commit standards, and version control requirements
+**Context:** Git workflow, commit standards, and version control detail
+supporting Rules #1, #7, #8 in `CLAUDE.md`.
 
 ---
 
-## Rule #7: 📤 Git Workflow - Smart Commit Messages
-
-**create concise commit messages, don't mention test state**
-
-**Use appropriate git commit format based on message length.**
+## Rule #7 — Smart Commit Messages
 
 ### For Simple Commits (≤ 128 characters):
 
@@ -31,41 +28,32 @@ git commit \
 git push
 ```
 
-### Key Rules:
-
-- NEVER embed newlines in single `-m` flag
-- Chain commands with `&&` (not semicolons)
-- Wait for command completion before proceeding
-- Exception: **None.** This ensures non-interactive automation.
+See "Multiple `-m` Flags" below for why this shape is required.
 
 ---
 
-## Rule #8: ✅ Commit Only Working Code
+## Rule #8 — Commit Only Working Code
 
-**All tests must pass before committing. No exceptions.**
-
-### Requirements:
-
-- Unit tests pass: `npm run test:unit`
-- E2E tests pass: `npm run test:e2e`
-- Linter passes: ESLint + Prettier
-- Pre-commit hooks verify automatically
-- Exception: **None.** Hooks will block bad commits anyway.
-
-### Checklist Before Commit:
+### Pre-Commit Checklist:
 
 ```
 □ All tests passing (unit + E2E)
 □ Linter passes (no errors or warnings)
-□ All text using i18n (t() function)
+□ TypeScript strict mode compliance, no `any` types, explicit return types on exports
+□ All text using i18n (t() function), no hardcoded user-facing strings
+□ Proper error handling — no silently swallowed errors
 □ No console.log statements (use proper logging)
-□ Code reviewed and approved by user
-□ Commit message follows standards
+□ Code is readable and maintainable
+□ Code reviewed and approved by user (Rule #1)
+□ Commit message follows conventional-commits format
 ```
+
+Husky's pre-commit hook verifies the automatable parts of this (tests, lint,
+i18n keys) and blocks the commit if any fail.
 
 ---
 
-## Conventional Commits (MANDATORY)
+## Conventional Commits
 
 ### Format:
 
@@ -105,35 +93,13 @@ git commit \
 git push
 ```
 
-**Full structured commit:**
-
-```bash
-git add -A && \
-git commit \
-  -m "feat(storage): add auto-save functionality" \
-  -m "Implements automatic saving every 30 seconds to prevent data loss during long editing sessions." \
-  -m "Changes:
-- Add AutoSaveService class
-- Update CharacterSheet to use auto-save
-- Add visual indicator for save status
-- Include debounce to avoid excessive saves" \
-  -m "Closes #42" && \
-git push
-```
-
 ---
 
-## AI-Assisted Git Workflow
+## Multiple `-m` Flags
 
-### Problem:
-
-Combining `git add`, `git commit`, and `git push` with long commit messages causes interactive shell prompts that break automation.
-
-### Solution:
-
-Use multiple `-m` flags for structured commit messages instead of embedding newlines in a single `-m` flag.
-
-### Rules for Multiple `-m` Flags:
+Combining `git add`, `git commit`, and `git push` with a commit message that
+embeds newlines in a single `-m` flag causes interactive shell prompts that
+break automation. Use one `-m` flag per paragraph instead.
 
 1. **NEVER embed newlines within a single `-m` flag**
 
@@ -145,25 +111,14 @@ Use multiple `-m` flags for structured commit messages instead of embedding newl
    git commit -m "feat: add feature" -m "This works"
    ```
 
-2. **Use multiple `-m` flags for structure:**
-   - **First `-m`**: Subject line only (conventional commit format)
-     - Format: `type(scope): description`
-     - Max 72 characters
-     - Present tense, no period
-   - **Second `-m`**: Detailed explanation (optional)
-     - Why the change was made
-     - What problem it solves
-     - 1-2 sentences
-   - **Third `-m`**: Bullet list of changes (optional)
-     - Specific files or components changed
-     - Key implementation details
-     - Can include newlines within this single `-m`
-   - **Fourth `-m`**: Footer (optional)
-     - Issue references: `Closes #123`
-     - Breaking changes: `BREAKING CHANGE: description`
-     - Co-authors
+2. **Each `-m` flag is one paragraph**, in order: subject line (conventional
+   commit format, ≤72 chars, present tense, no period), then an optional
+   explanation (why the change was made, 1-2 sentences), then an optional
+   bullet list of changes (this one may contain internal newlines), then an
+   optional footer (issue references, breaking changes, co-authors).
 
-3. **Chain commands with `&&`**
+3. **Chain commands with `&&`**, not `;`, so a failed commit stops the
+   sequence:
 
    ```bash
    # ✅ GOOD - Stops on error
@@ -173,37 +128,7 @@ Use multiple `-m` flags for structured commit messages instead of embedding newl
    git add -A; git commit -m "fix: bug"; git push
    ```
 
-4. **Each `-m` creates a paragraph**
-   - Paragraphs are separated by blank lines
-   - First `-m` is the subject
-   - Subsequent `-m` flags form the body
-
-### What NOT to Do:
-
-```bash
-# ❌ WRONG - Newlines in single -m flag (breaks shell)
-git commit -m "feat: add feature
-
-This explanation breaks
-because of newlines"
-
-# ❌ WRONG - Unclosed quotes
-git commit -m "feat: add feature
-> (shell waits for closing quote)
-
-# ❌ WRONG - Using semicolons instead of &&
-git add -A; git commit -m "feat: add"; git push
-# (continues even if commit fails)
-```
-
-### Why This Works:
-
-- No interactive shell prompts
-- No quote escaping issues
-- Works in automated contexts (CI/CD, AI tools)
-- Maintains professional commit structure
-- Follows conventional commits format
-- Each `-m` is self-contained
+**Exception: None.** This ensures non-interactive automation.
 
 ---
 
@@ -266,15 +191,13 @@ git add -A; git commit -m "feat: add"; git push
 
 ## Git Commands Reference
 
-### Daily Workflow:
-
 ```bash
 # Start new feature
 git checkout -b feature/new-feature
 
 # Make changes, run tests
 npm run test:unit
-npm run test:e2e
+npm run test:e2e:all
 
 # Stage and commit (simple)
 git add -A && git commit -m "feat(scope): description" && git push
@@ -288,34 +211,16 @@ git commit \
 - Item 1
 - Item 2" && \
 git push
-```
 
-### Check Status:
-
-```bash
 # See what's changed
 git status
-
-# See detailed diff
 git diff
-
-# See staged changes
 git diff --staged
-```
 
-### Branch Management:
-
-```bash
-# List branches
+# Branch management
 git branch
-
-# Switch branch
 git checkout branch-name
-
-# Create and switch
 git checkout -b new-branch-name
-
-# Delete branch (after merge)
 git branch -d branch-name
 ```
 
@@ -352,47 +257,22 @@ Move shared item rendering code to base ItemComponent class.
 Reduces duplication across Cypher, Artifact, and Equipment items.
 ```
 
-### Documentation:
-
-```
-docs(readme): update installation instructions
-
-Add troubleshooting section for common npm install issues.
-Include node version requirements.
-```
-
-### Test:
-
-```
-test(character): add validation tests for stat pools
-
-Verify edge reduction, minimum values, and pool spending logic.
-Covers edge cases from issue #45.
-```
-
 ---
 
 ## Troubleshooting
 
 ### "Pre-commit hook failed"
 
-**Causes:**
+**Causes:** tests failing, linter errors, missing i18n translation keys.
 
-- Tests failing
-- Linter errors
-- Missing i18n translation keys
-
-**Solution:**
-
-1. Read the error message
-2. Fix the reported issues
-3. Try commit again
+**Solution:** read the error message, fix the reported issue, try the commit
+again.
 
 ### "Git commit stuck in interactive mode"
 
-**Cause:** Newlines in single `-m` flag
+**Cause:** Newlines in a single `-m` flag.
 
-**Solution:** Use multiple `-m` flags instead
+**Solution:** Use multiple `-m` flags instead (see "Multiple `-m` Flags" above).
 
 ```bash
 # Instead of this (breaks):
@@ -404,35 +284,17 @@ git commit -m "feat: thing" -m "Body"
 
 ### "Push rejected"
 
-**Causes:**
-
-- E2E tests failing (pre-push hook)
-- Remote branch has changes you don't have
+**Causes:** E2E tests failing (pre-push hook), or the remote branch has
+changes you don't have.
 
 **Solution:**
 
-1. If tests failing: Fix tests, then push
-2. If remote has changes: Pull first, then push
-
 ```bash
+# If tests are failing: fix them, then push again.
+# If the remote has changes:
 git pull --rebase
 git push
 ```
-
----
-
-## For AI Development
-
-When an AI assistant needs to commit code:
-
-1. Use `git add -A` to stage all changes
-2. Build commit message with multiple `-m` flags
-3. Chain with `&&` for safety
-4. Use backslashes for readability
-5. Always include `git push` at the end
-6. Wait for command completion before proceeding
-
-This ensures git operations are fully automated, non-interactive, and professional.
 
 ---
 
@@ -440,8 +302,4 @@ This ensures git operations are fully automated, non-interactive, and profession
 
 - **Workflow:** See `workflow.md` for Rule #1 (User Review Before Commit)
 - **Testing:** See `testing.md` for test requirements before commit
-- **i18n:** See `i18n.md` for translation checks in pre-commit hook
-
----
-
-**Git workflow rules are ABSOLUTE and enforced by pre-commit/pre-push hooks.**
+- **i18n:** See `i18n.md` for translation checks in the pre-commit hook

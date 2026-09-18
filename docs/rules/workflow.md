@@ -1,67 +1,27 @@
 # Workflow Rules
 
-**Context:** Development process and workflow requirements
+**Context:** Development process detail supporting Rules #1, #2, #3, #6, #10 in
+`CLAUDE.md`. Each rule's requirement, rationale, and exception are stated there
+— this file adds only what that summary doesn't: templates, the canonical
+example, and process detail.
 
 ---
 
-## Rule #1: 🔒 User Review Before Commit (CRITICAL)
-
-**ALWAYS present changes to the user for review before committing.**
-
-### Requirements:
-
-- Show what changed and why
-- Confirm all tests pass
-- Wait for explicit approval
-- Exception: Only when user explicitly says "commit without review"
-
-### Why This Rule Exists:
-
-- Maintains quality control
-- Prevents unwanted changes
-- Ensures user understands what's being committed
-- Enables course correction before code is committed
+## Rule #1 — User Review Before Commit
 
 ### In Practice:
 
 ```
-After implementing feature:
+After implementing a feature:
 1. Run all tests
-2. Present summary of changes to user
+2. Present a summary of changes to the user
 3. Wait for "approved" or similar confirmation
 4. Only then execute git commands
 ```
 
 ---
 
-## Rule #2: 📝 BDD First - No Code Without Feature File
-
-**Every feature MUST start with a BDD `.feature` file before ANY implementation.**
-
-### Requirements:
-
-- Write feature file in `tests/e2e/features/`
-- Use Gherkin syntax (Given/When/Then)
-- Get user approval on feature file
-- ONLY THEN write code
-- Exception: **None.** Even bug fixes need a scenario.
-
-### Process:
-
-1. **Write Feature File First**
-   - Create `.feature` file in `tests/e2e/features/`
-   - Use Gherkin syntax
-   - Describe user behavior, not implementation
-   - Example filename: `character-creation.feature`
-
-2. **Review & Refine**
-   - Ensure feature describes actual user value
-   - Break down complex features into multiple scenarios
-   - Get stakeholder approval if needed
-
-3. **Only Then: Implement**
-   - Never write code before the feature file exists
-   - Feature file serves as acceptance criteria
+## Rule #2 — BDD First
 
 ### Feature File Format:
 
@@ -81,36 +41,19 @@ Feature: Brief feature description
 
 ### Guidelines:
 
-- Write from user perspective, not technical perspective
+- Write from the user's perspective, not the implementation's
 - Use present tense
 - Be specific but not implementation-focused
-- One feature per file
-- Multiple scenarios per feature when appropriate
+- One feature per file; multiple scenarios per feature when appropriate
 
-**Reference:** See `testing.md` for detailed BDD examples
+**Reference:** See `testing.md` for a full worked feature file.
 
 ---
 
-## Rule #3: 🧪 TDD Always - Test Before Code
+## Rule #3 — TDD Always
 
-**Follow strict Red-Green-Refactor cycle. NO production code without a failing test first.**
-
-### Red-Green-Refactor Cycle:
-
-1. **RED**: Write ONE failing unit test
-2. **GREEN**: Write minimal code to make it pass
-3. **REFACTOR**: Clean up code while keeping tests green
-4. **REPEAT**: Next test, one at a time
-
-### Rules:
-
-- Write only one test at a time
-- Never write production code without a failing test first
-- Tests must fail for the right reason before implementation
-- All previous tests must still pass
-- Exception: **None.** This is non-negotiable.
-
-### Example:
+The canonical Red-Green-Refactor cycle, referenced by other rule files instead
+of repeating it:
 
 ```typescript
 // 1. RED - Write failing test
@@ -148,27 +91,9 @@ class StatPool {
 }
 ```
 
-**Reference:** See `testing.md` for test structure details
-
 ---
 
-## Rule #6: 🔄 Make the Change Easy, Then Make the Easy Change
-
-**Before implementing a feature, refactor to make the implementation trivial.**
-
-### Process:
-
-1. Analyze existing code structure
-2. Identify what makes the change hard
-3. Refactor to make it easy (with tests passing)
-4. THEN implement the feature
-
-### Why This Matters:
-
-- Prevents technical debt accumulation
-- Makes features easier to implement correctly
-- Improves code quality continuously
-- Reduces bugs from rushed implementations
+## Rule #6 — Make the Change Easy, Then Make the Easy Change
 
 ### Example:
 
@@ -184,30 +109,9 @@ Easy way:
 4. Much simpler, less error-prone
 ```
 
-### Exception:
-
-**None.** This prevents technical debt.
-
 ---
 
-## Rule #10: 🎯 One Test at a Time
-
-**Write ONE test, make it pass, then move to the next.**
-
-### Requirements:
-
-- Never write multiple failing tests
-- Never skip a test to work on another
-- Each test informs the next design decision
-- Keeps cognitive load manageable
-
-### Why:
-
-- Maintains focus
-- Each test is a small, achievable goal
-- Prevents overwhelming complexity
-- Enables incremental progress
-- Makes debugging easier
+## Rule #10 — One Test at a Time
 
 ### In Practice:
 
@@ -226,33 +130,24 @@ Easy way:
 - Clear progress, always working code
 ```
 
-### Exception:
-
-**None.** This is core to TDD discipline.
-
 ---
 
-## Quick Decision Tree
+## When to Ask vs. Decide
+
+Reserve `AskUserQuestion` for decisions you genuinely cannot resolve from the
+request, the code, or a sensible default. If one reading is obviously right,
+take it, say so, and keep going.
 
 ```
-Starting a task?
-├─ Does feature file exist?
-│  ├─ No → CREATE IT FIRST (Rule #2)
-│  └─ Yes → Continue
-├─ Does test exist for this behavior?
-│  ├─ No → WRITE TEST FIRST (Rule #3)
-│  └─ Yes → Continue
-├─ Does code need refactoring first?
-│  ├─ Yes → REFACTOR FIRST (Rule #6)
-│  └─ No → Continue
-├─ Working on multiple tests?
-│  ├─ Yes → FOCUS ON ONE (Rule #10)
-│  └─ No → Continue
-├─ All tests passing?
-│  ├─ No → FIX THEM FIRST
-│  └─ Yes → Continue
-└─ Ready to commit?
-   └─ PRESENT TO USER FOR REVIEW (Rule #1)
+User: "Make it better"
+
+You: [AskUserQuestion]
+  question: "What would you like improved?"
+  options:
+    - "UI/styling"           — visual polish and layout
+    - "Performance"          — rendering and save throughput
+    - "Code structure"       — refactoring for maintainability
+    - "New features"         — pick the next item from TODO.md
 ```
 
 ---
@@ -260,11 +155,10 @@ Starting a task?
 ## Commit Frequency
 
 - Commit after each working feature (all tests green)
-- Commit message follows conventional commits format
 - Never commit broken code
 - Push regularly to trigger CI/CD
 
-**Reference:** See `git.md` for commit standards
+**Reference:** See `git.md` for commit format and standards.
 
 ---
 
@@ -273,7 +167,3 @@ Starting a task?
 - **Testing:** See `testing.md` for test structure and requirements
 - **Git:** See `git.md` for commit and push standards
 - **Code Quality:** See `code-quality.md` for code standards
-
----
-
-**These workflow rules are ABSOLUTE and NON-NEGOTIABLE.**

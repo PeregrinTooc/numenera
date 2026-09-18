@@ -1,21 +1,11 @@
 # Code Quality Rules
 
-**Context:** Code standards, linting, formatting, and quality requirements
+**Context:** Code standards, linting, formatting, and error handling detail
+supporting Rule #5 in `CLAUDE.md` (TypeScript strict, no `any`).
 
 ---
 
-## Rule #5: 💪 TypeScript Strict Mode - No Shortcuts
-
-**Strict TypeScript mode is MANDATORY. NO `any` types allowed.**
-
-### Requirements:
-
-- Strict mode ALWAYS enabled
-- NO `any` types (use `unknown` if truly needed)
-- Explicit return types for exported functions
-- Interface over type for object shapes
-- Use path aliases: `@/` prefix for src imports
-- Exception: **None.** Linter enforces this.
+## Rule #5 — TypeScript Strict Mode
 
 ### Good vs Bad Examples:
 
@@ -100,17 +90,14 @@ type Character = {
 
 ## Linting & Formatting
 
-### Enforcement:
-
-- ESLint configured with TypeScript rules
-- Prettier for consistent formatting
-- Husky pre-commit hook enforces both
+- ESLint configured with TypeScript rules; Prettier for consistent formatting
+- Husky pre-commit hook runs lint-staged (format + lint changed files) and
+  blocks the commit on failure
 - **You cannot bypass these** (nor should you want to)
 
 ### Configuration Standards:
 
-`.prettierrc` is authoritative — these are restated here for convenience, and
-must match it:
+`.prettierrc` is authoritative — this table restates it for convenience only:
 
 | Setting      | Value    | `.prettierrc` key                   |
 | ------------ | -------- | ----------------------------------- |
@@ -123,34 +110,14 @@ must match it:
 Never hand-format to a different style — run `npm run format`. If this table and
 `.prettierrc` ever disagree, `.prettierrc` wins and this table is the bug.
 
-### Pre-commit Hook:
-
-```bash
-# Automatically runs on git commit
-- Lint-staged (format and lint changed files)
-- Run unit tests
-- Block commit if any fail
-```
-
 ---
 
 ## Code Organization
 
-### Directory Structure:
-
-```
-src/
-├── types/          # TypeScript interfaces & types
-├── storage/        # Data persistence layer
-├── i18n/           # Internationalization
-├── components/     # UI components
-├── utils/          # Utility functions
-└── styles/         # Global styles
-```
-
 ### Organization Rules:
 
-- Group by feature/domain, not by technical layer
+- Group by feature/domain, not by technical layer (see `architecture.md` for
+  the current directory layout)
 - Keep files small and focused (< 300 lines)
 - One component/class per file
 - Co-locate related files
@@ -161,7 +128,6 @@ src/
 ✅ GOOD:
 - CharacterSheet.ts (component)
 - character.ts (type definitions)
-- localStorage.ts (storage implementation)
 - stat-pool.css (styles)
 
 ❌ BAD:
@@ -193,28 +159,26 @@ try {
   throw new CharacterLoadError(t("errors.characterLoadFailed"), { cause: error });
 }
 
-// ❌ BAD
+// ❌ BAD - Silent failure, no logging, no re-throw
 try {
   const character = await loadCharacter(id);
   return character;
 } catch (error) {
-  // Silent failure - no logging, no re-throw
   return null;
 }
 
-// ❌ BAD
+// ❌ BAD - No context, hardcoded message
 try {
   const character = await loadCharacter(id);
   return character;
 } catch (error) {
-  throw new Error("Failed to load character"); // No context, hardcoded message
+  throw new Error("Failed to load character");
 }
 ```
 
 ### Custom Error Types:
 
 ```typescript
-// ✅ GOOD - Specific error types
 export class CharacterLoadError extends Error {
   constructor(message: string, options?: ErrorOptions) {
     super(message, options);
@@ -262,79 +226,24 @@ const effectiveCost = Math.max(0, cost - edge);
 character.name = name;
 ```
 
-### README and Architecture Docs:
-
-- Keep `docs/ARCHITECTURE.md` updated
-- Document significant decisions
+- Keep `docs/ARCHITECTURE.md` updated for significant decisions
 - Explain the "why" not just the "what"
-- Include examples for complex patterns
-
----
-
-## Performance Considerations
-
-### Rules:
-
-- Lazy load heavy components
-- Debounce user input handlers
-- Optimize images (WebP, compression)
-- Code split routes (when routing added)
-- Monitor bundle size
-
-### Examples:
-
-```typescript
-// ✅ GOOD - Debounced input handler
-const debouncedSave = debounce((character: Character) => {
-  saveCharacter(character);
-}, 500);
-
-// ❌ BAD - Save on every keystroke
-input.addEventListener("input", () => {
-  saveCharacter(character); // Too frequent!
-});
-```
 
 ---
 
 ## Testing Quality
 
-### Code Coverage:
+Core business logic must be covered by unit tests, focused on behavior rather
+than implementation details.
 
-- Unit tests: Core business logic MUST be covered
-- Focus on behavior, not implementation details
-- Don't test framework code, test your code
-
-### Test Quality Checklist:
-
-```
-✅ Test describes behavior, not implementation
-✅ Test is isolated (no dependencies on other tests)
-✅ Test uses meaningful names
-✅ Test has single responsibility
-✅ Test uses Arrange-Act-Assert pattern
-✅ Test mocks external dependencies
-```
-
-**Reference:** See `testing.md` for detailed test standards
+**Reference:** See `testing.md` for the canonical Test Quality Checklist.
 
 ---
 
-## Code Review Checklist
+## Pre-Commit Checklist
 
-Before committing (part of Rule #1):
-
-```
-□ TypeScript strict mode compliance
-□ No `any` types
-□ Explicit return types on exports
-□ Proper error handling
-□ No hardcoded text (use i18n)
-□ Tests pass
-□ Linter passes
-□ Code is readable and maintainable
-□ Performance considerations addressed
-```
+**Reference:** See `git.md` for the canonical pre-commit checklist (part of
+Rule #1 and Rule #8).
 
 ---
 
@@ -342,8 +251,6 @@ Before committing (part of Rule #1):
 
 - **i18n:** See `i18n.md` for translation requirements
 - **Testing:** See `testing.md` for test quality standards
+- **Architecture:** See `architecture.md` for directory structure and
+  performance considerations
 - **Workflow:** See `workflow.md` for development process
-
----
-
-**These code quality rules are ABSOLUTE and NON-NEGOTIABLE.**

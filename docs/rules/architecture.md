@@ -1,20 +1,12 @@
 # Architecture Rules
 
-**Context:** Design patterns, system architecture, and technical guidelines
+**Context:** Design patterns and system architecture detail supporting Rule
+#11 in `CLAUDE.md` (storage through adapters only), plus the component and
+styling patterns the rest of the codebase follows.
 
 ---
 
-## Rule #11: 📚 Storage Through Adapters Only
-
-**NEVER access localStorage directly. Always use storage adapters.**
-
-### Requirements:
-
-- Go through `src/storage/storageFactory.ts` — never `localStorage` directly
-- The factory picks the backend at runtime and caches it as a singleton
-- Enables future cloud storage migration
-- Maintains a consistent async API
-- Exception: **None.** Architecture requirement.
+## Rule #11 — Storage Through Adapters Only
 
 ### The Layers:
 
@@ -47,16 +39,13 @@ interface ICharacterStorage {
 
 ```typescript
 // ✅ GOOD - Through the factory
-import { saveCharacterState } from "../storage/storageFactory.js";
+import { saveCharacterState } from "@/storage/storageFactory";
 
 async function persist(character: Character): Promise<void> {
   await saveCharacterState(character);
 }
 
-// ❌ BAD - Bypassing the factory, straight to the localStorage module
-import { saveCharacterState } from "../storage/localStorage.js";
-
-// ❌ WORSE - Direct localStorage access
+// ❌ BAD - Direct localStorage access
 localStorage.setItem("character", JSON.stringify(character));
 ```
 
@@ -66,35 +55,14 @@ localStorage.setItem("character", JSON.stringify(character));
 - IndexedDB today, cloud adapters later, without touching components
 - Easy to swap implementations and to fake in tests
 
-### ⚠️ Known Violation
-
-`src/components/helpers/CollectionBehavior.ts`, `src/components/BasicInfo.ts` and
-`src/components/RecoveryDamageSection.ts` import `saveCharacterState` directly
-from `src/storage/localStorage.js`. That writes a second copy of the character to
-localStorage which `IndexedDBStorageImpl.migrateFromLocalStorage()` later replays
-over the IndexedDB record on the next page load, silently reverting any edit made
-after the last card operation.
-
-Do not follow this pattern in new code. The fix is tracked in
-`docs/IMPLEMENTATION_PLAN.md`.
-
-### Future Storage Options:
-
-- Cloud sync (Firebase, Supabase)
-- IndexedDB for large data
-- Session storage for temporary data
-- Memory storage for testing
-
 ---
 
-## Mobile-First Design (Best Practice)
-
-**Note:** Not an absolute rule, but highly recommended approach.
+## Mobile-First Design & Tailwind CSS
 
 ### Approach:
 
 1. Design for mobile viewport first (320px+)
-2. Add complexity for larger screens
+2. Add complexity for larger screens with `md:`/`lg:`/`xl:` utilities
 3. Test on actual devices when possible
 
 ### Touch Targets:
@@ -103,72 +71,35 @@ Do not follow this pattern in new code. The fix is tracked in
 - Adequate spacing between tap targets
 - No hover-only interactions
 
-### Responsive Breakpoints:
+### Theme Values:
 
-```css
-/* Tailwind breakpoints */
-xs: 480px   /* small phones */
-sm: 640px   /* phones */
-md: 768px   /* tablets */
-lg: 1024px  /* desktops */
-xl: 1280px  /* large desktops */
-```
-
-> Declared in the `@theme` block of `src/styles/main.css` as `--breakpoint-*`
-> custom properties, in `rem` so they scale with the browser font size. That
-> block is the single source of truth for the theme — Tailwind v4 reads it
-> directly, and the project has no `tailwind.config.js`.
+Breakpoints and colors are declared in the `@theme` block of
+`src/styles/main.css` as `--breakpoint-*` and `--color-*` custom properties.
+That block is the **single source of truth** for the theme — Tailwind v4 reads
+it directly, and the project has no `tailwind.config.js`. Don't restate theme
+values as prose elsewhere; read the block itself, since a second copy drifts
+out of sync with the code (this has happened twice — see
+`docs/RULE_VIOLATIONS.md`'s "Fixed" table).
 
 ### Example:
 
 ```typescript
-// ✅ GOOD - Mobile-first
-<div class="
-  text-sm          // Mobile default
-  md:text-base     // Tablet and up
-  lg:text-lg       // Desktop and up
-">
+// ✅ GOOD - Mobile-first, theme colors via utility classes
+html`<div class="text-sm md:text-base lg:text-lg">
+  <button class="bg-numenera-primary text-white">...</button>
+</div>`;
 
-// ❌ BAD - Desktop-first (harder to maintain)
-<div class="
-  text-lg          // Desktop default
-  md:text-base     // Tablet down
-  sm:text-sm       // Mobile down
-">
+// ❌ BAD - Desktop-first, hardcoded colors
+html`<div class="text-lg md:text-base sm:text-sm">
+  <button class="bg-blue-600 text-white">...</button>
+</div>`;
 ```
-
----
-
-## Styling with Tailwind CSS
-
-### Theme Colors:
-
-- `numenera-primary`: #1a5490 (main brand color)
-- `numenera-secondary`: #8b4513 (accent)
-- `numenera-accent`: #d4af37 (highlights)
-
-### Usage:
-
-```typescript
-// ✅ GOOD - Using theme colors
-<button class="bg-numenera-primary text-white">
-
-// ❌ BAD - Hardcoded colors
-<button class="bg-blue-600 text-white">
-```
-
-### Approach:
-
-- Use Tailwind utilities where possible
-- Custom CSS only when necessary
-- Keep custom styles in component-specific files
-- Mobile-first responsive utilities
 
 ### Custom Styles Organization:
 
 ```
 src/styles/
-├── main.css              # Global styles, imports
+├── main.css              # Global styles, @theme block, imports
 ├── components/           # Component-specific styles
 │   ├── stat-pool.css
 │   ├── damage-track.css
@@ -177,18 +108,16 @@ src/styles/
     └── animations.css
 ```
 
+Use Tailwind utilities where possible; custom CSS only when necessary, kept in
+component-specific files.
+
 ---
 
 ## State Management
 
-### Current Approach:
-
 - Simple class-based approach
 - IndexedDB (localStorage fallback) for persistence, behind the storage adapter
-- No global state library yet
-- Direct component state
-
-### Example:
+- No global state library; direct component state
 
 ```typescript
 export class CharacterSheet {
@@ -206,35 +135,19 @@ export class CharacterSheet {
 }
 ```
 
-### Future Considerations:
-
-- May add state library for complex features
-- Consider Zustand for lightweight solution
-- Keep it simple until complexity demands more
-
 ---
 
 ## Component Architecture
 
-### Current Pattern:
-
-Each component is a class that:
-
-1. Manages its own state
-2. Handles its own rendering
-3. Responds to user events
-4. Coordinates with storage
-
-### Example Structure:
-
-Components are plain classes with a `render()` method returning a lit-html
-`TemplateResult`. They do **not** own a container element and do **not** write
-`innerHTML`; the parent composes their templates and a single `render()` call
-patches the DOM.
+Each component is a plain class that manages its own state, renders via a
+`render()` method returning a lit-html `TemplateResult`, handles its own
+events, and coordinates with storage. It does **not** own a container element
+and does **not** write `innerHTML`; the parent composes child templates and a
+single `render()` call patches the DOM.
 
 ```typescript
 import { html, TemplateResult } from "lit-html";
-import { t } from "../i18n/index.js";
+import { t } from "@/i18n/index";
 
 export class StatPool {
   constructor(
@@ -269,14 +182,17 @@ LitElement and shadow DOM were tried and reverted.
 
 ### Principles:
 
-- Single Responsibility: Each component does one thing
-- Encapsulation: Internal state is private
-- Clear API: Public methods are well-defined
-- Self-contained: Component manages own DOM
+- Single Responsibility: each component does one thing
+- Encapsulation: internal state is private
+- Clear API: public methods are well-defined
+- Self-contained: component manages its own DOM
 
 ---
 
 ## Performance Considerations
+
+The canonical copy of this guidance — `code-quality.md` points here instead
+of repeating it.
 
 ### Rules:
 
@@ -313,53 +229,43 @@ class CharacterSheet {
 ```html
 <!-- ✅ GOOD - Optimized images -->
 <picture>
-  <source srcset="portrait.webp" type="image/webp">
-  <img src="portrait.jpg" alt={t("character.portrait")}
-       loading="lazy" width="200" height="200">
+  <source srcset="portrait.webp" type="image/webp" />
+  <img
+    src="portrait.jpg"
+    alt="${t('character.portrait')}"
+    loading="lazy"
+    width="200"
+    height="200"
+  />
 </picture>
 
 <!-- ❌ BAD - Large unoptimized image -->
-<img src="portrait.png" alt="Portrait">
+<img src="portrait.png" alt="Portrait" />
 ```
 
 ---
 
 ## Directory Structure
 
-### Current Organization:
-
-```
-src/
-├── types/          # TypeScript interfaces & types
-├── storage/        # Data persistence layer
-├── i18n/           # Internationalization
-├── components/     # UI components
-├── utils/          # Utility functions
-└── styles/         # Global styles
-```
-
-### Principles:
-
-- Group by feature/domain, not by technical layer
-- Keep files small and focused (< 300 lines)
-- One component/class per file
-- Co-locate related files
-
-### Adding New Features:
+The canonical layout — see `CLAUDE.md`'s top-level Layout section for the
+full tree. Within a feature, prefer:
 
 ```
 # Good structure for new feature
 src/
 ├── components/
 │   ├── Inventory/           # Feature folder
-│   │   ├── Inventory.ts    # Main component
+│   │   ├── Inventory.ts     # Main component
 │   │   ├── InventoryItem.ts
-│   │   └── types.ts        # Feature-specific types
+│   │   └── types.ts         # Feature-specific types
 ├── styles/
 │   └── components/
 │       ├── inventory.css
 │       └── inventory-item.css
 ```
+
+Group by feature/domain, not by technical layer. Keep files small and focused
+(< 300 lines). One component/class per file. Co-locate related files.
 
 ---
 
@@ -428,57 +334,13 @@ Things that trip people up:
 - **`portrait` is excluded from version history** (`src/storage/versionHistory.ts`)
   and from ETag generation.
 
-**Reference:** See `numenera.md` for game mechanics
-
----
-
-## API Design Principles
-
-### For Public APIs:
-
-1. **Clear naming**: Function names describe what they do
-2. **Consistent patterns**: Similar operations work similarly
-3. **Type safety**: Use TypeScript types
-4. **Documentation**: JSDoc for public APIs
-5. **Error handling**: Clear, specific errors
-
-### Example:
-
-```typescript
-/**
- * Creates a new character with default values
- * @param name - Character's name
- * @param type - Character class (Glaive, Nano, Jack)
- * @returns Newly created character with tier 1
- * @throws {ValidationError} If name is empty or type is invalid
- */
-export function createCharacter(name: string, type: CharacterType): Character {
-  if (!name.trim()) {
-    throw new ValidationError(t("validation.nameRequired"), "name");
-  }
-
-  if (!["Glaive", "Nano", "Jack"].includes(type)) {
-    throw new ValidationError(t("validation.invalidType"), "type");
-  }
-
-  return {
-    id: generateId(),
-    name,
-    type,
-    tier: 1,
-    // ... defaults
-  };
-}
-```
+**Reference:** See `numenera.md` for game mechanics.
 
 ---
 
 ## Dependency Management
 
-### Rules:
-
-- Keep dependencies minimal
-- Audit dependencies regularly
+- Keep dependencies minimal; audit regularly
 - Prefer smaller, focused libraries
 - Consider bundle size impact
 
@@ -492,37 +354,9 @@ export function createCharacter(name: string, type: CharacterType): Character {
 
 ---
 
-## Future Architecture Considerations
-
-### Phase 2+:
-
-- Multiple character management
-- Cloud storage adapters
-- Reference data system
-- Modal system for detailed views
-
-### Phase 3+:
-
-- Advanced search/filter
-- Import/export functionality
-- Sharing/collaboration features
-
-### Maintain Flexibility:
-
-- Keep adapters abstract
-- Avoid tight coupling
-- Design for extension
-- Document architectural decisions
-
----
-
 ## Related Rules
 
 - **Storage:** This file (Rule #11)
 - **Code Quality:** See `code-quality.md` for code organization
 - **Testing:** See `testing.md` for architecture testing
 - **i18n:** See `i18n.md` for translation architecture
-
----
-
-**Architecture rules guide long-term maintainability and scalability.**

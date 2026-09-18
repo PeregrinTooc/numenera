@@ -1,12 +1,11 @@
 # Testing Rules
 
-**Context:** Test requirements, structure, and standards
+**Context:** Test requirements, structure, and standards supporting Rule #9 in
+`CLAUDE.md` (responsive viewports) plus the BDD/TDD workflow in `workflow.md`.
 
 ---
 
-## Rule #9: 📱 Responsive Design Required
-
-**Test features across all required viewports.**
+## Rule #9 — Responsive Design Required
 
 ### Required Viewports:
 
@@ -15,11 +14,7 @@
 - Mobile Safari (iPhone 12)
 - Tablet (iPad Pro)
 
-### Requirement:
-
-**All features must work on ALL viewports.**
-
-Exception: **None.** E2E tests verify this automatically.
+E2E tests verify all four automatically via `playwright.config.ts`.
 
 ---
 
@@ -40,30 +35,6 @@ tests/
 ---
 
 ## BDD Feature Files (Acceptance Tests)
-
-### Format:
-
-```gherkin
-Feature: Brief feature description
-    As a [user type]
-    I want to [action]
-    So that [benefit]
-
-    Scenario: Specific scenario name
-        Given [initial state]
-        When [action occurs]
-        And [another action]
-        Then [expected outcome]
-        And [another outcome]
-```
-
-### Guidelines:
-
-- Write from user perspective, not technical perspective
-- Use present tense
-- Be specific but not implementation-focused
-- One feature per file
-- Multiple scenarios per feature when appropriate
 
 ### Full Example:
 
@@ -96,7 +67,7 @@ Feature: Character stat pool management
         And Speed current should remain 10
 ```
 
-**Reference:** See `workflow.md` for BDD-First Approach (Rule #2)
+**Reference:** See `workflow.md` for the Feature File Format template (Rule #2).
 
 ---
 
@@ -121,14 +92,6 @@ describe("ComponentOrModule", () => {
 });
 ```
 
-### Rules:
-
-- Test behavior, not implementation
-- One assertion concept per test
-- Use descriptive test names
-- Mock external dependencies
-- Keep tests isolated and independent
-
 ### Full Example:
 
 ```typescript
@@ -144,69 +107,44 @@ describe("StatPool", () => {
 
   describe("spend", () => {
     it("should reduce current by specified amount", () => {
-      // Arrange
       const initialCurrent = pool.current;
-
-      // Act
       pool.spend(3);
-
-      // Assert
       expect(pool.current).toBe(initialCurrent - 3);
     });
 
     it("should apply edge to reduce cost", () => {
-      // Arrange
-      const edge = pool.edge; // 1
-
-      // Act
-      pool.spend(3);
-
-      // Assert
       // Effective cost: 3 - 1 = 2
+      pool.spend(3);
       expect(pool.current).toBe(10 - 2);
     });
 
     it("should throw error when spending negative points", () => {
-      // Arrange & Act & Assert
       expect(() => pool.spend(-1)).toThrow("Cannot spend negative");
     });
 
     it("should throw error when insufficient points", () => {
-      // Arrange
       pool.current = 2;
-
-      // Act & Assert
       expect(() => pool.spend(5)).toThrow("Insufficient points");
     });
   });
 
   describe("recover", () => {
     it("should restore points up to pool maximum", () => {
-      // Arrange
       pool.spend(5);
-
-      // Act
       pool.recover(3);
-
-      // Assert
-      expect(pool.current).toBe(8); // 5 - 5 + 3 = 3, wait... 10 - 3 + 3 = 10, but spent 5 so 5 + 3 = 8
+      expect(pool.current).toBe(8); // 10 - 5 = 5, then 5 + 3 = 8
     });
 
     it("should not exceed pool maximum", () => {
-      // Arrange
       pool.spend(2);
-
-      // Act
       pool.recover(100);
-
-      // Assert
       expect(pool.current).toBe(10); // Cannot exceed max
     });
   });
 });
 ```
 
-**Reference:** See `workflow.md` for TDD Always (Rule #3)
+**Reference:** See `workflow.md` for the canonical Red-Green-Refactor example (Rule #3).
 
 ---
 
@@ -221,44 +159,15 @@ test.describe("Character Sheet", () => {
   test("should display character name on all viewports", async ({ page }) => {
     await page.goto("/");
 
-    // Desktop
-    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.setViewportSize({ width: 1280, height: 720 }); // Desktop
     await expect(page.locator('[data-testid="character-name"]')).toBeVisible();
 
-    // Mobile
-    await page.setViewportSize({ width: 375, height: 667 });
+    await page.setViewportSize({ width: 375, height: 667 }); // Mobile
     await expect(page.locator('[data-testid="character-name"]')).toBeVisible();
 
-    // Tablet
-    await page.setViewportSize({ width: 768, height: 1024 });
+    await page.setViewportSize({ width: 768, height: 1024 }); // Tablet
     await expect(page.locator('[data-testid="character-name"]')).toBeVisible();
   });
-});
-```
-
-### Viewport Configuration:
-
-```typescript
-// playwright.config.ts
-export default defineConfig({
-  projects: [
-    {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
-    },
-    {
-      name: "mobile-chrome",
-      use: { ...devices["Pixel 5"] },
-    },
-    {
-      name: "mobile-safari",
-      use: { ...devices["iPhone 12"] },
-    },
-    {
-      name: "tablet",
-      use: { ...devices["iPad Pro"] },
-    },
-  ],
 });
 ```
 
@@ -266,43 +175,23 @@ export default defineConfig({
 
 ## Test Coverage Requirements
 
-### What Must Be Covered:
+**Unit Tests:** core business logic, data transformations, validation logic,
+calculations, error handling paths.
 
-**Unit Tests:**
+**Integration Tests:** data flow between modules, storage operations,
+component interactions, state management.
 
-- Core business logic (MUST be covered)
-- Data transformations
-- Validation logic
-- Calculations and algorithms
-- Error handling paths
+**E2E Tests:** complete user workflows, critical user paths, cross-viewport
+compatibility, form submissions, navigation flows.
 
-**Integration Tests:**
-
-- Data flow between modules
-- Storage operations
-- Component interactions
-- State management
-
-**E2E Tests:**
-
-- Complete user workflows
-- Critical user paths
-- Cross-viewport compatibility
-- Form submissions
-- Navigation flows
-
-### What NOT to Test:
-
-- Framework code (React, Vue internals)
-- Third-party libraries
-- Simple getters/setters
-- Trivial code
+**Not tested:** framework internals, third-party libraries, trivial
+getters/setters.
 
 ---
 
 ## Test Quality Checklist
 
-Before considering tests complete:
+The canonical checklist — `code-quality.md` points here instead of repeating it.
 
 ```
 ✅ Test describes behavior, not implementation
@@ -319,200 +208,43 @@ Before considering tests complete:
 
 ---
 
-## Testing Rule: 🚨 ALWAYS Use NPM Scripts for E2E Tests
+## Using NPM Scripts for E2E Tests
 
-**NEVER call cucumber-js directly. ALWAYS use npm scripts.**
-
-### CRITICAL REQUIREMENT:
-
-E2E tests MUST be executed using npm scripts, NOT by calling `cucumber-js` directly.
-
-### ✅ CORRECT:
+**Never call `cucumber-js` directly** (see `CLAUDE.md`'s gotchas). The npm
+scripts start the dev server via `concurrently`, wait for it with `wait-on`,
+run cucumber-js with the correct configuration, and tear the server down
+afterward. Calling `cucumber-js` directly bypasses server management and every
+scenario fails.
 
 ```bash
-# Run all E2E tests
-npm run test:e2e -- tests/e2e/features/**/*.feature
-
-# Run specific feature file
+# ✅ CORRECT
 npm run test:e2e -- tests/e2e/features/basic-info-editing.feature
-
-# Run multiple specific feature files
-npm run test:e2e -- tests/e2e/features/version-history.feature tests/e2e/features/basic-info-editing.feature
-
-# Run tests tagged @current
 npm run test:e2e:current
-
-# Run production build tests
 npm run test:e2e:prod
-```
 
-### ❌ INCORRECT:
-
-```bash
-# NEVER do this - bypasses server startup
+# ❌ INCORRECT — no server running
 cucumber-js tests/e2e/features/**/*.feature
-
-# NEVER do this - no server running
 npx cucumber-js --tags "@current"
 ```
 
-### Why This Rule Exists:
-
-The npm scripts handle:
-
-1. Starting the development server via `concurrently`
-2. Waiting for the server to be ready via `wait-on`
-3. Running cucumber-js with the correct configuration
-4. Cleaning up processes when tests complete
-
-**Calling cucumber-js directly bypasses server management and WILL cause test failures.**
-
-### Usage Pattern:
-
-Pass feature files or cucumber-js options after `--`:
-
-```bash
-# Pattern: npm run test:e2e -- [feature-files] [options]
-
-# Examples:
-npm run test:e2e -- tests/e2e/features/**/*.feature
-npm run test:e2e -- tests/e2e/features/my-feature.feature
-npm run test:e2e -- tests/e2e/features/**/*.feature --tags '@smoke'
-```
-
-**This rule is ABSOLUTE and NON-NEGOTIABLE.**
-
 ---
 
-## Running Tests
+## Test New Features in Isolation First
 
-### Commands:
+When implementing a new feature with BDD scenarios, run only the new feature's
+scenarios first, verify 100% pass, then run the complete suite to check for
+regressions:
 
 ```bash
-# Run all unit tests
-npm run test:unit
-
-# Run unit tests in watch mode
-npm run test:unit -- --watch
-
-# Run all E2E tests
-npm run test:e2e -- tests/e2e/features/**/*.feature
-
-# Run specific E2E feature file
+# 1. Run only new scenarios
 npm run test:e2e -- tests/e2e/features/basic-info-editing.feature
 
-# Run multiple E2E feature files
-npm run test:e2e -- tests/e2e/features/version-history.feature tests/e2e/features/basic-info-editing.feature
-
-# Run E2E tests tagged @current
-npm run test:e2e:current
-
-# Run production build E2E tests
-npm run test:e2e:prod
-
-# Run specific unit test file
-npm run test:unit src/components/StatPool.test.ts
-
-# Run with coverage
-npm run test:unit -- --coverage
+# 2. Fix until all pass, then run the full suite
+npm run test:e2e:all
 ```
 
-### Test Execution Order:
-
-1. Unit tests (fast, run during development)
-2. Integration tests (medium, run before commit)
-3. E2E tests (slow, run before push)
-
----
-
-## Testing Rule: 🧪 Test New Features in Isolation First
-
-**Run new scenario tests independently before running the full test suite.**
-
-### Requirement:
-
-When implementing a new feature with BDD scenarios:
-
-1. **First:** Run ONLY the new feature's scenarios
-2. **Verify:** All new scenarios pass (100%)
-3. **Then:** Run the complete test suite
-4. **Ensure:** All tests still pass (no regressions)
-
-### Commands:
-
-```bash
-# Run only new feature scenarios
-npm run test:e2e -- tests/e2e/features/new-feature.feature
-
-# After new tests pass, run full suite
-npm run test:e2e -- tests/e2e/features/**/*.feature
-```
-
-### Benefits:
-
-- **Faster feedback** during development
-- **Isolated debugging** of new features
-- **Prevents test pollution** affecting other tests
-- **Clear verification** that implementation is complete
-- **Confidence** before running expensive full suite
-
-### Example Workflow:
-
-```bash
-# 1. Implement new feature with BDD scenarios
-# 2. Run only new scenarios
-npm run test:e2e -- tests/e2e/features/basic-info-editing.feature
-
-# 3. Fix until all pass (100%)
-# 4. Then run full suite to check for regressions
-npm run test:e2e -- tests/e2e/features/**/*.feature
-
-# 5. Commit only when both pass
-```
-
-**This rule is MANDATORY for all new features.**
-
----
-
-## Test-Driven Development (TDD)
-
-### Red-Green-Refactor Cycle:
-
-**1. RED - Write Failing Test:**
-
-```typescript
-it("should reduce current when spending points", () => {
-  const pool = new StatPool(10, 0);
-  pool.spend(3);
-  expect(pool.current).toBe(7); // FAILS - not implemented
-});
-```
-
-**2. GREEN - Minimal Implementation:**
-
-```typescript
-class StatPool {
-  spend(points: number): void {
-    this.current -= points; // Just enough to pass
-  }
-}
-```
-
-**3. REFACTOR - Improve Code:**
-
-```typescript
-class StatPool {
-  spend(points: number): void {
-    if (points < 0) throw new Error("Cannot spend negative");
-    if (points > this.current) throw new Error("Insufficient");
-    this.current -= points;
-  }
-}
-```
-
-**4. REPEAT:** Write next test
-
-**Reference:** See `workflow.md` for detailed TDD workflow
+Faster feedback, isolated debugging, and confidence before paying for the full
+suite's runtime.
 
 ---
 
@@ -520,34 +252,27 @@ class StatPool {
 
 ### When to Mock:
 
-- External API calls
-- Database operations
-- File system operations
-- Time-dependent code
-- Random number generation
+External API calls, database operations, file system operations,
+time-dependent code, random number generation.
 
 ### Example:
 
 ```typescript
 import { vi } from "vitest";
-import { loadCharacter } from "@/storage/localStorage";
+import { loadCharacter } from "@/storage/storageFactory";
 
-// Mock the storage module
-vi.mock("@/storage/localStorage", () => ({
+vi.mock("@/storage/storageFactory", () => ({
   loadCharacter: vi.fn(),
 }));
 
 describe("CharacterSheet", () => {
   it("should load character on mount", async () => {
-    // Arrange
     const mockCharacter = { name: "Test", tier: 1 };
     vi.mocked(loadCharacter).mockResolvedValue(mockCharacter);
 
-    // Act
     const sheet = new CharacterSheet();
     await sheet.init();
 
-    // Assert
     expect(loadCharacter).toHaveBeenCalledWith("default");
     expect(sheet.character).toEqual(mockCharacter);
   });
@@ -558,10 +283,8 @@ describe("CharacterSheet", () => {
 
 ## Testing i18n
 
-### Test Translation Keys Exist:
-
 ```typescript
-import { t } from "@/i18n";
+import { t } from "@/i18n/index";
 
 describe("i18n", () => {
   it("should have translation for character name", () => {
@@ -571,25 +294,6 @@ describe("i18n", () => {
   it("should handle missing keys gracefully", () => {
     const result = t("missing.key");
     expect(result).toContain("missing.key"); // Returns key if not found
-  });
-});
-```
-
-### Test Components Use i18n:
-
-```typescript
-import { render } from "@testing-library/dom";
-import { CharacterSheet } from "@/components/CharacterSheet";
-
-describe("CharacterSheet", () => {
-  it("should use translation for title", () => {
-    const { container } = render(CharacterSheet);
-    const title = container.querySelector("h1");
-
-    // Should not have hardcoded text
-    expect(title?.textContent).not.toBe("Character Sheet");
-    // Should use translation
-    expect(title?.textContent).toBe(t("app.characterSheet"));
   });
 });
 ```
@@ -604,15 +308,16 @@ describe("CharacterSheet", () => {
 // test/factories/character.ts
 export function createTestCharacter(overrides = {}) {
   return {
-    id: "test-id",
     name: "Test Character",
     tier: 1,
     type: "Glaive",
     descriptor: "Strong",
     focus: "Controls Beasts",
-    might: { pool: 12, edge: 1, current: 12 },
-    speed: { pool: 10, edge: 0, current: 10 },
-    intellect: { pool: 8, edge: 0, current: 8 },
+    stats: {
+      might: { pool: 12, edge: 1, current: 12 },
+      speed: { pool: 10, edge: 0, current: 10 },
+      intellect: { pool: 8, edge: 0, current: 8 },
+    },
     ...overrides,
   };
 }
@@ -627,11 +332,8 @@ const character = createTestCharacter({ name: "Custom Name" });
 
 ### Common Issues:
 
-**Tests pass individually but fail together:**
-
-- Tests are not isolated
-- Shared state between tests
-- Use `beforeEach` to reset state
+**Tests pass individually but fail together:** tests are not isolated —
+shared state between tests. Use `beforeEach` to reset state.
 
 **Flaky tests:**
 
@@ -656,11 +358,8 @@ navigation`, seen only under `npm run test:e2e`/`test:e2e:all` (the dev
   `waitForSelector` on a baseline element like `[data-testid="character-name"]`)
   and bring the flaky one in line rather than inventing a new pattern.
 
-**Slow tests:**
-
-- Too many E2E tests (move to unit tests)
-- Not mocking external dependencies
-- Unnecessary waits
+**Slow tests:** too many E2E tests (move logic to unit tests), missing mocks
+for external dependencies, unnecessary waits.
 
 ### Debug Commands:
 
@@ -680,9 +379,5 @@ npm run test:e2e -- --debug
 ## Related Rules
 
 - **Workflow:** See `workflow.md` for BDD/TDD workflow (Rules #2, #3, #10)
-- **Code Quality:** See `code-quality.md` for test quality standards
+- **Code Quality:** See `code-quality.md` for code quality standards
 - **Git:** See `git.md` for pre-commit/pre-push test requirements
-
----
-
-**Testing rules are ABSOLUTE and enforced by pre-commit/pre-push hooks.**
