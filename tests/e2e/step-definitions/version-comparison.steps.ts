@@ -1,7 +1,6 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world.js";
-import { DOMHelpers } from "../support/dom-helpers.js";
 
 // ============================================================================
 // COMPARISON VIEW STEP DEFINITIONS
@@ -27,19 +26,18 @@ function paneControl(side: "left" | "right", control: string): string {
 // ----------------------------------------------------------------------------
 
 async function setComparisonViewEnabled(world: CustomWorld, enabled: boolean): Promise<void> {
-  const dom = new DOMHelpers(world.page!);
-  await dom.getByTestId("settings-gear-button").click();
-  await expect(dom.getByTestId("settings-panel")).toBeVisible();
+  await world.dom.getByTestId("settings-gear-button").click();
+  await expect(world.dom.getByTestId("settings-panel")).toBeVisible();
   await world.page!.waitForTimeout(50);
 
-  const toggle = dom.getByTestId("settings-comparison-view-toggle");
+  const toggle = world.dom.getByTestId("settings-comparison-view-toggle");
   const isChecked = await toggle.isChecked();
   if (isChecked !== enabled) {
     await toggle.click();
   }
 
-  await dom.getByTestId("settings-gear-button").click();
-  await expect(dom.getByTestId("settings-panel")).not.toBeVisible();
+  await world.dom.getByTestId("settings-gear-button").click();
+  await expect(world.dom.getByTestId("settings-panel")).not.toBeVisible();
 }
 
 Given("comparison view is enabled in settings", async function (this: CustomWorld) {
@@ -47,22 +45,19 @@ Given("comparison view is enabled in settings", async function (this: CustomWorl
 });
 
 When("I enable comparison view in settings", async function (this: CustomWorld) {
-  const dom = new DOMHelpers(this.page!);
-  const toggle = dom.getByTestId("settings-comparison-view-toggle");
+  const toggle = this.dom.getByTestId("settings-comparison-view-toggle");
   if (!(await toggle.isChecked())) {
     await toggle.click();
   }
 });
 
 When("I close the settings panel", async function (this: CustomWorld) {
-  const dom = new DOMHelpers(this.page!);
-  await dom.getByTestId("settings-gear-button").click();
-  await expect(dom.getByTestId("settings-panel")).not.toBeVisible();
+  await this.dom.getByTestId("settings-gear-button").click();
+  await expect(this.dom.getByTestId("settings-panel")).not.toBeVisible();
 });
 
 Then("comparison view should show as enabled in settings", async function (this: CustomWorld) {
-  const dom = new DOMHelpers(this.page!);
-  await expect(dom.getByTestId("settings-comparison-view-toggle")).toBeChecked();
+  await expect(this.dom.getByTestId("settings-comparison-view-toggle")).toBeChecked();
 });
 
 // ----------------------------------------------------------------------------

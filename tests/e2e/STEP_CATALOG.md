@@ -815,49 +815,49 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `comparison view is enabled in settings` | 23 | 44 |
-| Then | `comparison view should show as enabled in settings` | 1 | 62 |
-| Given | `I am using a phone-width viewport` | 1 | 429 |
-| Given | `I am using a tablet-width viewport` | 1 | 433 |
-| Given | `I am viewing the comparison view` | 19 | 71 |
-| When | `I click the left pane's backward arrow` | 3 | 168 |
-| When | `I click the left pane's backward arrow {int} time(s)` | 2 | 180 |
-| When | `I click the left pane's forward arrow` | 1 | 172 |
-| When | `I click the left pane's restore button` | 2 | 358 |
-| When | `I click the return to editing button` | 2 | 402 |
-| When | `I click the right pane's backward arrow` | 1 | 176 |
-| When | `I click the right pane's backward arrow {int} time(s)` | 1 | 191 |
-| When | `I click the right pane's restore button` | 1 | 363 |
-| When | `I close the settings panel` | 2 | 56 |
-| When | `I enable comparison view in settings` | 2 | 48 |
-| Then | `no add or delete button should be present in the comparison view` | 1 | 417 |
-| Then | `no field in the comparison view should be editable` | 1 | 410 |
-| Then | `the {string} field should be highlighted as changed in the {word} pane` | 2 | 274 |
-| Then | `the {string} field should not be highlighted in the {word} pane` | 2 | 283 |
-| Then | `the {word} pane should show the newly restored version` | 1 | 373 |
-| Then | `the added cypher card should be highlighted as added in the right pane` | 1 | 292 |
-| Given | `the character has a version where a cypher was renamed` | 1 | 148 |
-| Given | `the character has a version with a modified cypher effect` | 1 | 129 |
-| Given | `the character has a version with a name change` | 2 | 94 |
-| Given | `the character has a version with a removed cypher` | 1 | 118 |
-| Given | `the character has a version with an added cypher` | 1 | 104 |
-| Then | `the comparison header should indicate there are no differences` | 1 | 263 |
-| Then | `the comparison header should list every changed field, not just the top 3` | 1 | 238 |
-| Then | `the comparison header should reflect the new left pane version` | 1 | 253 |
-| Then | `the comparison view should be visible` | 3 | 76 |
-| Then | `the comparison view should not be visible` | 3 | 80 |
-| Then | `the left pane should not show the added cypher card` | 1 | 302 |
-| Then | `the left pane should show version {int}` | 5 | 223 |
-| Given | `the left pane shows version {int}` | 2 | 215 |
-| Then | `the modified cypher card should be highlighted as changed in the {word} pane` | 2 | 324 |
-| Then | `the new cypher name should be highlighted as added in the right pane` | 1 | 344 |
-| Then | `the old cypher name should be highlighted as removed in the left pane` | 1 | 334 |
-| Then | `the removed cypher card should be highlighted as removed in the left pane` | 1 | 307 |
-| Then | `the right pane should not show the removed cypher card` | 1 | 317 |
-| Then | `the right pane should show version {int}` | 4 | 227 |
-| Then | `the right pane should still show the same character name as before the restore` | 1 | 383 |
-| Given | `the right pane shows version {int}` | 1 | 219 |
-| Then | `the right pane's restore button should be disabled` | 1 | 368 |
+| Given | `comparison view is enabled in settings` | 23 | 42 |
+| Then | `comparison view should show as enabled in settings` | 1 | 58 |
+| Given | `I am using a phone-width viewport` | 1 | 424 |
+| Given | `I am using a tablet-width viewport` | 1 | 428 |
+| Given | `I am viewing the comparison view` | 19 | 66 |
+| When | `I click the left pane's backward arrow` | 3 | 163 |
+| When | `I click the left pane's backward arrow {int} time(s)` | 2 | 175 |
+| When | `I click the left pane's forward arrow` | 1 | 167 |
+| When | `I click the left pane's restore button` | 2 | 353 |
+| When | `I click the return to editing button` | 2 | 397 |
+| When | `I click the right pane's backward arrow` | 1 | 171 |
+| When | `I click the right pane's backward arrow {int} time(s)` | 1 | 186 |
+| When | `I click the right pane's restore button` | 1 | 358 |
+| When | `I close the settings panel` | 2 | 53 |
+| When | `I enable comparison view in settings` | 2 | 46 |
+| Then | `no add or delete button should be present in the comparison view` | 1 | 412 |
+| Then | `no field in the comparison view should be editable` | 1 | 405 |
+| Then | `the {string} field should be highlighted as changed in the {word} pane` | 2 | 269 |
+| Then | `the {string} field should not be highlighted in the {word} pane` | 2 | 278 |
+| Then | `the {word} pane should show the newly restored version` | 1 | 368 |
+| Then | `the added cypher card should be highlighted as added in the right pane` | 1 | 287 |
+| Given | `the character has a version where a cypher was renamed` | 1 | 143 |
+| Given | `the character has a version with a modified cypher effect` | 1 | 124 |
+| Given | `the character has a version with a name change` | 2 | 89 |
+| Given | `the character has a version with a removed cypher` | 1 | 113 |
+| Given | `the character has a version with an added cypher` | 1 | 99 |
+| Then | `the comparison header should indicate there are no differences` | 1 | 258 |
+| Then | `the comparison header should list every changed field, not just the top 3` | 1 | 233 |
+| Then | `the comparison header should reflect the new left pane version` | 1 | 248 |
+| Then | `the comparison view should be visible` | 3 | 71 |
+| Then | `the comparison view should not be visible` | 3 | 75 |
+| Then | `the left pane should not show the added cypher card` | 1 | 297 |
+| Then | `the left pane should show version {int}` | 5 | 218 |
+| Given | `the left pane shows version {int}` | 2 | 210 |
+| Then | `the modified cypher card should be highlighted as changed in the {word} pane` | 2 | 319 |
+| Then | `the new cypher name should be highlighted as added in the right pane` | 1 | 339 |
+| Then | `the old cypher name should be highlighted as removed in the left pane` | 1 | 329 |
+| Then | `the removed cypher card should be highlighted as removed in the left pane` | 1 | 302 |
+| Then | `the right pane should not show the removed cypher card` | 1 | 312 |
+| Then | `the right pane should show version {int}` | 4 | 222 |
+| Then | `the right pane should still show the same character name as before the restore` | 1 | 378 |
+| Given | `the right pane shows version {int}` | 1 | 214 |
+| Then | `the right pane's restore button should be disabled` | 1 | 363 |
 
 ## version-history.steps.ts
 
