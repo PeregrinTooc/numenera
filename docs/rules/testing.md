@@ -77,6 +77,32 @@ check:steps` fails on unused step definitions or a stale catalog.
 
 ---
 
+## E2E World DSL
+
+Look here before writing a raw locator or a `new SomeHelper(this.page)` call.
+`hooks.ts` builds each of these onto `CustomWorld` (`tests/e2e/support/world.ts`)
+in `Before`, so every step definition has them from the first line:
+
+| On `this`       | Class (file)                                         | For                                                                                                |
+| --------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `dom`           | `DOMHelpers` (`support/dom-helpers.ts`)              | Generic `data-testid` locators and waits.                                                          |
+| `storageHelper` | `TestStorageHelper` (`support/testStorageHelper.ts`) | Seed or clear character/version storage.                                                           |
+| `modal`         | `ModalDsl` (`support/modal.ts`)                      | Confirm/cancel/type/clear/expectOpen/expectClosed on the edit modal.                               |
+| `fields`        | `FieldsDsl` (`support/fields.ts`)                    | Click/tap/hover a named field or resource badge.                                                   |
+| `cards`         | `CardsDsl` (`support/cards.ts`)                      | Set up, add, edit, delete and count cards by type.                                                 |
+| `setup`         | `SetupDsl` (`support/setup.ts`)                      | `this.setup.character(overrides)` — seed `FULL_CHARACTER` + overrides, reload, wait for the sheet. |
+
+Gherkin vocabulary comes in through parameter types
+(`support/parameterTypes.ts`): `{cardType}`, `{badge}`, `{textarea}`,
+`{resource}`. An unrecognised word is a compile-time undefined step, not a
+runtime lookup failure inside the step body.
+
+ESLint enforces the DSL rather than leaving it as convention: instantiating
+`DOMHelpers`/`TestStorageHelper` directly, or one step-definitions file
+importing from another, are both lint errors (`eslint.config.js`).
+
+---
+
 ## Unit Tests
 
 ### Structure (Arrange-Act-Assert):

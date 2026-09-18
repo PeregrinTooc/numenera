@@ -89,6 +89,44 @@ export default [
     },
   },
   {
+    files: ["tests/e2e/step-definitions/**/*.ts"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "NewExpression[callee.name=/DOMHelpers|TestStorageHelper/]",
+          message:
+            "Use this.dom / this.storageHelper from CustomWorld instead of instantiating a new helper — see docs/rules/testing.md, E2E World DSL.",
+        },
+      ],
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["../step-definitions/*", "./*.steps"],
+              message:
+                "Step files must not import from each other. Move shared logic into tests/e2e/support/.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["tests/unit/**/*.ts"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "FunctionDeclaration[id.name=/create(Mock|Base)Character|makeCharacter/]",
+          message:
+            "Use createTestCharacter (or a preset) from tests/factories/character.ts instead of a local character factory.",
+        },
+      ],
+    },
+  },
+  {
     ignores: [
       "node_modules",
       "dist",
