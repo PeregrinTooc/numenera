@@ -1,7 +1,6 @@
 import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { Character } from "../../../src/types/character.js";
-import { TestStorageHelper } from "../support/testStorageHelper.js";
 
 // Test character data fixtures
 const TEST_CHARACTERS: Record<string, Character> = {
@@ -111,9 +110,8 @@ When("I import a valid character file {string}", async function (filename: strin
 
   // Directly inject the character data into storage (simulating successful import)
   // This is more reliable than trying to mock file system APIs in Playwright
-  const storageHelper = new TestStorageHelper(this.page);
   await this.page.waitForTimeout(500);
-  await storageHelper.setCharacter(fileContent.character);
+  await this.storageHelper.setCharacter(fileContent.character);
 
   // Use explicit page navigation to reload (this properly waits for the navigation)
   // Remove any query parameters to ensure clean reload
