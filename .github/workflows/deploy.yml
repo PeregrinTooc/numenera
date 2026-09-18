@@ -52,6 +52,9 @@ jobs:
       - name: Check translation coverage
         run: npm run check:i18n
 
+      - name: Check Cucumber step definitions
+        run: npm run check:steps
+
       - name: Run unit tests
         run: npm run test:unit
 
