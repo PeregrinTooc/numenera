@@ -787,23 +787,23 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am viewing an old version with the version navigator visible` | 1 | 113 |
+| Given | `I am viewing an old version with the version navigator visible` | 1 | 104 |
 | Given | `I am viewing the character sheet` | 1 | 11 |
-| When | `I click outside the settings panel` | 1 | 62 |
-| When | `I click the British flag icon` | 1 | 78 |
-| When | `I click the German flag icon` | 2 | 73 |
-| When | `I click the settings gear icon` | 1 | 43 |
-| Given | `I have opened the settings panel` | 9 | 58 |
-| Then | `I should be able to click the settings gear icon` | 1 | 30 |
-| Then | `I should see a {string} option` | 1 | 129 |
+| When | `I click outside the settings panel` | 1 | 56 |
+| When | `I click the British flag icon` | 1 | 71 |
+| When | `I click the German flag icon` | 2 | 67 |
+| When | `I click the settings gear icon` | 1 | 40 |
+| Given | `I have opened the settings panel` | 9 | 52 |
+| Then | `I should be able to click the settings gear icon` | 1 | 28 |
+| Then | `I should see a {string} option` | 1 | 119 |
 | Then | `I should see a settings gear icon in the header` | 1 | 20 |
-| Then | `I should see the settings panel` | 1 | 48 |
-| Then | `the {string} option should be disabled` | 1 | 136 |
-| Given | `the interface is in German` | 1 | 95 |
-| Then | `the interface should display in English` | 1 | 89 |
-| Then | `the interface should display in German` | 1 | 83 |
-| Then | `the settings gear icon should still be visible` | 1 | 25 |
-| Then | `the settings panel should close` | 4 | 53 |
+| Then | `I should see the settings panel` | 1 | 44 |
+| Then | `the {string} option should be disabled` | 1 | 125 |
+| Given | `the interface is in German` | 1 | 87 |
+| Then | `the interface should display in English` | 1 | 81 |
+| Then | `the interface should display in German` | 1 | 75 |
+| Then | `the settings gear icon should still be visible` | 1 | 24 |
+| Then | `the settings panel should close` | 4 | 48 |
 
 ## stat-pool-editing.steps.ts
 
