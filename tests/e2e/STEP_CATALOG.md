@@ -26,7 +26,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **721** in 25 files
+- Step definitions: **719** in 25 files
 - Feature step lines: **2047**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **24**
@@ -52,7 +52,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
-| [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 20 | 0 |
+| [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
 | [section-rearrangement.steps.ts](#sectionrearrangementstepsts) | 49 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
@@ -696,26 +696,24 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `the Armor badge should show {string}` | 4 | 209 |
-| Then | `the character data should have armor {int}` | 1 | 267 |
-| Then | `the character data should have currentXp {int}` | 1 | 237 |
-| Then | `the character data should have effort {int}` | 1 | 287 |
-| Then | `the character data should have maxCyphers {int}` | 1 | 277 |
-| Then | `the character data should have shins {int}` | 1 | 257 |
-| Then | `the character data should have totalXp {int}` | 1 | 247 |
-| Given | `the character has {int} armor` | 5 | 133 |
+| Then | `the Armor badge should show {string}` | 4 | 188 |
+| Then | `the character data should have armor {int}` | 1 | 246 |
+| Then | `the character data should have currentXp {int}` | 1 | 216 |
+| Then | `the character data should have effort {int}` | 1 | 266 |
+| Then | `the character data should have maxCyphers {int}` | 1 | 256 |
+| Then | `the character data should have shins {int}` | 1 | 236 |
+| Then | `the character data should have totalXp {int}` | 1 | 226 |
+| Given | `the character has {int} {resource}` | 12 | 145 |
 | Given | `the character has {int} current XP and {int} total XP` | 9 | 57 |
-| Given | `the character has {int} shins` | 7 | 119 |
-| Given | `the character has effort {int}` | 4 | 164 |
-| Given | `the character has max cyphers {int}` | 4 | 147 |
+| Given | `the character has {resource} {int}` | 8 | 152 |
 | Given | `the character was saved with a single legacy XP value of {int}` | 1 | 82 |
-| Then | `the Current XP badge should show {string}` | 7 | 185 |
-| Then | `the Effort badge should show {string}` | 3 | 225 |
-| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 217 |
-| Then | `the modal confirm button should be disabled` | 1 | 297 |
-| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 302 |
-| Then | `the Shins badge should show {string}` | 5 | 201 |
-| Then | `the Total XP badge should show {string}` | 5 | 193 |
+| Then | `the Current XP badge should show {string}` | 7 | 164 |
+| Then | `the Effort badge should show {string}` | 3 | 204 |
+| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 196 |
+| Then | `the modal confirm button should be disabled` | 1 | 276 |
+| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 281 |
+| Then | `the Shins badge should show {string}` | 5 | 180 |
+| Then | `the Total XP badge should show {string}` | 5 | 172 |
 
 ## section-rearrangement.steps.ts
 

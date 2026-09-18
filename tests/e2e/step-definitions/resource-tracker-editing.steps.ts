@@ -117,67 +117,46 @@ Given(
   }
 );
 
-Given("the character has {int} shins", async function (this: CustomWorld, shins: number) {
-  await this.setup.character({ shins });
+// Selector for each {resource} field's rendered value, used to wait for the
+// reload in this.setup.character() to actually reflect the new value.
+const RESOURCE_VALUE_SELECTORS: Record<string, string> = {
+  shins: '[data-testid="shins-badge"] .stat-badge-value',
+  armor: '[data-testid="armor-value"]',
+  maxCyphers: '[data-testid="max-cyphers-value"]',
+  effort: '[data-testid="effort-value"]',
+};
 
-  // Wait for shins badge to show correct value (increased timeout for CI)
-  await this.page!.waitForFunction(
-    (expectedShins) => {
-      const badge = document.querySelector('[data-testid="shins-badge"] .stat-badge-value');
-      return badge?.textContent === String(expectedShins);
-    },
-    shins,
+async function waitForResourceValue(
+  world: CustomWorld,
+  field: string,
+  value: number
+): Promise<void> {
+  const selector = RESOURCE_VALUE_SELECTORS[field];
+  await world.page!.waitForSelector(selector, { timeout: 10000 });
+  await world.page!.waitForFunction(
+    ({ sel, expected }) => document.querySelector(sel)?.textContent === String(expected),
+    { sel: selector, expected: value },
     { timeout: 10000 }
   );
-});
+}
 
-Given("the character has {int} armor", async function (this: CustomWorld, armor: number) {
-  await this.setup.character({ armor });
-
-  // Wait for armor value to show correct value (increased timeout for CI)
-  await this.page!.waitForFunction(
-    (expectedArmor) => {
-      const element = document.querySelector('[data-testid="armor-value"]');
-      return element?.textContent === String(expectedArmor);
-    },
-    armor,
-    { timeout: 10000 }
-  );
-});
-
+// The feature files use both word orders: "{int} shins/armor" but
+// "max cyphers/effort {int}" — two registrations, one shared body.
 Given(
-  "the character has max cyphers {int}",
-  async function (this: CustomWorld, maxCyphers: number) {
-    await this.setup.character({ maxCyphers });
-
-    // Wait for max cyphers value to show correct value (increased timeout for CI)
-    await this.page!.waitForFunction(
-      (expectedMaxCyphers) => {
-        const element = document.querySelector('[data-testid="max-cyphers-value"]');
-        return element?.textContent === String(expectedMaxCyphers);
-      },
-      maxCyphers,
-      { timeout: 10000 }
-    );
+  "the character has {int} {resource}",
+  async function (this: CustomWorld, value: number, field: string) {
+    await this.setup.character({ [field]: value });
+    await waitForResourceValue(this, field, value);
   }
 );
 
-Given("the character has effort {int}", async function (this: CustomWorld, effort: number) {
-  await this.setup.character({ effort });
-
-  // Wait for the effort element to exist first
-  await this.page!.waitForSelector('[data-testid="effort-value"]', { timeout: 10000 });
-
-  // Then wait for it to have the correct value
-  await this.page!.waitForFunction(
-    (expectedEffort) => {
-      const element = document.querySelector('[data-testid="effort-value"]');
-      return element?.textContent === String(expectedEffort);
-    },
-    effort,
-    { timeout: 10000 }
-  );
-});
+Given(
+  "the character has {resource} {int}",
+  async function (this: CustomWorld, field: string, value: number) {
+    await this.setup.character({ [field]: value });
+    await waitForResourceValue(this, field, value);
+  }
+);
 
 // ============================================================================
 // THEN STEPS - Badge-specific assertions
