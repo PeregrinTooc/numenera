@@ -2,9 +2,6 @@ import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 
-let savedTimestamp: string | null = null;
-let saveCount = 0;
-
 Given("the character sheet is displayed", async function (this: CustomWorld) {
   // Character sheet should already be visible from background
   const name = await this.page.locator('[data-testid="character-name"]').textContent();
@@ -17,7 +14,7 @@ Given("the character sheet is displayed", async function (this: CustomWorld) {
 When("I note the current save timestamp", async function (this: CustomWorld) {
   const indicator = this.page.locator('[data-testid="save-indicator"]');
   await indicator.waitFor({ state: "visible", timeout: 1000 });
-  savedTimestamp = await indicator.textContent();
+  this.savedTimestamp = await indicator.textContent();
 });
 
 When("I wait for {int} second(s)", async function (this: CustomWorld, seconds: number) {
@@ -29,7 +26,7 @@ When("I wait for {int} second(s)", async function (this: CustomWorld, seconds: n
 
 When("I rapidly edit the character name multiple times", async function (this: CustomWorld) {
   // Track saves by monitoring save indicator updates (MutationObserver)
-  saveCount = 0;
+  this.saveCount = 0;
 
   await this.page.evaluate(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -74,7 +71,7 @@ When("I rapidly edit the character name multiple times", async function (this: C
 
   // Get save count and cleanup observer
 
-  saveCount = await this.page.evaluate(() => {
+  this.saveCount = await this.page.evaluate(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const count = (window as any).__saveCount || 0;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -116,7 +113,7 @@ Then("the save timestamp should be updated", async function (this: CustomWorld) 
   await indicator.waitFor({ state: "visible", timeout: 1000 });
   const newTimestamp = await indicator.textContent();
 
-  expect(newTimestamp).not.toBe(savedTimestamp);
+  expect(newTimestamp).not.toBe(this.savedTimestamp);
   expect(newTimestamp).toBeTruthy();
 });
 
@@ -125,8 +122,8 @@ Then(
   async function (this: CustomWorld) {
     // With debouncing, we should see fewer saves than the number of edits (5)
     // Due to modal interactions and timing, we may get a few saves, but significantly fewer than without debouncing
-    expect(saveCount).toBeLessThanOrEqual(5);
-    expect(saveCount).toBeGreaterThanOrEqual(1);
+    expect(this.saveCount).toBeLessThanOrEqual(5);
+    expect(this.saveCount).toBeGreaterThanOrEqual(1);
 
     // The key is that it's less than the number of edits we made (5)
     // If debouncing wasn't working, we'd see 5 saves

@@ -1,12 +1,9 @@
 import { When, Then, Given } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
-
-// Store exported file data for verification
-let exportedFileData: any = null;
-let exportedFilename: string = "";
+import { CustomWorld } from "../support/world.js";
 
 // Scenario: Export button creates downloadable file
-Given("the character has name {string}", async function (name: string) {
+Given("the character has name {string}", async function (this: CustomWorld, name: string) {
   // Click on the name field to open the modal
   const nameElement = this.page.getByTestId("character-name");
   await nameElement.click();
@@ -35,7 +32,7 @@ Given("the character has name {string}", async function (name: string) {
   await expect(nameElement).toHaveText(name, { timeout: 5000 });
 });
 
-When("I click the export button", async function () {
+When("I click the export button", async function (this: CustomWorld) {
   // Mock the file export functionality to capture the data
   await this.page.evaluate(() => {
     // Clear previous data
@@ -106,71 +103,81 @@ When("I click the export button", async function () {
     };
   });
 
-  exportedFilename = capturedData.filename;
+  this.exportedFilename = capturedData.filename;
   if (capturedData.data) {
-    exportedFileData = JSON.parse(capturedData.data);
+    this.exportedFileData = JSON.parse(capturedData.data);
   }
 });
 
-Then("a file export should be triggered", async function () {
-  expect(exportedFilename).toBeTruthy();
-  expect(exportedFilename).toContain(".numenera");
-});
-
-Then("the exported filename should be {string}", async function (expectedFilename: string) {
-  expect(exportedFilename).toBe(expectedFilename);
-});
-
-// Scenario: Exported file contains complete character data
-Then("the exported file should contain all character properties", async function () {
-  expect(exportedFileData).toBeTruthy();
-  expect(exportedFileData.character).toBeTruthy();
-
-  const character = exportedFileData.character;
-
-  // Verify essential character properties exist
-  expect(character).toHaveProperty("name");
-  expect(character).toHaveProperty("tier");
-  expect(character).toHaveProperty("type");
-  expect(character).toHaveProperty("descriptor");
-  expect(character).toHaveProperty("focus");
-  expect(character).toHaveProperty("currentXp");
-  expect(character).toHaveProperty("totalXp");
-  expect(character).toHaveProperty("shins");
-  expect(character).toHaveProperty("armor");
-  expect(character).toHaveProperty("effort");
-  expect(character).toHaveProperty("maxCyphers");
-  expect(character).toHaveProperty("stats");
-  expect(character).toHaveProperty("cyphers");
-  expect(character).toHaveProperty("artifacts");
-  expect(character).toHaveProperty("oddities");
-  expect(character).toHaveProperty("abilities");
-  expect(character).toHaveProperty("equipment");
-  expect(character).toHaveProperty("attacks");
-  expect(character).toHaveProperty("specialAbilities");
-  expect(character).toHaveProperty("recoveryRolls");
-  expect(character).toHaveProperty("damageTrack");
-  expect(character).toHaveProperty("textFields");
-});
-
-Then("the exported file should have version {string}", async function (expectedVersion: string) {
-  expect(exportedFileData).toBeTruthy();
-  expect(exportedFileData.version).toBe(expectedVersion);
+Then("a file export should be triggered", async function (this: CustomWorld) {
+  expect(this.exportedFilename).toBeTruthy();
+  expect(this.exportedFilename).toContain(".numenera");
 });
 
 Then(
-  "the exported file should have schemaVersion {string}",
-  async function (expectedSchemaVersion: string) {
-    expect(exportedFileData).toBeTruthy();
-    expect(exportedFileData.schemaVersion).toBe(expectedSchemaVersion);
+  "the exported filename should be {string}",
+  async function (this: CustomWorld, expectedFilename: string) {
+    expect(this.exportedFilename).toBe(expectedFilename);
   }
 );
 
-Then("the exported file should have an exportDate", async function () {
-  expect(exportedFileData).toBeTruthy();
-  expect(exportedFileData.exportDate).toBeTruthy();
+// Scenario: Exported file contains complete character data
+Then(
+  "the exported file should contain all character properties",
+  async function (this: CustomWorld) {
+    expect(this.exportedFileData).toBeTruthy();
+    expect(this.exportedFileData?.character).toBeTruthy();
+
+    const character = this.exportedFileData?.character;
+
+    // Verify essential character properties exist
+    expect(character).toHaveProperty("name");
+    expect(character).toHaveProperty("tier");
+    expect(character).toHaveProperty("type");
+    expect(character).toHaveProperty("descriptor");
+    expect(character).toHaveProperty("focus");
+    expect(character).toHaveProperty("currentXp");
+    expect(character).toHaveProperty("totalXp");
+    expect(character).toHaveProperty("shins");
+    expect(character).toHaveProperty("armor");
+    expect(character).toHaveProperty("effort");
+    expect(character).toHaveProperty("maxCyphers");
+    expect(character).toHaveProperty("stats");
+    expect(character).toHaveProperty("cyphers");
+    expect(character).toHaveProperty("artifacts");
+    expect(character).toHaveProperty("oddities");
+    expect(character).toHaveProperty("abilities");
+    expect(character).toHaveProperty("equipment");
+    expect(character).toHaveProperty("attacks");
+    expect(character).toHaveProperty("specialAbilities");
+    expect(character).toHaveProperty("recoveryRolls");
+    expect(character).toHaveProperty("damageTrack");
+    expect(character).toHaveProperty("textFields");
+  }
+);
+
+Then(
+  "the exported file should have version {string}",
+  async function (this: CustomWorld, expectedVersion: string) {
+    expect(this.exportedFileData).toBeTruthy();
+    expect(this.exportedFileData?.version).toBe(expectedVersion);
+  }
+);
+
+Then(
+  "the exported file should have schemaVersion {string}",
+  async function (this: CustomWorld, expectedSchemaVersion: string) {
+    expect(this.exportedFileData).toBeTruthy();
+    expect(this.exportedFileData?.schemaVersion).toBe(expectedSchemaVersion);
+  }
+);
+
+Then("the exported file should have an exportDate", async function (this: CustomWorld) {
+  expect(this.exportedFileData).toBeTruthy();
+  const exportDate = this.exportedFileData?.exportDate;
+  expect(exportDate).toBeTruthy();
 
   // Verify it's a valid ISO date string
-  const date = new Date(exportedFileData.exportDate);
-  expect(date.toISOString()).toBe(exportedFileData.exportDate);
+  const date = new Date(exportDate as string);
+  expect(date.toISOString()).toBe(exportDate);
 });

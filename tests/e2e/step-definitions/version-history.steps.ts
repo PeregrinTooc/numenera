@@ -20,8 +20,7 @@ Given(
     // Store the original character name before any editing (for buffer undo tests)
     const nameField = this.page.locator('[data-testid="character-name"]');
     const originalName = await nameField.textContent();
-    this.testContext = this.testContext || {};
-    this.testContext.originalCharacterName = originalName?.trim();
+    this.originalCharacterName = originalName?.trim();
 
     // Create versions directly using the test helper to avoid timing issues
     // Get the current character as a base
@@ -84,10 +83,6 @@ Given("the character has a version with name change", async function (this: Cust
   // Wait for version navigator to show updated count (2 versions)
   const versionCounter = this.page.locator('[data-testid="version-counter"]');
   await expect(versionCounter).toContainText("Version 2 of 2", { timeout: 10000 });
-
-  // Store which version has the name change
-  this.testContext = this.testContext || {};
-  this.testContext.versionWithNameChange = (await this.storageHelper.getAllVersions()).length;
 
   // Create one more version so we can navigate back to see version 2's description
   const anotherCharacter = {
@@ -268,8 +263,7 @@ Given("the character has a portrait image", async function (this: CustomWorld) {
   const character = await this.storageHelper.getCharacter();
   character.portrait = portrait;
   await this.storageHelper.setCharacter(character);
-  this.testContext = this.testContext || {};
-  this.testContext.uploadedPortrait = portrait;
+  this.uploadedPortrait = portrait;
   await this.page.reload();
   await this.page.waitForTimeout(100);
 });
@@ -332,10 +326,6 @@ Given("I have made buffered edits that were undone", async function (this: Custo
   await confirmButton.click();
   await expect(modal).toHaveCount(0, { timeout: 2000 });
   await this.page.waitForTimeout(100);
-
-  // Store the second edit for verification
-  this.testContext = this.testContext || {};
-  this.testContext.secondEdit = "Second Edit";
 
   // Undo both edits using Control+Z (before squash timer expires)
   await this.page.evaluate(() => {
@@ -817,7 +807,7 @@ Then("the portrait should remain unchanged", async function (this: CustomWorld) 
   // visibility, or this would pass even if the portrait had been dropped.
   const portraitImage = this.page.locator('[data-testid="portrait-image-clickable"]');
   await expect(portraitImage).toBeVisible();
-  const uploadedPortrait = this.testContext?.uploadedPortrait;
+  const uploadedPortrait = this.uploadedPortrait;
   if (uploadedPortrait) {
     await expect(portraitImage).toHaveAttribute("src", uploadedPortrait);
   }
@@ -1124,7 +1114,7 @@ Then("no new version should be created yet", async function (this: CustomWorld) 
 
 Then("the character name should revert to the original value", async function (this: CustomWorld) {
   // Get the stored original name from test context
-  const originalName = this.testContext?.originalCharacterName;
+  const originalName = this.originalCharacterName;
   expect(originalName).toBeTruthy();
 
   const nameField = this.page.locator('[data-testid="character-name"]');
@@ -1170,10 +1160,6 @@ When(
       await expect(modal).toHaveCount(0, { timeout: 2000 });
       await this.page.waitForTimeout(100);
     }
-
-    // Store the last edit value for later verification
-    this.testContext = this.testContext || {};
-    this.testContext.lastRapidEdit = `Rapid Edit ${editCount}`;
   }
 );
 

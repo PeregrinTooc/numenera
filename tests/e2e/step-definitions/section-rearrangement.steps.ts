@@ -714,14 +714,13 @@ When("I export the character", async function (this: CustomWorld) {
     return (window as any).__exportedData;
   });
 
-  this.testContext = this.testContext || {};
-  this.testContext.exportedData = capturedData ? JSON.parse(capturedData) : null;
+  this.exportedLayoutData = capturedData ? JSON.parse(capturedData) : null;
 });
 
 Then(
   "the exported file should contain the layout configuration",
   async function (this: CustomWorld) {
-    const data = this.testContext?.exportedData;
+    const data = this.exportedLayoutData;
     if (!data) {
       throw new Error("No exported data available");
     }
@@ -732,9 +731,7 @@ Then(
 );
 
 Given("I have a character file with a different layout", async function (this: CustomWorld) {
-  // Create test context for later use
-  this.testContext = this.testContext || {};
-  this.testContext.importedLayout = [
+  this.importedLayout = [
     { type: "single", id: "basicInfo" },
     { type: "single", id: "stats" },
     { type: "single", id: "recoveryDamage" },
@@ -749,8 +746,7 @@ Given("I have a character file with a different layout", async function (this: C
 });
 
 Given("I have a character file with the default layout", async function (this: CustomWorld) {
-  this.testContext = this.testContext || {};
-  this.testContext.importedLayout = null; // No custom layout
+  this.importedLayout = null; // No custom layout
 });
 
 When("I import the character file", async function (this: CustomWorld) {
@@ -765,7 +761,7 @@ When("I import the character file", async function (this: CustomWorld) {
     might: { pool: 10, edge: 0, current: 10 },
     speed: { pool: 10, edge: 0, current: 10 },
     intellect: { pool: 14, edge: 1, current: 14 },
-    layout: this.testContext?.importedLayout,
+    layout: this.importedLayout,
   };
 
   // The import button is in the header, not in settings panel
