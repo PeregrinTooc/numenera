@@ -80,7 +80,7 @@ Feature: Version History (Character Time Travel)
         When I click the restore button in the warning banner
         Then a new version should be created with description "Restored: <version 2 description>"
         And the version counter should show "Version 6 of 6"
-        And the character data should match version 2 data
+        And the character data should match version 2
         And no warning banner should be visible
         And the forward arrow should be disabled
 
@@ -260,7 +260,7 @@ Feature: Version History (Character Time Travel)
     Scenario: Deleting a card creates a version
         Given I am on the character sheet page
         And I should see 2 cypher cards
-        When I click the delete button on the first cypher card
+        When I click the delete button on the first cypher
         Then I should see 1 cypher card
         When I press "Control+Z" before the squash timer expires
         Then I should see 2 cypher cards
@@ -355,7 +355,7 @@ Feature: Version History (Character Time Travel)
     Scenario: Removing a card shows a specific description
         Given I am on the character sheet page
         And I should see 2 cypher cards
-        When I click the delete button on the first cypher card
+        When I click the delete button on the first cypher
         And I wait for squash timer to complete
         And I edit the "character name" field to "Another Change"
         And I wait for squash timer to complete

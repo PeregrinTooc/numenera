@@ -127,11 +127,6 @@ Then(
   }
 );
 
-Then("the confirm button should be disabled", async function (this: CustomWorld) {
-  const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
-  await expect(confirmButton).toBeDisabled();
-});
-
 Then("the modal should not close", async function (this: CustomWorld) {
   const modal = this.page.locator('[data-testid="edit-modal"]');
   await expect(modal).toBeVisible();

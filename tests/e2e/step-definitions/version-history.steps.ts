@@ -932,19 +932,6 @@ Then(
   }
 );
 
-Then(
-  "the character data should match version {int} data",
-  async function (this: CustomWorld, versionNumber: number) {
-    // Check the displayed character data matches the specified version
-    const versions = await this.storageHelper.getAllVersions();
-    const expectedVersion = versions[versionNumber - 1];
-
-    const nameField = this.page.locator('[data-testid="character-name"]');
-    const displayedName = await nameField.textContent();
-    expect(displayedName?.trim()).toBe(expectedVersion.character.name);
-  }
-);
-
 Then("the warning banner should not be visible", async function (this: CustomWorld) {
   const warningBanner = await this.page.locator('[data-testid="version-warning-banner"]').count();
   expect(warningBanner).toBe(0);

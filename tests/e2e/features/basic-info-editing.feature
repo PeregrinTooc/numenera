@@ -153,7 +153,7 @@ Feature: Edit Basic Character Information
     Scenario: Empty name is not allowed
         When I click on the character name "Kael the Wanderer"
         And I clear the input field
-        Then the confirm button should be disabled
+        Then the modal confirm button should be disabled
         And the modal should not close
         And an error or validation message may appear
 

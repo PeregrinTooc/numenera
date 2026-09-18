@@ -26,7 +26,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **695** in 25 files
+- Step definitions: **688** in 25 files
 - Feature step lines: **2047**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **24**
@@ -36,16 +36,16 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [ability-enhancements.steps.ts](#abilityenhancementsstepsts) | 15 | 0 |
 | [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 37 | 0 |
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
-| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 38 | 0 |
-| [card-creation.steps.ts](#cardcreationstepsts) | 90 | 0 |
-| [card-deletion.steps.ts](#carddeletionstepsts) | 42 | 0 |
+| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 37 | 0 |
+| [card-creation.steps.ts](#cardcreationstepsts) | 89 | 0 |
+| [card-deletion.steps.ts](#carddeletionstepsts) | 40 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 16 | 0 |
 | [character-display.steps.ts](#characterdisplaystepsts) | 40 | 0 |
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
-| [combat.steps.ts](#combatstepsts) | 28 | 0 |
+| [combat.steps.ts](#combatstepsts) | 26 | 0 |
 | [common-steps.ts](#commonstepsts) | 34 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 5 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 14 | 0 |
@@ -57,7 +57,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
 | [version-comparison.steps.ts](#versioncomparisonstepsts) | 43 | 0 |
-| [version-history.steps.ts](#versionhistorystepsts) | 83 | 0 |
+| [version-history.steps.ts](#versionhistorystepsts) | 82 | 0 |
 
 ## ⚠️ Feature lines with no matching step definition
 
@@ -173,44 +173,43 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an error or validation message may appear` | 1 | 139 |
-| Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 213 |
-| Then | `focus should not leave the modal` | 1 | 247 |
-| Given | `I am viewing on a mobile device with width {string}` | 7 | 302 |
-| Then | `I can cancel with Escape key` | 1 | 272 |
-| Then | `I can confirm with Enter key` | 1 | 265 |
-| Then | `I can navigate with Tab key` | 1 | 257 |
+| Then | `an error or validation message may appear` | 1 | 134 |
+| Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 208 |
+| Then | `focus should not leave the modal` | 1 | 242 |
+| Given | `I am viewing on a mobile device with width {string}` | 7 | 297 |
+| Then | `I can cancel with Escape key` | 1 | 267 |
+| Then | `I can confirm with Enter key` | 1 | 260 |
+| Then | `I can navigate with Tab key` | 1 | 252 |
 | When | `I press Tab repeatedly` | 1 | 30 |
-| Then | `the backdrop should have aria-hidden={string}` | 1 | 289 |
-| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 354 |
-| Then | `the cancel button should have an X icon` | 1 | 163 |
-| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 382 |
+| Then | `the backdrop should have aria-hidden={string}` | 1 | 284 |
+| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 349 |
+| Then | `the cancel button should have an X icon` | 1 | 158 |
+| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 377 |
 | Then | `the character name should display {string}` | 6 | 82 |
 | Then | `the character name should still display {string}` | 6 | 90 |
-| Then | `the confirm button should be disabled` | 1 | 129 |
-| Then | `the confirm button should have a checkmark icon` | 1 | 157 |
-| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 402 |
+| Then | `the confirm button should have a checkmark icon` | 1 | 152 |
+| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 397 |
 | Then | `the descriptor should display {string}` | 2 | 104 |
-| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 412 |
+| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 407 |
 | Then | `the focus should display {string}` | 2 | 112 |
-| Then | `the input field should be large enough for touch input` | 1 | 374 |
+| Then | `the input field should be large enough for touch input` | 1 | 369 |
 | Then | `the input field should be of type {string}` | 1 | 69 |
-| Then | `the input field should have inputmode={string} for mobile` | 1 | 325 |
-| Then | `the mobile keyboard should appear` | 1 | 319 |
-| Then | `the modal backdrop should be semi-transparent` | 1 | 169 |
-| Then | `the modal should be sized appropriately for mobile` | 1 | 310 |
-| Then | `the modal should fill most of the screen width` | 1 | 334 |
+| Then | `the input field should have inputmode={string} for mobile` | 1 | 320 |
+| Then | `the mobile keyboard should appear` | 1 | 314 |
+| Then | `the modal backdrop should be semi-transparent` | 1 | 164 |
+| Then | `the modal should be sized appropriately for mobile` | 1 | 305 |
+| Then | `the modal should fill most of the screen width` | 1 | 329 |
 | Then | `the modal should have a cancel button with icon` | 1 | 62 |
 | Then | `the modal should have a confirm button with icon` | 1 | 55 |
-| Then | `the modal should have Numenera-themed styling` | 1 | 148 |
-| Then | `the modal should have role={string}` | 1 | 283 |
-| Then | `the modal should not close` | 1 | 134 |
-| Then | `the modal should not overflow the viewport` | 1 | 344 |
-| Then | `the name should show a hover state indicating it's editable` | 1 | 187 |
+| Then | `the modal should have Numenera-themed styling` | 1 | 143 |
+| Then | `the modal should have role={string}` | 1 | 278 |
+| Then | `the modal should not close` | 1 | 129 |
+| Then | `the modal should not overflow the viewport` | 1 | 339 |
+| Then | `the name should show a hover state indicating it's editable` | 1 | 182 |
 | Then | `the tier should be constrained to {string}` | 2 | 121 |
-| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 392 |
+| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 387 |
 | Then | `the tier should display {string}` | 6 | 98 |
-| Then | `the tier should show a hover state indicating it's editable` | 1 | 198 |
+| Then | `the tier should show a hover state indicating it's editable` | 1 | 193 |
 
 ## card-creation.steps.ts
 
@@ -223,7 +222,7 @@ pattern this script does not understand):
 | Then | `all equipment fields should be empty` | 1 | 162 |
 | Then | `all oddity fields should be empty` | 1 | 187 |
 | Then | `all special ability fields should be empty` | 1 | 231 |
-| When | `I cancel the card edit modal` | 7 | 569 |
+| When | `I cancel the card edit modal` | 7 | 566 |
 | When | `I click the add ability button` | 15 | 130 |
 | When | `I click the add artifact button` | 7 | 118 |
 | When | `I click the add attack button` | 7 | 126 |
@@ -231,14 +230,14 @@ pattern this script does not understand):
 | When | `I click the add equipment button` | 9 | 114 |
 | When | `I click the add oddity button` | 7 | 122 |
 | When | `I click the add special ability button` | 7 | 134 |
-| When | `I click the edit button on ability {string}` | 1 | 635 |
-| When | `I click the edit button on artifact {string}` | 1 | 614 |
-| When | `I click the edit button on attack {string}` | 1 | 628 |
-| When | `I click the edit button on cypher {string}` | 2 | 600 |
-| When | `I click the edit button on equipment {string}` | 1 | 607 |
-| When | `I click the edit button on oddity {string}` | 1 | 621 |
-| When | `I click the edit button on special ability {string}` | 1 | 642 |
-| When | `I confirm the card edit modal` | 50 | 558 |
+| When | `I click the edit button on ability {string}` | 1 | 632 |
+| When | `I click the edit button on artifact {string}` | 1 | 611 |
+| When | `I click the edit button on attack {string}` | 1 | 625 |
+| When | `I click the edit button on cypher {string}` | 2 | 597 |
+| When | `I click the edit button on equipment {string}` | 1 | 604 |
+| When | `I click the edit button on oddity {string}` | 1 | 618 |
+| When | `I click the edit button on special ability {string}` | 1 | 639 |
+| When | `I confirm the card edit modal` | 50 | 555 |
 | When | `I fill in the ability cost with {string}` | 6 | 324 |
 | When | `I fill in the ability description with {string}` | 9 | 332 |
 | When | `I fill in the ability name with {string}` | 9 | 321 |
@@ -258,17 +257,16 @@ pattern this script does not understand):
 | When | `I fill in the special ability description with {string}` | 7 | 354 |
 | When | `I fill in the special ability name with {string}` | 7 | 341 |
 | When | `I fill in the special ability source with {string}` | 7 | 347 |
-| Then | `I should see {int} ability cards` | 14 | 395 |
-| Then | `I should see {int} artifact cards` | 8 | 380 |
-| Then | `I should see {int} attack cards` | 8 | 390 |
-| Then | `I should see {int} cypher card` | 2 | 367 |
-| Then | `I should see {int} cypher cards` | 13 | 370 |
-| Then | `I should see {int} equipment cards` | 8 | 375 |
-| Then | `I should see {int} oddity cards` | 8 | 385 |
-| Then | `I should see {int} special ability cards` | 8 | 400 |
-| Then | `I should see a cypher card with name {string}` | 5 | 407 |
-| Then | `I should see a special ability card with name {string}` | 5 | 533 |
-| Then | `I should see an ability card with name {string}` | 7 | 508 |
+| Then | `I should see {int} ability cards` | 14 | 392 |
+| Then | `I should see {int} artifact cards` | 8 | 377 |
+| Then | `I should see {int} attack cards` | 8 | 387 |
+| Then | `I should see {int} cypher card(s)` | 15 | 367 |
+| Then | `I should see {int} equipment cards` | 8 | 372 |
+| Then | `I should see {int} oddity cards` | 8 | 382 |
+| Then | `I should see {int} special ability cards` | 8 | 397 |
+| Then | `I should see a cypher card with name {string}` | 5 | 404 |
+| Then | `I should see a special ability card with name {string}` | 5 | 530 |
+| Then | `I should see an ability card with name {string}` | 7 | 505 |
 | Then | `I should see an add ability button` | 1 | 98 |
 | Then | `I should see an add artifact button` | 1 | 69 |
 | Then | `I should see an add attack button` | 1 | 77 |
@@ -276,18 +274,18 @@ pattern this script does not understand):
 | Then | `I should see an add equipment button` | 1 | 65 |
 | Then | `I should see an add oddity button` | 1 | 73 |
 | Then | `I should see an add special ability button` | 1 | 102 |
-| Then | `I should see an artifact card with name {string}` | 5 | 449 |
-| Then | `I should see an attack card with name {string}` | 5 | 483 |
-| Then | `I should see an equipment card with name {string}` | 5 | 432 |
-| Then | `I should see an oddity card with text {string}` | 5 | 474 |
-| Then | `the ability {string} should have cost {string}` | 1 | 517 |
-| Then | `the ability {string} should have pool {string}` | 1 | 525 |
+| Then | `I should see an artifact card with name {string}` | 5 | 446 |
+| Then | `I should see an attack card with name {string}` | 5 | 480 |
+| Then | `I should see an equipment card with name {string}` | 5 | 429 |
+| Then | `I should see an oddity card with text {string}` | 5 | 471 |
+| Then | `the ability {string} should have cost {string}` | 1 | 514 |
+| Then | `the ability {string} should have pool {string}` | 1 | 522 |
 | Then | `the add attack button should have a non-transparent background` | 1 | 81 |
-| Then | `the artifact {string} should have effect {string}` | 1 | 466 |
-| Then | `the artifact {string} should have level {string}` | 1 | 458 |
-| Then | `the attack {string} should have damage {string}` | 1 | 500 |
-| Then | `the attack {string} should have modifier {string}` | 1 | 492 |
-| Then | `the card edit modal should be open` | 15 | 579 |
+| Then | `the artifact {string} should have effect {string}` | 1 | 463 |
+| Then | `the artifact {string} should have level {string}` | 1 | 455 |
+| Then | `the attack {string} should have damage {string}` | 1 | 497 |
+| Then | `the attack {string} should have modifier {string}` | 1 | 489 |
+| Then | `the card edit modal should be open` | 15 | 576 |
 | Given | `the character has {int} ability cards` | 5 | 46 |
 | Given | `the character has {int} artifact cards` | 5 | 31 |
 | Given | `the character has {int} attack cards` | 5 | 41 |
@@ -295,9 +293,9 @@ pattern this script does not understand):
 | Given | `the character has {int} equipment cards` | 5 | 26 |
 | Given | `the character has {int} oddity cards` | 5 | 36 |
 | Given | `the character has {int} special ability cards` | 5 | 51 |
-| Then | `the cypher {string} should have effect {string}` | 1 | 424 |
-| Then | `the cypher {string} should have level {string}` | 1 | 416 |
-| Then | `the equipment {string} should have description {string}` | 1 | 441 |
+| Then | `the cypher {string} should have effect {string}` | 1 | 421 |
+| Then | `the cypher {string} should have level {string}` | 1 | 413 |
+| Then | `the equipment {string} should have description {string}` | 1 | 438 |
 | Then | `the modal should show ability fields` | 1 | 208 |
 | Then | `the modal should show artifact fields` | 1 | 168 |
 | Then | `the modal should show attack fields` | 1 | 192 |
@@ -305,21 +303,20 @@ pattern this script does not understand):
 | Then | `the modal should show equipment fields` | 1 | 156 |
 | Then | `the modal should show oddity fields` | 1 | 182 |
 | Then | `the modal should show special ability fields` | 1 | 224 |
-| Then | `the special ability {string} should have source {string}` | 1 | 544 |
+| Then | `the special ability {string} should have source {string}` | 1 | 541 |
 
 ## card-deletion.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the delete button on the first ability` | 1 | 124 |
-| When | `I click the delete button on the first artifact` | 1 | 112 |
-| When | `I click the delete button on the first attack` | 1 | 120 |
-| When | `I click the delete button on the first cypher` | 4 | 105 |
-| When | `I click the delete button on the first cypher again` | 1 | 107 |
-| When | `I click the delete button on the first cypher card` | 2 | 106 |
-| When | `I click the delete button on the first equipment item` | 1 | 108 |
-| When | `I click the delete button on the first oddity` | 1 | 116 |
-| When | `I click the delete button on the first special ability` | 1 | 128 |
+| When | `I click the delete button on the first ability` | 1 | 123 |
+| When | `I click the delete button on the first artifact` | 1 | 111 |
+| When | `I click the delete button on the first attack` | 1 | 119 |
+| When | `I click the delete button on the first cypher` | 6 | 105 |
+| When | `I click the delete button on the first cypher again` | 1 | 106 |
+| When | `I click the delete button on the first equipment item` | 1 | 107 |
+| When | `I click the delete button on the first oddity` | 1 | 115 |
+| When | `I click the delete button on the first special ability` | 1 | 127 |
 | Given | `I have {int} abilities` | 1 | 86 |
 | Given | `I have {int} artifact` | 1 | 65 |
 | Given | `I have {int} attacks` | 1 | 79 |
@@ -334,25 +331,24 @@ pattern this script does not understand):
 | When | `I look at an attack card` | 1 | 23 |
 | When | `I look at an equipment card` | 1 | 11 |
 | When | `I look at an oddity card` | 1 | 19 |
-| Then | `I should have {int} abilities remaining` | 2 | 209 |
-| Then | `I should have {int} artifacts remaining` | 2 | 204 |
-| Then | `I should have {int} attack remaining` | 2 | 177 |
-| Then | `I should have {int} cypher remaining` | 3 | 168 |
-| Then | `I should have {int} cyphers remaining` | 1 | 192 |
-| Then | `I should have {int} equipment items remaining` | 2 | 196 |
-| Then | `I should have {int} oddity remaining` | 2 | 172 |
-| Then | `I should have {int} special ability remaining` | 2 | 182 |
-| Then | `I should not see a confirmation dialog` | 1 | 235 |
+| Then | `I should have {int} abilities remaining` | 2 | 203 |
+| Then | `I should have {int} artifacts remaining` | 2 | 198 |
+| Then | `I should have {int} attack remaining` | 2 | 176 |
+| Then | `I should have {int} cypher(s) remaining` | 4 | 167 |
+| Then | `I should have {int} equipment items remaining` | 2 | 191 |
+| Then | `I should have {int} oddity remaining` | 2 | 171 |
+| Then | `I should have {int} special ability remaining` | 2 | 181 |
+| Then | `I should not see a confirmation dialog` | 1 | 229 |
 | Then | `I should see a delete button on the {cardType} card` | 7 | 39 |
-| Then | `the ability should be removed from the DOM` | 1 | 155 |
-| Then | `the artifact should be removed from the DOM` | 1 | 143 |
-| Then | `the attack should be removed from the DOM` | 1 | 151 |
-| Then | `the cypher should be removed from the DOM` | 1 | 136 |
-| Then | `the cypher should be removed immediately` | 1 | 231 |
-| Then | `the delete button should be in the top-left corner of the card` | 1 | 216 |
-| Then | `the equipment item should be removed from the DOM` | 1 | 139 |
-| Then | `the oddity should be removed from the DOM` | 1 | 147 |
-| Then | `the special ability should be removed from the DOM` | 1 | 159 |
+| Then | `the ability should be removed from the DOM` | 1 | 154 |
+| Then | `the artifact should be removed from the DOM` | 1 | 142 |
+| Then | `the attack should be removed from the DOM` | 1 | 150 |
+| Then | `the cypher should be removed from the DOM` | 1 | 135 |
+| Then | `the cypher should be removed immediately` | 1 | 225 |
+| Then | `the delete button should be in the top-left corner of the card` | 1 | 210 |
+| Then | `the equipment item should be removed from the DOM` | 1 | 138 |
+| Then | `the oddity should be removed from the DOM` | 1 | 146 |
+| Then | `the special ability should be removed from the DOM` | 1 | 158 |
 
 ## card-modal-focus-trap.steps.ts
 
@@ -483,29 +479,27 @@ pattern this script does not understand):
 | --- | --- | ---: | ---: |
 | Then | `I should see an empty attacks section` | 1 | 105 |
 | Then | `I should see an empty special abilities section` | 1 | 187 |
-| Then | `I should see the armor badge in the attacks section` | 1 | 202 |
+| Then | `I should see the armor badge in the attacks section` | 1 | 198 |
 | Then | `I should see the attack {string}` | 2 | 17 |
 | Then | `I should see the special ability {string}` | 1 | 139 |
-| Then | `the armor badge should show value {string}` | 1 | 206 |
 | Then | `the attack {string} should have red combat theme styling` | 1 | 92 |
 | Then | `the attack {string} should not show notes` | 1 | 82 |
 | Then | `the attack {string} should show damage {string}` | 2 | 26 |
 | Then | `the attack {string} should show modifier {string}` | 2 | 40 |
 | Then | `the attack {string} should show notes {string}` | 1 | 68 |
 | Then | `the attack {string} should show range {string}` | 2 | 54 |
-| Then | `the attacks section should be in the right column` | 1 | 224 |
+| Then | `the attacks section should be in the right column` | 1 | 214 |
 | Given | `the character has a special ability {string}` | 1 | 130 |
 | Given | `the character has a special ability {string} with:` | 1 | 116 |
 | Given | `the character has an attack {string}` | 1 | 10 |
 | Given | `the character has an attack {string} with:` | 1 | 5 |
-| Given | `the character has armor value {int}` | 1 | 198 |
 | Given | `the character has no attacks` | 1 | 12 |
 | Given | `the character has no special abilities` | 1 | 134 |
-| Given | `the character has special abilities and attacks` | 1 | 214 |
+| Given | `the character has special abilities and attacks` | 1 | 204 |
 | Then | `the empty attacks state should use translation keys` | 1 | 109 |
 | Then | `the empty special abilities state should use translation keys` | 1 | 191 |
-| Then | `the sections should stack vertically on mobile` | 1 | 229 |
-| Then | `the special abilities section should be in the left column` | 1 | 219 |
+| Then | `the sections should stack vertically on mobile` | 1 | 219 |
+| Then | `the special abilities section should be in the left column` | 1 | 209 |
 | Then | `the special ability {string} should have teal theme styling` | 1 | 174 |
 | Then | `the special ability {string} should show description {string}` | 1 | 148 |
 | Then | `the special ability {string} should show source {string}` | 1 | 160 |
@@ -672,21 +666,21 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `the Armor badge should show {string}` | 4 | 155 |
+| Then | `the Armor badge should show {string}` | 5 | 155 |
 | Then | `the character data should have armor {int}` | 1 | 213 |
 | Then | `the character data should have currentXp {int}` | 1 | 183 |
 | Then | `the character data should have effort {int}` | 1 | 233 |
 | Then | `the character data should have maxCyphers {int}` | 1 | 223 |
 | Then | `the character data should have shins {int}` | 1 | 203 |
 | Then | `the character data should have totalXp {int}` | 1 | 193 |
-| Given | `the character has {int} {resource}` | 12 | 112 |
+| Given | `the character has {int} {resource}` | 13 | 112 |
 | Given | `the character has {int} current XP and {int} total XP` | 9 | 24 |
 | Given | `the character has {resource} {int}` | 8 | 119 |
 | Given | `the character was saved with a single legacy XP value of {int}` | 1 | 49 |
 | Then | `the Current XP badge should show {string}` | 7 | 131 |
 | Then | `the Effort badge should show {string}` | 3 | 171 |
 | Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 163 |
-| Then | `the modal confirm button should be disabled` | 1 | 243 |
+| Then | `the modal confirm button should be disabled` | 2 | 243 |
 | Then | `the modal should show a real validation error, not a raw translation key` | 1 | 248 |
 | Then | `the Shins badge should show {string}` | 5 | 147 |
 | Then | `the Total XP badge should show {string}` | 5 | 139 |
@@ -833,7 +827,7 @@ pattern this script does not understand):
 | Given | `I am viewing the latest version` | 6 | 49 |
 | Given | `I am viewing version {int}` | 8 | 54 |
 | When | `I click the backward navigation arrow` | 17 | 373 |
-| Then | `I click the backward navigation arrow {int} times` | 1 | 968 |
+| Then | `I click the backward navigation arrow {int} times` | 1 | 955 |
 | When | `I click the backward navigation arrow again` | 1 | 380 |
 | When | `I click the forward navigation arrow` | 3 | 392 |
 | When | `I click the forward navigation arrow again` | 1 | 398 |
@@ -841,34 +835,33 @@ pattern this script does not understand):
 | When | `I click the return to latest button` | 1 | 386 |
 | When | `I create a new version by editing the name` | 1 | 486 |
 | Given | `I have made buffered edits that were undone` | 2 | 305 |
-| When | `I make {int} rapid edits that are buffered` | 1 | 1144 |
+| When | `I make {int} rapid edits that are buffered` | 1 | 1131 |
 | When | `I navigate backward` | 1 | 450 |
 | When | `I navigate forward twice` | 1 | 456 |
 | When | `I navigate to version {int}` | 8 | 410 |
 | When | `I press {string}` | 5 | 665 |
-| When | `I press {string} again` | 2 | 1022 |
-| When | `I press {string} again before the squash timer expires` | 2 | 1057 |
-| When | `I press {string} before the squash timer expires` | 11 | 983 |
-| When | `I press {string} to navigate to previous version` | 1 | 1211 |
-| When | `I press {string} to undo buffered changes` | 1 | 1165 |
+| When | `I press {string} again` | 2 | 1009 |
+| When | `I press {string} again before the squash timer expires` | 2 | 1044 |
+| When | `I press {string} before the squash timer expires` | 11 | 970 |
+| When | `I press {string} to navigate to previous version` | 1 | 1198 |
+| When | `I press {string} to undo buffered changes` | 1 | 1152 |
 | When | `I rapidly click the backward arrow {int} times` | 1 | 464 |
 | When | `I refresh the browser` | 6 | 478 |
 | Then | `I should be viewing the latest version` | 3 | 877 |
-| Then | `I should be viewing version {int}` | 1 | 1251 |
+| Then | `I should be viewing version {int}` | 1 | 1238 |
 | Then | `I should navigate to version {int}` | 2 | 890 |
-| Then | `I should see {int} versions in history` | 2 | 1124 |
+| Then | `I should see {int} versions in history` | 2 | 1111 |
 | When | `I view the character sheet` | 2 | 366 |
 | When | `I wait for {int} milliseconds` | 4 | 650 |
-| When | `I wait for squash timer to complete` | 15 | 1206 |
-| Then | `no new version should be created yet` | 2 | 1105 |
+| When | `I wait for squash timer to complete` | 15 | 1193 |
+| Then | `no new version should be created yet` | 2 | 1092 |
 | Then | `no warning banner should be visible` | 6 | 536 |
 | Then | `the backward arrow should be disabled` | 1 | 599 |
 | Then | `the backward arrow should be enabled` | 3 | 541 |
 | Then | `the change description should be displayed` | 1 | 569 |
-| Then | `the changes should be reapplied` | 2 | 1132 |
+| Then | `the changes should be reapplied` | 2 | 1119 |
 | Then | `the character data should be correct for version {int}` | 1 | 900 |
-| Then | `the character data should match version {int}` | 4 | 551 |
-| Then | `the character data should match version {int} data` | 1 | 934 |
+| Then | `the character data should match version {int}` | 5 | 551 |
 | Then | `the character equipment should match version {int} equipment` | 2 | 779 |
 | Given | `the character has {int} versions in history` | 41 | 12 |
 | Given | `the character has {int} versions with different data` | 3 | 194 |
@@ -880,18 +873,18 @@ pattern this script does not understand):
 | Given | `the character has a version with multiple basic info changes` | 2 | 97 |
 | Given | `the character has a version with name change` | 1 | 68 |
 | Given | `the character has no version history yet` | 4 | 7 |
-| Then | `the character name should be {string}` | 8 | 1096 |
+| Then | `the character name should be {string}` | 8 | 1083 |
 | Then | `the character name should match version {int} name` | 4 | 754 |
-| Then | `the character name should revert to the original value` | 2 | 1114 |
+| Then | `the character name should revert to the original value` | 2 | 1101 |
 | Then | `the character stats should match version {int} stats` | 2 | 766 |
 | Then | `the exported file should contain version {int} data` | 1 | 815 |
 | Then | `the exported file should not contain version history` | 1 | 838 |
 | Then | `the exported file should use the current portrait` | 1 | 853 |
 | Then | `the forward arrow should be disabled` | 4 | 546 |
 | Then | `the forward arrow should be enabled` | 1 | 604 |
-| Then | `the import button should be disabled` | 1 | 1274 |
-| Then | `the import button should be enabled` | 2 | 1269 |
-| Then | `the oldest version should have been removed` | 2 | 962 |
+| Then | `the import button should be disabled` | 1 | 1261 |
+| Then | `the import button should be enabled` | 2 | 1256 |
+| Then | `the oldest version should have been removed` | 2 | 949 |
 | Then | `the portrait should remain unchanged` | 3 | 803 |
 | When | `the squash timer has completed` | 2 | 660 |
 | Then | `the timestamp should be displayed` | 1 | 578 |
@@ -901,11 +894,11 @@ pattern this script does not understand):
 | Then | `the undo buffer should contain exactly {int} changes` | 1 | 639 |
 | Then | `the version counter should show {string}` | 25 | 528 |
 | Then | `the version description should contain {string}` | 11 | 726 |
-| Then | `the version description should contain the tier change` | 1 | 952 |
+| Then | `the version description should contain the tier change` | 1 | 939 |
 | Then | `the version navigator should be visible` | 4 | 523 |
 | Then | `the version navigator should not be visible` | 2 | 511 |
 | Then | `the warning banner should be visible` | 7 | 594 |
 | Then | `the warning banner should contain text {string}` | 1 | 609 |
 | Then | `the warning banner should have a restore button` | 1 | 617 |
-| Then | `the warning banner should not be visible` | 2 | 947 |
+| Then | `the warning banner should not be visible` | 2 | 934 |
 

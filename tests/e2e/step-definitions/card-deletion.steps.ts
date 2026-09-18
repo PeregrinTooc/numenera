@@ -103,7 +103,6 @@ async function clickFirstCypherDelete(this: CustomWorld): Promise<void> {
   await this.cards.clickDeleteButton("cypher");
 }
 When("I click the delete button on the first cypher", clickFirstCypherDelete);
-When("I click the delete button on the first cypher card", clickFirstCypherDelete);
 When("I click the delete button on the first cypher again", clickFirstCypherDelete);
 
 When("I click the delete button on the first equipment item", async function (this: CustomWorld) {
@@ -165,7 +164,7 @@ Then("the special ability should be removed from the DOM", async function (this:
 // abilities) and the "equipment item(s)" extra word mean {cardType} can't
 // cover every phrasing here, so these stay individually registered; each
 // now shares this.cards.count() instead of a local selector-map lookup.
-Then("I should have {int} cypher remaining", async function (this: CustomWorld, count: number) {
+Then("I should have {int} cypher(s) remaining", async function (this: CustomWorld, count: number) {
   const actualCount = await this.cards.count("cypher");
   expect(actualCount).toBe(count);
 });
@@ -189,11 +188,6 @@ Then(
 );
 
 // Count verification steps - plural
-Then("I should have {int} cyphers remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await this.cards.count("cypher");
-  expect(actualCount).toBe(count);
-});
-
 Then(
   "I should have {int} equipment items remaining",
   async function (this: CustomWorld, count: number) {

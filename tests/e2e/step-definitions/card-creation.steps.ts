@@ -364,10 +364,7 @@ When(
 // ============================================================================
 
 // Cypher cards (singular and plural)
-Then("I should see {int} cypher card", async function (this: CustomWorld, count: number) {
-  await this.cards.expectVisibleCount("cypher", count);
-});
-Then("I should see {int} cypher cards", async function (this: CustomWorld, count: number) {
+Then("I should see {int} cypher card(s)", async function (this: CustomWorld, count: number) {
   await this.cards.expectVisibleCount("cypher", count);
 });
 
