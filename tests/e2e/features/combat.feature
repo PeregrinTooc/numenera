@@ -36,9 +36,9 @@ Feature: Combat & Special Abilities
         And the special ability "Lightning Bolt" should show source "Lightning Rod artifact"
 
     Scenario: Display armor badge in attacks section
-        Given the character has armor value 2
+        Given the character has 2 armor
         Then I should see the armor badge in the attacks section
-        And the armor badge should show value "2"
+        And the Armor badge should show "2"
 
     Scenario: Empty attacks section shows empty state
         Given the character has no attacks

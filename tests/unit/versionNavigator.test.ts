@@ -1,17 +1,14 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { VersionNavigator } from "../../src/components/VersionNavigator";
+import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("VersionNavigator", () => {
+  const getContainer = setupTestContainer();
   let container: HTMLElement;
   let versionNavigator: VersionNavigator;
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
+    container = getContainer();
   });
 
   describe("Visibility", () => {

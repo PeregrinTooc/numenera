@@ -24,6 +24,8 @@
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "check:i18n": "node scripts/check-translation-coverage.js",
+    "check:steps": "node scripts/step-catalog.js --check",
+    "docs:steps": "node scripts/step-catalog.js",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,html}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css,html}\"",
     "prepare": "husky"

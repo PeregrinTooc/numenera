@@ -1,23 +1,14 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
-import { DOMHelpers } from "../support/dom-helpers.js";
 
 // Attack step definitions
 
-Given("the character has an attack {string} with:", async function (attackName: string, dataTable) {
-  this.testAttackName = attackName;
-  this.testAttackProperties = {};
+Given(
+  "the character has an attack {string} with:",
+  async function (_attackName: string, _dataTable) {}
+);
 
-  const rows = dataTable.raw();
-  for (let i = 0; i < rows.length; i++) {
-    const [property, value] = rows[i];
-    this.testAttackProperties[property] = value;
-  }
-});
-
-Given("the character has an attack {string}", async function (attackName: string) {
-  this.testAttackName = attackName;
-});
+Given("the character has an attack {string}", async function (_attackName: string) {});
 
 Given("the character has no attacks", async function () {
   await this.page.goto(this.getBaseUrl());
@@ -113,13 +104,11 @@ Then(
 );
 
 Then("I should see an empty attacks section", async function () {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("empty-attacks")).toBeVisible();
+  await expect(this.dom.getByTestId("empty-attacks")).toBeVisible();
 });
 
 Then("the empty attacks state should use translation keys", async function () {
-  const dom = new DOMHelpers(this.page);
-  const emptyState = dom.getByTestId("empty-attacks");
+  const emptyState = this.dom.getByTestId("empty-attacks");
   await expect(emptyState).not.toBeEmpty();
 });
 
@@ -197,33 +186,18 @@ Then(
 );
 
 Then("I should see an empty special abilities section", async function () {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("empty-special-abilities")).toBeVisible();
+  await expect(this.dom.getByTestId("empty-special-abilities")).toBeVisible();
 });
 
 Then("the empty special abilities state should use translation keys", async function () {
-  const dom = new DOMHelpers(this.page);
-  const emptyState = dom.getByTestId("empty-special-abilities");
+  const emptyState = this.dom.getByTestId("empty-special-abilities");
   await expect(emptyState).not.toBeEmpty();
 });
 
 // Armor badge step definitions
 
-Given("the character has armor value {int}", async function (armorValue: number) {
-  // The character should already have this value in the mock data
-  this.testArmorValue = armorValue;
-});
-
 Then("I should see the armor badge in the attacks section", async function () {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("armor-badge")).toBeVisible();
-});
-
-Then("the armor badge should show value {string}", async function (value: string) {
-  const dom = new DOMHelpers(this.page);
-  const armorValue = dom.getByTestId("armor-value");
-  await expect(armorValue).toBeVisible();
-  await expect(armorValue).toContainText(value);
+  await expect(this.dom.getByTestId("armor-badge")).toBeVisible();
 });
 
 // Layout step definitions
@@ -234,14 +208,12 @@ Given("the character has special abilities and attacks", async function () {
 });
 
 Then("the special abilities section should be in the left column", async function () {
-  const dom = new DOMHelpers(this.page);
-  const specialAbilitiesSection = dom.getByTestId("special-abilities-section");
+  const specialAbilitiesSection = this.dom.getByTestId("special-abilities-section");
   await expect(specialAbilitiesSection).toBeVisible();
 });
 
 Then("the attacks section should be in the right column", async function () {
-  const dom = new DOMHelpers(this.page);
-  const attacksSection = dom.getByTestId("attacks-section");
+  const attacksSection = this.dom.getByTestId("attacks-section");
   await expect(attacksSection).toBeVisible();
 });
 
@@ -249,7 +221,6 @@ Then("the sections should stack vertically on mobile", async function () {
   // This tests the responsive grid layout
   // For now, we just verify both sections are visible
   // A full responsive test would require viewport resizing
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("special-abilities-section")).toBeVisible();
-  await expect(dom.getByTestId("attacks-section")).toBeVisible();
+  await expect(this.dom.getByTestId("special-abilities-section")).toBeVisible();
+  await expect(this.dom.getByTestId("attacks-section")).toBeVisible();
 });

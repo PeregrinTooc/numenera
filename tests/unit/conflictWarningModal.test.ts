@@ -1,19 +1,19 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { ConflictWarningModal } from "../../src/components/ConflictWarningModal";
 import type { ConflictDetail } from "../../src/services/conflictDetectionService";
+import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("ConflictWarningModal", () => {
+  const getContainer = setupTestContainer();
   let container: HTMLElement;
   let modal: ConflictWarningModal;
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
+    container = getContainer();
   });
 
   afterEach(() => {
     modal?.close();
-    container.remove();
     vi.restoreAllMocks();
   });
 

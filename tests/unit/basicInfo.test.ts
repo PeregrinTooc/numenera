@@ -1,16 +1,17 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { BasicInfo } from "../../src/components/BasicInfo";
 import type { Character } from "../../src/types/character";
 import { render } from "lit-html";
+import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("BasicInfo", () => {
+  const getContainer = setupTestContainer();
   let container: HTMLElement;
   let mockCharacter: Character;
   let onFieldUpdate: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
+    container = getContainer();
 
     mockCharacter = {
       name: "Test Character",
@@ -48,10 +49,6 @@ describe("BasicInfo", () => {
     };
 
     onFieldUpdate = vi.fn();
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
   });
 
   describe("Portrait Upload Validation", () => {

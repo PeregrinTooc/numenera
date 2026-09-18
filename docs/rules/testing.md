@@ -39,35 +39,82 @@ tests/
 ### Full Example:
 
 ```gherkin
-Feature: Character stat pool management
-    As a player
-    I want to manage my character's stat pools
-    So that I can track my character's capabilities
+Feature: Resource Tracker Fields Editing
+    As a user
+    I want to edit XP, Shins, Armor, Max Cyphers, and Effort values
+    So that I can manage character resources effectively
 
     Background:
-        Given I have a character with:
-            | stat      | pool | edge | current |
-            | Might     | 12   | 1    | 12      |
-            | Speed     | 10   | 0    | 10      |
-            | Intellect | 14   | 2    | 14      |
+        Given I am on the character sheet page
 
-    Scenario: Spending pool points
-        When I spend 3 points from Might
-        Then Might current should be 9
-        And Might pool should still be 12
-
-    Scenario: Edge reduces cost
-        When I spend 3 points from Intellect with edge applied
-        Then Intellect current should be 13
-        And the effective cost was 1 point
-
-    Scenario: Cannot spend more than available
-        When I attempt to spend 15 points from Speed
-        Then I should see an error "Insufficient points"
-        And Speed current should remain 10
+    Scenario: Editing current XP saves the change and leaves total XP untouched
+        Given the character has 5 current XP and 45 total XP
+        When I click the Current XP badge
+        And I type "10" in the modal input
+        And I click the modal confirm button
+        Then the Current XP badge should show "10"
+        And the Total XP badge should show "45"
+        And the character data should have currentXp 10
 ```
 
+Copied from `tests/e2e/features/resource-tracker-editing.feature` so the
+example and the real vocabulary never drift apart — every phrase here is a
+live entry in the catalog below, not an invented one.
+
 **Reference:** See `workflow.md` for the Feature File Format template (Rule #2).
+
+**Vocabulary:** every step phrase the suite already understands is listed in
+`tests/e2e/STEP_CATALOG.md`, with usage counts and the file that implements it.
+Search it before writing a step; reuse an existing phrase exactly rather than
+inventing a near-synonym. Regenerate with `npm run docs:steps`; `npm run
+check:steps` fails on unused step definitions or a stale catalog.
+
+### Phrasing Conventions
+
+Where a family of near-synonyms exists, use the canonical form below rather
+than adding another variant. This table is the tie-breaker; for anything not
+listed, **the phrasing with the most uses wins**, unless a generic
+parameterised pattern already exists (`{badge}`, `{cardType}`, `{textarea}`,
+`{resource}` — see E2E World DSL below), in which case the generic one wins.
+
+| Pattern                         | Canonical form                                                                                                                 | Not                                                                                        |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| Click a labelled button         | `I click the "Confirm" button` (quoted, visible label)                                                                         | `I click the Confirm button`, `I click the modal confirm button`, `I click the new button` |
+| Type into the open modal        | `I type "x" in the modal input`                                                                                                | `… in the input field`, `… into the input field`                                           |
+| Assert modal input              | `the modal input should contain "x"`                                                                                           | `the input field should contain "x"`                                                       |
+| Modal button state              | `the modal confirm button should be disabled`                                                                                  | `the confirm button should be disabled`                                                    |
+| Counts of cards                 | `I should see 3 cypher cards` — `card(s)` optional in the definition                                                           | `I should see 1 cypher card` as a **separate** definition                                  |
+| Set a resource on the character | `the character has 47 shins` / `the character has max cyphers 2` (one word order per resource, as the parameter type dictates) | `the character has armor value 2`                                                          |
+| Badge assertions                | `the Armor badge should show "2"`                                                                                              | `the armor badge should show value "2"`                                                    |
+| Basic-info fields               | `the descriptor should display "x"`                                                                                            | `the descriptor field should display "x"`                                                  |
+| Given-state, no article noise   | `the character has a version with a name change`                                                                               | `… with name change`                                                                       |
+| Capitalisation                  | Match the UI label inside quotes; lowercase elsewhere                                                                          | `I click the Export button` vs `I click the export button`                                 |
+
+---
+
+## E2E World DSL
+
+Look here before writing a raw locator or a `new SomeHelper(this.page)` call.
+`hooks.ts` builds each of these onto `CustomWorld` (`tests/e2e/support/world.ts`)
+in `Before`, so every step definition has them from the first line:
+
+| On `this`       | Class (file)                                         | For                                                                                                |
+| --------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `dom`           | `DOMHelpers` (`support/dom-helpers.ts`)              | Generic `data-testid` locators and waits.                                                          |
+| `storageHelper` | `TestStorageHelper` (`support/testStorageHelper.ts`) | Seed or clear character/version storage.                                                           |
+| `modal`         | `ModalDsl` (`support/modal.ts`)                      | Confirm/cancel/type/clear/expectOpen/expectClosed on the edit modal.                               |
+| `fields`        | `FieldsDsl` (`support/fields.ts`)                    | Click/tap/hover a named field or resource badge.                                                   |
+| `cards`         | `CardsDsl` (`support/cards.ts`)                      | Set up, add, edit, delete and count cards by type.                                                 |
+| `setup`         | `SetupDsl` (`support/setup.ts`)                      | `this.setup.character(overrides)` — seed `FULL_CHARACTER` + overrides, reload, wait for the sheet. |
+
+Gherkin vocabulary comes in through parameter types
+(`support/parameterTypes.ts`): `{cardType}`, `{badge}`, `{textarea}`,
+`{resource}`. An unrecognised word is a compile-time undefined step, not a
+runtime lookup failure inside the step body.
+
+ESLint enforces the DSL rather than leaving it as convention: instantiating
+`DOMHelpers`/`TestStorageHelper` directly, or one step-definitions file
+importing from another, are both lint errors (`eslint.config.js`).
 
 ---
 
@@ -305,7 +352,7 @@ describe("i18n", () => {
 ### Use Factories:
 
 ```typescript
-// test/factories/character.ts
+// tests/factories/character.ts
 export function createTestCharacter(overrides = {}) {
   return {
     name: "Test Character",

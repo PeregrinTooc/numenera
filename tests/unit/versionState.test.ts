@@ -3,51 +3,14 @@ import { VersionState } from "../../src/services/versionState";
 import { VersionHistoryManager } from "../../src/storage/versionHistory";
 import { Character } from "../../src/types/character";
 import { CharacterVersion } from "../../src/types/versionHistory";
+import { createTestCharacter } from "../factories/character.js";
 
 describe("VersionState", () => {
   let mockVersionHistory: VersionHistoryManager;
   let mockCharacter: Character;
   let versionState: VersionState;
 
-  const createMockCharacter = (name: string): Character => ({
-    name,
-    tier: 1,
-    type: "Glaive",
-    descriptor: "Strong",
-    focus: "Bears a Halo of Fire",
-    currentXp: 0,
-    totalXp: 0,
-    shins: 0,
-    armor: 0,
-    effort: 1,
-    maxCyphers: 2,
-    stats: {
-      might: { pool: 10, edge: 0, current: 10 },
-      speed: { pool: 10, edge: 0, current: 10 },
-      intellect: { pool: 10, edge: 0, current: 10 },
-    },
-    cyphers: [],
-    artifacts: [],
-    oddities: [],
-    abilities: [],
-    equipment: [],
-    attacks: [],
-    specialAbilities: [],
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: {
-      impairment: "healthy",
-    },
-    textFields: {
-      background: "",
-      notes: "",
-    },
-  });
+  const createMockCharacter = (name: string): Character => createTestCharacter({ name });
 
   const createMockVersion = (
     name: string,

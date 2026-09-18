@@ -1,11 +1,13 @@
 import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { Character } from "../../../src/types/character.js";
-import { TestStorageHelper } from "../support/testStorageHelper.js";
+import { FULL_CHARACTER } from "../support/cardTestFixtures.js";
 
-// Test character data fixtures
+// Test character data fixtures — overrides of the shared demo character so
+// only what makes each imported file distinctive needs to be spelled out.
 const TEST_CHARACTERS: Record<string, Character> = {
   "test-hero.numenera": {
+    ...FULL_CHARACTER,
     name: "Test Hero",
     tier: 3,
     type: "Glaive",
@@ -43,22 +45,13 @@ const TEST_CHARACTERS: Record<string, Character> = {
         source: "Type",
       },
     ],
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: {
-      impairment: "healthy",
-    },
     textFields: {
       background: "Test background story",
       notes: "Test notes",
     },
   },
   "another-hero.numenera": {
+    ...FULL_CHARACTER,
     name: "Another Hero",
     tier: 2,
     type: "Nano",
@@ -82,16 +75,6 @@ const TEST_CHARACTERS: Record<string, Character> = {
     equipment: [{ name: "Another Equipment" }],
     attacks: [],
     specialAbilities: [],
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: {
-      impairment: "healthy",
-    },
     textFields: {
       background: "Another background",
       notes: "Another notes",
@@ -111,9 +94,8 @@ When("I import a valid character file {string}", async function (filename: strin
 
   // Directly inject the character data into storage (simulating successful import)
   // This is more reliable than trying to mock file system APIs in Playwright
-  const storageHelper = new TestStorageHelper(this.page);
   await this.page.waitForTimeout(500);
-  await storageHelper.setCharacter(fileContent.character);
+  await this.storageHelper.setCharacter(fileContent.character);
 
   // Use explicit page navigation to reload (this properly waits for the navigation)
   // Remove any query parameters to ensure clean reload

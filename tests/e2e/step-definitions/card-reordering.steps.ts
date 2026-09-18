@@ -7,17 +7,9 @@ import type { CustomWorld } from "../support/world";
 // ============================================================================
 
 Given(
-  "the character has {int} cyphers named {string}, {string}, {string}",
-  async function (this: CustomWorld, count: number, name1: string, name2: string, name3: string) {
-    const names = [name1, name2, name3].slice(0, count);
-    await setupCyphersWithNames(this, names);
-  }
-);
-
-Given(
-  "the character has {int} cyphers named {string}, {string}",
-  async function (this: CustomWorld, count: number, name1: string, name2: string) {
-    const names = [name1, name2].slice(0, count);
+  "the character has {int} cyphers named {string}",
+  async function (this: CustomWorld, count: number, namesList: string) {
+    const names = namesList.split(", ").slice(0, count);
     await setupCyphersWithNames(this, names);
   }
 );
@@ -32,16 +24,16 @@ async function setupCyphersWithNames(world: CustomWorld, names: string[]): Promi
 
   // Use TestStorageHelper to interact with the app's actual storage (IndexedDB)
   // Get current character state and update cyphers
-  const character = await world.storageHelper!.getCharacter();
+  const character = await world.storageHelper.getCharacter();
   if (character) {
     character.cyphers = cyphers;
-    await world.storageHelper!.setCharacter(character);
+    await world.storageHelper.setCharacter(character);
   }
 
   // Reload page to reflect changes
-  await world.page!.reload();
-  await world.page!.waitForLoadState("domcontentloaded");
-  await world.page!.waitForSelector('[data-testid="cyphers-section"]');
+  await world.page.reload();
+  await world.page.waitForLoadState("domcontentloaded");
+  await world.page.waitForSelector('[data-testid="cyphers-section"]');
 }
 
 // ============================================================================
@@ -51,12 +43,12 @@ async function setupCyphersWithNames(world: CustomWorld, names: string[]): Promi
 When(
   "I drag cypher {string} before cypher {string}",
   async function (this: CustomWorld, sourceName: string, targetName: string) {
-    const sourceCard = this.page!.locator(`[data-testid="cypher-name-${sourceName}"]`).locator(
-      "xpath=ancestor::div[@data-testid='cypher-item']"
-    );
-    const targetCard = this.page!.locator(`[data-testid="cypher-name-${targetName}"]`).locator(
-      "xpath=ancestor::div[@data-testid='cypher-item']"
-    );
+    const sourceCard = this.page
+      .locator(`[data-testid="cypher-name-${sourceName}"]`)
+      .locator("xpath=ancestor::div[@data-testid='cypher-item']");
+    const targetCard = this.page
+      .locator(`[data-testid="cypher-name-${targetName}"]`)
+      .locator("xpath=ancestor::div[@data-testid='cypher-item']");
 
     // Use Playwright's dragTo method which properly triggers HTML5 drag events
     await sourceCard.dragTo(targetCard, {
@@ -64,19 +56,19 @@ When(
     });
 
     // Wait for DOM update after reorder
-    await this.page!.waitForTimeout(200);
+    await this.page.waitForTimeout(200);
   }
 );
 
 When(
   "I drag cypher {string} after cypher {string}",
   async function (this: CustomWorld, sourceName: string, targetName: string) {
-    const sourceCard = this.page!.locator(`[data-testid="cypher-name-${sourceName}"]`).locator(
-      "xpath=ancestor::div[@data-testid='cypher-item']"
-    );
-    const targetCard = this.page!.locator(`[data-testid="cypher-name-${targetName}"]`).locator(
-      "xpath=ancestor::div[@data-testid='cypher-item']"
-    );
+    const sourceCard = this.page
+      .locator(`[data-testid="cypher-name-${sourceName}"]`)
+      .locator("xpath=ancestor::div[@data-testid='cypher-item']");
+    const targetCard = this.page
+      .locator(`[data-testid="cypher-name-${targetName}"]`)
+      .locator("xpath=ancestor::div[@data-testid='cypher-item']");
 
     // Get target bounding box to calculate bottom position
     const targetBBox = await targetCard.boundingBox();
@@ -90,14 +82,14 @@ When(
     });
 
     // Wait for DOM update after reorder
-    await this.page!.waitForTimeout(200);
+    await this.page.waitForTimeout(200);
   }
 );
 
 When("I start dragging cypher {string}", async function (this: CustomWorld, cypherName: string) {
-  const cypherCard = this.page!.locator(`[data-testid="cypher-name-${cypherName}"]`).locator(
-    "xpath=ancestor::div[@data-testid='cypher-item']"
-  );
+  const cypherCard = this.page
+    .locator(`[data-testid="cypher-name-${cypherName}"]`)
+    .locator("xpath=ancestor::div[@data-testid='cypher-item']");
 
   const bbox = await cypherCard.boundingBox();
   if (!bbox) {
@@ -110,7 +102,6 @@ When("I start dragging cypher {string}", async function (this: CustomWorld, cyph
   // Dispatch dragstart event from within the browser context
   // This is needed because mouse.down() doesn't trigger HTML5 drag events
   await cypherCard.evaluate((el) => {
-    // eslint-disable-next-line no-undef
     const event = new DragEvent("dragstart", {
       bubbles: true,
       cancelable: true,
@@ -121,13 +112,13 @@ When("I start dragging cypher {string}", async function (this: CustomWorld, cyph
   });
 
   // Wait for drag state to be applied
-  await this.page!.waitForTimeout(100);
+  await this.page.waitForTimeout(100);
 });
 
 When("I hover over cypher {string}", async function (this: CustomWorld, cypherName: string) {
-  const cypherCard = this.page!.locator(`[data-testid="cypher-name-${cypherName}"]`).locator(
-    "xpath=ancestor::div[@data-testid='cypher-item']"
-  );
+  const cypherCard = this.page
+    .locator(`[data-testid="cypher-name-${cypherName}"]`)
+    .locator("xpath=ancestor::div[@data-testid='cypher-item']");
 
   const bbox = await cypherCard.boundingBox();
   if (!bbox) {
@@ -136,7 +127,6 @@ When("I hover over cypher {string}", async function (this: CustomWorld, cypherNa
 
   // Dispatch dragover event from within the browser context
   await cypherCard.evaluate((el) => {
-    // eslint-disable-next-line no-undef
     const event = new DragEvent("dragover", {
       bubbles: true,
       cancelable: true,
@@ -145,7 +135,7 @@ When("I hover over cypher {string}", async function (this: CustomWorld, cypherNa
   });
 
   // Wait for visual reorder
-  await this.page!.waitForTimeout(200);
+  await this.page.waitForTimeout(200);
 });
 
 // ============================================================================
@@ -153,23 +143,15 @@ When("I hover over cypher {string}", async function (this: CustomWorld, cypherNa
 // ============================================================================
 
 Then(
-  "the cyphers should be in order {string}, {string}, {string}",
-  async function (this: CustomWorld, name1: string, name2: string, name3: string) {
-    const expectedOrder = [name1, name2, name3];
-    await verifyCypherOrder(this, expectedOrder);
-  }
-);
-
-Then(
-  "the cyphers should be in order {string}, {string}",
-  async function (this: CustomWorld, name1: string, name2: string) {
-    const expectedOrder = [name1, name2];
+  "the cyphers should be in order {string}",
+  async function (this: CustomWorld, namesList: string) {
+    const expectedOrder = namesList.split(", ");
     await verifyCypherOrder(this, expectedOrder);
   }
 );
 
 async function verifyCypherOrder(world: CustomWorld, expectedOrder: string[]): Promise<void> {
-  const cypherItems = world.page!.locator('[data-testid="cypher-item"]');
+  const cypherItems = world.page.locator('[data-testid="cypher-item"]');
   const count = await cypherItems.count();
 
   expect(count).toBe(expectedOrder.length);
@@ -190,9 +172,9 @@ async function verifyCypherOrder(world: CustomWorld, expectedOrder: string[]): P
 Then(
   "the cypher {string} should have a dragging visual state",
   async function (this: CustomWorld, cypherName: string) {
-    const cypherCard = this.page!.locator(`[data-testid="cypher-name-${cypherName}"]`).locator(
-      "xpath=ancestor::div[@data-testid='cypher-item']"
-    );
+    const cypherCard = this.page
+      .locator(`[data-testid="cypher-name-${cypherName}"]`)
+      .locator("xpath=ancestor::div[@data-testid='cypher-item']");
 
     // Check for dragging class or visual state
     const hasDraggingClass = await cypherCard.evaluate((el) => {
@@ -207,12 +189,6 @@ Then(
   }
 );
 
-Then("I should see drop zone indicators", async function (this: CustomWorld) {
-  const dropZones = this.page!.locator('[data-testid="drop-zone"]');
-  const count = await dropZones.count();
-  expect(count).toBeGreaterThan(0);
-});
-
 Then(
   "the cyphers should be visually in order {string}, {string}, {string}",
   async function (this: CustomWorld, name1: string, name2: string, name3: string) {
@@ -222,7 +198,7 @@ Then(
 );
 
 async function verifyVisualCypherOrder(world: CustomWorld, expectedOrder: string[]): Promise<void> {
-  const cypherItems = world.page!.locator('[data-testid="cypher-item"]');
+  const cypherItems = world.page.locator('[data-testid="cypher-item"]');
   const count = await cypherItems.count();
 
   expect(count).toBe(expectedOrder.length);
@@ -258,17 +234,9 @@ async function verifyVisualCypherOrder(world: CustomWorld, expectedOrder: string
 // ============================================================================
 
 Given(
-  "the character has {int} abilities named {string}, {string}, {string}",
-  async function (this: CustomWorld, count: number, name1: string, name2: string, name3: string) {
-    const names = [name1, name2, name3].slice(0, count);
-    await setupAbilitiesWithNames(this, names);
-  }
-);
-
-Given(
-  "the character has {int} abilities named {string}, {string}",
-  async function (this: CustomWorld, count: number, name1: string, name2: string) {
-    const names = [name1, name2].slice(0, count);
+  "the character has {int} abilities named {string}",
+  async function (this: CustomWorld, count: number, namesList: string) {
+    const names = namesList.split(", ").slice(0, count);
     await setupAbilitiesWithNames(this, names);
   }
 );
@@ -282,53 +250,45 @@ async function setupAbilitiesWithNames(world: CustomWorld, names: string[]): Pro
     action: "Action",
   }));
 
-  const character = await world.storageHelper!.getCharacter();
+  const character = await world.storageHelper.getCharacter();
   if (character) {
     character.abilities = abilities;
-    await world.storageHelper!.setCharacter(character);
+    await world.storageHelper.setCharacter(character);
   }
 
-  await world.page!.reload();
-  await world.page!.waitForLoadState("domcontentloaded");
-  await world.page!.waitForSelector('[data-testid="abilities-section"]');
+  await world.page.reload();
+  await world.page.waitForLoadState("domcontentloaded");
+  await world.page.waitForSelector('[data-testid="abilities-section"]');
 }
 
 When(
   "I drag ability {string} before ability {string}",
   async function (this: CustomWorld, sourceName: string, targetName: string) {
-    const sourceCard = this.page!.locator(`[data-testid="ability-name-${sourceName}"]`).locator(
-      "xpath=ancestor::div[starts-with(@data-testid,'ability-item')]"
-    );
-    const targetCard = this.page!.locator(`[data-testid="ability-name-${targetName}"]`).locator(
-      "xpath=ancestor::div[starts-with(@data-testid,'ability-item')]"
-    );
+    const sourceCard = this.page
+      .locator(`[data-testid="ability-name-${sourceName}"]`)
+      .locator("xpath=ancestor::div[starts-with(@data-testid,'ability-item')]");
+    const targetCard = this.page
+      .locator(`[data-testid="ability-name-${targetName}"]`)
+      .locator("xpath=ancestor::div[starts-with(@data-testid,'ability-item')]");
 
     await sourceCard.dragTo(targetCard, {
       targetPosition: { x: 10, y: 5 },
     });
 
-    await this.page!.waitForTimeout(200);
+    await this.page.waitForTimeout(200);
   }
 );
 
 Then(
-  "the abilities should be in order {string}, {string}, {string}",
-  async function (this: CustomWorld, name1: string, name2: string, name3: string) {
-    const expectedOrder = [name1, name2, name3];
-    await verifyAbilityOrder(this, expectedOrder);
-  }
-);
-
-Then(
-  "the abilities should be in order {string}, {string}",
-  async function (this: CustomWorld, name1: string, name2: string) {
-    const expectedOrder = [name1, name2];
+  "the abilities should be in order {string}",
+  async function (this: CustomWorld, namesList: string) {
+    const expectedOrder = namesList.split(", ");
     await verifyAbilityOrder(this, expectedOrder);
   }
 );
 
 async function verifyAbilityOrder(world: CustomWorld, expectedOrder: string[]): Promise<void> {
-  const abilityItems = world.page!.locator('[data-testid^="ability-item"]');
+  const abilityItems = world.page.locator('[data-testid^="ability-item"]');
   const count = await abilityItems.count();
 
   expect(count).toBe(expectedOrder.length);
@@ -347,16 +307,16 @@ async function verifyAbilityOrder(world: CustomWorld, expectedOrder: string[]): 
 When(
   "I drag cypher {string} into the abilities section",
   async function (this: CustomWorld, cypherName: string) {
-    const sourceCard = this.page!.locator(`[data-testid="cypher-name-${cypherName}"]`).locator(
-      "xpath=ancestor::div[@data-testid='cypher-item']"
-    );
-    const abilitiesSection = this.page!.locator('[data-testid="abilities-section"]');
+    const sourceCard = this.page
+      .locator(`[data-testid="cypher-name-${cypherName}"]`)
+      .locator("xpath=ancestor::div[@data-testid='cypher-item']");
+    const abilitiesSection = this.page.locator('[data-testid="abilities-section"]');
 
     // Attempt to drag cypher into abilities section
     await sourceCard.dragTo(abilitiesSection, {
       targetPosition: { x: 50, y: 50 },
     });
 
-    await this.page!.waitForTimeout(200);
+    await this.page.waitForTimeout(200);
   }
 );

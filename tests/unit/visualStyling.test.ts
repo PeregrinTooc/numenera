@@ -22,11 +22,11 @@ import { Stats } from "../../src/components/Stats.js";
 import { StatPool } from "../../src/components/StatPool.js";
 import { BottomTextFields } from "../../src/components/BottomTextFields.js";
 import type { Cypher, Artifact } from "../../src/types/character.js";
+import { setupTestContainer } from "./helpers/testSetup.js";
 import {
-  setupTestContainer,
-  createMockCharacter,
+  createTestCharacter as createMockCharacter,
   createEmptyCharacter,
-} from "./helpers/testSetup.js";
+} from "../factories/character.js";
 
 describe("Visual Styling Tests", () => {
   const getContainer = setupTestContainer();

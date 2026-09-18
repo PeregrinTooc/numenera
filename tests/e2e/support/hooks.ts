@@ -2,6 +2,11 @@ import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
 import { chromium, Browser } from "@playwright/test";
 import { CustomWorld } from "./world";
 import { TestStorageHelper } from "./testStorageHelper.js";
+import { DOMHelpers } from "./dom-helpers.js";
+import { ModalDsl } from "./modal.js";
+import { FieldsDsl } from "./fields.js";
+import { CardsDsl } from "./cards.js";
+import { SetupDsl } from "./setup.js";
 
 let browser: Browser;
 
@@ -34,6 +39,16 @@ Before(async function (this: CustomWorld) {
     locale: "en-US",
   });
   this.page = await this.context.newPage();
+  this.dom = new DOMHelpers(this.page);
+  this.modal = new ModalDsl(this.page);
+  this.fields = new FieldsDsl(this.page);
+  this.cards = new CardsDsl(this);
+  this.setup = new SetupDsl(this);
+
+  // Initialize storage helper before navigation, so the Before hook's own
+  // storage clearing goes through the same adapter-backed helper every step
+  // uses, instead of a one-off inline page.evaluate.
+  this.storageHelper = new TestStorageHelper(this.page);
 
   // Capture console messages for debugging
   this.page.on("console", (msg) => {
@@ -131,17 +146,11 @@ Before(async function (this: CustomWorld) {
   // ever opens) and so never actually blocked. Clearing through the already-
   // open connections avoids the blocked-delete problem entirely.
   await this.page.goto(BASE_URL);
-  await this.page.evaluate(async () => {
-    localStorage.clear();
-    await window.__testStorage?.clearCharacterState();
-    await window.__testVersionHistory?.clearVersions();
-  });
+  await this.storageHelper.clearStorage();
+  await this.storageHelper.clearVersions();
 
   // Wait for the page to be fully loaded after clearing storage
   await this.page.waitForLoadState("networkidle");
-
-  // Initialize storage helper
-  this.storageHelper = new TestStorageHelper(this.page);
 });
 
 After(async function (this: CustomWorld) {

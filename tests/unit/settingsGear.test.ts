@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { SettingsGear } from "../../src/components/SettingsGear";
 import { render } from "lit-html";
+import { setupTestContainer } from "./helpers/testSetup.js";
 
 // Mock i18n
 vi.mock("../../src/i18n/index.js", () => ({
@@ -22,19 +23,15 @@ vi.mock("../../src/i18n/index.js", () => ({
 }));
 
 describe("SettingsGear", () => {
+  const getContainer = setupTestContainer();
   let container: HTMLElement;
   let settingsGear: SettingsGear;
   let onLanguageChange: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
+    container = getContainer();
     onLanguageChange = vi.fn();
     settingsGear = new SettingsGear(onLanguageChange);
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
   });
 
   describe("render", () => {

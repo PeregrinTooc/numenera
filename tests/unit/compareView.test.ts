@@ -2,48 +2,16 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { CompareView } from "../../src/components/CompareView";
 import { VersionState } from "../../src/services/versionState";
 import { VersionHistoryManager } from "../../src/storage/versionHistory";
-import type { Character } from "../../src/types/character";
 import type { CharacterVersion } from "../../src/types/versionHistory";
+import { createTestCharacter } from "../factories/character.js";
+import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("CompareView", () => {
   let mockVersionHistory: VersionHistoryManager;
   let versionState: VersionState;
-  let container: HTMLElement;
+  const getContainer = setupTestContainer();
 
-  const createMockCharacter = (name: string): Character => ({
-    name,
-    tier: 1,
-    type: "Glaive",
-    descriptor: "Strong",
-    focus: "Bears a Halo of Fire",
-    currentXp: 0,
-    totalXp: 0,
-    shins: 0,
-    armor: 0,
-    effort: 1,
-    maxCyphers: 2,
-    stats: {
-      might: { pool: 10, edge: 0, current: 10 },
-      speed: { pool: 10, edge: 0, current: 10 },
-      intellect: { pool: 10, edge: 0, current: 10 },
-    },
-    cyphers: [],
-    artifacts: [],
-    oddities: [],
-    abilities: [],
-    equipment: [],
-    attacks: [],
-    specialAbilities: [],
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: { impairment: "healthy" },
-    textFields: { background: "", notes: "" },
-  });
+  const createMockCharacter = (name: string) => createTestCharacter({ name });
 
   const createMockVersion = (name: string, description: string, id: string): CharacterVersion => {
     const character = createMockCharacter(name);
@@ -72,9 +40,6 @@ describe("CompareView", () => {
     } as any;
     const latestCharacter = createMockCharacter("Latest");
     versionState = new VersionState(latestCharacter, mockVersionHistory);
-
-    container = document.createElement("div");
-    document.body.appendChild(container);
   });
 
   it("seeds the right pane with the given index and the left pane one before it", async () => {
@@ -87,13 +52,13 @@ describe("CompareView", () => {
       onRestored: vi.fn(),
     });
 
-    compareView.mount(container);
+    compareView.mount(getContainer());
 
     expect(
-      container.querySelector('[data-testid="compare-pane-left-counter"]')?.textContent
+      getContainer().querySelector('[data-testid="compare-pane-left-counter"]')?.textContent
     ).toContain("4");
     expect(
-      container.querySelector('[data-testid="compare-pane-right-counter"]')?.textContent
+      getContainer().querySelector('[data-testid="compare-pane-right-counter"]')?.textContent
     ).toContain("5");
   });
 
@@ -106,18 +71,20 @@ describe("CompareView", () => {
       onExit: vi.fn(),
       onRestored: vi.fn(),
     });
-    compareView.mount(container);
+    compareView.mount(getContainer());
 
     (
-      container.querySelector('[data-testid="compare-pane-left-backward"]') as HTMLButtonElement
+      getContainer().querySelector(
+        '[data-testid="compare-pane-left-backward"]'
+      ) as HTMLButtonElement
     ).click();
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(
-      container.querySelector('[data-testid="compare-pane-left-counter"]')?.textContent
+      getContainer().querySelector('[data-testid="compare-pane-left-counter"]')?.textContent
     ).toContain("3");
     expect(
-      container.querySelector('[data-testid="compare-pane-right-counter"]')?.textContent
+      getContainer().querySelector('[data-testid="compare-pane-right-counter"]')?.textContent
     ).toContain("5");
   });
 
@@ -130,12 +97,12 @@ describe("CompareView", () => {
       onExit: vi.fn(),
       onRestored: vi.fn(),
     });
-    compareView.mount(container);
+    compareView.mount(getContainer());
 
-    const rightRestore = container.querySelector(
+    const rightRestore = getContainer().querySelector(
       '[data-testid="compare-pane-right-restore"]'
     ) as HTMLButtonElement;
-    const leftRestore = container.querySelector(
+    const leftRestore = getContainer().querySelector(
       '[data-testid="compare-pane-left-restore"]'
     ) as HTMLButtonElement;
 
@@ -153,9 +120,9 @@ describe("CompareView", () => {
       onExit: vi.fn(),
       onRestored,
     });
-    compareView.mount(container);
+    compareView.mount(getContainer());
 
-    const leftRestore = container.querySelector(
+    const leftRestore = getContainer().querySelector(
       '[data-testid="compare-pane-left-restore"]'
     ) as HTMLButtonElement;
     leftRestore.click();
@@ -179,7 +146,7 @@ describe("CompareView", () => {
       onExit: vi.fn(),
       onRestored: vi.fn(),
     });
-    compareView.mount(container);
+    compareView.mount(getContainer());
 
     // After restoring the right pane, simulate the FIFO eviction: storage
     // now returns 99 versions again, but "Version 1" (id-1) is gone and
@@ -200,7 +167,7 @@ describe("CompareView", () => {
     });
     vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(versionsAfterRestore);
 
-    const rightRestore = container.querySelector(
+    const rightRestore = getContainer().querySelector(
       '[data-testid="compare-pane-right-restore"]'
     ) as HTMLButtonElement;
     rightRestore.click();
@@ -209,7 +176,7 @@ describe("CompareView", () => {
     // Left pane was showing "Version 50" (id-50), which is now at index 48
     // (index 49 shifted down by one because id-1 was evicted).
     expect(
-      container.querySelector('[data-testid="compare-pane-left-counter"]')?.textContent
+      getContainer().querySelector('[data-testid="compare-pane-left-counter"]')?.textContent
     ).toContain("49");
   });
 
@@ -223,10 +190,10 @@ describe("CompareView", () => {
       onExit,
       onRestored: vi.fn(),
     });
-    compareView.mount(container);
+    compareView.mount(getContainer());
 
     (
-      container.querySelector('[data-testid="comparison-exit-button"]') as HTMLButtonElement
+      getContainer().querySelector('[data-testid="comparison-exit-button"]') as HTMLButtonElement
     ).click();
 
     expect(onExit).toHaveBeenCalled();
@@ -257,9 +224,9 @@ describe("CompareView", () => {
       onExit: vi.fn(),
       onRestored: vi.fn(),
     });
-    compareView.mount(container);
+    compareView.mount(getContainer());
 
-    const items = container.querySelectorAll('[data-testid="comparison-header"] li');
+    const items = getContainer().querySelectorAll('[data-testid="comparison-header"] li');
     expect(items.length).toBeGreaterThan(3);
   });
 });

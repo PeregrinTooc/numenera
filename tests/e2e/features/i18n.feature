@@ -49,7 +49,7 @@ Feature: Internationalization (i18n)
 
     Scenario: German translations for empty states
         Given I am on the character sheet page with "?lang=de"
-        When I click the new button
+        When I click the "New" button
         Then the empty cyphers message should be "Keine Cypher"
         And the empty artifacts message should be "Keine Artefakte"
         And the empty oddities message should be "Keine Kuriositäten"

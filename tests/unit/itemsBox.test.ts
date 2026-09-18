@@ -1,16 +1,17 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { ItemsBox } from "../../src/components/ItemsBox";
 import type { Character } from "../../src/types/character";
 import { render } from "lit-html";
+import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("ItemsBox", () => {
+  const getContainer = setupTestContainer();
   let container: HTMLElement;
   let mockCharacter: Character;
   let onFieldUpdate: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
+    container = getContainer();
 
     mockCharacter = {
       name: "Test",
@@ -48,10 +49,6 @@ describe("ItemsBox", () => {
     };
 
     onFieldUpdate = vi.fn();
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
   });
 
   describe("Shins Badge", () => {

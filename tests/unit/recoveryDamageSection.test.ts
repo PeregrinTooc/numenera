@@ -3,17 +3,20 @@
 import { render } from "lit-html";
 import { RecoveryDamageSection } from "../../src/components/RecoveryDamageSection.js";
 import { Character } from "../../src/types/character.js";
+import { setupTestContainer } from "./helpers/testSetup.js";
 
 vi.mock("../../src/storage/storageFactory.js");
 
 describe("RecoveryDamageSection", () => {
+  const getContainer = setupTestContainer();
   let container: HTMLElement;
   let mockCharacter: Character;
 
   beforeEach(() => {
-    container = document.createElement("div");
+    // RecoveryDamageSection dispatches character-updated on
+    // document.getElementById("app"), so this container must keep that id.
+    container = getContainer();
     container.id = "app";
-    document.body.appendChild(container);
 
     mockCharacter = {
       name: "Test Character",
@@ -54,10 +57,6 @@ describe("RecoveryDamageSection", () => {
         notes: "",
       },
     };
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
   });
 
   it("should update and persist the model when a recovery checkbox is ticked", async () => {
