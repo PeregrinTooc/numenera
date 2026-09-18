@@ -1,7 +1,10 @@
 import { describe, it, expect, vi } from "vitest";
 import { VersionWarningBanner } from "../../src/components/VersionWarningBanner";
+import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("VersionWarningBanner", () => {
+  const getContainer = setupTestContainer();
+
   it("should render banner with warning message", () => {
     const onReturn = vi.fn();
     const onRestore = vi.fn();
@@ -12,7 +15,7 @@ describe("VersionWarningBanner", () => {
       onRestore,
     });
 
-    const container = document.createElement("div");
+    const container = getContainer();
     banner.mount(container);
 
     // Should have warning banner element
@@ -30,7 +33,7 @@ describe("VersionWarningBanner", () => {
       onRestore,
     });
 
-    const container = document.createElement("div");
+    const container = getContainer();
     banner.mount(container);
 
     const description = container.querySelector('[data-testid="version-change-description"]');
@@ -47,7 +50,7 @@ describe("VersionWarningBanner", () => {
       onRestore,
     });
 
-    const container = document.createElement("div");
+    const container = getContainer();
     banner.mount(container);
 
     const timestamp = container.querySelector('[data-testid="version-timestamp"]');
@@ -65,7 +68,7 @@ describe("VersionWarningBanner", () => {
       onRestore,
     });
 
-    const container = document.createElement("div");
+    const container = getContainer();
     banner.mount(container);
 
     const returnButton = container.querySelector(
@@ -88,7 +91,7 @@ describe("VersionWarningBanner", () => {
       onRestore,
     });
 
-    const container = document.createElement("div");
+    const container = getContainer();
     banner.mount(container);
 
     const restoreButton = container.querySelector(
@@ -111,7 +114,7 @@ describe("VersionWarningBanner", () => {
       onRestore,
     });
 
-    const container = document.createElement("div");
+    const container = getContainer();
     banner.mount(container);
 
     const warningText = container.textContent;
@@ -128,7 +131,7 @@ describe("VersionWarningBanner", () => {
       onRestore,
     });
 
-    const container = document.createElement("div");
+    const container = getContainer();
     banner.mount(container);
 
     const warningBanner = container.querySelector(
@@ -149,7 +152,7 @@ describe("VersionWarningBanner", () => {
       onRestore,
     });
 
-    const container = document.createElement("div");
+    const container = getContainer();
     banner.mount(container);
 
     // Update with new description
@@ -176,7 +179,7 @@ describe("VersionWarningBanner", () => {
       onRestore,
     });
 
-    const container = document.createElement("div");
+    const container = getContainer();
     banner.mount(container);
 
     expect(container.children.length).toBeGreaterThan(0);
