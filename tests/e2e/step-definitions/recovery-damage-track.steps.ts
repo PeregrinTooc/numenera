@@ -1,6 +1,5 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
-import { TestStorageHelper } from "../support/testStorageHelper.js";
 import { waitForSaveComplete } from "../support/save.js";
 
 // Recovery Rolls step definitions
@@ -70,13 +69,12 @@ Then(
 
 Given("the character is {string}", async function (impairmentStatus: string) {
   // Use TestStorageHelper to modify character with IndexedDB
-  const storageHelper = new TestStorageHelper(this.page);
-  const character = await storageHelper.getCharacter();
+  const character = await this.storageHelper.getCharacter();
 
   if (character && character.damageTrack) {
     character.damageTrack.impairment = impairmentStatus;
     await this.page.waitForTimeout(500);
-    await storageHelper.setCharacter(character);
+    await this.storageHelper.setCharacter(character);
   }
 
   // Reload page to pick up the changes
@@ -134,13 +132,12 @@ Then("the damage track section should have red styling", async function () {
 
 Given("the character has recovery modifier {int}", async function (modifier: number) {
   // Use TestStorageHelper to modify character with IndexedDB
-  const storageHelper = new TestStorageHelper(this.page);
-  const character = await storageHelper.getCharacter();
+  const character = await this.storageHelper.getCharacter();
 
   if (character && character.recoveryRolls) {
     character.recoveryRolls.modifier = modifier;
     await this.page.waitForTimeout(500);
-    await storageHelper.setCharacter(character);
+    await this.storageHelper.setCharacter(character);
   }
 
   // Reload page to pick up the changes

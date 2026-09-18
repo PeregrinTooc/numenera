@@ -678,31 +678,31 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all recovery checkboxes should be unchecked` | 1 | 180 |
-| When | `I click on the recovery modifier display` | 1 | 193 |
-| When | `I click the {string} recovery checkbox` | 1 | 217 |
-| When | `I confirm the edit` | 3 | 209 |
-| When | `I enter {string} in the modifier field` | 1 | 199 |
-| When | `I select the {string} damage status` | 1 | 224 |
+| Then | `all recovery checkboxes should be unchecked` | 1 | 178 |
+| When | `I click on the recovery modifier display` | 1 | 191 |
+| When | `I click the {string} recovery checkbox` | 1 | 215 |
+| When | `I confirm the edit` | 3 | 207 |
+| When | `I enter {string} in the modifier field` | 1 | 197 |
+| When | `I select the {string} damage status` | 1 | 222 |
 | Then | `I should see {int} damage status options` | 1 | 50 |
 | Then | `I should see {int} recovery roll checkboxes` | 1 | 17 |
-| Then | `I should see {string} in the recovery section` | 3 | 164 |
+| Then | `I should see {string} in the recovery section` | 3 | 162 |
 | Then | `I should see a section titled {string}` | 2 | 6 |
-| Then | `I should see an edit modal` | 1 | 204 |
+| Then | `I should see an edit modal` | 1 | 202 |
 | Then | `I should see damage status {string}` | 1 | 55 |
 | Then | `I should see damage status {string} with description {string}` | 2 | 60 |
 | Then | `I should see recovery roll {string} with time {string}` | 4 | 22 |
 | Then | `I should see the recovery modifier display {string}` | 1 | 11 |
-| Then | `the {string} radio button should be selected` | 4 | 99 |
-| Then | `the {string} radio button should not be selected` | 6 | 105 |
+| Then | `the {string} radio button should be selected` | 4 | 98 |
+| Then | `the {string} radio button should not be selected` | 6 | 104 |
 | Then | `the {string} recovery checkbox should be checked` | 2 | 36 |
 | Then | `the {string} recovery checkbox should be unchecked` | 3 | 42 |
 | Given | `the character has {string} recovery used` | 1 | 31 |
-| Given | `the character has recovery modifier {int}` | 2 | 133 |
+| Given | `the character has recovery modifier {int}` | 2 | 132 |
 | Given | `the character is {string}` | 3 | 69 |
-| Given | `the character is new` | 1 | 171 |
-| Then | `the damage track section should have red styling` | 1 | 122 |
-| Then | `the recovery rolls section should have green styling` | 1 | 113 |
+| Given | `the character is new` | 1 | 169 |
+| Then | `the damage track section should have red styling` | 1 | 121 |
+| Then | `the recovery rolls section should have green styling` | 1 | 112 |
 
 ## resource-tracker-editing.steps.ts
 
