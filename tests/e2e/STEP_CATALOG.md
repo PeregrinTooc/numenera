@@ -233,96 +233,96 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all ability fields should be empty` | 1 | 279 |
-| Then | `all artifact fields should be empty` | 1 | 238 |
-| Then | `all attack fields should be empty` | 1 | 263 |
-| Then | `all cypher fields should be empty` | 1 | 212 |
-| Then | `all equipment fields should be empty` | 1 | 225 |
-| Then | `all oddity fields should be empty` | 1 | 250 |
-| Then | `all special ability fields should be empty` | 1 | 294 |
-| When | `I cancel the card edit modal` | 7 | 643 |
-| When | `I click the add ability button` | 15 | 193 |
-| When | `I click the add artifact button` | 7 | 181 |
-| When | `I click the add attack button` | 7 | 189 |
-| When | `I click the add cypher button` | 12 | 173 |
-| When | `I click the add equipment button` | 9 | 177 |
-| When | `I click the add oddity button` | 7 | 185 |
-| When | `I click the add special ability button` | 7 | 197 |
-| When | `I click the edit button on ability {string}` | 1 | 719 |
-| When | `I click the edit button on artifact {string}` | 1 | 698 |
-| When | `I click the edit button on attack {string}` | 1 | 712 |
-| When | `I click the edit button on cypher {string}` | 2 | 684 |
-| When | `I click the edit button on equipment {string}` | 1 | 691 |
-| When | `I click the edit button on oddity {string}` | 1 | 705 |
-| When | `I click the edit button on special ability {string}` | 1 | 726 |
-| When | `I confirm the card edit modal` | 50 | 634 |
-| When | `I fill in the ability cost with {string}` | 6 | 387 |
-| When | `I fill in the ability description with {string}` | 9 | 397 |
-| When | `I fill in the ability name with {string}` | 9 | 384 |
-| When | `I fill in the ability pool with {string}` | 6 | 391 |
-| When | `I fill in the artifact effect with {string}` | 7 | 351 |
-| When | `I fill in the artifact level with {string}` | 7 | 344 |
-| When | `I fill in the artifact name with {string}` | 7 | 338 |
-| When | `I fill in the attack damage with {string}` | 7 | 368 |
-| When | `I fill in the attack modifier with {string}` | 7 | 375 |
-| When | `I fill in the attack name with {string}` | 7 | 365 |
-| When | `I fill in the cypher effect with {string}` | 11 | 314 |
-| When | `I fill in the cypher level with {string}` | 11 | 310 |
-| When | `I fill in the cypher name with {string}` | 11 | 307 |
-| When | `I fill in the equipment description with {string}` | 7 | 329 |
-| When | `I fill in the equipment name with {string}` | 8 | 323 |
-| When | `I fill in the oddity text with {string}` | 7 | 360 |
-| When | `I fill in the special ability description with {string}` | 7 | 419 |
-| When | `I fill in the special ability name with {string}` | 7 | 406 |
-| When | `I fill in the special ability source with {string}` | 7 | 412 |
-| Then | `I should see {int} ability cards` | 14 | 471 |
-| Then | `I should see {int} artifact cards` | 8 | 456 |
-| Then | `I should see {int} attack cards` | 8 | 466 |
-| Then | `I should see {int} cypher card` | 2 | 443 |
-| Then | `I should see {int} cypher cards` | 13 | 446 |
-| Then | `I should see {int} equipment cards` | 8 | 451 |
-| Then | `I should see {int} oddity cards` | 8 | 461 |
-| Then | `I should see {int} special ability cards` | 8 | 476 |
-| Then | `I should see a cypher card with name {string}` | 5 | 483 |
-| Then | `I should see a special ability card with name {string}` | 5 | 609 |
-| Then | `I should see an ability card with name {string}` | 7 | 584 |
-| Then | `I should see an add ability button` | 1 | 155 |
-| Then | `I should see an add artifact button` | 1 | 126 |
-| Then | `I should see an add attack button` | 1 | 134 |
-| Then | `I should see an add cypher button` | 1 | 118 |
-| Then | `I should see an add equipment button` | 1 | 122 |
-| Then | `I should see an add oddity button` | 1 | 130 |
-| Then | `I should see an add special ability button` | 1 | 159 |
-| Then | `I should see an artifact card with name {string}` | 5 | 525 |
-| Then | `I should see an attack card with name {string}` | 5 | 559 |
-| Then | `I should see an equipment card with name {string}` | 5 | 508 |
-| Then | `I should see an oddity card with text {string}` | 5 | 550 |
-| Then | `the ability {string} should have cost {string}` | 1 | 593 |
-| Then | `the ability {string} should have pool {string}` | 1 | 601 |
-| Then | `the add attack button should have a non-transparent background` | 1 | 138 |
-| Then | `the artifact {string} should have effect {string}` | 1 | 542 |
-| Then | `the artifact {string} should have level {string}` | 1 | 534 |
-| Then | `the attack {string} should have damage {string}` | 1 | 576 |
-| Then | `the attack {string} should have modifier {string}` | 1 | 568 |
-| Then | `the card edit modal should be open` | 15 | 651 |
-| Given | `the character has {int} ability cards` | 5 | 103 |
-| Given | `the character has {int} artifact cards` | 5 | 88 |
-| Given | `the character has {int} attack cards` | 5 | 98 |
-| Given | `the character has {int} cypher cards` | 5 | 78 |
-| Given | `the character has {int} equipment cards` | 5 | 83 |
-| Given | `the character has {int} oddity cards` | 5 | 93 |
-| Given | `the character has {int} special ability cards` | 5 | 108 |
-| Then | `the cypher {string} should have effect {string}` | 1 | 500 |
-| Then | `the cypher {string} should have level {string}` | 1 | 492 |
-| Then | `the equipment {string} should have description {string}` | 1 | 517 |
-| Then | `the modal should show ability fields` | 1 | 271 |
-| Then | `the modal should show artifact fields` | 1 | 231 |
-| Then | `the modal should show attack fields` | 1 | 255 |
-| Then | `the modal should show cypher fields` | 1 | 205 |
-| Then | `the modal should show equipment fields` | 1 | 219 |
-| Then | `the modal should show oddity fields` | 1 | 245 |
-| Then | `the modal should show special ability fields` | 1 | 287 |
-| Then | `the special ability {string} should have source {string}` | 1 | 620 |
+| Then | `all ability fields should be empty` | 1 | 277 |
+| Then | `all artifact fields should be empty` | 1 | 236 |
+| Then | `all attack fields should be empty` | 1 | 261 |
+| Then | `all cypher fields should be empty` | 1 | 210 |
+| Then | `all equipment fields should be empty` | 1 | 223 |
+| Then | `all oddity fields should be empty` | 1 | 248 |
+| Then | `all special ability fields should be empty` | 1 | 292 |
+| When | `I cancel the card edit modal` | 7 | 641 |
+| When | `I click the add ability button` | 15 | 191 |
+| When | `I click the add artifact button` | 7 | 179 |
+| When | `I click the add attack button` | 7 | 187 |
+| When | `I click the add cypher button` | 12 | 171 |
+| When | `I click the add equipment button` | 9 | 175 |
+| When | `I click the add oddity button` | 7 | 183 |
+| When | `I click the add special ability button` | 7 | 195 |
+| When | `I click the edit button on ability {string}` | 1 | 717 |
+| When | `I click the edit button on artifact {string}` | 1 | 696 |
+| When | `I click the edit button on attack {string}` | 1 | 710 |
+| When | `I click the edit button on cypher {string}` | 2 | 682 |
+| When | `I click the edit button on equipment {string}` | 1 | 689 |
+| When | `I click the edit button on oddity {string}` | 1 | 703 |
+| When | `I click the edit button on special ability {string}` | 1 | 724 |
+| When | `I confirm the card edit modal` | 50 | 632 |
+| When | `I fill in the ability cost with {string}` | 6 | 385 |
+| When | `I fill in the ability description with {string}` | 9 | 395 |
+| When | `I fill in the ability name with {string}` | 9 | 382 |
+| When | `I fill in the ability pool with {string}` | 6 | 389 |
+| When | `I fill in the artifact effect with {string}` | 7 | 349 |
+| When | `I fill in the artifact level with {string}` | 7 | 342 |
+| When | `I fill in the artifact name with {string}` | 7 | 336 |
+| When | `I fill in the attack damage with {string}` | 7 | 366 |
+| When | `I fill in the attack modifier with {string}` | 7 | 373 |
+| When | `I fill in the attack name with {string}` | 7 | 363 |
+| When | `I fill in the cypher effect with {string}` | 11 | 312 |
+| When | `I fill in the cypher level with {string}` | 11 | 308 |
+| When | `I fill in the cypher name with {string}` | 11 | 305 |
+| When | `I fill in the equipment description with {string}` | 7 | 327 |
+| When | `I fill in the equipment name with {string}` | 8 | 321 |
+| When | `I fill in the oddity text with {string}` | 7 | 358 |
+| When | `I fill in the special ability description with {string}` | 7 | 417 |
+| When | `I fill in the special ability name with {string}` | 7 | 404 |
+| When | `I fill in the special ability source with {string}` | 7 | 410 |
+| Then | `I should see {int} ability cards` | 14 | 469 |
+| Then | `I should see {int} artifact cards` | 8 | 454 |
+| Then | `I should see {int} attack cards` | 8 | 464 |
+| Then | `I should see {int} cypher card` | 2 | 441 |
+| Then | `I should see {int} cypher cards` | 13 | 444 |
+| Then | `I should see {int} equipment cards` | 8 | 449 |
+| Then | `I should see {int} oddity cards` | 8 | 459 |
+| Then | `I should see {int} special ability cards` | 8 | 474 |
+| Then | `I should see a cypher card with name {string}` | 5 | 481 |
+| Then | `I should see a special ability card with name {string}` | 5 | 607 |
+| Then | `I should see an ability card with name {string}` | 7 | 582 |
+| Then | `I should see an add ability button` | 1 | 153 |
+| Then | `I should see an add artifact button` | 1 | 124 |
+| Then | `I should see an add attack button` | 1 | 132 |
+| Then | `I should see an add cypher button` | 1 | 116 |
+| Then | `I should see an add equipment button` | 1 | 120 |
+| Then | `I should see an add oddity button` | 1 | 128 |
+| Then | `I should see an add special ability button` | 1 | 157 |
+| Then | `I should see an artifact card with name {string}` | 5 | 523 |
+| Then | `I should see an attack card with name {string}` | 5 | 557 |
+| Then | `I should see an equipment card with name {string}` | 5 | 506 |
+| Then | `I should see an oddity card with text {string}` | 5 | 548 |
+| Then | `the ability {string} should have cost {string}` | 1 | 591 |
+| Then | `the ability {string} should have pool {string}` | 1 | 599 |
+| Then | `the add attack button should have a non-transparent background` | 1 | 136 |
+| Then | `the artifact {string} should have effect {string}` | 1 | 540 |
+| Then | `the artifact {string} should have level {string}` | 1 | 532 |
+| Then | `the attack {string} should have damage {string}` | 1 | 574 |
+| Then | `the attack {string} should have modifier {string}` | 1 | 566 |
+| Then | `the card edit modal should be open` | 15 | 649 |
+| Given | `the character has {int} ability cards` | 5 | 101 |
+| Given | `the character has {int} artifact cards` | 5 | 86 |
+| Given | `the character has {int} attack cards` | 5 | 96 |
+| Given | `the character has {int} cypher cards` | 5 | 76 |
+| Given | `the character has {int} equipment cards` | 5 | 81 |
+| Given | `the character has {int} oddity cards` | 5 | 91 |
+| Given | `the character has {int} special ability cards` | 5 | 106 |
+| Then | `the cypher {string} should have effect {string}` | 1 | 498 |
+| Then | `the cypher {string} should have level {string}` | 1 | 490 |
+| Then | `the equipment {string} should have description {string}` | 1 | 515 |
+| Then | `the modal should show ability fields` | 1 | 269 |
+| Then | `the modal should show artifact fields` | 1 | 229 |
+| Then | `the modal should show attack fields` | 1 | 253 |
+| Then | `the modal should show cypher fields` | 1 | 203 |
+| Then | `the modal should show equipment fields` | 1 | 217 |
+| Then | `the modal should show oddity fields` | 1 | 243 |
+| Then | `the modal should show special ability fields` | 1 | 285 |
+| Then | `the special ability {string} should have source {string}` | 1 | 618 |
 
 ## card-deletion.steps.ts
 

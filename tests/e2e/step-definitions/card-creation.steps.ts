@@ -1,7 +1,6 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
-import { TestStorageHelper } from "../support/testStorageHelper.js";
 import {
   CARD_CONFIGS,
   createTestCharacterWithCardCount,
@@ -27,10 +26,9 @@ async function setupCharacterWithCards(
 
   // Special case for ability 0 count
   if (cardType === "ability" && count === 0) {
-    const storageHelper = new TestStorageHelper(world.page!);
     await world.page!.evaluate(() => localStorage.clear());
-    await storageHelper.clearVersions();
-    await storageHelper.setCharacter(createEmptyAbilitiesCharacter());
+    await world.storageHelper.clearVersions();
+    await world.storageHelper.setCharacter(createEmptyAbilitiesCharacter());
     await world.page!.reload();
     await world.page!.waitForLoadState("networkidle");
     await world.page!.waitForTimeout(500);
@@ -46,11 +44,10 @@ async function setupCharacterWithCards(
 
   // Only set up storage if we need cards
   if (count > 0) {
-    const storageHelper = new TestStorageHelper(world.page!);
     const character = createTestCharacterWithCardCount(cardType, count);
 
     await world.page!.waitForTimeout(500);
-    await storageHelper.setCharacter(character);
+    await world.storageHelper.setCharacter(character);
     await world.page!.waitForTimeout(500);
     await world.page!.reload();
     await world.page!.waitForLoadState("networkidle");
