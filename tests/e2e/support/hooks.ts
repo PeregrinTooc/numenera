@@ -2,6 +2,7 @@ import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
 import { chromium, Browser } from "@playwright/test";
 import { CustomWorld } from "./world";
 import { TestStorageHelper } from "./testStorageHelper.js";
+import { DOMHelpers } from "./dom-helpers.js";
 
 let browser: Browser;
 
@@ -34,6 +35,7 @@ Before(async function (this: CustomWorld) {
     locale: "en-US",
   });
   this.page = await this.context.newPage();
+  this.dom = new DOMHelpers(this.page);
 
   // Initialize storage helper before navigation, so the Before hook's own
   // storage clearing goes through the same adapter-backed helper every step
