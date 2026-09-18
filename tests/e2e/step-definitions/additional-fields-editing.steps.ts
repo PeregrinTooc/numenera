@@ -1,7 +1,6 @@
 import { When, Then, Given } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
-import { TestStorageHelper } from "../support/testStorageHelper.js";
 import { waitForSaveComplete } from "../support/save.js";
 
 // ============================================================================
@@ -61,9 +60,8 @@ Given("the character has the following data:", async function (this: CustomWorld
   };
 
   // Use TestStorageHelper to set character data (uses app's storage backend)
-  const storageHelper = new TestStorageHelper(this.page!);
   await this.page!.waitForTimeout(500);
-  await storageHelper.setCharacter(characterState);
+  await this.storageHelper.setCharacter(characterState);
 
   // Wait for IndexedDB save to complete before reloading
   await this.page!.waitForTimeout(500);
@@ -121,8 +119,7 @@ Then(
     await waitForSaveComplete(this.page!);
 
     // Verify using TestStorageHelper
-    const storageHelper = new TestStorageHelper(this.page!);
-    const storedData = await storageHelper.getCharacter();
+    const storedData = await this.storageHelper.getCharacter();
 
     expect(storedData).toBeTruthy();
     expect(storedData.type).toBe(type);
@@ -256,8 +253,7 @@ Then(
     await waitForSaveComplete(this.page!);
 
     // Verify using TestStorageHelper
-    const storageHelper = new TestStorageHelper(this.page!);
-    const storedData = await storageHelper.getCharacter();
+    const storedData = await this.storageHelper.getCharacter();
 
     expect(storedData).toBeTruthy();
     expect(storedData.textFields.background).toBe(text);
@@ -351,8 +347,7 @@ Then(
     await waitForSaveComplete(this.page!);
 
     // Verify using TestStorageHelper
-    const storageHelper = new TestStorageHelper(this.page!);
-    const storedData = await storageHelper.getCharacter();
+    const storedData = await this.storageHelper.getCharacter();
 
     expect(storedData).toBeTruthy();
     expect(storedData.textFields.notes).toBe(text);
@@ -406,8 +401,7 @@ Then("the character data should have the full background text", async function (
   await waitForSaveComplete(this.page!);
 
   // Verify using TestStorageHelper
-  const storageHelper = new TestStorageHelper(this.page!);
-  const storedData = await storageHelper.getCharacter();
+  const storedData = await this.storageHelper.getCharacter();
 
   expect(storedData).toBeTruthy();
   const background = storedData.textFields.background;
@@ -420,8 +414,7 @@ Then("the character data should have the full notes text", async function (this:
   await waitForSaveComplete(this.page!);
 
   // Verify using TestStorageHelper
-  const storageHelper = new TestStorageHelper(this.page!);
-  const storedData = await storageHelper.getCharacter();
+  const storedData = await this.storageHelper.getCharacter();
 
   expect(storedData).toBeTruthy();
   const notes = storedData.textFields.notes;

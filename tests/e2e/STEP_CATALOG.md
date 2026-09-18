@@ -113,60 +113,60 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am using a mobile device` | 7 | 435 |
-| When | `I clear the background textarea` | 2 | 180 |
-| When | `I clear the notes textarea` | 2 | 311 |
-| When | `I click outside the background textarea` | 6 | 193 |
-| When | `I click outside the notes textarea` | 5 | 321 |
-| When | `I click the background textarea` | 11 | 175 |
-| When | `I click the notes textarea` | 9 | 287 |
-| When | `I select {string} from the mobile picker` | 1 | 466 |
-| When | `I select {string} from the type dropdown` | 4 | 82 |
-| When | `I tap outside the background textarea` | 1 | 502 |
-| When | `I tap outside the notes textarea` | 1 | 510 |
-| When | `I tap the background textarea` | 1 | 471 |
-| When | `I tap the notes textarea` | 1 | 491 |
-| When | `I tap the type dropdown` | 1 | 454 |
-| When | `I type {string} in the background textarea` | 7 | 185 |
-| When | `I type {string} in the notes textarea` | 5 | 316 |
-| When | `I type a {int} character string in the background textarea` | 1 | 365 |
-| When | `I type a {int} character string in the notes textarea` | 1 | 374 |
-| Then | `the background placeholder should be {string}` | 1 | 242 |
-| When | `the background textarea is empty` | 1 | 237 |
-| Then | `the background textarea should be empty` | 1 | 226 |
-| Then | `the background textarea should be focused` | 2 | 210 |
-| Then | `the background textarea should be readonly` | 4 | 154 |
-| Then | `the background textarea should become editable` | 1 | 476 |
-| Then | `the background textarea should contain the full {int} character text` | 1 | 383 |
-| Then | `the background textarea should have a pointer cursor` | 1 | 169 |
-| Then | `the background textarea should have an edit state visual indicator` | 1 | 215 |
-| Then | `the background textarea should not be readonly` | 2 | 204 |
-| Then | `the background textarea should show {string}` | 8 | 159 |
-| Then | `the background textarea should still be editable` | 1 | 231 |
-| Then | `the character data should have background {string}` | 3 | 251 |
-| Then | `the character data should have notes {string}` | 2 | 346 |
-| Then | `the character data should have the full background text` | 1 | 403 |
-| Then | `the character data should have the full notes text` | 1 | 417 |
-| Then | `the character data should have type {string}` | 1 | 116 |
-| Given | `the character has the following data:` | 1 | 10 |
-| Then | `the mobile OS picker should open` | 1 | 459 |
-| Then | `the notes placeholder should be {string}` | 1 | 340 |
-| When | `the notes textarea is empty` | 1 | 335 |
-| Then | `the notes textarea should be empty` | 1 | 330 |
-| Then | `the notes textarea should be focused` | 2 | 297 |
-| Then | `the notes textarea should be readonly` | 4 | 270 |
-| Then | `the notes textarea should become editable` | 1 | 496 |
-| Then | `the notes textarea should contain the full {int} character text` | 1 | 393 |
-| Then | `the notes textarea should have a pointer cursor` | 1 | 281 |
-| Then | `the notes textarea should have an edit state visual indicator` | 1 | 302 |
-| Then | `the notes textarea should not be readonly` | 2 | 292 |
-| Then | `the notes textarea should show {string}` | 6 | 275 |
-| Then | `the type dropdown label should be {string}` | 1 | 131 |
-| Then | `the type dropdown option for {string} should display as {string}` | 3 | 140 |
-| Then | `the type dropdown options should be {string}, {string}, {string}` | 1 | 104 |
-| Then | `the type dropdown should have {int} options` | 1 | 95 |
-| Then | `the type dropdown should show {string} as selected` | 6 | 87 |
-| Then | `the virtual keyboard should appear` | 2 | 482 |
+| Given | `I am using a mobile device` | 7 | 428 |
+| When | `I clear the background textarea` | 2 | 177 |
+| When | `I clear the notes textarea` | 2 | 307 |
+| When | `I click outside the background textarea` | 6 | 190 |
+| When | `I click outside the notes textarea` | 5 | 317 |
+| When | `I click the background textarea` | 11 | 172 |
+| When | `I click the notes textarea` | 9 | 283 |
+| When | `I select {string} from the mobile picker` | 1 | 459 |
+| When | `I select {string} from the type dropdown` | 4 | 80 |
+| When | `I tap outside the background textarea` | 1 | 495 |
+| When | `I tap outside the notes textarea` | 1 | 503 |
+| When | `I tap the background textarea` | 1 | 464 |
+| When | `I tap the notes textarea` | 1 | 484 |
+| When | `I tap the type dropdown` | 1 | 447 |
+| When | `I type {string} in the background textarea` | 7 | 182 |
+| When | `I type {string} in the notes textarea` | 5 | 312 |
+| When | `I type a {int} character string in the background textarea` | 1 | 360 |
+| When | `I type a {int} character string in the notes textarea` | 1 | 369 |
+| Then | `the background placeholder should be {string}` | 1 | 239 |
+| When | `the background textarea is empty` | 1 | 234 |
+| Then | `the background textarea should be empty` | 1 | 223 |
+| Then | `the background textarea should be focused` | 2 | 207 |
+| Then | `the background textarea should be readonly` | 4 | 151 |
+| Then | `the background textarea should become editable` | 1 | 469 |
+| Then | `the background textarea should contain the full {int} character text` | 1 | 378 |
+| Then | `the background textarea should have a pointer cursor` | 1 | 166 |
+| Then | `the background textarea should have an edit state visual indicator` | 1 | 212 |
+| Then | `the background textarea should not be readonly` | 2 | 201 |
+| Then | `the background textarea should show {string}` | 8 | 156 |
+| Then | `the background textarea should still be editable` | 1 | 228 |
+| Then | `the character data should have background {string}` | 3 | 248 |
+| Then | `the character data should have notes {string}` | 2 | 342 |
+| Then | `the character data should have the full background text` | 1 | 398 |
+| Then | `the character data should have the full notes text` | 1 | 411 |
+| Then | `the character data should have type {string}` | 1 | 114 |
+| Given | `the character has the following data:` | 1 | 9 |
+| Then | `the mobile OS picker should open` | 1 | 452 |
+| Then | `the notes placeholder should be {string}` | 1 | 336 |
+| When | `the notes textarea is empty` | 1 | 331 |
+| Then | `the notes textarea should be empty` | 1 | 326 |
+| Then | `the notes textarea should be focused` | 2 | 293 |
+| Then | `the notes textarea should be readonly` | 4 | 266 |
+| Then | `the notes textarea should become editable` | 1 | 489 |
+| Then | `the notes textarea should contain the full {int} character text` | 1 | 388 |
+| Then | `the notes textarea should have a pointer cursor` | 1 | 277 |
+| Then | `the notes textarea should have an edit state visual indicator` | 1 | 298 |
+| Then | `the notes textarea should not be readonly` | 2 | 288 |
+| Then | `the notes textarea should show {string}` | 6 | 271 |
+| Then | `the type dropdown label should be {string}` | 1 | 128 |
+| Then | `the type dropdown option for {string} should display as {string}` | 3 | 137 |
+| Then | `the type dropdown options should be {string}, {string}, {string}` | 1 | 102 |
+| Then | `the type dropdown should have {int} options` | 1 | 93 |
+| Then | `the type dropdown should show {string} as selected` | 6 | 85 |
+| Then | `the virtual keyboard should appear` | 2 | 475 |
 
 ## auto-save-indicator.steps.ts
 
@@ -233,96 +233,96 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all ability fields should be empty` | 1 | 280 |
-| Then | `all artifact fields should be empty` | 1 | 239 |
-| Then | `all attack fields should be empty` | 1 | 264 |
-| Then | `all cypher fields should be empty` | 1 | 213 |
-| Then | `all equipment fields should be empty` | 1 | 226 |
-| Then | `all oddity fields should be empty` | 1 | 251 |
-| Then | `all special ability fields should be empty` | 1 | 295 |
-| When | `I cancel the card edit modal` | 7 | 644 |
-| When | `I click the add ability button` | 15 | 194 |
-| When | `I click the add artifact button` | 7 | 182 |
-| When | `I click the add attack button` | 7 | 190 |
-| When | `I click the add cypher button` | 12 | 174 |
-| When | `I click the add equipment button` | 9 | 178 |
-| When | `I click the add oddity button` | 7 | 186 |
-| When | `I click the add special ability button` | 7 | 198 |
-| When | `I click the edit button on ability {string}` | 1 | 720 |
-| When | `I click the edit button on artifact {string}` | 1 | 699 |
-| When | `I click the edit button on attack {string}` | 1 | 713 |
-| When | `I click the edit button on cypher {string}` | 2 | 685 |
-| When | `I click the edit button on equipment {string}` | 1 | 692 |
-| When | `I click the edit button on oddity {string}` | 1 | 706 |
-| When | `I click the edit button on special ability {string}` | 1 | 727 |
-| When | `I confirm the card edit modal` | 50 | 635 |
-| When | `I fill in the ability cost with {string}` | 6 | 388 |
-| When | `I fill in the ability description with {string}` | 9 | 398 |
-| When | `I fill in the ability name with {string}` | 9 | 385 |
-| When | `I fill in the ability pool with {string}` | 6 | 392 |
-| When | `I fill in the artifact effect with {string}` | 7 | 352 |
-| When | `I fill in the artifact level with {string}` | 7 | 345 |
-| When | `I fill in the artifact name with {string}` | 7 | 339 |
-| When | `I fill in the attack damage with {string}` | 7 | 369 |
-| When | `I fill in the attack modifier with {string}` | 7 | 376 |
-| When | `I fill in the attack name with {string}` | 7 | 366 |
-| When | `I fill in the cypher effect with {string}` | 11 | 315 |
-| When | `I fill in the cypher level with {string}` | 11 | 311 |
-| When | `I fill in the cypher name with {string}` | 11 | 308 |
-| When | `I fill in the equipment description with {string}` | 7 | 330 |
-| When | `I fill in the equipment name with {string}` | 8 | 324 |
-| When | `I fill in the oddity text with {string}` | 7 | 361 |
-| When | `I fill in the special ability description with {string}` | 7 | 420 |
-| When | `I fill in the special ability name with {string}` | 7 | 407 |
-| When | `I fill in the special ability source with {string}` | 7 | 413 |
-| Then | `I should see {int} ability cards` | 14 | 472 |
-| Then | `I should see {int} artifact cards` | 8 | 457 |
-| Then | `I should see {int} attack cards` | 8 | 467 |
-| Then | `I should see {int} cypher card` | 2 | 444 |
-| Then | `I should see {int} cypher cards` | 13 | 447 |
-| Then | `I should see {int} equipment cards` | 8 | 452 |
-| Then | `I should see {int} oddity cards` | 8 | 462 |
-| Then | `I should see {int} special ability cards` | 8 | 477 |
-| Then | `I should see a cypher card with name {string}` | 5 | 484 |
-| Then | `I should see a special ability card with name {string}` | 5 | 610 |
-| Then | `I should see an ability card with name {string}` | 7 | 585 |
-| Then | `I should see an add ability button` | 1 | 156 |
-| Then | `I should see an add artifact button` | 1 | 127 |
-| Then | `I should see an add attack button` | 1 | 135 |
-| Then | `I should see an add cypher button` | 1 | 119 |
-| Then | `I should see an add equipment button` | 1 | 123 |
-| Then | `I should see an add oddity button` | 1 | 131 |
-| Then | `I should see an add special ability button` | 1 | 160 |
-| Then | `I should see an artifact card with name {string}` | 5 | 526 |
-| Then | `I should see an attack card with name {string}` | 5 | 560 |
-| Then | `I should see an equipment card with name {string}` | 5 | 509 |
-| Then | `I should see an oddity card with text {string}` | 5 | 551 |
-| Then | `the ability {string} should have cost {string}` | 1 | 594 |
-| Then | `the ability {string} should have pool {string}` | 1 | 602 |
-| Then | `the add attack button should have a non-transparent background` | 1 | 139 |
-| Then | `the artifact {string} should have effect {string}` | 1 | 543 |
-| Then | `the artifact {string} should have level {string}` | 1 | 535 |
-| Then | `the attack {string} should have damage {string}` | 1 | 577 |
-| Then | `the attack {string} should have modifier {string}` | 1 | 569 |
-| Then | `the card edit modal should be open` | 15 | 652 |
-| Given | `the character has {int} ability cards` | 5 | 104 |
-| Given | `the character has {int} artifact cards` | 5 | 89 |
-| Given | `the character has {int} attack cards` | 5 | 99 |
-| Given | `the character has {int} cypher cards` | 5 | 79 |
-| Given | `the character has {int} equipment cards` | 5 | 84 |
-| Given | `the character has {int} oddity cards` | 5 | 94 |
-| Given | `the character has {int} special ability cards` | 5 | 109 |
-| Then | `the cypher {string} should have effect {string}` | 1 | 501 |
-| Then | `the cypher {string} should have level {string}` | 1 | 493 |
-| Then | `the equipment {string} should have description {string}` | 1 | 518 |
-| Then | `the modal should show ability fields` | 1 | 272 |
-| Then | `the modal should show artifact fields` | 1 | 232 |
-| Then | `the modal should show attack fields` | 1 | 256 |
-| Then | `the modal should show cypher fields` | 1 | 206 |
-| Then | `the modal should show equipment fields` | 1 | 220 |
-| Then | `the modal should show oddity fields` | 1 | 246 |
-| Then | `the modal should show special ability fields` | 1 | 288 |
-| Then | `the special ability {string} should have source {string}` | 1 | 621 |
+| Then | `all ability fields should be empty` | 1 | 279 |
+| Then | `all artifact fields should be empty` | 1 | 238 |
+| Then | `all attack fields should be empty` | 1 | 263 |
+| Then | `all cypher fields should be empty` | 1 | 212 |
+| Then | `all equipment fields should be empty` | 1 | 225 |
+| Then | `all oddity fields should be empty` | 1 | 250 |
+| Then | `all special ability fields should be empty` | 1 | 294 |
+| When | `I cancel the card edit modal` | 7 | 643 |
+| When | `I click the add ability button` | 15 | 193 |
+| When | `I click the add artifact button` | 7 | 181 |
+| When | `I click the add attack button` | 7 | 189 |
+| When | `I click the add cypher button` | 12 | 173 |
+| When | `I click the add equipment button` | 9 | 177 |
+| When | `I click the add oddity button` | 7 | 185 |
+| When | `I click the add special ability button` | 7 | 197 |
+| When | `I click the edit button on ability {string}` | 1 | 719 |
+| When | `I click the edit button on artifact {string}` | 1 | 698 |
+| When | `I click the edit button on attack {string}` | 1 | 712 |
+| When | `I click the edit button on cypher {string}` | 2 | 684 |
+| When | `I click the edit button on equipment {string}` | 1 | 691 |
+| When | `I click the edit button on oddity {string}` | 1 | 705 |
+| When | `I click the edit button on special ability {string}` | 1 | 726 |
+| When | `I confirm the card edit modal` | 50 | 634 |
+| When | `I fill in the ability cost with {string}` | 6 | 387 |
+| When | `I fill in the ability description with {string}` | 9 | 397 |
+| When | `I fill in the ability name with {string}` | 9 | 384 |
+| When | `I fill in the ability pool with {string}` | 6 | 391 |
+| When | `I fill in the artifact effect with {string}` | 7 | 351 |
+| When | `I fill in the artifact level with {string}` | 7 | 344 |
+| When | `I fill in the artifact name with {string}` | 7 | 338 |
+| When | `I fill in the attack damage with {string}` | 7 | 368 |
+| When | `I fill in the attack modifier with {string}` | 7 | 375 |
+| When | `I fill in the attack name with {string}` | 7 | 365 |
+| When | `I fill in the cypher effect with {string}` | 11 | 314 |
+| When | `I fill in the cypher level with {string}` | 11 | 310 |
+| When | `I fill in the cypher name with {string}` | 11 | 307 |
+| When | `I fill in the equipment description with {string}` | 7 | 329 |
+| When | `I fill in the equipment name with {string}` | 8 | 323 |
+| When | `I fill in the oddity text with {string}` | 7 | 360 |
+| When | `I fill in the special ability description with {string}` | 7 | 419 |
+| When | `I fill in the special ability name with {string}` | 7 | 406 |
+| When | `I fill in the special ability source with {string}` | 7 | 412 |
+| Then | `I should see {int} ability cards` | 14 | 471 |
+| Then | `I should see {int} artifact cards` | 8 | 456 |
+| Then | `I should see {int} attack cards` | 8 | 466 |
+| Then | `I should see {int} cypher card` | 2 | 443 |
+| Then | `I should see {int} cypher cards` | 13 | 446 |
+| Then | `I should see {int} equipment cards` | 8 | 451 |
+| Then | `I should see {int} oddity cards` | 8 | 461 |
+| Then | `I should see {int} special ability cards` | 8 | 476 |
+| Then | `I should see a cypher card with name {string}` | 5 | 483 |
+| Then | `I should see a special ability card with name {string}` | 5 | 609 |
+| Then | `I should see an ability card with name {string}` | 7 | 584 |
+| Then | `I should see an add ability button` | 1 | 155 |
+| Then | `I should see an add artifact button` | 1 | 126 |
+| Then | `I should see an add attack button` | 1 | 134 |
+| Then | `I should see an add cypher button` | 1 | 118 |
+| Then | `I should see an add equipment button` | 1 | 122 |
+| Then | `I should see an add oddity button` | 1 | 130 |
+| Then | `I should see an add special ability button` | 1 | 159 |
+| Then | `I should see an artifact card with name {string}` | 5 | 525 |
+| Then | `I should see an attack card with name {string}` | 5 | 559 |
+| Then | `I should see an equipment card with name {string}` | 5 | 508 |
+| Then | `I should see an oddity card with text {string}` | 5 | 550 |
+| Then | `the ability {string} should have cost {string}` | 1 | 593 |
+| Then | `the ability {string} should have pool {string}` | 1 | 601 |
+| Then | `the add attack button should have a non-transparent background` | 1 | 138 |
+| Then | `the artifact {string} should have effect {string}` | 1 | 542 |
+| Then | `the artifact {string} should have level {string}` | 1 | 534 |
+| Then | `the attack {string} should have damage {string}` | 1 | 576 |
+| Then | `the attack {string} should have modifier {string}` | 1 | 568 |
+| Then | `the card edit modal should be open` | 15 | 651 |
+| Given | `the character has {int} ability cards` | 5 | 103 |
+| Given | `the character has {int} artifact cards` | 5 | 88 |
+| Given | `the character has {int} attack cards` | 5 | 98 |
+| Given | `the character has {int} cypher cards` | 5 | 78 |
+| Given | `the character has {int} equipment cards` | 5 | 83 |
+| Given | `the character has {int} oddity cards` | 5 | 93 |
+| Given | `the character has {int} special ability cards` | 5 | 108 |
+| Then | `the cypher {string} should have effect {string}` | 1 | 500 |
+| Then | `the cypher {string} should have level {string}` | 1 | 492 |
+| Then | `the equipment {string} should have description {string}` | 1 | 517 |
+| Then | `the modal should show ability fields` | 1 | 271 |
+| Then | `the modal should show artifact fields` | 1 | 231 |
+| Then | `the modal should show attack fields` | 1 | 255 |
+| Then | `the modal should show cypher fields` | 1 | 205 |
+| Then | `the modal should show equipment fields` | 1 | 219 |
+| Then | `the modal should show oddity fields` | 1 | 245 |
+| Then | `the modal should show special ability fields` | 1 | 287 |
+| Then | `the special ability {string} should have source {string}` | 1 | 620 |
 
 ## card-deletion.steps.ts
 
@@ -678,56 +678,56 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all recovery checkboxes should be unchecked` | 1 | 181 |
-| When | `I click on the recovery modifier display` | 1 | 194 |
-| When | `I click the {string} recovery checkbox` | 1 | 218 |
-| When | `I confirm the edit` | 3 | 210 |
-| When | `I enter {string} in the modifier field` | 1 | 200 |
-| When | `I select the {string} damage status` | 1 | 225 |
-| Then | `I should see {int} damage status options` | 1 | 51 |
-| Then | `I should see {int} recovery roll checkboxes` | 1 | 18 |
-| Then | `I should see {string} in the recovery section` | 3 | 165 |
-| Then | `I should see a section titled {string}` | 2 | 7 |
-| Then | `I should see an edit modal` | 1 | 205 |
-| Then | `I should see damage status {string}` | 1 | 56 |
-| Then | `I should see damage status {string} with description {string}` | 2 | 61 |
-| Then | `I should see recovery roll {string} with time {string}` | 4 | 23 |
-| Then | `I should see the recovery modifier display {string}` | 1 | 12 |
-| Then | `the {string} radio button should be selected` | 4 | 100 |
-| Then | `the {string} radio button should not be selected` | 6 | 106 |
-| Then | `the {string} recovery checkbox should be checked` | 2 | 37 |
-| Then | `the {string} recovery checkbox should be unchecked` | 3 | 43 |
-| Given | `the character has {string} recovery used` | 1 | 32 |
-| Given | `the character has recovery modifier {int}` | 2 | 134 |
-| Given | `the character is {string}` | 3 | 70 |
-| Given | `the character is new` | 1 | 172 |
-| Then | `the damage track section should have red styling` | 1 | 123 |
-| Then | `the recovery rolls section should have green styling` | 1 | 114 |
+| Then | `all recovery checkboxes should be unchecked` | 1 | 180 |
+| When | `I click on the recovery modifier display` | 1 | 193 |
+| When | `I click the {string} recovery checkbox` | 1 | 217 |
+| When | `I confirm the edit` | 3 | 209 |
+| When | `I enter {string} in the modifier field` | 1 | 199 |
+| When | `I select the {string} damage status` | 1 | 224 |
+| Then | `I should see {int} damage status options` | 1 | 50 |
+| Then | `I should see {int} recovery roll checkboxes` | 1 | 17 |
+| Then | `I should see {string} in the recovery section` | 3 | 164 |
+| Then | `I should see a section titled {string}` | 2 | 6 |
+| Then | `I should see an edit modal` | 1 | 204 |
+| Then | `I should see damage status {string}` | 1 | 55 |
+| Then | `I should see damage status {string} with description {string}` | 2 | 60 |
+| Then | `I should see recovery roll {string} with time {string}` | 4 | 22 |
+| Then | `I should see the recovery modifier display {string}` | 1 | 11 |
+| Then | `the {string} radio button should be selected` | 4 | 99 |
+| Then | `the {string} radio button should not be selected` | 6 | 105 |
+| Then | `the {string} recovery checkbox should be checked` | 2 | 36 |
+| Then | `the {string} recovery checkbox should be unchecked` | 3 | 42 |
+| Given | `the character has {string} recovery used` | 1 | 31 |
+| Given | `the character has recovery modifier {int}` | 2 | 133 |
+| Given | `the character is {string}` | 3 | 69 |
+| Given | `the character is new` | 1 | 171 |
+| Then | `the damage track section should have red styling` | 1 | 122 |
+| Then | `the recovery rolls section should have green styling` | 1 | 113 |
 
 ## resource-tracker-editing.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `the Armor badge should show {string}` | 4 | 281 |
-| Then | `the character data should have armor {int}` | 1 | 342 |
-| Then | `the character data should have currentXp {int}` | 1 | 309 |
-| Then | `the character data should have effort {int}` | 1 | 364 |
-| Then | `the character data should have maxCyphers {int}` | 1 | 353 |
-| Then | `the character data should have shins {int}` | 1 | 331 |
-| Then | `the character data should have totalXp {int}` | 1 | 320 |
-| Given | `the character has {int} armor` | 5 | 163 |
-| Given | `the character has {int} current XP and {int} total XP` | 9 | 58 |
-| Given | `the character has {int} shins` | 7 | 135 |
-| Given | `the character has effort {int}` | 4 | 222 |
-| Given | `the character has max cyphers {int}` | 4 | 191 |
-| Given | `the character was saved with a single legacy XP value of {int}` | 1 | 97 |
-| Then | `the Current XP badge should show {string}` | 7 | 257 |
-| Then | `the Effort badge should show {string}` | 3 | 297 |
-| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 289 |
-| Then | `the modal confirm button should be disabled` | 1 | 375 |
-| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 380 |
-| Then | `the Shins badge should show {string}` | 5 | 273 |
-| Then | `the Total XP badge should show {string}` | 5 | 265 |
+| Then | `the Armor badge should show {string}` | 4 | 280 |
+| Then | `the character data should have armor {int}` | 1 | 341 |
+| Then | `the character data should have currentXp {int}` | 1 | 308 |
+| Then | `the character data should have effort {int}` | 1 | 363 |
+| Then | `the character data should have maxCyphers {int}` | 1 | 352 |
+| Then | `the character data should have shins {int}` | 1 | 330 |
+| Then | `the character data should have totalXp {int}` | 1 | 319 |
+| Given | `the character has {int} armor` | 5 | 162 |
+| Given | `the character has {int} current XP and {int} total XP` | 9 | 57 |
+| Given | `the character has {int} shins` | 7 | 134 |
+| Given | `the character has effort {int}` | 4 | 221 |
+| Given | `the character has max cyphers {int}` | 4 | 190 |
+| Given | `the character was saved with a single legacy XP value of {int}` | 1 | 96 |
+| Then | `the Current XP badge should show {string}` | 7 | 256 |
+| Then | `the Effort badge should show {string}` | 3 | 296 |
+| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 288 |
+| Then | `the modal confirm button should be disabled` | 1 | 374 |
+| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 379 |
+| Then | `the Shins badge should show {string}` | 5 | 272 |
+| Then | `the Total XP badge should show {string}` | 5 | 264 |
 
 ## section-rearrangement.steps.ts
 
