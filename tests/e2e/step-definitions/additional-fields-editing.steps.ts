@@ -18,60 +18,18 @@ Given("the character has the following data:", async function (this: CustomWorld
     data[field] = value;
   }
 
-  // Set character data using TestStorageHelper (handles IndexedDB/localStorage abstraction)
-  const characterState = {
-    name: data.name || "Test Character",
-    tier: 1,
-    type: data.type || "Nano",
-    descriptor: "Strong",
-    focus: "Controls Beasts",
-    currentXp: 0,
-    totalXp: 0,
-    shins: 0,
-    armor: 0,
-    effort: 1,
-    maxCyphers: 2,
-    stats: {
-      might: { pool: 10, current: 10, edge: 0 },
-      speed: { pool: 10, current: 10, edge: 0 },
-      intellect: { pool: 10, current: 10, edge: 0 },
-    },
+  const overrides: Record<string, unknown> = {
     textFields: {
       background: data.background || "",
       notes: data.notes || "",
     },
-    abilities: [],
-    attacks: [],
-    specialAbilities: [],
-    equipment: [],
-    cyphers: [],
-    artifacts: [],
-    oddities: [],
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: {
-      impairment: "healthy",
-    },
   };
+  // Omit rather than pass undefined, so an unspecified name/type falls
+  // through to this.setup.character's own default instead of overwriting it.
+  if (data.name) overrides.name = data.name;
+  if (data.type) overrides.type = data.type;
 
-  // Use TestStorageHelper to set character data (uses app's storage backend)
-  await this.page!.waitForTimeout(500);
-  await this.storageHelper.setCharacter(characterState);
-
-  // Wait for IndexedDB save to complete before reloading
-  await this.page!.waitForTimeout(500);
-
-  // Reload to apply the data
-  await this.page!.reload();
-  await this.page!.waitForLoadState("networkidle");
-
-  // Additional wait for character to load from IndexedDB
-  await this.page!.waitForTimeout(200);
+  await this.setup.character(overrides);
 });
 
 // ============================================================================
