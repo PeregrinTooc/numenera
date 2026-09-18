@@ -708,26 +708,26 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `the Armor badge should show {string}` | 4 | 280 |
-| Then | `the character data should have armor {int}` | 1 | 341 |
-| Then | `the character data should have currentXp {int}` | 1 | 308 |
-| Then | `the character data should have effort {int}` | 1 | 363 |
-| Then | `the character data should have maxCyphers {int}` | 1 | 352 |
-| Then | `the character data should have shins {int}` | 1 | 330 |
-| Then | `the character data should have totalXp {int}` | 1 | 319 |
-| Given | `the character has {int} armor` | 5 | 162 |
+| Then | `the Armor badge should show {string}` | 4 | 274 |
+| Then | `the character data should have armor {int}` | 1 | 332 |
+| Then | `the character data should have currentXp {int}` | 1 | 302 |
+| Then | `the character data should have effort {int}` | 1 | 352 |
+| Then | `the character data should have maxCyphers {int}` | 1 | 342 |
+| Then | `the character data should have shins {int}` | 1 | 322 |
+| Then | `the character data should have totalXp {int}` | 1 | 312 |
+| Given | `the character has {int} armor` | 5 | 159 |
 | Given | `the character has {int} current XP and {int} total XP` | 9 | 57 |
-| Given | `the character has {int} shins` | 7 | 134 |
-| Given | `the character has effort {int}` | 4 | 221 |
-| Given | `the character has max cyphers {int}` | 4 | 190 |
-| Given | `the character was saved with a single legacy XP value of {int}` | 1 | 96 |
-| Then | `the Current XP badge should show {string}` | 7 | 256 |
-| Then | `the Effort badge should show {string}` | 3 | 296 |
-| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 288 |
-| Then | `the modal confirm button should be disabled` | 1 | 374 |
-| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 379 |
-| Then | `the Shins badge should show {string}` | 5 | 272 |
-| Then | `the Total XP badge should show {string}` | 5 | 264 |
+| Given | `the character has {int} shins` | 7 | 132 |
+| Given | `the character has effort {int}` | 4 | 216 |
+| Given | `the character has max cyphers {int}` | 4 | 186 |
+| Given | `the character was saved with a single legacy XP value of {int}` | 1 | 95 |
+| Then | `the Current XP badge should show {string}` | 7 | 250 |
+| Then | `the Effort badge should show {string}` | 3 | 290 |
+| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 282 |
+| Then | `the modal confirm button should be disabled` | 1 | 362 |
+| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 367 |
+| Then | `the Shins badge should show {string}` | 5 | 266 |
+| Then | `the Total XP badge should show {string}` | 5 | 258 |
 
 ## section-rearrangement.steps.ts
 

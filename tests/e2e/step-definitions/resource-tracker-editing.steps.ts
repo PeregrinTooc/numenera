@@ -1,7 +1,6 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
-import { TestStorageHelper } from "../support/testStorageHelper.js";
 
 // ============================================================================
 // GIVEN STEPS - Setup character state with specific resource values
@@ -60,11 +59,10 @@ Given(
   "the character has {int} current XP and {int} total XP",
   async function (this: CustomWorld, currentXp: number, totalXp: number) {
     const character = { ...createCharacterState("currentXp", currentXp).character, totalXp };
-    const storageHelper = new TestStorageHelper(this.page!);
 
     // Wait before setCharacter to ensure any previous auto-save completes
     await this.page!.waitForTimeout(500);
-    await storageHelper.setCharacter(character);
+    await this.storageHelper.setCharacter(character);
 
     // Wait for IndexedDB save to complete before reloading
     await this.page!.waitForTimeout(500);
@@ -104,10 +102,9 @@ Given(
       ...rest
     } = createCharacterState("currentXp", legacyXp).character as any;
     const character = { ...rest, xp: legacyXp };
-    const storageHelper = new TestStorageHelper(this.page!);
 
     await this.page!.waitForTimeout(500);
-    await storageHelper.setCharacter(character);
+    await this.storageHelper.setCharacter(character);
     await this.page!.waitForTimeout(500);
 
     await this.page!.reload();
@@ -135,11 +132,10 @@ Given(
 
 Given("the character has {int} shins", async function (this: CustomWorld, shins: number) {
   const character = createCharacterState("shins", shins).character;
-  const storageHelper = new TestStorageHelper(this.page!);
 
   // Wait before setCharacter to ensure any previous auto-save completes
   await this.page!.waitForTimeout(500);
-  await storageHelper.setCharacter(character);
+  await this.storageHelper.setCharacter(character);
 
   // Wait for IndexedDB save to complete before reloading
   await this.page!.waitForTimeout(500);
@@ -163,11 +159,10 @@ Given("the character has {int} shins", async function (this: CustomWorld, shins:
 
 Given("the character has {int} armor", async function (this: CustomWorld, armor: number) {
   const character = createCharacterState("armor", armor).character;
-  const storageHelper = new TestStorageHelper(this.page!);
 
   // Wait before setCharacter to ensure any previous auto-save completes
   await this.page!.waitForTimeout(500);
-  await storageHelper.setCharacter(character);
+  await this.storageHelper.setCharacter(character);
 
   // Wait for IndexedDB save to complete before reloading
   await this.page!.waitForTimeout(500);
@@ -193,11 +188,10 @@ Given(
   "the character has max cyphers {int}",
   async function (this: CustomWorld, maxCyphers: number) {
     const character = createCharacterState("maxCyphers", maxCyphers).character;
-    const storageHelper = new TestStorageHelper(this.page!);
 
     // Wait before setCharacter to ensure any previous auto-save completes
     await this.page!.waitForTimeout(500);
-    await storageHelper.setCharacter(character);
+    await this.storageHelper.setCharacter(character);
 
     // Wait for IndexedDB save to complete before reloading
     await this.page!.waitForTimeout(500);
@@ -222,11 +216,10 @@ Given(
 
 Given("the character has effort {int}", async function (this: CustomWorld, effort: number) {
   const character = createCharacterState("effort", effort).character;
-  const storageHelper = new TestStorageHelper(this.page!);
 
   // Wait before setCharacter to ensure any previous auto-save completes
   await this.page!.waitForTimeout(500);
-  await storageHelper.setCharacter(character);
+  await this.storageHelper.setCharacter(character);
 
   // Wait for IndexedDB save to complete before reloading
   await this.page!.waitForTimeout(500);
@@ -311,8 +304,7 @@ Then(
   "the character data should have currentXp {int}",
   async function (this: CustomWorld, expectedCurrentXp: number) {
     await this.page!.waitForTimeout(200);
-    const storageHelper = new TestStorageHelper(this.page!);
-    const storedData = await storageHelper.getCharacter();
+    const storedData = await this.storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
     expect(storedData.currentXp).toBe(expectedCurrentXp);
   }
@@ -322,8 +314,7 @@ Then(
   "the character data should have totalXp {int}",
   async function (this: CustomWorld, expectedTotalXp: number) {
     await this.page!.waitForTimeout(200);
-    const storageHelper = new TestStorageHelper(this.page!);
-    const storedData = await storageHelper.getCharacter();
+    const storedData = await this.storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
     expect(storedData.totalXp).toBe(expectedTotalXp);
   }
@@ -333,8 +324,7 @@ Then(
   "the character data should have shins {int}",
   async function (this: CustomWorld, expectedShins: number) {
     await this.page!.waitForTimeout(200);
-    const storageHelper = new TestStorageHelper(this.page!);
-    const storedData = await storageHelper.getCharacter();
+    const storedData = await this.storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
     expect(storedData.shins).toBe(expectedShins);
   }
@@ -344,8 +334,7 @@ Then(
   "the character data should have armor {int}",
   async function (this: CustomWorld, expectedArmor: number) {
     await this.page!.waitForTimeout(200);
-    const storageHelper = new TestStorageHelper(this.page!);
-    const storedData = await storageHelper.getCharacter();
+    const storedData = await this.storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
     expect(storedData.armor).toBe(expectedArmor);
   }
@@ -355,8 +344,7 @@ Then(
   "the character data should have maxCyphers {int}",
   async function (this: CustomWorld, expectedMaxCyphers: number) {
     await this.page!.waitForTimeout(200);
-    const storageHelper = new TestStorageHelper(this.page!);
-    const storedData = await storageHelper.getCharacter();
+    const storedData = await this.storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
     expect(storedData.maxCyphers).toBe(expectedMaxCyphers);
   }
@@ -366,8 +354,7 @@ Then(
   "the character data should have effort {int}",
   async function (this: CustomWorld, expectedEffort: number) {
     await this.page!.waitForTimeout(200);
-    const storageHelper = new TestStorageHelper(this.page!);
-    const storedData = await storageHelper.getCharacter();
+    const storedData = await this.storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
     expect(storedData.effort).toBe(expectedEffort);
   }
