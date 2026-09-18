@@ -93,7 +93,31 @@ const PARAM = {
   float: `(?:-?\\d+(?:\\.\\d+)?|${OUTLINE})`,
   word: `(?:\\S+|${OUTLINE})`,
   "": ".*",
+  ...readCustomParamTypes(),
 };
+
+/**
+ * Custom parameter types (defineParameterType({ name, regexp })) can match
+ * more than a single word — {badge} includes "Total XP", {cardType} includes
+ * "special ability" — so falling back to a single-run-of-non-whitespace
+ * wildcard for them, as an unrecognised type would, wrongly reports their
+ * multi-word feature lines as undefined. Reading each one's actual regexp
+ * out of parameterTypes.ts keeps this script's matching in sync with what
+ * Cucumber itself will match at runtime.
+ */
+function readCustomParamTypes() {
+  const file = path.join(projectRoot, "tests/e2e/support/parameterTypes.ts");
+  const custom = {};
+  if (!fs.existsSync(file)) return custom;
+  const src = fs.readFileSync(file, "utf8");
+  const re = /defineParameterType\(\{\s*name:\s*["'`]([^"'`]+)["'`][\s\S]*?regexp:\s*\/((?:\\.|[^\\/])*)\//g;
+  let m;
+  while ((m = re.exec(src))) {
+    const [, name, pattern] = m;
+    custom[name] = `(?:${pattern})`;
+  }
+  return custom;
+}
 
 function expressionToRegExp(expression) {
   let out = "";
