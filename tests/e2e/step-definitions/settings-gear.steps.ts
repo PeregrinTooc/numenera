@@ -2,6 +2,7 @@ import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 import { DOMHelpers } from "../support/dom-helpers.js";
+import { openSettingsPanel } from "../support/settings.js";
 
 // ============================================================================
 // SETTINGS GEAR STEP DEFINITIONS
@@ -57,11 +58,7 @@ Then("the settings panel should close", async function (this: CustomWorld) {
 });
 
 Given("I have opened the settings panel", async function (this: CustomWorld) {
-  const dom = new DOMHelpers(this.page!);
-  await dom.getByTestId("settings-gear-button").click();
-  await expect(dom.getByTestId("settings-panel")).toBeVisible();
-  // Wait for document event listeners to be attached (they're added with setTimeout(0))
-  await this.page!.waitForTimeout(50);
+  await openSettingsPanel(this);
 });
 
 When("I click outside the settings panel", async function (this: CustomWorld) {

@@ -5,6 +5,7 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
+import { openSettingsPanel } from "../support/settings.js";
 
 // ============================================
 // Edit Mode Entry/Exit Steps
@@ -185,9 +186,7 @@ Given("I have customized the layout", async function (this: CustomWorld) {
 });
 
 Given("I open the settings panel", async function (this: CustomWorld) {
-  const page = this.page!;
-  await page.click('[data-testid="settings-gear-button"]');
-  await expect(page.locator('[data-testid="settings-panel"]')).toBeVisible();
+  await openSettingsPanel(this);
 });
 
 When("I confirm the reset", async function (this: CustomWorld) {
