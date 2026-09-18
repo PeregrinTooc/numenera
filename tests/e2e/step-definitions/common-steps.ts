@@ -2,60 +2,7 @@ import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { waitForSaveComplete } from "../support/save.js";
-
-// ============================================================================
-// FIELD CONFIGURATION - Central mapping of field names to test IDs
-// ============================================================================
-
-const FIELD_TEST_IDS: Record<string, string> = {
-  // Basic Info fields
-  "character name": "character-name",
-  "character name value": "character-name",
-  tier: "character-tier",
-  "tier value": "character-tier",
-  descriptor: "character-descriptor",
-  "descriptor value": "character-descriptor",
-  focus: "character-focus",
-  "focus value": "character-focus",
-
-  // Stat Pool fields
-  "Might Pool": "stat-might-pool",
-  "Might Edge": "stat-might-edge",
-  "Might Current": "stat-might-current",
-  "Speed Pool": "stat-speed-pool",
-  "Speed Edge": "stat-speed-edge",
-  "Speed Current": "stat-speed-current",
-  "Intellect Pool": "stat-intellect-pool",
-  "Intellect Edge": "stat-intellect-edge",
-  "Intellect Current": "stat-intellect-current",
-
-  // Resource trackers (badges)
-  "Current XP badge": "xp-badge-current",
-  "Total XP badge": "xp-badge-total",
-  "Shins badge": "shins-badge",
-  "Armor badge": "armor-badge",
-  "Max Cyphers badge": "max-cyphers-badge",
-  "Effort badge": "effort-badge",
-
-  // Resource trackers (legacy - for backward compatibility)
-  Shins: "shins-badge",
-  Armor: "armor-badge",
-  "Max Cyphers": "max-cyphers-badge",
-  Effort: "effort-badge",
-
-  // Text fields
-  background: "character-background",
-  notes: "character-notes",
-  type: "character-type-select",
-};
-
-function getTestId(fieldName: string): string {
-  const testId = FIELD_TEST_IDS[fieldName];
-  if (!testId) {
-    throw new Error(`Unknown field name: "${fieldName}". Add it to FIELD_TEST_IDS mapping.`);
-  }
-  return testId;
-}
+import { getTestId } from "../support/fields.js";
 
 // Default stat values for verification (from FULL_CHARACTER in mockCharacters.ts)
 const DEFAULT_STAT_VALUES: Record<string, string> = {
@@ -75,8 +22,7 @@ const DEFAULT_STAT_VALUES: Record<string, string> = {
 // ============================================================================
 
 When("I click on the {string} value", async function (this: CustomWorld, fieldName: string) {
-  const testId = getTestId(fieldName);
-  await this.page!.locator(`[data-testid="${testId}"]`).click();
+  await this.fields.click(fieldName);
   // For fields that open modals, wait for modal to appear
   if (!["background", "notes", "type"].includes(fieldName)) {
     await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
@@ -84,8 +30,7 @@ When("I click on the {string} value", async function (this: CustomWorld, fieldNa
 });
 
 When("I tap on the {string} value", async function (this: CustomWorld, fieldName: string) {
-  const testId = getTestId(fieldName);
-  await this.page!.locator(`[data-testid="${testId}"]`).tap();
+  await this.fields.tap(fieldName);
   // For fields that open modals, wait for modal to appear
   if (!["background", "notes", "type"].includes(fieldName)) {
     await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
@@ -102,44 +47,17 @@ async function cancelModal(this: CustomWorld): Promise<void> {
 }
 When("I click the Cancel button", cancelModal);
 
-// Individual badge click steps
-When("I click the Current XP badge", async function (this: CustomWorld) {
-  await this.page!.locator('[data-testid="xp-badge-current"]').click();
+// Badge click/tap steps, parameterised by the {badge} type (resolves to a
+// data-testid; see support/parameterTypes.ts). No {badge} hover registration:
+// no feature line exercises hovering a badge today, and adding one would be
+// an unreachable step that check:steps would immediately flag as dead.
+When("I click the {badge} badge", async function (this: CustomWorld, testId: string) {
+  await this.dom.getByTestId(testId).click();
   await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
 });
 
-When("I click the Total XP badge", async function (this: CustomWorld) {
-  await this.page!.locator('[data-testid="xp-badge-total"]').click();
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-});
-
-When("I click the Shins badge", async function (this: CustomWorld) {
-  await this.page!.locator('[data-testid="shins-badge"]').click();
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-});
-
-When("I click the Armor badge", async function (this: CustomWorld) {
-  await this.page!.locator('[data-testid="armor-badge"]').click();
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-});
-
-When("I click the Max Cyphers badge", async function (this: CustomWorld) {
-  await this.page!.locator('[data-testid="max-cyphers-badge"]').click();
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-});
-
-When("I click the Effort badge", async function (this: CustomWorld) {
-  await this.page!.locator('[data-testid="effort-badge"]').click();
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-});
-
-When("I tap the Current XP badge", async function (this: CustomWorld) {
-  await this.page!.locator('[data-testid="xp-badge-current"]').tap();
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-});
-
-When("I tap the Shins badge", async function (this: CustomWorld) {
-  await this.page!.locator('[data-testid="shins-badge"]').tap();
+When("I tap the {badge} badge", async function (this: CustomWorld, testId: string) {
+  await this.dom.getByTestId(testId).tap();
   await this.page!.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
 });
 
