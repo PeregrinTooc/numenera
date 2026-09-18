@@ -48,7 +48,7 @@ Feature: Stat Pool Value Editing
         When I click on the "<stat> <field>" value
         And I clear the input field
         And I type "<new_value>" into the input field
-        And I click the Confirm button
+        And I click the "Confirm" button
         Then the modal should close
         And the "<stat> <field>" value should display "<new_value>"
 
@@ -68,7 +68,7 @@ Feature: Stat Pool Value Editing
         When I click on the "<stat> <field>" value
         And I clear the input field
         And I type "<persist_value>" into the input field
-        And I click the Confirm button
+        And I click the "Confirm" button
         And I reload the page
         Then the "<stat> <field>" value should display "<persist_value>"
 
@@ -88,7 +88,7 @@ Feature: Stat Pool Value Editing
         When I click on the "<stat> <field>" value
         And I clear the input field
         And I type "99" into the input field
-        And I click the Cancel button
+        And I click the "Cancel" button
         Then the modal should close
         And the "<stat> <field>" value should not have changed
 
@@ -144,7 +144,7 @@ Feature: Stat Pool Value Editing
         When I click on the "<stat> Pool" value
         And I clear the input field
         And I type "0" into the input field
-        And I click the Confirm button
+        And I click the "Confirm" button
         Then the modal should close
         And the "<stat> Pool" value should display "0"
 
@@ -158,7 +158,7 @@ Feature: Stat Pool Value Editing
         When I click on the "<stat> Pool" value
         And I clear the input field
         And I type "9999" into the input field
-        And I click the Confirm button
+        And I click the "Confirm" button
         Then the modal should close
         And the "<stat> Pool" value should display "9999"
 

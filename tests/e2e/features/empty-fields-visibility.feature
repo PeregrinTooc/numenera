@@ -8,19 +8,19 @@ Feature: Empty Fields Visibility
         And the character data is loaded
 
     Scenario: Empty descriptor field shows placeholder and is clickable after clicking New
-        When I click the New button
+        When I click the "New" button
         Then the descriptor field should display placeholder text
         And the descriptor field should be visible
         And the descriptor field should be clickable
 
     Scenario: Empty focus field shows placeholder and is clickable after clicking New
-        When I click the New button
+        When I click the "New" button
         Then the focus field should display placeholder text
         And the focus field should be visible
         And the focus field should be clickable
 
     Scenario: Edit empty descriptor field
-        When I click the New button
+        When I click the "New" button
         And I click on the descriptor field
         Then an edit modal should appear
         When I enter "Strong" in the edit field
@@ -29,7 +29,7 @@ Feature: Empty Fields Visibility
         And the descriptor field should not show placeholder text
 
     Scenario: Edit empty focus field
-        When I click the New button
+        When I click the "New" button
         And I click on the focus field
         Then an edit modal should appear
         When I enter "Bears a Halo of Fire" in the edit field

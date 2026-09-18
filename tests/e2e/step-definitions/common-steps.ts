@@ -42,12 +42,17 @@ When("I tap on the {string} value", async function (this: CustomWorld, fieldName
 async function confirmModal(this: CustomWorld): Promise<void> {
   await this.modal.confirm();
 }
-When("I click the Confirm button", confirmModal);
+When('I click the "Confirm" button', confirmModal);
 
 async function cancelModal(this: CustomWorld): Promise<void> {
   await this.modal.cancel();
 }
-When("I click the Cancel button", cancelModal);
+When('I click the "Cancel" button', cancelModal);
+
+When('I click the "New" button', async function (this: CustomWorld) {
+  await this.page.locator('[data-testid="new-button"]').click();
+  await this.page.waitForTimeout(200); // Wait for re-render
+});
 
 // Badge click/tap steps, parameterised by the {badge} type (resolves to a
 // data-testid; see support/parameterTypes.ts). No {badge} hover registration:
@@ -101,10 +106,6 @@ When("I hover over the character name {string}", async function (this: CustomWor
 When("I hover over the tier {string}", async function (this: CustomWorld, _tier: string) {
   await this.page.locator('[data-testid="character-tier"]').hover();
 });
-
-When("I click the modal confirm button", confirmModal);
-
-When("I click the modal cancel button", cancelModal);
 
 When("I tap the modal confirm button", async function (this: CustomWorld) {
   await this.modal.tapConfirm();
@@ -182,13 +183,6 @@ When("I press the Escape key", async function (this: CustomWorld) {
 
 When("I press the Enter key", async function (this: CustomWorld) {
   await this.page.keyboard.press("Enter");
-});
-
-When("I click the new button", async function (this: CustomWorld) {
-  const newButton = this.page.locator('[data-testid="new-button"]');
-  await newButton.click();
-  // Wait for the page to update
-  await this.page.waitForTimeout(100);
 });
 
 When("I reload the page", async function (this: CustomWorld) {

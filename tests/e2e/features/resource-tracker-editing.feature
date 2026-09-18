@@ -31,7 +31,7 @@ Feature: Resource Tracker Fields Editing
         Given the character has 5 current XP and 45 total XP
         When I click the Current XP badge
         And I type "10" in the modal input
-        And I click the modal confirm button
+        And I click the "Confirm" button
         Then the Current XP badge should show "10"
         And the Total XP badge should show "45"
         And the character data should have currentXp 10
@@ -40,7 +40,7 @@ Feature: Resource Tracker Fields Editing
         Given the character has 5 current XP and 45 total XP
         When I click the Total XP badge
         And I type "60" in the modal input
-        And I click the modal confirm button
+        And I click the "Confirm" button
         Then the Total XP badge should show "60"
         And the Current XP badge should show "5"
         And the character data should have totalXp 60
@@ -49,7 +49,7 @@ Feature: Resource Tracker Fields Editing
         Given the character has 5 current XP and 45 total XP
         When I click the Current XP badge
         And I type "15" in the modal input
-        And I click the modal confirm button
+        And I click the "Confirm" button
         And I reload the page
         Then the Current XP badge should show "15"
         And the Total XP badge should show "45"
@@ -58,7 +58,7 @@ Feature: Resource Tracker Fields Editing
         Given the character has 5 current XP and 45 total XP
         When I click the Current XP badge
         And I type "20" in the modal input
-        And I click the modal cancel button
+        And I click the "Cancel" button
         Then the Current XP badge should show "5"
 
     Scenario: Current XP validates numeric input
@@ -100,7 +100,7 @@ Feature: Resource Tracker Fields Editing
         Given the character has 100 shins
         When I click the Shins badge
         And I type "250" in the modal input
-        And I click the modal confirm button
+        And I click the "Confirm" button
         Then the Shins badge should show "250"
         And the character data should have shins 250
 
@@ -108,7 +108,7 @@ Feature: Resource Tracker Fields Editing
         Given the character has 100 shins
         When I click the Shins badge
         And I type "500" in the modal input
-        And I click the modal confirm button
+        And I click the "Confirm" button
         And I reload the page
         Then the Shins badge should show "500"
 
@@ -116,7 +116,7 @@ Feature: Resource Tracker Fields Editing
         Given the character has 100 shins
         When I click the Shins badge
         And I type "0" in the modal input
-        And I click the modal confirm button
+        And I click the "Confirm" button
         Then the Shins badge should show "0"
 
     Scenario: Shins on mobile devices
@@ -132,7 +132,7 @@ Feature: Resource Tracker Fields Editing
         And I confirm the card edit modal
         And I click the Shins badge
         And I type "250" in the modal input
-        And I click the modal confirm button
+        And I click the "Confirm" button
         Then the Shins badge should show "250"
 
     # ============================================================================
@@ -153,7 +153,7 @@ Feature: Resource Tracker Fields Editing
         Given the character has 2 armor
         When I click the Armor badge
         And I type "3" in the modal input
-        And I click the modal confirm button
+        And I click the "Confirm" button
         Then the Armor badge should show "3"
         And the character data should have armor 3
 
@@ -161,7 +161,7 @@ Feature: Resource Tracker Fields Editing
         Given the character has 2 armor
         When I click the Armor badge
         And I type "5" in the modal input
-        And I click the modal confirm button
+        And I click the "Confirm" button
         And I reload the page
         Then the Armor badge should show "5"
 
@@ -169,7 +169,7 @@ Feature: Resource Tracker Fields Editing
         Given the character has 2 armor
         When I click the Armor badge
         And I type "0" in the modal input
-        And I click the modal confirm button
+        And I click the "Confirm" button
         Then the Armor badge should show "0"
 
     # ============================================================================
@@ -190,7 +190,7 @@ Feature: Resource Tracker Fields Editing
         Given the character has max cyphers 2
         When I click the Max Cyphers badge
         And I type "4" in the modal input
-        And I click the modal confirm button
+        And I click the "Confirm" button
         Then the Max Cyphers portion of the badge should show "4"
         And the character data should have maxCyphers 4
 
@@ -198,7 +198,7 @@ Feature: Resource Tracker Fields Editing
         Given the character has max cyphers 2
         When I click the Max Cyphers badge
         And I type "3" in the modal input
-        And I click the modal confirm button
+        And I click the "Confirm" button
         And I reload the page
         Then the Max Cyphers portion of the badge should show "3"
 
@@ -220,7 +220,7 @@ Feature: Resource Tracker Fields Editing
         Given the character has effort 1
         When I click the Effort badge
         And I type "3" in the modal input
-        And I click the modal confirm button
+        And I click the "Confirm" button
         Then the Effort badge should show "3"
         And the character data should have effort 3
 
@@ -228,6 +228,6 @@ Feature: Resource Tracker Fields Editing
         Given the character has effort 1
         When I click the Effort badge
         And I type "4" in the modal input
-        And I click the modal confirm button
+        And I click the "Confirm" button
         And I reload the page
         Then the Effort badge should show "4"

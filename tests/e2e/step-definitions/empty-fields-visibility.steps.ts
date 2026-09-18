@@ -2,13 +2,6 @@ import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world.js";
 
-// New step: Click the New button to create a character with empty fields
-When("I click the New button", async function (this: CustomWorld) {
-  const newButton = this.page.locator('[data-testid="new-button"]');
-  await newButton.click();
-  await this.page.waitForTimeout(200); // Wait for re-render
-});
-
 Then("the descriptor field should display placeholder text", async function (this: CustomWorld) {
   const descriptorField = this.dom.getByTestId("character-descriptor");
   const text = await descriptorField.textContent();

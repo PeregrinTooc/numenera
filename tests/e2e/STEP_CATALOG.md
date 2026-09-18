@@ -26,7 +26,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **702** in 25 files
+- Step definitions: **698** in 25 files
 - Feature step lines: **2047**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **24**
@@ -44,11 +44,11 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-display.steps.ts](#characterdisplaystepsts) | 40 | 0 |
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
-| [character-storage.steps.ts](#characterstoragestepsts) | 11 | 0 |
+| [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [combat.steps.ts](#combatstepsts) | 28 | 0 |
-| [common-steps.ts](#commonstepsts) | 39 | 0 |
+| [common-steps.ts](#commonstepsts) | 37 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 5 | 0 |
-| [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 15 | 0 |
+| [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 14 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
@@ -466,17 +466,16 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `a character is currently displayed` | 2 | 4 |
-| Then | `all character data should be preserved` | 2 | 89 |
-| Then | `all character sections should show data` | 2 | 53 |
-| Then | `all sections should display empty state messages` | 2 | 24 |
-| When | `I click the "Load" button` | 3 | 43 |
-| When | `I click the "New" button` | 2 | 9 |
-| Then | `the character {string} should be displayed` | 3 | 48 |
-| Given | `the character sheet is empty` | 3 | 38 |
-| Then | `the character sheet should show empty states` | 2 | 17 |
-| Then | `the character should be displayed` | 1 | 77 |
-| Then | `the same character should still be displayed` | 1 | 83 |
+| Given | `a character is currently displayed` | 2 | 5 |
+| Then | `all character data should be preserved` | 2 | 82 |
+| Then | `all character sections should show data` | 2 | 46 |
+| Then | `all sections should display empty state messages` | 2 | 17 |
+| When | `I click the "Load" button` | 3 | 36 |
+| Then | `the character {string} should be displayed` | 3 | 41 |
+| Given | `the character sheet is empty` | 3 | 31 |
+| Then | `the character sheet should show empty states` | 2 | 10 |
+| Then | `the character should be displayed` | 1 | 70 |
+| Then | `the same character should still be displayed` | 1 | 76 |
 
 ## combat.steps.ts
 
@@ -515,45 +514,43 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 10 | 259 |
-| When | `I clear the input field` | 18 | 112 |
+| Then | `an edit modal should appear` | 10 | 253 |
+| When | `I clear the input field` | 18 | 113 |
 | When | `I click on the {string} value` | 9 | 25 |
-| When | `I click on the character name {string}` | 12 | 67 |
-| When | `I click on the descriptor {string}` | 2 | 76 |
-| When | `I click on the focus {string}` | 2 | 81 |
-| When | `I click on the tier {string}` | 5 | 71 |
-| When | `I click outside the modal on the backdrop` | 1 | 160 |
-| When | `I click the {badge} badge` | 22 | 56 |
-| When | `I click the Cancel button` | 1 | 50 |
-| When | `I click the Confirm button` | 5 | 45 |
-| When | `I click the modal cancel button` | 2 | 106 |
-| When | `I click the modal confirm button` | 22 | 104 |
-| When | `I click the new button` | 1 | 186 |
-| When | `I edit the {string} field to {string}` | 23 | 131 |
-| When | `I hover over the character name {string}` | 1 | 96 |
-| When | `I hover over the tier {string}` | 1 | 100 |
-| When | `I press the Enter key` | 2 | 182 |
-| When | `I press the Escape key` | 4 | 178 |
-| When | `I reload the page` | 48 | 193 |
-| Then | `I should see the {string} value displayed` | 1 | 218 |
+| When | `I click on the character name {string}` | 12 | 72 |
+| When | `I click on the descriptor {string}` | 2 | 81 |
+| When | `I click on the focus {string}` | 2 | 86 |
+| When | `I click on the tier {string}` | 5 | 76 |
+| When | `I click outside the modal on the backdrop` | 1 | 161 |
+| When | `I click the "Cancel" button` | 3 | 50 |
+| When | `I click the "Confirm" button` | 27 | 45 |
+| When | `I click the "New" button` | 7 | 51 |
+| When | `I click the {badge} badge` | 22 | 61 |
+| When | `I edit the {string} field to {string}` | 23 | 132 |
+| When | `I hover over the character name {string}` | 1 | 101 |
+| When | `I hover over the tier {string}` | 1 | 105 |
+| When | `I press the Enter key` | 2 | 183 |
+| When | `I press the Escape key` | 4 | 179 |
+| When | `I reload the page` | 48 | 187 |
+| Then | `I should see the {string} value displayed` | 1 | 212 |
 | When | `I tap on the {string} value` | 1 | 33 |
-| When | `I tap on the character name {string}` | 4 | 86 |
-| When | `I tap on the tier {string}` | 1 | 91 |
-| When | `I tap outside the modal on the backdrop` | 1 | 169 |
-| When | `I tap the {badge} badge` | 2 | 60 |
-| When | `I tap the modal confirm button` | 3 | 108 |
-| When | `I type {string} in the input field` | 15 | 125 |
-| When | `I type {string} in the modal input` | 17 | 121 |
-| When | `I type {string} into the input field` | 8 | 120 |
-| Then | `the {string} value should display {string}` | 6 | 227 |
-| Then | `the {string} value should not have changed` | 2 | 236 |
-| Then | `the edit modal should open` | 8 | 260 |
-| Then | `the input field should be focused` | 1 | 278 |
-| Then | `the input field should contain {string}` | 4 | 271 |
-| Then | `the input field should contain the current {string} value` | 1 | 280 |
-| Then | `the input field should receive focus automatically` | 1 | 277 |
-| Then | `the modal input should contain {string}` | 6 | 266 |
-| Then | `the modal should close` | 21 | 267 |
+| When | `I tap on the character name {string}` | 4 | 91 |
+| When | `I tap on the tier {string}` | 1 | 96 |
+| When | `I tap outside the modal on the backdrop` | 1 | 170 |
+| When | `I tap the {badge} badge` | 2 | 65 |
+| When | `I tap the modal confirm button` | 3 | 109 |
+| When | `I type {string} in the input field` | 15 | 126 |
+| When | `I type {string} in the modal input` | 17 | 122 |
+| When | `I type {string} into the input field` | 8 | 121 |
+| Then | `the {string} value should display {string}` | 6 | 221 |
+| Then | `the {string} value should not have changed` | 2 | 230 |
+| Then | `the edit modal should open` | 8 | 254 |
+| Then | `the input field should be focused` | 1 | 272 |
+| Then | `the input field should contain {string}` | 4 | 265 |
+| Then | `the input field should contain the current {string} value` | 1 | 274 |
+| Then | `the input field should receive focus automatically` | 1 | 271 |
+| Then | `the modal input should contain {string}` | 6 | 260 |
+| Then | `the modal should close` | 21 | 261 |
 
 ## data-validation.steps.ts
 
@@ -569,21 +566,20 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear with value {string}` | 1 | 122 |
-| When | `I click on the descriptor field` | 2 | 69 |
-| When | `I click on the focus field` | 1 | 75 |
-| When | `I click the New button` | 4 | 6 |
-| When | `I enter {string} in the edit field` | 2 | 81 |
-| Then | `the descriptor field should be clickable` | 1 | 37 |
-| Then | `the descriptor field should be visible` | 1 | 27 |
-| Then | `the descriptor field should display {string}` | 2 | 86 |
-| Then | `the descriptor field should display placeholder text` | 1 | 11 |
-| Then | `the descriptor field should not show placeholder text` | 1 | 104 |
-| Then | `the focus field should be clickable` | 1 | 53 |
-| Then | `the focus field should be visible` | 1 | 32 |
-| Then | `the focus field should display {string}` | 2 | 95 |
-| Then | `the focus field should display placeholder text` | 1 | 19 |
-| Then | `the focus field should not show placeholder text` | 1 | 113 |
+| Then | `an edit modal should appear with value {string}` | 1 | 115 |
+| When | `I click on the descriptor field` | 2 | 62 |
+| When | `I click on the focus field` | 1 | 68 |
+| When | `I enter {string} in the edit field` | 2 | 74 |
+| Then | `the descriptor field should be clickable` | 1 | 30 |
+| Then | `the descriptor field should be visible` | 1 | 20 |
+| Then | `the descriptor field should display {string}` | 2 | 79 |
+| Then | `the descriptor field should display placeholder text` | 1 | 4 |
+| Then | `the descriptor field should not show placeholder text` | 1 | 97 |
+| Then | `the focus field should be clickable` | 1 | 46 |
+| Then | `the focus field should be visible` | 1 | 25 |
+| Then | `the focus field should display {string}` | 2 | 88 |
+| Then | `the focus field should display placeholder text` | 1 | 12 |
+| Then | `the focus field should not show placeholder text` | 1 | 106 |
 
 ## export-enhancement.steps.ts
 
