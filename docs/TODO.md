@@ -64,6 +64,38 @@ Phase 7: consolidate Gherkin wording). The step catalog
 (`tests/e2e/STEP_CATALOG.md`, `npm run docs:steps`) and the `check:steps`
 guardrail already exist.
 
+### Undocumented `@skip` Scenarios in character-display.feature
+
+**Overview**  
+`character-display.feature:99-149` has 7 `@skip` scenarios (responsive
+mobile/tablet/desktop layouts, tier-3 cypher limit, special characters, long
+text, section order) that were never implemented — zero matching step
+definitions, unrelated to the drag/drop limitation above. Found during
+`tests/implementation-plan.md` Phase 7 (`npm run docs:steps` catalog's
+"Feature lines with no matching step definition" section) and previously
+untracked anywhere.
+
+**Decision needed**
+
+- Implement the steps (real feature work, needs its own planning), or
+- Delete the scenarios if the behaviour they describe is out of scope
+
+### Ability / Special-Ability Wording Unification (blocked on shared code)
+
+**Overview**  
+`ability-enhancements.steps.ts` and `combat.steps.ts` separately hardcode
+`the character has no abilities` / `no special abilities` and the matching
+empty-section assertions. They don't fit the existing `{cardType}` parameter
+type cleanly (irregular pluralisation, split across two files), so Phase 7
+of `tests/implementation-plan.md` left this family alone rather than forcing
+a wording-only fix onto what is really a shared-helper gap.
+
+**Goals**
+
+- Extend `{cardType}` (or add a sibling parameter type) to cover "ability" /
+  "special ability" pluralisation
+- Then collapse the two files' near-duplicate Given/Then pairs onto it
+
 ### Automated Drag/Drop E2E Tests
 
 **Overview**  
