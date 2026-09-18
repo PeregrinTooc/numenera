@@ -1,17 +1,6 @@
 import { defineParameterType } from "@cucumber/cucumber";
 import { CARD_CONFIGS } from "./cardTestFixtures.js";
-
-// Maps the Gherkin word for a resource badge to its data-testid. Kept local
-// to this file for now; common-steps.ts still has its own FIELD_TEST_IDS
-// copy until Phase 3.5 moves badge wiring here permanently and deletes it.
-const BADGE_TEST_IDS: Record<string, string> = {
-  "Current XP": "xp-badge-current",
-  "Total XP": "xp-badge-total",
-  Shins: "shins-badge",
-  Armor: "armor-badge",
-  "Max Cyphers": "max-cyphers-badge",
-  Effort: "effort-badge",
-};
+import { FIELD_TEST_IDS } from "./fields.js";
 
 // Maps the Gherkin word for a character resource to its field name on
 // Character. Consumed by Phase 3.7's this.setup.character(overrides).
@@ -31,7 +20,7 @@ defineParameterType({
 defineParameterType({
   name: "badge",
   regexp: /Current XP|Total XP|Shins|Armor|Max Cyphers|Effort/,
-  transformer: (s: string) => BADGE_TEST_IDS[s],
+  transformer: (s: string) => FIELD_TEST_IDS[s],
 });
 
 defineParameterType({

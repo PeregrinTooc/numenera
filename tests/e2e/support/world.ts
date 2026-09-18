@@ -3,6 +3,7 @@ import { Browser, BrowserContext, Page } from "@playwright/test";
 import { TestStorageHelper } from "./testStorageHelper.js";
 import { DOMHelpers } from "./dom-helpers.js";
 import { ModalDsl } from "./modal.js";
+import { FieldsDsl } from "./fields.js";
 
 // Set default timeout for all steps to 30 seconds
 setDefaultTimeout(30000);
@@ -17,6 +18,7 @@ export interface CustomWorld extends World {
   storageHelper: TestStorageHelper;
   dom: DOMHelpers;
   modal: ModalDsl;
+  fields: FieldsDsl;
   testContext?: Record<string, any>;
   previousCardCount?: number;
   getBaseUrl(): string;
@@ -29,6 +31,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   storageHelper!: TestStorageHelper;
   dom!: DOMHelpers;
   modal!: ModalDsl;
+  fields!: FieldsDsl;
   testContext?: Record<string, any>;
   previousCardCount?: number;
 
