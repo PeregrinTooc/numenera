@@ -1,23 +1,18 @@
 // Unit tests for CardEditModal component
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { screen, fireEvent } from "@testing-library/dom";
 import { html } from "lit-html";
 import { openCardEditModal } from "../../src/components/CardEditModal.js";
+import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("CardEditModal", () => {
-  let container: HTMLElement;
+  setupTestContainer();
   let confirmSpy: () => void;
   let cancelSpy: () => void;
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
     confirmSpy = vi.fn();
     cancelSpy = vi.fn();
-  });
-
-  afterEach(() => {
-    document.body.innerHTML = "";
   });
 
   it("should render modal with provided content", () => {
