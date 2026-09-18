@@ -4,49 +4,7 @@
 
 import { describe, it, expect } from "vitest";
 import { applyFieldUpdate } from "../../src/utils/characterFieldUpdate.js";
-import { Character } from "../../src/types/character.js";
-
-function makeCharacter(): Character {
-  return {
-    name: "Test Character",
-    descriptor: "Clever",
-    type: "Jack",
-    focus: "Who Controls Beasts",
-    tier: 1,
-    effort: 1,
-    currentXp: 0,
-    totalXp: 0,
-    shins: 0,
-    armor: 0,
-    maxCyphers: 3,
-    stats: {
-      might: { pool: 10, edge: 0, current: 10 },
-      speed: { pool: 10, edge: 0, current: 10 },
-      intellect: { pool: 10, edge: 0, current: 10 },
-    },
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: {
-      impairment: "healthy",
-    },
-    abilities: [],
-    specialAbilities: [],
-    attacks: [],
-    cyphers: [],
-    artifacts: [],
-    oddities: [],
-    equipment: [],
-    textFields: {
-      background: "",
-      notes: "",
-    },
-  };
-}
+import { createTestCharacter as makeCharacter } from "../factories/character.js";
 
 describe("applyFieldUpdate", () => {
   it("updates a top-level string field and returns a matching label", () => {
