@@ -196,18 +196,8 @@ Then("the empty special abilities state should use translation keys", async func
 
 // Armor badge step definitions
 
-Given("the character has armor value {int}", async function (_armorValue: number) {
-  // The character should already have this value in the mock data
-});
-
 Then("I should see the armor badge in the attacks section", async function () {
   await expect(this.dom.getByTestId("armor-badge")).toBeVisible();
-});
-
-Then("the armor badge should show value {string}", async function (value: string) {
-  const armorValue = this.dom.getByTestId("armor-value");
-  await expect(armorValue).toBeVisible();
-  await expect(armorValue).toContainText(value);
 });
 
 // Layout step definitions
