@@ -644,35 +644,35 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `artifact level labels should display {string}` | 1 | 112 |
-| Then | `cypher level labels should display {string}` | 1 | 100 |
+| Then | `artifact level labels should display {string}` | 1 | 105 |
+| Then | `cypher level labels should display {string}` | 1 | 94 |
 | Given | `I am on the character sheet page with {string}` | 9 | 10 |
 | When | `I navigate to the page with {string}` | 1 | 16 |
-| Then | `the artifacts heading should be {string}` | 1 | 106 |
-| Then | `the background field label should be {string}` | 2 | 127 |
-| Then | `the cyphers heading should be {string}` | 1 | 94 |
-| Then | `the empty abilities message should be {string}` | 1 | 185 |
-| Then | `the empty artifacts message should be {string}` | 1 | 145 |
-| Then | `the empty background message should be {string}` | 1 | 157 |
-| Then | `the empty cyphers message should be {string}` | 1 | 139 |
-| Then | `the empty equipment message should be {string}` | 1 | 179 |
-| Then | `the empty notes message should be {string}` | 1 | 168 |
-| Then | `the empty oddities message should be {string}` | 1 | 151 |
-| Then | `the intellect stat should display {string}` | 1 | 64 |
+| Then | `the artifacts heading should be {string}` | 1 | 100 |
+| Then | `the background field label should be {string}` | 2 | 119 |
+| Then | `the cyphers heading should be {string}` | 1 | 89 |
+| Then | `the empty abilities message should be {string}` | 1 | 173 |
+| Then | `the empty artifacts message should be {string}` | 1 | 136 |
+| Then | `the empty background message should be {string}` | 1 | 146 |
+| Then | `the empty cyphers message should be {string}` | 1 | 131 |
+| Then | `the empty equipment message should be {string}` | 1 | 168 |
+| Then | `the empty notes message should be {string}` | 1 | 157 |
+| Then | `the empty oddities message should be {string}` | 1 | 141 |
+| Then | `the intellect stat should display {string}` | 1 | 59 |
 | Given | `the language is set to {string}` | 3 | 3 |
-| Then | `the language should remain German` | 1 | 191 |
-| Then | `the load button should display {string}` | 3 | 34 |
-| Then | `the might stat should display {string}` | 1 | 52 |
-| Then | `the new button should display {string}` | 3 | 40 |
-| Then | `the notes field label should be {string}` | 2 | 133 |
-| Then | `the oddities heading should be {string}` | 1 | 121 |
-| Then | `the page title should be {string}` | 2 | 28 |
+| Then | `the language should remain German` | 1 | 178 |
+| Then | `the load button should display {string}` | 3 | 32 |
+| Then | `the might stat should display {string}` | 1 | 47 |
+| Then | `the new button should display {string}` | 3 | 37 |
+| Then | `the notes field label should be {string}` | 2 | 125 |
+| Then | `the oddities heading should be {string}` | 1 | 114 |
+| Then | `the page title should be {string}` | 2 | 27 |
 | Then | `the page title should be in English` | 2 | 22 |
-| Then | `the speed stat should display {string}` | 1 | 58 |
-| Then | `the stat current label should be {string}` | 1 | 86 |
-| Then | `the stat edge label should be {string}` | 1 | 78 |
-| Then | `the stat pool label should be {string}` | 1 | 70 |
-| Then | `the stats heading should be {string}` | 1 | 46 |
+| Then | `the speed stat should display {string}` | 1 | 53 |
+| Then | `the stat current label should be {string}` | 1 | 81 |
+| Then | `the stat edge label should be {string}` | 1 | 73 |
+| Then | `the stat pool label should be {string}` | 1 | 65 |
+| Then | `the stats heading should be {string}` | 1 | 42 |
 
 ## recovery-damage-track.steps.ts
 

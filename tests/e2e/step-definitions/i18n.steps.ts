@@ -1,6 +1,5 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
-import { DOMHelpers } from "../support/dom-helpers.js";
 
 Given("the language is set to {string}", async function (language: string) {
   // Set language by navigating with query parameter
@@ -22,32 +21,27 @@ When("I navigate to the page with {string}", async function (queryString: string
 });
 
 Then("the page title should be in English", async function () {
-  const dom = new DOMHelpers(this.page);
-  const title = dom.getByTestId("page-title");
+  const title = this.dom.getByTestId("page-title");
   await expect(title).toHaveText("Numenera Character Sheet");
 });
 
 Then("the page title should be {string}", async function (expectedTitle: string) {
-  const dom = new DOMHelpers(this.page);
-  const title = dom.getByTestId("page-title");
+  const title = this.dom.getByTestId("page-title");
   await expect(title).toHaveText(expectedTitle);
 });
 
 Then("the load button should display {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const button = dom.getByTestId("load-button");
+  const button = this.dom.getByTestId("load-button");
   await expect(button).toHaveText(expectedText);
 });
 
 Then("the new button should display {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const button = dom.getByTestId("new-button");
+  const button = this.dom.getByTestId("new-button");
   await expect(button).toHaveText(expectedText);
 });
 
 Then("the stats heading should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const heading = dom.getByTestId("stats-heading");
+  const heading = this.dom.getByTestId("stats-heading");
   await expect(heading).toHaveText(expectedText);
 });
 
@@ -94,8 +88,7 @@ Then("the stat current label should be {string}", async function (expectedText: 
 });
 
 Then("the cyphers heading should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const heading = dom.getByTestId("cyphers-heading");
+  const heading = this.dom.getByTestId("cyphers-heading");
   await expect(heading).toHaveText(expectedText);
 });
 
@@ -106,8 +99,7 @@ Then("cypher level labels should display {string}", async function (expectedText
 });
 
 Then("the artifacts heading should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const heading = dom.getByTestId("artifacts-heading");
+  const heading = this.dom.getByTestId("artifacts-heading");
   await expect(heading).toHaveText(expectedText);
 });
 
@@ -121,8 +113,7 @@ Then("artifact level labels should display {string}", async function (expectedTe
 });
 
 Then("the oddities heading should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const heading = dom.getByTestId("oddities-heading");
+  const heading = this.dom.getByTestId("oddities-heading");
   await expect(heading).toHaveText(expectedText);
 });
 
@@ -139,20 +130,17 @@ Then("the notes field label should be {string}", async function (expectedText: s
 });
 
 Then("the empty cyphers message should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const message = dom.getByTestId("empty-cyphers");
+  const message = this.dom.getByTestId("empty-cyphers");
   await expect(message).toHaveText(expectedText);
 });
 
 Then("the empty artifacts message should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const message = dom.getByTestId("empty-artifacts");
+  const message = this.dom.getByTestId("empty-artifacts");
   await expect(message).toHaveText(expectedText);
 });
 
 Then("the empty oddities message should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const message = dom.getByTestId("empty-oddities");
+  const message = this.dom.getByTestId("empty-oddities");
   await expect(message).toHaveText(expectedText);
 });
 
@@ -179,19 +167,16 @@ Then("the empty notes message should be {string}", async function (_expectedText
 });
 
 Then("the empty equipment message should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const message = dom.getByTestId("empty-equipment");
+  const message = this.dom.getByTestId("empty-equipment");
   await expect(message).toHaveText(expectedText);
 });
 
 Then("the empty abilities message should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const message = dom.getByTestId("empty-abilities");
+  const message = this.dom.getByTestId("empty-abilities");
   await expect(message).toHaveText(expectedText);
 });
 
 Then("the language should remain German", async function () {
-  const dom = new DOMHelpers(this.page);
-  const title = dom.getByTestId("page-title");
+  const title = this.dom.getByTestId("page-title");
   await expect(title).toHaveText("Numenera Charakterbogen");
 });
