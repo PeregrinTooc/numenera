@@ -7,17 +7,9 @@ import type { CustomWorld } from "../support/world";
 // ============================================================================
 
 Given(
-  "the character has {int} cyphers named {string}, {string}, {string}",
-  async function (this: CustomWorld, count: number, name1: string, name2: string, name3: string) {
-    const names = [name1, name2, name3].slice(0, count);
-    await setupCyphersWithNames(this, names);
-  }
-);
-
-Given(
-  "the character has {int} cyphers named {string}, {string}",
-  async function (this: CustomWorld, count: number, name1: string, name2: string) {
-    const names = [name1, name2].slice(0, count);
+  "the character has {int} cyphers named {string}",
+  async function (this: CustomWorld, count: number, namesList: string) {
+    const names = namesList.split(", ").slice(0, count);
     await setupCyphersWithNames(this, names);
   }
 );
@@ -151,17 +143,9 @@ When("I hover over cypher {string}", async function (this: CustomWorld, cypherNa
 // ============================================================================
 
 Then(
-  "the cyphers should be in order {string}, {string}, {string}",
-  async function (this: CustomWorld, name1: string, name2: string, name3: string) {
-    const expectedOrder = [name1, name2, name3];
-    await verifyCypherOrder(this, expectedOrder);
-  }
-);
-
-Then(
-  "the cyphers should be in order {string}, {string}",
-  async function (this: CustomWorld, name1: string, name2: string) {
-    const expectedOrder = [name1, name2];
+  "the cyphers should be in order {string}",
+  async function (this: CustomWorld, namesList: string) {
+    const expectedOrder = namesList.split(", ");
     await verifyCypherOrder(this, expectedOrder);
   }
 );
@@ -250,17 +234,9 @@ async function verifyVisualCypherOrder(world: CustomWorld, expectedOrder: string
 // ============================================================================
 
 Given(
-  "the character has {int} abilities named {string}, {string}, {string}",
-  async function (this: CustomWorld, count: number, name1: string, name2: string, name3: string) {
-    const names = [name1, name2, name3].slice(0, count);
-    await setupAbilitiesWithNames(this, names);
-  }
-);
-
-Given(
-  "the character has {int} abilities named {string}, {string}",
-  async function (this: CustomWorld, count: number, name1: string, name2: string) {
-    const names = [name1, name2].slice(0, count);
+  "the character has {int} abilities named {string}",
+  async function (this: CustomWorld, count: number, namesList: string) {
+    const names = namesList.split(", ").slice(0, count);
     await setupAbilitiesWithNames(this, names);
   }
 );
@@ -304,17 +280,9 @@ When(
 );
 
 Then(
-  "the abilities should be in order {string}, {string}, {string}",
-  async function (this: CustomWorld, name1: string, name2: string, name3: string) {
-    const expectedOrder = [name1, name2, name3];
-    await verifyAbilityOrder(this, expectedOrder);
-  }
-);
-
-Then(
-  "the abilities should be in order {string}, {string}",
-  async function (this: CustomWorld, name1: string, name2: string) {
-    const expectedOrder = [name1, name2];
+  "the abilities should be in order {string}",
+  async function (this: CustomWorld, namesList: string) {
+    const expectedOrder = namesList.split(", ");
     await verifyAbilityOrder(this, expectedOrder);
   }
 );
