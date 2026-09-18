@@ -311,7 +311,7 @@ describe("i18n", () => {
 ### Use Factories:
 
 ```typescript
-// test/factories/character.ts
+// tests/factories/character.ts
 export function createTestCharacter(overrides = {}) {
   return {
     name: "Test Character",
