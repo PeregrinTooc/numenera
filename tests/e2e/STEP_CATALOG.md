@@ -26,15 +26,15 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **864** in 25 files
+- Step definitions: **824** in 25 files
 - Feature step lines: **2047**
-- Definitions with no feature usage: **131**
+- Definitions with no feature usage: **91**
 - Feature lines matching no definition: **24**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
 | [ability-enhancements.steps.ts](#abilityenhancementsstepsts) | 15 | 0 |
-| [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 94 | 40 |
+| [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 54 | 0 |
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
 | [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 44 | 6 |
 | [card-creation.steps.ts](#cardcreationstepsts) | 104 | 14 |
@@ -113,100 +113,60 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a character-updated event should be dispatched for background change` | **0** | 595 |
-| Then | `a character-updated event should be dispatched for notes change` | **0** | 607 |
-| Then | `a character-updated event should be dispatched for type change` | **0** | 583 |
-| Given | `I am using a mobile device` | 7 | 754 |
-| When | `I clear the background textarea` | 2 | 277 |
-| When | `I clear the notes textarea` | 2 | 470 |
-| When | `I click on the background field` | **0** | 257 |
-| When | `I click on the notes field` | **0** | 455 |
-| When | `I click on the type dropdown` | **0** | 81 |
-| When | `I click outside the background field` | **0** | 301 |
-| When | `I click outside the background textarea` | 6 | 290 |
-| When | `I click outside the notes field` | **0** | 489 |
-| When | `I click outside the notes textarea` | 5 | 480 |
-| When | `I click the background textarea` | 11 | 262 |
-| When | `I click the notes textarea` | 9 | 431 |
-| When | `I edit the background field and then switch to notes` | **0** | 568 |
-| When | `I focus the type dropdown` | **0** | 91 |
-| When | `I press Escape in the background field` | **0** | 306 |
-| When | `I press Escape in the notes field` | **0** | 494 |
-| When | `I press the {string} key` | **0** | 96 |
-| When | `I select {string} from the mobile picker` | 1 | 785 |
-| When | `I select {string} from the type dropdown` | 4 | 86 |
-| When | `I tap on the background field on mobile` | **0** | 267 |
-| When | `I tap on the notes field on mobile` | **0** | 460 |
-| When | `I tap on the type dropdown on mobile` | **0** | 125 |
-| When | `I tap outside the background field on mobile` | **0** | 310 |
-| When | `I tap outside the background textarea` | 1 | 821 |
-| When | `I tap outside the notes field on mobile` | **0** | 498 |
-| When | `I tap outside the notes textarea` | 1 | 829 |
-| When | `I tap the background textarea` | 1 | 790 |
-| When | `I tap the notes textarea` | 1 | 810 |
-| When | `I tap the type dropdown` | 1 | 773 |
-| When | `I try to edit both background and notes simultaneously` | **0** | 623 |
-| When | `I type {string} in the background textarea` | 7 | 282 |
-| When | `I type {string} in the notes textarea` | 5 | 475 |
-| When | `I type {string} into the background field` | **0** | 272 |
-| When | `I type {string} into the notes field` | **0** | 465 |
-| When | `I type a {int} character string in the background textarea` | 1 | 684 |
-| When | `I type a {int} character string in the notes textarea` | 1 | 693 |
-| When | `I type a very long text into the background field` | **0** | 644 |
-| When | `I type special characters into the notes field` | **0** | 660 |
-| When | `I use keyboard to navigate and select {string} from the type dropdown` | **0** | 100 |
-| Then | `only one field should be in edit mode at a time` | **0** | 632 |
-| Then | `the background field should automatically save` | **0** | 577 |
-| Then | `the background field should be in edit mode` | **0** | 320 |
-| Then | `the background field should be in readonly mode` | **0** | 315 |
-| Then | `the background field should contain {string}` | **0** | 347 |
-| Then | `the background field should handle the long text correctly` | **0** | 651 |
-| Then | `the background field should show the placeholder in {string}` | **0** | 395 |
-| Then | `the background placeholder should be {string}` | 1 | 371 |
-| When | `the background textarea is empty` | 1 | 366 |
-| Then | `the background textarea should be empty` | 1 | 355 |
-| Then | `the background textarea should be focused` | 2 | 331 |
-| Then | `the background textarea should be readonly` | 4 | 236 |
-| Then | `the background textarea should become editable` | 1 | 795 |
-| Then | `the background textarea should contain the full {int} character text` | 1 | 702 |
-| Then | `the background textarea should have a pointer cursor` | 1 | 251 |
-| Then | `the background textarea should have an edit state visual indicator` | 1 | 336 |
-| Then | `the background textarea should not be readonly` | 2 | 325 |
-| Then | `the background textarea should show {string}` | 8 | 241 |
-| Then | `the background textarea should still be editable` | 1 | 360 |
-| Then | `the character data should have background {string}` | 3 | 380 |
-| Then | `the character data should have notes {string}` | 2 | 534 |
-| Then | `the character data should have the full background text` | 1 | 722 |
-| Then | `the character data should have the full notes text` | 1 | 736 |
-| Then | `the character data should have type {string}` | 1 | 164 |
-| Given | `the character has the following data:` | 1 | 9 |
-| Then | `the mobile OS picker should open` | 1 | 778 |
-| Then | `the notes field should be in edit mode` | **0** | 508 |
-| Then | `the notes field should be in readonly mode` | **0** | 503 |
-| Then | `the notes field should contain {string}` | **0** | 513 |
-| Then | `the notes field should preserve the special characters` | **0** | 667 |
-| Then | `the notes field should show the placeholder in {string}` | **0** | 549 |
-| Then | `the notes placeholder should be {string}` | 1 | 528 |
-| When | `the notes textarea is empty` | 1 | 523 |
-| Then | `the notes textarea should be empty` | 1 | 518 |
-| Then | `the notes textarea should be focused` | 2 | 441 |
-| Then | `the notes textarea should be readonly` | 4 | 414 |
-| Then | `the notes textarea should become editable` | 1 | 815 |
-| Then | `the notes textarea should contain the full {int} character text` | 1 | 712 |
-| Then | `the notes textarea should have a pointer cursor` | 1 | 425 |
-| Then | `the notes textarea should have an edit state visual indicator` | 1 | 446 |
-| Then | `the notes textarea should not be readonly` | 2 | 436 |
-| Then | `the notes textarea should show {string}` | 6 | 419 |
-| Then | `the type dropdown label should be {string}` | 1 | 213 |
-| Then | `the type dropdown option for {string} should display as {string}` | 3 | 222 |
-| Then | `the type dropdown options should be {string}, {string}, {string}` | 1 | 152 |
-| Then | `the type dropdown should display in {string}` | **0** | 179 |
-| Then | `the type dropdown should have {int} options` | 1 | 143 |
-| Then | `the type dropdown should have an accessible label` | **0** | 197 |
-| Then | `the type dropdown should show {string}` | **0** | 130 |
-| Then | `the type dropdown should show {string} as selected` | 6 | 135 |
-| Then | `the type should change to the next option` | **0** | 204 |
-| Then | `the virtual keyboard should appear` | 2 | 801 |
+| Given | `I am using a mobile device` | 7 | 435 |
+| When | `I clear the background textarea` | 2 | 180 |
+| When | `I clear the notes textarea` | 2 | 311 |
+| When | `I click outside the background textarea` | 6 | 193 |
+| When | `I click outside the notes textarea` | 5 | 321 |
+| When | `I click the background textarea` | 11 | 175 |
+| When | `I click the notes textarea` | 9 | 287 |
+| When | `I select {string} from the mobile picker` | 1 | 466 |
+| When | `I select {string} from the type dropdown` | 4 | 82 |
+| When | `I tap outside the background textarea` | 1 | 502 |
+| When | `I tap outside the notes textarea` | 1 | 510 |
+| When | `I tap the background textarea` | 1 | 471 |
+| When | `I tap the notes textarea` | 1 | 491 |
+| When | `I tap the type dropdown` | 1 | 454 |
+| When | `I type {string} in the background textarea` | 7 | 185 |
+| When | `I type {string} in the notes textarea` | 5 | 316 |
+| When | `I type a {int} character string in the background textarea` | 1 | 365 |
+| When | `I type a {int} character string in the notes textarea` | 1 | 374 |
+| Then | `the background placeholder should be {string}` | 1 | 242 |
+| When | `the background textarea is empty` | 1 | 237 |
+| Then | `the background textarea should be empty` | 1 | 226 |
+| Then | `the background textarea should be focused` | 2 | 210 |
+| Then | `the background textarea should be readonly` | 4 | 154 |
+| Then | `the background textarea should become editable` | 1 | 476 |
+| Then | `the background textarea should contain the full {int} character text` | 1 | 383 |
+| Then | `the background textarea should have a pointer cursor` | 1 | 169 |
+| Then | `the background textarea should have an edit state visual indicator` | 1 | 215 |
+| Then | `the background textarea should not be readonly` | 2 | 204 |
+| Then | `the background textarea should show {string}` | 8 | 159 |
+| Then | `the background textarea should still be editable` | 1 | 231 |
+| Then | `the character data should have background {string}` | 3 | 251 |
+| Then | `the character data should have notes {string}` | 2 | 346 |
+| Then | `the character data should have the full background text` | 1 | 403 |
+| Then | `the character data should have the full notes text` | 1 | 417 |
+| Then | `the character data should have type {string}` | 1 | 116 |
+| Given | `the character has the following data:` | 1 | 10 |
+| Then | `the mobile OS picker should open` | 1 | 459 |
+| Then | `the notes placeholder should be {string}` | 1 | 340 |
+| When | `the notes textarea is empty` | 1 | 335 |
+| Then | `the notes textarea should be empty` | 1 | 330 |
+| Then | `the notes textarea should be focused` | 2 | 297 |
+| Then | `the notes textarea should be readonly` | 4 | 270 |
+| Then | `the notes textarea should become editable` | 1 | 496 |
+| Then | `the notes textarea should contain the full {int} character text` | 1 | 393 |
+| Then | `the notes textarea should have a pointer cursor` | 1 | 281 |
+| Then | `the notes textarea should have an edit state visual indicator` | 1 | 302 |
+| Then | `the notes textarea should not be readonly` | 2 | 292 |
+| Then | `the notes textarea should show {string}` | 6 | 275 |
+| Then | `the type dropdown label should be {string}` | 1 | 131 |
+| Then | `the type dropdown option for {string} should display as {string}` | 3 | 140 |
+| Then | `the type dropdown options should be {string}, {string}, {string}` | 1 | 104 |
+| Then | `the type dropdown should have {int} options` | 1 | 95 |
+| Then | `the type dropdown should show {string} as selected` | 6 | 87 |
+| Then | `the virtual keyboard should appear` | 2 | 482 |
 
 ## auto-save-indicator.steps.ts
 
