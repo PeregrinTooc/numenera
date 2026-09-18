@@ -1,17 +1,14 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { EditFieldModal } from "../../src/components/EditFieldModal";
 import { render } from "lit-html";
+import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("EditFieldModal", () => {
+  const getContainer = setupTestContainer();
   let container: HTMLElement;
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
+    container = getContainer();
   });
 
   describe("Modal Initialization", () => {
