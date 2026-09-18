@@ -328,55 +328,55 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the delete button on the first ability` | 1 | 200 |
-| When | `I click the delete button on the first artifact` | 1 | 182 |
-| When | `I click the delete button on the first attack` | 1 | 194 |
-| When | `I click the delete button on the first cypher` | 4 | 157 |
-| When | `I click the delete button on the first cypher again` | 1 | 170 |
-| When | `I click the delete button on the first cypher card` | 2 | 163 |
-| When | `I click the delete button on the first equipment item` | 1 | 176 |
-| When | `I click the delete button on the first oddity` | 1 | 188 |
-| When | `I click the delete button on the first special ability` | 1 | 206 |
-| Given | `I have {int} abilities` | 1 | 141 |
-| Given | `I have {int} artifact` | 1 | 120 |
-| Given | `I have {int} attacks` | 1 | 134 |
-| Given | `I have {int} cyphers` | 4 | 105 |
-| Given | `I have {int} equipment items` | 1 | 113 |
-| Given | `I have {int} oddities` | 1 | 127 |
-| Given | `I have {int} special abilities` | 1 | 148 |
-| When | `I look at a cypher card` | 2 | 37 |
-| When | `I look at a special ability card` | 1 | 61 |
-| When | `I look at an ability card` | 1 | 57 |
-| When | `I look at an artifact card` | 1 | 45 |
-| When | `I look at an attack card` | 1 | 53 |
-| When | `I look at an equipment card` | 1 | 41 |
-| When | `I look at an oddity card` | 1 | 49 |
-| Then | `I should have {int} abilities remaining` | 2 | 285 |
-| Then | `I should have {int} artifacts remaining` | 2 | 280 |
-| Then | `I should have {int} attack remaining` | 2 | 253 |
-| Then | `I should have {int} cypher remaining` | 3 | 244 |
-| Then | `I should have {int} cyphers remaining` | 1 | 268 |
-| Then | `I should have {int} equipment items remaining` | 2 | 272 |
-| Then | `I should have {int} oddity remaining` | 2 | 248 |
-| Then | `I should have {int} special abilities remaining` | **0** | 290 |
-| Then | `I should have {int} special ability remaining` | 2 | 258 |
-| Then | `I should not see a confirmation dialog` | 1 | 319 |
-| Then | `I should see a delete button on the ability card` | 1 | 90 |
-| Then | `I should see a delete button on the artifact card` | 1 | 75 |
-| Then | `I should see a delete button on the attack card` | 1 | 85 |
-| Then | `I should see a delete button on the cypher card` | 1 | 65 |
-| Then | `I should see a delete button on the equipment card` | 1 | 70 |
-| Then | `I should see a delete button on the oddity card` | 1 | 80 |
-| Then | `I should see a delete button on the special ability card` | 1 | 95 |
-| Then | `the ability should be removed from the DOM` | 1 | 234 |
-| Then | `the artifact should be removed from the DOM` | 1 | 222 |
-| Then | `the attack should be removed from the DOM` | 1 | 230 |
-| Then | `the cypher should be removed from the DOM` | 1 | 214 |
-| Then | `the cypher should be removed immediately` | 1 | 315 |
-| Then | `the delete button should be in the top-left corner of the card` | 1 | 300 |
-| Then | `the equipment item should be removed from the DOM` | 1 | 218 |
-| Then | `the oddity should be removed from the DOM` | 1 | 226 |
-| Then | `the special ability should be removed from the DOM` | 1 | 238 |
+| When | `I click the delete button on the first ability` | 1 | 199 |
+| When | `I click the delete button on the first artifact` | 1 | 181 |
+| When | `I click the delete button on the first attack` | 1 | 193 |
+| When | `I click the delete button on the first cypher` | 4 | 156 |
+| When | `I click the delete button on the first cypher again` | 1 | 169 |
+| When | `I click the delete button on the first cypher card` | 2 | 162 |
+| When | `I click the delete button on the first equipment item` | 1 | 175 |
+| When | `I click the delete button on the first oddity` | 1 | 187 |
+| When | `I click the delete button on the first special ability` | 1 | 205 |
+| Given | `I have {int} abilities` | 1 | 140 |
+| Given | `I have {int} artifact` | 1 | 119 |
+| Given | `I have {int} attacks` | 1 | 133 |
+| Given | `I have {int} cyphers` | 4 | 104 |
+| Given | `I have {int} equipment items` | 1 | 112 |
+| Given | `I have {int} oddities` | 1 | 126 |
+| Given | `I have {int} special abilities` | 1 | 147 |
+| When | `I look at a cypher card` | 2 | 36 |
+| When | `I look at a special ability card` | 1 | 60 |
+| When | `I look at an ability card` | 1 | 56 |
+| When | `I look at an artifact card` | 1 | 44 |
+| When | `I look at an attack card` | 1 | 52 |
+| When | `I look at an equipment card` | 1 | 40 |
+| When | `I look at an oddity card` | 1 | 48 |
+| Then | `I should have {int} abilities remaining` | 2 | 284 |
+| Then | `I should have {int} artifacts remaining` | 2 | 279 |
+| Then | `I should have {int} attack remaining` | 2 | 252 |
+| Then | `I should have {int} cypher remaining` | 3 | 243 |
+| Then | `I should have {int} cyphers remaining` | 1 | 267 |
+| Then | `I should have {int} equipment items remaining` | 2 | 271 |
+| Then | `I should have {int} oddity remaining` | 2 | 247 |
+| Then | `I should have {int} special abilities remaining` | **0** | 289 |
+| Then | `I should have {int} special ability remaining` | 2 | 257 |
+| Then | `I should not see a confirmation dialog` | 1 | 318 |
+| Then | `I should see a delete button on the ability card` | 1 | 89 |
+| Then | `I should see a delete button on the artifact card` | 1 | 74 |
+| Then | `I should see a delete button on the attack card` | 1 | 84 |
+| Then | `I should see a delete button on the cypher card` | 1 | 64 |
+| Then | `I should see a delete button on the equipment card` | 1 | 69 |
+| Then | `I should see a delete button on the oddity card` | 1 | 79 |
+| Then | `I should see a delete button on the special ability card` | 1 | 94 |
+| Then | `the ability should be removed from the DOM` | 1 | 233 |
+| Then | `the artifact should be removed from the DOM` | 1 | 221 |
+| Then | `the attack should be removed from the DOM` | 1 | 229 |
+| Then | `the cypher should be removed from the DOM` | 1 | 213 |
+| Then | `the cypher should be removed immediately` | 1 | 314 |
+| Then | `the delete button should be in the top-left corner of the card` | 1 | 299 |
+| Then | `the equipment item should be removed from the DOM` | 1 | 217 |
+| Then | `the oddity should be removed from the DOM` | 1 | 225 |
+| Then | `the special ability should be removed from the DOM` | 1 | 237 |
 
 ## card-modal-focus-trap.steps.ts
 
@@ -711,26 +711,26 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `the Armor badge should show {string}` | 4 | 280 |
-| Then | `the character data should have armor {int}` | 1 | 341 |
-| Then | `the character data should have currentXp {int}` | 1 | 308 |
-| Then | `the character data should have effort {int}` | 1 | 363 |
-| Then | `the character data should have maxCyphers {int}` | 1 | 352 |
-| Then | `the character data should have shins {int}` | 1 | 330 |
-| Then | `the character data should have totalXp {int}` | 1 | 319 |
-| Given | `the character has {int} armor` | 5 | 162 |
-| Given | `the character has {int} current XP and {int} total XP` | 9 | 57 |
-| Given | `the character has {int} shins` | 7 | 134 |
-| Given | `the character has effort {int}` | 4 | 221 |
-| Given | `the character has max cyphers {int}` | 4 | 190 |
-| Given | `the character was saved with a single legacy XP value of {int}` | 1 | 96 |
-| Then | `the Current XP badge should show {string}` | 7 | 256 |
-| Then | `the Effort badge should show {string}` | 3 | 296 |
-| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 288 |
-| Then | `the modal confirm button should be disabled` | 1 | 374 |
-| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 379 |
-| Then | `the Shins badge should show {string}` | 5 | 272 |
-| Then | `the Total XP badge should show {string}` | 5 | 264 |
+| Then | `the Armor badge should show {string}` | 4 | 281 |
+| Then | `the character data should have armor {int}` | 1 | 342 |
+| Then | `the character data should have currentXp {int}` | 1 | 309 |
+| Then | `the character data should have effort {int}` | 1 | 364 |
+| Then | `the character data should have maxCyphers {int}` | 1 | 353 |
+| Then | `the character data should have shins {int}` | 1 | 331 |
+| Then | `the character data should have totalXp {int}` | 1 | 320 |
+| Given | `the character has {int} armor` | 5 | 163 |
+| Given | `the character has {int} current XP and {int} total XP` | 9 | 58 |
+| Given | `the character has {int} shins` | 7 | 135 |
+| Given | `the character has effort {int}` | 4 | 222 |
+| Given | `the character has max cyphers {int}` | 4 | 191 |
+| Given | `the character was saved with a single legacy XP value of {int}` | 1 | 97 |
+| Then | `the Current XP badge should show {string}` | 7 | 257 |
+| Then | `the Effort badge should show {string}` | 3 | 297 |
+| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 289 |
+| Then | `the modal confirm button should be disabled` | 1 | 375 |
+| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 380 |
+| Then | `the Shins badge should show {string}` | 5 | 273 |
+| Then | `the Total XP badge should show {string}` | 5 | 265 |
 
 ## section-rearrangement.steps.ts
 

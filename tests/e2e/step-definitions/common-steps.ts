@@ -203,16 +203,6 @@ When("I click the modal cancel button", async function (this: CustomWorld) {
   });
 });
 
-When("I click the modal backdrop", async function (this: CustomWorld) {
-  await this.page!.click('[data-testid="modal-backdrop"]', { position: { x: 10, y: 10 } });
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
-    state: "hidden",
-    timeout: 2000,
-  }).catch(() => {
-    // Modal might already be hidden
-  });
-});
-
 When("I tap the modal confirm button", async function (this: CustomWorld) {
   await this.page!.tap('[data-testid="modal-confirm-button"]');
   await this.page!.waitForSelector('[data-testid="edit-modal"]', {
@@ -223,53 +213,6 @@ When("I tap the modal confirm button", async function (this: CustomWorld) {
   });
   // Wait for auto-save to complete
   await waitForSaveComplete(this.page!);
-});
-
-When("I click the {string}", async function (this: CustomWorld, elementName: string) {
-  const testIdMap: Record<string, string> = {
-    "Confirm button": "modal-confirm-button",
-    "confirm button": "modal-confirm-button",
-    "Cancel button": "modal-cancel-button",
-    "cancel button": "modal-cancel-button",
-  };
-
-  const testId = testIdMap[elementName];
-  if (!testId) {
-    throw new Error(`Unknown element: "${elementName}"`);
-  }
-
-  await this.page!.click(`[data-testid="${testId}"]`);
-
-  // Wait for modal to close after confirm/cancel
-  if (elementName.toLowerCase().includes("button")) {
-    await this.page!.waitForSelector('[data-testid="edit-modal"]', {
-      state: "hidden",
-      timeout: 2000,
-    }).catch(() => {
-      // Modal might already be hidden
-    });
-  }
-});
-
-When("I tap the {string}", async function (this: CustomWorld, elementName: string) {
-  const testIdMap: Record<string, string> = {
-    "confirm button": "modal-confirm-button",
-    "Cancel button": "modal-cancel-button",
-    "cancel button": "modal-cancel-button",
-  };
-
-  const testId = testIdMap[elementName];
-  if (!testId) {
-    throw new Error(`Unknown element: "${elementName}"`);
-  }
-
-  await this.page!.tap(`[data-testid="${testId}"]`);
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
-    state: "hidden",
-    timeout: 2000,
-  }).catch(() => {
-    // Modal might already be hidden
-  });
 });
 
 When("I clear the input field", async function (this: CustomWorld) {
@@ -357,14 +300,6 @@ When("I press the Escape key", async function (this: CustomWorld) {
 
 When("I press the Enter key", async function (this: CustomWorld) {
   await this.page!.keyboard.press("Enter");
-});
-
-When("I press Enter", async function (this: CustomWorld) {
-  await this.page!.keyboard.press("Enter");
-});
-
-When("I press Escape", async function (this: CustomWorld) {
-  await this.page!.keyboard.press("Escape");
 });
 
 When("I click the new button", async function (this: CustomWorld) {
