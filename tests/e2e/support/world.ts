@@ -14,6 +14,7 @@ export interface CustomWorld extends World {
   page: Page;
   storageHelper: TestStorageHelper;
   testContext?: Record<string, any>;
+  previousCardCount?: number;
   getBaseUrl(): string;
 }
 
@@ -23,6 +24,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   page!: Page;
   storageHelper!: TestStorageHelper;
   testContext?: Record<string, any>;
+  previousCardCount?: number;
 
   constructor(options: IWorldOptions) {
     super(options);

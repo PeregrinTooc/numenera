@@ -17,19 +17,20 @@ function getDeleteButtonSelector(cardType: string, index: number = 0): string {
   return selectorMap[cardType] || "";
 }
 
+// Selectors for counting all delete buttons of a given card type
+const CARD_COUNT_SELECTORS: Record<string, string> = {
+  cypher: '[data-testid^="cypher-delete-button-"]',
+  equipment: '[data-testid^="equipment-delete-button-"]',
+  artifact: '[data-testid^="artifact-delete-button-"]',
+  oddity: '[data-testid^="oddity-delete-button-"]',
+  attack: '[data-testid^="attack-delete-button-"]',
+  ability: '[data-testid^="ability-delete-button-"]',
+  "special ability": '[data-testid^="special-ability-delete-button-"]',
+};
+
 // Helper function to get card count
 async function getCardCount(world: CustomWorld, cardType: string): Promise<number> {
-  const selectorMap: Record<string, string> = {
-    cypher: '[data-testid^="cypher-delete-button-"]',
-    equipment: '[data-testid^="equipment-delete-button-"]',
-    artifact: '[data-testid^="artifact-delete-button-"]',
-    oddity: '[data-testid^="oddity-delete-button-"]',
-    attack: '[data-testid^="attack-delete-button-"]',
-    ability: '[data-testid^="ability-delete-button-"]',
-    "special ability": '[data-testid^="special-ability-delete-button-"]',
-  };
-  const selector = selectorMap[cardType];
-  const elements = await world.page.locator(selector).all();
+  const elements = await world.page.locator(CARD_COUNT_SELECTORS[cardType]).all();
   return elements.length;
 }
 
@@ -155,6 +156,7 @@ Given("I have {int} special abilities", async function (this: CustomWorld, count
 
 // Deletion action steps
 When("I click the delete button on the first cypher", async function (this: CustomWorld) {
+  this.previousCardCount = await getCardCount(this, "cypher");
   const deleteButton = this.page.locator(getDeleteButtonSelector("cypher", 0));
   await deleteButton.click();
   // Wait a bit for the deletion to process
@@ -162,6 +164,7 @@ When("I click the delete button on the first cypher", async function (this: Cust
 });
 
 When("I click the delete button on the first cypher card", async function (this: CustomWorld) {
+  this.previousCardCount = await getCardCount(this, "cypher");
   const deleteButton = this.page.locator(getDeleteButtonSelector("cypher", 0));
   await deleteButton.click();
   // Wait a bit for the deletion to process
@@ -169,75 +172,86 @@ When("I click the delete button on the first cypher card", async function (this:
 });
 
 When("I click the delete button on the first cypher again", async function (this: CustomWorld) {
+  this.previousCardCount = await getCardCount(this, "cypher");
   const deleteButton = this.page.locator(getDeleteButtonSelector("cypher", 0));
   await deleteButton.click();
   await this.page.waitForTimeout(100);
 });
 
 When("I click the delete button on the first equipment item", async function (this: CustomWorld) {
+  this.previousCardCount = await getCardCount(this, "equipment");
   const deleteButton = this.page.locator(getDeleteButtonSelector("equipment", 0));
   await deleteButton.click();
   await this.page.waitForTimeout(100);
 });
 
 When("I click the delete button on the first artifact", async function (this: CustomWorld) {
+  this.previousCardCount = await getCardCount(this, "artifact");
   const deleteButton = this.page.locator(getDeleteButtonSelector("artifact", 0));
   await deleteButton.click();
   await this.page.waitForTimeout(100);
 });
 
 When("I click the delete button on the first oddity", async function (this: CustomWorld) {
+  this.previousCardCount = await getCardCount(this, "oddity");
   const deleteButton = this.page.locator(getDeleteButtonSelector("oddity", 0));
   await deleteButton.click();
   await this.page.waitForTimeout(100);
 });
 
 When("I click the delete button on the first attack", async function (this: CustomWorld) {
+  this.previousCardCount = await getCardCount(this, "attack");
   const deleteButton = this.page.locator(getDeleteButtonSelector("attack", 0));
   await deleteButton.click();
   await this.page.waitForTimeout(100);
 });
 
 When("I click the delete button on the first ability", async function (this: CustomWorld) {
+  this.previousCardCount = await getCardCount(this, "ability");
   const deleteButton = this.page.locator(getDeleteButtonSelector("ability", 0));
   await deleteButton.click();
   await this.page.waitForTimeout(100);
 });
 
 When("I click the delete button on the first special ability", async function (this: CustomWorld) {
+  this.previousCardCount = await getCardCount(this, "special ability");
   const deleteButton = this.page.locator(getDeleteButtonSelector("special ability", 0));
   await deleteButton.click();
   await this.page.waitForTimeout(100);
 });
 
 // Verification steps
+async function expectCardRemoved(world: CustomWorld, cardType: string): Promise<void> {
+  const previousCount = world.previousCardCount ?? 0;
+  await expect(world.page.locator(CARD_COUNT_SELECTORS[cardType])).toHaveCount(previousCount - 1);
+}
+
 Then("the cypher should be removed from the DOM", async function (this: CustomWorld) {
-  // Just verify that a deletion happened - the count check will verify the exact number
-  await this.page.waitForTimeout(100);
+  await expectCardRemoved(this, "cypher");
 });
 
 Then("the equipment item should be removed from the DOM", async function (this: CustomWorld) {
-  await this.page.waitForTimeout(100);
+  await expectCardRemoved(this, "equipment");
 });
 
 Then("the artifact should be removed from the DOM", async function (this: CustomWorld) {
-  await this.page.waitForTimeout(100);
+  await expectCardRemoved(this, "artifact");
 });
 
 Then("the oddity should be removed from the DOM", async function (this: CustomWorld) {
-  await this.page.waitForTimeout(100);
+  await expectCardRemoved(this, "oddity");
 });
 
 Then("the attack should be removed from the DOM", async function (this: CustomWorld) {
-  await this.page.waitForTimeout(100);
+  await expectCardRemoved(this, "attack");
 });
 
 Then("the ability should be removed from the DOM", async function (this: CustomWorld) {
-  await this.page.waitForTimeout(100);
+  await expectCardRemoved(this, "ability");
 });
 
 Then("the special ability should be removed from the DOM", async function (this: CustomWorld) {
-  await this.page.waitForTimeout(100);
+  await expectCardRemoved(this, "special ability");
 });
 
 // Count verification steps - singular
