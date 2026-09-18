@@ -26,9 +26,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **765** in 25 files
+- Step definitions: **757** in 25 files
 - Feature step lines: **2047**
-- Definitions with no feature usage: **32**
+- Definitions with no feature usage: **24**
 - Feature lines matching no definition: **24**
 
 | Step file | Definitions | Unused |
@@ -47,7 +47,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-storage.steps.ts](#characterstoragestepsts) | 11 | 0 |
 | [combat.steps.ts](#combatstepsts) | 28 | 0 |
 | [common-steps.ts](#commonstepsts) | 50 | 5 |
-| [data-validation.steps.ts](#datavalidationstepsts) | 13 | 8 |
+| [data-validation.steps.ts](#datavalidationstepsts) | 5 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 15 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 22 | 1 |
 | [i18n.steps.ts](#i18nstepsts) | 37 | 8 |
@@ -190,44 +190,44 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an error or validation message may appear` | 1 | 139 |
-| Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 213 |
-| Then | `focus should not leave the modal` | 1 | 247 |
-| Given | `I am viewing on a mobile device with width {string}` | 7 | 302 |
-| Then | `I can cancel with Escape key` | 1 | 272 |
-| Then | `I can confirm with Enter key` | 1 | 265 |
-| Then | `I can navigate with Tab key` | 1 | 257 |
-| When | `I press Tab repeatedly` | 1 | 29 |
-| Then | `the backdrop should have aria-hidden={string}` | 1 | 289 |
-| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 354 |
-| Then | `the cancel button should have an X icon` | 1 | 163 |
-| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 382 |
-| Then | `the character name should display {string}` | 6 | 81 |
-| Then | `the character name should still display {string}` | 6 | 89 |
-| Then | `the confirm button should be disabled` | 1 | 128 |
-| Then | `the confirm button should have a checkmark icon` | 1 | 157 |
-| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 402 |
-| Then | `the descriptor should display {string}` | 2 | 103 |
-| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 412 |
-| Then | `the focus should display {string}` | 2 | 111 |
-| Then | `the input field should be large enough for touch input` | 1 | 374 |
-| Then | `the input field should be of type {string}` | 1 | 68 |
-| Then | `the input field should have inputmode={string} for mobile` | 1 | 325 |
-| Then | `the mobile keyboard should appear` | 1 | 319 |
-| Then | `the modal backdrop should be semi-transparent` | 1 | 169 |
-| Then | `the modal should be sized appropriately for mobile` | 1 | 310 |
-| Then | `the modal should fill most of the screen width` | 1 | 334 |
-| Then | `the modal should have a cancel button with icon` | 1 | 61 |
-| Then | `the modal should have a confirm button with icon` | 1 | 54 |
-| Then | `the modal should have Numenera-themed styling` | 1 | 148 |
-| Then | `the modal should have role={string}` | 1 | 283 |
-| Then | `the modal should not close` | 1 | 134 |
-| Then | `the modal should not overflow the viewport` | 1 | 344 |
-| Then | `the name should show a hover state indicating it's editable` | 1 | 187 |
-| Then | `the tier should be constrained to {string}` | 2 | 120 |
-| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 392 |
-| Then | `the tier should display {string}` | 6 | 97 |
-| Then | `the tier should show a hover state indicating it's editable` | 1 | 198 |
+| Then | `an error or validation message may appear` | 1 | 140 |
+| Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 214 |
+| Then | `focus should not leave the modal` | 1 | 248 |
+| Given | `I am viewing on a mobile device with width {string}` | 7 | 303 |
+| Then | `I can cancel with Escape key` | 1 | 273 |
+| Then | `I can confirm with Enter key` | 1 | 266 |
+| Then | `I can navigate with Tab key` | 1 | 258 |
+| When | `I press Tab repeatedly` | 1 | 30 |
+| Then | `the backdrop should have aria-hidden={string}` | 1 | 290 |
+| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 355 |
+| Then | `the cancel button should have an X icon` | 1 | 164 |
+| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 383 |
+| Then | `the character name should display {string}` | 6 | 82 |
+| Then | `the character name should still display {string}` | 6 | 90 |
+| Then | `the confirm button should be disabled` | 1 | 129 |
+| Then | `the confirm button should have a checkmark icon` | 1 | 158 |
+| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 403 |
+| Then | `the descriptor should display {string}` | 2 | 104 |
+| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 413 |
+| Then | `the focus should display {string}` | 2 | 112 |
+| Then | `the input field should be large enough for touch input` | 1 | 375 |
+| Then | `the input field should be of type {string}` | 1 | 69 |
+| Then | `the input field should have inputmode={string} for mobile` | 1 | 326 |
+| Then | `the mobile keyboard should appear` | 1 | 320 |
+| Then | `the modal backdrop should be semi-transparent` | 1 | 170 |
+| Then | `the modal should be sized appropriately for mobile` | 1 | 311 |
+| Then | `the modal should fill most of the screen width` | 1 | 335 |
+| Then | `the modal should have a cancel button with icon` | 1 | 62 |
+| Then | `the modal should have a confirm button with icon` | 1 | 55 |
+| Then | `the modal should have Numenera-themed styling` | 1 | 149 |
+| Then | `the modal should have role={string}` | 1 | 284 |
+| Then | `the modal should not close` | 1 | 135 |
+| Then | `the modal should not overflow the viewport` | 1 | 345 |
+| Then | `the name should show a hover state indicating it's editable` | 1 | 188 |
+| Then | `the tier should be constrained to {string}` | 2 | 121 |
+| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 393 |
+| Then | `the tier should display {string}` | 6 | 98 |
+| Then | `the tier should show a hover state indicating it's editable` | 1 | 199 |
 
 ## card-creation.steps.ts
 
@@ -601,19 +601,11 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all character data should be correctly displayed` | 1 | 244 |
-| When | `I attempt to import a file with invalid JSON syntax` | **0** | 51 |
-| When | `I import a character file with invalid field types` | **0** | 113 |
-| When | `I import a file with old schemaVersion but valid character structure` | **0** | 81 |
-| When | `I import a valid character file with matching schema version` | 2 | 146 |
-| Then | `I should see a warning about corrected values` | **0** | 214 |
-| Then | `I should see a warning about the schema version` | **0** | 200 |
-| Then | `I should see an error message containing {string}` | **0** | 169 |
-| Then | `no warnings should be shown` | **0** | 231 |
-| Then | `the character name should still be {string}` | 1 | 256 |
-| Then | `the character should be imported successfully` | 1 | 192 |
-| Then | `the current character should remain unchanged` | **0** | 185 |
-| Then | `the tier should still be {string}` | 1 | 264 |
+| Then | `all character data should be correctly displayed` | 1 | 79 |
+| When | `I import a valid character file with matching schema version` | 2 | 48 |
+| Then | `the character name should still be {string}` | 1 | 91 |
+| Then | `the character should be imported successfully` | 1 | 71 |
+| Then | `the tier should still be {string}` | 1 | 99 |
 
 ## empty-fields-visibility.steps.ts
 
