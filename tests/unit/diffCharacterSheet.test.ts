@@ -2,11 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { render } from "lit-html";
 import { DiffCharacterSheet } from "../../src/components/DiffCharacterSheet";
 import { diffCharacters } from "../../src/utils/characterDiff";
-import { createTestCharacter } from "../factories/character.js";
-
-function createBaseCharacter() {
-  return createTestCharacter({ portrait: undefined });
-}
+import { createTestCharacter as createBaseCharacter } from "../factories/character.js";
 
 describe("DiffCharacterSheet", () => {
   let container: HTMLElement;

@@ -3,12 +3,9 @@
 
 import { render } from "lit-html";
 import { Character } from "../../../src/types/character.js";
-import { createTestCharacter } from "../../factories/character.js";
+import { createTestCharacter as createMockCharacter } from "../../factories/character.js";
 
-// Mock character data factory for tests
-export function createMockCharacter(overrides: Partial<Character> = {}): Character {
-  return createTestCharacter(overrides);
-}
+export { createMockCharacter };
 
 export interface ContainerTestConfig<T> {
   componentName: string;
