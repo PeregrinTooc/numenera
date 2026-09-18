@@ -2,43 +2,10 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { render } from "lit-html";
 import { DiffCharacterSheet } from "../../src/components/DiffCharacterSheet";
 import { diffCharacters } from "../../src/utils/characterDiff";
-import type { Character } from "../../src/types/character";
+import { createTestCharacter } from "../factories/character.js";
 
-function createBaseCharacter(): Character {
-  return {
-    name: "Test Character",
-    tier: 1,
-    type: "Glaive",
-    descriptor: "Strong",
-    focus: "Battles",
-    currentXp: 0,
-    totalXp: 0,
-    shins: 10,
-    armor: 1,
-    effort: 1,
-    maxCyphers: 2,
-    stats: {
-      might: { pool: 10, edge: 0, current: 10 },
-      speed: { pool: 10, edge: 0, current: 10 },
-      intellect: { pool: 10, edge: 0, current: 10 },
-    },
-    cyphers: [],
-    artifacts: [],
-    oddities: [],
-    abilities: [],
-    equipment: [],
-    attacks: [],
-    specialAbilities: [],
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: { impairment: "healthy" },
-    textFields: { background: "", notes: "" },
-  };
+function createBaseCharacter() {
+  return createTestCharacter({ portrait: undefined });
 }
 
 describe("DiffCharacterSheet", () => {
