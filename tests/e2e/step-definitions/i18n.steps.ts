@@ -45,36 +45,6 @@ Then("the new button should display {string}", async function (expectedText: str
   await expect(button).toHaveText(expectedText);
 });
 
-Then("the character name label should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const label = dom.getByTestId("label-name");
-  await expect(label).toContainText(expectedText);
-});
-
-Then("the character tier label should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const label = dom.getByTestId("label-tier");
-  await expect(label).toContainText(expectedText);
-});
-
-Then("the character type label should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const label = dom.getByTestId("label-type");
-  await expect(label).toContainText(expectedText);
-});
-
-Then("the character descriptor label should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const label = dom.getByTestId("label-descriptor");
-  await expect(label).toContainText(expectedText);
-});
-
-Then("the character focus label should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const label = dom.getByTestId("label-focus");
-  await expect(label).toContainText(expectedText);
-});
-
 Then("the stats heading should be {string}", async function (expectedText: string) {
   const dom = new DOMHelpers(this.page);
   const heading = dom.getByTestId("stats-heading");
@@ -156,12 +126,6 @@ Then("the oddities heading should be {string}", async function (expectedText: st
   await expect(heading).toHaveText(expectedText);
 });
 
-Then("the text fields heading should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const heading = dom.getByTestId("text-fields-heading");
-  await expect(heading).toHaveText(expectedText);
-});
-
 Then("the background field label should be {string}", async function (expectedText: string) {
   // Background label is an h3 inside the parchment-field div, find it by looking near the textarea
   const label = this.page.locator(".parchment-field h3").first();
@@ -171,18 +135,6 @@ Then("the background field label should be {string}", async function (expectedTe
 Then("the notes field label should be {string}", async function (expectedText: string) {
   // Notes label is an h3 inside the parchment-field div, find the second one
   const label = this.page.locator(".parchment-field h3").nth(1);
-  await expect(label).toHaveText(expectedText);
-});
-
-Then("the equipment field label should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const label = dom.getByTestId("label-equipment");
-  await expect(label).toHaveText(expectedText);
-});
-
-Then("the abilities field label should be {string}", async function (expectedText: string) {
-  const dom = new DOMHelpers(this.page);
-  const label = dom.getByTestId("label-abilities");
   await expect(label).toHaveText(expectedText);
 });
 

@@ -26,9 +26,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **757** in 25 files
+- Step definitions: **749** in 25 files
 - Feature step lines: **2047**
-- Definitions with no feature usage: **24**
+- Definitions with no feature usage: **16**
 - Feature lines matching no definition: **24**
 
 | Step file | Definitions | Unused |
@@ -50,7 +50,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [data-validation.steps.ts](#datavalidationstepsts) | 5 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 15 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 22 | 1 |
-| [i18n.steps.ts](#i18nstepsts) | 37 | 8 |
+| [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 21 | 1 |
 | [section-rearrangement.steps.ts](#sectionrearrangementstepsts) | 49 | 0 |
@@ -601,11 +601,11 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all character data should be correctly displayed` | 1 | 79 |
-| When | `I import a valid character file with matching schema version` | 2 | 48 |
-| Then | `the character name should still be {string}` | 1 | 91 |
-| Then | `the character should be imported successfully` | 1 | 71 |
-| Then | `the tier should still be {string}` | 1 | 99 |
+| Then | `all character data should be correctly displayed` | 1 | 80 |
+| When | `I import a valid character file with matching schema version` | 2 | 49 |
+| Then | `the character name should still be {string}` | 1 | 92 |
+| Then | `the character should be imported successfully` | 1 | 72 |
+| Then | `the tier should still be {string}` | 1 | 100 |
 
 ## empty-fields-visibility.steps.ts
 
@@ -658,43 +658,35 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `artifact level labels should display {string}` | 1 | 142 |
-| Then | `cypher level labels should display {string}` | 1 | 130 |
+| Then | `artifact level labels should display {string}` | 1 | 112 |
+| Then | `cypher level labels should display {string}` | 1 | 100 |
 | Given | `I am on the character sheet page with {string}` | 9 | 10 |
 | When | `I navigate to the page with {string}` | 1 | 16 |
-| Then | `the abilities field label should be {string}` | **0** | 181 |
-| Then | `the artifacts heading should be {string}` | 1 | 136 |
-| Then | `the background field label should be {string}` | 2 | 163 |
-| Then | `the character descriptor label should be {string}` | **0** | 64 |
-| Then | `the character focus label should be {string}` | **0** | 70 |
-| Then | `the character name label should be {string}` | **0** | 46 |
-| Then | `the character tier label should be {string}` | **0** | 52 |
-| Then | `the character type label should be {string}` | **0** | 58 |
-| Then | `the cyphers heading should be {string}` | 1 | 124 |
-| Then | `the empty abilities message should be {string}` | 1 | 233 |
-| Then | `the empty artifacts message should be {string}` | 1 | 193 |
-| Then | `the empty background message should be {string}` | 1 | 205 |
-| Then | `the empty cyphers message should be {string}` | 1 | 187 |
-| Then | `the empty equipment message should be {string}` | 1 | 227 |
-| Then | `the empty notes message should be {string}` | 1 | 216 |
-| Then | `the empty oddities message should be {string}` | 1 | 199 |
-| Then | `the equipment field label should be {string}` | **0** | 175 |
-| Then | `the intellect stat should display {string}` | 1 | 94 |
+| Then | `the artifacts heading should be {string}` | 1 | 106 |
+| Then | `the background field label should be {string}` | 2 | 127 |
+| Then | `the cyphers heading should be {string}` | 1 | 94 |
+| Then | `the empty abilities message should be {string}` | 1 | 185 |
+| Then | `the empty artifacts message should be {string}` | 1 | 145 |
+| Then | `the empty background message should be {string}` | 1 | 157 |
+| Then | `the empty cyphers message should be {string}` | 1 | 139 |
+| Then | `the empty equipment message should be {string}` | 1 | 179 |
+| Then | `the empty notes message should be {string}` | 1 | 168 |
+| Then | `the empty oddities message should be {string}` | 1 | 151 |
+| Then | `the intellect stat should display {string}` | 1 | 64 |
 | Given | `the language is set to {string}` | 3 | 3 |
-| Then | `the language should remain German` | 1 | 239 |
+| Then | `the language should remain German` | 1 | 191 |
 | Then | `the load button should display {string}` | 3 | 34 |
-| Then | `the might stat should display {string}` | 1 | 82 |
+| Then | `the might stat should display {string}` | 1 | 52 |
 | Then | `the new button should display {string}` | 3 | 40 |
-| Then | `the notes field label should be {string}` | 2 | 169 |
-| Then | `the oddities heading should be {string}` | 1 | 151 |
+| Then | `the notes field label should be {string}` | 2 | 133 |
+| Then | `the oddities heading should be {string}` | 1 | 121 |
 | Then | `the page title should be {string}` | 2 | 28 |
 | Then | `the page title should be in English` | 2 | 22 |
-| Then | `the speed stat should display {string}` | 1 | 88 |
-| Then | `the stat current label should be {string}` | 1 | 116 |
-| Then | `the stat edge label should be {string}` | 1 | 108 |
-| Then | `the stat pool label should be {string}` | 1 | 100 |
-| Then | `the stats heading should be {string}` | 1 | 76 |
-| Then | `the text fields heading should be {string}` | **0** | 157 |
+| Then | `the speed stat should display {string}` | 1 | 58 |
+| Then | `the stat current label should be {string}` | 1 | 86 |
+| Then | `the stat edge label should be {string}` | 1 | 78 |
+| Then | `the stat pool label should be {string}` | 1 | 70 |
+| Then | `the stats heading should be {string}` | 1 | 46 |
 
 ## recovery-damage-track.steps.ts
 
