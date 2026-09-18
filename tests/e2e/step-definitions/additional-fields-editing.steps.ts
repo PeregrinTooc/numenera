@@ -2,7 +2,7 @@ import { When, Then, Given } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { TestStorageHelper } from "../support/testStorageHelper.js";
-import { waitForSaveComplete } from "./auto-save-indicator.steps.js";
+import { waitForSaveComplete } from "../support/save.js";
 
 // ============================================================================
 // BACKGROUND DATA SETUP - Unique to additional fields

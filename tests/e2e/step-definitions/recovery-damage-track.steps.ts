@@ -2,7 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { DOMHelpers } from "../support/dom-helpers.js";
 import { TestStorageHelper } from "../support/testStorageHelper.js";
-import { waitForSaveComplete } from "./auto-save-indicator.steps.js";
+import { waitForSaveComplete } from "../support/save.js";
 
 // Recovery Rolls step definitions
 
