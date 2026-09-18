@@ -2,48 +2,15 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { CompareView } from "../../src/components/CompareView";
 import { VersionState } from "../../src/services/versionState";
 import { VersionHistoryManager } from "../../src/storage/versionHistory";
-import type { Character } from "../../src/types/character";
 import type { CharacterVersion } from "../../src/types/versionHistory";
+import { createTestCharacter } from "../factories/character.js";
 
 describe("CompareView", () => {
   let mockVersionHistory: VersionHistoryManager;
   let versionState: VersionState;
   let container: HTMLElement;
 
-  const createMockCharacter = (name: string): Character => ({
-    name,
-    tier: 1,
-    type: "Glaive",
-    descriptor: "Strong",
-    focus: "Bears a Halo of Fire",
-    currentXp: 0,
-    totalXp: 0,
-    shins: 0,
-    armor: 0,
-    effort: 1,
-    maxCyphers: 2,
-    stats: {
-      might: { pool: 10, edge: 0, current: 10 },
-      speed: { pool: 10, edge: 0, current: 10 },
-      intellect: { pool: 10, edge: 0, current: 10 },
-    },
-    cyphers: [],
-    artifacts: [],
-    oddities: [],
-    abilities: [],
-    equipment: [],
-    attacks: [],
-    specialAbilities: [],
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: { impairment: "healthy" },
-    textFields: { background: "", notes: "" },
-  });
+  const createMockCharacter = (name: string) => createTestCharacter({ name });
 
   const createMockVersion = (name: string, description: string, id: string): CharacterVersion => {
     const character = createMockCharacter(name);
