@@ -49,7 +49,7 @@ function readStepDefinitions() {
     .readdirSync(STEP_DIR)
     .filter((f) => f.endsWith(".ts"))
     .sort()) {
-    const src = fs.readFileSync(path.join(STEP_DIR, file), "utf8");
+    const src = fs.readFileSync(path.join(STEP_DIR, file), "utf8").replace(/\r\n/g, "\n");
     let m;
     while ((m = STEP_DEF_RE.exec(src))) {
       const line = src.slice(0, m.index).split("\n").length;

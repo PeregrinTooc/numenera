@@ -354,22 +354,22 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `focus should be on the description textarea` | 1 | 146 |
-| Then | `focus should eventually wrap back to the first input field` | 1 | 82 |
-| Then | `focus should eventually wrap back to the last focusable element` | 1 | 100 |
-| Then | `focus should move to the last focusable element in the modal` | 1 | 73 |
-| Then | `focus should move to the next focusable element in the modal` | 1 | 65 |
-| Then | `focus should never escape to the page body or address bar` | 4 | 111 |
-| Then | `focus should still be within the card modal` | 3 | 130 |
-| When | `I press Shift+Tab` | 1 | 15 |
-| When | `I press Shift+Tab repeatedly` | 1 | 48 |
-| When | `I press the Tab key` | 1 | 11 |
-| When | `I press the Tab key {int} times` | 4 | 56 |
-| When | `I press the Tab key repeatedly` | 1 | 41 |
-| Then | `the active element should not be the browser chrome` | 1 | 161 |
-| Then | `the active element should not be the document body` | 1 | 139 |
-| Then | `the card edit modal should be closed` | 1 | 4 |
-| Then | `the first input field in the modal should be automatically focused` | 1 | 22 |
+| Then | `focus should be on the description textarea` | 1 | 147 |
+| Then | `focus should eventually wrap back to the first input field` | 1 | 83 |
+| Then | `focus should eventually wrap back to the last focusable element` | 1 | 101 |
+| Then | `focus should move to the last focusable element in the modal` | 1 | 74 |
+| Then | `focus should move to the next focusable element in the modal` | 1 | 66 |
+| Then | `focus should never escape to the page body or address bar` | 4 | 112 |
+| Then | `focus should still be within the card modal` | 3 | 131 |
+| When | `I press Shift+Tab` | 1 | 16 |
+| When | `I press Shift+Tab repeatedly` | 1 | 49 |
+| When | `I press the Tab key` | 1 | 12 |
+| When | `I press the Tab key {int} times` | 4 | 57 |
+| When | `I press the Tab key repeatedly` | 1 | 42 |
+| Then | `the active element should not be the browser chrome` | 1 | 162 |
+| Then | `the active element should not be the document body` | 1 | 140 |
+| Then | `the card edit modal should be closed` | 1 | 5 |
+| Then | `the first input field in the modal should be automatically focused` | 1 | 23 |
 
 ## card-reordering.steps.ts
 
