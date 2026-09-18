@@ -598,21 +598,21 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear with value {string}` | 1 | 127 |
-| When | `I click on the descriptor field` | 2 | 74 |
-| When | `I click on the focus field` | 1 | 81 |
-| When | `I click the New button` | 4 | 5 |
-| When | `I enter {string} in the edit field` | 2 | 88 |
-| Then | `the descriptor field should be clickable` | 1 | 40 |
-| Then | `the descriptor field should be visible` | 1 | 28 |
-| Then | `the descriptor field should display {string}` | 2 | 93 |
-| Then | `the descriptor field should display placeholder text` | 1 | 10 |
-| Then | `the descriptor field should not show placeholder text` | 1 | 107 |
-| Then | `the focus field should be clickable` | 1 | 57 |
-| Then | `the focus field should be visible` | 1 | 34 |
-| Then | `the focus field should display {string}` | 2 | 100 |
+| Then | `an edit modal should appear with value {string}` | 1 | 122 |
+| When | `I click on the descriptor field` | 2 | 69 |
+| When | `I click on the focus field` | 1 | 75 |
+| When | `I click the New button` | 4 | 6 |
+| When | `I enter {string} in the edit field` | 2 | 81 |
+| Then | `the descriptor field should be clickable` | 1 | 37 |
+| Then | `the descriptor field should be visible` | 1 | 27 |
+| Then | `the descriptor field should display {string}` | 2 | 86 |
+| Then | `the descriptor field should display placeholder text` | 1 | 11 |
+| Then | `the descriptor field should not show placeholder text` | 1 | 104 |
+| Then | `the focus field should be clickable` | 1 | 53 |
+| Then | `the focus field should be visible` | 1 | 32 |
+| Then | `the focus field should display {string}` | 2 | 95 |
 | Then | `the focus field should display placeholder text` | 1 | 19 |
-| Then | `the focus field should not show placeholder text` | 1 | 117 |
+| Then | `the focus field should not show placeholder text` | 1 | 113 |
 
 ## export-enhancement.steps.ts
 
