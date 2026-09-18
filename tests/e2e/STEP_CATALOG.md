@@ -458,9 +458,9 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I import a valid character file {string}` | 4 | 102 |
-| Then | `the character {string} should still be displayed` | 1 | 140 |
-| Then | `the previous character should be replaced` | 1 | 147 |
+| When | `I import a valid character file {string}` | 4 | 86 |
+| Then | `the character {string} should still be displayed` | 1 | 124 |
+| Then | `the previous character should be replaced` | 1 | 131 |
 
 ## character-storage.steps.ts
 
