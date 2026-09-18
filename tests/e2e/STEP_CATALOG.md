@@ -26,9 +26,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **743** in 25 files
+- Step definitions: **737** in 25 files
 - Feature step lines: **2047**
-- Definitions with no feature usage: **10**
+- Definitions with no feature usage: **4**
 - Feature lines matching no definition: **24**
 
 | Step file | Definitions | Unused |
@@ -46,13 +46,13 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 11 | 0 |
 | [combat.steps.ts](#combatstepsts) | 28 | 0 |
-| [common-steps.ts](#commonstepsts) | 50 | 5 |
+| [common-steps.ts](#commonstepsts) | 45 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 5 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 15 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 22 | 1 |
 | [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
-| [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 21 | 1 |
+| [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 20 | 0 |
 | [section-rearrangement.steps.ts](#sectionrearrangementstepsts) | 49 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
@@ -328,55 +328,55 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the delete button on the first ability` | 1 | 199 |
-| When | `I click the delete button on the first artifact` | 1 | 181 |
-| When | `I click the delete button on the first attack` | 1 | 193 |
-| When | `I click the delete button on the first cypher` | 4 | 156 |
-| When | `I click the delete button on the first cypher again` | 1 | 169 |
-| When | `I click the delete button on the first cypher card` | 2 | 162 |
-| When | `I click the delete button on the first equipment item` | 1 | 175 |
-| When | `I click the delete button on the first oddity` | 1 | 187 |
-| When | `I click the delete button on the first special ability` | 1 | 205 |
-| Given | `I have {int} abilities` | 1 | 140 |
-| Given | `I have {int} artifact` | 1 | 119 |
-| Given | `I have {int} attacks` | 1 | 133 |
-| Given | `I have {int} cyphers` | 4 | 104 |
-| Given | `I have {int} equipment items` | 1 | 112 |
-| Given | `I have {int} oddities` | 1 | 126 |
-| Given | `I have {int} special abilities` | 1 | 147 |
-| When | `I look at a cypher card` | 2 | 36 |
-| When | `I look at a special ability card` | 1 | 60 |
-| When | `I look at an ability card` | 1 | 56 |
-| When | `I look at an artifact card` | 1 | 44 |
-| When | `I look at an attack card` | 1 | 52 |
-| When | `I look at an equipment card` | 1 | 40 |
-| When | `I look at an oddity card` | 1 | 48 |
-| Then | `I should have {int} abilities remaining` | 2 | 284 |
-| Then | `I should have {int} artifacts remaining` | 2 | 279 |
-| Then | `I should have {int} attack remaining` | 2 | 252 |
-| Then | `I should have {int} cypher remaining` | 3 | 243 |
-| Then | `I should have {int} cyphers remaining` | 1 | 267 |
-| Then | `I should have {int} equipment items remaining` | 2 | 271 |
-| Then | `I should have {int} oddity remaining` | 2 | 247 |
-| Then | `I should have {int} special abilities remaining` | **0** | 289 |
-| Then | `I should have {int} special ability remaining` | 2 | 257 |
-| Then | `I should not see a confirmation dialog` | 1 | 318 |
-| Then | `I should see a delete button on the ability card` | 1 | 89 |
-| Then | `I should see a delete button on the artifact card` | 1 | 74 |
-| Then | `I should see a delete button on the attack card` | 1 | 84 |
-| Then | `I should see a delete button on the cypher card` | 1 | 64 |
-| Then | `I should see a delete button on the equipment card` | 1 | 69 |
-| Then | `I should see a delete button on the oddity card` | 1 | 79 |
-| Then | `I should see a delete button on the special ability card` | 1 | 94 |
-| Then | `the ability should be removed from the DOM` | 1 | 233 |
-| Then | `the artifact should be removed from the DOM` | 1 | 221 |
-| Then | `the attack should be removed from the DOM` | 1 | 229 |
-| Then | `the cypher should be removed from the DOM` | 1 | 213 |
-| Then | `the cypher should be removed immediately` | 1 | 314 |
-| Then | `the delete button should be in the top-left corner of the card` | 1 | 299 |
-| Then | `the equipment item should be removed from the DOM` | 1 | 217 |
-| Then | `the oddity should be removed from the DOM` | 1 | 225 |
-| Then | `the special ability should be removed from the DOM` | 1 | 237 |
+| When | `I click the delete button on the first ability` | 1 | 200 |
+| When | `I click the delete button on the first artifact` | 1 | 182 |
+| When | `I click the delete button on the first attack` | 1 | 194 |
+| When | `I click the delete button on the first cypher` | 4 | 157 |
+| When | `I click the delete button on the first cypher again` | 1 | 170 |
+| When | `I click the delete button on the first cypher card` | 2 | 163 |
+| When | `I click the delete button on the first equipment item` | 1 | 176 |
+| When | `I click the delete button on the first oddity` | 1 | 188 |
+| When | `I click the delete button on the first special ability` | 1 | 206 |
+| Given | `I have {int} abilities` | 1 | 141 |
+| Given | `I have {int} artifact` | 1 | 120 |
+| Given | `I have {int} attacks` | 1 | 134 |
+| Given | `I have {int} cyphers` | 4 | 105 |
+| Given | `I have {int} equipment items` | 1 | 113 |
+| Given | `I have {int} oddities` | 1 | 127 |
+| Given | `I have {int} special abilities` | 1 | 148 |
+| When | `I look at a cypher card` | 2 | 37 |
+| When | `I look at a special ability card` | 1 | 61 |
+| When | `I look at an ability card` | 1 | 57 |
+| When | `I look at an artifact card` | 1 | 45 |
+| When | `I look at an attack card` | 1 | 53 |
+| When | `I look at an equipment card` | 1 | 41 |
+| When | `I look at an oddity card` | 1 | 49 |
+| Then | `I should have {int} abilities remaining` | 2 | 285 |
+| Then | `I should have {int} artifacts remaining` | 2 | 280 |
+| Then | `I should have {int} attack remaining` | 2 | 253 |
+| Then | `I should have {int} cypher remaining` | 3 | 244 |
+| Then | `I should have {int} cyphers remaining` | 1 | 268 |
+| Then | `I should have {int} equipment items remaining` | 2 | 272 |
+| Then | `I should have {int} oddity remaining` | 2 | 248 |
+| Then | `I should have {int} special abilities remaining` | **0** | 290 |
+| Then | `I should have {int} special ability remaining` | 2 | 258 |
+| Then | `I should not see a confirmation dialog` | 1 | 319 |
+| Then | `I should see a delete button on the ability card` | 1 | 90 |
+| Then | `I should see a delete button on the artifact card` | 1 | 75 |
+| Then | `I should see a delete button on the attack card` | 1 | 85 |
+| Then | `I should see a delete button on the cypher card` | 1 | 65 |
+| Then | `I should see a delete button on the equipment card` | 1 | 70 |
+| Then | `I should see a delete button on the oddity card` | 1 | 80 |
+| Then | `I should see a delete button on the special ability card` | 1 | 95 |
+| Then | `the ability should be removed from the DOM` | 1 | 234 |
+| Then | `the artifact should be removed from the DOM` | 1 | 222 |
+| Then | `the attack should be removed from the DOM` | 1 | 230 |
+| Then | `the cypher should be removed from the DOM` | 1 | 214 |
+| Then | `the cypher should be removed immediately` | 1 | 315 |
+| Then | `the delete button should be in the top-left corner of the card` | 1 | 300 |
+| Then | `the equipment item should be removed from the DOM` | 1 | 218 |
+| Then | `the oddity should be removed from the DOM` | 1 | 226 |
+| Then | `the special ability should be removed from the DOM` | 1 | 238 |
 
 ## card-modal-focus-trap.steps.ts
 
@@ -540,56 +540,51 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 10 | 450 |
-| When | `I clear the input field` | 18 | 273 |
+| Then | `an edit modal should appear` | 10 | 385 |
+| When | `I clear the input field` | 18 | 216 |
 | When | `I click on the {string} value` | 9 | 62 |
 | When | `I click on the character name {string}` | 12 | 145 |
 | When | `I click on the descriptor {string}` | 2 | 154 |
 | When | `I click on the focus {string}` | 2 | 159 |
 | When | `I click on the tier {string}` | 5 | 149 |
-| When | `I click outside the modal on the backdrop` | 1 | 334 |
-| When | `I click the {string}` | **0** | 226 |
+| When | `I click outside the modal on the backdrop` | 1 | 277 |
 | When | `I click the Armor badge` | 4 | 118 |
 | When | `I click the Cancel button` | 1 | 92 |
 | When | `I click the Confirm button` | 5 | 80 |
 | When | `I click the Current XP badge` | 5 | 104 |
 | When | `I click the Effort badge` | 3 | 128 |
 | When | `I click the Max Cyphers badge` | 3 | 123 |
-| When | `I click the modal backdrop` | **0** | 204 |
 | When | `I click the modal cancel button` | 2 | 194 |
 | When | `I click the modal confirm button` | 22 | 182 |
-| When | `I click the new button` | 1 | 368 |
+| When | `I click the new button` | 1 | 303 |
 | When | `I click the Shins badge` | 5 | 113 |
 | When | `I click the Total XP badge` | 2 | 108 |
-| When | `I edit the {string} field to {string}` | 23 | 305 |
+| When | `I edit the {string} field to {string}` | 23 | 248 |
 | When | `I hover over the character name {string}` | 1 | 174 |
 | When | `I hover over the tier {string}` | 1 | 178 |
-| When | `I press Enter` | **0** | 360 |
-| When | `I press Escape` | **0** | 364 |
-| When | `I press the Enter key` | 2 | 356 |
-| When | `I press the Escape key` | 4 | 352 |
-| When | `I reload the page` | 48 | 375 |
-| Then | `I should see the {string} value displayed` | 1 | 400 |
+| When | `I press the Enter key` | 2 | 299 |
+| When | `I press the Escape key` | 4 | 295 |
+| When | `I reload the page` | 48 | 310 |
+| Then | `I should see the {string} value displayed` | 1 | 335 |
 | When | `I tap on the {string} value` | 1 | 71 |
 | When | `I tap on the character name {string}` | 4 | 164 |
 | When | `I tap on the tier {string}` | 1 | 169 |
-| When | `I tap outside the modal on the backdrop` | 1 | 343 |
-| When | `I tap the {string}` | **0** | 252 |
+| When | `I tap outside the modal on the backdrop` | 1 | 286 |
 | When | `I tap the Current XP badge` | 1 | 133 |
-| When | `I tap the modal confirm button` | 3 | 214 |
+| When | `I tap the modal confirm button` | 3 | 204 |
 | When | `I tap the Shins badge` | 1 | 138 |
-| When | `I type {string} in the input field` | 15 | 296 |
-| When | `I type {string} in the modal input` | 17 | 283 |
-| When | `I type {string} into the input field` | 8 | 278 |
-| Then | `the {string} value should display {string}` | 6 | 409 |
-| Then | `the {string} value should not have changed` | 2 | 418 |
-| Then | `the edit modal should open` | 8 | 455 |
-| Then | `the input field should be focused` | 1 | 483 |
-| Then | `the input field should contain {string}` | 4 | 473 |
-| Then | `the input field should contain the current {string} value` | 1 | 488 |
-| Then | `the input field should receive focus automatically` | 1 | 478 |
-| Then | `the modal input should contain {string}` | 6 | 460 |
-| Then | `the modal should close` | 21 | 468 |
+| When | `I type {string} in the input field` | 15 | 239 |
+| When | `I type {string} in the modal input` | 17 | 226 |
+| When | `I type {string} into the input field` | 8 | 221 |
+| Then | `the {string} value should display {string}` | 6 | 344 |
+| Then | `the {string} value should not have changed` | 2 | 353 |
+| Then | `the edit modal should open` | 8 | 390 |
+| Then | `the input field should be focused` | 1 | 418 |
+| Then | `the input field should contain {string}` | 4 | 408 |
+| Then | `the input field should contain the current {string} value` | 1 | 423 |
+| Then | `the input field should receive focus automatically` | 1 | 413 |
+| Then | `the modal input should contain {string}` | 6 | 395 |
+| Then | `the modal should close` | 21 | 403 |
 
 ## data-validation.steps.ts
 
@@ -716,27 +711,26 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `the Armor badge should show {string}` | 4 | 349 |
-| Then | `the character data should have armor {int}` | 1 | 410 |
-| Then | `the character data should have currentXp {int}` | 1 | 377 |
-| Then | `the character data should have effort {int}` | 1 | 432 |
-| Then | `the character data should have maxCyphers {int}` | 1 | 421 |
-| Then | `the character data should have shins {int}` | 1 | 399 |
-| Then | `the character data should have totalXp {int}` | 1 | 388 |
-| Given | `the character has {int} armor` | 5 | 231 |
-| Given | `the character has {int} current XP and {int} total XP` | 9 | 126 |
-| Given | `the character has {int} shins` | 7 | 203 |
-| Given | `the character has {string} set to {int}` | **0** | 13 |
-| Given | `the character has effort {int}` | 4 | 290 |
-| Given | `the character has max cyphers {int}` | 4 | 259 |
-| Given | `the character was saved with a single legacy XP value of {int}` | 1 | 165 |
-| Then | `the Current XP badge should show {string}` | 7 | 325 |
-| Then | `the Effort badge should show {string}` | 3 | 365 |
-| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 357 |
-| Then | `the modal confirm button should be disabled` | 1 | 443 |
-| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 448 |
-| Then | `the Shins badge should show {string}` | 5 | 341 |
-| Then | `the Total XP badge should show {string}` | 5 | 333 |
+| Then | `the Armor badge should show {string}` | 4 | 280 |
+| Then | `the character data should have armor {int}` | 1 | 341 |
+| Then | `the character data should have currentXp {int}` | 1 | 308 |
+| Then | `the character data should have effort {int}` | 1 | 363 |
+| Then | `the character data should have maxCyphers {int}` | 1 | 352 |
+| Then | `the character data should have shins {int}` | 1 | 330 |
+| Then | `the character data should have totalXp {int}` | 1 | 319 |
+| Given | `the character has {int} armor` | 5 | 162 |
+| Given | `the character has {int} current XP and {int} total XP` | 9 | 57 |
+| Given | `the character has {int} shins` | 7 | 134 |
+| Given | `the character has effort {int}` | 4 | 221 |
+| Given | `the character has max cyphers {int}` | 4 | 190 |
+| Given | `the character was saved with a single legacy XP value of {int}` | 1 | 96 |
+| Then | `the Current XP badge should show {string}` | 7 | 256 |
+| Then | `the Effort badge should show {string}` | 3 | 296 |
+| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 288 |
+| Then | `the modal confirm button should be disabled` | 1 | 374 |
+| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 379 |
+| Then | `the Shins badge should show {string}` | 5 | 272 |
+| Then | `the Total XP badge should show {string}` | 5 | 264 |
 
 ## section-rearrangement.steps.ts
 
