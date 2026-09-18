@@ -737,8 +737,8 @@ Then("the timestamp should be in human-readable format", async function (this: C
   const timestampText = await timestamp.textContent();
 
   // Check that timestamp contains readable format (e.g., "ago", "minutes", "hours", or date format)
-  expect(timestampText).toBeTruthy();
-  expect(timestampText!.length).toBeGreaterThan(0);
+  if (!timestampText) throw new Error("version-timestamp had no text content");
+  expect(timestampText.length).toBeGreaterThan(0);
 });
 
 Then(

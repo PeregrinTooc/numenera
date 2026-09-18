@@ -83,6 +83,12 @@ export default [
     },
   },
   {
+    files: ["tests/e2e/**/*.ts"],
+    rules: {
+      "@typescript-eslint/no-non-null-assertion": "error",
+    },
+  },
+  {
     ignores: [
       "node_modules",
       "dist",

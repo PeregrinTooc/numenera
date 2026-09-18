@@ -12,22 +12,22 @@ import { openSettingsPanel } from "../support/settings.js";
 // ============================================
 
 When("I click the Edit Layout button", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
   await page.click('[data-testid="edit-layout-button"]');
 });
 
 When("I click the Exit Edit Layout button", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
   await page.click('[data-testid="edit-layout-button"]');
 });
 
 When("I click the Reset Layout button", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
   await page.click('[data-testid="settings-reset-layout"]');
 });
 
 Then("I should see layout edit mode is active", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Check that the edit button has the active class
   const editButton = page.locator('[data-testid="edit-layout-button"]');
@@ -41,7 +41,7 @@ Then("I should see layout edit mode is active", async function (this: CustomWorl
 Then(
   "I should see visual indicators on rearrangeable sections",
   async function (this: CustomWorld) {
-    const page = this.page!;
+    const page = this.page;
 
     // Check that draggable sections have the layout-draggable class
     const draggableSections = page.locator(".layout-draggable");
@@ -51,7 +51,7 @@ Then(
 );
 
 Given("layout edit mode is active", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Click the edit layout button to enter edit mode
   await page.click('[data-testid="edit-layout-button"]');
@@ -62,7 +62,7 @@ Given("layout edit mode is active", async function (this: CustomWorld) {
 });
 
 Then("layout edit mode should be inactive", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Check that the edit button does not have the active class
   const editButton = page.locator('[data-testid="edit-layout-button"]');
@@ -74,7 +74,7 @@ Then("layout edit mode should be inactive", async function (this: CustomWorld) {
 });
 
 Then("the visual indicators should be removed", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // In non-edit mode, sections should not have layout-draggable class
   // Actually, the class is only added when in edit mode via conditional rendering
@@ -87,7 +87,7 @@ Then("the visual indicators should be removed", async function (this: CustomWorl
 // ============================================
 
 Given("I have reordered sections", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Actually perform a reorder by modifying localStorage
   // This simulates having reordered sections
@@ -109,7 +109,7 @@ Given("I have reordered sections", async function (this: CustomWorld) {
 });
 
 Then("the layout should be saved", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Check that layout was saved to localStorage
   const layoutData = await page.evaluate(() => {
@@ -122,7 +122,7 @@ Then("the layout should be saved", async function (this: CustomWorld) {
 Then("the sections should remain in the new order", async function (this: CustomWorld) {
   // This will be verified when we implement actual reordering
   // For now, just verify the layout exists
-  const page = this.page!;
+  const page = this.page;
   const layoutData = await page.evaluate(() => {
     return localStorage.getItem("numenera-layout");
   });
@@ -134,7 +134,7 @@ Then("the sections should remain in the new order", async function (this: Custom
 // ============================================
 
 Then("I should see the {string} button", async function (this: CustomWorld, buttonText: string) {
-  const page = this.page!;
+  const page = this.page;
 
   if (buttonText === "Edit Layout") {
     const editButton = page.locator('[data-testid="edit-layout-button"]');
@@ -145,7 +145,7 @@ Then("I should see the {string} button", async function (this: CustomWorld, butt
 });
 
 Then("it should be touch-friendly", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Check that the button has minimum touch target size (44x44px)
   const editButton = page.locator('[data-testid="edit-layout-button"]');
@@ -163,7 +163,7 @@ Then("it should be touch-friendly", async function (this: CustomWorld) {
 // ============================================
 
 Given("I have customized the layout", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Save a custom layout to localStorage
   await page.evaluate(() => {
@@ -195,7 +195,7 @@ When("I confirm the reset", async function (this: CustomWorld) {
 });
 
 Then("the layout should return to the default arrangement", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Check that layout was reset (removed from localStorage or set to default)
   const layoutData = await page.evaluate(() => {
@@ -207,7 +207,7 @@ Then("the layout should return to the default arrangement", async function (this
 });
 
 Then("the {string} option should be enabled", async function (this: CustomWorld, option: string) {
-  const page = this.page!;
+  const page = this.page;
 
   if (option === "Reset Layout") {
     const resetButton = page.locator('[data-testid="settings-reset-layout"]');
@@ -219,7 +219,7 @@ Then("the {string} option should be enabled", async function (this: CustomWorld,
 });
 
 Given("I have the default layout", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Remove any custom layout from localStorage
   await page.evaluate(() => {
@@ -238,7 +238,7 @@ Given("I have the default layout", async function (this: CustomWorld) {
 When(
   "I drag the {string} section above the {string} section",
   async function (this: CustomWorld, sourceSection: string, targetSection: string) {
-    const page = this.page!;
+    const page = this.page;
 
     const sectionIdMap: Record<string, string> = {
       Cyphers: "cyphers",
@@ -274,7 +274,7 @@ When(
 Then(
   "the {string} section should appear before the {string} section",
   async function (this: CustomWorld, firstSection: string, secondSection: string) {
-    const page = this.page!;
+    const page = this.page;
 
     const sectionIdMap: Record<string, string> = {
       Cyphers: "cyphers",
@@ -315,7 +315,7 @@ Then(
 Given(
   "I have moved the {string} section to the top",
   async function (this: CustomWorld, sectionName: string) {
-    const page = this.page!;
+    const page = this.page;
 
     const sectionIdMap: Record<string, string> = {
       Cyphers: "cyphers",
@@ -371,7 +371,7 @@ Given(
 );
 
 When("I exit layout edit mode", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
   await page.click('[data-testid="edit-layout-button"]');
 
   // Verify edit mode is inactive
@@ -384,7 +384,7 @@ When("I exit layout edit mode", async function (this: CustomWorld) {
 Then(
   "the {string} section should still be at the top",
   async function (this: CustomWorld, sectionName: string) {
-    const page = this.page!;
+    const page = this.page;
 
     const sectionIdMap: Record<string, string> = {
       Cyphers: "cyphers",
@@ -420,7 +420,7 @@ Then(
 When(
   "I drag the {string} section onto the {string} section",
   async function (this: CustomWorld, sourceSection: string, targetSection: string) {
-    const page = this.page!;
+    const page = this.page;
 
     const sectionIdMap: Record<string, string> = {
       Background: "background",
@@ -462,7 +462,7 @@ When(
 Then(
   "{string} and {string} should be displayed side by side in a grid",
   async function (this: CustomWorld, section1: string, section2: string) {
-    const page = this.page!;
+    const page = this.page;
 
     const sectionIdMap: Record<string, string> = {
       Background: "background",
@@ -501,7 +501,7 @@ Then(
 When(
   "I attempt to drag {string} onto {string}",
   async function (this: CustomWorld, sourceSection: string, targetSection: string) {
-    const page = this.page!;
+    const page = this.page;
 
     const sectionIdMap: Record<string, string> = {
       Stats: "stats",
@@ -534,7 +534,7 @@ When(
 );
 
 Then("no grid should be created", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Check that stats and basicInfo are not in a grid together
   const inGrid = await page.evaluate(() => {
@@ -561,7 +561,7 @@ Then("the sections should remain in single-column layout", async function (this:
 Given(
   "{string} and {string} are in a grid",
   async function (this: CustomWorld, section1: string, section2: string) {
-    const page = this.page!;
+    const page = this.page;
 
     const sectionIdMap: Record<string, string> = {
       Background: "background",
@@ -600,7 +600,7 @@ Given(
 );
 
 When("I drag {string} out of the grid", async function (this: CustomWorld, sectionName: string) {
-  const page = this.page!;
+  const page = this.page;
 
   const sectionIdMap: Record<string, string> = {
     Background: "background",
@@ -629,7 +629,7 @@ When("I drag {string} out of the grid", async function (this: CustomWorld, secti
 });
 
 Then("{string} should be in its own row", async function (this: CustomWorld, sectionName: string) {
-  const page = this.page!;
+  const page = this.page;
 
   const sectionIdMap: Record<string, string> = {
     Background: "background",
@@ -653,7 +653,7 @@ Then("{string} should be in its own row", async function (this: CustomWorld, sec
 // ============================================
 
 When("I export the character", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Mock the file export functionality to capture the data
   await page.evaluate(() => {
@@ -750,7 +750,7 @@ Given("I have a character file with the default layout", async function (this: C
 });
 
 When("I import the character file", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   const characterData = {
     name: "Imported Character",
@@ -783,7 +783,7 @@ When("I import the character file", async function (this: CustomWorld) {
 });
 
 Then("I should see a layout choice prompt", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Check for layout choice modal
   const prompt = page.locator('[data-testid="layout-choice-modal"]');
@@ -791,7 +791,7 @@ Then("I should see a layout choice prompt", async function (this: CustomWorld) {
 });
 
 Then("I should not see a layout choice prompt", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Wait a moment to ensure modal would have appeared
   await page.waitForTimeout(500);
@@ -803,7 +803,7 @@ Then("I should not see a layout choice prompt", async function (this: CustomWorl
 Then(
   "I should see options to {string} or {string}",
   async function (this: CustomWorld, _option1: string, _option2: string) {
-    const page = this.page!;
+    const page = this.page;
 
     const keepButton = page.locator('[data-testid="keep-current-layout"]');
     const useButton = page.locator('[data-testid="use-imported-layout"]');
@@ -814,7 +814,7 @@ Then(
 );
 
 When("I choose to {string}", async function (this: CustomWorld, choice: string) {
-  const page = this.page!;
+  const page = this.page;
 
   if (choice === "Keep current layout") {
     await page.click('[data-testid="keep-current-layout"]');
@@ -826,15 +826,15 @@ When("I choose to {string}", async function (this: CustomWorld, choice: string) 
 });
 
 Then("my current layout should be preserved", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Check that the layout in localStorage is still the custom one we set earlier
   const layoutData = await page.evaluate(() => {
     return localStorage.getItem("numenera-layout");
   });
 
-  expect(layoutData).not.toBeNull();
-  const layout = JSON.parse(layoutData!);
+  if (layoutData === null) throw new Error("numenera-layout was not saved");
+  const layout = JSON.parse(layoutData);
 
   // Should still have cyphers before abilities (our custom order)
   const cypherIndex = layout.findIndex(
@@ -848,7 +848,7 @@ Then("my current layout should be preserved", async function (this: CustomWorld)
 });
 
 Then("only the character data should be imported", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Check that the character name was updated
   const name = await page.locator('[data-testid="character-name"]').textContent();
@@ -856,15 +856,15 @@ Then("only the character data should be imported", async function (this: CustomW
 });
 
 Then("the layout from the imported file should be applied", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Check that layout was updated from import
   const layoutData = await page.evaluate(() => {
     return localStorage.getItem("numenera-layout");
   });
 
-  expect(layoutData).not.toBeNull();
-  const layout = JSON.parse(layoutData!);
+  if (layoutData === null) throw new Error("numenera-layout was not saved");
+  const layout = JSON.parse(layoutData);
 
   // Should have items before cyphers (from imported layout)
   const itemsIndex = layout.findIndex((item: any) => item.type === "single" && item.id === "items");
@@ -876,14 +876,14 @@ Then("the layout from the imported file should be applied", async function (this
 });
 
 Then("the character data should be imported", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   const name = await page.locator('[data-testid="character-name"]').textContent();
   expect(name).toContain("Imported Character");
 });
 
 Then("the character should be imported normally", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   const name = await page.locator('[data-testid="character-name"]').textContent();
   expect(name).toContain("Imported Character");
@@ -894,7 +894,7 @@ Then("the character should be imported normally", async function (this: CustomWo
 // ============================================
 
 When("I long-tap on a section for 250ms", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Long-tap on a draggable section (e.g., abilities)
   const section = page.locator('[data-section-id="abilities"]');
@@ -912,7 +912,7 @@ When("I long-tap on a section for 250ms", async function (this: CustomWorld) {
 });
 
 Then("the section should enter drag mode", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Check for visual indicator that drag mode is active
   const section = page.locator('[data-section-id="abilities"]');
@@ -920,7 +920,7 @@ Then("the section should enter drag mode", async function (this: CustomWorld) {
 });
 
 Then("I should be able to drag it to a new position", async function (this: CustomWorld) {
-  const page = this.page!;
+  const page = this.page;
 
   // Complete the drag operation
   const targetSection = page.locator('[data-section-id="cyphers"]');

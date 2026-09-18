@@ -7,7 +7,7 @@ import { CustomWorld } from "../support/world.js";
 
 Given("the character data is loaded", async function (this: CustomWorld) {
   // Just wait for the page to be loaded - character data is already in localStorage
-  await this.page!.waitForLoadState("domcontentloaded");
+  await this.page.waitForLoadState("domcontentloaded");
 });
 
 // All other step definitions (When/Then) are now handled by common-steps.ts

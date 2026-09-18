@@ -9,9 +9,9 @@ import { openSettingsPanel } from "../support/settings.js";
 
 // Background step - reuse if not already defined elsewhere
 Given("I am viewing the character sheet", async function (this: CustomWorld) {
-  await this.page!.goto(this.getBaseUrl());
+  await this.page.goto(this.getBaseUrl());
   // Wait for page to load
-  await this.page!.waitForSelector('[data-testid="character-header"]');
+  await this.page.waitForSelector('[data-testid="character-header"]');
 });
 
 // ============================================================================
@@ -56,7 +56,7 @@ Given("I have opened the settings panel", async function (this: CustomWorld) {
 
 When("I click outside the settings panel", async function (this: CustomWorld) {
   // Click on the page title which is outside the settings panel
-  await this.page!.locator('[data-testid="page-title"]').click();
+  await this.page.locator('[data-testid="page-title"]').click();
 });
 
 // Note: "I press the Escape key" is defined in common-steps.ts
@@ -75,13 +75,13 @@ When("I click the British flag icon", async function (this: CustomWorld) {
 
 Then("the interface should display in German", async function (this: CustomWorld) {
   // Check that the page title is in German
-  const pageTitle = this.page!.locator('[data-testid="page-title"]');
+  const pageTitle = this.page.locator('[data-testid="page-title"]');
   await expect(pageTitle).toHaveText("Numenera Charakterbogen");
 });
 
 Then("the interface should display in English", async function (this: CustomWorld) {
   // Check that the page title is in English
-  const pageTitle = this.page!.locator('[data-testid="page-title"]');
+  const pageTitle = this.page.locator('[data-testid="page-title"]');
   await expect(pageTitle).toHaveText("Numenera Character Sheet");
 });
 
@@ -89,7 +89,7 @@ Given("the interface is in German", async function (this: CustomWorld) {
   // Click the German flag to switch to German
   await this.dom.getByTestId("language-flag-de").click();
   // Wait for UI to update
-  await this.page!.waitForFunction(() => {
+  await this.page.waitForFunction(() => {
     const title = document.querySelector('[data-testid="page-title"]');
     return title?.textContent === "Numenera Charakterbogen";
   });

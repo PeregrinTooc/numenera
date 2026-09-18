@@ -60,23 +60,23 @@ Given(
 // ============================================================================
 
 Then("I should see an add cypher button", async function (this: CustomWorld) {
-  await expect(this.page!.locator(CARD_CONFIGS.cypher.addButtonTestId)).toBeVisible();
+  await expect(this.page.locator(CARD_CONFIGS.cypher.addButtonTestId)).toBeVisible();
 });
 
 Then("I should see an add equipment button", async function (this: CustomWorld) {
-  await expect(this.page!.locator(CARD_CONFIGS.equipment.addButtonTestId)).toBeVisible();
+  await expect(this.page.locator(CARD_CONFIGS.equipment.addButtonTestId)).toBeVisible();
 });
 
 Then("I should see an add artifact button", async function (this: CustomWorld) {
-  await expect(this.page!.locator(CARD_CONFIGS.artifact.addButtonTestId)).toBeVisible();
+  await expect(this.page.locator(CARD_CONFIGS.artifact.addButtonTestId)).toBeVisible();
 });
 
 Then("I should see an add oddity button", async function (this: CustomWorld) {
-  await expect(this.page!.locator(CARD_CONFIGS.oddity.addButtonTestId)).toBeVisible();
+  await expect(this.page.locator(CARD_CONFIGS.oddity.addButtonTestId)).toBeVisible();
 });
 
 Then("I should see an add attack button", async function (this: CustomWorld) {
-  await expect(this.page!.locator(CARD_CONFIGS.attack.addButtonTestId)).toBeVisible();
+  await expect(this.page.locator(CARD_CONFIGS.attack.addButtonTestId)).toBeVisible();
 });
 
 Then(
@@ -87,7 +87,7 @@ Then(
     // interpolated class silently produces no rule and the button renders
     // fully transparent - a plain "is the class present" check can't catch
     // this, only the actual computed style can.
-    const button = this.page!.locator(CARD_CONFIGS.attack.addButtonTestId);
+    const button = this.page.locator(CARD_CONFIGS.attack.addButtonTestId);
     const bgColor = await button.evaluate(
       (el: HTMLElement) => window.getComputedStyle(el).backgroundColor
     );
@@ -97,11 +97,11 @@ Then(
 );
 
 Then("I should see an add ability button", async function (this: CustomWorld) {
-  await expect(this.page!.locator(CARD_CONFIGS.ability.addButtonTestId)).toBeVisible();
+  await expect(this.page.locator(CARD_CONFIGS.ability.addButtonTestId)).toBeVisible();
 });
 
 Then("I should see an add special ability button", async function (this: CustomWorld) {
-  await expect(this.page!.locator(CARD_CONFIGS["special-ability"].addButtonTestId)).toBeVisible();
+  await expect(this.page.locator(CARD_CONFIGS["special-ability"].addButtonTestId)).toBeVisible();
 });
 
 // ============================================================================
@@ -142,98 +142,98 @@ When("I click the add special ability button", async function (this: CustomWorld
 
 Then("the modal should show cypher fields", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.cypher.fieldTestIds;
-  await expect(this.page!.locator(fields.name)).toBeVisible();
-  await expect(this.page!.locator(fields.level)).toBeVisible();
-  await expect(this.page!.locator(fields.effect)).toBeVisible();
+  await expect(this.page.locator(fields.name)).toBeVisible();
+  await expect(this.page.locator(fields.level)).toBeVisible();
+  await expect(this.page.locator(fields.effect)).toBeVisible();
 });
 
 Then("all cypher fields should be empty", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.cypher.fieldTestIds;
-  await expect(this.page!.locator(fields.name)).toHaveValue("");
-  await expect(this.page!.locator(fields.level)).toHaveValue("");
-  await expect(this.page!.locator(fields.effect)).toHaveValue("");
+  await expect(this.page.locator(fields.name)).toHaveValue("");
+  await expect(this.page.locator(fields.level)).toHaveValue("");
+  await expect(this.page.locator(fields.effect)).toHaveValue("");
 });
 
 Then("the modal should show equipment fields", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.equipment.fieldTestIds;
-  await expect(this.page!.locator(fields.name)).toBeVisible();
-  await expect(this.page!.locator(fields.description)).toBeVisible();
+  await expect(this.page.locator(fields.name)).toBeVisible();
+  await expect(this.page.locator(fields.description)).toBeVisible();
 });
 
 Then("all equipment fields should be empty", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.equipment.fieldTestIds;
-  await expect(this.page!.locator(fields.name)).toHaveValue("");
-  await expect(this.page!.locator(fields.description)).toHaveValue("");
+  await expect(this.page.locator(fields.name)).toHaveValue("");
+  await expect(this.page.locator(fields.description)).toHaveValue("");
 });
 
 Then("the modal should show artifact fields", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.artifact.fieldTestIds;
-  await expect(this.page!.locator(fields.name)).toBeVisible();
-  await expect(this.page!.locator(fields.level)).toBeVisible();
-  await expect(this.page!.locator(fields.effect)).toBeVisible();
+  await expect(this.page.locator(fields.name)).toBeVisible();
+  await expect(this.page.locator(fields.level)).toBeVisible();
+  await expect(this.page.locator(fields.effect)).toBeVisible();
 });
 
 Then("all artifact fields should be empty", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.artifact.fieldTestIds;
-  await expect(this.page!.locator(fields.name)).toHaveValue("");
-  await expect(this.page!.locator(fields.level)).toHaveValue("");
-  await expect(this.page!.locator(fields.effect)).toHaveValue("");
+  await expect(this.page.locator(fields.name)).toHaveValue("");
+  await expect(this.page.locator(fields.level)).toHaveValue("");
+  await expect(this.page.locator(fields.effect)).toHaveValue("");
 });
 
 Then("the modal should show oddity fields", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.oddity.fieldTestIds;
-  await expect(this.page!.locator(fields.oddity)).toBeVisible();
+  await expect(this.page.locator(fields.oddity)).toBeVisible();
 });
 
 Then("all oddity fields should be empty", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.oddity.fieldTestIds;
-  await expect(this.page!.locator(fields.oddity)).toHaveValue("");
+  await expect(this.page.locator(fields.oddity)).toHaveValue("");
 });
 
 Then("the modal should show attack fields", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.attack.fieldTestIds;
-  await expect(this.page!.locator(fields.name)).toBeVisible();
-  await expect(this.page!.locator(fields.damage)).toBeVisible();
-  await expect(this.page!.locator(fields.modifier)).toBeVisible();
-  await expect(this.page!.locator(fields.range)).toBeVisible();
+  await expect(this.page.locator(fields.name)).toBeVisible();
+  await expect(this.page.locator(fields.damage)).toBeVisible();
+  await expect(this.page.locator(fields.modifier)).toBeVisible();
+  await expect(this.page.locator(fields.range)).toBeVisible();
 });
 
 Then("all attack fields should be empty", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.attack.fieldTestIds;
-  await expect(this.page!.locator(fields.name)).toHaveValue("");
-  await expect(this.page!.locator(fields.damage)).toHaveValue("0");
-  await expect(this.page!.locator(fields.modifier)).toHaveValue("0");
-  await expect(this.page!.locator(fields.range)).toHaveValue("");
+  await expect(this.page.locator(fields.name)).toHaveValue("");
+  await expect(this.page.locator(fields.damage)).toHaveValue("0");
+  await expect(this.page.locator(fields.modifier)).toHaveValue("0");
+  await expect(this.page.locator(fields.range)).toHaveValue("");
 });
 
 Then("the modal should show ability fields", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.ability.fieldTestIds;
-  await expect(this.page!.locator(fields.name)).toBeVisible();
-  await expect(this.page!.locator(fields.cost)).toBeVisible();
-  await expect(this.page!.locator(fields.pool)).toBeVisible();
-  await expect(this.page!.locator(fields.description)).toBeVisible();
+  await expect(this.page.locator(fields.name)).toBeVisible();
+  await expect(this.page.locator(fields.cost)).toBeVisible();
+  await expect(this.page.locator(fields.pool)).toBeVisible();
+  await expect(this.page.locator(fields.description)).toBeVisible();
 });
 
 Then("all ability fields should be empty", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.ability.fieldTestIds;
-  await expect(this.page!.locator(fields.name)).toHaveValue("");
-  await expect(this.page!.locator(fields.cost)).toHaveValue("");
-  await expect(this.page!.locator(fields.pool)).toHaveValue("");
-  await expect(this.page!.locator(fields.description)).toHaveValue("");
+  await expect(this.page.locator(fields.name)).toHaveValue("");
+  await expect(this.page.locator(fields.cost)).toHaveValue("");
+  await expect(this.page.locator(fields.pool)).toHaveValue("");
+  await expect(this.page.locator(fields.description)).toHaveValue("");
 });
 
 Then("the modal should show special ability fields", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS["special-ability"].fieldTestIds;
-  await expect(this.page!.locator(fields.name)).toBeVisible();
-  await expect(this.page!.locator(fields.source)).toBeVisible();
-  await expect(this.page!.locator(fields.description)).toBeVisible();
+  await expect(this.page.locator(fields.name)).toBeVisible();
+  await expect(this.page.locator(fields.source)).toBeVisible();
+  await expect(this.page.locator(fields.description)).toBeVisible();
 });
 
 Then("all special ability fields should be empty", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS["special-ability"].fieldTestIds;
-  await expect(this.page!.locator(fields.name)).toHaveValue("");
-  await expect(this.page!.locator(fields.source)).toHaveValue("");
-  await expect(this.page!.locator(fields.description)).toHaveValue("");
+  await expect(this.page.locator(fields.name)).toHaveValue("");
+  await expect(this.page.locator(fields.source)).toHaveValue("");
+  await expect(this.page.locator(fields.description)).toHaveValue("");
 });
 
 // ============================================================================
@@ -242,17 +242,17 @@ Then("all special ability fields should be empty", async function (this: CustomW
 
 // Cypher fields
 When("I fill in the cypher name with {string}", async function (this: CustomWorld, value: string) {
-  await this.page!.locator(CARD_CONFIGS.cypher.fieldTestIds.name).fill(value);
+  await this.page.locator(CARD_CONFIGS.cypher.fieldTestIds.name).fill(value);
 });
 
 When("I fill in the cypher level with {string}", async function (this: CustomWorld, value: string) {
-  await this.page!.locator(CARD_CONFIGS.cypher.fieldTestIds.level).fill(value);
+  await this.page.locator(CARD_CONFIGS.cypher.fieldTestIds.level).fill(value);
 });
 
 When(
   "I fill in the cypher effect with {string}",
   async function (this: CustomWorld, value: string) {
-    await this.page!.locator(CARD_CONFIGS.cypher.fieldTestIds.effect).fill(value);
+    await this.page.locator(CARD_CONFIGS.cypher.fieldTestIds.effect).fill(value);
   }
 );
 
@@ -260,14 +260,14 @@ When(
 When(
   "I fill in the equipment name with {string}",
   async function (this: CustomWorld, value: string) {
-    await this.page!.locator(CARD_CONFIGS.equipment.fieldTestIds.name).fill(value);
+    await this.page.locator(CARD_CONFIGS.equipment.fieldTestIds.name).fill(value);
   }
 );
 
 When(
   "I fill in the equipment description with {string}",
   async function (this: CustomWorld, value: string) {
-    await this.page!.locator(CARD_CONFIGS.equipment.fieldTestIds.description).fill(value);
+    await this.page.locator(CARD_CONFIGS.equipment.fieldTestIds.description).fill(value);
   }
 );
 
@@ -275,67 +275,65 @@ When(
 When(
   "I fill in the artifact name with {string}",
   async function (this: CustomWorld, value: string) {
-    await this.page!.locator(CARD_CONFIGS.artifact.fieldTestIds.name).fill(value);
+    await this.page.locator(CARD_CONFIGS.artifact.fieldTestIds.name).fill(value);
   }
 );
 
 When(
   "I fill in the artifact level with {string}",
   async function (this: CustomWorld, value: string) {
-    await this.page!.locator(CARD_CONFIGS.artifact.fieldTestIds.level).fill(value);
+    await this.page.locator(CARD_CONFIGS.artifact.fieldTestIds.level).fill(value);
   }
 );
 
 When(
   "I fill in the artifact effect with {string}",
   async function (this: CustomWorld, value: string) {
-    await this.page!.locator(CARD_CONFIGS.artifact.fieldTestIds.effect).fill(value);
+    await this.page.locator(CARD_CONFIGS.artifact.fieldTestIds.effect).fill(value);
   }
 );
 
 // Oddity fields
 When("I fill in the oddity text with {string}", async function (this: CustomWorld, value: string) {
-  await this.page!.locator(CARD_CONFIGS.oddity.fieldTestIds.oddity).fill(value);
+  await this.page.locator(CARD_CONFIGS.oddity.fieldTestIds.oddity).fill(value);
 });
 
 // Attack fields
 When("I fill in the attack name with {string}", async function (this: CustomWorld, value: string) {
-  await this.page!.locator(CARD_CONFIGS.attack.fieldTestIds.name).fill(value);
+  await this.page.locator(CARD_CONFIGS.attack.fieldTestIds.name).fill(value);
 });
 
 When(
   "I fill in the attack damage with {string}",
   async function (this: CustomWorld, value: string) {
-    await this.page!.locator(CARD_CONFIGS.attack.fieldTestIds.damage).fill(value);
+    await this.page.locator(CARD_CONFIGS.attack.fieldTestIds.damage).fill(value);
   }
 );
 
 When(
   "I fill in the attack modifier with {string}",
   async function (this: CustomWorld, value: string) {
-    await this.page!.locator(CARD_CONFIGS.attack.fieldTestIds.modifier).fill(value);
+    await this.page.locator(CARD_CONFIGS.attack.fieldTestIds.modifier).fill(value);
   }
 );
 
 // Ability fields
 When("I fill in the ability name with {string}", async function (this: CustomWorld, value: string) {
-  await this.page!.locator(CARD_CONFIGS.ability.fieldTestIds.name).fill(value);
+  await this.page.locator(CARD_CONFIGS.ability.fieldTestIds.name).fill(value);
 });
 
 When("I fill in the ability cost with {string}", async function (this: CustomWorld, value: string) {
-  await this.page!.locator(CARD_CONFIGS.ability.fieldTestIds.cost).fill(value);
+  await this.page.locator(CARD_CONFIGS.ability.fieldTestIds.cost).fill(value);
 });
 
 When("I fill in the ability pool with {string}", async function (this: CustomWorld, value: string) {
-  await this.page!.locator(CARD_CONFIGS.ability.fieldTestIds.pool).selectOption(
-    value.toLowerCase()
-  );
+  await this.page.locator(CARD_CONFIGS.ability.fieldTestIds.pool).selectOption(value.toLowerCase());
 });
 
 When(
   "I fill in the ability description with {string}",
   async function (this: CustomWorld, value: string) {
-    await this.page!.locator(CARD_CONFIGS.ability.fieldTestIds.description).fill(value);
+    await this.page.locator(CARD_CONFIGS.ability.fieldTestIds.description).fill(value);
   }
 );
 
@@ -343,21 +341,21 @@ When(
 When(
   "I fill in the special ability name with {string}",
   async function (this: CustomWorld, value: string) {
-    await this.page!.locator(CARD_CONFIGS["special-ability"].fieldTestIds.name).fill(value);
+    await this.page.locator(CARD_CONFIGS["special-ability"].fieldTestIds.name).fill(value);
   }
 );
 
 When(
   "I fill in the special ability source with {string}",
   async function (this: CustomWorld, value: string) {
-    await this.page!.locator(CARD_CONFIGS["special-ability"].fieldTestIds.source).fill(value);
+    await this.page.locator(CARD_CONFIGS["special-ability"].fieldTestIds.source).fill(value);
   }
 );
 
 When(
   "I fill in the special ability description with {string}",
   async function (this: CustomWorld, value: string) {
-    await this.page!.locator(CARD_CONFIGS["special-ability"].fieldTestIds.description).fill(value);
+    await this.page.locator(CARD_CONFIGS["special-ability"].fieldTestIds.description).fill(value);
   }
 );
 
@@ -410,8 +408,8 @@ Then("I should see {int} special ability cards", async function (this: CustomWor
 Then(
   "I should see a cypher card with name {string}",
   async function (this: CustomWorld, name: string) {
-    await this.page!.waitForTimeout(100);
-    const card = this.page!.locator(CARD_CONFIGS.cypher.itemTestId).filter({ hasText: name });
+    await this.page.waitForTimeout(100);
+    const card = this.page.locator(CARD_CONFIGS.cypher.itemTestId).filter({ hasText: name });
     await expect(card).toBeVisible();
   }
 );
@@ -419,7 +417,7 @@ Then(
 Then(
   "the cypher {string} should have level {string}",
   async function (this: CustomWorld, name: string, level: string) {
-    const card = this.page!.locator(CARD_CONFIGS.cypher.itemTestId).filter({ hasText: name });
+    const card = this.page.locator(CARD_CONFIGS.cypher.itemTestId).filter({ hasText: name });
     await expect(card).toContainText(level);
   }
 );
@@ -427,7 +425,7 @@ Then(
 Then(
   "the cypher {string} should have effect {string}",
   async function (this: CustomWorld, name: string, effect: string) {
-    const card = this.page!.locator(CARD_CONFIGS.cypher.itemTestId).filter({ hasText: name });
+    const card = this.page.locator(CARD_CONFIGS.cypher.itemTestId).filter({ hasText: name });
     await expect(card).toContainText(effect);
   }
 );
@@ -435,8 +433,8 @@ Then(
 Then(
   "I should see an equipment card with name {string}",
   async function (this: CustomWorld, name: string) {
-    await this.page!.waitForTimeout(100);
-    const card = this.page!.locator(CARD_CONFIGS.equipment.itemTestId).filter({ hasText: name });
+    await this.page.waitForTimeout(100);
+    const card = this.page.locator(CARD_CONFIGS.equipment.itemTestId).filter({ hasText: name });
     await expect(card).toBeVisible();
   }
 );
@@ -444,7 +442,7 @@ Then(
 Then(
   "the equipment {string} should have description {string}",
   async function (this: CustomWorld, name: string, description: string) {
-    const card = this.page!.locator(CARD_CONFIGS.equipment.itemTestId).filter({ hasText: name });
+    const card = this.page.locator(CARD_CONFIGS.equipment.itemTestId).filter({ hasText: name });
     await expect(card).toContainText(description);
   }
 );
@@ -452,8 +450,8 @@ Then(
 Then(
   "I should see an artifact card with name {string}",
   async function (this: CustomWorld, name: string) {
-    await this.page!.waitForTimeout(100);
-    const card = this.page!.locator(CARD_CONFIGS.artifact.itemTestId).filter({ hasText: name });
+    await this.page.waitForTimeout(100);
+    const card = this.page.locator(CARD_CONFIGS.artifact.itemTestId).filter({ hasText: name });
     await expect(card).toBeVisible();
   }
 );
@@ -461,7 +459,7 @@ Then(
 Then(
   "the artifact {string} should have level {string}",
   async function (this: CustomWorld, name: string, level: string) {
-    const card = this.page!.locator(CARD_CONFIGS.artifact.itemTestId).filter({ hasText: name });
+    const card = this.page.locator(CARD_CONFIGS.artifact.itemTestId).filter({ hasText: name });
     await expect(card).toContainText(level);
   }
 );
@@ -469,7 +467,7 @@ Then(
 Then(
   "the artifact {string} should have effect {string}",
   async function (this: CustomWorld, name: string, effect: string) {
-    const card = this.page!.locator(CARD_CONFIGS.artifact.itemTestId).filter({ hasText: name });
+    const card = this.page.locator(CARD_CONFIGS.artifact.itemTestId).filter({ hasText: name });
     await expect(card).toContainText(effect);
   }
 );
@@ -477,8 +475,8 @@ Then(
 Then(
   "I should see an oddity card with text {string}",
   async function (this: CustomWorld, text: string) {
-    await this.page!.waitForTimeout(100);
-    const card = this.page!.locator(CARD_CONFIGS.oddity.itemTestId).filter({ hasText: text });
+    await this.page.waitForTimeout(100);
+    const card = this.page.locator(CARD_CONFIGS.oddity.itemTestId).filter({ hasText: text });
     await expect(card).toBeVisible();
   }
 );
@@ -486,8 +484,8 @@ Then(
 Then(
   "I should see an attack card with name {string}",
   async function (this: CustomWorld, name: string) {
-    await this.page!.waitForTimeout(100);
-    const card = this.page!.locator(CARD_CONFIGS.attack.itemTestId).filter({ hasText: name });
+    await this.page.waitForTimeout(100);
+    const card = this.page.locator(CARD_CONFIGS.attack.itemTestId).filter({ hasText: name });
     await expect(card).toBeVisible();
   }
 );
@@ -495,7 +493,7 @@ Then(
 Then(
   "the attack {string} should have modifier {string}",
   async function (this: CustomWorld, name: string, modifier: string) {
-    const card = this.page!.locator(CARD_CONFIGS.attack.itemTestId).filter({ hasText: name });
+    const card = this.page.locator(CARD_CONFIGS.attack.itemTestId).filter({ hasText: name });
     await expect(card).toContainText(modifier);
   }
 );
@@ -503,7 +501,7 @@ Then(
 Then(
   "the attack {string} should have damage {string}",
   async function (this: CustomWorld, name: string, damage: string) {
-    const card = this.page!.locator(CARD_CONFIGS.attack.itemTestId).filter({ hasText: name });
+    const card = this.page.locator(CARD_CONFIGS.attack.itemTestId).filter({ hasText: name });
     await expect(card).toContainText(damage);
   }
 );
@@ -511,8 +509,8 @@ Then(
 Then(
   "I should see an ability card with name {string}",
   async function (this: CustomWorld, name: string) {
-    await this.page!.waitForTimeout(100);
-    const card = this.page!.locator(CARD_CONFIGS.ability.itemTestId).filter({ hasText: name });
+    await this.page.waitForTimeout(100);
+    const card = this.page.locator(CARD_CONFIGS.ability.itemTestId).filter({ hasText: name });
     await expect(card).toBeVisible();
   }
 );
@@ -520,7 +518,7 @@ Then(
 Then(
   "the ability {string} should have cost {string}",
   async function (this: CustomWorld, name: string, cost: string) {
-    const card = this.page!.locator(CARD_CONFIGS.ability.itemTestId).filter({ hasText: name });
+    const card = this.page.locator(CARD_CONFIGS.ability.itemTestId).filter({ hasText: name });
     await expect(card).toContainText(cost);
   }
 );
@@ -528,7 +526,7 @@ Then(
 Then(
   "the ability {string} should have pool {string}",
   async function (this: CustomWorld, name: string, pool: string) {
-    const card = this.page!.locator(CARD_CONFIGS.ability.itemTestId).filter({ hasText: name });
+    const card = this.page.locator(CARD_CONFIGS.ability.itemTestId).filter({ hasText: name });
     await expect(card).toContainText(pool);
   }
 );
@@ -536,8 +534,8 @@ Then(
 Then(
   "I should see a special ability card with name {string}",
   async function (this: CustomWorld, name: string) {
-    await this.page!.waitForTimeout(100);
-    const card = this.page!.locator(CARD_CONFIGS["special-ability"].itemTestId).filter({
+    await this.page.waitForTimeout(100);
+    const card = this.page.locator(CARD_CONFIGS["special-ability"].itemTestId).filter({
       hasText: name,
     });
     await expect(card).toBeVisible();
@@ -547,7 +545,7 @@ Then(
 Then(
   "the special ability {string} should have source {string}",
   async function (this: CustomWorld, name: string, source: string) {
-    const card = this.page!.locator(CARD_CONFIGS["special-ability"].itemTestId).filter({
+    const card = this.page.locator(CARD_CONFIGS["special-ability"].itemTestId).filter({
       hasText: name,
     });
     await expect(card).toContainText(source);
@@ -559,24 +557,28 @@ Then(
 // ============================================================================
 
 When("I confirm the card edit modal", async function (this: CustomWorld) {
-  await this.page!.locator('[data-testid="card-modal-confirm"]').click();
-  await this.page!.waitForSelector('[data-testid="card-edit-modal"]', {
-    state: "hidden",
-    timeout: 2000,
-  }).catch(() => {});
-  await this.page!.waitForTimeout(200);
+  await this.page.locator('[data-testid="card-modal-confirm"]').click();
+  await this.page
+    .waitForSelector('[data-testid="card-edit-modal"]', {
+      state: "hidden",
+      timeout: 2000,
+    })
+    .catch(() => {});
+  await this.page.waitForTimeout(200);
 });
 
 When("I cancel the card edit modal", async function (this: CustomWorld) {
-  await this.page!.locator('[data-testid="card-modal-cancel"]').click();
-  await this.page!.waitForSelector('[data-testid="card-edit-modal"]', {
-    state: "hidden",
-    timeout: 2000,
-  }).catch(() => {});
+  await this.page.locator('[data-testid="card-modal-cancel"]').click();
+  await this.page
+    .waitForSelector('[data-testid="card-edit-modal"]', {
+      state: "hidden",
+      timeout: 2000,
+    })
+    .catch(() => {});
 });
 
 Then("the card edit modal should be open", async function (this: CustomWorld) {
-  await expect(this.page!.locator('[data-testid="card-edit-modal"]')).toBeVisible();
+  await expect(this.page.locator('[data-testid="card-edit-modal"]')).toBeVisible();
 
   // openCardEditModal() defers its auto-focus via setTimeout(0)
   // (ModalContainer.focusElement in modalBehavior.ts) so it doesn't fight
@@ -586,7 +588,7 @@ Then("the card edit modal should be open", async function (this: CustomWorld) {
   // A keyboard step run right after this one can otherwise race that
   // deferred focus and land on whatever was focused before the modal
   // opened, silently missing the modal's listener entirely.
-  await this.page!.waitForFunction(() => {
+  await this.page.waitForFunction(() => {
     const modal = document.querySelector('[data-testid="card-edit-modal"]');
     return !!modal && modal.contains(document.activeElement);
   });

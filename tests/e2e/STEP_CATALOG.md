@@ -231,16 +231,16 @@ pattern this script does not understand):
 | When | `I click the add equipment button` | 9 | 114 |
 | When | `I click the add oddity button` | 7 | 122 |
 | When | `I click the add special ability button` | 7 | 134 |
-| When | `I click the edit button on ability {string}` | 1 | 633 |
-| When | `I click the edit button on artifact {string}` | 1 | 612 |
-| When | `I click the edit button on attack {string}` | 1 | 626 |
-| When | `I click the edit button on cypher {string}` | 2 | 598 |
-| When | `I click the edit button on equipment {string}` | 1 | 605 |
-| When | `I click the edit button on oddity {string}` | 1 | 619 |
-| When | `I click the edit button on special ability {string}` | 1 | 640 |
-| When | `I confirm the card edit modal` | 50 | 560 |
+| When | `I click the edit button on ability {string}` | 1 | 635 |
+| When | `I click the edit button on artifact {string}` | 1 | 614 |
+| When | `I click the edit button on attack {string}` | 1 | 628 |
+| When | `I click the edit button on cypher {string}` | 2 | 600 |
+| When | `I click the edit button on equipment {string}` | 1 | 607 |
+| When | `I click the edit button on oddity {string}` | 1 | 621 |
+| When | `I click the edit button on special ability {string}` | 1 | 642 |
+| When | `I confirm the card edit modal` | 50 | 558 |
 | When | `I fill in the ability cost with {string}` | 6 | 324 |
-| When | `I fill in the ability description with {string}` | 9 | 334 |
+| When | `I fill in the ability description with {string}` | 9 | 332 |
 | When | `I fill in the ability name with {string}` | 9 | 321 |
 | When | `I fill in the ability pool with {string}` | 6 | 328 |
 | When | `I fill in the artifact effect with {string}` | 7 | 288 |
@@ -255,20 +255,20 @@ pattern this script does not understand):
 | When | `I fill in the equipment description with {string}` | 7 | 266 |
 | When | `I fill in the equipment name with {string}` | 8 | 260 |
 | When | `I fill in the oddity text with {string}` | 7 | 297 |
-| When | `I fill in the special ability description with {string}` | 7 | 356 |
-| When | `I fill in the special ability name with {string}` | 7 | 343 |
-| When | `I fill in the special ability source with {string}` | 7 | 349 |
-| Then | `I should see {int} ability cards` | 14 | 397 |
-| Then | `I should see {int} artifact cards` | 8 | 382 |
-| Then | `I should see {int} attack cards` | 8 | 392 |
-| Then | `I should see {int} cypher card` | 2 | 369 |
-| Then | `I should see {int} cypher cards` | 13 | 372 |
-| Then | `I should see {int} equipment cards` | 8 | 377 |
-| Then | `I should see {int} oddity cards` | 8 | 387 |
-| Then | `I should see {int} special ability cards` | 8 | 402 |
-| Then | `I should see a cypher card with name {string}` | 5 | 409 |
-| Then | `I should see a special ability card with name {string}` | 5 | 535 |
-| Then | `I should see an ability card with name {string}` | 7 | 510 |
+| When | `I fill in the special ability description with {string}` | 7 | 354 |
+| When | `I fill in the special ability name with {string}` | 7 | 341 |
+| When | `I fill in the special ability source with {string}` | 7 | 347 |
+| Then | `I should see {int} ability cards` | 14 | 395 |
+| Then | `I should see {int} artifact cards` | 8 | 380 |
+| Then | `I should see {int} attack cards` | 8 | 390 |
+| Then | `I should see {int} cypher card` | 2 | 367 |
+| Then | `I should see {int} cypher cards` | 13 | 370 |
+| Then | `I should see {int} equipment cards` | 8 | 375 |
+| Then | `I should see {int} oddity cards` | 8 | 385 |
+| Then | `I should see {int} special ability cards` | 8 | 400 |
+| Then | `I should see a cypher card with name {string}` | 5 | 407 |
+| Then | `I should see a special ability card with name {string}` | 5 | 533 |
+| Then | `I should see an ability card with name {string}` | 7 | 508 |
 | Then | `I should see an add ability button` | 1 | 98 |
 | Then | `I should see an add artifact button` | 1 | 69 |
 | Then | `I should see an add attack button` | 1 | 77 |
@@ -276,18 +276,18 @@ pattern this script does not understand):
 | Then | `I should see an add equipment button` | 1 | 65 |
 | Then | `I should see an add oddity button` | 1 | 73 |
 | Then | `I should see an add special ability button` | 1 | 102 |
-| Then | `I should see an artifact card with name {string}` | 5 | 451 |
-| Then | `I should see an attack card with name {string}` | 5 | 485 |
-| Then | `I should see an equipment card with name {string}` | 5 | 434 |
-| Then | `I should see an oddity card with text {string}` | 5 | 476 |
-| Then | `the ability {string} should have cost {string}` | 1 | 519 |
-| Then | `the ability {string} should have pool {string}` | 1 | 527 |
+| Then | `I should see an artifact card with name {string}` | 5 | 449 |
+| Then | `I should see an attack card with name {string}` | 5 | 483 |
+| Then | `I should see an equipment card with name {string}` | 5 | 432 |
+| Then | `I should see an oddity card with text {string}` | 5 | 474 |
+| Then | `the ability {string} should have cost {string}` | 1 | 517 |
+| Then | `the ability {string} should have pool {string}` | 1 | 525 |
 | Then | `the add attack button should have a non-transparent background` | 1 | 81 |
-| Then | `the artifact {string} should have effect {string}` | 1 | 468 |
-| Then | `the artifact {string} should have level {string}` | 1 | 460 |
-| Then | `the attack {string} should have damage {string}` | 1 | 502 |
-| Then | `the attack {string} should have modifier {string}` | 1 | 494 |
-| Then | `the card edit modal should be open` | 15 | 577 |
+| Then | `the artifact {string} should have effect {string}` | 1 | 466 |
+| Then | `the artifact {string} should have level {string}` | 1 | 458 |
+| Then | `the attack {string} should have damage {string}` | 1 | 500 |
+| Then | `the attack {string} should have modifier {string}` | 1 | 492 |
+| Then | `the card edit modal should be open` | 15 | 579 |
 | Given | `the character has {int} ability cards` | 5 | 46 |
 | Given | `the character has {int} artifact cards` | 5 | 31 |
 | Given | `the character has {int} attack cards` | 5 | 41 |
@@ -295,9 +295,9 @@ pattern this script does not understand):
 | Given | `the character has {int} equipment cards` | 5 | 26 |
 | Given | `the character has {int} oddity cards` | 5 | 36 |
 | Given | `the character has {int} special ability cards` | 5 | 51 |
-| Then | `the cypher {string} should have effect {string}` | 1 | 426 |
-| Then | `the cypher {string} should have level {string}` | 1 | 418 |
-| Then | `the equipment {string} should have description {string}` | 1 | 443 |
+| Then | `the cypher {string} should have effect {string}` | 1 | 424 |
+| Then | `the cypher {string} should have level {string}` | 1 | 416 |
+| Then | `the equipment {string} should have description {string}` | 1 | 441 |
 | Then | `the modal should show ability fields` | 1 | 208 |
 | Then | `the modal should show artifact fields` | 1 | 168 |
 | Then | `the modal should show attack fields` | 1 | 192 |
@@ -305,7 +305,7 @@ pattern this script does not understand):
 | Then | `the modal should show equipment fields` | 1 | 156 |
 | Then | `the modal should show oddity fields` | 1 | 182 |
 | Then | `the modal should show special ability fields` | 1 | 224 |
-| Then | `the special ability {string} should have source {string}` | 1 | 546 |
+| Then | `the special ability {string} should have source {string}` | 1 | 544 |
 
 ## card-deletion.steps.ts
 
@@ -778,7 +778,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the character data is loaded` | 2 | 6 |
+| Given | `the character data is loaded` | 2 | 7 |
 
 ## version-comparison.steps.ts
 
@@ -786,24 +786,24 @@ pattern this script does not understand):
 | --- | --- | ---: | ---: |
 | Given | `comparison view is enabled in settings` | 23 | 42 |
 | Then | `comparison view should show as enabled in settings` | 1 | 58 |
-| Given | `I am using a phone-width viewport` | 1 | 424 |
-| Given | `I am using a tablet-width viewport` | 1 | 428 |
+| Given | `I am using a phone-width viewport` | 1 | 416 |
+| Given | `I am using a tablet-width viewport` | 1 | 420 |
 | Given | `I am viewing the comparison view` | 19 | 66 |
 | When | `I click the left pane's backward arrow` | 3 | 163 |
 | When | `I click the left pane's backward arrow {int} time(s)` | 2 | 175 |
 | When | `I click the left pane's forward arrow` | 1 | 167 |
-| When | `I click the left pane's restore button` | 2 | 353 |
-| When | `I click the return to editing button` | 2 | 397 |
+| When | `I click the left pane's restore button` | 2 | 345 |
+| When | `I click the return to editing button` | 2 | 389 |
 | When | `I click the right pane's backward arrow` | 1 | 171 |
 | When | `I click the right pane's backward arrow {int} time(s)` | 1 | 186 |
-| When | `I click the right pane's restore button` | 1 | 358 |
+| When | `I click the right pane's restore button` | 1 | 350 |
 | When | `I close the settings panel` | 2 | 53 |
 | When | `I enable comparison view in settings` | 2 | 46 |
-| Then | `no add or delete button should be present in the comparison view` | 1 | 412 |
-| Then | `no field in the comparison view should be editable` | 1 | 405 |
+| Then | `no add or delete button should be present in the comparison view` | 1 | 404 |
+| Then | `no field in the comparison view should be editable` | 1 | 397 |
 | Then | `the {string} field should be highlighted as changed in the {word} pane` | 2 | 269 |
 | Then | `the {string} field should not be highlighted in the {word} pane` | 2 | 278 |
-| Then | `the {word} pane should show the newly restored version` | 1 | 368 |
+| Then | `the {word} pane should show the newly restored version` | 1 | 360 |
 | Then | `the added cypher card should be highlighted as added in the right pane` | 1 | 287 |
 | Given | `the character has a version where a cypher was renamed` | 1 | 143 |
 | Given | `the character has a version with a modified cypher effect` | 1 | 124 |
@@ -815,18 +815,18 @@ pattern this script does not understand):
 | Then | `the comparison header should reflect the new left pane version` | 1 | 248 |
 | Then | `the comparison view should be visible` | 3 | 71 |
 | Then | `the comparison view should not be visible` | 3 | 75 |
-| Then | `the left pane should not show the added cypher card` | 1 | 297 |
+| Then | `the left pane should not show the added cypher card` | 1 | 295 |
 | Then | `the left pane should show version {int}` | 5 | 218 |
 | Given | `the left pane shows version {int}` | 2 | 210 |
-| Then | `the modified cypher card should be highlighted as changed in the {word} pane` | 2 | 319 |
-| Then | `the new cypher name should be highlighted as added in the right pane` | 1 | 339 |
-| Then | `the old cypher name should be highlighted as removed in the left pane` | 1 | 329 |
-| Then | `the removed cypher card should be highlighted as removed in the left pane` | 1 | 302 |
-| Then | `the right pane should not show the removed cypher card` | 1 | 312 |
+| Then | `the modified cypher card should be highlighted as changed in the {word} pane` | 2 | 315 |
+| Then | `the new cypher name should be highlighted as added in the right pane` | 1 | 333 |
+| Then | `the old cypher name should be highlighted as removed in the left pane` | 1 | 323 |
+| Then | `the removed cypher card should be highlighted as removed in the left pane` | 1 | 300 |
+| Then | `the right pane should not show the removed cypher card` | 1 | 310 |
 | Then | `the right pane should show version {int}` | 4 | 222 |
-| Then | `the right pane should still show the same character name as before the restore` | 1 | 378 |
+| Then | `the right pane should still show the same character name as before the restore` | 1 | 370 |
 | Given | `the right pane shows version {int}` | 1 | 214 |
-| Then | `the right pane's restore button should be disabled` | 1 | 363 |
+| Then | `the right pane's restore button should be disabled` | 1 | 355 |
 
 ## version-history.steps.ts
 
