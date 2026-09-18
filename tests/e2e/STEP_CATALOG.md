@@ -93,21 +93,21 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `I should see an empty abilities section` | 1 | 129 |
+| Then | `I should see an empty abilities section` | 1 | 119 |
 | Then | `I should see the ability {string}` | 4 | 39 |
-| Then | `the ability {string} should have intellect pool styling` | 1 | 117 |
-| Then | `the ability {string} should have might pool styling` | 1 | 99 |
-| Then | `the ability {string} should have speed pool styling` | 1 | 108 |
-| Then | `the ability {string} should not show action indicator` | 1 | 92 |
-| Then | `the ability {string} should not show cost badge` | 1 | 78 |
-| Then | `the ability {string} should not show pool indicator` | 1 | 85 |
-| Then | `the ability {string} should show action {string}` | 2 | 67 |
-| Then | `the ability {string} should show cost {string}` | 2 | 45 |
-| Then | `the ability {string} should show pool {string}` | 2 | 56 |
+| Then | `the ability {string} should have intellect pool styling` | 1 | 108 |
+| Then | `the ability {string} should have might pool styling` | 1 | 92 |
+| Then | `the ability {string} should have speed pool styling` | 1 | 100 |
+| Then | `the ability {string} should not show action indicator` | 1 | 86 |
+| Then | `the ability {string} should not show cost badge` | 1 | 74 |
+| Then | `the ability {string} should not show pool indicator` | 1 | 80 |
+| Then | `the ability {string} should show action {string}` | 2 | 64 |
+| Then | `the ability {string} should show cost {string}` | 2 | 44 |
+| Then | `the ability {string} should show pool {string}` | 2 | 54 |
 | Given | `the character has abilities with different pools:` | 1 | 24 |
 | Given | `the character has an ability {string} with:` | 4 | 8 |
 | Given | `the character has no abilities` | 1 | 33 |
-| Then | `the empty state should use translation keys` | 1 | 134 |
+| Then | `the empty state should use translation keys` | 1 | 123 |
 
 ## additional-fields-editing.steps.ts
 
