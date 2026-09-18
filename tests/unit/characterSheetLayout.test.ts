@@ -9,47 +9,10 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { CharacterSheet } from "../../src/components/CharacterSheet.js";
-import { Character } from "../../src/types/character.js";
 import { Layout } from "../../src/types/layout.js";
 import { loadLayout } from "../../src/storage/layoutStorage.js";
 import { LAYOUT_STORAGE_KEY } from "../../src/storage/storageConstants.js";
-
-function createMockCharacter(): Character {
-  return {
-    name: "Test Character",
-    descriptor: "Clever",
-    type: "Jack",
-    focus: "Who Controls Beasts",
-    tier: 1,
-    effort: 1,
-    currentXp: 0,
-    totalXp: 0,
-    shins: 0,
-    armor: 0,
-    maxCyphers: 3,
-    stats: {
-      might: { pool: 10, edge: 0, current: 10 },
-      speed: { pool: 10, edge: 0, current: 10 },
-      intellect: { pool: 10, edge: 0, current: 10 },
-    },
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: { impairment: "healthy" },
-    abilities: [],
-    specialAbilities: [],
-    attacks: [],
-    cyphers: [],
-    artifacts: [],
-    oddities: [],
-    equipment: [],
-    textFields: { background: "", notes: "" },
-  };
-}
+import { createTestCharacter as createMockCharacter } from "../factories/character.js";
 
 const REORDERED_LAYOUT: Layout = [
   { type: "single", id: "cyphers" },
