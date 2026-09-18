@@ -559,11 +559,11 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all character data should be correctly displayed` | 1 | 80 |
-| When | `I import a valid character file with matching schema version` | 2 | 49 |
-| Then | `the character name should still be {string}` | 1 | 92 |
-| Then | `the character should be imported successfully` | 1 | 72 |
-| Then | `the tier should still be {string}` | 1 | 100 |
+| Then | `all character data should be correctly displayed` | 1 | 74 |
+| When | `I import a valid character file with matching schema version` | 2 | 43 |
+| Then | `the character name should still be {string}` | 1 | 86 |
+| Then | `the character should be imported successfully` | 1 | 66 |
+| Then | `the tier should still be {string}` | 1 | 94 |
 
 ## empty-fields-visibility.steps.ts
 

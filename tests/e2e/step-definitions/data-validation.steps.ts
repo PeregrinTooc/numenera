@@ -1,9 +1,13 @@
 import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world.js";
+import { FULL_CHARACTER } from "../support/cardTestFixtures.js";
 
-// Test fixtures for various import scenarios
+// Test fixture for the "import a valid character" scenarios — an override
+// of the shared demo character so only what makes this import distinctive
+// needs to be spelled out.
 const VALID_CHARACTER = {
+  ...FULL_CHARACTER,
   name: "Imported Hero",
   tier: 2,
   type: "Nano",
@@ -27,16 +31,6 @@ const VALID_CHARACTER = {
   equipment: [],
   attacks: [],
   specialAbilities: [],
-  recoveryRolls: {
-    action: false,
-    tenMinutes: false,
-    oneHour: false,
-    tenHours: false,
-    modifier: 0,
-  },
-  damageTrack: {
-    impairment: "healthy",
-  },
   textFields: {
     background: "Test background",
     notes: "Test notes",
