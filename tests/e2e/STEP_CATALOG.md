@@ -505,34 +505,34 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `I should see an empty attacks section` | 1 | 105 |
-| Then | `I should see an empty special abilities section` | 1 | 189 |
-| Then | `I should see the armor badge in the attacks section` | 1 | 206 |
-| Then | `I should see the attack {string}` | 2 | 17 |
-| Then | `I should see the special ability {string}` | 1 | 141 |
-| Then | `the armor badge should show value {string}` | 1 | 211 |
-| Then | `the attack {string} should have red combat theme styling` | 1 | 92 |
-| Then | `the attack {string} should not show notes` | 1 | 82 |
-| Then | `the attack {string} should show damage {string}` | 2 | 26 |
-| Then | `the attack {string} should show modifier {string}` | 2 | 40 |
-| Then | `the attack {string} should show notes {string}` | 1 | 68 |
-| Then | `the attack {string} should show range {string}` | 2 | 54 |
-| Then | `the attacks section should be in the right column` | 1 | 231 |
-| Given | `the character has a special ability {string}` | 1 | 132 |
-| Given | `the character has a special ability {string} with:` | 1 | 118 |
-| Given | `the character has an attack {string}` | 1 | 10 |
-| Given | `the character has an attack {string} with:` | 1 | 5 |
-| Given | `the character has armor value {int}` | 1 | 202 |
-| Given | `the character has no attacks` | 1 | 12 |
-| Given | `the character has no special abilities` | 1 | 136 |
-| Given | `the character has special abilities and attacks` | 1 | 220 |
-| Then | `the empty attacks state should use translation keys` | 1 | 110 |
-| Then | `the empty special abilities state should use translation keys` | 1 | 194 |
-| Then | `the sections should stack vertically on mobile` | 1 | 237 |
-| Then | `the special abilities section should be in the left column` | 1 | 225 |
-| Then | `the special ability {string} should have teal theme styling` | 1 | 176 |
-| Then | `the special ability {string} should show description {string}` | 1 | 150 |
-| Then | `the special ability {string} should show source {string}` | 1 | 162 |
+| Then | `I should see an empty attacks section` | 1 | 106 |
+| Then | `I should see an empty special abilities section` | 1 | 190 |
+| Then | `I should see the armor badge in the attacks section` | 1 | 207 |
+| Then | `I should see the attack {string}` | 2 | 18 |
+| Then | `I should see the special ability {string}` | 1 | 142 |
+| Then | `the armor badge should show value {string}` | 1 | 212 |
+| Then | `the attack {string} should have red combat theme styling` | 1 | 93 |
+| Then | `the attack {string} should not show notes` | 1 | 83 |
+| Then | `the attack {string} should show damage {string}` | 2 | 27 |
+| Then | `the attack {string} should show modifier {string}` | 2 | 41 |
+| Then | `the attack {string} should show notes {string}` | 1 | 69 |
+| Then | `the attack {string} should show range {string}` | 2 | 55 |
+| Then | `the attacks section should be in the right column` | 1 | 232 |
+| Given | `the character has a special ability {string}` | 1 | 133 |
+| Given | `the character has a special ability {string} with:` | 1 | 119 |
+| Given | `the character has an attack {string}` | 1 | 11 |
+| Given | `the character has an attack {string} with:` | 1 | 6 |
+| Given | `the character has armor value {int}` | 1 | 203 |
+| Given | `the character has no attacks` | 1 | 13 |
+| Given | `the character has no special abilities` | 1 | 137 |
+| Given | `the character has special abilities and attacks` | 1 | 221 |
+| Then | `the empty attacks state should use translation keys` | 1 | 111 |
+| Then | `the empty special abilities state should use translation keys` | 1 | 195 |
+| Then | `the sections should stack vertically on mobile` | 1 | 238 |
+| Then | `the special abilities section should be in the left column` | 1 | 226 |
+| Then | `the special ability {string} should have teal theme styling` | 1 | 177 |
+| Then | `the special ability {string} should show description {string}` | 1 | 151 |
+| Then | `the special ability {string} should show source {string}` | 1 | 163 |
 
 ## common-steps.ts
 
