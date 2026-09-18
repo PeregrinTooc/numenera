@@ -53,23 +53,6 @@ When("I press Tab repeatedly", async function (this: CustomWorld) {
 // UNIQUE THEN STEPS - Modal Assertions
 // ============================================================================
 
-Then(
-  "the modal should have aria-label {string}",
-  async function (this: CustomWorld, label: string) {
-    const modal = this.page!.locator('[data-testid="edit-modal"]');
-    const ariaLabel = await modal.getAttribute("aria-label");
-    expect(ariaLabel).toBe(label);
-  }
-);
-
-Then("the modal should have German aria-label translation", async function (this: CustomWorld) {
-  const modal = this.page!.locator('[data-testid="edit-modal"]');
-  const ariaLabel = await modal.getAttribute("aria-label");
-  // Check that it's truthy and not the English version
-  expect(ariaLabel).toBeTruthy();
-  expect(ariaLabel).not.toBe("Edit Character Name");
-});
-
 Then("the modal should have a confirm button with icon", async function (this: CustomWorld) {
   const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
   await expect(confirmButton).toBeVisible();
@@ -305,12 +288,6 @@ Then("the modal should have role={string}", async function (this: CustomWorld, r
   expect(actualRole).toBe(role);
 });
 
-Then("the modal should have aria-label attribute", async function (this: CustomWorld) {
-  const modal = this.page!.locator('[data-testid="edit-modal"]');
-  const ariaLabel = await modal.getAttribute("aria-label");
-  expect(ariaLabel).toBeTruthy();
-});
-
 Then(
   "the backdrop should have aria-hidden={string}",
   async function (this: CustomWorld, value: string) {
@@ -319,29 +296,6 @@ Then(
     expect(ariaHidden).toBe(value);
   }
 );
-
-Then("the confirm button should have appropriate label", async function (this: CustomWorld) {
-  const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
-  const ariaLabel = await confirmButton.getAttribute("aria-label");
-  expect(ariaLabel).toBeTruthy();
-});
-
-Then("the cancel button should have appropriate label", async function (this: CustomWorld) {
-  const cancelButton = this.page!.locator('[data-testid="modal-cancel-button"]');
-  const ariaLabel = await cancelButton.getAttribute("aria-label");
-  expect(ariaLabel).toBeTruthy();
-});
-
-Then("the buttons should display German translations", async function (this: CustomWorld) {
-  const confirmButton = this.page!.locator('[data-testid="modal-confirm-button"]');
-  const cancelButton = this.page!.locator('[data-testid="modal-cancel-button"]');
-
-  const confirmLabel = await confirmButton.getAttribute("aria-label");
-  const cancelLabel = await cancelButton.getAttribute("aria-label");
-
-  expect(confirmLabel).toBeTruthy();
-  expect(cancelLabel).toBeTruthy();
-});
 
 // ============================================================================
 // UNIQUE GIVEN/THEN STEPS - Mobile Device Configuration

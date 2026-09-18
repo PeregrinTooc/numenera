@@ -26,9 +26,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **771** in 25 files
+- Step definitions: **765** in 25 files
 - Feature step lines: **2047**
-- Definitions with no feature usage: **38**
+- Definitions with no feature usage: **32**
 - Feature lines matching no definition: **24**
 
 | Step file | Definitions | Unused |
@@ -36,7 +36,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [ability-enhancements.steps.ts](#abilityenhancementsstepsts) | 15 | 0 |
 | [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 54 | 0 |
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
-| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 44 | 6 |
+| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 38 | 0 |
 | [card-creation.steps.ts](#cardcreationstepsts) | 90 | 0 |
 | [card-deletion.steps.ts](#carddeletionstepsts) | 55 | 7 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
@@ -190,145 +190,139 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an error or validation message may appear` | 1 | 156 |
-| Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 230 |
-| Then | `focus should not leave the modal` | 1 | 264 |
-| Given | `I am viewing on a mobile device with width {string}` | 7 | 348 |
-| Then | `I can cancel with Escape key` | 1 | 289 |
-| Then | `I can confirm with Enter key` | 1 | 282 |
-| Then | `I can navigate with Tab key` | 1 | 274 |
+| Then | `an error or validation message may appear` | 1 | 139 |
+| Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 213 |
+| Then | `focus should not leave the modal` | 1 | 247 |
+| Given | `I am viewing on a mobile device with width {string}` | 7 | 302 |
+| Then | `I can cancel with Escape key` | 1 | 272 |
+| Then | `I can confirm with Enter key` | 1 | 265 |
+| Then | `I can navigate with Tab key` | 1 | 257 |
 | When | `I press Tab repeatedly` | 1 | 29 |
-| Then | `the backdrop should have aria-hidden={string}` | 1 | 312 |
-| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 400 |
-| Then | `the buttons should display German translations` | **0** | 333 |
-| Then | `the cancel button should have an X icon` | 1 | 180 |
-| Then | `the cancel button should have appropriate label` | **0** | 327 |
-| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 428 |
-| Then | `the character name should display {string}` | 6 | 98 |
-| Then | `the character name should still display {string}` | 6 | 106 |
-| Then | `the confirm button should be disabled` | 1 | 145 |
-| Then | `the confirm button should have a checkmark icon` | 1 | 174 |
-| Then | `the confirm button should have appropriate label` | **0** | 321 |
-| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 448 |
-| Then | `the descriptor should display {string}` | 2 | 120 |
-| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 458 |
-| Then | `the focus should display {string}` | 2 | 128 |
-| Then | `the input field should be large enough for touch input` | 1 | 420 |
-| Then | `the input field should be of type {string}` | 1 | 85 |
-| Then | `the input field should have inputmode={string} for mobile` | 1 | 371 |
-| Then | `the mobile keyboard should appear` | 1 | 365 |
-| Then | `the modal backdrop should be semi-transparent` | 1 | 186 |
-| Then | `the modal should be sized appropriately for mobile` | 1 | 356 |
-| Then | `the modal should fill most of the screen width` | 1 | 380 |
-| Then | `the modal should have a cancel button with icon` | 1 | 78 |
-| Then | `the modal should have a confirm button with icon` | 1 | 71 |
-| Then | `the modal should have aria-label {string}` | **0** | 54 |
-| Then | `the modal should have aria-label attribute` | **0** | 306 |
-| Then | `the modal should have German aria-label translation` | **0** | 63 |
-| Then | `the modal should have Numenera-themed styling` | 1 | 165 |
-| Then | `the modal should have role={string}` | 1 | 300 |
-| Then | `the modal should not close` | 1 | 151 |
-| Then | `the modal should not overflow the viewport` | 1 | 390 |
-| Then | `the name should show a hover state indicating it's editable` | 1 | 204 |
-| Then | `the tier should be constrained to {string}` | 2 | 137 |
-| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 438 |
-| Then | `the tier should display {string}` | 6 | 114 |
-| Then | `the tier should show a hover state indicating it's editable` | 1 | 215 |
+| Then | `the backdrop should have aria-hidden={string}` | 1 | 289 |
+| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 354 |
+| Then | `the cancel button should have an X icon` | 1 | 163 |
+| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 382 |
+| Then | `the character name should display {string}` | 6 | 81 |
+| Then | `the character name should still display {string}` | 6 | 89 |
+| Then | `the confirm button should be disabled` | 1 | 128 |
+| Then | `the confirm button should have a checkmark icon` | 1 | 157 |
+| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 402 |
+| Then | `the descriptor should display {string}` | 2 | 103 |
+| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 412 |
+| Then | `the focus should display {string}` | 2 | 111 |
+| Then | `the input field should be large enough for touch input` | 1 | 374 |
+| Then | `the input field should be of type {string}` | 1 | 68 |
+| Then | `the input field should have inputmode={string} for mobile` | 1 | 325 |
+| Then | `the mobile keyboard should appear` | 1 | 319 |
+| Then | `the modal backdrop should be semi-transparent` | 1 | 169 |
+| Then | `the modal should be sized appropriately for mobile` | 1 | 310 |
+| Then | `the modal should fill most of the screen width` | 1 | 334 |
+| Then | `the modal should have a cancel button with icon` | 1 | 61 |
+| Then | `the modal should have a confirm button with icon` | 1 | 54 |
+| Then | `the modal should have Numenera-themed styling` | 1 | 148 |
+| Then | `the modal should have role={string}` | 1 | 283 |
+| Then | `the modal should not close` | 1 | 134 |
+| Then | `the modal should not overflow the viewport` | 1 | 344 |
+| Then | `the name should show a hover state indicating it's editable` | 1 | 187 |
+| Then | `the tier should be constrained to {string}` | 2 | 120 |
+| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 392 |
+| Then | `the tier should display {string}` | 6 | 97 |
+| Then | `the tier should show a hover state indicating it's editable` | 1 | 198 |
 
 ## card-creation.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all ability fields should be empty` | 1 | 279 |
-| Then | `all artifact fields should be empty` | 1 | 238 |
-| Then | `all attack fields should be empty` | 1 | 263 |
-| Then | `all cypher fields should be empty` | 1 | 212 |
-| Then | `all equipment fields should be empty` | 1 | 225 |
-| Then | `all oddity fields should be empty` | 1 | 250 |
-| Then | `all special ability fields should be empty` | 1 | 294 |
-| When | `I cancel the card edit modal` | 7 | 643 |
-| When | `I click the add ability button` | 15 | 193 |
-| When | `I click the add artifact button` | 7 | 181 |
-| When | `I click the add attack button` | 7 | 189 |
-| When | `I click the add cypher button` | 12 | 173 |
-| When | `I click the add equipment button` | 9 | 177 |
-| When | `I click the add oddity button` | 7 | 185 |
-| When | `I click the add special ability button` | 7 | 197 |
-| When | `I click the edit button on ability {string}` | 1 | 719 |
-| When | `I click the edit button on artifact {string}` | 1 | 698 |
-| When | `I click the edit button on attack {string}` | 1 | 712 |
-| When | `I click the edit button on cypher {string}` | 2 | 684 |
-| When | `I click the edit button on equipment {string}` | 1 | 691 |
-| When | `I click the edit button on oddity {string}` | 1 | 705 |
-| When | `I click the edit button on special ability {string}` | 1 | 726 |
-| When | `I confirm the card edit modal` | 50 | 634 |
-| When | `I fill in the ability cost with {string}` | 6 | 387 |
-| When | `I fill in the ability description with {string}` | 9 | 397 |
-| When | `I fill in the ability name with {string}` | 9 | 384 |
-| When | `I fill in the ability pool with {string}` | 6 | 391 |
-| When | `I fill in the artifact effect with {string}` | 7 | 351 |
-| When | `I fill in the artifact level with {string}` | 7 | 344 |
-| When | `I fill in the artifact name with {string}` | 7 | 338 |
-| When | `I fill in the attack damage with {string}` | 7 | 368 |
-| When | `I fill in the attack modifier with {string}` | 7 | 375 |
-| When | `I fill in the attack name with {string}` | 7 | 365 |
-| When | `I fill in the cypher effect with {string}` | 11 | 314 |
-| When | `I fill in the cypher level with {string}` | 11 | 310 |
-| When | `I fill in the cypher name with {string}` | 11 | 307 |
-| When | `I fill in the equipment description with {string}` | 7 | 329 |
-| When | `I fill in the equipment name with {string}` | 8 | 323 |
-| When | `I fill in the oddity text with {string}` | 7 | 360 |
-| When | `I fill in the special ability description with {string}` | 7 | 419 |
-| When | `I fill in the special ability name with {string}` | 7 | 406 |
-| When | `I fill in the special ability source with {string}` | 7 | 412 |
-| Then | `I should see {int} ability cards` | 14 | 471 |
-| Then | `I should see {int} artifact cards` | 8 | 456 |
-| Then | `I should see {int} attack cards` | 8 | 466 |
-| Then | `I should see {int} cypher card` | 2 | 443 |
-| Then | `I should see {int} cypher cards` | 13 | 446 |
-| Then | `I should see {int} equipment cards` | 8 | 451 |
-| Then | `I should see {int} oddity cards` | 8 | 461 |
-| Then | `I should see {int} special ability cards` | 8 | 476 |
-| Then | `I should see a cypher card with name {string}` | 5 | 483 |
-| Then | `I should see a special ability card with name {string}` | 5 | 609 |
-| Then | `I should see an ability card with name {string}` | 7 | 584 |
-| Then | `I should see an add ability button` | 1 | 155 |
-| Then | `I should see an add artifact button` | 1 | 126 |
-| Then | `I should see an add attack button` | 1 | 134 |
-| Then | `I should see an add cypher button` | 1 | 118 |
-| Then | `I should see an add equipment button` | 1 | 122 |
-| Then | `I should see an add oddity button` | 1 | 130 |
-| Then | `I should see an add special ability button` | 1 | 159 |
-| Then | `I should see an artifact card with name {string}` | 5 | 525 |
-| Then | `I should see an attack card with name {string}` | 5 | 559 |
-| Then | `I should see an equipment card with name {string}` | 5 | 508 |
-| Then | `I should see an oddity card with text {string}` | 5 | 550 |
-| Then | `the ability {string} should have cost {string}` | 1 | 593 |
-| Then | `the ability {string} should have pool {string}` | 1 | 601 |
-| Then | `the add attack button should have a non-transparent background` | 1 | 138 |
-| Then | `the artifact {string} should have effect {string}` | 1 | 542 |
-| Then | `the artifact {string} should have level {string}` | 1 | 534 |
-| Then | `the attack {string} should have damage {string}` | 1 | 576 |
-| Then | `the attack {string} should have modifier {string}` | 1 | 568 |
-| Then | `the card edit modal should be open` | 15 | 651 |
-| Given | `the character has {int} ability cards` | 5 | 103 |
-| Given | `the character has {int} artifact cards` | 5 | 88 |
-| Given | `the character has {int} attack cards` | 5 | 98 |
-| Given | `the character has {int} cypher cards` | 5 | 78 |
-| Given | `the character has {int} equipment cards` | 5 | 83 |
-| Given | `the character has {int} oddity cards` | 5 | 93 |
-| Given | `the character has {int} special ability cards` | 5 | 108 |
-| Then | `the cypher {string} should have effect {string}` | 1 | 500 |
-| Then | `the cypher {string} should have level {string}` | 1 | 492 |
-| Then | `the equipment {string} should have description {string}` | 1 | 517 |
-| Then | `the modal should show ability fields` | 1 | 271 |
-| Then | `the modal should show artifact fields` | 1 | 231 |
-| Then | `the modal should show attack fields` | 1 | 255 |
-| Then | `the modal should show cypher fields` | 1 | 205 |
-| Then | `the modal should show equipment fields` | 1 | 219 |
-| Then | `the modal should show oddity fields` | 1 | 245 |
-| Then | `the modal should show special ability fields` | 1 | 287 |
-| Then | `the special ability {string} should have source {string}` | 1 | 620 |
+| Then | `all ability fields should be empty` | 1 | 280 |
+| Then | `all artifact fields should be empty` | 1 | 239 |
+| Then | `all attack fields should be empty` | 1 | 264 |
+| Then | `all cypher fields should be empty` | 1 | 213 |
+| Then | `all equipment fields should be empty` | 1 | 226 |
+| Then | `all oddity fields should be empty` | 1 | 251 |
+| Then | `all special ability fields should be empty` | 1 | 295 |
+| When | `I cancel the card edit modal` | 7 | 644 |
+| When | `I click the add ability button` | 15 | 194 |
+| When | `I click the add artifact button` | 7 | 182 |
+| When | `I click the add attack button` | 7 | 190 |
+| When | `I click the add cypher button` | 12 | 174 |
+| When | `I click the add equipment button` | 9 | 178 |
+| When | `I click the add oddity button` | 7 | 186 |
+| When | `I click the add special ability button` | 7 | 198 |
+| When | `I click the edit button on ability {string}` | 1 | 720 |
+| When | `I click the edit button on artifact {string}` | 1 | 699 |
+| When | `I click the edit button on attack {string}` | 1 | 713 |
+| When | `I click the edit button on cypher {string}` | 2 | 685 |
+| When | `I click the edit button on equipment {string}` | 1 | 692 |
+| When | `I click the edit button on oddity {string}` | 1 | 706 |
+| When | `I click the edit button on special ability {string}` | 1 | 727 |
+| When | `I confirm the card edit modal` | 50 | 635 |
+| When | `I fill in the ability cost with {string}` | 6 | 388 |
+| When | `I fill in the ability description with {string}` | 9 | 398 |
+| When | `I fill in the ability name with {string}` | 9 | 385 |
+| When | `I fill in the ability pool with {string}` | 6 | 392 |
+| When | `I fill in the artifact effect with {string}` | 7 | 352 |
+| When | `I fill in the artifact level with {string}` | 7 | 345 |
+| When | `I fill in the artifact name with {string}` | 7 | 339 |
+| When | `I fill in the attack damage with {string}` | 7 | 369 |
+| When | `I fill in the attack modifier with {string}` | 7 | 376 |
+| When | `I fill in the attack name with {string}` | 7 | 366 |
+| When | `I fill in the cypher effect with {string}` | 11 | 315 |
+| When | `I fill in the cypher level with {string}` | 11 | 311 |
+| When | `I fill in the cypher name with {string}` | 11 | 308 |
+| When | `I fill in the equipment description with {string}` | 7 | 330 |
+| When | `I fill in the equipment name with {string}` | 8 | 324 |
+| When | `I fill in the oddity text with {string}` | 7 | 361 |
+| When | `I fill in the special ability description with {string}` | 7 | 420 |
+| When | `I fill in the special ability name with {string}` | 7 | 407 |
+| When | `I fill in the special ability source with {string}` | 7 | 413 |
+| Then | `I should see {int} ability cards` | 14 | 472 |
+| Then | `I should see {int} artifact cards` | 8 | 457 |
+| Then | `I should see {int} attack cards` | 8 | 467 |
+| Then | `I should see {int} cypher card` | 2 | 444 |
+| Then | `I should see {int} cypher cards` | 13 | 447 |
+| Then | `I should see {int} equipment cards` | 8 | 452 |
+| Then | `I should see {int} oddity cards` | 8 | 462 |
+| Then | `I should see {int} special ability cards` | 8 | 477 |
+| Then | `I should see a cypher card with name {string}` | 5 | 484 |
+| Then | `I should see a special ability card with name {string}` | 5 | 610 |
+| Then | `I should see an ability card with name {string}` | 7 | 585 |
+| Then | `I should see an add ability button` | 1 | 156 |
+| Then | `I should see an add artifact button` | 1 | 127 |
+| Then | `I should see an add attack button` | 1 | 135 |
+| Then | `I should see an add cypher button` | 1 | 119 |
+| Then | `I should see an add equipment button` | 1 | 123 |
+| Then | `I should see an add oddity button` | 1 | 131 |
+| Then | `I should see an add special ability button` | 1 | 160 |
+| Then | `I should see an artifact card with name {string}` | 5 | 526 |
+| Then | `I should see an attack card with name {string}` | 5 | 560 |
+| Then | `I should see an equipment card with name {string}` | 5 | 509 |
+| Then | `I should see an oddity card with text {string}` | 5 | 551 |
+| Then | `the ability {string} should have cost {string}` | 1 | 594 |
+| Then | `the ability {string} should have pool {string}` | 1 | 602 |
+| Then | `the add attack button should have a non-transparent background` | 1 | 139 |
+| Then | `the artifact {string} should have effect {string}` | 1 | 543 |
+| Then | `the artifact {string} should have level {string}` | 1 | 535 |
+| Then | `the attack {string} should have damage {string}` | 1 | 577 |
+| Then | `the attack {string} should have modifier {string}` | 1 | 569 |
+| Then | `the card edit modal should be open` | 15 | 652 |
+| Given | `the character has {int} ability cards` | 5 | 104 |
+| Given | `the character has {int} artifact cards` | 5 | 89 |
+| Given | `the character has {int} attack cards` | 5 | 99 |
+| Given | `the character has {int} cypher cards` | 5 | 79 |
+| Given | `the character has {int} equipment cards` | 5 | 84 |
+| Given | `the character has {int} oddity cards` | 5 | 94 |
+| Given | `the character has {int} special ability cards` | 5 | 109 |
+| Then | `the cypher {string} should have effect {string}` | 1 | 501 |
+| Then | `the cypher {string} should have level {string}` | 1 | 493 |
+| Then | `the equipment {string} should have description {string}` | 1 | 518 |
+| Then | `the modal should show ability fields` | 1 | 272 |
+| Then | `the modal should show artifact fields` | 1 | 232 |
+| Then | `the modal should show attack fields` | 1 | 256 |
+| Then | `the modal should show cypher fields` | 1 | 206 |
+| Then | `the modal should show equipment fields` | 1 | 220 |
+| Then | `the modal should show oddity fields` | 1 | 246 |
+| Then | `the modal should show special ability fields` | 1 | 288 |
+| Then | `the special ability {string} should have source {string}` | 1 | 621 |
 
 ## card-deletion.steps.ts
 
