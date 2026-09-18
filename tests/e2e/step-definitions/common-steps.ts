@@ -57,6 +57,19 @@ function getTestId(fieldName: string): string {
   return testId;
 }
 
+// Default stat values for verification (from FULL_CHARACTER in mockCharacters.ts)
+const DEFAULT_STAT_VALUES: Record<string, string> = {
+  "Might Pool": "15",
+  "Might Edge": "2",
+  "Might Current": "12",
+  "Speed Pool": "12",
+  "Speed Edge": "1",
+  "Speed Current": "12",
+  "Intellect Pool": "10",
+  "Intellect Edge": "0",
+  "Intellect Current": "8",
+};
+
 // ============================================================================
 // REUSABLE WHEN STEPS - User Actions
 // ============================================================================
@@ -361,20 +374,7 @@ Then(
     // Get current value
     const currentValue = (await element.textContent())?.trim();
 
-    // Default values for verification (from FULL_CHARACTER in mockCharacters.ts)
-    const defaultValues: Record<string, string> = {
-      "Might Pool": "15",
-      "Might Edge": "2",
-      "Might Current": "12",
-      "Speed Pool": "12",
-      "Speed Edge": "1",
-      "Speed Current": "12",
-      "Intellect Pool": "10",
-      "Intellect Edge": "0",
-      "Intellect Current": "8",
-    };
-
-    const expectedDefault = defaultValues[fieldName];
+    const expectedDefault = DEFAULT_STAT_VALUES[fieldName];
     if (expectedDefault) {
       expect(currentValue).toBe(expectedDefault);
     } else {
@@ -427,20 +427,7 @@ Then(
   async function (this: CustomWorld, fieldName: string) {
     const input = this.page!.locator('[data-testid="edit-modal-input"]');
 
-    // Default values for verification
-    const defaultValues: Record<string, string> = {
-      "Might Pool": "15",
-      "Might Edge": "2",
-      "Might Current": "12",
-      "Speed Pool": "12",
-      "Speed Edge": "1",
-      "Speed Current": "12",
-      "Intellect Pool": "10",
-      "Intellect Edge": "0",
-      "Intellect Current": "8",
-    };
-
-    const expectedValue = defaultValues[fieldName];
+    const expectedValue = DEFAULT_STAT_VALUES[fieldName];
     if (expectedValue) {
       await expect(input).toHaveValue(expectedValue, { timeout: 10000 });
     }
