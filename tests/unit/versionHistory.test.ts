@@ -1,48 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { VersionHistoryManager } from "../../src/storage/versionHistory.js";
 import type { Character } from "../../src/types/character.js";
+import { createTestCharacter as createMockCharacter } from "../factories/character.js";
 
 // Helper for async delays
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-// Helper to create a mock character with all required fields
-function createMockCharacter(): Character {
-  return {
-    name: "Test Character",
-    tier: 1,
-    type: "Glaive",
-    descriptor: "Strong",
-    focus: "Battles",
-    portrait: "data:image/png;base64,test-image-data",
-    currentXp: 0,
-    totalXp: 0,
-    shins: 10,
-    armor: 1,
-    effort: 1,
-    maxCyphers: 2,
-    stats: {
-      might: { pool: 10, edge: 0, current: 10 },
-      speed: { pool: 10, edge: 0, current: 10 },
-      intellect: { pool: 10, edge: 0, current: 10 },
-    },
-    cyphers: [],
-    artifacts: [],
-    oddities: [],
-    abilities: [],
-    equipment: [],
-    attacks: [],
-    specialAbilities: [],
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: { impairment: "healthy" },
-    textFields: { background: "", notes: "" },
-  };
-}
 
 describe.sequential("VersionHistoryManager", () => {
   let manager: VersionHistoryManager;
