@@ -143,11 +143,6 @@ Then("I should see a {string} button", async function (buttonText: string) {
   await expect(button).toBeVisible();
 });
 
-Then("I should not see a {string} button", async function (buttonText: string) {
-  const button = this.page.locator(`button:has-text("${buttonText}")`);
-  await expect(button).not.toBeVisible();
-});
-
 Then("I should not see an {string} button", async function (buttonText: string) {
   // Use exact text match to avoid matching "Quick Export" when looking for "Export"
   const button = this.page.locator(`button:text-is("${buttonText}")`);

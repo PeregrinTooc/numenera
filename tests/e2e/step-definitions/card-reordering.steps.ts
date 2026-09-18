@@ -110,7 +110,6 @@ When("I start dragging cypher {string}", async function (this: CustomWorld, cyph
   // Dispatch dragstart event from within the browser context
   // This is needed because mouse.down() doesn't trigger HTML5 drag events
   await cypherCard.evaluate((el) => {
-    // eslint-disable-next-line no-undef
     const event = new DragEvent("dragstart", {
       bubbles: true,
       cancelable: true,
@@ -136,7 +135,6 @@ When("I hover over cypher {string}", async function (this: CustomWorld, cypherNa
 
   // Dispatch dragover event from within the browser context
   await cypherCard.evaluate((el) => {
-    // eslint-disable-next-line no-undef
     const event = new DragEvent("dragover", {
       bubbles: true,
       cancelable: true,
@@ -206,12 +204,6 @@ Then(
     expect(hasDraggingClass).toBe(true);
   }
 );
-
-Then("I should see drop zone indicators", async function (this: CustomWorld) {
-  const dropZones = this.page!.locator('[data-testid="drop-zone"]');
-  const count = await dropZones.count();
-  expect(count).toBeGreaterThan(0);
-});
 
 Then(
   "the cyphers should be visually in order {string}, {string}, {string}",

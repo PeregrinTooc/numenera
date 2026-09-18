@@ -178,10 +178,6 @@ When("I click the right pane's backward arrow", async function (this: CustomWorl
   await this.page!.locator(paneControl("right", "backward")).click();
 });
 
-When("I click the right pane's forward arrow", async function (this: CustomWorld) {
-  await this.page!.locator(paneControl("right", "forward")).click();
-});
-
 When(
   "I click the left pane's backward arrow {int} time(s)",
   async function (this: CustomWorld, times: number) {

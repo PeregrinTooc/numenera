@@ -288,14 +288,6 @@ Then("I should have {int} abilities remaining", async function (this: CustomWorl
   expect(actualCount).toBe(count);
 });
 
-Then(
-  "I should have {int} special abilities remaining",
-  async function (this: CustomWorld, count: number) {
-    const actualCount = await getCardCount(this, "special ability");
-    expect(actualCount).toBe(count);
-  }
-);
-
 // Position verification
 Then(
   "the delete button should be in the top-left corner of the card",

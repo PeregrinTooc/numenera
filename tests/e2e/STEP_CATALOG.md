@@ -26,9 +26,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **737** in 25 files
+- Step definitions: **733** in 25 files
 - Feature step lines: **2047**
-- Definitions with no feature usage: **4**
+- Definitions with no feature usage: **0**
 - Feature lines matching no definition: **24**
 
 | Step file | Definitions | Unused |
@@ -38,9 +38,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
 | [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 38 | 0 |
 | [card-creation.steps.ts](#cardcreationstepsts) | 90 | 0 |
-| [card-deletion.steps.ts](#carddeletionstepsts) | 49 | 1 |
+| [card-deletion.steps.ts](#carddeletionstepsts) | 48 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
-| [card-reordering.steps.ts](#cardreorderingstepsts) | 17 | 1 |
+| [card-reordering.steps.ts](#cardreorderingstepsts) | 16 | 0 |
 | [character-display.steps.ts](#characterdisplaystepsts) | 40 | 0 |
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
@@ -49,14 +49,14 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [common-steps.ts](#commonstepsts) | 45 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 5 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 15 | 0 |
-| [export-enhancement.steps.ts](#exportenhancementstepsts) | 22 | 1 |
+| [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 20 | 0 |
 | [section-rearrangement.steps.ts](#sectionrearrangementstepsts) | 49 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
-| [version-comparison.steps.ts](#versioncomparisonstepsts) | 44 | 1 |
+| [version-comparison.steps.ts](#versioncomparisonstepsts) | 43 | 0 |
 | [version-history.steps.ts](#versionhistorystepsts) | 83 | 0 |
 
 ## ⚠️ Feature lines with no matching step definition
@@ -328,55 +328,54 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the delete button on the first ability` | 1 | 199 |
-| When | `I click the delete button on the first artifact` | 1 | 181 |
-| When | `I click the delete button on the first attack` | 1 | 193 |
-| When | `I click the delete button on the first cypher` | 4 | 156 |
-| When | `I click the delete button on the first cypher again` | 1 | 169 |
-| When | `I click the delete button on the first cypher card` | 2 | 162 |
-| When | `I click the delete button on the first equipment item` | 1 | 175 |
-| When | `I click the delete button on the first oddity` | 1 | 187 |
-| When | `I click the delete button on the first special ability` | 1 | 205 |
-| Given | `I have {int} abilities` | 1 | 140 |
-| Given | `I have {int} artifact` | 1 | 119 |
-| Given | `I have {int} attacks` | 1 | 133 |
-| Given | `I have {int} cyphers` | 4 | 104 |
-| Given | `I have {int} equipment items` | 1 | 112 |
-| Given | `I have {int} oddities` | 1 | 126 |
-| Given | `I have {int} special abilities` | 1 | 147 |
-| When | `I look at a cypher card` | 2 | 36 |
-| When | `I look at a special ability card` | 1 | 60 |
-| When | `I look at an ability card` | 1 | 56 |
-| When | `I look at an artifact card` | 1 | 44 |
-| When | `I look at an attack card` | 1 | 52 |
-| When | `I look at an equipment card` | 1 | 40 |
-| When | `I look at an oddity card` | 1 | 48 |
-| Then | `I should have {int} abilities remaining` | 2 | 284 |
-| Then | `I should have {int} artifacts remaining` | 2 | 279 |
-| Then | `I should have {int} attack remaining` | 2 | 252 |
-| Then | `I should have {int} cypher remaining` | 3 | 243 |
-| Then | `I should have {int} cyphers remaining` | 1 | 267 |
-| Then | `I should have {int} equipment items remaining` | 2 | 271 |
-| Then | `I should have {int} oddity remaining` | 2 | 247 |
-| Then | `I should have {int} special abilities remaining` | **0** | 289 |
-| Then | `I should have {int} special ability remaining` | 2 | 257 |
-| Then | `I should not see a confirmation dialog` | 1 | 318 |
-| Then | `I should see a delete button on the ability card` | 1 | 89 |
-| Then | `I should see a delete button on the artifact card` | 1 | 74 |
-| Then | `I should see a delete button on the attack card` | 1 | 84 |
-| Then | `I should see a delete button on the cypher card` | 1 | 64 |
-| Then | `I should see a delete button on the equipment card` | 1 | 69 |
-| Then | `I should see a delete button on the oddity card` | 1 | 79 |
-| Then | `I should see a delete button on the special ability card` | 1 | 94 |
-| Then | `the ability should be removed from the DOM` | 1 | 233 |
-| Then | `the artifact should be removed from the DOM` | 1 | 221 |
-| Then | `the attack should be removed from the DOM` | 1 | 229 |
-| Then | `the cypher should be removed from the DOM` | 1 | 213 |
-| Then | `the cypher should be removed immediately` | 1 | 314 |
-| Then | `the delete button should be in the top-left corner of the card` | 1 | 299 |
-| Then | `the equipment item should be removed from the DOM` | 1 | 217 |
-| Then | `the oddity should be removed from the DOM` | 1 | 225 |
-| Then | `the special ability should be removed from the DOM` | 1 | 237 |
+| When | `I click the delete button on the first ability` | 1 | 200 |
+| When | `I click the delete button on the first artifact` | 1 | 182 |
+| When | `I click the delete button on the first attack` | 1 | 194 |
+| When | `I click the delete button on the first cypher` | 4 | 157 |
+| When | `I click the delete button on the first cypher again` | 1 | 170 |
+| When | `I click the delete button on the first cypher card` | 2 | 163 |
+| When | `I click the delete button on the first equipment item` | 1 | 176 |
+| When | `I click the delete button on the first oddity` | 1 | 188 |
+| When | `I click the delete button on the first special ability` | 1 | 206 |
+| Given | `I have {int} abilities` | 1 | 141 |
+| Given | `I have {int} artifact` | 1 | 120 |
+| Given | `I have {int} attacks` | 1 | 134 |
+| Given | `I have {int} cyphers` | 4 | 105 |
+| Given | `I have {int} equipment items` | 1 | 113 |
+| Given | `I have {int} oddities` | 1 | 127 |
+| Given | `I have {int} special abilities` | 1 | 148 |
+| When | `I look at a cypher card` | 2 | 37 |
+| When | `I look at a special ability card` | 1 | 61 |
+| When | `I look at an ability card` | 1 | 57 |
+| When | `I look at an artifact card` | 1 | 45 |
+| When | `I look at an attack card` | 1 | 53 |
+| When | `I look at an equipment card` | 1 | 41 |
+| When | `I look at an oddity card` | 1 | 49 |
+| Then | `I should have {int} abilities remaining` | 2 | 285 |
+| Then | `I should have {int} artifacts remaining` | 2 | 280 |
+| Then | `I should have {int} attack remaining` | 2 | 253 |
+| Then | `I should have {int} cypher remaining` | 3 | 244 |
+| Then | `I should have {int} cyphers remaining` | 1 | 268 |
+| Then | `I should have {int} equipment items remaining` | 2 | 272 |
+| Then | `I should have {int} oddity remaining` | 2 | 248 |
+| Then | `I should have {int} special ability remaining` | 2 | 258 |
+| Then | `I should not see a confirmation dialog` | 1 | 311 |
+| Then | `I should see a delete button on the ability card` | 1 | 90 |
+| Then | `I should see a delete button on the artifact card` | 1 | 75 |
+| Then | `I should see a delete button on the attack card` | 1 | 85 |
+| Then | `I should see a delete button on the cypher card` | 1 | 65 |
+| Then | `I should see a delete button on the equipment card` | 1 | 70 |
+| Then | `I should see a delete button on the oddity card` | 1 | 80 |
+| Then | `I should see a delete button on the special ability card` | 1 | 95 |
+| Then | `the ability should be removed from the DOM` | 1 | 234 |
+| Then | `the artifact should be removed from the DOM` | 1 | 222 |
+| Then | `the attack should be removed from the DOM` | 1 | 230 |
+| Then | `the cypher should be removed from the DOM` | 1 | 214 |
+| Then | `the cypher should be removed immediately` | 1 | 307 |
+| Then | `the delete button should be in the top-left corner of the card` | 1 | 292 |
+| Then | `the equipment item should be removed from the DOM` | 1 | 218 |
+| Then | `the oddity should be removed from the DOM` | 1 | 226 |
+| Then | `the special ability should be removed from the DOM` | 1 | 238 |
 
 ## card-modal-focus-trap.steps.ts
 
@@ -403,23 +402,22 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag ability {string} before ability {string}` | 2 | 294 |
+| When | `I drag ability {string} before ability {string}` | 2 | 288 |
 | When | `I drag cypher {string} after cypher {string}` | 1 | 69 |
 | When | `I drag cypher {string} before cypher {string}` | 3 | 49 |
-| When | `I drag cypher {string} into the abilities section` | 1 | 345 |
+| When | `I drag cypher {string} into the abilities section` | 1 | 339 |
 | When | `I hover over cypher {string}` | 1 | 125 |
-| Then | `I should see drop zone indicators` | **0** | 208 |
 | When | `I start dragging cypher {string}` | 2 | 95 |
-| Then | `the abilities should be in order {string}, {string}` | 1 | 320 |
-| Then | `the abilities should be in order {string}, {string}, {string}` | 3 | 312 |
-| Given | `the character has {int} abilities named {string}, {string}` | 1 | 266 |
-| Given | `the character has {int} abilities named {string}, {string}, {string}` | 3 | 258 |
+| Then | `the abilities should be in order {string}, {string}` | 1 | 314 |
+| Then | `the abilities should be in order {string}, {string}, {string}` | 3 | 306 |
+| Given | `the character has {int} abilities named {string}, {string}` | 1 | 260 |
+| Given | `the character has {int} abilities named {string}, {string}, {string}` | 3 | 252 |
 | Given | `the character has {int} cyphers named {string}, {string}` | 2 | 15 |
 | Given | `the character has {int} cyphers named {string}, {string}, {string}` | 6 | 7 |
 | Then | `the cypher {string} should have a dragging visual state` | 1 | 188 |
 | Then | `the cyphers should be in order {string}, {string}` | 1 | 161 |
 | Then | `the cyphers should be in order {string}, {string}, {string}` | 5 | 153 |
-| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 214 |
+| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 208 |
 
 ## character-display.steps.ts
 
@@ -540,51 +538,51 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 10 | 385 |
-| When | `I clear the input field` | 18 | 216 |
-| When | `I click on the {string} value` | 9 | 62 |
-| When | `I click on the character name {string}` | 12 | 145 |
-| When | `I click on the descriptor {string}` | 2 | 154 |
-| When | `I click on the focus {string}` | 2 | 159 |
-| When | `I click on the tier {string}` | 5 | 149 |
-| When | `I click outside the modal on the backdrop` | 1 | 277 |
-| When | `I click the Armor badge` | 4 | 118 |
-| When | `I click the Cancel button` | 1 | 92 |
-| When | `I click the Confirm button` | 5 | 80 |
-| When | `I click the Current XP badge` | 5 | 104 |
-| When | `I click the Effort badge` | 3 | 128 |
-| When | `I click the Max Cyphers badge` | 3 | 123 |
-| When | `I click the modal cancel button` | 2 | 194 |
-| When | `I click the modal confirm button` | 22 | 182 |
-| When | `I click the new button` | 1 | 303 |
-| When | `I click the Shins badge` | 5 | 113 |
-| When | `I click the Total XP badge` | 2 | 108 |
-| When | `I edit the {string} field to {string}` | 23 | 248 |
-| When | `I hover over the character name {string}` | 1 | 174 |
-| When | `I hover over the tier {string}` | 1 | 178 |
-| When | `I press the Enter key` | 2 | 299 |
-| When | `I press the Escape key` | 4 | 295 |
-| When | `I reload the page` | 48 | 310 |
-| Then | `I should see the {string} value displayed` | 1 | 335 |
-| When | `I tap on the {string} value` | 1 | 71 |
-| When | `I tap on the character name {string}` | 4 | 164 |
-| When | `I tap on the tier {string}` | 1 | 169 |
-| When | `I tap outside the modal on the backdrop` | 1 | 286 |
-| When | `I tap the Current XP badge` | 1 | 133 |
-| When | `I tap the modal confirm button` | 3 | 204 |
-| When | `I tap the Shins badge` | 1 | 138 |
-| When | `I type {string} in the input field` | 15 | 239 |
-| When | `I type {string} in the modal input` | 17 | 226 |
-| When | `I type {string} into the input field` | 8 | 221 |
-| Then | `the {string} value should display {string}` | 6 | 344 |
-| Then | `the {string} value should not have changed` | 2 | 353 |
-| Then | `the edit modal should open` | 8 | 390 |
-| Then | `the input field should be focused` | 1 | 418 |
-| Then | `the input field should contain {string}` | 4 | 408 |
-| Then | `the input field should contain the current {string} value` | 1 | 423 |
-| Then | `the input field should receive focus automatically` | 1 | 413 |
-| Then | `the modal input should contain {string}` | 6 | 395 |
-| Then | `the modal should close` | 21 | 403 |
+| Then | `an edit modal should appear` | 10 | 386 |
+| When | `I clear the input field` | 18 | 217 |
+| When | `I click on the {string} value` | 9 | 63 |
+| When | `I click on the character name {string}` | 12 | 146 |
+| When | `I click on the descriptor {string}` | 2 | 155 |
+| When | `I click on the focus {string}` | 2 | 160 |
+| When | `I click on the tier {string}` | 5 | 150 |
+| When | `I click outside the modal on the backdrop` | 1 | 278 |
+| When | `I click the Armor badge` | 4 | 119 |
+| When | `I click the Cancel button` | 1 | 93 |
+| When | `I click the Confirm button` | 5 | 81 |
+| When | `I click the Current XP badge` | 5 | 105 |
+| When | `I click the Effort badge` | 3 | 129 |
+| When | `I click the Max Cyphers badge` | 3 | 124 |
+| When | `I click the modal cancel button` | 2 | 195 |
+| When | `I click the modal confirm button` | 22 | 183 |
+| When | `I click the new button` | 1 | 304 |
+| When | `I click the Shins badge` | 5 | 114 |
+| When | `I click the Total XP badge` | 2 | 109 |
+| When | `I edit the {string} field to {string}` | 23 | 249 |
+| When | `I hover over the character name {string}` | 1 | 175 |
+| When | `I hover over the tier {string}` | 1 | 179 |
+| When | `I press the Enter key` | 2 | 300 |
+| When | `I press the Escape key` | 4 | 296 |
+| When | `I reload the page` | 48 | 311 |
+| Then | `I should see the {string} value displayed` | 1 | 336 |
+| When | `I tap on the {string} value` | 1 | 72 |
+| When | `I tap on the character name {string}` | 4 | 165 |
+| When | `I tap on the tier {string}` | 1 | 170 |
+| When | `I tap outside the modal on the backdrop` | 1 | 287 |
+| When | `I tap the Current XP badge` | 1 | 134 |
+| When | `I tap the modal confirm button` | 3 | 205 |
+| When | `I tap the Shins badge` | 1 | 139 |
+| When | `I type {string} in the input field` | 15 | 240 |
+| When | `I type {string} in the modal input` | 17 | 227 |
+| When | `I type {string} into the input field` | 8 | 222 |
+| Then | `the {string} value should display {string}` | 6 | 345 |
+| Then | `the {string} value should not have changed` | 2 | 354 |
+| Then | `the edit modal should open` | 8 | 391 |
+| Then | `the input field should be focused` | 1 | 419 |
+| Then | `the input field should contain {string}` | 4 | 409 |
+| Then | `the input field should contain the current {string} value` | 1 | 424 |
+| Then | `the input field should receive focus automatically` | 1 | 414 |
+| Then | `the modal input should contain {string}` | 6 | 396 |
+| Then | `the modal should close` | 21 | 404 |
 
 ## data-validation.steps.ts
 
@@ -620,28 +618,27 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a file download should be triggered` | 1 | 180 |
+| Then | `a file download should be triggered` | 1 | 175 |
 | When | `I cancel the file save dialog` | 1 | 111 |
 | When | `I click the Export button` | 7 | 104 |
 | When | `I click the Quick Export button` | 1 | 118 |
 | When | `I click the Save As button` | 1 | 124 |
-| Then | `I should not see a {string} button` | **0** | 144 |
-| Then | `I should not see an {string} button` | 1 | 149 |
+| Then | `I should not see an {string} button` | 1 | 144 |
 | Then | `I should see a {string} button` | 2 | 139 |
 | Then | `I should see an {string} button` | 2 | 134 |
 | When | `I view the export buttons` | 1 | 99 |
 | Given | `my browser does not support File System Access API` | 1 | 36 |
 | Given | `my browser supports File System Access API` | 7 | 6 |
-| Then | `no file should be saved` | 1 | 222 |
+| Then | `no file should be saved` | 1 | 217 |
 | Given | `the character name is {string}` | 1 | 66 |
-| Then | `the download filename should contain {string}` | 1 | 190 |
-| Then | `the download should have correct file structure` | 1 | 198 |
-| Then | `the Export button should still be visible` | 1 | 229 |
-| Then | `the export dialog should be triggered` | 1 | 249 |
-| Then | `the export dialog should be triggered with filename containing {string}` | 1 | 155 |
-| Then | `the exported data should have correct structure` | 1 | 167 |
-| Then | `the file should be saved without prompting` | 1 | 234 |
-| Then | `the suggested filename should be {string}` | 1 | 215 |
+| Then | `the download filename should contain {string}` | 1 | 185 |
+| Then | `the download should have correct file structure` | 1 | 193 |
+| Then | `the Export button should still be visible` | 1 | 224 |
+| Then | `the export dialog should be triggered` | 1 | 244 |
+| Then | `the export dialog should be triggered with filename containing {string}` | 1 | 150 |
+| Then | `the exported data should have correct structure` | 1 | 162 |
+| Then | `the file should be saved without prompting` | 1 | 229 |
+| Then | `the suggested filename should be {string}` | 1 | 210 |
 
 ## i18n.steps.ts
 
@@ -820,48 +817,47 @@ pattern this script does not understand):
 | --- | --- | ---: | ---: |
 | Given | `comparison view is enabled in settings` | 23 | 43 |
 | Then | `comparison view should show as enabled in settings` | 1 | 61 |
-| Given | `I am using a phone-width viewport` | 1 | 432 |
-| Given | `I am using a tablet-width viewport` | 1 | 436 |
+| Given | `I am using a phone-width viewport` | 1 | 428 |
+| Given | `I am using a tablet-width viewport` | 1 | 432 |
 | Given | `I am viewing the comparison view` | 19 | 70 |
 | When | `I click the left pane's backward arrow` | 3 | 167 |
-| When | `I click the left pane's backward arrow {int} time(s)` | 2 | 183 |
+| When | `I click the left pane's backward arrow {int} time(s)` | 2 | 179 |
 | When | `I click the left pane's forward arrow` | 1 | 171 |
-| When | `I click the left pane's restore button` | 2 | 361 |
-| When | `I click the return to editing button` | 2 | 405 |
+| When | `I click the left pane's restore button` | 2 | 357 |
+| When | `I click the return to editing button` | 2 | 401 |
 | When | `I click the right pane's backward arrow` | 1 | 175 |
-| When | `I click the right pane's backward arrow {int} time(s)` | 1 | 194 |
-| When | `I click the right pane's forward arrow` | **0** | 179 |
-| When | `I click the right pane's restore button` | 1 | 366 |
+| When | `I click the right pane's backward arrow {int} time(s)` | 1 | 190 |
+| When | `I click the right pane's restore button` | 1 | 362 |
 | When | `I close the settings panel` | 2 | 55 |
 | When | `I enable comparison view in settings` | 2 | 47 |
-| Then | `no add or delete button should be present in the comparison view` | 1 | 420 |
-| Then | `no field in the comparison view should be editable` | 1 | 413 |
-| Then | `the {string} field should be highlighted as changed in the {word} pane` | 2 | 277 |
-| Then | `the {string} field should not be highlighted in the {word} pane` | 2 | 286 |
-| Then | `the {word} pane should show the newly restored version` | 1 | 376 |
-| Then | `the added cypher card should be highlighted as added in the right pane` | 1 | 295 |
+| Then | `no add or delete button should be present in the comparison view` | 1 | 416 |
+| Then | `no field in the comparison view should be editable` | 1 | 409 |
+| Then | `the {string} field should be highlighted as changed in the {word} pane` | 2 | 273 |
+| Then | `the {string} field should not be highlighted in the {word} pane` | 2 | 282 |
+| Then | `the {word} pane should show the newly restored version` | 1 | 372 |
+| Then | `the added cypher card should be highlighted as added in the right pane` | 1 | 291 |
 | Given | `the character has a version where a cypher was renamed` | 1 | 147 |
 | Given | `the character has a version with a modified cypher effect` | 1 | 128 |
 | Given | `the character has a version with a name change` | 2 | 93 |
 | Given | `the character has a version with a removed cypher` | 1 | 117 |
 | Given | `the character has a version with an added cypher` | 1 | 103 |
-| Then | `the comparison header should indicate there are no differences` | 1 | 266 |
-| Then | `the comparison header should list every changed field, not just the top 3` | 1 | 241 |
-| Then | `the comparison header should reflect the new left pane version` | 1 | 256 |
+| Then | `the comparison header should indicate there are no differences` | 1 | 262 |
+| Then | `the comparison header should list every changed field, not just the top 3` | 1 | 237 |
+| Then | `the comparison header should reflect the new left pane version` | 1 | 252 |
 | Then | `the comparison view should be visible` | 3 | 75 |
 | Then | `the comparison view should not be visible` | 3 | 79 |
-| Then | `the left pane should not show the added cypher card` | 1 | 305 |
-| Then | `the left pane should show version {int}` | 5 | 226 |
-| Given | `the left pane shows version {int}` | 2 | 218 |
-| Then | `the modified cypher card should be highlighted as changed in the {word} pane` | 2 | 327 |
-| Then | `the new cypher name should be highlighted as added in the right pane` | 1 | 347 |
-| Then | `the old cypher name should be highlighted as removed in the left pane` | 1 | 337 |
-| Then | `the removed cypher card should be highlighted as removed in the left pane` | 1 | 310 |
-| Then | `the right pane should not show the removed cypher card` | 1 | 320 |
-| Then | `the right pane should show version {int}` | 4 | 230 |
-| Then | `the right pane should still show the same character name as before the restore` | 1 | 386 |
-| Given | `the right pane shows version {int}` | 1 | 222 |
-| Then | `the right pane's restore button should be disabled` | 1 | 371 |
+| Then | `the left pane should not show the added cypher card` | 1 | 301 |
+| Then | `the left pane should show version {int}` | 5 | 222 |
+| Given | `the left pane shows version {int}` | 2 | 214 |
+| Then | `the modified cypher card should be highlighted as changed in the {word} pane` | 2 | 323 |
+| Then | `the new cypher name should be highlighted as added in the right pane` | 1 | 343 |
+| Then | `the old cypher name should be highlighted as removed in the left pane` | 1 | 333 |
+| Then | `the removed cypher card should be highlighted as removed in the left pane` | 1 | 306 |
+| Then | `the right pane should not show the removed cypher card` | 1 | 316 |
+| Then | `the right pane should show version {int}` | 4 | 226 |
+| Then | `the right pane should still show the same character name as before the restore` | 1 | 382 |
+| Given | `the right pane shows version {int}` | 1 | 218 |
+| Then | `the right pane's restore button should be disabled` | 1 | 367 |
 
 ## version-history.steps.ts
 
