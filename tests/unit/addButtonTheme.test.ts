@@ -13,17 +13,14 @@ import {
   renderAddButton,
   AddButtonColorTheme,
 } from "../../src/components/helpers/CollectionBehavior.js";
+import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("renderAddButton theme classes", () => {
+  const getContainer = setupTestContainer();
   let container: HTMLElement;
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
+    container = getContainer();
   });
 
   const themes: Array<{ colorTheme: AddButtonColorTheme; expectedClasses: string[] }> = [
