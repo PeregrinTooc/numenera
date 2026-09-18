@@ -1,60 +1,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
-import {
-  CARD_CONFIGS,
-  createTestCharacterWithCardCount,
-  createEmptyAbilitiesCharacter,
-} from "../support/cardTestFixtures.js";
-
-// ============================================================================
-// HELPER FUNCTIONS
-// ============================================================================
-
-/**
- * Sets up character with specified card count and waits for render
- */
-async function setupCharacterWithCards(
-  world: CustomWorld,
-  cardType: string,
-  count: number
-): Promise<void> {
-  const config = CARD_CONFIGS[cardType];
-  if (!config) {
-    throw new Error(`Unknown card type: ${cardType}`);
-  }
-
-  // Special case for ability 0 count
-  if (cardType === "ability" && count === 0) {
-    await world.page!.evaluate(() => localStorage.clear());
-    await world.storageHelper.clearVersions();
-    await world.storageHelper.setCharacter(createEmptyAbilitiesCharacter());
-    await world.page!.reload();
-    await world.page!.waitForLoadState("networkidle");
-    await world.page!.waitForTimeout(500);
-    return;
-  }
-
-  // Check if we have enough sample cards for the requested count
-  if (count > config.sampleCards.length) {
-    throw new Error(
-      `Requested ${count} ${cardType} cards but only ${config.sampleCards.length} sample cards available`
-    );
-  }
-
-  // Only set up storage if we need cards
-  if (count > 0) {
-    const character = createTestCharacterWithCardCount(cardType, count);
-
-    await world.page!.waitForTimeout(500);
-    await world.storageHelper.setCharacter(character);
-    await world.page!.waitForTimeout(500);
-    await world.page!.reload();
-    await world.page!.waitForLoadState("networkidle");
-    await world.page!.waitForTimeout(200);
-    await world.page!.waitForSelector(config.itemTestId, { timeout: 5000 });
-  }
-}
+import { CARD_CONFIGS } from "../support/cardTestFixtures.js";
 
 // ============================================================================
 // PARAMETERIZED PRECONDITION STEPS
@@ -66,10 +13,8 @@ async function givenCharacterHasCards(
   cardType: string,
   count: number
 ): Promise<void> {
-  await setupCharacterWithCards(world, cardType, count);
-  const config = CARD_CONFIGS[cardType];
-  const cards = world.page!.locator(config.itemTestId);
-  await expect(cards).toHaveCount(count);
+  await world.cards.setupWithCount(cardType, count);
+  await world.cards.expectHasCount(cardType, count);
 }
 
 // Cypher cards
@@ -163,38 +108,32 @@ Then("I should see an add special ability button", async function (this: CustomW
 // ADD BUTTON CLICK STEPS
 // ============================================================================
 
-async function clickAddButton(world: CustomWorld, cardType: string): Promise<void> {
-  const config = CARD_CONFIGS[cardType];
-  await world.page!.locator(config.addButtonTestId).click();
-  await world.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
-}
-
 When("I click the add cypher button", async function (this: CustomWorld) {
-  await clickAddButton(this, "cypher");
+  await this.cards.clickAddButton("cypher");
 });
 
 When("I click the add equipment button", async function (this: CustomWorld) {
-  await clickAddButton(this, "equipment");
+  await this.cards.clickAddButton("equipment");
 });
 
 When("I click the add artifact button", async function (this: CustomWorld) {
-  await clickAddButton(this, "artifact");
+  await this.cards.clickAddButton("artifact");
 });
 
 When("I click the add oddity button", async function (this: CustomWorld) {
-  await clickAddButton(this, "oddity");
+  await this.cards.clickAddButton("oddity");
 });
 
 When("I click the add attack button", async function (this: CustomWorld) {
-  await clickAddButton(this, "attack");
+  await this.cards.clickAddButton("attack");
 });
 
 When("I click the add ability button", async function (this: CustomWorld) {
-  await clickAddButton(this, "ability");
+  await this.cards.clickAddButton("ability");
 });
 
 When("I click the add special ability button", async function (this: CustomWorld) {
-  await clickAddButton(this, "special-ability");
+  await this.cards.clickAddButton("special-ability");
 });
 
 // ============================================================================
@@ -426,53 +365,42 @@ When(
 // CARD COUNT VERIFICATION STEPS
 // ============================================================================
 
-// Helper for Then steps
-async function thenShouldSeeCards(
-  world: CustomWorld,
-  cardType: string,
-  count: number
-): Promise<void> {
-  await world.page!.waitForTimeout(100);
-  const config = CARD_CONFIGS[cardType];
-  await expect(world.page!.locator(config.itemTestId)).toHaveCount(count);
-}
-
 // Cypher cards (singular and plural)
 Then("I should see {int} cypher card", async function (this: CustomWorld, count: number) {
-  await thenShouldSeeCards(this, "cypher", count);
+  await this.cards.expectVisibleCount("cypher", count);
 });
 Then("I should see {int} cypher cards", async function (this: CustomWorld, count: number) {
-  await thenShouldSeeCards(this, "cypher", count);
+  await this.cards.expectVisibleCount("cypher", count);
 });
 
 // Equipment cards
 Then("I should see {int} equipment cards", async function (this: CustomWorld, count: number) {
-  await thenShouldSeeCards(this, "equipment", count);
+  await this.cards.expectVisibleCount("equipment", count);
 });
 
 // Artifact cards
 Then("I should see {int} artifact cards", async function (this: CustomWorld, count: number) {
-  await thenShouldSeeCards(this, "artifact", count);
+  await this.cards.expectVisibleCount("artifact", count);
 });
 
 // Oddity cards
 Then("I should see {int} oddity cards", async function (this: CustomWorld, count: number) {
-  await thenShouldSeeCards(this, "oddity", count);
+  await this.cards.expectVisibleCount("oddity", count);
 });
 
 // Attack cards
 Then("I should see {int} attack cards", async function (this: CustomWorld, count: number) {
-  await thenShouldSeeCards(this, "attack", count);
+  await this.cards.expectVisibleCount("attack", count);
 });
 
 // Ability cards
 Then("I should see {int} ability cards", async function (this: CustomWorld, count: number) {
-  await thenShouldSeeCards(this, "ability", count);
+  await this.cards.expectVisibleCount("ability", count);
 });
 
 // Special ability cards
 Then("I should see {int} special ability cards", async function (this: CustomWorld, count: number) {
-  await thenShouldSeeCards(this, "special-ability", count);
+  await this.cards.expectVisibleCount("special-ability", count);
 });
 
 // ============================================================================
@@ -668,63 +596,51 @@ Then("the card edit modal should be open", async function (this: CustomWorld) {
 // EDIT EXISTING CARD STEPS
 // ============================================================================
 
-async function clickEditButton(
-  world: CustomWorld,
-  cardType: string,
-  identifier: string
-): Promise<void> {
-  const config = CARD_CONFIGS[cardType];
-  const card = world.page!.locator(config.itemTestId).filter({ hasText: identifier });
-  const editButton = card.locator(`[data-testid^="${config.editButtonPrefix}"]`);
-  await editButton.click();
-  await world.page!.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
-}
-
 When(
   "I click the edit button on cypher {string}",
   async function (this: CustomWorld, name: string) {
-    await clickEditButton(this, "cypher", name);
+    await this.cards.clickEditButton("cypher", name);
   }
 );
 
 When(
   "I click the edit button on equipment {string}",
   async function (this: CustomWorld, name: string) {
-    await clickEditButton(this, "equipment", name);
+    await this.cards.clickEditButton("equipment", name);
   }
 );
 
 When(
   "I click the edit button on artifact {string}",
   async function (this: CustomWorld, name: string) {
-    await clickEditButton(this, "artifact", name);
+    await this.cards.clickEditButton("artifact", name);
   }
 );
 
 When(
   "I click the edit button on oddity {string}",
   async function (this: CustomWorld, text: string) {
-    await clickEditButton(this, "oddity", text);
+    await this.cards.clickEditButton("oddity", text);
   }
 );
 
 When(
   "I click the edit button on attack {string}",
   async function (this: CustomWorld, name: string) {
-    await clickEditButton(this, "attack", name);
+    await this.cards.clickEditButton("attack", name);
   }
 );
 
 When(
   "I click the edit button on ability {string}",
   async function (this: CustomWorld, name: string) {
-    await clickEditButton(this, "ability", name);
+    await this.cards.clickEditButton("ability", name);
   }
 );
 
 When(
   "I click the edit button on special ability {string}",
   async function (this: CustomWorld, name: string) {
-    await clickEditButton(this, "special-ability", name);
+    await this.cards.clickEditButton("special-ability", name);
   }
 );
