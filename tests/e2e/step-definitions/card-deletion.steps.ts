@@ -3,37 +3,6 @@ import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 
-// Helper function to get delete button for a card type
-function getDeleteButtonSelector(cardType: string, index: number = 0): string {
-  const selectorMap: Record<string, string> = {
-    cypher: `[data-testid="cypher-delete-button-${index}"]`,
-    equipment: `[data-testid="equipment-delete-button-${index}"]`,
-    artifact: `[data-testid="artifact-delete-button-${index}"]`,
-    oddity: `[data-testid="oddity-delete-button-${index}"]`,
-    attack: `[data-testid="attack-delete-button-${index}"]`,
-    ability: `[data-testid="ability-delete-button-${index}"]`,
-    "special ability": `[data-testid="special-ability-delete-button-${index}"]`,
-  };
-  return selectorMap[cardType] || "";
-}
-
-// Selectors for counting all delete buttons of a given card type
-const CARD_COUNT_SELECTORS: Record<string, string> = {
-  cypher: '[data-testid^="cypher-delete-button-"]',
-  equipment: '[data-testid^="equipment-delete-button-"]',
-  artifact: '[data-testid^="artifact-delete-button-"]',
-  oddity: '[data-testid^="oddity-delete-button-"]',
-  attack: '[data-testid^="attack-delete-button-"]',
-  ability: '[data-testid^="ability-delete-button-"]',
-  "special ability": '[data-testid^="special-ability-delete-button-"]',
-};
-
-// Helper function to get card count
-async function getCardCount(world: CustomWorld, cardType: string): Promise<number> {
-  const elements = await world.page.locator(CARD_COUNT_SELECTORS[cardType]).all();
-  return elements.length;
-}
-
 // Visibility steps
 When("I look at a cypher card", async function (this: CustomWorld) {
   // Just verify cypher section exists
@@ -64,241 +33,182 @@ When("I look at a special ability card", async function (this: CustomWorld) {
   await expect(this.page.locator('[data-testid="special-abilities-section"]')).toBeVisible();
 });
 
-Then("I should see a delete button on the cypher card", async function (this: CustomWorld) {
-  const deleteButton = this.page.locator(getDeleteButtonSelector("cypher", 0));
-  await expect(deleteButton).toBeVisible();
-});
-
-Then("I should see a delete button on the equipment card", async function (this: CustomWorld) {
-  const deleteButton = this.page.locator(getDeleteButtonSelector("equipment", 0));
-  await expect(deleteButton).toBeVisible();
-});
-
-Then("I should see a delete button on the artifact card", async function (this: CustomWorld) {
-  const deleteButton = this.page.locator(getDeleteButtonSelector("artifact", 0));
-  await expect(deleteButton).toBeVisible();
-});
-
-Then("I should see a delete button on the oddity card", async function (this: CustomWorld) {
-  const deleteButton = this.page.locator(getDeleteButtonSelector("oddity", 0));
-  await expect(deleteButton).toBeVisible();
-});
-
-Then("I should see a delete button on the attack card", async function (this: CustomWorld) {
-  const deleteButton = this.page.locator(getDeleteButtonSelector("attack", 0));
-  await expect(deleteButton).toBeVisible();
-});
-
-Then("I should see a delete button on the ability card", async function (this: CustomWorld) {
-  const deleteButton = this.page.locator(getDeleteButtonSelector("ability", 0));
-  await expect(deleteButton).toBeVisible();
-});
-
+// The fixed " card" suffix is uniform across all 7 types (unlike "removed
+// from the DOM" and "remaining" below, where "equipment item" and irregular
+// plurals break a single {cardType} pattern), so this family collapses cleanly.
 Then(
-  "I should see a delete button on the special ability card",
-  async function (this: CustomWorld) {
-    const deleteButton = this.page.locator(getDeleteButtonSelector("special ability", 0));
-    await expect(deleteButton).toBeVisible();
+  "I should see a delete button on the {cardType} card",
+  async function (this: CustomWorld, cardType: string) {
+    await expect(this.cards.deleteButtonLocator(cardType)).toBeVisible();
   }
 );
 
-// Setup steps for multiple cards
+// Setup steps for multiple cards. Each phrasing pluralises differently
+// ("equipment items", "abilities", "special abilities" vs. plain "artifact")
+// so this stays 7 registrations; each now shares this.cards.count() instead
+// of a local selector-string lookup.
 Given("I have {int} cyphers", async function (this: CustomWorld, count: number) {
   // This assumes the character data already has the required number
   // If not, we'd need to manipulate the character data
-  const actualCount = await getCardCount(this, "cypher");
+  const actualCount = await this.cards.count("cypher");
   if (actualCount < count) {
     throw new Error(`Expected ${count} cyphers but found ${actualCount}`);
   }
 });
 
 Given("I have {int} equipment items", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "equipment");
+  const actualCount = await this.cards.count("equipment");
   if (actualCount < count) {
     throw new Error(`Expected ${count} equipment items but found ${actualCount}`);
   }
 });
 
 Given("I have {int} artifact", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "artifact");
+  const actualCount = await this.cards.count("artifact");
   if (actualCount < count) {
     throw new Error(`Expected ${count} artifact but found ${actualCount}`);
   }
 });
 
 Given("I have {int} oddities", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "oddity");
+  const actualCount = await this.cards.count("oddity");
   if (actualCount < count) {
     throw new Error(`Expected ${count} oddities but found ${actualCount}`);
   }
 });
 
 Given("I have {int} attacks", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "attack");
+  const actualCount = await this.cards.count("attack");
   if (actualCount < count) {
     throw new Error(`Expected ${count} attacks but found ${actualCount}`);
   }
 });
 
 Given("I have {int} abilities", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "ability");
+  const actualCount = await this.cards.count("ability");
   if (actualCount < count) {
     throw new Error(`Expected ${count} abilities but found ${actualCount}`);
   }
 });
 
 Given("I have {int} special abilities", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "special ability");
+  const actualCount = await this.cards.count("special-ability");
   if (actualCount < count) {
     throw new Error(`Expected ${count} special abilities but found ${actualCount}`);
   }
 });
 
 // Deletion action steps
-When("I click the delete button on the first cypher", async function (this: CustomWorld) {
-  this.previousCardCount = await getCardCount(this, "cypher");
-  const deleteButton = this.page.locator(getDeleteButtonSelector("cypher", 0));
-  await deleteButton.click();
-  // Wait a bit for the deletion to process
-  await this.page.waitForTimeout(100);
-});
-
-When("I click the delete button on the first cypher card", async function (this: CustomWorld) {
-  this.previousCardCount = await getCardCount(this, "cypher");
-  const deleteButton = this.page.locator(getDeleteButtonSelector("cypher", 0));
-  await deleteButton.click();
-  // Wait a bit for the deletion to process
-  await this.page.waitForTimeout(100);
-});
-
-When("I click the delete button on the first cypher again", async function (this: CustomWorld) {
-  this.previousCardCount = await getCardCount(this, "cypher");
-  const deleteButton = this.page.locator(getDeleteButtonSelector("cypher", 0));
-  await deleteButton.click();
-  await this.page.waitForTimeout(100);
-});
+async function clickFirstCypherDelete(this: CustomWorld): Promise<void> {
+  await this.cards.clickDeleteButton("cypher");
+}
+When("I click the delete button on the first cypher", clickFirstCypherDelete);
+When("I click the delete button on the first cypher card", clickFirstCypherDelete);
+When("I click the delete button on the first cypher again", clickFirstCypherDelete);
 
 When("I click the delete button on the first equipment item", async function (this: CustomWorld) {
-  this.previousCardCount = await getCardCount(this, "equipment");
-  const deleteButton = this.page.locator(getDeleteButtonSelector("equipment", 0));
-  await deleteButton.click();
-  await this.page.waitForTimeout(100);
+  await this.cards.clickDeleteButton("equipment");
 });
 
 When("I click the delete button on the first artifact", async function (this: CustomWorld) {
-  this.previousCardCount = await getCardCount(this, "artifact");
-  const deleteButton = this.page.locator(getDeleteButtonSelector("artifact", 0));
-  await deleteButton.click();
-  await this.page.waitForTimeout(100);
+  await this.cards.clickDeleteButton("artifact");
 });
 
 When("I click the delete button on the first oddity", async function (this: CustomWorld) {
-  this.previousCardCount = await getCardCount(this, "oddity");
-  const deleteButton = this.page.locator(getDeleteButtonSelector("oddity", 0));
-  await deleteButton.click();
-  await this.page.waitForTimeout(100);
+  await this.cards.clickDeleteButton("oddity");
 });
 
 When("I click the delete button on the first attack", async function (this: CustomWorld) {
-  this.previousCardCount = await getCardCount(this, "attack");
-  const deleteButton = this.page.locator(getDeleteButtonSelector("attack", 0));
-  await deleteButton.click();
-  await this.page.waitForTimeout(100);
+  await this.cards.clickDeleteButton("attack");
 });
 
 When("I click the delete button on the first ability", async function (this: CustomWorld) {
-  this.previousCardCount = await getCardCount(this, "ability");
-  const deleteButton = this.page.locator(getDeleteButtonSelector("ability", 0));
-  await deleteButton.click();
-  await this.page.waitForTimeout(100);
+  await this.cards.clickDeleteButton("ability");
 });
 
 When("I click the delete button on the first special ability", async function (this: CustomWorld) {
-  this.previousCardCount = await getCardCount(this, "special ability");
-  const deleteButton = this.page.locator(getDeleteButtonSelector("special ability", 0));
-  await deleteButton.click();
-  await this.page.waitForTimeout(100);
+  await this.cards.clickDeleteButton("special-ability");
 });
 
-// Verification steps
-async function expectCardRemoved(world: CustomWorld, cardType: string): Promise<void> {
-  const previousCount = world.previousCardCount ?? 0;
-  await expect(world.page.locator(CARD_COUNT_SELECTORS[cardType])).toHaveCount(previousCount - 1);
-}
-
+// Verification steps. "equipment item" carries an extra word {cardType}
+// doesn't, so this stays 7 registrations, each now delegating to
+// this.cards.expectRemoved() instead of a local selector-map lookup.
 Then("the cypher should be removed from the DOM", async function (this: CustomWorld) {
-  await expectCardRemoved(this, "cypher");
+  await this.cards.expectRemoved("cypher");
 });
 
 Then("the equipment item should be removed from the DOM", async function (this: CustomWorld) {
-  await expectCardRemoved(this, "equipment");
+  await this.cards.expectRemoved("equipment");
 });
 
 Then("the artifact should be removed from the DOM", async function (this: CustomWorld) {
-  await expectCardRemoved(this, "artifact");
+  await this.cards.expectRemoved("artifact");
 });
 
 Then("the oddity should be removed from the DOM", async function (this: CustomWorld) {
-  await expectCardRemoved(this, "oddity");
+  await this.cards.expectRemoved("oddity");
 });
 
 Then("the attack should be removed from the DOM", async function (this: CustomWorld) {
-  await expectCardRemoved(this, "attack");
+  await this.cards.expectRemoved("attack");
 });
 
 Then("the ability should be removed from the DOM", async function (this: CustomWorld) {
-  await expectCardRemoved(this, "ability");
+  await this.cards.expectRemoved("ability");
 });
 
 Then("the special ability should be removed from the DOM", async function (this: CustomWorld) {
-  await expectCardRemoved(this, "special ability");
+  await this.cards.expectRemoved("special-ability");
 });
 
-// Count verification steps - singular
+// Count verification steps - singular. Irregular plurals (oddities,
+// abilities) and the "equipment item(s)" extra word mean {cardType} can't
+// cover every phrasing here, so these stay individually registered; each
+// now shares this.cards.count() instead of a local selector-map lookup.
 Then("I should have {int} cypher remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "cypher");
+  const actualCount = await this.cards.count("cypher");
   expect(actualCount).toBe(count);
 });
 
 Then("I should have {int} oddity remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "oddity");
+  const actualCount = await this.cards.count("oddity");
   expect(actualCount).toBe(count);
 });
 
 Then("I should have {int} attack remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "attack");
+  const actualCount = await this.cards.count("attack");
   expect(actualCount).toBe(count);
 });
 
 Then(
   "I should have {int} special ability remaining",
   async function (this: CustomWorld, count: number) {
-    const actualCount = await getCardCount(this, "special ability");
+    const actualCount = await this.cards.count("special-ability");
     expect(actualCount).toBe(count);
   }
 );
 
 // Count verification steps - plural
 Then("I should have {int} cyphers remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "cypher");
+  const actualCount = await this.cards.count("cypher");
   expect(actualCount).toBe(count);
 });
 
 Then(
   "I should have {int} equipment items remaining",
   async function (this: CustomWorld, count: number) {
-    const actualCount = await getCardCount(this, "equipment");
+    const actualCount = await this.cards.count("equipment");
     expect(actualCount).toBe(count);
   }
 );
 
 Then("I should have {int} artifacts remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "artifact");
+  const actualCount = await this.cards.count("artifact");
   expect(actualCount).toBe(count);
 });
 
 Then("I should have {int} abilities remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "ability");
+  const actualCount = await this.cards.count("ability");
   expect(actualCount).toBe(count);
 });
 
@@ -306,7 +216,7 @@ Then("I should have {int} abilities remaining", async function (this: CustomWorl
 Then(
   "the delete button should be in the top-left corner of the card",
   async function (this: CustomWorld) {
-    const deleteButton = this.page.locator(getDeleteButtonSelector("cypher", 0));
+    const deleteButton = this.cards.deleteButtonLocator("cypher");
     await expect(deleteButton).toBeVisible();
 
     // Check if the button has the correct positioning classes

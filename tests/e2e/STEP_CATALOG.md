@@ -26,7 +26,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **727** in 25 files
+- Step definitions: **721** in 25 files
 - Feature step lines: **2047**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **24**
@@ -38,7 +38,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
 | [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 38 | 0 |
 | [card-creation.steps.ts](#cardcreationstepsts) | 90 | 0 |
-| [card-deletion.steps.ts](#carddeletionstepsts) | 48 | 0 |
+| [card-deletion.steps.ts](#carddeletionstepsts) | 42 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 16 | 0 |
 | [character-display.steps.ts](#characterdisplaystepsts) | 40 | 0 |
@@ -328,54 +328,48 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the delete button on the first ability` | 1 | 208 |
-| When | `I click the delete button on the first artifact` | 1 | 187 |
-| When | `I click the delete button on the first attack` | 1 | 201 |
-| When | `I click the delete button on the first cypher` | 4 | 158 |
-| When | `I click the delete button on the first cypher again` | 1 | 173 |
-| When | `I click the delete button on the first cypher card` | 2 | 165 |
-| When | `I click the delete button on the first equipment item` | 1 | 180 |
-| When | `I click the delete button on the first oddity` | 1 | 194 |
-| When | `I click the delete button on the first special ability` | 1 | 215 |
-| Given | `I have {int} abilities` | 1 | 142 |
-| Given | `I have {int} artifact` | 1 | 121 |
-| Given | `I have {int} attacks` | 1 | 135 |
-| Given | `I have {int} cyphers` | 4 | 106 |
-| Given | `I have {int} equipment items` | 1 | 114 |
-| Given | `I have {int} oddities` | 1 | 128 |
-| Given | `I have {int} special abilities` | 1 | 149 |
-| When | `I look at a cypher card` | 2 | 38 |
-| When | `I look at a special ability card` | 1 | 62 |
-| When | `I look at an ability card` | 1 | 58 |
-| When | `I look at an artifact card` | 1 | 46 |
-| When | `I look at an attack card` | 1 | 54 |
-| When | `I look at an equipment card` | 1 | 42 |
-| When | `I look at an oddity card` | 1 | 50 |
-| Then | `I should have {int} abilities remaining` | 2 | 299 |
-| Then | `I should have {int} artifacts remaining` | 2 | 294 |
-| Then | `I should have {int} attack remaining` | 2 | 267 |
-| Then | `I should have {int} cypher remaining` | 3 | 258 |
-| Then | `I should have {int} cyphers remaining` | 1 | 282 |
-| Then | `I should have {int} equipment items remaining` | 2 | 286 |
-| Then | `I should have {int} oddity remaining` | 2 | 262 |
-| Then | `I should have {int} special ability remaining` | 2 | 272 |
-| Then | `I should not see a confirmation dialog` | 1 | 325 |
-| Then | `I should see a delete button on the ability card` | 1 | 91 |
-| Then | `I should see a delete button on the artifact card` | 1 | 76 |
-| Then | `I should see a delete button on the attack card` | 1 | 86 |
-| Then | `I should see a delete button on the cypher card` | 1 | 66 |
-| Then | `I should see a delete button on the equipment card` | 1 | 71 |
-| Then | `I should see a delete button on the oddity card` | 1 | 81 |
-| Then | `I should see a delete button on the special ability card` | 1 | 96 |
-| Then | `the ability should be removed from the DOM` | 1 | 248 |
-| Then | `the artifact should be removed from the DOM` | 1 | 236 |
-| Then | `the attack should be removed from the DOM` | 1 | 244 |
-| Then | `the cypher should be removed from the DOM` | 1 | 228 |
-| Then | `the cypher should be removed immediately` | 1 | 321 |
-| Then | `the delete button should be in the top-left corner of the card` | 1 | 306 |
-| Then | `the equipment item should be removed from the DOM` | 1 | 232 |
-| Then | `the oddity should be removed from the DOM` | 1 | 240 |
-| Then | `the special ability should be removed from the DOM` | 1 | 252 |
+| When | `I click the delete button on the first ability` | 1 | 124 |
+| When | `I click the delete button on the first artifact` | 1 | 112 |
+| When | `I click the delete button on the first attack` | 1 | 120 |
+| When | `I click the delete button on the first cypher` | 4 | 105 |
+| When | `I click the delete button on the first cypher again` | 1 | 107 |
+| When | `I click the delete button on the first cypher card` | 2 | 106 |
+| When | `I click the delete button on the first equipment item` | 1 | 108 |
+| When | `I click the delete button on the first oddity` | 1 | 116 |
+| When | `I click the delete button on the first special ability` | 1 | 128 |
+| Given | `I have {int} abilities` | 1 | 86 |
+| Given | `I have {int} artifact` | 1 | 65 |
+| Given | `I have {int} attacks` | 1 | 79 |
+| Given | `I have {int} cyphers` | 4 | 50 |
+| Given | `I have {int} equipment items` | 1 | 58 |
+| Given | `I have {int} oddities` | 1 | 72 |
+| Given | `I have {int} special abilities` | 1 | 93 |
+| When | `I look at a cypher card` | 2 | 7 |
+| When | `I look at a special ability card` | 1 | 31 |
+| When | `I look at an ability card` | 1 | 27 |
+| When | `I look at an artifact card` | 1 | 15 |
+| When | `I look at an attack card` | 1 | 23 |
+| When | `I look at an equipment card` | 1 | 11 |
+| When | `I look at an oddity card` | 1 | 19 |
+| Then | `I should have {int} abilities remaining` | 2 | 209 |
+| Then | `I should have {int} artifacts remaining` | 2 | 204 |
+| Then | `I should have {int} attack remaining` | 2 | 177 |
+| Then | `I should have {int} cypher remaining` | 3 | 168 |
+| Then | `I should have {int} cyphers remaining` | 1 | 192 |
+| Then | `I should have {int} equipment items remaining` | 2 | 196 |
+| Then | `I should have {int} oddity remaining` | 2 | 172 |
+| Then | `I should have {int} special ability remaining` | 2 | 182 |
+| Then | `I should not see a confirmation dialog` | 1 | 235 |
+| Then | `I should see a delete button on the {cardType} card` | 7 | 39 |
+| Then | `the ability should be removed from the DOM` | 1 | 155 |
+| Then | `the artifact should be removed from the DOM` | 1 | 143 |
+| Then | `the attack should be removed from the DOM` | 1 | 151 |
+| Then | `the cypher should be removed from the DOM` | 1 | 136 |
+| Then | `the cypher should be removed immediately` | 1 | 231 |
+| Then | `the delete button should be in the top-left corner of the card` | 1 | 216 |
+| Then | `the equipment item should be removed from the DOM` | 1 | 139 |
+| Then | `the oddity should be removed from the DOM` | 1 | 147 |
+| Then | `the special ability should be removed from the DOM` | 1 | 159 |
 
 ## card-modal-focus-trap.steps.ts
 

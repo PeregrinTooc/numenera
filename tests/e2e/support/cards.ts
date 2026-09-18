@@ -93,6 +93,11 @@ export class CardsDsl {
     return this.page.locator(this.deleteButtonSelector(cardType)).count();
   }
 
+  /** The delete button for a specific card (index 0 is the first/only one in most scenarios). */
+  deleteButtonLocator(cardType: string, index = 0) {
+    return this.page.locator(this.deleteButtonSelector(cardType, index));
+  }
+
   async expectRemoved(cardType: string): Promise<void> {
     const previousCount = this.world.previousCardCount ?? 0;
     await expect(this.page.locator(this.deleteButtonSelector(cardType))).toHaveCount(
