@@ -69,6 +69,12 @@ Feature: Character stat pool management
 
 **Reference:** See `workflow.md` for the Feature File Format template (Rule #2).
 
+**Vocabulary:** every step phrase the suite already understands is listed in
+`tests/e2e/STEP_CATALOG.md`, with usage counts and the file that implements it.
+Search it before writing a step; reuse an existing phrase exactly rather than
+inventing a near-synonym. Regenerate with `npm run docs:steps`; `npm run
+check:steps` fails on unused step definitions or a stale catalog.
+
 ---
 
 ## Unit Tests

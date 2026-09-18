@@ -45,6 +45,8 @@ Feature: Brief feature description
 - Use present tense
 - Be specific but not implementation-focused
 - One feature per file; multiple scenarios per feature when appropriate
+- Reuse existing step phrases: look them up in `tests/e2e/STEP_CATALOG.md`
+  (generated — `npm run docs:steps`) before inventing a new one
 
 **Reference:** See `testing.md` for a full worked feature file.
 

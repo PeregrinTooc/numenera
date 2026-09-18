@@ -44,13 +44,23 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ## 📊 Current Status
 
-**Test Coverage**: `npm run test:unit` — 754 tests passing. `npm run test:e2e:prod` —
+**Test Coverage**: `npm run test:unit` — 869 tests passing. `npm run test:e2e:prod` —
 365 scenarios passing, 16 `@skip`ped (see below for why).  
 **Documentation**: See [FEATURES.md](./FEATURES.md) for complete feature list
 
 ---
 
 ## 🚨 Must-Have (Technical Debt)
+
+### Test Suite DSL Consolidation
+
+`tests/analysis.md` found no common test DSL, ~131 unreachable Cucumber step
+definitions, and twelve independent unit character factories. The ordered,
+per-commit plan is in `tests/implementation-plan.md` (Phase 1: delete dead
+code; Phases 3–4: `CustomWorld` DSL and one `createTestCharacter` factory;
+Phase 7: consolidate Gherkin wording). The step catalog
+(`tests/e2e/STEP_CATALOG.md`, `npm run docs:steps`) and the `check:steps`
+guardrail already exist.
 
 ### Automated Drag/Drop E2E Tests
 
