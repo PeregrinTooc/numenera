@@ -1,7 +1,12 @@
 module.exports = {
   default: {
-    import: ["tests/e2e/support/**/*.ts", "tests/e2e/step-definitions/**/*.ts"],
-    loader: ["ts-node/esm"],
+    // tsx-register.js must come first: it registers the TypeScript loader
+    // that the following .ts globs depend on.
+    import: [
+      "tests/e2e/support/tsx-register.js",
+      "tests/e2e/support/**/*.ts",
+      "tests/e2e/step-definitions/**/*.ts",
+    ],
     format: ["progress", "html:test-results/cucumber-report.html"],
     formatOptions: { snippetInterface: "async-await" },
     tags: "not @skip and not @wip and not @deprecated",

@@ -53,6 +53,14 @@ Before(async function (this: CustomWorld) {
     }
   });
 
+  // tsx transpiles step definitions with esbuild's `keepNames`, which wraps
+  // every named function/class in a `__name(fn, "fn")` helper. Playwright
+  // serialises callbacks passed to page.evaluate/addInitScript and runs them
+  // in the browser, where that helper does not exist. Define it as an
+  // identity function before anything else runs. Passed as a string so the
+  // shim itself is never transformed.
+  await this.page.addInitScript("globalThis.__name = (fn) => fn;");
+
   // Inject test configuration and TestTimer BEFORE navigation
   // Set squash delay to 1000ms for faster tests
   await this.page.addInitScript(() => {

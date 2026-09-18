@@ -47,9 +47,10 @@ imports with `@/…` and dropping the `.js` extension. Verify with `tsc --noEmit
 `npm run build` and the unit suite. Do it as one commit; a half-migrated tree is
 worse than either end state.
 
-**Caveat to check first:** Cucumber loads step definitions through `ts-node/esm`.
-If any step definition imports from `src/`, confirm alias resolution works there
-before converting those imports.
+**Caveat to check first:** Cucumber loads step definitions through `tsx` (see
+`tests/e2e/support/tsx-register.js`), which honours `compilerOptions.paths`
+from `tsconfig.json`. If any step definition imports from `src/`, still confirm
+alias resolution works there before converting those imports.
 
 ### 2. Rule #5 — 257 `any` usages, and the linter only warns
 
