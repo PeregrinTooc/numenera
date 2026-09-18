@@ -3,37 +3,11 @@
 
 import { render } from "lit-html";
 import { Character } from "../../../src/types/character.js";
+import { createTestCharacter } from "../../factories/character.js";
 
 // Mock character data factory for tests
 export function createMockCharacter(overrides: Partial<Character> = {}): Character {
-  return {
-    name: "Test Character",
-    descriptor: "Strong",
-    type: "Glaive",
-    focus: "Fights Dirty",
-    tier: 1,
-    effort: 1,
-    currentXp: 0,
-    totalXp: 0,
-    might: { pool: 10, edge: 0, current: 10 },
-    speed: { pool: 10, edge: 0, current: 10 },
-    intellect: { pool: 10, edge: 0, current: 10 },
-    armor: 1,
-    recoveryRolls: { available: 4, modifier: 0 },
-    damageTrack: { status: "hale" },
-    cyphers: [],
-    equipment: [],
-    artifacts: [],
-    oddities: [],
-    abilities: [],
-    specialAbilities: [],
-    attacks: [],
-    skills: "",
-    background: "",
-    notes: "",
-    portrait: "",
-    ...overrides,
-  };
+  return createTestCharacter(overrides);
 }
 
 export interface ContainerTestConfig<T> {
