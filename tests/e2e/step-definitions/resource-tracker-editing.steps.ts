@@ -1,51 +1,18 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
+import { FULL_CHARACTER, EMPTY_ARRAYS } from "../support/cardTestFixtures.js";
 
 // ============================================================================
 // GIVEN STEPS - Setup character state with specific resource values
 // ============================================================================
 
-// Helper function to create character state
+// Helper function to create character state, overriding one resource field
+// on the shared demo character.
 function createCharacterState(fieldKey: string, value: number) {
   const character = {
-    name: "Test Character",
-    tier: 1,
-    type: "Nano",
-    descriptor: "Strong",
-    focus: "Controls Beasts",
-    currentXp: 0,
-    totalXp: 0,
-    shins: 0,
-    armor: 0,
-    effort: 1,
-    maxCyphers: 2,
-    stats: {
-      might: { pool: 10, current: 10, edge: 0 },
-      speed: { pool: 10, current: 10, edge: 0 },
-      intellect: { pool: 10, current: 10, edge: 0 },
-    },
-    textFields: {
-      background: "",
-      notes: "",
-    },
-    abilities: [],
-    attacks: [],
-    specialAbilities: [],
-    equipment: [],
-    cyphers: [],
-    artifacts: [],
-    oddities: [],
-    recoveryRolls: {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    },
-    damageTrack: {
-      impairment: "healthy",
-    },
+    ...FULL_CHARACTER,
+    ...EMPTY_ARRAYS,
     [fieldKey]: value,
   };
 
