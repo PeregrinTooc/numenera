@@ -678,31 +678,31 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all recovery checkboxes should be unchecked` | 1 | 189 |
-| When | `I click on the recovery modifier display` | 1 | 202 |
-| When | `I click the {string} recovery checkbox` | 1 | 227 |
-| When | `I confirm the edit` | 3 | 219 |
-| When | `I enter {string} in the modifier field` | 1 | 209 |
-| When | `I select the {string} damage status` | 1 | 235 |
-| Then | `I should see {int} damage status options` | 1 | 54 |
-| Then | `I should see {int} recovery roll checkboxes` | 1 | 19 |
-| Then | `I should see {string} in the recovery section` | 3 | 172 |
+| Then | `all recovery checkboxes should be unchecked` | 1 | 181 |
+| When | `I click on the recovery modifier display` | 1 | 194 |
+| When | `I click the {string} recovery checkbox` | 1 | 218 |
+| When | `I confirm the edit` | 3 | 210 |
+| When | `I enter {string} in the modifier field` | 1 | 200 |
+| When | `I select the {string} damage status` | 1 | 225 |
+| Then | `I should see {int} damage status options` | 1 | 51 |
+| Then | `I should see {int} recovery roll checkboxes` | 1 | 18 |
+| Then | `I should see {string} in the recovery section` | 3 | 165 |
 | Then | `I should see a section titled {string}` | 2 | 7 |
-| Then | `I should see an edit modal` | 1 | 214 |
-| Then | `I should see damage status {string}` | 1 | 59 |
-| Then | `I should see damage status {string} with description {string}` | 2 | 64 |
-| Then | `I should see recovery roll {string} with time {string}` | 4 | 24 |
+| Then | `I should see an edit modal` | 1 | 205 |
+| Then | `I should see damage status {string}` | 1 | 56 |
+| Then | `I should see damage status {string} with description {string}` | 2 | 61 |
+| Then | `I should see recovery roll {string} with time {string}` | 4 | 23 |
 | Then | `I should see the recovery modifier display {string}` | 1 | 12 |
-| Then | `the {string} radio button should be selected` | 4 | 103 |
-| Then | `the {string} radio button should not be selected` | 6 | 110 |
-| Then | `the {string} recovery checkbox should be checked` | 2 | 38 |
-| Then | `the {string} recovery checkbox should be unchecked` | 3 | 45 |
-| Given | `the character has {string} recovery used` | 1 | 33 |
-| Given | `the character has recovery modifier {int}` | 2 | 141 |
-| Given | `the character is {string}` | 3 | 73 |
-| Given | `the character is new` | 1 | 180 |
-| Then | `the damage track section should have red styling` | 1 | 129 |
-| Then | `the recovery rolls section should have green styling` | 1 | 119 |
+| Then | `the {string} radio button should be selected` | 4 | 100 |
+| Then | `the {string} radio button should not be selected` | 6 | 106 |
+| Then | `the {string} recovery checkbox should be checked` | 2 | 37 |
+| Then | `the {string} recovery checkbox should be unchecked` | 3 | 43 |
+| Given | `the character has {string} recovery used` | 1 | 32 |
+| Given | `the character has recovery modifier {int}` | 2 | 134 |
+| Given | `the character is {string}` | 3 | 70 |
+| Given | `the character is new` | 1 | 172 |
+| Then | `the damage track section should have red styling` | 1 | 123 |
+| Then | `the recovery rolls section should have green styling` | 1 | 114 |
 
 ## resource-tracker-editing.steps.ts
 

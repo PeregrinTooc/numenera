@@ -1,6 +1,5 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
-import { DOMHelpers } from "../support/dom-helpers.js";
 import { TestStorageHelper } from "../support/testStorageHelper.js";
 import { waitForSaveComplete } from "../support/save.js";
 
@@ -12,8 +11,7 @@ Then("I should see a section titled {string}", async function (title: string) {
 });
 
 Then("I should see the recovery modifier display {string}", async function (display: string) {
-  const dom = new DOMHelpers(this.page);
-  const recoveryDisplay = dom.getByTestId("recovery-modifier-display");
+  const recoveryDisplay = this.dom.getByTestId("recovery-modifier-display");
   await expect(recoveryDisplay).toBeVisible();
   await expect(recoveryDisplay).toContainText(display);
 });
@@ -38,16 +36,14 @@ Given("the character has {string} recovery used", async function (rollType: stri
 });
 
 Then("the {string} recovery checkbox should be checked", async function (rollType: string) {
-  const dom = new DOMHelpers(this.page);
   const sanitized = rollType.toLowerCase().replace(/\s+/g, "-");
-  const checkbox = dom.getByTestId(`recovery-${sanitized}`);
+  const checkbox = this.dom.getByTestId(`recovery-${sanitized}`);
   await expect(checkbox).toBeChecked();
 });
 
 Then("the {string} recovery checkbox should be unchecked", async function (rollType: string) {
-  const dom = new DOMHelpers(this.page);
   const sanitized = rollType.toLowerCase().replace(/\s+/g, "-");
-  const checkbox = dom.getByTestId(`recovery-${sanitized}`);
+  const checkbox = this.dom.getByTestId(`recovery-${sanitized}`);
   await expect(checkbox).not.toBeChecked();
 });
 
@@ -103,38 +99,34 @@ Given("the character is {string}", async function (impairmentStatus: string) {
 });
 
 Then("the {string} radio button should be selected", async function (status: string) {
-  const dom = new DOMHelpers(this.page);
   const sanitized = status.toLowerCase();
-  const radio = dom.getByTestId(`damage-${sanitized}`);
+  const radio = this.dom.getByTestId(`damage-${sanitized}`);
   await expect(radio).toBeChecked();
 });
 
 Then("the {string} radio button should not be selected", async function (status: string) {
-  const dom = new DOMHelpers(this.page);
   const sanitized = status.toLowerCase();
-  const radio = dom.getByTestId(`damage-${sanitized}`);
+  const radio = this.dom.getByTestId(`damage-${sanitized}`);
   await expect(radio).not.toBeChecked();
 });
 
 // Styling step definitions
 
 Then("the recovery rolls section should have green styling", async function () {
-  const dom = new DOMHelpers(this.page);
-  const section = dom.getByTestId("recovery-rolls-section");
+  const section = this.dom.getByTestId("recovery-rolls-section");
   await expect(section).toBeVisible();
 
   // Check for green-themed classes
-  const hasGreenTheme = await dom.hasClass("recovery-rolls-section", "from-green-50");
+  const hasGreenTheme = await this.dom.hasClass("recovery-rolls-section", "from-green-50");
   expect(hasGreenTheme).toBe(true);
 });
 
 Then("the damage track section should have red styling", async function () {
-  const dom = new DOMHelpers(this.page);
-  const section = dom.getByTestId("damage-track-section");
+  const section = this.dom.getByTestId("damage-track-section");
   await expect(section).toBeVisible();
 
   // Check for red-themed classes
-  const hasRedTheme = await dom.hasClass("damage-track-section", "from-red-50");
+  const hasRedTheme = await this.dom.hasClass("damage-track-section", "from-red-50");
   expect(hasRedTheme).toBe(true);
 });
 
@@ -172,8 +164,7 @@ Given("the character has recovery modifier {int}", async function (modifier: num
 });
 
 Then("I should see {string} in the recovery section", async function (text: string) {
-  const dom = new DOMHelpers(this.page);
-  const recoverySection = dom.getByTestId("recovery-rolls-section");
+  const recoverySection = this.dom.getByTestId("recovery-rolls-section");
   await expect(recoverySection).toContainText(text);
 });
 
@@ -202,8 +193,7 @@ Then("all recovery checkboxes should be unchecked", async function () {
 // Edit recovery modifier step definitions
 
 When("I click on the recovery modifier display", async function () {
-  const dom = new DOMHelpers(this.page);
-  const modifierDisplay = dom.getByTestId("recovery-modifier-display");
+  const modifierDisplay = this.dom.getByTestId("recovery-modifier-display");
   await modifierDisplay.click();
   await this.page.waitForTimeout(200);
 });
@@ -227,17 +217,15 @@ When("I confirm the edit", async function () {
 // Persistence step definitions
 
 When("I click the {string} recovery checkbox", async function (rollType: string) {
-  const dom = new DOMHelpers(this.page);
   const sanitized = rollType.toLowerCase().replace(/\s+/g, "-");
-  const checkbox = dom.getByTestId(`recovery-${sanitized}`);
+  const checkbox = this.dom.getByTestId(`recovery-${sanitized}`);
   await checkbox.click();
   await waitForSaveComplete(this.page);
 });
 
 When("I select the {string} damage status", async function (status: string) {
-  const dom = new DOMHelpers(this.page);
   const sanitized = status.toLowerCase();
-  const radio = dom.getByTestId(`damage-${sanitized}`);
+  const radio = this.dom.getByTestId(`damage-${sanitized}`);
   await radio.click();
   await waitForSaveComplete(this.page);
 });
