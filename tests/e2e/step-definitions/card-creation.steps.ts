@@ -75,61 +75,37 @@ async function givenCharacterHasCards(
   await expect(cards).toHaveCount(count);
 }
 
-// Cypher cards (singular and plural)
-Given("the character has {int} cypher card", async function (this: CustomWorld, count: number) {
-  await givenCharacterHasCards(this, "cypher", count);
-});
+// Cypher cards
 Given("the character has {int} cypher cards", async function (this: CustomWorld, count: number) {
   await givenCharacterHasCards(this, "cypher", count);
 });
 
-// Equipment cards (singular and plural)
-Given("the character has {int} equipment card", async function (this: CustomWorld, count: number) {
-  await givenCharacterHasCards(this, "equipment", count);
-});
+// Equipment cards
 Given("the character has {int} equipment cards", async function (this: CustomWorld, count: number) {
   await givenCharacterHasCards(this, "equipment", count);
 });
 
-// Artifact cards (singular and plural)
-Given("the character has {int} artifact card", async function (this: CustomWorld, count: number) {
-  await givenCharacterHasCards(this, "artifact", count);
-});
+// Artifact cards
 Given("the character has {int} artifact cards", async function (this: CustomWorld, count: number) {
   await givenCharacterHasCards(this, "artifact", count);
 });
 
-// Oddity cards (singular and plural)
-Given("the character has {int} oddity card", async function (this: CustomWorld, count: number) {
-  await givenCharacterHasCards(this, "oddity", count);
-});
+// Oddity cards
 Given("the character has {int} oddity cards", async function (this: CustomWorld, count: number) {
   await givenCharacterHasCards(this, "oddity", count);
 });
 
-// Attack cards (singular and plural)
-Given("the character has {int} attack card", async function (this: CustomWorld, count: number) {
-  await givenCharacterHasCards(this, "attack", count);
-});
+// Attack cards
 Given("the character has {int} attack cards", async function (this: CustomWorld, count: number) {
   await givenCharacterHasCards(this, "attack", count);
 });
 
-// Ability cards (singular and plural)
-Given("the character has {int} ability card", async function (this: CustomWorld, count: number) {
-  await givenCharacterHasCards(this, "ability", count);
-});
+// Ability cards
 Given("the character has {int} ability cards", async function (this: CustomWorld, count: number) {
   await givenCharacterHasCards(this, "ability", count);
 });
 
-// Special ability cards (singular and plural)
-Given(
-  "the character has {int} special ability card",
-  async function (this: CustomWorld, count: number) {
-    await givenCharacterHasCards(this, "special-ability", count);
-  }
-);
+// Special ability cards
 Given(
   "the character has {int} special ability cards",
   async function (this: CustomWorld, count: number) {
@@ -405,10 +381,6 @@ When(
   }
 );
 
-When("I fill in the attack range with {string}", async function (this: CustomWorld, value: string) {
-  await this.page!.locator(CARD_CONFIGS.attack.fieldTestIds.range).fill(value);
-});
-
 // Ability fields
 When("I fill in the ability name with {string}", async function (this: CustomWorld, value: string) {
   await this.page!.locator(CARD_CONFIGS.ability.fieldTestIds.name).fill(value);
@@ -476,50 +448,32 @@ Then("I should see {int} cypher cards", async function (this: CustomWorld, count
   await thenShouldSeeCards(this, "cypher", count);
 });
 
-// Equipment cards (singular and plural)
-Then("I should see {int} equipment card", async function (this: CustomWorld, count: number) {
-  await thenShouldSeeCards(this, "equipment", count);
-});
+// Equipment cards
 Then("I should see {int} equipment cards", async function (this: CustomWorld, count: number) {
   await thenShouldSeeCards(this, "equipment", count);
 });
 
-// Artifact cards (singular and plural)
-Then("I should see {int} artifact card", async function (this: CustomWorld, count: number) {
-  await thenShouldSeeCards(this, "artifact", count);
-});
+// Artifact cards
 Then("I should see {int} artifact cards", async function (this: CustomWorld, count: number) {
   await thenShouldSeeCards(this, "artifact", count);
 });
 
-// Oddity cards (singular and plural)
-Then("I should see {int} oddity card", async function (this: CustomWorld, count: number) {
-  await thenShouldSeeCards(this, "oddity", count);
-});
+// Oddity cards
 Then("I should see {int} oddity cards", async function (this: CustomWorld, count: number) {
   await thenShouldSeeCards(this, "oddity", count);
 });
 
-// Attack cards (singular and plural)
-Then("I should see {int} attack card", async function (this: CustomWorld, count: number) {
-  await thenShouldSeeCards(this, "attack", count);
-});
+// Attack cards
 Then("I should see {int} attack cards", async function (this: CustomWorld, count: number) {
   await thenShouldSeeCards(this, "attack", count);
 });
 
-// Ability cards (singular and plural)
-Then("I should see {int} ability card", async function (this: CustomWorld, count: number) {
-  await thenShouldSeeCards(this, "ability", count);
-});
+// Ability cards
 Then("I should see {int} ability cards", async function (this: CustomWorld, count: number) {
   await thenShouldSeeCards(this, "ability", count);
 });
 
-// Special ability cards (singular and plural)
-Then("I should see {int} special ability card", async function (this: CustomWorld, count: number) {
-  await thenShouldSeeCards(this, "special-ability", count);
-});
+// Special ability cards
 Then("I should see {int} special ability cards", async function (this: CustomWorld, count: number) {
   await thenShouldSeeCards(this, "special-ability", count);
 });

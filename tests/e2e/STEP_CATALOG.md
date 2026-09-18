@@ -26,9 +26,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **785** in 25 files
+- Step definitions: **771** in 25 files
 - Feature step lines: **2047**
-- Definitions with no feature usage: **52**
+- Definitions with no feature usage: **38**
 - Feature lines matching no definition: **24**
 
 | Step file | Definitions | Unused |
@@ -37,7 +37,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 54 | 0 |
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
 | [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 44 | 6 |
-| [card-creation.steps.ts](#cardcreationstepsts) | 104 | 14 |
+| [card-creation.steps.ts](#cardcreationstepsts) | 90 | 0 |
 | [card-deletion.steps.ts](#carddeletionstepsts) | 55 | 7 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 17 | 1 |
@@ -239,110 +239,96 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all ability fields should be empty` | 1 | 303 |
-| Then | `all artifact fields should be empty` | 1 | 262 |
-| Then | `all attack fields should be empty` | 1 | 287 |
-| Then | `all cypher fields should be empty` | 1 | 236 |
-| Then | `all equipment fields should be empty` | 1 | 249 |
-| Then | `all oddity fields should be empty` | 1 | 274 |
-| Then | `all special ability fields should be empty` | 1 | 318 |
-| When | `I cancel the card edit modal` | 7 | 689 |
-| When | `I click the add ability button` | 15 | 217 |
-| When | `I click the add artifact button` | 7 | 205 |
-| When | `I click the add attack button` | 7 | 213 |
-| When | `I click the add cypher button` | 12 | 197 |
-| When | `I click the add equipment button` | 9 | 201 |
-| When | `I click the add oddity button` | 7 | 209 |
-| When | `I click the add special ability button` | 7 | 221 |
-| When | `I click the edit button on ability {string}` | 1 | 765 |
-| When | `I click the edit button on artifact {string}` | 1 | 744 |
-| When | `I click the edit button on attack {string}` | 1 | 758 |
-| When | `I click the edit button on cypher {string}` | 2 | 730 |
-| When | `I click the edit button on equipment {string}` | 1 | 737 |
-| When | `I click the edit button on oddity {string}` | 1 | 751 |
-| When | `I click the edit button on special ability {string}` | 1 | 772 |
-| When | `I confirm the card edit modal` | 50 | 680 |
-| When | `I fill in the ability cost with {string}` | 6 | 415 |
-| When | `I fill in the ability description with {string}` | 9 | 425 |
-| When | `I fill in the ability name with {string}` | 9 | 412 |
-| When | `I fill in the ability pool with {string}` | 6 | 419 |
-| When | `I fill in the artifact effect with {string}` | 7 | 375 |
-| When | `I fill in the artifact level with {string}` | 7 | 368 |
-| When | `I fill in the artifact name with {string}` | 7 | 362 |
-| When | `I fill in the attack damage with {string}` | 7 | 392 |
-| When | `I fill in the attack modifier with {string}` | 7 | 399 |
-| When | `I fill in the attack name with {string}` | 7 | 389 |
-| When | `I fill in the attack range with {string}` | **0** | 406 |
-| When | `I fill in the cypher effect with {string}` | 11 | 338 |
-| When | `I fill in the cypher level with {string}` | 11 | 334 |
-| When | `I fill in the cypher name with {string}` | 11 | 331 |
-| When | `I fill in the equipment description with {string}` | 7 | 353 |
-| When | `I fill in the equipment name with {string}` | 8 | 347 |
-| When | `I fill in the oddity text with {string}` | 7 | 384 |
-| When | `I fill in the special ability description with {string}` | 7 | 447 |
-| When | `I fill in the special ability name with {string}` | 7 | 434 |
-| When | `I fill in the special ability source with {string}` | 7 | 440 |
-| Then | `I should see {int} ability card` | **0** | 511 |
-| Then | `I should see {int} ability cards` | 14 | 514 |
-| Then | `I should see {int} artifact card` | **0** | 487 |
-| Then | `I should see {int} artifact cards` | 8 | 490 |
-| Then | `I should see {int} attack card` | **0** | 503 |
-| Then | `I should see {int} attack cards` | 8 | 506 |
-| Then | `I should see {int} cypher card` | 2 | 471 |
-| Then | `I should see {int} cypher cards` | 13 | 474 |
-| Then | `I should see {int} equipment card` | **0** | 479 |
-| Then | `I should see {int} equipment cards` | 8 | 482 |
-| Then | `I should see {int} oddity card` | **0** | 495 |
-| Then | `I should see {int} oddity cards` | 8 | 498 |
-| Then | `I should see {int} special ability card` | **0** | 519 |
-| Then | `I should see {int} special ability cards` | 8 | 522 |
-| Then | `I should see a cypher card with name {string}` | 5 | 529 |
-| Then | `I should see a special ability card with name {string}` | 5 | 655 |
-| Then | `I should see an ability card with name {string}` | 7 | 630 |
-| Then | `I should see an add ability button` | 1 | 179 |
-| Then | `I should see an add artifact button` | 1 | 150 |
-| Then | `I should see an add attack button` | 1 | 158 |
-| Then | `I should see an add cypher button` | 1 | 142 |
-| Then | `I should see an add equipment button` | 1 | 146 |
-| Then | `I should see an add oddity button` | 1 | 154 |
-| Then | `I should see an add special ability button` | 1 | 183 |
-| Then | `I should see an artifact card with name {string}` | 5 | 571 |
-| Then | `I should see an attack card with name {string}` | 5 | 605 |
-| Then | `I should see an equipment card with name {string}` | 5 | 554 |
-| Then | `I should see an oddity card with text {string}` | 5 | 596 |
-| Then | `the ability {string} should have cost {string}` | 1 | 639 |
-| Then | `the ability {string} should have pool {string}` | 1 | 647 |
-| Then | `the add attack button should have a non-transparent background` | 1 | 162 |
-| Then | `the artifact {string} should have effect {string}` | 1 | 588 |
-| Then | `the artifact {string} should have level {string}` | 1 | 580 |
-| Then | `the attack {string} should have damage {string}` | 1 | 622 |
-| Then | `the attack {string} should have modifier {string}` | 1 | 614 |
-| Then | `the card edit modal should be open` | 15 | 697 |
-| Given | `the character has {int} ability card` | **0** | 118 |
-| Given | `the character has {int} ability cards` | 5 | 121 |
-| Given | `the character has {int} artifact card` | **0** | 94 |
-| Given | `the character has {int} artifact cards` | 5 | 97 |
-| Given | `the character has {int} attack card` | **0** | 110 |
-| Given | `the character has {int} attack cards` | 5 | 113 |
-| Given | `the character has {int} cypher card` | **0** | 78 |
-| Given | `the character has {int} cypher cards` | 5 | 81 |
-| Given | `the character has {int} equipment card` | **0** | 86 |
-| Given | `the character has {int} equipment cards` | 5 | 89 |
-| Given | `the character has {int} oddity card` | **0** | 102 |
-| Given | `the character has {int} oddity cards` | 5 | 105 |
-| Given | `the character has {int} special ability card` | **0** | 126 |
-| Given | `the character has {int} special ability cards` | 5 | 132 |
-| Then | `the cypher {string} should have effect {string}` | 1 | 546 |
-| Then | `the cypher {string} should have level {string}` | 1 | 538 |
-| Then | `the equipment {string} should have description {string}` | 1 | 563 |
-| Then | `the modal should show ability fields` | 1 | 295 |
-| Then | `the modal should show artifact fields` | 1 | 255 |
-| Then | `the modal should show attack fields` | 1 | 279 |
-| Then | `the modal should show cypher fields` | 1 | 229 |
-| Then | `the modal should show equipment fields` | 1 | 243 |
-| Then | `the modal should show oddity fields` | 1 | 269 |
-| Then | `the modal should show special ability fields` | 1 | 311 |
-| Then | `the special ability {string} should have source {string}` | 1 | 666 |
+| Then | `all ability fields should be empty` | 1 | 279 |
+| Then | `all artifact fields should be empty` | 1 | 238 |
+| Then | `all attack fields should be empty` | 1 | 263 |
+| Then | `all cypher fields should be empty` | 1 | 212 |
+| Then | `all equipment fields should be empty` | 1 | 225 |
+| Then | `all oddity fields should be empty` | 1 | 250 |
+| Then | `all special ability fields should be empty` | 1 | 294 |
+| When | `I cancel the card edit modal` | 7 | 643 |
+| When | `I click the add ability button` | 15 | 193 |
+| When | `I click the add artifact button` | 7 | 181 |
+| When | `I click the add attack button` | 7 | 189 |
+| When | `I click the add cypher button` | 12 | 173 |
+| When | `I click the add equipment button` | 9 | 177 |
+| When | `I click the add oddity button` | 7 | 185 |
+| When | `I click the add special ability button` | 7 | 197 |
+| When | `I click the edit button on ability {string}` | 1 | 719 |
+| When | `I click the edit button on artifact {string}` | 1 | 698 |
+| When | `I click the edit button on attack {string}` | 1 | 712 |
+| When | `I click the edit button on cypher {string}` | 2 | 684 |
+| When | `I click the edit button on equipment {string}` | 1 | 691 |
+| When | `I click the edit button on oddity {string}` | 1 | 705 |
+| When | `I click the edit button on special ability {string}` | 1 | 726 |
+| When | `I confirm the card edit modal` | 50 | 634 |
+| When | `I fill in the ability cost with {string}` | 6 | 387 |
+| When | `I fill in the ability description with {string}` | 9 | 397 |
+| When | `I fill in the ability name with {string}` | 9 | 384 |
+| When | `I fill in the ability pool with {string}` | 6 | 391 |
+| When | `I fill in the artifact effect with {string}` | 7 | 351 |
+| When | `I fill in the artifact level with {string}` | 7 | 344 |
+| When | `I fill in the artifact name with {string}` | 7 | 338 |
+| When | `I fill in the attack damage with {string}` | 7 | 368 |
+| When | `I fill in the attack modifier with {string}` | 7 | 375 |
+| When | `I fill in the attack name with {string}` | 7 | 365 |
+| When | `I fill in the cypher effect with {string}` | 11 | 314 |
+| When | `I fill in the cypher level with {string}` | 11 | 310 |
+| When | `I fill in the cypher name with {string}` | 11 | 307 |
+| When | `I fill in the equipment description with {string}` | 7 | 329 |
+| When | `I fill in the equipment name with {string}` | 8 | 323 |
+| When | `I fill in the oddity text with {string}` | 7 | 360 |
+| When | `I fill in the special ability description with {string}` | 7 | 419 |
+| When | `I fill in the special ability name with {string}` | 7 | 406 |
+| When | `I fill in the special ability source with {string}` | 7 | 412 |
+| Then | `I should see {int} ability cards` | 14 | 471 |
+| Then | `I should see {int} artifact cards` | 8 | 456 |
+| Then | `I should see {int} attack cards` | 8 | 466 |
+| Then | `I should see {int} cypher card` | 2 | 443 |
+| Then | `I should see {int} cypher cards` | 13 | 446 |
+| Then | `I should see {int} equipment cards` | 8 | 451 |
+| Then | `I should see {int} oddity cards` | 8 | 461 |
+| Then | `I should see {int} special ability cards` | 8 | 476 |
+| Then | `I should see a cypher card with name {string}` | 5 | 483 |
+| Then | `I should see a special ability card with name {string}` | 5 | 609 |
+| Then | `I should see an ability card with name {string}` | 7 | 584 |
+| Then | `I should see an add ability button` | 1 | 155 |
+| Then | `I should see an add artifact button` | 1 | 126 |
+| Then | `I should see an add attack button` | 1 | 134 |
+| Then | `I should see an add cypher button` | 1 | 118 |
+| Then | `I should see an add equipment button` | 1 | 122 |
+| Then | `I should see an add oddity button` | 1 | 130 |
+| Then | `I should see an add special ability button` | 1 | 159 |
+| Then | `I should see an artifact card with name {string}` | 5 | 525 |
+| Then | `I should see an attack card with name {string}` | 5 | 559 |
+| Then | `I should see an equipment card with name {string}` | 5 | 508 |
+| Then | `I should see an oddity card with text {string}` | 5 | 550 |
+| Then | `the ability {string} should have cost {string}` | 1 | 593 |
+| Then | `the ability {string} should have pool {string}` | 1 | 601 |
+| Then | `the add attack button should have a non-transparent background` | 1 | 138 |
+| Then | `the artifact {string} should have effect {string}` | 1 | 542 |
+| Then | `the artifact {string} should have level {string}` | 1 | 534 |
+| Then | `the attack {string} should have damage {string}` | 1 | 576 |
+| Then | `the attack {string} should have modifier {string}` | 1 | 568 |
+| Then | `the card edit modal should be open` | 15 | 651 |
+| Given | `the character has {int} ability cards` | 5 | 103 |
+| Given | `the character has {int} artifact cards` | 5 | 88 |
+| Given | `the character has {int} attack cards` | 5 | 98 |
+| Given | `the character has {int} cypher cards` | 5 | 78 |
+| Given | `the character has {int} equipment cards` | 5 | 83 |
+| Given | `the character has {int} oddity cards` | 5 | 93 |
+| Given | `the character has {int} special ability cards` | 5 | 108 |
+| Then | `the cypher {string} should have effect {string}` | 1 | 500 |
+| Then | `the cypher {string} should have level {string}` | 1 | 492 |
+| Then | `the equipment {string} should have description {string}` | 1 | 517 |
+| Then | `the modal should show ability fields` | 1 | 271 |
+| Then | `the modal should show artifact fields` | 1 | 231 |
+| Then | `the modal should show attack fields` | 1 | 255 |
+| Then | `the modal should show cypher fields` | 1 | 205 |
+| Then | `the modal should show equipment fields` | 1 | 219 |
+| Then | `the modal should show oddity fields` | 1 | 245 |
+| Then | `the modal should show special ability fields` | 1 | 287 |
+| Then | `the special ability {string} should have source {string}` | 1 | 620 |
 
 ## card-deletion.steps.ts
 
@@ -915,87 +901,87 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a new version should be created` | 1 | 880 |
-| Then | `a new version should be created with description {string}` | 3 | 933 |
-| Then | `all edit controls should be enabled` | 2 | 526 |
-| Then | `both navigation arrows should be enabled` | 2 | 596 |
-| Given | `I am viewing that version` | 3 | 301 |
-| Given | `I am viewing the latest version` | 6 | 49 |
-| Given | `I am viewing version {int}` | 8 | 54 |
-| When | `I click the backward navigation arrow` | 17 | 382 |
-| Then | `I click the backward navigation arrow {int} times` | 1 | 977 |
-| When | `I click the backward navigation arrow again` | 1 | 389 |
-| When | `I click the forward navigation arrow` | 3 | 401 |
-| When | `I click the forward navigation arrow again` | 1 | 407 |
-| When | `I click the restore button in the warning banner` | 3 | 413 |
-| When | `I click the return to latest button` | 1 | 395 |
-| When | `I create a new version by editing the name` | 1 | 495 |
-| Given | `I have made buffered edits that were undone` | 2 | 310 |
-| When | `I make {int} rapid edits that are buffered` | 1 | 1153 |
-| When | `I navigate backward` | 1 | 459 |
-| When | `I navigate forward twice` | 1 | 465 |
-| When | `I navigate to version {int}` | 8 | 419 |
-| When | `I press {string}` | 5 | 674 |
-| When | `I press {string} again` | 2 | 1031 |
-| When | `I press {string} again before the squash timer expires` | 2 | 1066 |
-| When | `I press {string} before the squash timer expires` | 11 | 992 |
-| When | `I press {string} to navigate to previous version` | 1 | 1224 |
-| When | `I press {string} to undo buffered changes` | 1 | 1178 |
-| When | `I rapidly click the backward arrow {int} times` | 1 | 473 |
-| When | `I refresh the browser` | 6 | 487 |
-| Then | `I should be viewing the latest version` | 3 | 886 |
-| Then | `I should be viewing version {int}` | 1 | 1264 |
-| Then | `I should navigate to version {int}` | 2 | 899 |
-| Then | `I should see {int} versions in history` | 2 | 1133 |
-| When | `I view the character sheet` | 2 | 375 |
-| When | `I wait for {int} milliseconds` | 4 | 659 |
-| When | `I wait for squash timer to complete` | 15 | 1219 |
-| Then | `no new version should be created yet` | 2 | 1114 |
-| Then | `no warning banner should be visible` | 6 | 545 |
-| Then | `the backward arrow should be disabled` | 1 | 608 |
-| Then | `the backward arrow should be enabled` | 3 | 550 |
-| Then | `the change description should be displayed` | 1 | 578 |
-| Then | `the changes should be reapplied` | 2 | 1141 |
-| Then | `the character data should be correct for version {int}` | 1 | 909 |
-| Then | `the character data should match version {int}` | 4 | 560 |
-| Then | `the character data should match version {int} data` | 1 | 943 |
-| Then | `the character equipment should match version {int} equipment` | 2 | 788 |
-| Given | `the character has {int} versions in history` | 41 | 11 |
-| Given | `the character has {int} versions with different data` | 3 | 198 |
-| Given | `the character has {int} versions with different names` | 2 | 233 |
-| Given | `the character has a legacy version with a {string} description for a name change and an added ability` | 1 | 168 |
-| Given | `the character has a legacy version with an {string} description for an added cypher` | 1 | 136 |
-| Given | `the character has a portrait image` | 2 | 262 |
-| Given | `the character has a version from {int} minutes ago` | 1 | 275 |
-| Given | `the character has a version with multiple basic info changes` | 2 | 101 |
-| Given | `the character has a version with name change` | 1 | 68 |
-| Given | `the character has no version history yet` | 4 | 6 |
-| Then | `the character name should be {string}` | 8 | 1105 |
-| Then | `the character name should match version {int} name` | 4 | 763 |
-| Then | `the character name should revert to the original value` | 2 | 1123 |
-| Then | `the character stats should match version {int} stats` | 2 | 775 |
-| Then | `the exported file should contain version {int} data` | 1 | 824 |
-| Then | `the exported file should not contain version history` | 1 | 847 |
-| Then | `the exported file should use the current portrait` | 1 | 862 |
-| Then | `the forward arrow should be disabled` | 4 | 555 |
-| Then | `the forward arrow should be enabled` | 1 | 613 |
-| Then | `the import button should be disabled` | 1 | 1287 |
-| Then | `the import button should be enabled` | 2 | 1282 |
-| Then | `the oldest version should have been removed` | 2 | 971 |
-| Then | `the portrait should remain unchanged` | 3 | 812 |
-| When | `the squash timer has completed` | 2 | 669 |
-| Then | `the timestamp should be displayed` | 1 | 587 |
-| Then | `the timestamp should be in human-readable format` | 1 | 743 |
-| Then | `the timestamp should show a relative time like {string}` | 1 | 752 |
-| Then | `the UI should remain responsive` | 2 | 923 |
-| Then | `the undo buffer should contain exactly {int} changes` | 1 | 648 |
-| Then | `the version counter should show {string}` | 25 | 537 |
-| Then | `the version description should contain {string}` | 11 | 735 |
-| Then | `the version description should contain the tier change` | 1 | 961 |
-| Then | `the version navigator should be visible` | 4 | 532 |
-| Then | `the version navigator should not be visible` | 2 | 520 |
-| Then | `the warning banner should be visible` | 7 | 603 |
-| Then | `the warning banner should contain text {string}` | 1 | 618 |
-| Then | `the warning banner should have a restore button` | 1 | 626 |
-| Then | `the warning banner should not be visible` | 2 | 956 |
+| Then | `a new version should be created` | 1 | 881 |
+| Then | `a new version should be created with description {string}` | 3 | 934 |
+| Then | `all edit controls should be enabled` | 2 | 527 |
+| Then | `both navigation arrows should be enabled` | 2 | 597 |
+| Given | `I am viewing that version` | 3 | 302 |
+| Given | `I am viewing the latest version` | 6 | 50 |
+| Given | `I am viewing version {int}` | 8 | 55 |
+| When | `I click the backward navigation arrow` | 17 | 383 |
+| Then | `I click the backward navigation arrow {int} times` | 1 | 978 |
+| When | `I click the backward navigation arrow again` | 1 | 390 |
+| When | `I click the forward navigation arrow` | 3 | 402 |
+| When | `I click the forward navigation arrow again` | 1 | 408 |
+| When | `I click the restore button in the warning banner` | 3 | 414 |
+| When | `I click the return to latest button` | 1 | 396 |
+| When | `I create a new version by editing the name` | 1 | 496 |
+| Given | `I have made buffered edits that were undone` | 2 | 311 |
+| When | `I make {int} rapid edits that are buffered` | 1 | 1154 |
+| When | `I navigate backward` | 1 | 460 |
+| When | `I navigate forward twice` | 1 | 466 |
+| When | `I navigate to version {int}` | 8 | 420 |
+| When | `I press {string}` | 5 | 675 |
+| When | `I press {string} again` | 2 | 1032 |
+| When | `I press {string} again before the squash timer expires` | 2 | 1067 |
+| When | `I press {string} before the squash timer expires` | 11 | 993 |
+| When | `I press {string} to navigate to previous version` | 1 | 1225 |
+| When | `I press {string} to undo buffered changes` | 1 | 1179 |
+| When | `I rapidly click the backward arrow {int} times` | 1 | 474 |
+| When | `I refresh the browser` | 6 | 488 |
+| Then | `I should be viewing the latest version` | 3 | 887 |
+| Then | `I should be viewing version {int}` | 1 | 1265 |
+| Then | `I should navigate to version {int}` | 2 | 900 |
+| Then | `I should see {int} versions in history` | 2 | 1134 |
+| When | `I view the character sheet` | 2 | 376 |
+| When | `I wait for {int} milliseconds` | 4 | 660 |
+| When | `I wait for squash timer to complete` | 15 | 1220 |
+| Then | `no new version should be created yet` | 2 | 1115 |
+| Then | `no warning banner should be visible` | 6 | 546 |
+| Then | `the backward arrow should be disabled` | 1 | 609 |
+| Then | `the backward arrow should be enabled` | 3 | 551 |
+| Then | `the change description should be displayed` | 1 | 579 |
+| Then | `the changes should be reapplied` | 2 | 1142 |
+| Then | `the character data should be correct for version {int}` | 1 | 910 |
+| Then | `the character data should match version {int}` | 4 | 561 |
+| Then | `the character data should match version {int} data` | 1 | 944 |
+| Then | `the character equipment should match version {int} equipment` | 2 | 789 |
+| Given | `the character has {int} versions in history` | 41 | 12 |
+| Given | `the character has {int} versions with different data` | 3 | 199 |
+| Given | `the character has {int} versions with different names` | 2 | 234 |
+| Given | `the character has a legacy version with a {string} description for a name change and an added ability` | 1 | 169 |
+| Given | `the character has a legacy version with an {string} description for an added cypher` | 1 | 137 |
+| Given | `the character has a portrait image` | 2 | 263 |
+| Given | `the character has a version from {int} minutes ago` | 1 | 276 |
+| Given | `the character has a version with multiple basic info changes` | 2 | 102 |
+| Given | `the character has a version with name change` | 1 | 69 |
+| Given | `the character has no version history yet` | 4 | 7 |
+| Then | `the character name should be {string}` | 8 | 1106 |
+| Then | `the character name should match version {int} name` | 4 | 764 |
+| Then | `the character name should revert to the original value` | 2 | 1124 |
+| Then | `the character stats should match version {int} stats` | 2 | 776 |
+| Then | `the exported file should contain version {int} data` | 1 | 825 |
+| Then | `the exported file should not contain version history` | 1 | 848 |
+| Then | `the exported file should use the current portrait` | 1 | 863 |
+| Then | `the forward arrow should be disabled` | 4 | 556 |
+| Then | `the forward arrow should be enabled` | 1 | 614 |
+| Then | `the import button should be disabled` | 1 | 1288 |
+| Then | `the import button should be enabled` | 2 | 1283 |
+| Then | `the oldest version should have been removed` | 2 | 972 |
+| Then | `the portrait should remain unchanged` | 3 | 813 |
+| When | `the squash timer has completed` | 2 | 670 |
+| Then | `the timestamp should be displayed` | 1 | 588 |
+| Then | `the timestamp should be in human-readable format` | 1 | 744 |
+| Then | `the timestamp should show a relative time like {string}` | 1 | 753 |
+| Then | `the UI should remain responsive` | 2 | 924 |
+| Then | `the undo buffer should contain exactly {int} changes` | 1 | 649 |
+| Then | `the version counter should show {string}` | 25 | 538 |
+| Then | `the version description should contain {string}` | 11 | 736 |
+| Then | `the version description should contain the tier change` | 1 | 962 |
+| Then | `the version navigator should be visible` | 4 | 533 |
+| Then | `the version navigator should not be visible` | 2 | 521 |
+| Then | `the warning banner should be visible` | 7 | 604 |
+| Then | `the warning banner should contain text {string}` | 1 | 619 |
+| Then | `the warning banner should have a restore button` | 1 | 627 |
+| Then | `the warning banner should not be visible` | 2 | 957 |
 
