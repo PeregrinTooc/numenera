@@ -1,4 +1,5 @@
 import type { Character } from "../../src/types/character.js";
+import { FULL_CHARACTER } from "../../src/data/mockCharacters.js";
 
 /**
  * Shared unit-test character factory (docs/rules/testing.md "Use Factories").
@@ -78,4 +79,15 @@ export function createCharacterWithItems(overrides: Partial<Character> = {}): Ch
     ],
     ...overrides,
   });
+}
+
+/**
+ * Preset with the app's demo character shape (src/data/mockCharacters.ts),
+ * for tests that need realistic, fully-populated data rather than the
+ * minimal default. The unit default stays small and neutral deliberately
+ * (see `createTestCharacter`); this is the same "Kael the Wanderer" E2E
+ * fixtures build on.
+ */
+export function fullCharacter(overrides: Partial<Character> = {}): Character {
+  return { ...FULL_CHARACTER, ...overrides };
 }
