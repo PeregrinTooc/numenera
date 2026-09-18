@@ -92,27 +92,15 @@ When("I tap on the {string} value", async function (this: CustomWorld, fieldName
   }
 });
 
-When("I click the Confirm button", async function (this: CustomWorld) {
-  await this.page!.click('[data-testid="modal-confirm-button"]');
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
-    state: "hidden",
-    timeout: 2000,
-  }).catch(() => {
-    // Modal might already be hidden
-  });
-  // Wait for auto-save to complete
-  await waitForSaveComplete(this.page!);
-});
+async function confirmModal(this: CustomWorld): Promise<void> {
+  await this.modal.confirm();
+}
+When("I click the Confirm button", confirmModal);
 
-When("I click the Cancel button", async function (this: CustomWorld) {
-  await this.page!.click('[data-testid="modal-cancel-button"]');
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
-    state: "hidden",
-    timeout: 2000,
-  }).catch(() => {
-    // Modal might already be hidden
-  });
-});
+async function cancelModal(this: CustomWorld): Promise<void> {
+  await this.modal.cancel();
+}
+When("I click the Cancel button", cancelModal);
 
 // Individual badge click steps
 When("I click the Current XP badge", async function (this: CustomWorld) {
@@ -194,67 +182,28 @@ When("I hover over the tier {string}", async function (this: CustomWorld, _tier:
   await this.page!.locator('[data-testid="character-tier"]').hover();
 });
 
-When("I click the modal confirm button", async function (this: CustomWorld) {
-  await this.page!.click('[data-testid="modal-confirm-button"]');
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
-    state: "hidden",
-    timeout: 2000,
-  }).catch(() => {
-    // Modal might already be hidden
-  });
-  // Wait for auto-save to complete
-  await waitForSaveComplete(this.page!);
-});
+When("I click the modal confirm button", confirmModal);
 
-When("I click the modal cancel button", async function (this: CustomWorld) {
-  await this.page!.click('[data-testid="modal-cancel-button"]');
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
-    state: "hidden",
-    timeout: 2000,
-  }).catch(() => {
-    // Modal might already be hidden
-  });
-});
+When("I click the modal cancel button", cancelModal);
 
 When("I tap the modal confirm button", async function (this: CustomWorld) {
-  await this.page!.tap('[data-testid="modal-confirm-button"]');
-  await this.page!.waitForSelector('[data-testid="edit-modal"]', {
-    state: "hidden",
-    timeout: 2000,
-  }).catch(() => {
-    // Modal might already be hidden
-  });
-  // Wait for auto-save to complete
-  await waitForSaveComplete(this.page!);
+  await this.modal.tapConfirm();
 });
 
 When("I clear the input field", async function (this: CustomWorld) {
-  const input = this.page!.locator('[data-testid="edit-modal-input"]');
-  await input.clear();
+  await this.modal.clearInput();
 });
 
-When("I type {string} into the input field", async function (this: CustomWorld, text: string) {
-  const input = this.page!.locator('[data-testid="edit-modal-input"]');
-  await input.fill(text);
-});
+async function typeIntoInputField(this: CustomWorld, text: string): Promise<void> {
+  await this.modal.type(text);
+}
+When("I type {string} into the input field", typeIntoInputField);
 
 When("I type {string} in the modal input", async function (this: CustomWorld, value: string) {
-  const input = this.page!.locator('[data-testid="edit-modal-input"]');
-  await input.clear();
-
-  // For non-numeric values in number inputs, use pressSequentially to simulate keyboard
-  const inputType = await input.getAttribute("type");
-  if (inputType === "number" && !/^\d+$/.test(value)) {
-    await input.pressSequentially(value);
-  } else {
-    await input.fill(value);
-  }
+  await this.modal.type(value);
 });
 
-When("I type {string} in the input field", async function (this: CustomWorld, text: string) {
-  const input = this.page!.locator('[data-testid="edit-modal-input"]');
-  await input.fill(text);
-});
+When("I type {string} in the input field", typeIntoInputField);
 
 // ============================================================================
 // UNIFIED EDIT FIELD STEP - Replaces duplicates across multiple files
@@ -384,43 +333,30 @@ Then(
   }
 );
 
-Then("an edit modal should appear", async function (this: CustomWorld) {
-  const modal = this.page!.locator('[data-testid="edit-modal"]');
-  await expect(modal).toBeVisible();
-});
+async function expectModalOpen(this: CustomWorld): Promise<void> {
+  await this.modal.expectOpen();
+}
+Then("an edit modal should appear", expectModalOpen);
 
-Then("the edit modal should open", async function (this: CustomWorld) {
-  const modal = this.page!.locator('[data-testid="edit-modal"]');
-  await expect(modal).toBeVisible();
-});
+Then("the edit modal should open", expectModalOpen);
 
-Then(
-  "the modal input should contain {string}",
-  async function (this: CustomWorld, expectedValue: string) {
-    const input = this.page!.locator('[data-testid="edit-modal-input"]');
-    await expect(input).toHaveValue(expectedValue);
-  }
-);
+async function expectModalInputContains(this: CustomWorld, value: string): Promise<void> {
+  await this.modal.expectInputValue(value);
+}
+Then("the modal input should contain {string}", expectModalInputContains);
 
 Then("the modal should close", async function (this: CustomWorld) {
-  const modal = this.page!.locator('[data-testid="edit-modal"]');
-  await expect(modal).not.toBeVisible();
+  await this.modal.expectClosed();
 });
 
-Then("the input field should contain {string}", async function (this: CustomWorld, value: string) {
-  const input = this.page!.locator('[data-testid="edit-modal-input"]');
-  await expect(input).toHaveValue(value);
-});
+Then("the input field should contain {string}", expectModalInputContains);
 
-Then("the input field should receive focus automatically", async function (this: CustomWorld) {
-  const input = this.page!.locator('[data-testid="edit-modal-input"]');
-  await expect(input).toBeFocused();
-});
+async function expectInputFocused(this: CustomWorld): Promise<void> {
+  await this.modal.expectInputFocused();
+}
+Then("the input field should receive focus automatically", expectInputFocused);
 
-Then("the input field should be focused", async function (this: CustomWorld) {
-  const input = this.page!.locator('[data-testid="edit-modal-input"]');
-  await expect(input).toBeFocused();
-});
+Then("the input field should be focused", expectInputFocused);
 
 Then(
   "the input field should contain the current {string} value",

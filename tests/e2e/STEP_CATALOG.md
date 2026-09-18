@@ -538,51 +538,51 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 10 | 386 |
-| When | `I clear the input field` | 18 | 230 |
+| Then | `an edit modal should appear` | 10 | 339 |
+| When | `I clear the input field` | 18 | 192 |
 | When | `I click on the {string} value` | 9 | 76 |
-| When | `I click on the character name {string}` | 12 | 159 |
-| When | `I click on the descriptor {string}` | 2 | 168 |
-| When | `I click on the focus {string}` | 2 | 173 |
-| When | `I click on the tier {string}` | 5 | 163 |
-| When | `I click outside the modal on the backdrop` | 1 | 291 |
-| When | `I click the Armor badge` | 4 | 132 |
-| When | `I click the Cancel button` | 1 | 106 |
-| When | `I click the Confirm button` | 5 | 94 |
-| When | `I click the Current XP badge` | 5 | 118 |
-| When | `I click the Effort badge` | 3 | 142 |
-| When | `I click the Max Cyphers badge` | 3 | 137 |
-| When | `I click the modal cancel button` | 2 | 208 |
-| When | `I click the modal confirm button` | 22 | 196 |
-| When | `I click the new button` | 1 | 317 |
-| When | `I click the Shins badge` | 5 | 127 |
-| When | `I click the Total XP badge` | 2 | 122 |
-| When | `I edit the {string} field to {string}` | 23 | 262 |
-| When | `I hover over the character name {string}` | 1 | 188 |
-| When | `I hover over the tier {string}` | 1 | 192 |
-| When | `I press the Enter key` | 2 | 313 |
-| When | `I press the Escape key` | 4 | 309 |
-| When | `I reload the page` | 48 | 324 |
-| Then | `I should see the {string} value displayed` | 1 | 349 |
+| When | `I click on the character name {string}` | 12 | 147 |
+| When | `I click on the descriptor {string}` | 2 | 156 |
+| When | `I click on the focus {string}` | 2 | 161 |
+| When | `I click on the tier {string}` | 5 | 151 |
+| When | `I click outside the modal on the backdrop` | 1 | 240 |
+| When | `I click the Armor badge` | 4 | 120 |
+| When | `I click the Cancel button` | 1 | 103 |
+| When | `I click the Confirm button` | 5 | 98 |
+| When | `I click the Current XP badge` | 5 | 106 |
+| When | `I click the Effort badge` | 3 | 130 |
+| When | `I click the Max Cyphers badge` | 3 | 125 |
+| When | `I click the modal cancel button` | 2 | 186 |
+| When | `I click the modal confirm button` | 22 | 184 |
+| When | `I click the new button` | 1 | 266 |
+| When | `I click the Shins badge` | 5 | 115 |
+| When | `I click the Total XP badge` | 2 | 110 |
+| When | `I edit the {string} field to {string}` | 23 | 211 |
+| When | `I hover over the character name {string}` | 1 | 176 |
+| When | `I hover over the tier {string}` | 1 | 180 |
+| When | `I press the Enter key` | 2 | 262 |
+| When | `I press the Escape key` | 4 | 258 |
+| When | `I reload the page` | 48 | 273 |
+| Then | `I should see the {string} value displayed` | 1 | 298 |
 | When | `I tap on the {string} value` | 1 | 85 |
-| When | `I tap on the character name {string}` | 4 | 178 |
-| When | `I tap on the tier {string}` | 1 | 183 |
-| When | `I tap outside the modal on the backdrop` | 1 | 300 |
-| When | `I tap the Current XP badge` | 1 | 147 |
-| When | `I tap the modal confirm button` | 3 | 218 |
-| When | `I tap the Shins badge` | 1 | 152 |
-| When | `I type {string} in the input field` | 15 | 253 |
-| When | `I type {string} in the modal input` | 17 | 240 |
-| When | `I type {string} into the input field` | 8 | 235 |
-| Then | `the {string} value should display {string}` | 6 | 358 |
-| Then | `the {string} value should not have changed` | 2 | 367 |
-| Then | `the edit modal should open` | 8 | 391 |
-| Then | `the input field should be focused` | 1 | 419 |
-| Then | `the input field should contain {string}` | 4 | 409 |
-| Then | `the input field should contain the current {string} value` | 1 | 424 |
-| Then | `the input field should receive focus automatically` | 1 | 414 |
-| Then | `the modal input should contain {string}` | 6 | 396 |
-| Then | `the modal should close` | 21 | 404 |
+| When | `I tap on the character name {string}` | 4 | 166 |
+| When | `I tap on the tier {string}` | 1 | 171 |
+| When | `I tap outside the modal on the backdrop` | 1 | 249 |
+| When | `I tap the Current XP badge` | 1 | 135 |
+| When | `I tap the modal confirm button` | 3 | 188 |
+| When | `I tap the Shins badge` | 1 | 140 |
+| When | `I type {string} in the input field` | 15 | 205 |
+| When | `I type {string} in the modal input` | 17 | 201 |
+| When | `I type {string} into the input field` | 8 | 200 |
+| Then | `the {string} value should display {string}` | 6 | 307 |
+| Then | `the {string} value should not have changed` | 2 | 316 |
+| Then | `the edit modal should open` | 8 | 340 |
+| Then | `the input field should be focused` | 1 | 358 |
+| Then | `the input field should contain {string}` | 4 | 351 |
+| Then | `the input field should contain the current {string} value` | 1 | 360 |
+| Then | `the input field should receive focus automatically` | 1 | 357 |
+| Then | `the modal input should contain {string}` | 6 | 346 |
+| Then | `the modal should close` | 21 | 347 |
 
 ## data-validation.steps.ts
 
