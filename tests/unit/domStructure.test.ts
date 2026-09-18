@@ -15,11 +15,11 @@ import { Stats } from "../../src/components/Stats.js";
 import { CyphersBox } from "../../src/components/CyphersBox.js";
 import { ItemsBox } from "../../src/components/ItemsBox.js";
 import { BottomTextFields } from "../../src/components/BottomTextFields.js";
+import { setupTestContainer } from "./helpers/testSetup.js";
 import {
-  setupTestContainer,
-  createMockCharacter,
+  createTestCharacter as createMockCharacter,
   createEmptyCharacter,
-} from "./helpers/testSetup.js";
+} from "../factories/character.js";
 
 describe("DOM Structure Tests", () => {
   const getContainer = setupTestContainer();
