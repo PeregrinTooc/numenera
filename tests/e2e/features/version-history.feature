@@ -106,7 +106,7 @@ Feature: Version History (Character Time Travel)
         When I navigate to version 2
         And I click on the "Might Pool" value
         And I clear the input field
-        And I type "77" into the input field
+        And I type "77" in the modal input
         And I click the "Confirm" button
         And I navigate to version 3
         And I navigate to version 2

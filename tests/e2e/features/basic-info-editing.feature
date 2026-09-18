@@ -16,14 +16,14 @@ Feature: Edit Basic Character Information
     Scenario: Click on character name opens edit modal
         When I click on the character name "Kael the Wanderer"
         Then an edit modal should appear
-        And the input field should contain "Kael the Wanderer"
+        And the modal input should contain "Kael the Wanderer"
         And the modal should have a confirm button with icon
         And the modal should have a cancel button with icon
 
     Scenario: Edit character name successfully
         When I click on the character name "Kael the Wanderer"
         And I clear the input field
-        And I type "Kael the Wise" in the input field
+        And I type "Kael the Wise" in the modal input
         And I click the "Confirm" button
         Then the modal should close
         And the character name should display "Kael the Wise"
@@ -32,7 +32,7 @@ Feature: Edit Basic Character Information
 
     Scenario: Cancel character name edit
         When I click on the character name "Kael the Wanderer"
-        And I type "New Name" in the input field
+        And I type "New Name" in the modal input
         And I click the "Cancel" button
         Then the modal should close
         And the character name should still display "Kael the Wanderer"
@@ -41,7 +41,7 @@ Feature: Edit Basic Character Information
 
     Scenario: Edit character name with escape key
         When I click on the character name "Kael the Wanderer"
-        And I type "Different Name" in the input field
+        And I type "Different Name" in the modal input
         And I press the Escape key
         Then the modal should close
         And the character name should still display "Kael the Wanderer"
@@ -49,7 +49,7 @@ Feature: Edit Basic Character Information
     Scenario: Edit character name with enter key
         When I click on the character name "Kael the Wanderer"
         And I clear the input field
-        And I type "Kael the Swift" in the input field
+        And I type "Kael the Swift" in the modal input
         And I press the Enter key
         Then the modal should close
         And the character name should display "Kael the Swift"
@@ -57,13 +57,13 @@ Feature: Edit Basic Character Information
     Scenario: Click on tier opens edit modal
         When I click on the tier "3"
         Then an edit modal should appear
-        And the input field should contain "3"
+        And the modal input should contain "3"
         And the input field should be of type "number"
 
     Scenario: Edit character tier successfully
         When I click on the tier "3"
         And I clear the input field
-        And I type "5" in the input field
+        And I type "5" in the modal input
         And I click the "Confirm" button
         Then the modal should close
         And the tier should display "5"
@@ -73,7 +73,7 @@ Feature: Edit Basic Character Information
     Scenario: Edit tier with invalid value (out of range)
         When I click on the tier "3"
         And I clear the input field
-        And I type "7" in the input field
+        And I type "7" in the modal input
         And I click the "Confirm" button
         Then the tier should be constrained to "6"
         And the modal should close
@@ -82,7 +82,7 @@ Feature: Edit Basic Character Information
     Scenario: Edit tier with invalid value (below minimum)
         When I click on the tier "3"
         And I clear the input field
-        And I type "0" in the input field
+        And I type "0" in the modal input
         And I click the "Confirm" button
         Then the tier should be constrained to "1"
         And the modal should close
@@ -91,12 +91,12 @@ Feature: Edit Basic Character Information
     Scenario: Click on descriptor opens edit modal
         When I click on the descriptor "Strong"
         Then an edit modal should appear
-        And the input field should contain "Strong"
+        And the modal input should contain "Strong"
 
     Scenario: Edit character descriptor successfully
         When I click on the descriptor "Strong"
         And I clear the input field
-        And I type "Swift" in the input field
+        And I type "Swift" in the modal input
         And I click the "Confirm" button
         Then the modal should close
         And the descriptor should display "Swift"
@@ -106,12 +106,12 @@ Feature: Edit Basic Character Information
     Scenario: Click on focus opens edit modal
         When I click on the focus "Bears a Halo of Fire"
         Then an edit modal should appear
-        And the input field should contain "Bears a Halo of Fire"
+        And the modal input should contain "Bears a Halo of Fire"
 
     Scenario: Edit character focus successfully
         When I click on the focus "Bears a Halo of Fire"
         And I clear the input field
-        And I type "Commands Mental Powers" in the input field
+        And I type "Commands Mental Powers" in the modal input
         And I click the "Confirm" button
         Then the modal should close
         And the focus should display "Commands Mental Powers"
@@ -127,18 +127,18 @@ Feature: Edit Basic Character Information
 
     Scenario: Modal click outside closes without saving
         When I click on the character name "Kael the Wanderer"
-        And I type "New Name" in the input field
+        And I type "New Name" in the modal input
         And I click outside the modal on the backdrop
         Then the modal should close
         And the character name should still display "Kael the Wanderer"
 
     Scenario: Edit multiple fields in sequence
         When I click on the character name "Kael the Wanderer"
-        And I type "Kael the Wise" in the input field
+        And I type "Kael the Wise" in the modal input
         And I click the "Confirm" button
         Then the modal should close
         When I click on the tier "3"
-        And I type "4" in the input field
+        And I type "4" in the modal input
         And I click the "Confirm" button
         Then the modal should close
         And the character name should display "Kael the Wise"
@@ -190,7 +190,7 @@ Feature: Edit Basic Character Information
         Given I am viewing on a mobile device with width "375px"
         When I tap on the character name "Kael the Wanderer"
         And I clear the input field
-        And I type "Kael the Wise" in the input field
+        And I type "Kael the Wise" in the modal input
         And I tap the modal confirm button
         Then the modal should close
         And the character name should display "Kael the Wise"
@@ -204,7 +204,7 @@ Feature: Edit Basic Character Information
         Then an edit modal should appear
         And the input field should have inputmode="numeric" for mobile
         And I clear the input field
-        And I type "5" in the input field
+        And I type "5" in the modal input
         And I tap the modal confirm button
         Then the modal should close
         And the tier should display "5"
@@ -222,7 +222,7 @@ Feature: Edit Basic Character Information
     Scenario: Cancel edit by tapping outside modal on mobile
         Given I am viewing on a mobile device with width "375px"
         When I tap on the character name "Kael the Wanderer"
-        And I type "New Name" in the input field
+        And I type "New Name" in the modal input
         And I tap outside the modal on the backdrop
         Then the modal should close
         And the character name should still display "Kael the Wanderer"

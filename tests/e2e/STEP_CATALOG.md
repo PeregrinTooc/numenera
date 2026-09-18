@@ -26,7 +26,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **698** in 25 files
+- Step definitions: **695** in 25 files
 - Feature step lines: **2047**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **24**
@@ -46,7 +46,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [combat.steps.ts](#combatstepsts) | 28 | 0 |
-| [common-steps.ts](#commonstepsts) | 37 | 0 |
+| [common-steps.ts](#commonstepsts) | 34 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 5 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 14 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
@@ -514,43 +514,40 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 10 | 253 |
+| Then | `an edit modal should appear` | 10 | 246 |
 | When | `I clear the input field` | 18 | 113 |
 | When | `I click on the {string} value` | 9 | 25 |
 | When | `I click on the character name {string}` | 12 | 72 |
 | When | `I click on the descriptor {string}` | 2 | 81 |
 | When | `I click on the focus {string}` | 2 | 86 |
 | When | `I click on the tier {string}` | 5 | 76 |
-| When | `I click outside the modal on the backdrop` | 1 | 161 |
+| When | `I click outside the modal on the backdrop` | 1 | 154 |
 | When | `I click the "Cancel" button` | 3 | 50 |
 | When | `I click the "Confirm" button` | 27 | 45 |
 | When | `I click the "New" button` | 7 | 51 |
 | When | `I click the {badge} badge` | 22 | 61 |
-| When | `I edit the {string} field to {string}` | 23 | 132 |
+| When | `I edit the {string} field to {string}` | 23 | 125 |
 | When | `I hover over the character name {string}` | 1 | 101 |
 | When | `I hover over the tier {string}` | 1 | 105 |
-| When | `I press the Enter key` | 2 | 183 |
-| When | `I press the Escape key` | 4 | 179 |
-| When | `I reload the page` | 48 | 187 |
-| Then | `I should see the {string} value displayed` | 1 | 212 |
+| When | `I press the Enter key` | 2 | 176 |
+| When | `I press the Escape key` | 4 | 172 |
+| When | `I reload the page` | 48 | 180 |
+| Then | `I should see the {string} value displayed` | 1 | 205 |
 | When | `I tap on the {string} value` | 1 | 33 |
 | When | `I tap on the character name {string}` | 4 | 91 |
 | When | `I tap on the tier {string}` | 1 | 96 |
-| When | `I tap outside the modal on the backdrop` | 1 | 170 |
+| When | `I tap outside the modal on the backdrop` | 1 | 163 |
 | When | `I tap the {badge} badge` | 2 | 65 |
 | When | `I tap the modal confirm button` | 3 | 109 |
-| When | `I type {string} in the input field` | 15 | 126 |
-| When | `I type {string} in the modal input` | 17 | 122 |
-| When | `I type {string} into the input field` | 8 | 121 |
-| Then | `the {string} value should display {string}` | 6 | 221 |
-| Then | `the {string} value should not have changed` | 2 | 230 |
-| Then | `the edit modal should open` | 8 | 254 |
-| Then | `the input field should be focused` | 1 | 272 |
-| Then | `the input field should contain {string}` | 4 | 265 |
-| Then | `the input field should contain the current {string} value` | 1 | 274 |
-| Then | `the input field should receive focus automatically` | 1 | 271 |
-| Then | `the modal input should contain {string}` | 6 | 260 |
-| Then | `the modal should close` | 21 | 261 |
+| When | `I type {string} in the modal input` | 40 | 117 |
+| Then | `the {string} value should display {string}` | 6 | 214 |
+| Then | `the {string} value should not have changed` | 2 | 223 |
+| Then | `the edit modal should open` | 8 | 247 |
+| Then | `the input field should be focused` | 1 | 263 |
+| Then | `the input field should contain the current {string} value` | 1 | 265 |
+| Then | `the input field should receive focus automatically` | 1 | 262 |
+| Then | `the modal input should contain {string}` | 10 | 253 |
+| Then | `the modal should close` | 21 | 254 |
 
 ## data-validation.steps.ts
 

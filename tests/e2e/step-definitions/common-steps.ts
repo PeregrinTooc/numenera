@@ -115,16 +115,9 @@ When("I clear the input field", async function (this: CustomWorld) {
   await this.modal.clearInput();
 });
 
-async function typeIntoInputField(this: CustomWorld, text: string): Promise<void> {
-  await this.modal.type(text);
-}
-When("I type {string} into the input field", typeIntoInputField);
-
 When("I type {string} in the modal input", async function (this: CustomWorld, value: string) {
   await this.modal.type(value);
 });
-
-When("I type {string} in the input field", typeIntoInputField);
 
 // ============================================================================
 // UNIFIED EDIT FIELD STEP - Replaces duplicates across multiple files
@@ -262,8 +255,6 @@ Then("the modal input should contain {string}", expectModalInputContains);
 Then("the modal should close", async function (this: CustomWorld) {
   await this.modal.expectClosed();
 });
-
-Then("the input field should contain {string}", expectModalInputContains);
 
 async function expectInputFocused(this: CustomWorld): Promise<void> {
   await this.modal.expectInputFocused();
