@@ -5,6 +5,7 @@ import { DOMHelpers } from "./dom-helpers.js";
 import { ModalDsl } from "./modal.js";
 import { FieldsDsl } from "./fields.js";
 import { CardsDsl } from "./cards.js";
+import { SetupDsl } from "./setup.js";
 
 // Set default timeout for all steps to 30 seconds
 setDefaultTimeout(30000);
@@ -21,6 +22,7 @@ export interface CustomWorld extends World {
   modal: ModalDsl;
   fields: FieldsDsl;
   cards: CardsDsl;
+  setup: SetupDsl;
   testContext?: Record<string, any>;
   previousCardCount?: number;
   getBaseUrl(): string;
@@ -35,6 +37,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   modal!: ModalDsl;
   fields!: FieldsDsl;
   cards!: CardsDsl;
+  setup!: SetupDsl;
   testContext?: Record<string, any>;
   previousCardCount?: number;
 

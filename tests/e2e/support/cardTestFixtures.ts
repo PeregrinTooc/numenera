@@ -4,7 +4,7 @@
  */
 
 // Base character template used across all card tests
-const BASE_CHARACTER = {
+export const BASE_CHARACTER = {
   name: "Kael the Wanderer",
   tier: 3,
   type: "Glaive",
@@ -33,7 +33,7 @@ const BASE_CHARACTER = {
 };
 
 // Empty arrays for all card types
-const EMPTY_ARRAYS = {
+export const EMPTY_ARRAYS = {
   cyphers: [],
   artifacts: [],
   oddities: [],
