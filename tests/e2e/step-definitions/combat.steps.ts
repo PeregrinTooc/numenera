@@ -4,20 +4,12 @@ import { DOMHelpers } from "../support/dom-helpers.js";
 
 // Attack step definitions
 
-Given("the character has an attack {string} with:", async function (attackName: string, dataTable) {
-  this.testAttackName = attackName;
-  this.testAttackProperties = {};
+Given(
+  "the character has an attack {string} with:",
+  async function (_attackName: string, _dataTable) {}
+);
 
-  const rows = dataTable.raw();
-  for (let i = 0; i < rows.length; i++) {
-    const [property, value] = rows[i];
-    this.testAttackProperties[property] = value;
-  }
-});
-
-Given("the character has an attack {string}", async function (attackName: string) {
-  this.testAttackName = attackName;
-});
+Given("the character has an attack {string}", async function (_attackName: string) {});
 
 Given("the character has no attacks", async function () {
   await this.page.goto(this.getBaseUrl());
@@ -209,9 +201,8 @@ Then("the empty special abilities state should use translation keys", async func
 
 // Armor badge step definitions
 
-Given("the character has armor value {int}", async function (armorValue: number) {
+Given("the character has armor value {int}", async function (_armorValue: number) {
   // The character should already have this value in the mock data
-  this.testArmorValue = armorValue;
 });
 
 Then("I should see the armor badge in the attacks section", async function () {

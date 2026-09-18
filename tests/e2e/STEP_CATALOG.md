@@ -402,22 +402,22 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag ability {string} before ability {string}` | 2 | 288 |
-| When | `I drag cypher {string} after cypher {string}` | 1 | 69 |
-| When | `I drag cypher {string} before cypher {string}` | 3 | 49 |
-| When | `I drag cypher {string} into the abilities section` | 1 | 339 |
+| When | `I drag ability {string} before ability {string}` | 2 | 287 |
+| When | `I drag cypher {string} after cypher {string}` | 1 | 70 |
+| When | `I drag cypher {string} before cypher {string}` | 3 | 50 |
+| When | `I drag cypher {string} into the abilities section` | 1 | 338 |
 | When | `I hover over cypher {string}` | 1 | 125 |
-| When | `I start dragging cypher {string}` | 2 | 95 |
-| Then | `the abilities should be in order {string}, {string}` | 1 | 314 |
-| Then | `the abilities should be in order {string}, {string}, {string}` | 3 | 306 |
-| Given | `the character has {int} abilities named {string}, {string}` | 1 | 260 |
-| Given | `the character has {int} abilities named {string}, {string}, {string}` | 3 | 252 |
-| Given | `the character has {int} cyphers named {string}, {string}` | 2 | 15 |
-| Given | `the character has {int} cyphers named {string}, {string}, {string}` | 6 | 7 |
-| Then | `the cypher {string} should have a dragging visual state` | 1 | 188 |
-| Then | `the cyphers should be in order {string}, {string}` | 1 | 161 |
-| Then | `the cyphers should be in order {string}, {string}, {string}` | 5 | 153 |
-| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 208 |
+| When | `I start dragging cypher {string}` | 2 | 96 |
+| Then | `the abilities should be in order {string}, {string}` | 1 | 313 |
+| Then | `the abilities should be in order {string}, {string}, {string}` | 3 | 305 |
+| Given | `the character has {int} abilities named {string}, {string}` | 1 | 259 |
+| Given | `the character has {int} abilities named {string}, {string}, {string}` | 3 | 251 |
+| Given | `the character has {int} cyphers named {string}, {string}` | 2 | 16 |
+| Given | `the character has {int} cyphers named {string}, {string}, {string}` | 6 | 8 |
+| Then | `the cypher {string} should have a dragging visual state` | 1 | 187 |
+| Then | `the cyphers should be in order {string}, {string}` | 1 | 160 |
+| Then | `the cyphers should be in order {string}, {string}, {string}` | 5 | 152 |
+| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 207 |
 
 ## character-display.steps.ts
 
@@ -505,34 +505,34 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `I should see an empty attacks section` | 1 | 113 |
-| Then | `I should see an empty special abilities section` | 1 | 197 |
-| Then | `I should see the armor badge in the attacks section` | 1 | 215 |
-| Then | `I should see the attack {string}` | 2 | 25 |
-| Then | `I should see the special ability {string}` | 1 | 149 |
-| Then | `the armor badge should show value {string}` | 1 | 220 |
-| Then | `the attack {string} should have red combat theme styling` | 1 | 100 |
-| Then | `the attack {string} should not show notes` | 1 | 90 |
-| Then | `the attack {string} should show damage {string}` | 2 | 34 |
-| Then | `the attack {string} should show modifier {string}` | 2 | 48 |
-| Then | `the attack {string} should show notes {string}` | 1 | 76 |
-| Then | `the attack {string} should show range {string}` | 2 | 62 |
-| Then | `the attacks section should be in the right column` | 1 | 240 |
-| Given | `the character has a special ability {string}` | 1 | 140 |
-| Given | `the character has a special ability {string} with:` | 1 | 126 |
-| Given | `the character has an attack {string}` | 1 | 16 |
+| Then | `I should see an empty attacks section` | 1 | 105 |
+| Then | `I should see an empty special abilities section` | 1 | 189 |
+| Then | `I should see the armor badge in the attacks section` | 1 | 206 |
+| Then | `I should see the attack {string}` | 2 | 17 |
+| Then | `I should see the special ability {string}` | 1 | 141 |
+| Then | `the armor badge should show value {string}` | 1 | 211 |
+| Then | `the attack {string} should have red combat theme styling` | 1 | 92 |
+| Then | `the attack {string} should not show notes` | 1 | 82 |
+| Then | `the attack {string} should show damage {string}` | 2 | 26 |
+| Then | `the attack {string} should show modifier {string}` | 2 | 40 |
+| Then | `the attack {string} should show notes {string}` | 1 | 68 |
+| Then | `the attack {string} should show range {string}` | 2 | 54 |
+| Then | `the attacks section should be in the right column` | 1 | 231 |
+| Given | `the character has a special ability {string}` | 1 | 132 |
+| Given | `the character has a special ability {string} with:` | 1 | 118 |
+| Given | `the character has an attack {string}` | 1 | 10 |
 | Given | `the character has an attack {string} with:` | 1 | 5 |
-| Given | `the character has armor value {int}` | 1 | 210 |
-| Given | `the character has no attacks` | 1 | 20 |
-| Given | `the character has no special abilities` | 1 | 144 |
-| Given | `the character has special abilities and attacks` | 1 | 229 |
-| Then | `the empty attacks state should use translation keys` | 1 | 118 |
-| Then | `the empty special abilities state should use translation keys` | 1 | 202 |
-| Then | `the sections should stack vertically on mobile` | 1 | 246 |
-| Then | `the special abilities section should be in the left column` | 1 | 234 |
-| Then | `the special ability {string} should have teal theme styling` | 1 | 184 |
-| Then | `the special ability {string} should show description {string}` | 1 | 158 |
-| Then | `the special ability {string} should show source {string}` | 1 | 170 |
+| Given | `the character has armor value {int}` | 1 | 202 |
+| Given | `the character has no attacks` | 1 | 12 |
+| Given | `the character has no special abilities` | 1 | 136 |
+| Given | `the character has special abilities and attacks` | 1 | 220 |
+| Then | `the empty attacks state should use translation keys` | 1 | 110 |
+| Then | `the empty special abilities state should use translation keys` | 1 | 194 |
+| Then | `the sections should stack vertically on mobile` | 1 | 237 |
+| Then | `the special abilities section should be in the left column` | 1 | 225 |
+| Then | `the special ability {string} should have teal theme styling` | 1 | 176 |
+| Then | `the special ability {string} should show description {string}` | 1 | 150 |
+| Then | `the special ability {string} should show source {string}` | 1 | 162 |
 
 ## common-steps.ts
 
@@ -618,27 +618,27 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a file download should be triggered` | 1 | 175 |
-| When | `I cancel the file save dialog` | 1 | 111 |
-| When | `I click the Export button` | 7 | 104 |
-| When | `I click the Quick Export button` | 1 | 118 |
-| When | `I click the Save As button` | 1 | 124 |
-| Then | `I should not see an {string} button` | 1 | 144 |
-| Then | `I should see a {string} button` | 2 | 139 |
-| Then | `I should see an {string} button` | 2 | 134 |
-| When | `I view the export buttons` | 1 | 99 |
-| Given | `my browser does not support File System Access API` | 1 | 36 |
-| Given | `my browser supports File System Access API` | 7 | 6 |
-| Then | `no file should be saved` | 1 | 217 |
-| Given | `the character name is {string}` | 1 | 66 |
-| Then | `the download filename should contain {string}` | 1 | 185 |
-| Then | `the download should have correct file structure` | 1 | 193 |
-| Then | `the Export button should still be visible` | 1 | 224 |
-| Then | `the export dialog should be triggered` | 1 | 244 |
-| Then | `the export dialog should be triggered with filename containing {string}` | 1 | 150 |
-| Then | `the exported data should have correct structure` | 1 | 162 |
-| Then | `the file should be saved without prompting` | 1 | 229 |
-| Then | `the suggested filename should be {string}` | 1 | 210 |
+| Then | `a file download should be triggered` | 1 | 176 |
+| When | `I cancel the file save dialog` | 1 | 112 |
+| When | `I click the Export button` | 7 | 105 |
+| When | `I click the Quick Export button` | 1 | 119 |
+| When | `I click the Save As button` | 1 | 125 |
+| Then | `I should not see an {string} button` | 1 | 145 |
+| Then | `I should see a {string} button` | 2 | 140 |
+| Then | `I should see an {string} button` | 2 | 135 |
+| When | `I view the export buttons` | 1 | 100 |
+| Given | `my browser does not support File System Access API` | 1 | 37 |
+| Given | `my browser supports File System Access API` | 7 | 7 |
+| Then | `no file should be saved` | 1 | 218 |
+| Given | `the character name is {string}` | 1 | 67 |
+| Then | `the download filename should contain {string}` | 1 | 186 |
+| Then | `the download should have correct file structure` | 1 | 194 |
+| Then | `the Export button should still be visible` | 1 | 225 |
+| Then | `the export dialog should be triggered` | 1 | 245 |
+| Then | `the export dialog should be triggered with filename containing {string}` | 1 | 151 |
+| Then | `the exported data should have correct structure` | 1 | 163 |
+| Then | `the file should be saved without prompting` | 1 | 230 |
+| Then | `the suggested filename should be {string}` | 1 | 211 |
 
 ## i18n.steps.ts
 
@@ -815,49 +815,49 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `comparison view is enabled in settings` | 23 | 43 |
-| Then | `comparison view should show as enabled in settings` | 1 | 61 |
-| Given | `I am using a phone-width viewport` | 1 | 428 |
-| Given | `I am using a tablet-width viewport` | 1 | 432 |
-| Given | `I am viewing the comparison view` | 19 | 70 |
-| When | `I click the left pane's backward arrow` | 3 | 167 |
-| When | `I click the left pane's backward arrow {int} time(s)` | 2 | 179 |
-| When | `I click the left pane's forward arrow` | 1 | 171 |
-| When | `I click the left pane's restore button` | 2 | 357 |
-| When | `I click the return to editing button` | 2 | 401 |
-| When | `I click the right pane's backward arrow` | 1 | 175 |
-| When | `I click the right pane's backward arrow {int} time(s)` | 1 | 190 |
-| When | `I click the right pane's restore button` | 1 | 362 |
-| When | `I close the settings panel` | 2 | 55 |
-| When | `I enable comparison view in settings` | 2 | 47 |
-| Then | `no add or delete button should be present in the comparison view` | 1 | 416 |
-| Then | `no field in the comparison view should be editable` | 1 | 409 |
-| Then | `the {string} field should be highlighted as changed in the {word} pane` | 2 | 273 |
-| Then | `the {string} field should not be highlighted in the {word} pane` | 2 | 282 |
-| Then | `the {word} pane should show the newly restored version` | 1 | 372 |
-| Then | `the added cypher card should be highlighted as added in the right pane` | 1 | 291 |
-| Given | `the character has a version where a cypher was renamed` | 1 | 147 |
-| Given | `the character has a version with a modified cypher effect` | 1 | 128 |
-| Given | `the character has a version with a name change` | 2 | 93 |
-| Given | `the character has a version with a removed cypher` | 1 | 117 |
-| Given | `the character has a version with an added cypher` | 1 | 103 |
-| Then | `the comparison header should indicate there are no differences` | 1 | 262 |
-| Then | `the comparison header should list every changed field, not just the top 3` | 1 | 237 |
-| Then | `the comparison header should reflect the new left pane version` | 1 | 252 |
-| Then | `the comparison view should be visible` | 3 | 75 |
-| Then | `the comparison view should not be visible` | 3 | 79 |
-| Then | `the left pane should not show the added cypher card` | 1 | 301 |
-| Then | `the left pane should show version {int}` | 5 | 222 |
-| Given | `the left pane shows version {int}` | 2 | 214 |
-| Then | `the modified cypher card should be highlighted as changed in the {word} pane` | 2 | 323 |
-| Then | `the new cypher name should be highlighted as added in the right pane` | 1 | 343 |
-| Then | `the old cypher name should be highlighted as removed in the left pane` | 1 | 333 |
-| Then | `the removed cypher card should be highlighted as removed in the left pane` | 1 | 306 |
-| Then | `the right pane should not show the removed cypher card` | 1 | 316 |
-| Then | `the right pane should show version {int}` | 4 | 226 |
-| Then | `the right pane should still show the same character name as before the restore` | 1 | 382 |
-| Given | `the right pane shows version {int}` | 1 | 218 |
-| Then | `the right pane's restore button should be disabled` | 1 | 367 |
+| Given | `comparison view is enabled in settings` | 23 | 44 |
+| Then | `comparison view should show as enabled in settings` | 1 | 62 |
+| Given | `I am using a phone-width viewport` | 1 | 429 |
+| Given | `I am using a tablet-width viewport` | 1 | 433 |
+| Given | `I am viewing the comparison view` | 19 | 71 |
+| When | `I click the left pane's backward arrow` | 3 | 168 |
+| When | `I click the left pane's backward arrow {int} time(s)` | 2 | 180 |
+| When | `I click the left pane's forward arrow` | 1 | 172 |
+| When | `I click the left pane's restore button` | 2 | 358 |
+| When | `I click the return to editing button` | 2 | 402 |
+| When | `I click the right pane's backward arrow` | 1 | 176 |
+| When | `I click the right pane's backward arrow {int} time(s)` | 1 | 191 |
+| When | `I click the right pane's restore button` | 1 | 363 |
+| When | `I close the settings panel` | 2 | 56 |
+| When | `I enable comparison view in settings` | 2 | 48 |
+| Then | `no add or delete button should be present in the comparison view` | 1 | 417 |
+| Then | `no field in the comparison view should be editable` | 1 | 410 |
+| Then | `the {string} field should be highlighted as changed in the {word} pane` | 2 | 274 |
+| Then | `the {string} field should not be highlighted in the {word} pane` | 2 | 283 |
+| Then | `the {word} pane should show the newly restored version` | 1 | 373 |
+| Then | `the added cypher card should be highlighted as added in the right pane` | 1 | 292 |
+| Given | `the character has a version where a cypher was renamed` | 1 | 148 |
+| Given | `the character has a version with a modified cypher effect` | 1 | 129 |
+| Given | `the character has a version with a name change` | 2 | 94 |
+| Given | `the character has a version with a removed cypher` | 1 | 118 |
+| Given | `the character has a version with an added cypher` | 1 | 104 |
+| Then | `the comparison header should indicate there are no differences` | 1 | 263 |
+| Then | `the comparison header should list every changed field, not just the top 3` | 1 | 238 |
+| Then | `the comparison header should reflect the new left pane version` | 1 | 253 |
+| Then | `the comparison view should be visible` | 3 | 76 |
+| Then | `the comparison view should not be visible` | 3 | 80 |
+| Then | `the left pane should not show the added cypher card` | 1 | 302 |
+| Then | `the left pane should show version {int}` | 5 | 223 |
+| Given | `the left pane shows version {int}` | 2 | 215 |
+| Then | `the modified cypher card should be highlighted as changed in the {word} pane` | 2 | 324 |
+| Then | `the new cypher name should be highlighted as added in the right pane` | 1 | 344 |
+| Then | `the old cypher name should be highlighted as removed in the left pane` | 1 | 334 |
+| Then | `the removed cypher card should be highlighted as removed in the left pane` | 1 | 307 |
+| Then | `the right pane should not show the removed cypher card` | 1 | 317 |
+| Then | `the right pane should show version {int}` | 4 | 227 |
+| Then | `the right pane should still show the same character name as before the restore` | 1 | 383 |
+| Given | `the right pane shows version {int}` | 1 | 219 |
+| Then | `the right pane's restore button should be disabled` | 1 | 368 |
 
 ## version-history.steps.ts
 
