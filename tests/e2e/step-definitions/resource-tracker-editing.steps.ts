@@ -58,20 +58,7 @@ function createCharacterState(fieldKey: string, value: number) {
 Given(
   "the character has {int} current XP and {int} total XP",
   async function (this: CustomWorld, currentXp: number, totalXp: number) {
-    const character = { ...createCharacterState("currentXp", currentXp).character, totalXp };
-
-    // Wait before setCharacter to ensure any previous auto-save completes
-    await this.page!.waitForTimeout(500);
-    await this.storageHelper.setCharacter(character);
-
-    // Wait for IndexedDB save to complete before reloading
-    await this.page!.waitForTimeout(500);
-
-    await this.page!.reload();
-    await this.page!.waitForLoadState("networkidle");
-
-    // Additional wait for character to load from IndexedDB
-    await this.page!.waitForTimeout(200);
+    await this.setup.character({ currentXp, totalXp });
 
     // Wait for both XP cells to show the correct values (increased timeout for CI)
     await this.page!.waitForFunction(
@@ -131,20 +118,7 @@ Given(
 );
 
 Given("the character has {int} shins", async function (this: CustomWorld, shins: number) {
-  const character = createCharacterState("shins", shins).character;
-
-  // Wait before setCharacter to ensure any previous auto-save completes
-  await this.page!.waitForTimeout(500);
-  await this.storageHelper.setCharacter(character);
-
-  // Wait for IndexedDB save to complete before reloading
-  await this.page!.waitForTimeout(500);
-
-  await this.page!.reload();
-  await this.page!.waitForLoadState("networkidle");
-
-  // Additional wait for character to load from IndexedDB
-  await this.page!.waitForTimeout(200);
+  await this.setup.character({ shins });
 
   // Wait for shins badge to show correct value (increased timeout for CI)
   await this.page!.waitForFunction(
@@ -158,20 +132,7 @@ Given("the character has {int} shins", async function (this: CustomWorld, shins:
 });
 
 Given("the character has {int} armor", async function (this: CustomWorld, armor: number) {
-  const character = createCharacterState("armor", armor).character;
-
-  // Wait before setCharacter to ensure any previous auto-save completes
-  await this.page!.waitForTimeout(500);
-  await this.storageHelper.setCharacter(character);
-
-  // Wait for IndexedDB save to complete before reloading
-  await this.page!.waitForTimeout(500);
-
-  await this.page!.reload();
-  await this.page!.waitForLoadState("networkidle");
-
-  // Additional wait for character to load from IndexedDB
-  await this.page!.waitForTimeout(200);
+  await this.setup.character({ armor });
 
   // Wait for armor value to show correct value (increased timeout for CI)
   await this.page!.waitForFunction(
@@ -187,20 +148,7 @@ Given("the character has {int} armor", async function (this: CustomWorld, armor:
 Given(
   "the character has max cyphers {int}",
   async function (this: CustomWorld, maxCyphers: number) {
-    const character = createCharacterState("maxCyphers", maxCyphers).character;
-
-    // Wait before setCharacter to ensure any previous auto-save completes
-    await this.page!.waitForTimeout(500);
-    await this.storageHelper.setCharacter(character);
-
-    // Wait for IndexedDB save to complete before reloading
-    await this.page!.waitForTimeout(500);
-
-    await this.page!.reload();
-    await this.page!.waitForLoadState("networkidle");
-
-    // Additional wait for character to load from IndexedDB
-    await this.page!.waitForTimeout(200);
+    await this.setup.character({ maxCyphers });
 
     // Wait for max cyphers value to show correct value (increased timeout for CI)
     await this.page!.waitForFunction(
@@ -215,20 +163,7 @@ Given(
 );
 
 Given("the character has effort {int}", async function (this: CustomWorld, effort: number) {
-  const character = createCharacterState("effort", effort).character;
-
-  // Wait before setCharacter to ensure any previous auto-save completes
-  await this.page!.waitForTimeout(500);
-  await this.storageHelper.setCharacter(character);
-
-  // Wait for IndexedDB save to complete before reloading
-  await this.page!.waitForTimeout(500);
-
-  await this.page!.reload();
-  await this.page!.waitForLoadState("networkidle");
-
-  // Additional wait for character to load from IndexedDB
-  await this.page!.waitForTimeout(200);
+  await this.setup.character({ effort });
 
   // Wait for the effort element to exist first
   await this.page!.waitForSelector('[data-testid="effort-value"]', { timeout: 10000 });
