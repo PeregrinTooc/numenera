@@ -1,25 +1,18 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { Attacks } from "../../src/components/Attacks";
 import { Abilities } from "../../src/components/Abilities";
 import { SpecialAbilities } from "../../src/components/SpecialAbilities";
 import type { Character } from "../../src/types/character";
 import { render } from "lit-html";
 import { createMockCharacter } from "./helpers/containerTestSuite";
+import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("Collection Components", () => {
-  let container: HTMLElement;
+  const getContainer = setupTestContainer();
   let mockCharacter: Character;
 
   beforeEach(() => {
-    container = document.createElement("div");
-    container.id = "app";
-    document.body.appendChild(container);
-
     mockCharacter = createMockCharacter();
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
   });
 
   describe("Attacks Component", () => {
@@ -27,9 +20,11 @@ describe("Collection Components", () => {
       mockCharacter.attacks = [];
       const onFieldUpdate = vi.fn();
       const attacks = new Attacks(mockCharacter, onFieldUpdate);
-      render(attacks.render(), container);
+      render(attacks.render(), getContainer());
 
-      const emptyState = container.querySelector('[data-testid="empty-attacks"]') as HTMLElement;
+      const emptyState = getContainer().querySelector(
+        '[data-testid="empty-attacks"]'
+      ) as HTMLElement;
       expect(emptyState).toBeTruthy();
     });
 
@@ -40,18 +35,18 @@ describe("Collection Components", () => {
 
       const onFieldUpdate = vi.fn();
       const attacks = new Attacks(mockCharacter, onFieldUpdate);
-      render(attacks.render(), container);
+      render(attacks.render(), getContainer());
 
-      const emptyState = container.querySelector('[data-testid="empty-attacks"]');
+      const emptyState = getContainer().querySelector('[data-testid="empty-attacks"]');
       expect(emptyState).toBeFalsy();
     });
 
     it("should render add attack button", () => {
       const onFieldUpdate = vi.fn();
       const attacks = new Attacks(mockCharacter, onFieldUpdate);
-      render(attacks.render(), container);
+      render(attacks.render(), getContainer());
 
-      const addButton = container.querySelector(
+      const addButton = getContainer().querySelector(
         '[data-testid="add-attack-button"]'
       ) as HTMLButtonElement;
       expect(addButton).toBeTruthy();
@@ -85,9 +80,9 @@ describe("Collection Components", () => {
     it("should render armor field as editable", () => {
       const onFieldUpdate = vi.fn();
       const attacks = new Attacks(mockCharacter, onFieldUpdate);
-      render(attacks.render(), container);
+      render(attacks.render(), getContainer());
 
-      const armorBadge = container.querySelector('[data-testid="armor-badge"]') as HTMLElement;
+      const armorBadge = getContainer().querySelector('[data-testid="armor-badge"]') as HTMLElement;
       expect(armorBadge).toBeTruthy();
       expect(armorBadge.classList.contains("editable-field")).toBe(true);
     });
@@ -97,27 +92,29 @@ describe("Collection Components", () => {
     it("should display empty state when no abilities", () => {
       mockCharacter.abilities = [];
       const abilitiesComp = new Abilities(mockCharacter);
-      render(abilitiesComp.render(), container);
+      render(abilitiesComp.render(), getContainer());
 
-      const emptyState = container.querySelector('[data-testid="empty-abilities"]') as HTMLElement;
+      const emptyState = getContainer().querySelector(
+        '[data-testid="empty-abilities"]'
+      ) as HTMLElement;
       expect(emptyState).toBeTruthy();
     });
 
     it("should display abilities when they exist", () => {
       mockCharacter.abilities = [{ name: "Bash", description: "Hit hard" }];
       const abilitiesComp = new Abilities(mockCharacter);
-      render(abilitiesComp.render(), container);
+      render(abilitiesComp.render(), getContainer());
 
-      const emptyState = container.querySelector('[data-testid="empty-abilities"]');
+      const emptyState = getContainer().querySelector('[data-testid="empty-abilities"]');
       expect(emptyState).toBeFalsy();
     });
 
     it("should render add ability button (event-based pattern)", () => {
       mockCharacter.abilities = [];
       const abilitiesComp = new Abilities(mockCharacter);
-      render(abilitiesComp.render(), container);
+      render(abilitiesComp.render(), getContainer());
 
-      const addButton = container.querySelector(
+      const addButton = getContainer().querySelector(
         '[data-testid="add-ability-button"]'
       ) as HTMLButtonElement;
       expect(addButton).toBeTruthy();
@@ -126,9 +123,9 @@ describe("Collection Components", () => {
     it("should always render add button in event-based pattern", () => {
       mockCharacter.abilities = [];
       const abilitiesComp = new Abilities(mockCharacter);
-      render(abilitiesComp.render(), container);
+      render(abilitiesComp.render(), getContainer());
 
-      const addButton = container.querySelector('[data-testid="add-ability-button"]');
+      const addButton = getContainer().querySelector('[data-testid="add-ability-button"]');
       // Event-based pattern always renders add button
       expect(addButton).toBeTruthy();
     });
@@ -154,9 +151,9 @@ describe("Collection Components", () => {
     it("should display empty state when no special abilities", () => {
       mockCharacter.specialAbilities = [];
       const specialAbilitiesComp = new SpecialAbilities(mockCharacter);
-      render(specialAbilitiesComp.render(), container);
+      render(specialAbilitiesComp.render(), getContainer());
 
-      const emptyState = container.querySelector(
+      const emptyState = getContainer().querySelector(
         '[data-testid="empty-special-abilities"]'
       ) as HTMLElement;
       expect(emptyState).toBeTruthy();
@@ -167,18 +164,18 @@ describe("Collection Components", () => {
         { name: "Fleet of Foot", source: "Type", description: "Move faster" },
       ];
       const specialAbilitiesComp = new SpecialAbilities(mockCharacter);
-      render(specialAbilitiesComp.render(), container);
+      render(specialAbilitiesComp.render(), getContainer());
 
-      const emptyState = container.querySelector('[data-testid="empty-special-abilities"]');
+      const emptyState = getContainer().querySelector('[data-testid="empty-special-abilities"]');
       expect(emptyState).toBeFalsy();
     });
 
     it("should render add button (event-based pattern)", () => {
       mockCharacter.specialAbilities = [];
       const specialAbilitiesComp = new SpecialAbilities(mockCharacter);
-      render(specialAbilitiesComp.render(), container);
+      render(specialAbilitiesComp.render(), getContainer());
 
-      const addButton = container.querySelector(
+      const addButton = getContainer().querySelector(
         '[data-testid="add-special-ability-button"]'
       ) as HTMLButtonElement;
       expect(addButton).toBeTruthy();
@@ -187,9 +184,9 @@ describe("Collection Components", () => {
     it("should always render add button in event-based pattern", () => {
       mockCharacter.specialAbilities = [];
       const specialAbilitiesComp = new SpecialAbilities(mockCharacter);
-      render(specialAbilitiesComp.render(), container);
+      render(specialAbilitiesComp.render(), getContainer());
 
-      const addButton = container.querySelector('[data-testid="add-special-ability-button"]');
+      const addButton = getContainer().querySelector('[data-testid="add-special-ability-button"]');
       // Event-based pattern always renders add button
       expect(addButton).toBeTruthy();
     });
