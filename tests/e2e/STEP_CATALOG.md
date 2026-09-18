@@ -172,62 +172,62 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I note the current save timestamp` | 1 | 29 |
-| When | `I rapidly edit the character name multiple times` | 1 | 42 |
-| When | `I wait for {int} second(s)` | 1 | 35 |
-| Given | `the character sheet is displayed` | 5 | 20 |
-| Then | `the character should be saved only once after changes stop` | 1 | 135 |
-| Then | `the save indicator should be in the lower-right corner` | 1 | 162 |
-| Then | `the save indicator should be visible` | 2 | 104 |
-| Then | `the save indicator should contain {string}` | 1 | 118 |
-| Then | `the save indicator should have subtle styling` | 1 | 183 |
-| Then | `the save indicator should show a single timestamp` | 1 | 148 |
-| Then | `the save indicator should show a timestamp` | 1 | 109 |
-| Then | `the save indicator should still be visible` | 1 | 157 |
-| Then | `the save timestamp should be updated` | 2 | 126 |
+| When | `I note the current save timestamp` | 1 | 16 |
+| When | `I rapidly edit the character name multiple times` | 1 | 29 |
+| When | `I wait for {int} second(s)` | 1 | 22 |
+| Given | `the character sheet is displayed` | 5 | 7 |
+| Then | `the character should be saved only once after changes stop` | 1 | 122 |
+| Then | `the save indicator should be in the lower-right corner` | 1 | 149 |
+| Then | `the save indicator should be visible` | 2 | 91 |
+| Then | `the save indicator should contain {string}` | 1 | 105 |
+| Then | `the save indicator should have subtle styling` | 1 | 170 |
+| Then | `the save indicator should show a single timestamp` | 1 | 135 |
+| Then | `the save indicator should show a timestamp` | 1 | 96 |
+| Then | `the save indicator should still be visible` | 1 | 144 |
+| Then | `the save timestamp should be updated` | 2 | 113 |
 
 ## basic-info-editing.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an error or validation message may appear` | 1 | 140 |
-| Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 214 |
-| Then | `focus should not leave the modal` | 1 | 248 |
-| Given | `I am viewing on a mobile device with width {string}` | 7 | 303 |
-| Then | `I can cancel with Escape key` | 1 | 273 |
-| Then | `I can confirm with Enter key` | 1 | 266 |
-| Then | `I can navigate with Tab key` | 1 | 258 |
+| Then | `an error or validation message may appear` | 1 | 139 |
+| Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 213 |
+| Then | `focus should not leave the modal` | 1 | 247 |
+| Given | `I am viewing on a mobile device with width {string}` | 7 | 302 |
+| Then | `I can cancel with Escape key` | 1 | 272 |
+| Then | `I can confirm with Enter key` | 1 | 265 |
+| Then | `I can navigate with Tab key` | 1 | 257 |
 | When | `I press Tab repeatedly` | 1 | 30 |
-| Then | `the backdrop should have aria-hidden={string}` | 1 | 290 |
-| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 355 |
-| Then | `the cancel button should have an X icon` | 1 | 164 |
-| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 383 |
+| Then | `the backdrop should have aria-hidden={string}` | 1 | 289 |
+| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 354 |
+| Then | `the cancel button should have an X icon` | 1 | 163 |
+| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 382 |
 | Then | `the character name should display {string}` | 6 | 82 |
 | Then | `the character name should still display {string}` | 6 | 90 |
 | Then | `the confirm button should be disabled` | 1 | 129 |
-| Then | `the confirm button should have a checkmark icon` | 1 | 158 |
-| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 403 |
+| Then | `the confirm button should have a checkmark icon` | 1 | 157 |
+| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 402 |
 | Then | `the descriptor should display {string}` | 2 | 104 |
-| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 413 |
+| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 412 |
 | Then | `the focus should display {string}` | 2 | 112 |
-| Then | `the input field should be large enough for touch input` | 1 | 375 |
+| Then | `the input field should be large enough for touch input` | 1 | 374 |
 | Then | `the input field should be of type {string}` | 1 | 69 |
-| Then | `the input field should have inputmode={string} for mobile` | 1 | 326 |
-| Then | `the mobile keyboard should appear` | 1 | 320 |
-| Then | `the modal backdrop should be semi-transparent` | 1 | 170 |
-| Then | `the modal should be sized appropriately for mobile` | 1 | 311 |
-| Then | `the modal should fill most of the screen width` | 1 | 335 |
+| Then | `the input field should have inputmode={string} for mobile` | 1 | 325 |
+| Then | `the mobile keyboard should appear` | 1 | 319 |
+| Then | `the modal backdrop should be semi-transparent` | 1 | 169 |
+| Then | `the modal should be sized appropriately for mobile` | 1 | 310 |
+| Then | `the modal should fill most of the screen width` | 1 | 334 |
 | Then | `the modal should have a cancel button with icon` | 1 | 62 |
 | Then | `the modal should have a confirm button with icon` | 1 | 55 |
-| Then | `the modal should have Numenera-themed styling` | 1 | 149 |
-| Then | `the modal should have role={string}` | 1 | 284 |
-| Then | `the modal should not close` | 1 | 135 |
-| Then | `the modal should not overflow the viewport` | 1 | 345 |
-| Then | `the name should show a hover state indicating it's editable` | 1 | 188 |
+| Then | `the modal should have Numenera-themed styling` | 1 | 148 |
+| Then | `the modal should have role={string}` | 1 | 283 |
+| Then | `the modal should not close` | 1 | 134 |
+| Then | `the modal should not overflow the viewport` | 1 | 344 |
+| Then | `the name should show a hover state indicating it's editable` | 1 | 187 |
 | Then | `the tier should be constrained to {string}` | 2 | 121 |
-| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 393 |
+| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 392 |
 | Then | `the tier should display {string}` | 6 | 98 |
-| Then | `the tier should show a hover state indicating it's editable` | 1 | 199 |
+| Then | `the tier should show a hover state indicating it's editable` | 1 | 198 |
 
 ## card-creation.steps.ts
 
@@ -328,54 +328,54 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the delete button on the first ability` | 1 | 200 |
-| When | `I click the delete button on the first artifact` | 1 | 182 |
-| When | `I click the delete button on the first attack` | 1 | 194 |
-| When | `I click the delete button on the first cypher` | 4 | 157 |
-| When | `I click the delete button on the first cypher again` | 1 | 170 |
-| When | `I click the delete button on the first cypher card` | 2 | 163 |
-| When | `I click the delete button on the first equipment item` | 1 | 176 |
-| When | `I click the delete button on the first oddity` | 1 | 188 |
-| When | `I click the delete button on the first special ability` | 1 | 206 |
-| Given | `I have {int} abilities` | 1 | 141 |
-| Given | `I have {int} artifact` | 1 | 120 |
-| Given | `I have {int} attacks` | 1 | 134 |
-| Given | `I have {int} cyphers` | 4 | 105 |
-| Given | `I have {int} equipment items` | 1 | 113 |
-| Given | `I have {int} oddities` | 1 | 127 |
-| Given | `I have {int} special abilities` | 1 | 148 |
-| When | `I look at a cypher card` | 2 | 37 |
-| When | `I look at a special ability card` | 1 | 61 |
-| When | `I look at an ability card` | 1 | 57 |
-| When | `I look at an artifact card` | 1 | 45 |
-| When | `I look at an attack card` | 1 | 53 |
-| When | `I look at an equipment card` | 1 | 41 |
-| When | `I look at an oddity card` | 1 | 49 |
-| Then | `I should have {int} abilities remaining` | 2 | 285 |
-| Then | `I should have {int} artifacts remaining` | 2 | 280 |
-| Then | `I should have {int} attack remaining` | 2 | 253 |
-| Then | `I should have {int} cypher remaining` | 3 | 244 |
-| Then | `I should have {int} cyphers remaining` | 1 | 268 |
-| Then | `I should have {int} equipment items remaining` | 2 | 272 |
-| Then | `I should have {int} oddity remaining` | 2 | 248 |
-| Then | `I should have {int} special ability remaining` | 2 | 258 |
-| Then | `I should not see a confirmation dialog` | 1 | 311 |
-| Then | `I should see a delete button on the ability card` | 1 | 90 |
-| Then | `I should see a delete button on the artifact card` | 1 | 75 |
-| Then | `I should see a delete button on the attack card` | 1 | 85 |
-| Then | `I should see a delete button on the cypher card` | 1 | 65 |
-| Then | `I should see a delete button on the equipment card` | 1 | 70 |
-| Then | `I should see a delete button on the oddity card` | 1 | 80 |
-| Then | `I should see a delete button on the special ability card` | 1 | 95 |
-| Then | `the ability should be removed from the DOM` | 1 | 234 |
-| Then | `the artifact should be removed from the DOM` | 1 | 222 |
-| Then | `the attack should be removed from the DOM` | 1 | 230 |
-| Then | `the cypher should be removed from the DOM` | 1 | 214 |
-| Then | `the cypher should be removed immediately` | 1 | 307 |
-| Then | `the delete button should be in the top-left corner of the card` | 1 | 292 |
-| Then | `the equipment item should be removed from the DOM` | 1 | 218 |
-| Then | `the oddity should be removed from the DOM` | 1 | 226 |
-| Then | `the special ability should be removed from the DOM` | 1 | 238 |
+| When | `I click the delete button on the first ability` | 1 | 208 |
+| When | `I click the delete button on the first artifact` | 1 | 187 |
+| When | `I click the delete button on the first attack` | 1 | 201 |
+| When | `I click the delete button on the first cypher` | 4 | 158 |
+| When | `I click the delete button on the first cypher again` | 1 | 173 |
+| When | `I click the delete button on the first cypher card` | 2 | 165 |
+| When | `I click the delete button on the first equipment item` | 1 | 180 |
+| When | `I click the delete button on the first oddity` | 1 | 194 |
+| When | `I click the delete button on the first special ability` | 1 | 215 |
+| Given | `I have {int} abilities` | 1 | 142 |
+| Given | `I have {int} artifact` | 1 | 121 |
+| Given | `I have {int} attacks` | 1 | 135 |
+| Given | `I have {int} cyphers` | 4 | 106 |
+| Given | `I have {int} equipment items` | 1 | 114 |
+| Given | `I have {int} oddities` | 1 | 128 |
+| Given | `I have {int} special abilities` | 1 | 149 |
+| When | `I look at a cypher card` | 2 | 38 |
+| When | `I look at a special ability card` | 1 | 62 |
+| When | `I look at an ability card` | 1 | 58 |
+| When | `I look at an artifact card` | 1 | 46 |
+| When | `I look at an attack card` | 1 | 54 |
+| When | `I look at an equipment card` | 1 | 42 |
+| When | `I look at an oddity card` | 1 | 50 |
+| Then | `I should have {int} abilities remaining` | 2 | 299 |
+| Then | `I should have {int} artifacts remaining` | 2 | 294 |
+| Then | `I should have {int} attack remaining` | 2 | 267 |
+| Then | `I should have {int} cypher remaining` | 3 | 258 |
+| Then | `I should have {int} cyphers remaining` | 1 | 282 |
+| Then | `I should have {int} equipment items remaining` | 2 | 286 |
+| Then | `I should have {int} oddity remaining` | 2 | 262 |
+| Then | `I should have {int} special ability remaining` | 2 | 272 |
+| Then | `I should not see a confirmation dialog` | 1 | 325 |
+| Then | `I should see a delete button on the ability card` | 1 | 91 |
+| Then | `I should see a delete button on the artifact card` | 1 | 76 |
+| Then | `I should see a delete button on the attack card` | 1 | 86 |
+| Then | `I should see a delete button on the cypher card` | 1 | 66 |
+| Then | `I should see a delete button on the equipment card` | 1 | 71 |
+| Then | `I should see a delete button on the oddity card` | 1 | 81 |
+| Then | `I should see a delete button on the special ability card` | 1 | 96 |
+| Then | `the ability should be removed from the DOM` | 1 | 248 |
+| Then | `the artifact should be removed from the DOM` | 1 | 236 |
+| Then | `the attack should be removed from the DOM` | 1 | 244 |
+| Then | `the cypher should be removed from the DOM` | 1 | 228 |
+| Then | `the cypher should be removed immediately` | 1 | 321 |
+| Then | `the delete button should be in the top-left corner of the card` | 1 | 306 |
+| Then | `the equipment item should be removed from the DOM` | 1 | 232 |
+| Then | `the oddity should be removed from the DOM` | 1 | 240 |
+| Then | `the special ability should be removed from the DOM` | 1 | 252 |
 
 ## card-modal-focus-trap.steps.ts
 
@@ -539,43 +539,43 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `an edit modal should appear` | 10 | 386 |
-| When | `I clear the input field` | 18 | 217 |
-| When | `I click on the {string} value` | 9 | 63 |
-| When | `I click on the character name {string}` | 12 | 146 |
-| When | `I click on the descriptor {string}` | 2 | 155 |
-| When | `I click on the focus {string}` | 2 | 160 |
-| When | `I click on the tier {string}` | 5 | 150 |
-| When | `I click outside the modal on the backdrop` | 1 | 278 |
-| When | `I click the Armor badge` | 4 | 119 |
-| When | `I click the Cancel button` | 1 | 93 |
-| When | `I click the Confirm button` | 5 | 81 |
-| When | `I click the Current XP badge` | 5 | 105 |
-| When | `I click the Effort badge` | 3 | 129 |
-| When | `I click the Max Cyphers badge` | 3 | 124 |
-| When | `I click the modal cancel button` | 2 | 195 |
-| When | `I click the modal confirm button` | 22 | 183 |
-| When | `I click the new button` | 1 | 304 |
-| When | `I click the Shins badge` | 5 | 114 |
-| When | `I click the Total XP badge` | 2 | 109 |
-| When | `I edit the {string} field to {string}` | 23 | 249 |
-| When | `I hover over the character name {string}` | 1 | 175 |
-| When | `I hover over the tier {string}` | 1 | 179 |
-| When | `I press the Enter key` | 2 | 300 |
-| When | `I press the Escape key` | 4 | 296 |
-| When | `I reload the page` | 48 | 311 |
-| Then | `I should see the {string} value displayed` | 1 | 336 |
-| When | `I tap on the {string} value` | 1 | 72 |
-| When | `I tap on the character name {string}` | 4 | 165 |
-| When | `I tap on the tier {string}` | 1 | 170 |
-| When | `I tap outside the modal on the backdrop` | 1 | 287 |
-| When | `I tap the Current XP badge` | 1 | 134 |
-| When | `I tap the modal confirm button` | 3 | 205 |
-| When | `I tap the Shins badge` | 1 | 139 |
-| When | `I type {string} in the input field` | 15 | 240 |
-| When | `I type {string} in the modal input` | 17 | 227 |
-| When | `I type {string} into the input field` | 8 | 222 |
-| Then | `the {string} value should display {string}` | 6 | 345 |
-| Then | `the {string} value should not have changed` | 2 | 354 |
+| When | `I clear the input field` | 18 | 230 |
+| When | `I click on the {string} value` | 9 | 76 |
+| When | `I click on the character name {string}` | 12 | 159 |
+| When | `I click on the descriptor {string}` | 2 | 168 |
+| When | `I click on the focus {string}` | 2 | 173 |
+| When | `I click on the tier {string}` | 5 | 163 |
+| When | `I click outside the modal on the backdrop` | 1 | 291 |
+| When | `I click the Armor badge` | 4 | 132 |
+| When | `I click the Cancel button` | 1 | 106 |
+| When | `I click the Confirm button` | 5 | 94 |
+| When | `I click the Current XP badge` | 5 | 118 |
+| When | `I click the Effort badge` | 3 | 142 |
+| When | `I click the Max Cyphers badge` | 3 | 137 |
+| When | `I click the modal cancel button` | 2 | 208 |
+| When | `I click the modal confirm button` | 22 | 196 |
+| When | `I click the new button` | 1 | 317 |
+| When | `I click the Shins badge` | 5 | 127 |
+| When | `I click the Total XP badge` | 2 | 122 |
+| When | `I edit the {string} field to {string}` | 23 | 262 |
+| When | `I hover over the character name {string}` | 1 | 188 |
+| When | `I hover over the tier {string}` | 1 | 192 |
+| When | `I press the Enter key` | 2 | 313 |
+| When | `I press the Escape key` | 4 | 309 |
+| When | `I reload the page` | 48 | 324 |
+| Then | `I should see the {string} value displayed` | 1 | 349 |
+| When | `I tap on the {string} value` | 1 | 85 |
+| When | `I tap on the character name {string}` | 4 | 178 |
+| When | `I tap on the tier {string}` | 1 | 183 |
+| When | `I tap outside the modal on the backdrop` | 1 | 300 |
+| When | `I tap the Current XP badge` | 1 | 147 |
+| When | `I tap the modal confirm button` | 3 | 218 |
+| When | `I tap the Shins badge` | 1 | 152 |
+| When | `I type {string} in the input field` | 15 | 253 |
+| When | `I type {string} in the modal input` | 17 | 240 |
+| When | `I type {string} into the input field` | 8 | 235 |
+| Then | `the {string} value should display {string}` | 6 | 358 |
+| Then | `the {string} value should not have changed` | 2 | 367 |
 | Then | `the edit modal should open` | 8 | 391 |
 | Then | `the input field should be focused` | 1 | 419 |
 | Then | `the input field should contain {string}` | 4 | 409 |
@@ -678,31 +678,31 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all recovery checkboxes should be unchecked` | 1 | 189 |
-| When | `I click on the recovery modifier display` | 1 | 202 |
-| When | `I click the {string} recovery checkbox` | 1 | 227 |
-| When | `I confirm the edit` | 3 | 219 |
-| When | `I enter {string} in the modifier field` | 1 | 209 |
-| When | `I select the {string} damage status` | 1 | 235 |
-| Then | `I should see {int} damage status options` | 1 | 54 |
-| Then | `I should see {int} recovery roll checkboxes` | 1 | 19 |
-| Then | `I should see {string} in the recovery section` | 3 | 172 |
-| Then | `I should see a section titled {string}` | 2 | 7 |
-| Then | `I should see an edit modal` | 1 | 214 |
-| Then | `I should see damage status {string}` | 1 | 59 |
-| Then | `I should see damage status {string} with description {string}` | 2 | 64 |
-| Then | `I should see recovery roll {string} with time {string}` | 4 | 24 |
-| Then | `I should see the recovery modifier display {string}` | 1 | 12 |
-| Then | `the {string} radio button should be selected` | 4 | 103 |
-| Then | `the {string} radio button should not be selected` | 6 | 110 |
-| Then | `the {string} recovery checkbox should be checked` | 2 | 38 |
-| Then | `the {string} recovery checkbox should be unchecked` | 3 | 45 |
-| Given | `the character has {string} recovery used` | 1 | 33 |
-| Given | `the character has recovery modifier {int}` | 2 | 141 |
-| Given | `the character is {string}` | 3 | 73 |
-| Given | `the character is new` | 1 | 180 |
-| Then | `the damage track section should have red styling` | 1 | 129 |
-| Then | `the recovery rolls section should have green styling` | 1 | 119 |
+| Then | `all recovery checkboxes should be unchecked` | 1 | 190 |
+| When | `I click on the recovery modifier display` | 1 | 203 |
+| When | `I click the {string} recovery checkbox` | 1 | 228 |
+| When | `I confirm the edit` | 3 | 220 |
+| When | `I enter {string} in the modifier field` | 1 | 210 |
+| When | `I select the {string} damage status` | 1 | 236 |
+| Then | `I should see {int} damage status options` | 1 | 55 |
+| Then | `I should see {int} recovery roll checkboxes` | 1 | 20 |
+| Then | `I should see {string} in the recovery section` | 3 | 173 |
+| Then | `I should see a section titled {string}` | 2 | 8 |
+| Then | `I should see an edit modal` | 1 | 215 |
+| Then | `I should see damage status {string}` | 1 | 60 |
+| Then | `I should see damage status {string} with description {string}` | 2 | 65 |
+| Then | `I should see recovery roll {string} with time {string}` | 4 | 25 |
+| Then | `I should see the recovery modifier display {string}` | 1 | 13 |
+| Then | `the {string} radio button should be selected` | 4 | 104 |
+| Then | `the {string} radio button should not be selected` | 6 | 111 |
+| Then | `the {string} recovery checkbox should be checked` | 2 | 39 |
+| Then | `the {string} recovery checkbox should be unchecked` | 3 | 46 |
+| Given | `the character has {string} recovery used` | 1 | 34 |
+| Given | `the character has recovery modifier {int}` | 2 | 142 |
+| Given | `the character is {string}` | 3 | 74 |
+| Given | `the character is new` | 1 | 181 |
+| Then | `the damage track section should have red styling` | 1 | 130 |
+| Then | `the recovery rolls section should have green styling` | 1 | 120 |
 
 ## resource-tracker-editing.steps.ts
 
@@ -738,9 +738,9 @@ pattern this script does not understand):
 | Then | `{string} should be in its own row` | 2 | 630 |
 | When | `I attempt to drag {string} onto {string}` | 1 | 500 |
 | When | `I choose to {string}` | 2 | 819 |
-| When | `I click the Edit Layout button` | 1 | 11 |
-| When | `I click the Exit Edit Layout button` | 2 | 16 |
-| When | `I click the Reset Layout button` | 1 | 21 |
+| When | `I click the Edit Layout button` | 1 | 13 |
+| When | `I click the Exit Edit Layout button` | 2 | 18 |
+| When | `I click the Reset Layout button` | 1 | 23 |
 | When | `I confirm the reset` | 1 | 191 |
 | When | `I drag {string} out of the grid` | 1 | 601 |
 | When | `I drag the {string} section above the {string} section` | 1 | 237 |
@@ -749,23 +749,23 @@ pattern this script does not understand):
 | When | `I export the character` | 1 | 654 |
 | Given | `I have a character file with a different layout` | 3 | 733 |
 | Given | `I have a character file with the default layout` | 1 | 750 |
-| Given | `I have customized the layout` | 5 | 162 |
+| Given | `I have customized the layout` | 5 | 164 |
 | Given | `I have moved the {string} section to the top` | 1 | 314 |
-| Given | `I have reordered sections` | 1 | 86 |
+| Given | `I have reordered sections` | 1 | 88 |
 | Given | `I have the default layout` | 1 | 220 |
 | When | `I import the character file` | 4 | 755 |
 | When | `I long-tap on a section for 250ms` | 1 | 899 |
-| Given | `I open the settings panel` | 2 | 185 |
+| Given | `I open the settings panel` | 2 | 187 |
 | Then | `I should be able to drag it to a new position` | 1 | 925 |
 | Then | `I should not see a layout choice prompt` | 1 | 796 |
 | Then | `I should see a layout choice prompt` | 1 | 788 |
-| Then | `I should see layout edit mode is active` | 1 | 26 |
+| Then | `I should see layout edit mode is active` | 1 | 28 |
 | Then | `I should see options to {string} or {string}` | 1 | 806 |
-| Then | `I should see the {string} button` | 1 | 133 |
-| Then | `I should see visual indicators on rearrangeable sections` | 1 | 38 |
-| Then | `it should be touch-friendly` | 1 | 144 |
-| Given | `layout edit mode is active` | 8 | 50 |
-| Then | `layout edit mode should be inactive` | 1 | 61 |
+| Then | `I should see the {string} button` | 1 | 135 |
+| Then | `I should see visual indicators on rearrangeable sections` | 1 | 40 |
+| Then | `it should be touch-friendly` | 1 | 146 |
+| Given | `layout edit mode is active` | 8 | 52 |
+| Then | `layout edit mode should be inactive` | 1 | 63 |
 | Then | `my current layout should be preserved` | 1 | 831 |
 | Then | `no grid should be created` | 1 | 535 |
 | Then | `only the character data should be imported` | 1 | 853 |
@@ -776,34 +776,34 @@ pattern this script does not understand):
 | Then | `the character should be imported normally` | 1 | 888 |
 | Then | `the exported file should contain the layout configuration` | 1 | 720 |
 | Then | `the layout from the imported file should be applied` | 1 | 861 |
-| Then | `the layout should be saved` | 1 | 108 |
+| Then | `the layout should be saved` | 1 | 110 |
 | Then | `the layout should return to the default arrangement` | 1 | 196 |
 | Then | `the section should enter drag mode` | 1 | 917 |
 | Then | `the sections should remain in single-column layout` | 1 | 555 |
-| Then | `the sections should remain in the new order` | 1 | 119 |
-| Then | `the visual indicators should be removed` | 1 | 73 |
+| Then | `the sections should remain in the new order` | 1 | 121 |
+| Then | `the visual indicators should be removed` | 1 | 75 |
 
 ## settings-gear.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am viewing an old version with the version navigator visible` | 1 | 116 |
-| Given | `I am viewing the character sheet` | 1 | 10 |
-| When | `I click outside the settings panel` | 1 | 65 |
-| When | `I click the British flag icon` | 1 | 81 |
-| When | `I click the German flag icon` | 2 | 76 |
-| When | `I click the settings gear icon` | 1 | 42 |
-| Given | `I have opened the settings panel` | 9 | 57 |
-| Then | `I should be able to click the settings gear icon` | 1 | 29 |
-| Then | `I should see a {string} option` | 1 | 132 |
-| Then | `I should see a settings gear icon in the header` | 1 | 19 |
-| Then | `I should see the settings panel` | 1 | 47 |
-| Then | `the {string} option should be disabled` | 1 | 139 |
-| Given | `the interface is in German` | 1 | 98 |
-| Then | `the interface should display in English` | 1 | 92 |
-| Then | `the interface should display in German` | 1 | 86 |
-| Then | `the settings gear icon should still be visible` | 1 | 24 |
-| Then | `the settings panel should close` | 4 | 52 |
+| Given | `I am viewing an old version with the version navigator visible` | 1 | 114 |
+| Given | `I am viewing the character sheet` | 1 | 12 |
+| When | `I click outside the settings panel` | 1 | 63 |
+| When | `I click the British flag icon` | 1 | 79 |
+| When | `I click the German flag icon` | 2 | 74 |
+| When | `I click the settings gear icon` | 1 | 44 |
+| Given | `I have opened the settings panel` | 9 | 59 |
+| Then | `I should be able to click the settings gear icon` | 1 | 31 |
+| Then | `I should see a {string} option` | 1 | 130 |
+| Then | `I should see a settings gear icon in the header` | 1 | 21 |
+| Then | `I should see the settings panel` | 1 | 49 |
+| Then | `the {string} option should be disabled` | 1 | 137 |
+| Given | `the interface is in German` | 1 | 96 |
+| Then | `the interface should display in English` | 1 | 90 |
+| Then | `the interface should display in German` | 1 | 84 |
+| Then | `the settings gear icon should still be visible` | 1 | 26 |
+| Then | `the settings panel should close` | 4 | 54 |
 
 ## stat-pool-editing.steps.ts
 
