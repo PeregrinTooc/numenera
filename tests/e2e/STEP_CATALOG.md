@@ -424,45 +424,45 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 4 |
-| Then | `all labels should use translation keys` | 1 | 41 |
-| Then | `all stat labels should use translation keys` | 1 | 63 |
-| Then | `all text field labels should use translation keys` | 1 | 169 |
-| Then | `empty states should use translation keys` | 1 | 203 |
+| Then | `all labels should use translation keys` | 1 | 37 |
+| Then | `all stat labels should use translation keys` | 1 | 58 |
+| Then | `all text field labels should use translation keys` | 1 | 156 |
+| Then | `empty states should use translation keys` | 1 | 187 |
 | Given | `I am on the character sheet page` | 50 | 10 |
-| Then | `I should see {int} artifact displayed` | 1 | 101 |
-| Then | `I should see {int} cyphers displayed` | 1 | 73 |
-| Then | `I should see {int} oddities displayed` | 1 | 116 |
-| Then | `I should see an empty artifacts section` | 1 | 193 |
-| Then | `I should see an empty cyphers section` | 1 | 188 |
-| Then | `I should see an empty oddities section` | 1 | 198 |
-| Then | `I should see artifact {string} with level {string}` | 1 | 107 |
-| Then | `I should see cypher {string} with level {string}` | 2 | 79 |
-| Then | `I should see descriptor {string} displayed` | 1 | 31 |
-| Then | `I should see empty state for abilities` | 1 | 235 |
-| Then | `I should see empty state for background` | 1 | 214 |
-| Then | `I should see empty state for equipment` | 1 | 230 |
-| Then | `I should see empty state for notes` | 1 | 222 |
-| Then | `I should see focus {string} displayed` | 1 | 36 |
-| Then | `I should see oddity {string}` | 2 | 122 |
-| Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 51 |
-| Then | `I should see the abilities text` | 1 | 161 |
-| Then | `I should see the background text` | 1 | 136 |
+| Then | `I should see {int} artifact displayed` | 1 | 94 |
+| Then | `I should see {int} cyphers displayed` | 1 | 68 |
+| Then | `I should see {int} oddities displayed` | 1 | 107 |
+| Then | `I should see an empty artifacts section` | 1 | 179 |
+| Then | `I should see an empty cyphers section` | 1 | 175 |
+| Then | `I should see an empty oddities section` | 1 | 183 |
+| Then | `I should see artifact {string} with level {string}` | 1 | 99 |
+| Then | `I should see cypher {string} with level {string}` | 2 | 73 |
+| Then | `I should see descriptor {string} displayed` | 1 | 29 |
+| Then | `I should see empty state for abilities` | 1 | 218 |
+| Then | `I should see empty state for background` | 1 | 198 |
+| Then | `I should see empty state for equipment` | 1 | 214 |
+| Then | `I should see empty state for notes` | 1 | 206 |
+| Then | `I should see focus {string} displayed` | 1 | 33 |
+| Then | `I should see oddity {string}` | 2 | 112 |
+| Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 47 |
+| Then | `I should see the abilities text` | 1 | 149 |
+| Then | `I should see the background text` | 1 | 125 |
 | Then | `I should see the character name {string}` | 1 | 15 |
-| Then | `I should see the equipment text` | 1 | 152 |
-| Then | `I should see the notes text` | 1 | 144 |
-| Then | `I should see tier {string} displayed` | 1 | 20 |
-| Then | `I should see type {string} displayed` | 1 | 25 |
-| Given | `the character has empty text fields` | 1 | 209 |
-| Given | `the character has no artifacts` | 1 | 180 |
-| Given | `the character has no cyphers` | 1 | 175 |
-| Given | `the character has no oddities` | 1 | 184 |
-| Given | `the character has the following artifacts:` | 1 | 94 |
-| Given | `the character has the following cyphers:` | 1 | 70 |
-| Given | `the character has the following oddities:` | 1 | 97 |
-| Given | `the character has the following stats:` | 1 | 48 |
-| Given | `the character has the following text fields:` | 1 | 133 |
-| Then | `the cyphers section label should use translation keys` | 1 | 88 |
-| Then | `the items section labels should use translation keys` | 1 | 127 |
+| Then | `I should see the equipment text` | 1 | 141 |
+| Then | `I should see the notes text` | 1 | 133 |
+| Then | `I should see tier {string} displayed` | 1 | 19 |
+| Then | `I should see type {string} displayed` | 1 | 23 |
+| Given | `the character has empty text fields` | 1 | 193 |
+| Given | `the character has no artifacts` | 1 | 167 |
+| Given | `the character has no cyphers` | 1 | 162 |
+| Given | `the character has no oddities` | 1 | 171 |
+| Given | `the character has the following artifacts:` | 1 | 87 |
+| Given | `the character has the following cyphers:` | 1 | 65 |
+| Given | `the character has the following oddities:` | 1 | 90 |
+| Given | `the character has the following stats:` | 1 | 44 |
+| Given | `the character has the following text fields:` | 1 | 122 |
+| Then | `the cyphers section label should use translation keys` | 1 | 81 |
+| Then | `the items section labels should use translation keys` | 1 | 116 |
 
 ## character-file-export.steps.ts
 

@@ -1,6 +1,5 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
-import { DOMHelpers } from "../support/dom-helpers.js";
 import { waitForCharacterSheetReady } from "../support/app-ready.js";
 
 Given("a character exists with the following data:", function (_dataTable) {
@@ -15,13 +14,11 @@ Given("I am on the character sheet page", async function () {
 });
 
 Then("I should see the character name {string}", async function (name: string) {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("character-name")).toHaveText(name);
+  await expect(this.dom.getByTestId("character-name")).toHaveText(name);
 });
 
 Then("I should see tier {string} displayed", async function (tier: string) {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("character-tier")).toContainText(tier);
+  await expect(this.dom.getByTestId("character-tier")).toContainText(tier);
 });
 
 Then("I should see type {string} displayed", async function (type: string) {
@@ -31,13 +28,11 @@ Then("I should see type {string} displayed", async function (type: string) {
 });
 
 Then("I should see descriptor {string} displayed", async function (descriptor: string) {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("character-descriptor")).toContainText(descriptor);
+  await expect(this.dom.getByTestId("character-descriptor")).toContainText(descriptor);
 });
 
 Then("I should see focus {string} displayed", async function (focus: string) {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("character-focus")).toContainText(focus);
+  await expect(this.dom.getByTestId("character-focus")).toContainText(focus);
 });
 
 Then("all labels should use translation keys", async function () {
@@ -53,12 +48,11 @@ Given("the character has the following stats:", function (_dataTable) {
 Then(
   "I should see the {string} stat with pool {string}, edge {string}, and current {string}",
   async function (statName: string, pool: string, edge: string, current: string) {
-    const dom = new DOMHelpers(this.page);
     const statNameLower = statName.toLowerCase();
 
-    await expect(dom.getByTestId(`stat-${statNameLower}-pool`)).toContainText(pool);
-    await expect(dom.getByTestId(`stat-${statNameLower}-edge`)).toContainText(edge);
-    await expect(dom.getByTestId(`stat-${statNameLower}-current`)).toContainText(current);
+    await expect(this.dom.getByTestId(`stat-${statNameLower}-pool`)).toContainText(pool);
+    await expect(this.dom.getByTestId(`stat-${statNameLower}-edge`)).toContainText(edge);
+    await expect(this.dom.getByTestId(`stat-${statNameLower}-current`)).toContainText(current);
   }
 );
 
@@ -73,17 +67,15 @@ Given("the character has the following cyphers:", function (_dataTable) {
 });
 
 Then("I should see {int} cyphers displayed", async function (count: number) {
-  const dom = new DOMHelpers(this.page);
-  const actualCount = await dom.count("cypher-item");
+  const actualCount = await this.dom.count("cypher-item");
   expect(actualCount).toBe(count);
 });
 
 Then(
   "I should see cypher {string} with level {string}",
   async function (name: string, level: string) {
-    const dom = new DOMHelpers(this.page);
-    await expect(dom.getByTestId(`cypher-name-${name}`)).toContainText(name);
-    await expect(dom.getByTestId(`cypher-level-${name}`)).toContainText(level);
+    await expect(this.dom.getByTestId(`cypher-name-${name}`)).toContainText(name);
+    await expect(this.dom.getByTestId(`cypher-level-${name}`)).toContainText(level);
   }
 );
 
@@ -101,29 +93,25 @@ Given("the character has the following oddities:", function (_dataTable) {
 });
 
 Then("I should see {int} artifact displayed", async function (count: number) {
-  const dom = new DOMHelpers(this.page);
-  const actualCount = await dom.count("artifact-item");
+  const actualCount = await this.dom.count("artifact-item");
   expect(actualCount).toBe(count);
 });
 
 Then(
   "I should see artifact {string} with level {string}",
   async function (name: string, level: string) {
-    const dom = new DOMHelpers(this.page);
-    await expect(dom.getByTestId(`artifact-name-${name}`)).toContainText(name);
-    await expect(dom.getByTestId(`artifact-level-${name}`)).toContainText(level);
+    await expect(this.dom.getByTestId(`artifact-name-${name}`)).toContainText(name);
+    await expect(this.dom.getByTestId(`artifact-level-${name}`)).toContainText(level);
   }
 );
 
 Then("I should see {int} oddities displayed", async function (count: number) {
-  const dom = new DOMHelpers(this.page);
-  const actualCount = await dom.count("oddity-item");
+  const actualCount = await this.dom.count("oddity-item");
   expect(actualCount).toBe(count);
 });
 
 Then("I should see oddity {string}", async function (description: string) {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId(`oddity-${description}`)).toContainText(description);
+  await expect(this.dom.getByTestId(`oddity-${description}`)).toContainText(description);
 });
 
 Then("the items section labels should use translation keys", async function () {
@@ -152,19 +140,17 @@ Then("I should see the notes text", async function () {
 });
 
 Then("I should see the equipment text", async function () {
-  const dom = new DOMHelpers(this.page);
   // Equipment is now displayed as individual items, not a text field
   // Check for equipment section and at least one equipment item
-  await expect(dom.getByTestId("equipment-heading")).toBeVisible();
-  const equipmentCount = await dom.count("equipment-item");
+  await expect(this.dom.getByTestId("equipment-heading")).toBeVisible();
+  const equipmentCount = await this.dom.count("equipment-item");
   expect(equipmentCount).toBeGreaterThan(0);
 });
 
 Then("I should see the abilities text", async function () {
-  const dom = new DOMHelpers(this.page);
   // Abilities are now cards, check for abilities section and at least one ability
-  await expect(dom.getByTestId("abilities-section")).toBeVisible();
-  const abilityCount = await dom.count("ability-item");
+  await expect(this.dom.getByTestId("abilities-section")).toBeVisible();
+  const abilityCount = await this.dom.count("ability-item");
   expect(abilityCount).toBeGreaterThan(0);
 });
 
@@ -188,18 +174,15 @@ Given("the character has no oddities", function () {
 });
 
 Then("I should see an empty cyphers section", async function () {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("empty-cyphers")).toBeVisible();
+  await expect(this.dom.getByTestId("empty-cyphers")).toBeVisible();
 });
 
 Then("I should see an empty artifacts section", async function () {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("empty-artifacts")).toBeVisible();
+  await expect(this.dom.getByTestId("empty-artifacts")).toBeVisible();
 });
 
 Then("I should see an empty oddities section", async function () {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("empty-oddities")).toBeVisible();
+  await expect(this.dom.getByTestId("empty-oddities")).toBeVisible();
 });
 
 Then("empty states should use translation keys", async function () {
@@ -230,11 +213,9 @@ Then("I should see empty state for notes", async function () {
 });
 
 Then("I should see empty state for equipment", async function () {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("empty-equipment")).toBeVisible();
+  await expect(this.dom.getByTestId("empty-equipment")).toBeVisible();
 });
 
 Then("I should see empty state for abilities", async function () {
-  const dom = new DOMHelpers(this.page);
-  await expect(dom.getByTestId("empty-abilities")).toBeVisible();
+  await expect(this.dom.getByTestId("empty-abilities")).toBeVisible();
 });
