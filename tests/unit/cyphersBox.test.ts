@@ -5,18 +5,20 @@ import { CyphersBox } from "../../src/components/CyphersBox.js";
 import { Character, Cypher } from "../../src/types/character.js";
 import { CypherItem } from "../../src/components/CypherItem.js";
 import { createItemInstances } from "../../src/components/helpers/CollectionBehavior.js";
+import { setupTestContainer } from "./helpers/testSetup.js";
 
 vi.mock("../../src/storage/storageFactory.js");
 
 describe("CyphersBox", () => {
+  const getContainer = setupTestContainer();
   let container: HTMLElement;
   let mockCharacter: Character;
   let mockOnFieldUpdate: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    container = document.createElement("div");
+    // CyphersBox dispatches character-updated on document.getElementById("app").
+    container = getContainer();
     container.id = "app";
-    document.body.appendChild(container);
 
     mockOnFieldUpdate = vi.fn();
 
@@ -62,10 +64,6 @@ describe("CyphersBox", () => {
         notes: "",
       },
     };
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
   });
 
   it("should remove cypher when delete callback is invoked", () => {
