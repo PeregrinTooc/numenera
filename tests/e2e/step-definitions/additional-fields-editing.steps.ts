@@ -104,52 +104,64 @@ Then(
 );
 
 // ============================================================================
-// BACKGROUND TEXTAREA STEPS - Unique inline editing (not modal-based)
+// TEXTAREA STEPS - Unique inline editing (not modal-based). Parameterised by
+// {textarea} (background/notes); see support/parameterTypes.ts.
 // ============================================================================
 
-Then("the background textarea should be readonly", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-background"]');
-  await expect(textarea).toHaveAttribute("readonly", "");
-});
+const TEXTAREA_TEST_IDS: Record<string, string> = {
+  background: "character-background",
+  notes: "character-notes",
+};
+
+function textareaLocator(world: CustomWorld, field: string) {
+  return world.page!.locator(`[data-testid="${TEXTAREA_TEST_IDS[field]}"]`);
+}
 
 Then(
-  "the background textarea should show {string}",
-  async function (this: CustomWorld, text: string) {
-    const textarea = this.page!.locator('[data-testid="character-background"]');
+  "the {textarea} textarea should be readonly",
+  async function (this: CustomWorld, field: string) {
+    await expect(textareaLocator(this, field)).toHaveAttribute("readonly", "");
+  }
+);
+
+Then(
+  "the {textarea} textarea should show {string}",
+  async function (this: CustomWorld, field: string, text: string) {
+    const textarea = textareaLocator(this, field);
     // Wait for the textarea to be visible and check the value
     await textarea.waitFor({ state: "visible" });
     await expect(textarea).toHaveValue(text);
   }
 );
 
-Then("the background textarea should have a pointer cursor", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-background"]');
-  const cursor = await textarea.evaluate((el) => window.getComputedStyle(el).cursor);
-  expect(cursor).toBe("pointer");
-});
-
-When("I click the background textarea", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-background"]');
-  await textarea.click();
-});
-
-When("I clear the background textarea", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-background"]');
-  await textarea.clear();
-});
-
-When(
-  "I type {string} in the background textarea",
-  async function (this: CustomWorld, text: string) {
-    const textarea = this.page!.locator('[data-testid="character-background"]');
-    await textarea.fill(text);
+Then(
+  "the {textarea} textarea should have a pointer cursor",
+  async function (this: CustomWorld, field: string) {
+    const cursor = await textareaLocator(this, field).evaluate(
+      (el) => window.getComputedStyle(el).cursor
+    );
+    expect(cursor).toBe("pointer");
   }
 );
 
-When("I click outside the background textarea", async function (this: CustomWorld) {
+When("I click the {textarea} textarea", async function (this: CustomWorld, field: string) {
+  await textareaLocator(this, field).click();
+});
+
+When("I clear the {textarea} textarea", async function (this: CustomWorld, field: string) {
+  await textareaLocator(this, field).clear();
+});
+
+When(
+  "I type {string} in the {textarea} textarea",
+  async function (this: CustomWorld, text: string, field: string) {
+    await textareaLocator(this, field).fill(text);
+  }
+);
+
+When("I click outside the {textarea} textarea", async function (this: CustomWorld, field: string) {
   // Trigger blur by clicking outside - use body as a safe target
-  const textarea = this.page!.locator('[data-testid="character-background"]');
-  await textarea.blur();
+  await textareaLocator(this, field).blur();
 
   // Give the blur handler time to execute and trigger auto-save
   await this.page!.waitForTimeout(100);
@@ -157,21 +169,27 @@ When("I click outside the background textarea", async function (this: CustomWorl
   await waitForSaveComplete(this.page!);
 });
 
-Then("the background textarea should not be readonly", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-background"]');
-  // Wait for the readonly attribute to be removed (with increased timeout)
-  await expect(textarea).not.toHaveAttribute("readonly", { timeout: 10000 });
-});
-
-Then("the background textarea should be focused", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-background"]');
-  await expect(textarea).toBeFocused();
-});
+Then(
+  "the {textarea} textarea should not be readonly",
+  async function (this: CustomWorld, field: string) {
+    // Wait for the readonly attribute to be removed (with increased timeout)
+    await expect(textareaLocator(this, field)).not.toHaveAttribute("readonly", {
+      timeout: 10000,
+    });
+  }
+);
 
 Then(
-  "the background textarea should have an edit state visual indicator",
-  async function (this: CustomWorld) {
-    const textarea = this.page!.locator('[data-testid="character-background"]');
+  "the {textarea} textarea should be focused",
+  async function (this: CustomWorld, field: string) {
+    await expect(textareaLocator(this, field)).toBeFocused();
+  }
+);
+
+Then(
+  "the {textarea} textarea should have an edit state visual indicator",
+  async function (this: CustomWorld, field: string) {
+    const textarea = textareaLocator(this, field);
     // Check that textarea does not have readonly attribute (visual indicator of edit mode)
     await expect(textarea).not.toHaveAttribute("readonly");
     // Additional check: verify it's actually editable by checking if it's enabled
@@ -179,34 +197,31 @@ Then(
   }
 );
 
-Then("the background textarea should be empty", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-background"]');
-  await expect(textarea).toHaveValue("");
+Then("the {textarea} textarea should be empty", async function (this: CustomWorld, field: string) {
+  await expect(textareaLocator(this, field)).toHaveValue("");
 });
 
 Then("the background textarea should still be editable", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-background"]');
+  const textarea = textareaLocator(this, "background");
   await expect(textarea).not.toHaveAttribute("readonly");
   await expect(textarea).toBeEnabled();
 });
 
-When("the background textarea is empty", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-background"]');
-  await textarea.clear();
+When("the {textarea} textarea is empty", async function (this: CustomWorld, field: string) {
+  await textareaLocator(this, field).clear();
 });
 
 Then(
-  "the background placeholder should be {string}",
-  async function (this: CustomWorld, text: string) {
-    const textarea = this.page!.locator('[data-testid="character-background"]');
-    const placeholder = await textarea.getAttribute("placeholder");
+  "the {textarea} placeholder should be {string}",
+  async function (this: CustomWorld, field: string, text: string) {
+    const placeholder = await textareaLocator(this, field).getAttribute("placeholder");
     expect(placeholder).toBe(text);
   }
 );
 
 Then(
-  "the character data should have background {string}",
-  async function (this: CustomWorld, text: string) {
+  "the character data should have {textarea} {string}",
+  async function (this: CustomWorld, field: string, text: string) {
     // Wait for auto-save to complete by monitoring save indicator
     await waitForSaveComplete(this.page!);
 
@@ -214,101 +229,7 @@ Then(
     const storedData = await this.storageHelper.getCharacter();
 
     expect(storedData).toBeTruthy();
-    expect(storedData.textFields.background).toBe(text);
-  }
-);
-
-// ============================================================================
-// NOTES TEXTAREA STEPS - Unique inline editing (not modal-based)
-// ============================================================================
-
-Then("the notes textarea should be readonly", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  await expect(textarea).toHaveAttribute("readonly", "");
-});
-
-Then("the notes textarea should show {string}", async function (this: CustomWorld, text: string) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  await textarea.waitFor({ state: "visible" });
-  await expect(textarea).toHaveValue(text);
-});
-
-Then("the notes textarea should have a pointer cursor", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  const cursor = await textarea.evaluate((el) => window.getComputedStyle(el).cursor);
-  expect(cursor).toBe("pointer");
-});
-
-When("I click the notes textarea", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  await textarea.click();
-});
-
-Then("the notes textarea should not be readonly", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  await expect(textarea).not.toHaveAttribute("readonly", { timeout: 10000 });
-});
-
-Then("the notes textarea should be focused", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  await expect(textarea).toBeFocused();
-});
-
-Then(
-  "the notes textarea should have an edit state visual indicator",
-  async function (this: CustomWorld) {
-    const textarea = this.page!.locator('[data-testid="character-notes"]');
-    await expect(textarea).not.toHaveAttribute("readonly");
-    await expect(textarea).toBeEnabled();
-  }
-);
-
-When("I clear the notes textarea", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  await textarea.clear();
-});
-
-When("I type {string} in the notes textarea", async function (this: CustomWorld, text: string) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  await textarea.fill(text);
-});
-
-When("I click outside the notes textarea", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  await textarea.blur();
-  // Give the blur handler time to execute and trigger auto-save
-  await this.page!.waitForTimeout(100);
-  // Wait for auto-save to complete
-  await waitForSaveComplete(this.page!);
-});
-
-Then("the notes textarea should be empty", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  await expect(textarea).toHaveValue("");
-});
-
-When("the notes textarea is empty", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  await textarea.clear();
-});
-
-Then("the notes placeholder should be {string}", async function (this: CustomWorld, text: string) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  const placeholder = await textarea.getAttribute("placeholder");
-  expect(placeholder).toBe(text);
-});
-
-Then(
-  "the character data should have notes {string}",
-  async function (this: CustomWorld, text: string) {
-    // Wait for auto-save to complete by monitoring save indicator
-    await waitForSaveComplete(this.page!);
-
-    // Verify using TestStorageHelper
-    const storedData = await this.storageHelper.getCharacter();
-
-    expect(storedData).toBeTruthy();
-    expect(storedData.textFields.notes).toBe(text);
+    expect(storedData.textFields[field]).toBe(text);
   }
 );
 
@@ -420,16 +341,18 @@ When("I select {string} from the mobile picker", async function (this: CustomWor
   await select.selectOption(type);
 });
 
-When("I tap the background textarea", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-background"]');
-  await textarea.tap();
+When("I tap the {textarea} textarea", async function (this: CustomWorld, field: string) {
+  await textareaLocator(this, field).tap();
 });
 
-Then("the background textarea should become editable", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-background"]');
-  await expect(textarea).not.toHaveAttribute("readonly", { timeout: 10000 });
-  await expect(textarea).toBeEnabled();
-});
+Then(
+  "the {textarea} textarea should become editable",
+  async function (this: CustomWorld, field: string) {
+    const textarea = textareaLocator(this, field);
+    await expect(textarea).not.toHaveAttribute("readonly", { timeout: 10000 });
+    await expect(textarea).toBeEnabled();
+  }
+);
 
 Then("the virtual keyboard should appear", async function (this: CustomWorld) {
   // On real mobile devices, the virtual keyboard appears when a textarea is focused
@@ -440,29 +363,9 @@ Then("the virtual keyboard should appear", async function (this: CustomWorld) {
   // We've already verified the textarea became editable in the previous step
 });
 
-When("I tap the notes textarea", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  await textarea.tap();
-});
-
-Then("the notes textarea should become editable", async function (this: CustomWorld) {
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  await expect(textarea).not.toHaveAttribute("readonly", { timeout: 10000 });
-  await expect(textarea).toBeEnabled();
-});
-
-When("I tap outside the background textarea", async function (this: CustomWorld) {
+When("I tap outside the {textarea} textarea", async function (this: CustomWorld, field: string) {
   // On mobile, just blur the textarea directly which is more reliable
-  const textarea = this.page!.locator('[data-testid="character-background"]');
-  await textarea.blur();
-  // Give the blur handler time to execute
-  await this.page!.waitForTimeout(100);
-});
-
-When("I tap outside the notes textarea", async function (this: CustomWorld) {
-  // On mobile, just blur the textarea directly which is more reliable
-  const textarea = this.page!.locator('[data-testid="character-notes"]');
-  await textarea.blur();
+  await textareaLocator(this, field).blur();
   // Give the blur handler time to execute
   await this.page!.waitForTimeout(100);
 });
