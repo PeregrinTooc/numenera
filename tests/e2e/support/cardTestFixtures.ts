@@ -3,34 +3,12 @@
  * Eliminates duplication of FULL_CHARACTER object across step definitions
  */
 
-// Base character template used across all card tests
-export const BASE_CHARACTER = {
-  name: "Kael the Wanderer",
-  tier: 3,
-  type: "Glaive",
-  descriptor: "Strong",
-  focus: "Bears a Halo of Fire",
-  currentXp: 12,
-  totalXp: 12,
-  shins: 47,
-  armor: 2,
-  effort: 3,
-  maxCyphers: 4,
-  stats: {
-    might: { pool: 15, edge: 2, current: 12 },
-    speed: { pool: 12, edge: 1, current: 12 },
-    intellect: { pool: 10, edge: 0, current: 8 },
-  },
-  recoveryRolls: {
-    action: false,
-    tenMinutes: false,
-    oneHour: false,
-    tenHours: false,
-    modifier: 0,
-  },
-  damageTrack: { impairment: "healthy" },
-  textFields: { background: "", notes: "" },
-};
+import { FULL_CHARACTER } from "../../../src/data/mockCharacters.js";
+
+// Re-exported so every card fixture builds on the same demo character the
+// app itself ships (src/data/mockCharacters.ts), instead of a hand-copied
+// twin that could silently drift from it.
+export { FULL_CHARACTER };
 
 // Empty arrays for all card types
 export const EMPTY_ARRAYS = {
@@ -52,7 +30,7 @@ export function createCharacterWithCards<K extends keyof typeof EMPTY_ARRAYS>(
   cards: (typeof EMPTY_ARRAYS)[K]
 ): Record<string, unknown> {
   return {
-    ...BASE_CHARACTER,
+    ...FULL_CHARACTER,
     ...EMPTY_ARRAYS,
     [cardType]: cards,
   };
@@ -237,7 +215,7 @@ export function createTestCharacterWithCardCount(
   const cards = config.sampleCards.slice(0, count);
 
   return {
-    ...BASE_CHARACTER,
+    ...FULL_CHARACTER,
     ...EMPTY_ARRAYS,
     [property]: cards,
   };
