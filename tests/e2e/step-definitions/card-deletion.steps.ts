@@ -125,13 +125,6 @@ Given("I have {int} artifact", async function (this: CustomWorld, count: number)
   }
 });
 
-Given("I have {int} artifacts", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "artifact");
-  if (actualCount < count) {
-    throw new Error(`Expected ${count} artifacts but found ${actualCount}`);
-  }
-});
-
 Given("I have {int} oddities", async function (this: CustomWorld, count: number) {
   const actualCount = await getCardCount(this, "oddity");
   if (actualCount < count) {
@@ -253,19 +246,6 @@ Then("I should have {int} cypher remaining", async function (this: CustomWorld, 
   expect(actualCount).toBe(count);
 });
 
-Then(
-  "I should have {int} equipment item remaining",
-  async function (this: CustomWorld, count: number) {
-    const actualCount = await getCardCount(this, "equipment");
-    expect(actualCount).toBe(count);
-  }
-);
-
-Then("I should have {int} artifact remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "artifact");
-  expect(actualCount).toBe(count);
-});
-
 Then("I should have {int} oddity remaining", async function (this: CustomWorld, count: number) {
   const actualCount = await getCardCount(this, "oddity");
   expect(actualCount).toBe(count);
@@ -273,11 +253,6 @@ Then("I should have {int} oddity remaining", async function (this: CustomWorld, 
 
 Then("I should have {int} attack remaining", async function (this: CustomWorld, count: number) {
   const actualCount = await getCardCount(this, "attack");
-  expect(actualCount).toBe(count);
-});
-
-Then("I should have {int} ability remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "ability");
   expect(actualCount).toBe(count);
 });
 
@@ -305,16 +280,6 @@ Then(
 
 Then("I should have {int} artifacts remaining", async function (this: CustomWorld, count: number) {
   const actualCount = await getCardCount(this, "artifact");
-  expect(actualCount).toBe(count);
-});
-
-Then("I should have {int} oddities remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "oddity");
-  expect(actualCount).toBe(count);
-});
-
-Then("I should have {int} attacks remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await getCardCount(this, "attack");
   expect(actualCount).toBe(count);
 });
 

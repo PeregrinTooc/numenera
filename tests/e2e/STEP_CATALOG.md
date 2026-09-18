@@ -26,9 +26,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **749** in 25 files
+- Step definitions: **743** in 25 files
 - Feature step lines: **2047**
-- Definitions with no feature usage: **16**
+- Definitions with no feature usage: **10**
 - Feature lines matching no definition: **24**
 
 | Step file | Definitions | Unused |
@@ -38,7 +38,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
 | [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 38 | 0 |
 | [card-creation.steps.ts](#cardcreationstepsts) | 90 | 0 |
-| [card-deletion.steps.ts](#carddeletionstepsts) | 55 | 7 |
+| [card-deletion.steps.ts](#carddeletionstepsts) | 49 | 1 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 17 | 1 |
 | [character-display.steps.ts](#characterdisplaystepsts) | 40 | 0 |
@@ -328,23 +328,22 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the delete button on the first ability` | 1 | 206 |
-| When | `I click the delete button on the first artifact` | 1 | 188 |
-| When | `I click the delete button on the first attack` | 1 | 200 |
-| When | `I click the delete button on the first cypher` | 4 | 163 |
-| When | `I click the delete button on the first cypher again` | 1 | 176 |
-| When | `I click the delete button on the first cypher card` | 2 | 169 |
-| When | `I click the delete button on the first equipment item` | 1 | 182 |
-| When | `I click the delete button on the first oddity` | 1 | 194 |
-| When | `I click the delete button on the first special ability` | 1 | 212 |
-| Given | `I have {int} abilities` | 1 | 147 |
+| When | `I click the delete button on the first ability` | 1 | 199 |
+| When | `I click the delete button on the first artifact` | 1 | 181 |
+| When | `I click the delete button on the first attack` | 1 | 193 |
+| When | `I click the delete button on the first cypher` | 4 | 156 |
+| When | `I click the delete button on the first cypher again` | 1 | 169 |
+| When | `I click the delete button on the first cypher card` | 2 | 162 |
+| When | `I click the delete button on the first equipment item` | 1 | 175 |
+| When | `I click the delete button on the first oddity` | 1 | 187 |
+| When | `I click the delete button on the first special ability` | 1 | 205 |
+| Given | `I have {int} abilities` | 1 | 140 |
 | Given | `I have {int} artifact` | 1 | 119 |
-| Given | `I have {int} artifacts` | **0** | 126 |
-| Given | `I have {int} attacks` | 1 | 140 |
+| Given | `I have {int} attacks` | 1 | 133 |
 | Given | `I have {int} cyphers` | 4 | 104 |
 | Given | `I have {int} equipment items` | 1 | 112 |
-| Given | `I have {int} oddities` | 1 | 133 |
-| Given | `I have {int} special abilities` | 1 | 154 |
+| Given | `I have {int} oddities` | 1 | 126 |
+| Given | `I have {int} special abilities` | 1 | 147 |
 | When | `I look at a cypher card` | 2 | 36 |
 | When | `I look at a special ability card` | 1 | 60 |
 | When | `I look at an ability card` | 1 | 56 |
@@ -352,21 +351,16 @@ pattern this script does not understand):
 | When | `I look at an attack card` | 1 | 52 |
 | When | `I look at an equipment card` | 1 | 40 |
 | When | `I look at an oddity card` | 1 | 48 |
-| Then | `I should have {int} abilities remaining` | 2 | 319 |
-| Then | `I should have {int} ability remaining` | **0** | 277 |
-| Then | `I should have {int} artifact remaining` | **0** | 262 |
-| Then | `I should have {int} artifacts remaining` | 2 | 304 |
-| Then | `I should have {int} attack remaining` | 2 | 272 |
-| Then | `I should have {int} attacks remaining` | **0** | 314 |
-| Then | `I should have {int} cypher remaining` | 3 | 250 |
-| Then | `I should have {int} cyphers remaining` | 1 | 292 |
-| Then | `I should have {int} equipment item remaining` | **0** | 254 |
-| Then | `I should have {int} equipment items remaining` | 2 | 296 |
-| Then | `I should have {int} oddities remaining` | **0** | 309 |
-| Then | `I should have {int} oddity remaining` | 2 | 267 |
-| Then | `I should have {int} special abilities remaining` | **0** | 324 |
-| Then | `I should have {int} special ability remaining` | 2 | 282 |
-| Then | `I should not see a confirmation dialog` | 1 | 353 |
+| Then | `I should have {int} abilities remaining` | 2 | 284 |
+| Then | `I should have {int} artifacts remaining` | 2 | 279 |
+| Then | `I should have {int} attack remaining` | 2 | 252 |
+| Then | `I should have {int} cypher remaining` | 3 | 243 |
+| Then | `I should have {int} cyphers remaining` | 1 | 267 |
+| Then | `I should have {int} equipment items remaining` | 2 | 271 |
+| Then | `I should have {int} oddity remaining` | 2 | 247 |
+| Then | `I should have {int} special abilities remaining` | **0** | 289 |
+| Then | `I should have {int} special ability remaining` | 2 | 257 |
+| Then | `I should not see a confirmation dialog` | 1 | 318 |
 | Then | `I should see a delete button on the ability card` | 1 | 89 |
 | Then | `I should see a delete button on the artifact card` | 1 | 74 |
 | Then | `I should see a delete button on the attack card` | 1 | 84 |
@@ -374,15 +368,15 @@ pattern this script does not understand):
 | Then | `I should see a delete button on the equipment card` | 1 | 69 |
 | Then | `I should see a delete button on the oddity card` | 1 | 79 |
 | Then | `I should see a delete button on the special ability card` | 1 | 94 |
-| Then | `the ability should be removed from the DOM` | 1 | 240 |
-| Then | `the artifact should be removed from the DOM` | 1 | 228 |
-| Then | `the attack should be removed from the DOM` | 1 | 236 |
-| Then | `the cypher should be removed from the DOM` | 1 | 220 |
-| Then | `the cypher should be removed immediately` | 1 | 349 |
-| Then | `the delete button should be in the top-left corner of the card` | 1 | 334 |
-| Then | `the equipment item should be removed from the DOM` | 1 | 224 |
-| Then | `the oddity should be removed from the DOM` | 1 | 232 |
-| Then | `the special ability should be removed from the DOM` | 1 | 244 |
+| Then | `the ability should be removed from the DOM` | 1 | 233 |
+| Then | `the artifact should be removed from the DOM` | 1 | 221 |
+| Then | `the attack should be removed from the DOM` | 1 | 229 |
+| Then | `the cypher should be removed from the DOM` | 1 | 213 |
+| Then | `the cypher should be removed immediately` | 1 | 314 |
+| Then | `the delete button should be in the top-left corner of the card` | 1 | 299 |
+| Then | `the equipment item should be removed from the DOM` | 1 | 217 |
+| Then | `the oddity should be removed from the DOM` | 1 | 225 |
+| Then | `the special ability should be removed from the DOM` | 1 | 237 |
 
 ## card-modal-focus-trap.steps.ts
 
@@ -658,35 +652,35 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `artifact level labels should display {string}` | 1 | 112 |
-| Then | `cypher level labels should display {string}` | 1 | 100 |
-| Given | `I am on the character sheet page with {string}` | 9 | 10 |
-| When | `I navigate to the page with {string}` | 1 | 16 |
-| Then | `the artifacts heading should be {string}` | 1 | 106 |
-| Then | `the background field label should be {string}` | 2 | 127 |
-| Then | `the cyphers heading should be {string}` | 1 | 94 |
-| Then | `the empty abilities message should be {string}` | 1 | 185 |
-| Then | `the empty artifacts message should be {string}` | 1 | 145 |
-| Then | `the empty background message should be {string}` | 1 | 157 |
-| Then | `the empty cyphers message should be {string}` | 1 | 139 |
-| Then | `the empty equipment message should be {string}` | 1 | 179 |
-| Then | `the empty notes message should be {string}` | 1 | 168 |
-| Then | `the empty oddities message should be {string}` | 1 | 151 |
-| Then | `the intellect stat should display {string}` | 1 | 64 |
-| Given | `the language is set to {string}` | 3 | 3 |
-| Then | `the language should remain German` | 1 | 191 |
-| Then | `the load button should display {string}` | 3 | 34 |
-| Then | `the might stat should display {string}` | 1 | 52 |
-| Then | `the new button should display {string}` | 3 | 40 |
-| Then | `the notes field label should be {string}` | 2 | 133 |
-| Then | `the oddities heading should be {string}` | 1 | 121 |
-| Then | `the page title should be {string}` | 2 | 28 |
-| Then | `the page title should be in English` | 2 | 22 |
-| Then | `the speed stat should display {string}` | 1 | 58 |
-| Then | `the stat current label should be {string}` | 1 | 86 |
-| Then | `the stat edge label should be {string}` | 1 | 78 |
-| Then | `the stat pool label should be {string}` | 1 | 70 |
-| Then | `the stats heading should be {string}` | 1 | 46 |
+| Then | `artifact level labels should display {string}` | 1 | 113 |
+| Then | `cypher level labels should display {string}` | 1 | 101 |
+| Given | `I am on the character sheet page with {string}` | 9 | 11 |
+| When | `I navigate to the page with {string}` | 1 | 17 |
+| Then | `the artifacts heading should be {string}` | 1 | 107 |
+| Then | `the background field label should be {string}` | 2 | 128 |
+| Then | `the cyphers heading should be {string}` | 1 | 95 |
+| Then | `the empty abilities message should be {string}` | 1 | 186 |
+| Then | `the empty artifacts message should be {string}` | 1 | 146 |
+| Then | `the empty background message should be {string}` | 1 | 158 |
+| Then | `the empty cyphers message should be {string}` | 1 | 140 |
+| Then | `the empty equipment message should be {string}` | 1 | 180 |
+| Then | `the empty notes message should be {string}` | 1 | 169 |
+| Then | `the empty oddities message should be {string}` | 1 | 152 |
+| Then | `the intellect stat should display {string}` | 1 | 65 |
+| Given | `the language is set to {string}` | 3 | 4 |
+| Then | `the language should remain German` | 1 | 192 |
+| Then | `the load button should display {string}` | 3 | 35 |
+| Then | `the might stat should display {string}` | 1 | 53 |
+| Then | `the new button should display {string}` | 3 | 41 |
+| Then | `the notes field label should be {string}` | 2 | 134 |
+| Then | `the oddities heading should be {string}` | 1 | 122 |
+| Then | `the page title should be {string}` | 2 | 29 |
+| Then | `the page title should be in English` | 2 | 23 |
+| Then | `the speed stat should display {string}` | 1 | 59 |
+| Then | `the stat current label should be {string}` | 1 | 87 |
+| Then | `the stat edge label should be {string}` | 1 | 79 |
+| Then | `the stat pool label should be {string}` | 1 | 71 |
+| Then | `the stats heading should be {string}` | 1 | 47 |
 
 ## recovery-damage-track.steps.ts
 
