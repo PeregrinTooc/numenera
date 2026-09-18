@@ -515,45 +515,45 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 10 | 257 |
-| When | `I clear the input field` | 18 | 110 |
-| When | `I click on the {string} value` | 9 | 23 |
-| When | `I click on the character name {string}` | 12 | 65 |
-| When | `I click on the descriptor {string}` | 2 | 74 |
-| When | `I click on the focus {string}` | 2 | 79 |
-| When | `I click on the tier {string}` | 5 | 69 |
-| When | `I click outside the modal on the backdrop` | 1 | 158 |
-| When | `I click the {badge} badge` | 22 | 54 |
-| When | `I click the Cancel button` | 1 | 48 |
-| When | `I click the Confirm button` | 5 | 43 |
-| When | `I click the modal cancel button` | 2 | 104 |
-| When | `I click the modal confirm button` | 22 | 102 |
-| When | `I click the new button` | 1 | 184 |
-| When | `I edit the {string} field to {string}` | 23 | 129 |
-| When | `I hover over the character name {string}` | 1 | 94 |
-| When | `I hover over the tier {string}` | 1 | 98 |
-| When | `I press the Enter key` | 2 | 180 |
-| When | `I press the Escape key` | 4 | 176 |
-| When | `I reload the page` | 48 | 191 |
-| Then | `I should see the {string} value displayed` | 1 | 216 |
-| When | `I tap on the {string} value` | 1 | 31 |
-| When | `I tap on the character name {string}` | 4 | 84 |
-| When | `I tap on the tier {string}` | 1 | 89 |
-| When | `I tap outside the modal on the backdrop` | 1 | 167 |
-| When | `I tap the {badge} badge` | 2 | 58 |
-| When | `I tap the modal confirm button` | 3 | 106 |
-| When | `I type {string} in the input field` | 15 | 123 |
-| When | `I type {string} in the modal input` | 17 | 119 |
-| When | `I type {string} into the input field` | 8 | 118 |
-| Then | `the {string} value should display {string}` | 6 | 225 |
-| Then | `the {string} value should not have changed` | 2 | 234 |
-| Then | `the edit modal should open` | 8 | 258 |
-| Then | `the input field should be focused` | 1 | 276 |
-| Then | `the input field should contain {string}` | 4 | 269 |
-| Then | `the input field should contain the current {string} value` | 1 | 278 |
-| Then | `the input field should receive focus automatically` | 1 | 275 |
-| Then | `the modal input should contain {string}` | 6 | 264 |
-| Then | `the modal should close` | 21 | 265 |
+| Then | `an edit modal should appear` | 10 | 259 |
+| When | `I clear the input field` | 18 | 112 |
+| When | `I click on the {string} value` | 9 | 25 |
+| When | `I click on the character name {string}` | 12 | 67 |
+| When | `I click on the descriptor {string}` | 2 | 76 |
+| When | `I click on the focus {string}` | 2 | 81 |
+| When | `I click on the tier {string}` | 5 | 71 |
+| When | `I click outside the modal on the backdrop` | 1 | 160 |
+| When | `I click the {badge} badge` | 22 | 56 |
+| When | `I click the Cancel button` | 1 | 50 |
+| When | `I click the Confirm button` | 5 | 45 |
+| When | `I click the modal cancel button` | 2 | 106 |
+| When | `I click the modal confirm button` | 22 | 104 |
+| When | `I click the new button` | 1 | 186 |
+| When | `I edit the {string} field to {string}` | 23 | 131 |
+| When | `I hover over the character name {string}` | 1 | 96 |
+| When | `I hover over the tier {string}` | 1 | 100 |
+| When | `I press the Enter key` | 2 | 182 |
+| When | `I press the Escape key` | 4 | 178 |
+| When | `I reload the page` | 48 | 193 |
+| Then | `I should see the {string} value displayed` | 1 | 218 |
+| When | `I tap on the {string} value` | 1 | 33 |
+| When | `I tap on the character name {string}` | 4 | 86 |
+| When | `I tap on the tier {string}` | 1 | 91 |
+| When | `I tap outside the modal on the backdrop` | 1 | 169 |
+| When | `I tap the {badge} badge` | 2 | 60 |
+| When | `I tap the modal confirm button` | 3 | 108 |
+| When | `I type {string} in the input field` | 15 | 125 |
+| When | `I type {string} in the modal input` | 17 | 121 |
+| When | `I type {string} into the input field` | 8 | 120 |
+| Then | `the {string} value should display {string}` | 6 | 227 |
+| Then | `the {string} value should not have changed` | 2 | 236 |
+| Then | `the edit modal should open` | 8 | 260 |
+| Then | `the input field should be focused` | 1 | 278 |
+| Then | `the input field should contain {string}` | 4 | 271 |
+| Then | `the input field should contain the current {string} value` | 1 | 280 |
+| Then | `the input field should receive focus automatically` | 1 | 277 |
+| Then | `the modal input should contain {string}` | 6 | 266 |
+| Then | `the modal should close` | 21 | 267 |
 
 ## data-validation.steps.ts
 

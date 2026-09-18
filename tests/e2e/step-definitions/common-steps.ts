@@ -3,19 +3,21 @@ import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { waitForSaveComplete } from "../support/save.js";
 import { getTestId } from "../support/fields.js";
+import { FULL_CHARACTER } from "../support/cardTestFixtures.js";
 
-// Default stat values for verification (from FULL_CHARACTER in mockCharacters.ts)
-const DEFAULT_STAT_VALUES: Record<string, string> = {
-  "Might Pool": "15",
-  "Might Edge": "2",
-  "Might Current": "12",
-  "Speed Pool": "12",
-  "Speed Edge": "1",
-  "Speed Current": "12",
-  "Intellect Pool": "10",
-  "Intellect Edge": "0",
-  "Intellect Current": "8",
-};
+// Default stat values for verification, derived from FULL_CHARACTER so this
+// map can't drift from the character every card fixture builds on.
+const DEFAULT_STAT_VALUES: Record<string, string> = Object.fromEntries(
+  (["might", "speed", "intellect"] as const).flatMap((stat) => {
+    const { pool, edge, current } = FULL_CHARACTER.stats[stat];
+    const label = stat.charAt(0).toUpperCase() + stat.slice(1);
+    return [
+      [`${label} Pool`, String(pool)],
+      [`${label} Edge`, String(edge)],
+      [`${label} Current`, String(current)],
+    ];
+  })
+);
 
 // ============================================================================
 // REUSABLE WHEN STEPS - User Actions
