@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { RecoveryRolls } from "../../src/components/RecoveryRolls";
 import { DamageTrack } from "../../src/components/DamageTrack";
 import { CharacterSheet } from "../../src/components/CharacterSheet";
@@ -8,14 +8,15 @@ import type {
   DamageTrack as DamageTrackType,
 } from "../../src/types/character";
 import { render } from "lit-html";
+import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("State Management Components", () => {
+  const getContainer = setupTestContainer();
   let container: HTMLElement;
   let mockCharacter: Character;
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
+    container = getContainer();
 
     mockCharacter = {
       name: "Test",
@@ -51,10 +52,6 @@ describe("State Management Components", () => {
       damageTrack: { impairment: "healthy" },
       textFields: { background: "", notes: "" },
     };
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
   });
 
   describe("RecoveryRolls Component", () => {
