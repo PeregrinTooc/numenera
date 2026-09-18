@@ -26,7 +26,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **688** in 25 files
+- Step definitions: **686** in 25 files
 - Feature step lines: **2047**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **24**
@@ -48,7 +48,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [combat.steps.ts](#combatstepsts) | 26 | 0 |
 | [common-steps.ts](#commonstepsts) | 34 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 5 | 0 |
-| [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 14 | 0 |
+| [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 12 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
@@ -189,9 +189,9 @@ pattern this script does not understand):
 | Then | `the character name should still display {string}` | 6 | 90 |
 | Then | `the confirm button should have a checkmark icon` | 1 | 152 |
 | Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 397 |
-| Then | `the descriptor should display {string}` | 2 | 104 |
+| Then | `the descriptor should display {string}` | 4 | 104 |
 | Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 407 |
-| Then | `the focus should display {string}` | 2 | 112 |
+| Then | `the focus should display {string}` | 4 | 112 |
 | Then | `the input field should be large enough for touch input` | 1 | 369 |
 | Then | `the input field should be of type {string}` | 1 | 69 |
 | Then | `the input field should have inputmode={string} for mobile` | 1 | 320 |
@@ -557,20 +557,18 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear with value {string}` | 1 | 115 |
+| Then | `an edit modal should appear with value {string}` | 1 | 97 |
 | When | `I click on the descriptor field` | 2 | 62 |
 | When | `I click on the focus field` | 1 | 68 |
 | When | `I enter {string} in the edit field` | 2 | 74 |
 | Then | `the descriptor field should be clickable` | 1 | 30 |
 | Then | `the descriptor field should be visible` | 1 | 20 |
-| Then | `the descriptor field should display {string}` | 2 | 79 |
 | Then | `the descriptor field should display placeholder text` | 1 | 4 |
-| Then | `the descriptor field should not show placeholder text` | 1 | 97 |
+| Then | `the descriptor field should not show placeholder text` | 1 | 79 |
 | Then | `the focus field should be clickable` | 1 | 46 |
 | Then | `the focus field should be visible` | 1 | 25 |
-| Then | `the focus field should display {string}` | 2 | 88 |
 | Then | `the focus field should display placeholder text` | 1 | 12 |
-| Then | `the focus field should not show placeholder text` | 1 | 106 |
+| Then | `the focus field should not show placeholder text` | 1 | 88 |
 
 ## export-enhancement.steps.ts
 

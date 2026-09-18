@@ -77,24 +77,6 @@ When("I enter {string} in the edit field", async function (this: CustomWorld, va
   await input.fill(value);
 });
 
-Then(
-  "the descriptor field should display {string}",
-  async function (this: CustomWorld, expectedText: string) {
-    const descriptorField = this.dom.getByTestId("character-descriptor");
-    const text = await descriptorField.textContent();
-    expect(text?.trim()).toBe(expectedText);
-  }
-);
-
-Then(
-  "the focus field should display {string}",
-  async function (this: CustomWorld, expectedText: string) {
-    const focusField = this.dom.getByTestId("character-focus");
-    const text = await focusField.textContent();
-    expect(text?.trim()).toBe(expectedText);
-  }
-);
-
 Then("the descriptor field should not show placeholder text", async function (this: CustomWorld) {
   const descriptorField = this.dom.getByTestId("character-descriptor");
   const text = await descriptorField.textContent();

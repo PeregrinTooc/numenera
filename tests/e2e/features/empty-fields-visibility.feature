@@ -25,7 +25,7 @@ Feature: Empty Fields Visibility
         Then an edit modal should appear
         When I enter "Strong" in the edit field
         And I confirm the edit
-        Then the descriptor field should display "Strong"
+        Then the descriptor should display "Strong"
         And the descriptor field should not show placeholder text
 
     Scenario: Edit empty focus field
@@ -34,11 +34,11 @@ Feature: Empty Fields Visibility
         Then an edit modal should appear
         When I enter "Bears a Halo of Fire" in the edit field
         And I confirm the edit
-        Then the focus field should display "Bears a Halo of Fire"
+        Then the focus should display "Bears a Halo of Fire"
         And the focus field should not show placeholder text
 
     Scenario: Non-empty descriptor and focus fields work normally
-        Then the descriptor field should display "Strong"
-        And the focus field should display "Bears a Halo of Fire"
+        Then the descriptor should display "Strong"
+        And the focus should display "Bears a Halo of Fire"
         When I click on the descriptor field
         Then an edit modal should appear with value "Strong"
