@@ -2,22 +2,23 @@
  * CharacterSheet component tests - version history integration
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { CharacterSheet } from "../../src/components/CharacterSheet.js";
 import { Character } from "../../src/types/character.js";
 import * as RecoveryDamageSectionModule from "../../src/components/RecoveryDamageSection.js";
+import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("CharacterSheet - Version History Integration", () => {
+  const getContainer = setupTestContainer();
   let container: HTMLElement;
   let mockCharacter: Character;
   let characterSheet: CharacterSheet;
 
   beforeEach(() => {
-    // Create container. The id matters: components re-render themselves into
-    // #app, the same element main.ts renders the sheet into.
-    container = document.createElement("div");
+    // The id matters: components re-render themselves into #app, the same
+    // element main.ts renders the sheet into.
+    container = getContainer();
     container.id = "app";
-    document.body.appendChild(container);
 
     // Create mock character
     mockCharacter = {
@@ -71,12 +72,6 @@ describe("CharacterSheet - Version History Integration", () => {
       vi.fn(), // onQuickExport
       vi.fn() // onSaveAs
     );
-  });
-
-  afterEach(() => {
-    if (container.parentNode) {
-      container.parentNode.removeChild(container);
-    }
   });
 
   it("should render successfully", () => {
