@@ -505,34 +505,34 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `I should see an empty attacks section` | 1 | 106 |
-| Then | `I should see an empty special abilities section` | 1 | 190 |
-| Then | `I should see the armor badge in the attacks section` | 1 | 207 |
-| Then | `I should see the attack {string}` | 2 | 18 |
-| Then | `I should see the special ability {string}` | 1 | 142 |
-| Then | `the armor badge should show value {string}` | 1 | 212 |
-| Then | `the attack {string} should have red combat theme styling` | 1 | 93 |
-| Then | `the attack {string} should not show notes` | 1 | 83 |
-| Then | `the attack {string} should show damage {string}` | 2 | 27 |
-| Then | `the attack {string} should show modifier {string}` | 2 | 41 |
-| Then | `the attack {string} should show notes {string}` | 1 | 69 |
-| Then | `the attack {string} should show range {string}` | 2 | 55 |
-| Then | `the attacks section should be in the right column` | 1 | 232 |
-| Given | `the character has a special ability {string}` | 1 | 133 |
-| Given | `the character has a special ability {string} with:` | 1 | 119 |
-| Given | `the character has an attack {string}` | 1 | 11 |
-| Given | `the character has an attack {string} with:` | 1 | 6 |
-| Given | `the character has armor value {int}` | 1 | 203 |
-| Given | `the character has no attacks` | 1 | 13 |
-| Given | `the character has no special abilities` | 1 | 137 |
-| Given | `the character has special abilities and attacks` | 1 | 221 |
-| Then | `the empty attacks state should use translation keys` | 1 | 111 |
-| Then | `the empty special abilities state should use translation keys` | 1 | 195 |
-| Then | `the sections should stack vertically on mobile` | 1 | 238 |
-| Then | `the special abilities section should be in the left column` | 1 | 226 |
-| Then | `the special ability {string} should have teal theme styling` | 1 | 177 |
-| Then | `the special ability {string} should show description {string}` | 1 | 151 |
-| Then | `the special ability {string} should show source {string}` | 1 | 163 |
+| Then | `I should see an empty attacks section` | 1 | 105 |
+| Then | `I should see an empty special abilities section` | 1 | 187 |
+| Then | `I should see the armor badge in the attacks section` | 1 | 202 |
+| Then | `I should see the attack {string}` | 2 | 17 |
+| Then | `I should see the special ability {string}` | 1 | 139 |
+| Then | `the armor badge should show value {string}` | 1 | 206 |
+| Then | `the attack {string} should have red combat theme styling` | 1 | 92 |
+| Then | `the attack {string} should not show notes` | 1 | 82 |
+| Then | `the attack {string} should show damage {string}` | 2 | 26 |
+| Then | `the attack {string} should show modifier {string}` | 2 | 40 |
+| Then | `the attack {string} should show notes {string}` | 1 | 68 |
+| Then | `the attack {string} should show range {string}` | 2 | 54 |
+| Then | `the attacks section should be in the right column` | 1 | 224 |
+| Given | `the character has a special ability {string}` | 1 | 130 |
+| Given | `the character has a special ability {string} with:` | 1 | 116 |
+| Given | `the character has an attack {string}` | 1 | 10 |
+| Given | `the character has an attack {string} with:` | 1 | 5 |
+| Given | `the character has armor value {int}` | 1 | 198 |
+| Given | `the character has no attacks` | 1 | 12 |
+| Given | `the character has no special abilities` | 1 | 134 |
+| Given | `the character has special abilities and attacks` | 1 | 214 |
+| Then | `the empty attacks state should use translation keys` | 1 | 109 |
+| Then | `the empty special abilities state should use translation keys` | 1 | 191 |
+| Then | `the sections should stack vertically on mobile` | 1 | 229 |
+| Then | `the special abilities section should be in the left column` | 1 | 219 |
+| Then | `the special ability {string} should have teal theme styling` | 1 | 174 |
+| Then | `the special ability {string} should show description {string}` | 1 | 148 |
+| Then | `the special ability {string} should show source {string}` | 1 | 160 |
 
 ## common-steps.ts
 
@@ -644,65 +644,65 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `artifact level labels should display {string}` | 1 | 113 |
-| Then | `cypher level labels should display {string}` | 1 | 101 |
-| Given | `I am on the character sheet page with {string}` | 9 | 11 |
-| When | `I navigate to the page with {string}` | 1 | 17 |
-| Then | `the artifacts heading should be {string}` | 1 | 107 |
-| Then | `the background field label should be {string}` | 2 | 128 |
-| Then | `the cyphers heading should be {string}` | 1 | 95 |
-| Then | `the empty abilities message should be {string}` | 1 | 186 |
-| Then | `the empty artifacts message should be {string}` | 1 | 146 |
-| Then | `the empty background message should be {string}` | 1 | 158 |
-| Then | `the empty cyphers message should be {string}` | 1 | 140 |
-| Then | `the empty equipment message should be {string}` | 1 | 180 |
-| Then | `the empty notes message should be {string}` | 1 | 169 |
-| Then | `the empty oddities message should be {string}` | 1 | 152 |
-| Then | `the intellect stat should display {string}` | 1 | 65 |
-| Given | `the language is set to {string}` | 3 | 4 |
-| Then | `the language should remain German` | 1 | 192 |
-| Then | `the load button should display {string}` | 3 | 35 |
-| Then | `the might stat should display {string}` | 1 | 53 |
-| Then | `the new button should display {string}` | 3 | 41 |
-| Then | `the notes field label should be {string}` | 2 | 134 |
-| Then | `the oddities heading should be {string}` | 1 | 122 |
-| Then | `the page title should be {string}` | 2 | 29 |
-| Then | `the page title should be in English` | 2 | 23 |
-| Then | `the speed stat should display {string}` | 1 | 59 |
-| Then | `the stat current label should be {string}` | 1 | 87 |
-| Then | `the stat edge label should be {string}` | 1 | 79 |
-| Then | `the stat pool label should be {string}` | 1 | 71 |
-| Then | `the stats heading should be {string}` | 1 | 47 |
+| Then | `artifact level labels should display {string}` | 1 | 112 |
+| Then | `cypher level labels should display {string}` | 1 | 100 |
+| Given | `I am on the character sheet page with {string}` | 9 | 10 |
+| When | `I navigate to the page with {string}` | 1 | 16 |
+| Then | `the artifacts heading should be {string}` | 1 | 106 |
+| Then | `the background field label should be {string}` | 2 | 127 |
+| Then | `the cyphers heading should be {string}` | 1 | 94 |
+| Then | `the empty abilities message should be {string}` | 1 | 185 |
+| Then | `the empty artifacts message should be {string}` | 1 | 145 |
+| Then | `the empty background message should be {string}` | 1 | 157 |
+| Then | `the empty cyphers message should be {string}` | 1 | 139 |
+| Then | `the empty equipment message should be {string}` | 1 | 179 |
+| Then | `the empty notes message should be {string}` | 1 | 168 |
+| Then | `the empty oddities message should be {string}` | 1 | 151 |
+| Then | `the intellect stat should display {string}` | 1 | 64 |
+| Given | `the language is set to {string}` | 3 | 3 |
+| Then | `the language should remain German` | 1 | 191 |
+| Then | `the load button should display {string}` | 3 | 34 |
+| Then | `the might stat should display {string}` | 1 | 52 |
+| Then | `the new button should display {string}` | 3 | 40 |
+| Then | `the notes field label should be {string}` | 2 | 133 |
+| Then | `the oddities heading should be {string}` | 1 | 121 |
+| Then | `the page title should be {string}` | 2 | 28 |
+| Then | `the page title should be in English` | 2 | 22 |
+| Then | `the speed stat should display {string}` | 1 | 58 |
+| Then | `the stat current label should be {string}` | 1 | 86 |
+| Then | `the stat edge label should be {string}` | 1 | 78 |
+| Then | `the stat pool label should be {string}` | 1 | 70 |
+| Then | `the stats heading should be {string}` | 1 | 46 |
 
 ## recovery-damage-track.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all recovery checkboxes should be unchecked` | 1 | 190 |
-| When | `I click on the recovery modifier display` | 1 | 203 |
-| When | `I click the {string} recovery checkbox` | 1 | 228 |
-| When | `I confirm the edit` | 3 | 220 |
-| When | `I enter {string} in the modifier field` | 1 | 210 |
-| When | `I select the {string} damage status` | 1 | 236 |
-| Then | `I should see {int} damage status options` | 1 | 55 |
-| Then | `I should see {int} recovery roll checkboxes` | 1 | 20 |
-| Then | `I should see {string} in the recovery section` | 3 | 173 |
-| Then | `I should see a section titled {string}` | 2 | 8 |
-| Then | `I should see an edit modal` | 1 | 215 |
-| Then | `I should see damage status {string}` | 1 | 60 |
-| Then | `I should see damage status {string} with description {string}` | 2 | 65 |
-| Then | `I should see recovery roll {string} with time {string}` | 4 | 25 |
-| Then | `I should see the recovery modifier display {string}` | 1 | 13 |
-| Then | `the {string} radio button should be selected` | 4 | 104 |
-| Then | `the {string} radio button should not be selected` | 6 | 111 |
-| Then | `the {string} recovery checkbox should be checked` | 2 | 39 |
-| Then | `the {string} recovery checkbox should be unchecked` | 3 | 46 |
-| Given | `the character has {string} recovery used` | 1 | 34 |
-| Given | `the character has recovery modifier {int}` | 2 | 142 |
-| Given | `the character is {string}` | 3 | 74 |
-| Given | `the character is new` | 1 | 181 |
-| Then | `the damage track section should have red styling` | 1 | 130 |
-| Then | `the recovery rolls section should have green styling` | 1 | 120 |
+| Then | `all recovery checkboxes should be unchecked` | 1 | 189 |
+| When | `I click on the recovery modifier display` | 1 | 202 |
+| When | `I click the {string} recovery checkbox` | 1 | 227 |
+| When | `I confirm the edit` | 3 | 219 |
+| When | `I enter {string} in the modifier field` | 1 | 209 |
+| When | `I select the {string} damage status` | 1 | 235 |
+| Then | `I should see {int} damage status options` | 1 | 54 |
+| Then | `I should see {int} recovery roll checkboxes` | 1 | 19 |
+| Then | `I should see {string} in the recovery section` | 3 | 172 |
+| Then | `I should see a section titled {string}` | 2 | 7 |
+| Then | `I should see an edit modal` | 1 | 214 |
+| Then | `I should see damage status {string}` | 1 | 59 |
+| Then | `I should see damage status {string} with description {string}` | 2 | 64 |
+| Then | `I should see recovery roll {string} with time {string}` | 4 | 24 |
+| Then | `I should see the recovery modifier display {string}` | 1 | 12 |
+| Then | `the {string} radio button should be selected` | 4 | 103 |
+| Then | `the {string} radio button should not be selected` | 6 | 110 |
+| Then | `the {string} recovery checkbox should be checked` | 2 | 38 |
+| Then | `the {string} recovery checkbox should be unchecked` | 3 | 45 |
+| Given | `the character has {string} recovery used` | 1 | 33 |
+| Given | `the character has recovery modifier {int}` | 2 | 141 |
+| Given | `the character is {string}` | 3 | 73 |
+| Given | `the character is new` | 1 | 180 |
+| Then | `the damage track section should have red styling` | 1 | 129 |
+| Then | `the recovery rolls section should have green styling` | 1 | 119 |
 
 ## resource-tracker-editing.steps.ts
 
@@ -787,23 +787,23 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am viewing an old version with the version navigator visible` | 1 | 114 |
-| Given | `I am viewing the character sheet` | 1 | 12 |
-| When | `I click outside the settings panel` | 1 | 63 |
-| When | `I click the British flag icon` | 1 | 79 |
-| When | `I click the German flag icon` | 2 | 74 |
-| When | `I click the settings gear icon` | 1 | 44 |
-| Given | `I have opened the settings panel` | 9 | 59 |
-| Then | `I should be able to click the settings gear icon` | 1 | 31 |
-| Then | `I should see a {string} option` | 1 | 130 |
-| Then | `I should see a settings gear icon in the header` | 1 | 21 |
-| Then | `I should see the settings panel` | 1 | 49 |
-| Then | `the {string} option should be disabled` | 1 | 137 |
-| Given | `the interface is in German` | 1 | 96 |
-| Then | `the interface should display in English` | 1 | 90 |
-| Then | `the interface should display in German` | 1 | 84 |
-| Then | `the settings gear icon should still be visible` | 1 | 26 |
-| Then | `the settings panel should close` | 4 | 54 |
+| Given | `I am viewing an old version with the version navigator visible` | 1 | 113 |
+| Given | `I am viewing the character sheet` | 1 | 11 |
+| When | `I click outside the settings panel` | 1 | 62 |
+| When | `I click the British flag icon` | 1 | 78 |
+| When | `I click the German flag icon` | 2 | 73 |
+| When | `I click the settings gear icon` | 1 | 43 |
+| Given | `I have opened the settings panel` | 9 | 58 |
+| Then | `I should be able to click the settings gear icon` | 1 | 30 |
+| Then | `I should see a {string} option` | 1 | 129 |
+| Then | `I should see a settings gear icon in the header` | 1 | 20 |
+| Then | `I should see the settings panel` | 1 | 48 |
+| Then | `the {string} option should be disabled` | 1 | 136 |
+| Given | `the interface is in German` | 1 | 95 |
+| Then | `the interface should display in English` | 1 | 89 |
+| Then | `the interface should display in German` | 1 | 83 |
+| Then | `the settings gear icon should still be visible` | 1 | 25 |
+| Then | `the settings panel should close` | 4 | 53 |
 
 ## stat-pool-editing.steps.ts
 
