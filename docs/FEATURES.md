@@ -158,15 +158,19 @@ All features listed below have full BDD test coverage and are verified working.
 
 ### Automated Section Drag/Drop Tests & Touch Long-Press Drag
 
-- Sections can be reordered on touch devices: in layout edit mode, long-press a
-  section (250 ms) and drag it onto another section to move it above that
-  section. A quick swipe still scrolls the page.
-- The desktop and touch section-drag scenarios in
-  `section-rearrangement.feature` run automatically. Desktop drags run in a
-  full-height viewport (`tests/e2e/support/sections.ts`) because
-  `locator.dragTo()` scrolls mid-drag otherwise; touch drags use real CDP touch
-  input (`TouchGesture`).
-- Spec: `docs/superpowers/specs/2026-09-26-section-dnd-e2e-design.md`
+- **Touch Long-Press Section Dragging**
+  - Sections can be reordered on touch devices: in layout edit mode,
+    long-press a section (250 ms) and drag it onto another section to move
+    it above that section
+  - A quick swipe still scrolls the page
+
+- **Automated Section Drag E2E Coverage** ([section-rearrangement.feature](../tests/e2e/features/section-rearrangement.feature))
+  - The desktop and touch section-drag scenarios run automatically
+  - Desktop drags run in a full-height viewport
+    (`tests/e2e/support/sections.ts`) because `locator.dragTo()` scrolls
+    mid-drag otherwise
+  - Touch drags use real CDP touch input (`TouchGesture`)
+  - Spec: `docs/superpowers/specs/2026-09-26-section-dnd-e2e-design.md`
 
 ### File Management
 
