@@ -44,10 +44,11 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ## 📊 Current Status
 
-**Test Coverage**: `npm run test:unit` — 869 tests passing. `npm run test:e2e:prod` —
-401 scenarios passing, 16 `@skip`ped (see below for why). The 365/16 figure
+**Test Coverage**: `npm run test:unit` — 895 tests passing. `npm run test:e2e:prod` —
+405 scenarios passing, 14 `@skip`ped (see below for why). The 365/16 figure
 previously recorded here was stale (never re-measured); re-verified at the
-start of `tests/implementation-plan.md` Phase 1.  
+start of `tests/implementation-plan.md` Phase 1, and again after the
+section-dnd-e2e branch automated the section-drag scenarios.  
 **Documentation**: See [FEATURES.md](./FEATURES.md) for complete feature list
 
 ---
