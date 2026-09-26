@@ -178,47 +178,26 @@ export class CharacterSheet {
    */
   private renderLayoutItem(item: LayoutItem): TemplateResult {
     if (item.type === "single") {
-      const isDragging = this.draggedSectionId === item.id;
-      const isDropTarget = this.dropTargetId === item.id;
-      const wrapperClass = this.isLayoutEditMode
-        ? `layout-section layout-draggable${isDragging ? " dragging" : ""}${isDropTarget ? " drop-target" : ""}`
-        : "";
-      const draggable = this.isLayoutEditMode ? "true" : "false";
-
-      return html`
-        <div
-          class=${wrapperClass}
-          data-section-id=${item.id}
-          data-testid="layout-section-${item.id}"
-          draggable=${draggable}
-          @dragstart=${(e: DragEvent) => this.handleDragStart(e, item.id)}
-          @dragend=${() => this.handleDragEnd()}
-          @dragover=${(e: DragEvent) => this.handleDragOver(e, item.id)}
-          @dragleave=${() => this.handleDragLeave()}
-          @drop=${(e: DragEvent) => this.handleDrop(e, item.id)}
-        >
-          ${this.getSectionTemplate(item.id)}
-        </div>
-      `;
-    } else {
-      // Grid layout - two sections side by side
-      const wrapperClass = this.isLayoutEditMode ? "layout-grid" : "";
-
-      return html`
-        <div
-          class="grid grid-cols-1 lg:grid-cols-2 gap-6 ${wrapperClass}"
-          data-testid="layout-grid-${item.items[0]}-${item.items[1]}"
-        >
-          ${this.renderGridItem(item.items[0])} ${this.renderGridItem(item.items[1])}
-        </div>
-      `;
+      return this.renderDraggableSection(item.id);
     }
+
+    // Grid layout - two sections side by side
+    const wrapperClass = this.isLayoutEditMode ? "layout-grid" : "";
+
+    return html`
+      <div
+        class="grid grid-cols-1 lg:grid-cols-2 gap-6 ${wrapperClass}"
+        data-testid="layout-grid-${item.items[0]}-${item.items[1]}"
+      >
+        ${this.renderDraggableSection(item.items[0])} ${this.renderDraggableSection(item.items[1])}
+      </div>
+    `;
   }
 
   /**
-   * Render an individual item within a grid
+   * Render a section wrapped for layout editing (drag handle, drop target)
    */
-  private renderGridItem(sectionId: SectionId): TemplateResult {
+  private renderDraggableSection(sectionId: SectionId): TemplateResult {
     const isDragging = this.draggedSectionId === sectionId;
     const isDropTarget = this.dropTargetId === sectionId;
     const wrapperClass = this.isLayoutEditMode
