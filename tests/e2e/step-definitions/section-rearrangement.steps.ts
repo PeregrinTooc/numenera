@@ -6,7 +6,7 @@ import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
 import { openSettingsPanel } from "../support/settings.js";
-import { sectionId, sectionLocator } from "../support/sections.js";
+import { dragSectionTo, sectionId, sectionLocator } from "../support/sections.js";
 
 // ============================================
 // Edit Mode Entry/Exit Steps
@@ -239,19 +239,7 @@ Given("I have the default layout", async function (this: CustomWorld) {
 When(
   "I drag the {string} section above the {string} section",
   async function (this: CustomWorld, sourceSection: string, targetSection: string) {
-    const page = this.page;
-
-    // Get the source and target elements
-    const sourceElement = sectionLocator(page, sourceSection);
-    const targetElement = sectionLocator(page, targetSection);
-
-    // Use Playwright's native dragTo for proper HTML5 drag events
-    await sourceElement.dragTo(targetElement, {
-      targetPosition: { x: 10, y: 10 }, // Drop near the top of target
-    });
-
-    // Wait for re-render
-    await page.waitForTimeout(200);
+    await dragSectionTo(this.page, sourceSection, targetSection);
   }
 );
 
