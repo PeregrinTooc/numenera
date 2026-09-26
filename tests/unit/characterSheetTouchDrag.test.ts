@@ -8,9 +8,13 @@ type TouchType = "touchstart" | "touchmove" | "touchend" | "touchcancel";
 function touch(
   target: Element,
   type: TouchType,
-  points: { x: number; y: number }[] = []
+  points: { x: number; y: number }[] = [],
+  options: { cancelable?: boolean } = {}
 ): TouchEvent {
-  const event = new TouchEvent(type, { bubbles: true, cancelable: true });
+  const event = new TouchEvent(type, {
+    bubbles: true,
+    cancelable: options.cancelable ?? true,
+  });
   Object.defineProperty(event, "touches", {
     value: points.map((p) => ({ clientX: p.x, clientY: p.y })),
   });
@@ -181,5 +185,112 @@ describe("CharacterSheet touch long-press drag", () => {
 
     expect(sectionOrder()).toEqual(before);
     expect(section("cyphers").classList.contains("dragging")).toBe(false);
+  });
+
+  it("a touchmove that the browser can't prevent cancels the drag (already scrolling)", () => {
+    const before = sectionOrder();
+    const cyphers = section("cyphers");
+    vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("abilities"));
+
+    touch(cyphers, "touchstart", [{ x: 20, y: 500 }]);
+    vi.advanceTimersByTime(250);
+    touch(cyphers, "touchmove", [{ x: 20, y: 120 }], { cancelable: false });
+    touch(cyphers, "touchend");
+
+    expect(sectionOrder()).toEqual(before);
+    expect(section("cyphers").classList.contains("dragging")).toBe(false);
+  });
+
+  it("a second touch point arriving mid-drag cancels it (pinch)", () => {
+    const before = sectionOrder();
+    const cyphers = section("cyphers");
+    vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("abilities"));
+
+    touch(cyphers, "touchstart", [{ x: 20, y: 500 }]);
+    vi.advanceTimersByTime(250);
+    touch(cyphers, "touchmove", [
+      { x: 20, y: 120 },
+      { x: 200, y: 120 },
+    ]);
+    touch(cyphers, "touchend");
+
+    expect(sectionOrder()).toEqual(before);
+    expect(section("cyphers").classList.contains("dragging")).toBe(false);
+  });
+
+  it("blocks a card's dragstart from reaching it during an active touch drag", () => {
+    const withAbilities = new CharacterSheet(
+      createTestCharacter({
+        abilities: [{ name: "Trained in Defense", description: "Reduces difficulty by 1" }],
+      }),
+      vi.fn(),
+      vi.fn(),
+      vi.fn(),
+      vi.fn(),
+      vi.fn()
+    );
+    withAbilities.mount(document.getElementById("app") as HTMLElement);
+    withAbilities.toggleLayoutEditMode();
+
+    touch(section("abilities"), "touchstart", [{ x: 20, y: 500 }]);
+    vi.advanceTimersByTime(250);
+
+    const card = document.querySelector<HTMLElement>("[data-testid^='ability-item']");
+    if (!card) throw new Error("No ability card rendered");
+    const dragStart = new Event("dragstart", { bubbles: true, cancelable: true });
+    card.dispatchEvent(dragStart);
+
+    expect(dragStart.defaultPrevented).toBe(true);
+    expect(card.getAttribute("data-dragging")).not.toBe("true");
+  });
+});
+
+describe("CharacterSheet touch listener passivity outside edit mode", () => {
+  let sheet: CharacterSheet;
+  let addSpy: ReturnType<typeof vi.spyOn>;
+  let removeSpy: ReturnType<typeof vi.spyOn>;
+
+  beforeEach(() => {
+    localStorage.clear();
+    document.elementFromPoint = (): Element | null => null;
+    document.body.innerHTML = '<div id="app"></div>';
+    addSpy = vi.spyOn(EventTarget.prototype, "addEventListener");
+    removeSpy = vi.spyOn(EventTarget.prototype, "removeEventListener");
+    const container = document.getElementById("app") as HTMLElement;
+    sheet = new CharacterSheet(createTestCharacter(), vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
+    sheet.mount(container);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  function touchmoveCalls(spy: ReturnType<typeof vi.spyOn>): unknown[][] {
+    return spy.mock.calls.filter(([type]) => type === "touchmove");
+  }
+
+  it("does not register a touchmove listener on section wrappers outside edit mode", () => {
+    expect(touchmoveCalls(addSpy)).toHaveLength(0);
+  });
+
+  it("registers a non-passive touchmove listener once edit mode is entered", () => {
+    addSpy.mockClear();
+
+    sheet.toggleLayoutEditMode();
+
+    const calls = touchmoveCalls(addSpy);
+    expect(calls.length).toBeGreaterThan(0);
+    for (const [, , options] of calls) {
+      expect((options as AddEventListenerOptions).passive).toBe(false);
+    }
+  });
+
+  it("removes the touchmove listener when edit mode is exited", () => {
+    sheet.toggleLayoutEditMode();
+    removeSpy.mockClear();
+
+    sheet.toggleLayoutEditMode();
+
+    expect(touchmoveCalls(removeSpy).length).toBeGreaterThan(0);
   });
 });

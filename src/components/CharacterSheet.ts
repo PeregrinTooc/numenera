@@ -1,6 +1,6 @@
 // CharacterSheet component - Main container that composes all sections
 
-import { html, render, TemplateResult } from "lit-html";
+import { html, nothing, render, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
 import { Header } from "./Header.js";
 import { BasicInfo } from "./BasicInfo.js";
@@ -76,10 +76,46 @@ export class CharacterSheet {
    * Lit listener object so the touchmove listener is registered non-passive:
    * an active touch drag must be able to preventDefault() the page scroll.
    * Kept as one stable object so lit doesn't re-add it on every render.
+   *
+   * Bound only while `isLayoutEditMode` is true (see `renderDraggableSection`):
+   * unconditionally, this would make every scroll on the sheet non-passive,
+   * even outside layout editing.
    */
   private readonly touchMoveListener = {
     handleEvent: (e: TouchEvent): void => this.handleTouchMove(e),
     passive: false,
+  };
+
+  /**
+   * Lit listener object for touchstart, registered passive: it never calls
+   * preventDefault(), so the browser is free to start scrolling immediately.
+   * Reads the section id off `currentTarget` so one instance covers every
+   * section wrapper.
+   */
+  private readonly touchStartListener = {
+    handleEvent: (e: TouchEvent): void => {
+      const sectionId = (e.currentTarget as HTMLElement).dataset.sectionId;
+      if (sectionId && isSectionId(sectionId)) {
+        this.handleTouchStart(e, sectionId);
+      }
+    },
+    passive: true,
+  };
+
+  /**
+   * Lit listener object for dragstart, registered in the capture phase so it
+   * runs before a card's own dragstart handler inside the section (e.g.
+   * Abilities). During an active touch drag, `handleDragStart` stops the
+   * event here so the card never sees it and never marks itself as dragging.
+   */
+  private readonly dragStartListener = {
+    handleEvent: (e: Event): void => {
+      const sectionId = (e.currentTarget as HTMLElement).dataset.sectionId;
+      if (sectionId && isSectionId(sectionId)) {
+        this.handleDragStart(e as DragEvent, sectionId);
+      }
+    },
+    capture: true,
   };
 
   constructor(
@@ -237,15 +273,15 @@ export class CharacterSheet {
         data-section-id=${sectionId}
         data-testid="layout-section-${sectionId}"
         draggable=${draggable}
-        @dragstart=${(e: DragEvent) => this.handleDragStart(e, sectionId)}
+        @dragstart=${this.dragStartListener}
         @dragend=${() => this.handleDragEnd()}
         @dragover=${(e: DragEvent) => this.handleDragOver(e, sectionId)}
         @dragleave=${() => this.handleDragLeave()}
         @drop=${(e: DragEvent) => this.handleDrop(e, sectionId)}
-        @touchstart=${(e: TouchEvent) => this.handleTouchStart(e, sectionId)}
-        @touchmove=${this.touchMoveListener}
-        @touchend=${() => this.longPress.end()}
-        @touchcancel=${() => this.longPress.cancel()}
+        @touchstart=${this.isLayoutEditMode ? this.touchStartListener : nothing}
+        @touchmove=${this.isLayoutEditMode ? this.touchMoveListener : nothing}
+        @touchend=${this.isLayoutEditMode ? () => this.longPress.end() : nothing}
+        @touchcancel=${this.isLayoutEditMode ? () => this.longPress.cancel() : nothing}
         @contextmenu=${(e: Event) => this.handleContextMenu(e)}
       >
         ${this.getSectionTemplate(sectionId)}
@@ -267,8 +303,13 @@ export class CharacterSheet {
    */
   private handleDragStart(e: DragEvent, sectionId: SectionId): void {
     if (this.longPress.isActive()) {
-      // Android can start its own long-press drag; the touch drag owns this gesture.
+      // Android can start its own long-press drag; the touch drag owns this
+      // gesture. This listener runs in the capture phase (see
+      // dragStartListener), so stopping it here keeps a card inside the
+      // section (e.g. Abilities) from ever seeing the event and marking
+      // itself as dragging.
       e.preventDefault();
+      e.stopPropagation();
       return;
     }
     if (!this.isLayoutEditMode) return;
@@ -347,6 +388,17 @@ export class CharacterSheet {
    * Handle touch move: once a long-press is active, the finger drags instead of scrolling
    */
   private handleTouchMove(e: TouchEvent): void {
+    if (e.touches.length !== 1) {
+      // A second finger landed outside any section wrapper (touchstart only
+      // sees touches inside it) — a pinch, not a drag.
+      this.longPress.cancel();
+      return;
+    }
+    if (this.longPress.isActive() && !e.cancelable) {
+      // The browser has already committed to scrolling; let it.
+      this.longPress.cancel();
+      return;
+    }
     const touch = e.touches[0];
     if (!touch) return;
     if (this.longPress.move(touch.clientX, touch.clientY)) {

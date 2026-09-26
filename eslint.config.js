@@ -34,6 +34,8 @@ export default [
         DragEvent: "readonly",
         TouchEvent: "readonly",
         Element: "readonly",
+        EventTarget: "readonly",
+        AddEventListenerOptions: "readonly",
         CustomEvent: "readonly",
         FileReader: "readonly",
         Blob: "readonly",
