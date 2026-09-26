@@ -212,3 +212,10 @@ export const SECTION_DISPLAY_NAMES: Record<SectionId, string> = {
   background: "Background",
   notes: "Notes",
 };
+
+/**
+ * Type guard for values read from the DOM (e.g. `data-section-id`).
+ */
+export function isSectionId(value: string): value is SectionId {
+  return Object.prototype.hasOwnProperty.call(SECTION_DISPLAY_NAMES, value);
+}

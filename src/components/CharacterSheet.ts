@@ -15,7 +15,14 @@ import { BottomTextFields } from "./BottomTextFields.js";
 import { VersionNavigator } from "./VersionNavigator.js";
 import { VersionWarningBanner } from "./VersionWarningBanner.js";
 import { changeLanguage, t } from "../i18n/index.js";
-import { Layout, LayoutItem, SectionId, isGridEligible, cloneLayout } from "../types/layout.js";
+import {
+  Layout,
+  LayoutItem,
+  SectionId,
+  isGridEligible,
+  isSectionId,
+  cloneLayout,
+} from "../types/layout.js";
 import { loadLayout, saveLayout, resetLayout } from "../storage/layoutStorage.js";
 import { LongPressDrag } from "@/components/helpers/LongPressDrag";
 
@@ -60,8 +67,8 @@ export class CharacterSheet {
   /** Touch long-press → section drag; mouse drags use native HTML5 DnD. */
   private readonly longPress = new LongPressDrag<SectionId>({
     onActivate: (id) => this.handleTouchDragActivate(id),
-    onHover: () => {},
-    onDrop: () => this.clearDragState(),
+    onHover: (x, y) => this.handleTouchDragHover(x, y),
+    onDrop: () => this.handleTouchDrop(),
     onAbort: () => this.clearDragState(),
   });
 
@@ -239,6 +246,7 @@ export class CharacterSheet {
         @touchmove=${this.touchMoveListener}
         @touchend=${() => this.longPress.end()}
         @touchcancel=${() => this.longPress.cancel()}
+        @contextmenu=${(e: Event) => this.handleContextMenu(e)}
       >
         ${this.getSectionTemplate(sectionId)}
       </div>
@@ -246,9 +254,23 @@ export class CharacterSheet {
   }
 
   /**
+   * Suppress the long-press context menu while a touch drag is in progress
+   */
+  private handleContextMenu(e: Event): void {
+    if (this.longPress.isActive()) {
+      e.preventDefault();
+    }
+  }
+
+  /**
    * Handle drag start event
    */
   private handleDragStart(e: DragEvent, sectionId: SectionId): void {
+    if (this.longPress.isActive()) {
+      // Android can start its own long-press drag; the touch drag owns this gesture.
+      e.preventDefault();
+      return;
+    }
     if (!this.isLayoutEditMode) return;
 
     this.draggedSectionId = sectionId;
@@ -313,8 +335,11 @@ export class CharacterSheet {
    */
   private handleTouchStart(e: TouchEvent, sectionId: SectionId): void {
     if (!this.isLayoutEditMode) return;
+    if (e.touches.length !== 1) {
+      this.longPress.cancel();
+      return;
+    }
     const touch = e.touches[0];
-    if (!touch) return;
     this.longPress.start(sectionId, touch.clientX, touch.clientY);
   }
 
@@ -336,6 +361,36 @@ export class CharacterSheet {
     this.draggedSectionId = sectionId;
     this.dropTargetId = null;
     this.rerender();
+  }
+
+  /**
+   * During a touch drag, mark the section under the finger as the drop target
+   */
+  private handleTouchDragHover(x: number, y: number): void {
+    const hovered = document.elementFromPoint(x, y)?.closest<HTMLElement>("[data-section-id]");
+    const hoveredId = hovered?.dataset.sectionId;
+    const targetId =
+      hoveredId && isSectionId(hoveredId) && hoveredId !== this.draggedSectionId ? hoveredId : null;
+
+    if (targetId !== this.dropTargetId) {
+      this.dropTargetId = targetId;
+      this.rerender();
+    }
+  }
+
+  /**
+   * Touch drag released: move the dragged section before the drop target, if any
+   */
+  private handleTouchDrop(): void {
+    const sourceId = this.draggedSectionId;
+    const targetId = this.dropTargetId;
+    if (sourceId && targetId) {
+      this.draggedSectionId = null;
+      this.dropTargetId = null;
+      this.reorderSections(sourceId, targetId); // persists and re-renders
+    } else {
+      this.clearDragState();
+    }
   }
 
   /**
@@ -467,6 +522,7 @@ export class CharacterSheet {
    * Toggle layout edit mode
    */
   toggleLayoutEditMode(): void {
+    this.longPress.cancel();
     this.isLayoutEditMode = !this.isLayoutEditMode;
     if (this.isLayoutEditMode) {
       // Re-sync with storage on entry so a long-lived instance (or one whose

@@ -124,3 +124,15 @@ Feature: Section Re-arrangement
     And layout edit mode is active
     When I long-press the "Cyphers" section
     Then the "Cyphers" section should be in drag mode
+
+  Scenario: Reorder sections by long-press dragging on a touch device
+    Given I am using a mobile device
+    And layout edit mode is active
+    When I long-press the "Cyphers" section and drag it above the "Abilities" section
+    Then the "Cyphers" section should appear before the "Abilities" section
+
+  Scenario: A quick swipe does not start a section drag
+    Given I am using a mobile device
+    And layout edit mode is active
+    When I swipe from the "Cyphers" section towards the "Abilities" section
+    Then the "Abilities" section should appear before the "Cyphers" section

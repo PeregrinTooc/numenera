@@ -24,6 +24,12 @@ function section(id: string): HTMLElement {
   return element;
 }
 
+function sectionOrder(): string[] {
+  return Array.from(document.querySelectorAll("[data-section-id]")).map(
+    (el) => el.getAttribute("data-section-id") ?? ""
+  );
+}
+
 describe("CharacterSheet touch long-press drag", () => {
   let sheet: CharacterSheet;
 
@@ -75,6 +81,105 @@ describe("CharacterSheet touch long-press drag", () => {
     touch(section("cyphers"), "touchstart", [{ x: 20, y: 500 }]);
     vi.advanceTimersByTime(250);
 
+    expect(section("cyphers").classList.contains("dragging")).toBe(false);
+  });
+
+  it("moves a long-pressed section before the section it is released over", () => {
+    const cyphers = section("cyphers");
+    vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("abilities"));
+
+    touch(cyphers, "touchstart", [{ x: 20, y: 500 }]);
+    vi.advanceTimersByTime(250);
+    touch(cyphers, "touchmove", [{ x: 20, y: 120 }]);
+    expect(section("abilities").classList.contains("drop-target")).toBe(true);
+    touch(cyphers, "touchend");
+
+    const order = sectionOrder();
+    expect(order.indexOf("cyphers")).toBeLessThan(order.indexOf("abilities"));
+    expect(section("cyphers").classList.contains("dragging")).toBe(false);
+  });
+
+  it("releasing over no other section does not reorder (Review Focus 3)", () => {
+    const before = sectionOrder();
+    const cyphers = section("cyphers");
+    vi.spyOn(document, "elementFromPoint").mockReturnValue(document.body);
+
+    touch(cyphers, "touchstart", [{ x: 20, y: 500 }]);
+    vi.advanceTimersByTime(250);
+    touch(cyphers, "touchmove", [{ x: 20, y: 5 }]);
+    touch(cyphers, "touchend");
+
+    expect(sectionOrder()).toEqual(before);
+    expect(section("cyphers").classList.contains("dragging")).toBe(false);
+  });
+
+  it("a second finger cancels the touch drag (Review Focus 1)", () => {
+    const before = sectionOrder();
+    const cyphers = section("cyphers");
+    vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("abilities"));
+
+    touch(cyphers, "touchstart", [{ x: 20, y: 500 }]);
+    vi.advanceTimersByTime(250);
+    touch(cyphers, "touchstart", [
+      { x: 20, y: 500 },
+      { x: 200, y: 500 },
+    ]);
+    // Keep both fingers down past the hold time: a restarted gesture would re-activate.
+    vi.advanceTimersByTime(250);
+
+    expect(section("cyphers").classList.contains("dragging")).toBe(false);
+    touch(cyphers, "touchend");
+    expect(sectionOrder()).toEqual(before);
+  });
+
+  it("exiting edit mode cancels an active touch drag (Review Focus 2)", () => {
+    touch(section("cyphers"), "touchstart", [{ x: 20, y: 500 }]);
+    vi.advanceTimersByTime(250);
+
+    sheet.toggleLayoutEditMode();
+    sheet.toggleLayoutEditMode();
+
+    expect(section("cyphers").classList.contains("dragging")).toBe(false);
+  });
+
+  it("native dragstart is blocked during a touch drag (Review Focus 4)", () => {
+    touch(section("cyphers"), "touchstart", [{ x: 20, y: 500 }]);
+    vi.advanceTimersByTime(250);
+
+    const dragStart = new Event("dragstart", { bubbles: true, cancelable: true });
+    section("cyphers").dispatchEvent(dragStart);
+
+    expect(dragStart.defaultPrevented).toBe(true);
+  });
+
+  it("contextmenu is blocked during a touch drag (Review Focus 4)", () => {
+    touch(section("cyphers"), "touchstart", [{ x: 20, y: 500 }]);
+    vi.advanceTimersByTime(250);
+
+    const contextMenu = new Event("contextmenu", { bubbles: true, cancelable: true });
+    section("cyphers").dispatchEvent(contextMenu);
+
+    expect(contextMenu.defaultPrevented).toBe(true);
+  });
+
+  it("contextmenu is left alone when no touch drag is active", () => {
+    const contextMenu = new Event("contextmenu", { bubbles: true, cancelable: true });
+    section("cyphers").dispatchEvent(contextMenu);
+
+    expect(contextMenu.defaultPrevented).toBe(false);
+  });
+
+  it("touchcancel aborts an active touch drag without reordering", () => {
+    const before = sectionOrder();
+    const cyphers = section("cyphers");
+    vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("abilities"));
+
+    touch(cyphers, "touchstart", [{ x: 20, y: 500 }]);
+    vi.advanceTimersByTime(250);
+    touch(cyphers, "touchmove", [{ x: 20, y: 120 }]);
+    touch(cyphers, "touchcancel");
+
+    expect(sectionOrder()).toEqual(before);
     expect(section("cyphers").classList.contains("dragging")).toBe(false);
   });
 });
