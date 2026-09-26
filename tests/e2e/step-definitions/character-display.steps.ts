@@ -1,6 +1,6 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
-import { waitForCharacterSheetReady } from "../support/app-ready.js";
+import { waitForCharacterSheetReady, startNewCharacter } from "../support/app-ready.js";
 
 Given("a character exists with the following data:", function (_dataTable) {
   // Test data is defined in the feature file Background
@@ -161,8 +161,7 @@ Then("all text field labels should use translation keys", async function () {
 // Scenario 6: View empty character items sections
 Given("the character has no cyphers", async function () {
   // Click the "New" button to start with empty character
-  await this.page.goto(this.getBaseUrl());
-  await this.page.getByTestId("new-button").click();
+  await startNewCharacter(this.page, this.getBaseUrl());
 });
 
 Given("the character has no artifacts", function () {
@@ -192,8 +191,7 @@ Then("empty states should use translation keys", async function () {
 // Scenario 7: View empty character text fields
 Given("the character has empty text fields", async function () {
   // Click the "New" button to start with empty character
-  await this.page.goto(this.getBaseUrl());
-  await this.page.getByTestId("new-button").click();
+  await startNewCharacter(this.page, this.getBaseUrl());
 });
 
 Then("I should see empty state for background", async function () {

@@ -1,6 +1,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { waitForSaveComplete } from "../support/save.js";
+import { waitForCharacterSheetReady } from "../support/app-ready.js";
 
 // Recovery Rolls step definitions
 
@@ -80,8 +81,7 @@ Given("the character is {string}", async function (impairmentStatus: string) {
   // Reload page to pick up the changes
   await this.page.waitForTimeout(500);
   await this.page.reload();
-  await this.page.waitForLoadState("networkidle");
-  await this.page.waitForTimeout(200);
+  await waitForCharacterSheetReady(this.page);
 
   // Wait for damage track section to be visible and correct radio button to be selected
   await this.page.waitForSelector('[data-testid="damage-track-section"]', { state: "visible" });
@@ -143,8 +143,7 @@ Given("the character has recovery modifier {int}", async function (modifier: num
   // Reload page to pick up the changes
   await this.page.waitForTimeout(500);
   await this.page.reload();
-  await this.page.waitForLoadState("networkidle");
-  await this.page.waitForTimeout(200);
+  await waitForCharacterSheetReady(this.page);
 
   // Wait for recovery modifier display to show correct value
   // The display shows "1d6 + X" format

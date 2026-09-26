@@ -1,6 +1,7 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
+import { waitForCharacterSheetReady } from "../support/app-ready.js";
 
 // ============================================================================
 // SETUP STEPS - Create cyphers for testing
@@ -32,7 +33,7 @@ async function setupCyphersWithNames(world: CustomWorld, names: string[]): Promi
 
   // Reload page to reflect changes
   await world.page.reload();
-  await world.page.waitForLoadState("domcontentloaded");
+  await waitForCharacterSheetReady(world.page);
   await world.page.waitForSelector('[data-testid="cyphers-section"]');
 }
 
@@ -257,7 +258,7 @@ async function setupAbilitiesWithNames(world: CustomWorld, names: string[]): Pro
   }
 
   await world.page.reload();
-  await world.page.waitForLoadState("domcontentloaded");
+  await waitForCharacterSheetReady(world.page);
   await world.page.waitForSelector('[data-testid="abilities-section"]');
 }
 

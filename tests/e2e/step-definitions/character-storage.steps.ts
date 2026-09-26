@@ -1,5 +1,6 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
+import { startNewCharacter } from "../support/app-ready.js";
 
 // Scenario: Clear character data via clear button
 Given("a character is currently displayed", async function () {
@@ -30,8 +31,7 @@ Then("all sections should display empty state messages", async function () {
 // Scenario: Load hard-coded character via load button
 Given("the character sheet is empty", async function () {
   // Click the "New" button to start with empty character
-  await this.page.goto(this.getBaseUrl());
-  await this.page.getByTestId("new-button").click();
+  await startNewCharacter(this.page, this.getBaseUrl());
 });
 
 When('I click the "Load" button', async function () {

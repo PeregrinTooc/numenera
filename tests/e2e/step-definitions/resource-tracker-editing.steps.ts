@@ -2,6 +2,7 @@ import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { FULL_CHARACTER, EMPTY_ARRAYS } from "../support/cardTestFixtures.js";
+import { waitForCharacterSheetReady } from "../support/app-ready.js";
 
 // ============================================================================
 // GIVEN STEPS - Setup character state with specific resource values
@@ -62,8 +63,7 @@ Given(
     await this.page.waitForTimeout(500);
 
     await this.page.reload();
-    await this.page.waitForLoadState("networkidle");
-    await this.page.waitForTimeout(200);
+    await waitForCharacterSheetReady(this.page);
 
     await this.page.waitForFunction(
       ({ expectedCurrent, expectedTotal }) => {

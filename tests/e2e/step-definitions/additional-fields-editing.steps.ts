@@ -2,6 +2,7 @@ import { When, Then, Given } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { waitForSaveComplete } from "../support/save.js";
+import { waitForCharacterSheetReady } from "../support/app-ready.js";
 
 // ============================================================================
 // BACKGROUND DATA SETUP - Unique to additional fields
@@ -321,7 +322,7 @@ Given("I am using a mobile device", async function (this: CustomWorld) {
 
   // Reload page to apply changes
   await this.page.reload();
-  await this.page.waitForLoadState("domcontentloaded");
+  await waitForCharacterSheetReady(this.page);
 });
 
 When("I tap the type dropdown", async function (this: CustomWorld) {

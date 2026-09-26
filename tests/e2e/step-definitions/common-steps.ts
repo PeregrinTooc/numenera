@@ -4,6 +4,7 @@ import { CustomWorld } from "../support/world.js";
 import { waitForSaveComplete } from "../support/save.js";
 import { getTestId } from "../support/fields.js";
 import { FULL_CHARACTER } from "../support/cardTestFixtures.js";
+import { waitForCharacterSheetReady } from "../support/app-ready.js";
 
 // Default stat values for verification, derived from FULL_CHARACTER so this
 // map can't drift from the character every card fixture builds on.
@@ -191,12 +192,10 @@ When("I reload the page", async function (this: CustomWorld) {
   }
 
   await this.page.reload();
-  // "domcontentloaded" fires before the app's own async render pipeline
-  // (loadLayout/loadCharacterState, etc.) has produced any DOM content.
-  // Wait for a baseline element every character sheet render always
-  // includes, so callers checking rendered state right after don't race
-  // the app's own bootstrap.
-  await this.page.waitForSelector('[data-testid="character-name"]');
+  // Wait for both the rendered DOM and the app's own bootstrap persist to
+  // land, so callers checking rendered/persisted state right after don't
+  // race the app's async bootstrap (see waitForCharacterSheetReady).
+  await waitForCharacterSheetReady(this.page);
 });
 
 // ============================================================================

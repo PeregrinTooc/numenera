@@ -1,5 +1,6 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
+import { startNewCharacter } from "../support/app-ready.js";
 
 // Helper function to sanitize ability names for testid
 function sanitizeForTestId(name: string): string {
@@ -33,8 +34,7 @@ Given("the character has abilities with different pools:", function (dataTable) 
 
 Given("the character has no abilities", async function () {
   // Click the "New" button to start with empty character
-  await this.page.goto(this.getBaseUrl());
-  await this.page.getByTestId("new-button").click();
+  await startNewCharacter(this.page, this.getBaseUrl());
 });
 
 Then("I should see the ability {string}", async function (abilityName: string) {

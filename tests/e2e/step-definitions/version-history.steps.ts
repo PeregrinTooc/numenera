@@ -2,6 +2,7 @@ import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
+import { waitForCharacterSheetReady } from "../support/app-ready.js";
 
 // Given steps
 
@@ -265,7 +266,7 @@ Given("the character has a portrait image", async function (this: CustomWorld) {
   await this.storageHelper.setCharacter(character);
   this.uploadedPortrait = portrait;
   await this.page.reload();
-  await this.page.waitForTimeout(100);
+  await waitForCharacterSheetReady(this.page);
 });
 
 Given(
@@ -478,7 +479,7 @@ When(
 
 When("I refresh the browser", async function (this: CustomWorld) {
   await this.page.reload();
-  await this.page.waitForTimeout(200);
+  await waitForCharacterSheetReady(this.page);
 });
 
 // Note: "I edit the character tier to {int}" is now handled by the unified

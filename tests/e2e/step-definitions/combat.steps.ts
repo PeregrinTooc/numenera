@@ -1,5 +1,6 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
+import { startNewCharacter } from "../support/app-ready.js";
 
 // Attack step definitions
 
@@ -11,8 +12,7 @@ Given(
 Given("the character has an attack {string}", async function (_attackName: string) {});
 
 Given("the character has no attacks", async function () {
-  await this.page.goto(this.getBaseUrl());
-  await this.page.getByTestId("new-button").click();
+  await startNewCharacter(this.page, this.getBaseUrl());
 });
 
 Then("I should see the attack {string}", async function (attackName: string) {
@@ -133,8 +133,7 @@ Given("the character has a special ability {string}", async function (abilityNam
 });
 
 Given("the character has no special abilities", async function () {
-  await this.page.goto(this.getBaseUrl());
-  await this.page.getByTestId("new-button").click();
+  await startNewCharacter(this.page, this.getBaseUrl());
 });
 
 Then("I should see the special ability {string}", async function (abilityName: string) {
