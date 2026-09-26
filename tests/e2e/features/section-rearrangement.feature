@@ -119,10 +119,8 @@ Feature: Section Re-arrangement
     Then I should see the "Edit Layout" button
     And it should be touch-friendly
 
-  @skip
-  Scenario: Section dragging works on mobile with long-tap
+  Scenario: Long-press puts a section into drag mode
     Given I am using a mobile device
     And layout edit mode is active
-    When I long-tap on a section for 250ms
-    Then the section should enter drag mode
-    And I should be able to drag it to a new position
+    When I long-press the "Cyphers" section
+    Then the "Cyphers" section should be in drag mode

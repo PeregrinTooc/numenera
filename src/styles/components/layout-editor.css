@@ -83,6 +83,10 @@
 
 .layout-edit-mode .layout-draggable {
   cursor: grab;
+  /* A long-press starts a section drag; don't let it select text or open the iOS callout. */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .layout-edit-mode .layout-draggable:hover {

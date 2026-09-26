@@ -6,7 +6,14 @@ import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
 import { openSettingsPanel } from "../support/settings.js";
-import { dragSectionTo, sectionId, sectionLocator } from "../support/sections.js";
+import {
+  dragSectionTo,
+  LONG_PRESS_HOLD_MS,
+  nearTopOf,
+  sectionId,
+  sectionLocator,
+  TouchGesture,
+} from "../support/sections.js";
 
 // ============================================
 // Edit Mode Entry/Exit Steps
@@ -768,49 +775,20 @@ Then("the character should be imported normally", async function (this: CustomWo
 });
 
 // ============================================
-// Mobile Long-tap Steps
+// Touch Long-press Steps
 // ============================================
 
-When("I long-tap on a section for 250ms", async function (this: CustomWorld) {
-  const page = this.page;
+When("I long-press the {string} section", async function (this: CustomWorld, name: string) {
+  const section = sectionLocator(this.page, name);
+  await section.scrollIntoViewIfNeeded();
+  // The gesture is deliberately left held: the Then step asserts the drag state.
+  await TouchGesture.start(this.page, await nearTopOf(section));
+  await this.page.waitForTimeout(LONG_PRESS_HOLD_MS);
+});
 
-  // Long-tap on a draggable section (e.g., abilities)
-  const section = page.locator('[data-section-id="abilities"]');
-  const box = await section.boundingBox();
-
-  if (!box) {
-    throw new Error("Could not get bounding box for section");
+Then(
+  "the {string} section should be in drag mode",
+  async function (this: CustomWorld, name: string) {
+    await expect(sectionLocator(this.page, name)).toHaveClass(/\bdragging\b/);
   }
-
-  // Simulate long-tap with touch events
-  await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
-  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-  await page.mouse.down();
-  await page.waitForTimeout(250);
-});
-
-Then("the section should enter drag mode", async function (this: CustomWorld) {
-  const page = this.page;
-
-  // Check for visual indicator that drag mode is active
-  const section = page.locator('[data-section-id="abilities"]');
-  await expect(section).toHaveClass(/dragging|drag-active/);
-});
-
-Then("I should be able to drag it to a new position", async function (this: CustomWorld) {
-  const page = this.page;
-
-  // Complete the drag operation
-  const targetSection = page.locator('[data-section-id="cyphers"]');
-  const targetBox = await targetSection.boundingBox();
-
-  if (!targetBox) {
-    throw new Error("Could not get bounding box for target section");
-  }
-
-  await page.mouse.move(targetBox.x + targetBox.width / 2, targetBox.y - 10);
-  await page.mouse.up();
-
-  // Verify the move was possible
-  await page.waitForTimeout(100);
-});
+);

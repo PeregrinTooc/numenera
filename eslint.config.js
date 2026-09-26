@@ -32,6 +32,8 @@ export default [
         KeyboardEvent: "readonly",
         MouseEvent: "readonly",
         DragEvent: "readonly",
+        TouchEvent: "readonly",
+        Element: "readonly",
         CustomEvent: "readonly",
         FileReader: "readonly",
         Blob: "readonly",

@@ -17,6 +17,7 @@ import { VersionWarningBanner } from "./VersionWarningBanner.js";
 import { changeLanguage, t } from "../i18n/index.js";
 import { Layout, LayoutItem, SectionId, isGridEligible, cloneLayout } from "../types/layout.js";
 import { loadLayout, saveLayout, resetLayout } from "../storage/layoutStorage.js";
+import { LongPressDrag } from "@/components/helpers/LongPressDrag";
 
 /**
  * Sections backed by a CollectionBehavior component. Each one is mounted into
@@ -55,6 +56,24 @@ export class CharacterSheet {
   private draggedSectionId: SectionId | null = null;
   private dropTargetId: SectionId | null = null;
   private container: HTMLElement | null = null;
+
+  /** Touch long-press → section drag; mouse drags use native HTML5 DnD. */
+  private readonly longPress = new LongPressDrag<SectionId>({
+    onActivate: (id) => this.handleTouchDragActivate(id),
+    onHover: () => {},
+    onDrop: () => this.clearDragState(),
+    onAbort: () => this.clearDragState(),
+  });
+
+  /**
+   * Lit listener object so the touchmove listener is registered non-passive:
+   * an active touch drag must be able to preventDefault() the page scroll.
+   * Kept as one stable object so lit doesn't re-add it on every render.
+   */
+  private readonly touchMoveListener = {
+    handleEvent: (e: TouchEvent): void => this.handleTouchMove(e),
+    passive: false,
+  };
 
   constructor(
     private character: Character,
@@ -216,6 +235,10 @@ export class CharacterSheet {
         @dragover=${(e: DragEvent) => this.handleDragOver(e, sectionId)}
         @dragleave=${() => this.handleDragLeave()}
         @drop=${(e: DragEvent) => this.handleDrop(e, sectionId)}
+        @touchstart=${(e: TouchEvent) => this.handleTouchStart(e, sectionId)}
+        @touchmove=${this.touchMoveListener}
+        @touchend=${() => this.longPress.end()}
+        @touchcancel=${() => this.longPress.cancel()}
       >
         ${this.getSectionTemplate(sectionId)}
       </div>
@@ -240,9 +263,7 @@ export class CharacterSheet {
    * Handle drag end event
    */
   private handleDragEnd(): void {
-    this.draggedSectionId = null;
-    this.dropTargetId = null;
-    this.rerender();
+    this.clearDragState();
   }
 
   /**
@@ -285,6 +306,45 @@ export class CharacterSheet {
     // Clear drag state
     this.draggedSectionId = null;
     this.dropTargetId = null;
+  }
+
+  /**
+   * Handle touch start: begin a long-press that may become a section drag
+   */
+  private handleTouchStart(e: TouchEvent, sectionId: SectionId): void {
+    if (!this.isLayoutEditMode) return;
+    const touch = e.touches[0];
+    if (!touch) return;
+    this.longPress.start(sectionId, touch.clientX, touch.clientY);
+  }
+
+  /**
+   * Handle touch move: once a long-press is active, the finger drags instead of scrolling
+   */
+  private handleTouchMove(e: TouchEvent): void {
+    const touch = e.touches[0];
+    if (!touch) return;
+    if (this.longPress.move(touch.clientX, touch.clientY)) {
+      e.preventDefault();
+    }
+  }
+
+  /**
+   * A long-press activated: show the section as being dragged
+   */
+  private handleTouchDragActivate(sectionId: SectionId): void {
+    this.draggedSectionId = sectionId;
+    this.dropTargetId = null;
+    this.rerender();
+  }
+
+  /**
+   * Clear drag/drop-target styling and re-render
+   */
+  private clearDragState(): void {
+    this.draggedSectionId = null;
+    this.dropTargetId = null;
+    this.rerender();
   }
 
   /**
