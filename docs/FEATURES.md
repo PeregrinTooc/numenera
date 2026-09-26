@@ -132,8 +132,8 @@ All features listed below have full BDD test coverage and are verified working.
     Oddities, Abilities, Special Abilities, Attacks)
   - Card order persists with the character
   - Desktop click-and-drag; mobile long-tap activation
-  - The drag gesture itself isn't covered by automated E2E (see note below) —
-    manually verified
+  - Card drag reordering is covered by automated E2E
+    (card-reordering.feature) via real `dragTo()`
 
 - **Section Re-arrangement** ([section-rearrangement.feature](../tests/e2e/features/section-rearrangement.feature))
   - Toggle a dedicated layout edit mode from the Header
