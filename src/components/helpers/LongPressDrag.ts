@@ -40,9 +40,13 @@ export class LongPressDrag<Id extends string> {
   }
 
   start(id: Id, x: number, y: number): void {
-    this.cancel();
+    const wasActive = this.isActive();
+    this.reset();
     const timer = setTimeout(() => this.activate(id), this.holdMs);
     this.state = { kind: "pending", id, startX: x, startY: y, timer };
+    if (wasActive) {
+      this.options.onAbort();
+    }
   }
 
   isActive(): boolean {

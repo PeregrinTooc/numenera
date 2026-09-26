@@ -138,6 +138,21 @@ describe("LongPressDrag", () => {
     expect(onActivate).toHaveBeenCalledTimes(2);
   });
 
+  it("a gesture started from onAbort is not clobbered by the start that aborted it", () => {
+    const { drag, onActivate, onAbort } = createDrag();
+    onAbort.mockImplementationOnce(() => {
+      drag.start("notes", 0, 0);
+    });
+
+    drag.start("cyphers", 100, 100);
+    vi.advanceTimersByTime(250);
+    drag.start("abilities", 50, 50);
+    vi.advanceTimersByTime(250);
+
+    expect(onActivate).toHaveBeenLastCalledWith("notes");
+    expect(onActivate).toHaveBeenCalledTimes(2);
+  });
+
   it("ignores move, end and cancel when no gesture is in progress", () => {
     const { drag, onHover, onDrop, onAbort } = createDrag();
 
