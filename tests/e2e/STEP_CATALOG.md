@@ -683,55 +683,55 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `{string} and {string} are in a grid` | 1 | 560 |
-| Then | `{string} and {string} should be displayed side by side in a grid` | 1 | 461 |
-| Then | `{string} should be in its own row` | 2 | 630 |
-| When | `I attempt to drag {string} onto {string}` | 1 | 500 |
-| When | `I choose to {string}` | 2 | 815 |
-| When | `I click the Edit Layout button` | 1 | 13 |
-| When | `I click the Exit Edit Layout button` | 2 | 18 |
-| When | `I click the Reset Layout button` | 1 | 23 |
-| When | `I confirm the reset` | 1 | 191 |
-| When | `I drag {string} out of the grid` | 1 | 601 |
-| When | `I drag the {string} section above the {string} section` | 1 | 237 |
-| When | `I drag the {string} section onto the {string} section` | 1 | 419 |
-| When | `I exit layout edit mode` | 1 | 372 |
-| When | `I export the character` | 1 | 654 |
-| Given | `I have a character file with a different layout` | 3 | 732 |
-| Given | `I have a character file with the default layout` | 1 | 747 |
-| Given | `I have customized the layout` | 5 | 164 |
-| Given | `I have moved the {string} section to the top` | 1 | 314 |
-| Given | `I have reordered sections` | 1 | 88 |
-| Given | `I have the default layout` | 1 | 220 |
-| When | `I import the character file` | 4 | 751 |
-| When | `I long-tap on a section for 250ms` | 1 | 895 |
-| Given | `I open the settings panel` | 2 | 187 |
-| Then | `I should be able to drag it to a new position` | 1 | 921 |
-| Then | `I should not see a layout choice prompt` | 1 | 792 |
-| Then | `I should see a layout choice prompt` | 1 | 784 |
-| Then | `I should see layout edit mode is active` | 1 | 28 |
-| Then | `I should see options to {string} or {string}` | 1 | 802 |
-| Then | `I should see the {string} button` | 1 | 135 |
-| Then | `I should see visual indicators on rearrangeable sections` | 1 | 40 |
-| Then | `it should be touch-friendly` | 1 | 146 |
-| Given | `layout edit mode is active` | 8 | 52 |
-| Then | `layout edit mode should be inactive` | 1 | 63 |
-| Then | `my current layout should be preserved` | 1 | 827 |
-| Then | `no grid should be created` | 1 | 535 |
-| Then | `only the character data should be imported` | 1 | 849 |
-| Then | `the {string} option should be enabled` | 1 | 208 |
-| Then | `the {string} section should appear before the {string} section` | 1 | 273 |
-| Then | `the {string} section should still be at the top` | 1 | 383 |
-| Then | `the character data should be imported` | 1 | 877 |
-| Then | `the character should be imported normally` | 1 | 884 |
-| Then | `the exported file should contain the layout configuration` | 1 | 719 |
-| Then | `the layout from the imported file should be applied` | 1 | 857 |
-| Then | `the layout should be saved` | 1 | 110 |
-| Then | `the layout should return to the default arrangement` | 1 | 196 |
-| Then | `the section should enter drag mode` | 1 | 913 |
-| Then | `the sections should remain in single-column layout` | 1 | 555 |
-| Then | `the sections should remain in the new order` | 1 | 121 |
-| Then | `the visual indicators should be removed` | 1 | 75 |
+| Given | `{string} and {string} are in a grid` | 1 | 470 |
+| Then | `{string} and {string} should be displayed side by side in a grid` | 1 | 395 |
+| Then | `{string} should be in its own row` | 2 | 525 |
+| When | `I attempt to drag {string} onto {string}` | 1 | 424 |
+| When | `I choose to {string}` | 2 | 705 |
+| When | `I click the Edit Layout button` | 1 | 14 |
+| When | `I click the Exit Edit Layout button` | 2 | 19 |
+| When | `I click the Reset Layout button` | 1 | 24 |
+| When | `I confirm the reset` | 1 | 192 |
+| When | `I drag {string} out of the grid` | 1 | 506 |
+| When | `I drag the {string} section above the {string} section` | 1 | 238 |
+| When | `I drag the {string} section onto the {string} section` | 1 | 370 |
+| When | `I exit layout edit mode` | 1 | 333 |
+| When | `I export the character` | 1 | 544 |
+| Given | `I have a character file with a different layout` | 3 | 622 |
+| Given | `I have a character file with the default layout` | 1 | 637 |
+| Given | `I have customized the layout` | 5 | 165 |
+| Given | `I have moved the {string} section to the top` | 1 | 288 |
+| Given | `I have reordered sections` | 1 | 89 |
+| Given | `I have the default layout` | 1 | 221 |
+| When | `I import the character file` | 4 | 641 |
+| When | `I long-tap on a section for 250ms` | 1 | 785 |
+| Given | `I open the settings panel` | 2 | 188 |
+| Then | `I should be able to drag it to a new position` | 1 | 811 |
+| Then | `I should not see a layout choice prompt` | 1 | 682 |
+| Then | `I should see a layout choice prompt` | 1 | 674 |
+| Then | `I should see layout edit mode is active` | 1 | 29 |
+| Then | `I should see options to {string} or {string}` | 1 | 692 |
+| Then | `I should see the {string} button` | 1 | 136 |
+| Then | `I should see visual indicators on rearrangeable sections` | 1 | 41 |
+| Then | `it should be touch-friendly` | 1 | 147 |
+| Given | `layout edit mode is active` | 8 | 53 |
+| Then | `layout edit mode should be inactive` | 1 | 64 |
+| Then | `my current layout should be preserved` | 1 | 717 |
+| Then | `no grid should be created` | 1 | 445 |
+| Then | `only the character data should be imported` | 1 | 739 |
+| Then | `the {string} option should be enabled` | 1 | 209 |
+| Then | `the {string} section should appear before the {string} section` | 1 | 257 |
+| Then | `the {string} section should still be at the top` | 1 | 344 |
+| Then | `the character data should be imported` | 1 | 767 |
+| Then | `the character should be imported normally` | 1 | 774 |
+| Then | `the exported file should contain the layout configuration` | 1 | 609 |
+| Then | `the layout from the imported file should be applied` | 1 | 747 |
+| Then | `the layout should be saved` | 1 | 111 |
+| Then | `the layout should return to the default arrangement` | 1 | 197 |
+| Then | `the section should enter drag mode` | 1 | 803 |
+| Then | `the sections should remain in single-column layout` | 1 | 465 |
+| Then | `the sections should remain in the new order` | 1 | 122 |
+| Then | `the visual indicators should be removed` | 1 | 76 |
 
 ## settings-gear.steps.ts
 

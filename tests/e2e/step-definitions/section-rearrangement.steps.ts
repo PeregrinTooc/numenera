@@ -6,6 +6,7 @@ import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
 import { openSettingsPanel } from "../support/settings.js";
+import { sectionId, sectionLocator } from "../support/sections.js";
 
 // ============================================
 // Edit Mode Entry/Exit Steps
@@ -240,26 +241,9 @@ When(
   async function (this: CustomWorld, sourceSection: string, targetSection: string) {
     const page = this.page;
 
-    const sectionIdMap: Record<string, string> = {
-      Cyphers: "cyphers",
-      Abilities: "abilities",
-      "Special Abilities": "specialAbilities",
-      Attacks: "attacks",
-      Items: "items",
-      Background: "background",
-      Notes: "notes",
-    };
-
-    const sourceId = sectionIdMap[sourceSection];
-    const targetId = sectionIdMap[targetSection];
-
-    if (!sourceId || !targetId) {
-      throw new Error(`Unknown section: ${sourceSection} or ${targetSection}`);
-    }
-
     // Get the source and target elements
-    const sourceElement = page.locator(`[data-section-id="${sourceId}"]`);
-    const targetElement = page.locator(`[data-section-id="${targetId}"]`);
+    const sourceElement = sectionLocator(page, sourceSection);
+    const targetElement = sectionLocator(page, targetSection);
 
     // Use Playwright's native dragTo for proper HTML5 drag events
     await sourceElement.dragTo(targetElement, {
@@ -276,18 +260,8 @@ Then(
   async function (this: CustomWorld, firstSection: string, secondSection: string) {
     const page = this.page;
 
-    const sectionIdMap: Record<string, string> = {
-      Cyphers: "cyphers",
-      Abilities: "abilities",
-      "Special Abilities": "specialAbilities",
-      Attacks: "attacks",
-      Items: "items",
-      Background: "background",
-      Notes: "notes",
-    };
-
-    const firstId = sectionIdMap[firstSection];
-    const secondId = sectionIdMap[secondSection];
+    const firstId = sectionId(firstSection);
+    const secondId = sectionId(secondSection);
 
     // Get the positions of the sections in the DOM
     const positions = await page.evaluate(
@@ -317,24 +291,11 @@ Given(
   async function (this: CustomWorld, sectionName: string) {
     const page = this.page;
 
-    const sectionIdMap: Record<string, string> = {
-      Cyphers: "cyphers",
-      Abilities: "abilities",
-      "Special Abilities": "specialAbilities",
-      Attacks: "attacks",
-      Items: "items",
-      Background: "background",
-      Notes: "notes",
-    };
-
-    const sectionId = sectionIdMap[sectionName];
-    if (!sectionId) {
-      throw new Error(`Unknown section: ${sectionName}`);
-    }
+    const id = sectionId(sectionName);
 
     // Move the section to top by modifying the layout in localStorage
     // Create a proper layout with the section at top of rearrangeable sections
-    await page.evaluate((sectionId) => {
+    await page.evaluate((id) => {
       // Build a layout with the section moved to the top of rearrangeable sections
       const fixedSections = ["basicInfo", "stats", "recoveryDamage"];
       const rearrangeableSections = [
@@ -348,8 +309,8 @@ Given(
       ];
 
       // Remove the section from rearrangeableSections and put it first
-      const filtered = rearrangeableSections.filter((id) => id !== sectionId);
-      const newOrder = [sectionId, ...filtered];
+      const filtered = rearrangeableSections.filter((existingId) => existingId !== id);
+      const newOrder = [id, ...filtered];
 
       const layout = [
         ...fixedSections.map((id) => ({ type: "single", id })),
@@ -357,7 +318,7 @@ Given(
       ];
 
       localStorage.setItem("numenera-layout", JSON.stringify(layout));
-    }, sectionId);
+    }, id);
 
     // Reload to apply the new layout
     await page.reload();
@@ -386,28 +347,18 @@ Then(
   async function (this: CustomWorld, sectionName: string) {
     const page = this.page;
 
-    const sectionIdMap: Record<string, string> = {
-      Cyphers: "cyphers",
-      Abilities: "abilities",
-      "Special Abilities": "specialAbilities",
-      Attacks: "attacks",
-      Items: "items",
-      Background: "background",
-      Notes: "notes",
-    };
-
-    const sectionId = sectionIdMap[sectionName];
+    const id = sectionId(sectionName);
 
     // Check that this section appears right after recoveryDamage
-    const position = await page.evaluate((sectionId) => {
+    const position = await page.evaluate((id) => {
       const allSections = Array.from(document.querySelectorAll("[data-section-id]"));
       const sectionIds = allSections.map((el) => el.getAttribute("data-section-id"));
       // Find position after the non-rearrangeable sections
       const rearrangeableSections = sectionIds.filter(
-        (id) => !["basicInfo", "stats", "recoveryDamage"].includes(id || "")
+        (existingId) => !["basicInfo", "stats", "recoveryDamage"].includes(existingId || "")
       );
-      return rearrangeableSections[0] === sectionId;
-    }, sectionId);
+      return rearrangeableSections[0] === id;
+    }, id);
 
     expect(position).toBe(true);
   }
@@ -422,25 +373,8 @@ When(
   async function (this: CustomWorld, sourceSection: string, targetSection: string) {
     const page = this.page;
 
-    const sectionIdMap: Record<string, string> = {
-      Background: "background",
-      Notes: "notes",
-      Abilities: "abilities",
-      "Special Abilities": "specialAbilities",
-      Attacks: "attacks",
-      Cyphers: "cyphers",
-      Items: "items",
-    };
-
-    const sourceId = sectionIdMap[sourceSection];
-    const targetId = sectionIdMap[targetSection];
-
-    if (!sourceId || !targetId) {
-      throw new Error(`Unknown section: ${sourceSection} or ${targetSection}`);
-    }
-
-    const sourceElement = page.locator(`[data-section-id="${sourceId}"]`);
-    const targetElement = page.locator(`[data-section-id="${targetId}"]`);
+    const sourceElement = sectionLocator(page, sourceSection);
+    const targetElement = sectionLocator(page, targetSection);
 
     const sourceBox = await sourceElement.boundingBox();
     const targetBox = await targetElement.boundingBox();
@@ -464,18 +398,8 @@ Then(
   async function (this: CustomWorld, section1: string, section2: string) {
     const page = this.page;
 
-    const sectionIdMap: Record<string, string> = {
-      Background: "background",
-      Notes: "notes",
-      Abilities: "abilities",
-      "Special Abilities": "specialAbilities",
-      Attacks: "attacks",
-      Cyphers: "cyphers",
-      Items: "items",
-    };
-
-    const id1 = sectionIdMap[section1];
-    const id2 = sectionIdMap[section2];
+    const id1 = sectionId(section1);
+    const id2 = sectionId(section2);
 
     // Check that both sections are within a grid container
     const inGrid = await page.evaluate(
@@ -503,23 +427,9 @@ When(
   async function (this: CustomWorld, sourceSection: string, targetSection: string) {
     const page = this.page;
 
-    const sectionIdMap: Record<string, string> = {
-      Stats: "stats",
-      "Basic Info": "basicInfo",
-      Background: "background",
-      Notes: "notes",
-    };
-
-    const sourceId = sectionIdMap[sourceSection];
-    const targetId = sectionIdMap[targetSection];
-
-    if (!sourceId || !targetId) {
-      throw new Error(`Unknown section: ${sourceSection} or ${targetSection}`);
-    }
-
     // Try to drag - this may not work for non-eligible sections
-    const sourceElement = page.locator(`[data-section-id="${sourceId}"]`);
-    const targetElement = page.locator(`[data-section-id="${targetId}"]`);
+    const sourceElement = sectionLocator(page, sourceSection);
+    const targetElement = sectionLocator(page, targetSection);
 
     const sourceBox = await sourceElement.boundingBox();
     const targetBox = await targetElement.boundingBox();
@@ -563,13 +473,8 @@ Given(
   async function (this: CustomWorld, section1: string, section2: string) {
     const page = this.page;
 
-    const sectionIdMap: Record<string, string> = {
-      Background: "background",
-      Notes: "notes",
-    };
-
-    const id1 = sectionIdMap[section1];
-    const id2 = sectionIdMap[section2];
+    const id1 = sectionId(section1);
+    const id2 = sectionId(section2);
 
     // Set up a grid layout
     await page.evaluate(
@@ -602,17 +507,7 @@ Given(
 When("I drag {string} out of the grid", async function (this: CustomWorld, sectionName: string) {
   const page = this.page;
 
-  const sectionIdMap: Record<string, string> = {
-    Background: "background",
-    Notes: "notes",
-  };
-
-  const sectionId = sectionIdMap[sectionName];
-  if (!sectionId) {
-    throw new Error(`Unknown section: ${sectionName}`);
-  }
-
-  const sourceElement = page.locator(`[data-section-id="${sectionId}"]`);
+  const sourceElement = sectionLocator(page, sectionName);
   const sourceBox = await sourceElement.boundingBox();
 
   if (!sourceBox) {
@@ -631,19 +526,14 @@ When("I drag {string} out of the grid", async function (this: CustomWorld, secti
 Then("{string} should be in its own row", async function (this: CustomWorld, sectionName: string) {
   const page = this.page;
 
-  const sectionIdMap: Record<string, string> = {
-    Background: "background",
-    Notes: "notes",
-  };
-
-  const sectionId = sectionIdMap[sectionName];
+  const id = sectionId(sectionName);
 
   // Check that section is not in a grid
-  const notInGrid = await page.evaluate((sectionId) => {
-    const section = document.querySelector(`[data-section-id="${sectionId}"]`);
+  const notInGrid = await page.evaluate((id) => {
+    const section = document.querySelector(`[data-section-id="${id}"]`);
     if (!section) return false;
     return section.closest(".layout-grid") === null;
-  }, sectionId);
+  }, id);
 
   expect(notInGrid).toBe(true);
 });
