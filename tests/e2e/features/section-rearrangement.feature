@@ -136,3 +136,4 @@ Feature: Section Re-arrangement
     And layout edit mode is active
     When I swipe from the "Cyphers" section towards the "Abilities" section
     Then the "Abilities" section should appear before the "Cyphers" section
+    And the page should have scrolled

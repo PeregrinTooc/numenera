@@ -34,6 +34,7 @@ export interface CustomWorld extends World {
   // section-rearrangement.steps.ts
   exportedLayoutData?: { layout?: unknown[] } | null;
   importedLayout?: Array<{ type: string; id: string }> | null;
+  scrollYBeforeSwipe?: number;
   // version-history.steps.ts
   originalCharacterName?: string;
   uploadedPortrait?: string;
@@ -59,6 +60,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   previousCardCount?: number;
   exportedLayoutData?: { layout?: unknown[] } | null;
   importedLayout?: Array<{ type: string; id: string }> | null;
+  scrollYBeforeSwipe?: number;
   originalCharacterName?: string;
   uploadedPortrait?: string;
   savedTimestamp?: string | null;

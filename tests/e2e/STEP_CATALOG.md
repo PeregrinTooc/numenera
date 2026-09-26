@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **683** in 25 files
-- Feature step lines: **2054**
+- Step definitions: **684** in 25 files
+- Feature step lines: **2055**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **24**
 
@@ -53,7 +53,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
-| [section-rearrangement.steps.ts](#sectionrearrangementstepsts) | 50 | 0 |
+| [section-rearrangement.steps.ts](#sectionrearrangementstepsts) | 51 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
 | [version-comparison.steps.ts](#versioncomparisonstepsts) | 43 | 0 |
@@ -713,7 +713,7 @@ pattern this script does not understand):
 | Then | `I should see options to {string} or {string}` | 1 | 688 |
 | Then | `I should see the {string} button` | 1 | 144 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 49 |
-| When | `I swipe from the {string} section towards the {string} section` | 1 | 813 |
+| When | `I swipe from the {string} section towards the {string} section` | 1 | 819 |
 | Then | `it should be touch-friendly` | 1 | 155 |
 | Given | `layout edit mode is active` | 10 | 61 |
 | Then | `layout edit mode should be inactive` | 1 | 72 |
@@ -730,6 +730,7 @@ pattern this script does not understand):
 | Then | `the layout from the imported file should be applied` | 1 | 743 |
 | Then | `the layout should be saved` | 1 | 119 |
 | Then | `the layout should return to the default arrangement` | 1 | 205 |
+| Then | `the page should have scrolled` | 1 | 843 |
 | Then | `the sections should remain in single-column layout` | 1 | 461 |
 | Then | `the sections should remain in the new order` | 1 | 130 |
 | Then | `the visual indicators should be removed` | 1 | 84 |
