@@ -44,10 +44,11 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ## 📊 Current Status
 
-**Test Coverage**: `npm run test:unit` — 869 tests passing. `npm run test:e2e:prod` —
-401 scenarios passing, 16 `@skip`ped (see below for why). The 365/16 figure
+**Test Coverage**: `npm run test:unit` — 895 tests passing. `npm run test:e2e:prod` —
+405 scenarios passing, 14 `@skip`ped (see below for why). The 365/16 figure
 previously recorded here was stale (never re-measured); re-verified at the
-start of `tests/implementation-plan.md` Phase 1.  
+start of `tests/implementation-plan.md` Phase 1, and again after the
+section-dnd-e2e branch automated the section-drag scenarios.  
 **Documentation**: See [FEATURES.md](./FEATURES.md) for complete feature list
 
 ---
@@ -96,35 +97,6 @@ a wording-only fix onto what is really a shared-helper gap.
   "special ability" pluralisation
 - Then collapse the two files' near-duplicate Given/Then pairs onto it
 
-### Automated Drag/Drop E2E Tests
-
-**Overview**  
-Section reordering has drag/drop functionality that works but currently cannot be
-reliably automated with Playwright. These two tests are marked with `@skip` and
-require manual testing until a solution is found.
-
-**Goals**
-
-- Find a reliable way to automate HTML5 drag and drop events in Playwright
-- Implement automated tests for both scenarios below
-- Remove `@skip` tags once tests are reliable
-
-**Skipped Tests** (see `tests/e2e/features/section-rearrangement.feature`)
-
-- Reorder sections by dragging
-- Section dragging works on mobile with long-tap
-
-**Research Needed**
-
-- Playwright's `dragTo()` method behavior with HTML5 drag events
-- Alternative approaches: programmatic drag simulation, custom data transfer
-- Consider if drag/drop should use a different library (sortable.js, drag-drop libraries)
-
-> The other 7 `@skip`ped scenarios in that file (grid merge/split, import-layout
-> prompt) are **not** blocked by this — they were previously misattributed here.
-> The underlying features were never wired up at all; see "Grid Merge/Split &
-> Import-Layout Conflict Prompt" below.
-
 ---
 
 ## 📋 Feature Backlog
@@ -155,10 +127,10 @@ but discards. Decided: build this rather than delete the dead code — see
 - The four `CharacterSheet` methods above already exist and persist correctly
   once called — the missing piece is gesture wiring and the import prompt
   component, not the underlying layout logic.
-- This project has a known, unresolved Playwright limitation automating HTML5
-  drag/drop (see "Automated Drag/Drop E2E Tests" above). The merge/split
-  scenarios below will likely hit the same wall — plan for `@skip` and manual
-  verification unless that's solved first.
+- Section drags are automatable: use `dragSectionTo` (mouse) or `TouchGesture`
+  inside `withFullHeightViewport` (touch) from `tests/e2e/support/sections.ts`.
+  `locator.dragTo()` fails when it has to scroll mid-drag — see
+  `docs/superpowers/specs/2026-09-26-section-dnd-e2e-design.md`.
 
 **E2E Tests**
 
@@ -171,6 +143,19 @@ but discards. Decided: build this rather than delete the dead code — see
   - Keep existing layout on import
   - Use imported layout on import
   - Import with same layout does not show prompt
+
+### Edge Auto-Scroll for Touch Section Drags
+
+**Overview**  
+Touch long-press section dragging has no auto-scroll, so on a phone a section
+can only be dropped onto a section that is already on screen.
+
+**Goals**
+
+- Scroll the page while a touch drag is held near the top/bottom edge of the
+  viewport
+- Cover it with an E2E scenario that drags between sections that aren't both
+  on screen (don't use `withFullHeightViewport` for that one)
 
 ### Multiple Images
 

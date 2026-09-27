@@ -1,0 +1,4 @@
+# The step catalog is generated with LF line endings by scripts/step-catalog.js,
+# and `npm run check:steps` compares it byte-for-byte. Pin it to LF so Windows
+# checkouts (core.autocrlf=true) don't fail the check with an identical file.
+tests/e2e/STEP_CATALOG.md text eol=lf

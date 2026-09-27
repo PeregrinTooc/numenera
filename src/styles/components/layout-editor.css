@@ -83,6 +83,16 @@
 
 .layout-edit-mode .layout-draggable {
   cursor: grab;
+  /* A long-press starts a section drag; don't let it select text or open the iOS callout. */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Typing must still work inside a draggable section's own inputs. */
+.layout-edit-mode .layout-draggable :is(input, textarea, select, [contenteditable="true"]) {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 .layout-edit-mode .layout-draggable:hover {
@@ -111,6 +121,24 @@
 .layout-edit-mode .layout-draggable.dragging {
   opacity: 0.5;
   cursor: grabbing;
+}
+
+/* Drop target indicator: the dragged section will be inserted above this one */
+.layout-edit-mode .layout-draggable.drop-target {
+  outline: 2px solid var(--color-numenera-primary, #1a5490);
+  outline-offset: 4px;
+}
+
+.layout-edit-mode .layout-draggable.drop-target::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: var(--color-numenera-primary, #1a5490);
+  border-radius: 2px;
+  pointer-events: none;
 }
 
 /* Drop zone indicators */

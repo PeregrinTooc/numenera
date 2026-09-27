@@ -9,6 +9,7 @@ import {
   isValidLayout,
   cloneLayout,
   layoutsAreEqual,
+  isSectionId,
   DEFAULT_LAYOUT,
   GRID_ELIGIBLE_SECTIONS,
   SINGLE_ONLY_SECTIONS,
@@ -308,6 +309,16 @@ describe("Layout Types", () => {
           item.type === "grid" && item.items.includes("background") && item.items.includes("notes")
       );
       expect(gridWithBackgroundAndNotes).toBeDefined();
+    });
+  });
+
+  describe("isSectionId", () => {
+    it("accepts every layout section id and rejects anything else", () => {
+      expect(isSectionId("cyphers")).toBe(true);
+      expect(isSectionId("specialAbilities")).toBe(true);
+      expect(isSectionId("Cyphers")).toBe(false);
+      expect(isSectionId("")).toBe(false);
+      expect(isSectionId("toString")).toBe(false);
     });
   });
 });

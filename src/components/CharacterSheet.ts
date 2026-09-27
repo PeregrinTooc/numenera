@@ -1,6 +1,6 @@
 // CharacterSheet component - Main container that composes all sections
 
-import { html, render, TemplateResult } from "lit-html";
+import { html, nothing, render, TemplateResult } from "lit-html";
 import { Character } from "../types/character.js";
 import { Header } from "./Header.js";
 import { BasicInfo } from "./BasicInfo.js";
@@ -15,8 +15,16 @@ import { BottomTextFields } from "./BottomTextFields.js";
 import { VersionNavigator } from "./VersionNavigator.js";
 import { VersionWarningBanner } from "./VersionWarningBanner.js";
 import { changeLanguage, t } from "../i18n/index.js";
-import { Layout, LayoutItem, SectionId, isGridEligible, cloneLayout } from "../types/layout.js";
+import {
+  Layout,
+  LayoutItem,
+  SectionId,
+  isGridEligible,
+  isSectionId,
+  cloneLayout,
+} from "../types/layout.js";
 import { loadLayout, saveLayout, resetLayout } from "../storage/layoutStorage.js";
+import { LongPressDrag } from "@/components/helpers/LongPressDrag";
 
 /**
  * Sections backed by a CollectionBehavior component. Each one is mounted into
@@ -55,6 +63,60 @@ export class CharacterSheet {
   private draggedSectionId: SectionId | null = null;
   private dropTargetId: SectionId | null = null;
   private container: HTMLElement | null = null;
+
+  /** Touch long-press → section drag; mouse drags use native HTML5 DnD. */
+  private readonly longPress = new LongPressDrag<SectionId>({
+    onActivate: (id) => this.handleTouchDragActivate(id),
+    onHover: (x, y) => this.handleTouchDragHover(x, y),
+    onDrop: () => this.handleTouchDrop(),
+    onAbort: () => this.clearDragState(),
+  });
+
+  /**
+   * Lit listener object so the touchmove listener is registered non-passive:
+   * an active touch drag must be able to preventDefault() the page scroll.
+   * Kept as one stable object so lit doesn't re-add it on every render.
+   *
+   * Bound only while `isLayoutEditMode` is true (see `renderDraggableSection`):
+   * unconditionally, this would make every scroll on the sheet non-passive,
+   * even outside layout editing.
+   */
+  private readonly touchMoveListener = {
+    handleEvent: (e: TouchEvent): void => this.handleTouchMove(e),
+    passive: false,
+  };
+
+  /**
+   * Lit listener object for touchstart, registered passive: it never calls
+   * preventDefault(), so the browser is free to start scrolling immediately.
+   * Reads the section id off `currentTarget` so one instance covers every
+   * section wrapper.
+   */
+  private readonly touchStartListener = {
+    handleEvent: (e: TouchEvent): void => {
+      const sectionId = (e.currentTarget as HTMLElement).dataset.sectionId;
+      if (sectionId && isSectionId(sectionId)) {
+        this.handleTouchStart(e, sectionId);
+      }
+    },
+    passive: true,
+  };
+
+  /**
+   * Lit listener object for dragstart, registered in the capture phase so it
+   * runs before a card's own dragstart handler inside the section (e.g.
+   * Abilities). During an active touch drag, `handleDragStart` stops the
+   * event here so the card never sees it and never marks itself as dragging.
+   */
+  private readonly dragStartListener = {
+    handleEvent: (e: Event): void => {
+      const sectionId = (e.currentTarget as HTMLElement).dataset.sectionId;
+      if (sectionId && isSectionId(sectionId)) {
+        this.handleDragStart(e as DragEvent, sectionId);
+      }
+    },
+    capture: true,
+  };
 
   constructor(
     private character: Character,
@@ -178,47 +240,26 @@ export class CharacterSheet {
    */
   private renderLayoutItem(item: LayoutItem): TemplateResult {
     if (item.type === "single") {
-      const isDragging = this.draggedSectionId === item.id;
-      const isDropTarget = this.dropTargetId === item.id;
-      const wrapperClass = this.isLayoutEditMode
-        ? `layout-section layout-draggable${isDragging ? " dragging" : ""}${isDropTarget ? " drop-target" : ""}`
-        : "";
-      const draggable = this.isLayoutEditMode ? "true" : "false";
-
-      return html`
-        <div
-          class=${wrapperClass}
-          data-section-id=${item.id}
-          data-testid="layout-section-${item.id}"
-          draggable=${draggable}
-          @dragstart=${(e: DragEvent) => this.handleDragStart(e, item.id)}
-          @dragend=${() => this.handleDragEnd()}
-          @dragover=${(e: DragEvent) => this.handleDragOver(e, item.id)}
-          @dragleave=${() => this.handleDragLeave()}
-          @drop=${(e: DragEvent) => this.handleDrop(e, item.id)}
-        >
-          ${this.getSectionTemplate(item.id)}
-        </div>
-      `;
-    } else {
-      // Grid layout - two sections side by side
-      const wrapperClass = this.isLayoutEditMode ? "layout-grid" : "";
-
-      return html`
-        <div
-          class="grid grid-cols-1 lg:grid-cols-2 gap-6 ${wrapperClass}"
-          data-testid="layout-grid-${item.items[0]}-${item.items[1]}"
-        >
-          ${this.renderGridItem(item.items[0])} ${this.renderGridItem(item.items[1])}
-        </div>
-      `;
+      return this.renderDraggableSection(item.id);
     }
+
+    // Grid layout - two sections side by side
+    const wrapperClass = this.isLayoutEditMode ? "layout-grid" : "";
+
+    return html`
+      <div
+        class="grid grid-cols-1 lg:grid-cols-2 gap-6 ${wrapperClass}"
+        data-testid="layout-grid-${item.items[0]}-${item.items[1]}"
+      >
+        ${this.renderDraggableSection(item.items[0])} ${this.renderDraggableSection(item.items[1])}
+      </div>
+    `;
   }
 
   /**
-   * Render an individual item within a grid
+   * Render a section wrapped for layout editing (drag handle, drop target)
    */
-  private renderGridItem(sectionId: SectionId): TemplateResult {
+  private renderDraggableSection(sectionId: SectionId): TemplateResult {
     const isDragging = this.draggedSectionId === sectionId;
     const isDropTarget = this.dropTargetId === sectionId;
     const wrapperClass = this.isLayoutEditMode
@@ -232,11 +273,16 @@ export class CharacterSheet {
         data-section-id=${sectionId}
         data-testid="layout-section-${sectionId}"
         draggable=${draggable}
-        @dragstart=${(e: DragEvent) => this.handleDragStart(e, sectionId)}
+        @dragstart=${this.dragStartListener}
         @dragend=${() => this.handleDragEnd()}
         @dragover=${(e: DragEvent) => this.handleDragOver(e, sectionId)}
         @dragleave=${() => this.handleDragLeave()}
         @drop=${(e: DragEvent) => this.handleDrop(e, sectionId)}
+        @touchstart=${this.isLayoutEditMode ? this.touchStartListener : nothing}
+        @touchmove=${this.isLayoutEditMode ? this.touchMoveListener : nothing}
+        @touchend=${this.isLayoutEditMode ? () => this.longPress.end() : nothing}
+        @touchcancel=${this.isLayoutEditMode ? () => this.longPress.cancel() : nothing}
+        @contextmenu=${(e: Event) => this.handleContextMenu(e)}
       >
         ${this.getSectionTemplate(sectionId)}
       </div>
@@ -244,9 +290,28 @@ export class CharacterSheet {
   }
 
   /**
+   * Suppress the long-press context menu while a touch drag is in progress
+   */
+  private handleContextMenu(e: Event): void {
+    if (this.longPress.isActive()) {
+      e.preventDefault();
+    }
+  }
+
+  /**
    * Handle drag start event
    */
   private handleDragStart(e: DragEvent, sectionId: SectionId): void {
+    if (this.longPress.isActive()) {
+      // Android can start its own long-press drag; the touch drag owns this
+      // gesture. This listener runs in the capture phase (see
+      // dragStartListener), so stopping it here keeps a card inside the
+      // section (e.g. Abilities) from ever seeing the event and marking
+      // itself as dragging.
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
     if (!this.isLayoutEditMode) return;
 
     this.draggedSectionId = sectionId;
@@ -261,9 +326,7 @@ export class CharacterSheet {
    * Handle drag end event
    */
   private handleDragEnd(): void {
-    this.draggedSectionId = null;
-    this.dropTargetId = null;
-    this.rerender();
+    this.clearDragState();
   }
 
   /**
@@ -306,6 +369,89 @@ export class CharacterSheet {
     // Clear drag state
     this.draggedSectionId = null;
     this.dropTargetId = null;
+  }
+
+  /**
+   * Handle touch start: begin a long-press that may become a section drag
+   */
+  private handleTouchStart(e: TouchEvent, sectionId: SectionId): void {
+    if (!this.isLayoutEditMode) return;
+    if (e.touches.length !== 1) {
+      this.longPress.cancel();
+      return;
+    }
+    const touch = e.touches[0];
+    this.longPress.start(sectionId, touch.clientX, touch.clientY);
+  }
+
+  /**
+   * Handle touch move: once a long-press is active, the finger drags instead of scrolling
+   */
+  private handleTouchMove(e: TouchEvent): void {
+    if (e.touches.length !== 1) {
+      // A second finger landed outside any section wrapper (touchstart only
+      // sees touches inside it) — a pinch, not a drag.
+      this.longPress.cancel();
+      return;
+    }
+    if (this.longPress.isActive() && !e.cancelable) {
+      // The browser has already committed to scrolling; let it.
+      this.longPress.cancel();
+      return;
+    }
+    const touch = e.touches[0];
+    if (!touch) return;
+    if (this.longPress.move(touch.clientX, touch.clientY)) {
+      e.preventDefault();
+    }
+  }
+
+  /**
+   * A long-press activated: show the section as being dragged
+   */
+  private handleTouchDragActivate(sectionId: SectionId): void {
+    this.draggedSectionId = sectionId;
+    this.dropTargetId = null;
+    this.rerender();
+  }
+
+  /**
+   * During a touch drag, mark the section under the finger as the drop target
+   */
+  private handleTouchDragHover(x: number, y: number): void {
+    const hovered = document.elementFromPoint(x, y)?.closest<HTMLElement>("[data-section-id]");
+    const hoveredId = hovered?.dataset.sectionId;
+    const targetId =
+      hoveredId && isSectionId(hoveredId) && hoveredId !== this.draggedSectionId ? hoveredId : null;
+
+    if (targetId !== this.dropTargetId) {
+      this.dropTargetId = targetId;
+      this.rerender();
+    }
+  }
+
+  /**
+   * Touch drag released: move the dragged section before the drop target, if any
+   */
+  private handleTouchDrop(): void {
+    const sourceId = this.draggedSectionId;
+    const targetId = this.dropTargetId;
+    if (sourceId && targetId) {
+      this.draggedSectionId = null;
+      this.dropTargetId = null;
+      this.reorderSections(sourceId, targetId); // persists and re-renders
+    } else {
+      this.clearDragState();
+    }
+  }
+
+  /**
+   * Clear drag/drop-target styling and re-render
+   */
+  private clearDragState(): void {
+    this.draggedSectionId = null;
+    this.dropTargetId = null;
+    this.rerender();
   }
 
   /**
@@ -428,6 +574,7 @@ export class CharacterSheet {
    * Toggle layout edit mode
    */
   toggleLayoutEditMode(): void {
+    this.longPress.cancel();
     this.isLayoutEditMode = !this.isLayoutEditMode;
     if (this.isLayoutEditMode) {
       // Re-sync with storage on entry so a long-lived instance (or one whose

@@ -132,8 +132,8 @@ All features listed below have full BDD test coverage and are verified working.
     Oddities, Abilities, Special Abilities, Attacks)
   - Card order persists with the character
   - Desktop click-and-drag; mobile long-tap activation
-  - The drag gesture itself isn't covered by automated E2E (see note below) —
-    manually verified
+  - Card drag reordering is covered by automated E2E
+    (card-reordering.feature) via real `dragTo()`
 
 - **Section Re-arrangement** ([section-rearrangement.feature](../tests/e2e/features/section-rearrangement.feature))
   - Toggle a dedicated layout edit mode from the Header
@@ -141,19 +141,36 @@ All features listed below have full BDD test coverage and are verified working.
   - Layout persists independently of character data and survives reload
   - Reset to the default layout from Settings
   - Layout included in character export
-  - The drag gesture itself isn't covered by automated E2E (see note below) —
-    manually verified
+  - Drag reordering is covered by automated E2E — desktop via `dragSectionTo`,
+    touch long-press via `TouchGesture` (see "Automated Section Drag/Drop
+    Tests & Touch Long-Press Drag" below)
   - **Not implemented**: creating or splitting a two-column grid pairing by
     drag, and a conflict prompt on importing a character with a different
     layout — the underlying `CharacterSheet` methods exist and are unit
     tested, but nothing calls them yet. Tracked as a backlog feature in
     `docs/TODO.md` ("Grid Merge/Split & Import-Layout Conflict Prompt").
 
-> **Drag-and-drop E2E coverage.** HTML5 drag-and-drop cannot currently be
-> automated reliably with Playwright in this project. The scenarios that
-> exercise an actual drag gesture are `@skip`ped and verified manually
-> instead — see `docs/TODO.md`'s "Automated Drag/Drop E2E Tests" for the
-> specific list and the investigation notes.
+> **Drag-and-drop E2E coverage.** The not-yet-implemented grid-merge/split
+> and import-layout-prompt scenarios noted above are `@skip`ped — the
+> underlying gestures aren't wired up yet, not a Playwright limitation — see
+> `docs/TODO.md`'s "Grid Merge/Split & Import-Layout Conflict Prompt" for the
+> plan.
+
+### Automated Section Drag/Drop Tests & Touch Long-Press Drag
+
+- **Touch Long-Press Section Dragging**
+  - Sections can be reordered on touch devices: in layout edit mode,
+    long-press a section (250 ms) and drag it onto another section to move
+    it above that section
+  - A quick swipe still scrolls the page
+
+- **Automated Section Drag E2E Coverage** ([section-rearrangement.feature](../tests/e2e/features/section-rearrangement.feature))
+  - The desktop and touch section-drag scenarios run automatically
+  - Desktop drags run in a full-height viewport
+    (`tests/e2e/support/sections.ts`) because `locator.dragTo()` scrolls
+    mid-drag otherwise
+  - Touch drags use real CDP touch input (`TouchGesture`)
+  - Spec: `docs/superpowers/specs/2026-09-26-section-dnd-e2e-design.md`
 
 ### File Management
 

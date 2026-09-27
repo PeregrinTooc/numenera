@@ -25,8 +25,7 @@ Feature: Section Re-arrangement
     Then the layout should be saved
     And the sections should remain in the new order
 
-  # Section Reordering - Drag/Drop tests skipped for now (manual testing required)
-  @skip
+  # Section Reordering
   Scenario: Reorder sections by dragging
     Given layout edit mode is active
     When I drag the "Cyphers" section above the "Abilities" section
@@ -120,10 +119,21 @@ Feature: Section Re-arrangement
     Then I should see the "Edit Layout" button
     And it should be touch-friendly
 
-  @skip
-  Scenario: Section dragging works on mobile with long-tap
+  Scenario: Long-press puts a section into drag mode
     Given I am using a mobile device
     And layout edit mode is active
-    When I long-tap on a section for 250ms
-    Then the section should enter drag mode
-    And I should be able to drag it to a new position
+    When I long-press the "Cyphers" section
+    Then the "Cyphers" section should be in drag mode
+
+  Scenario: Reorder sections by long-press dragging on a touch device
+    Given I am using a mobile device
+    And layout edit mode is active
+    When I long-press the "Cyphers" section and drag it above the "Abilities" section
+    Then the "Cyphers" section should appear before the "Abilities" section
+
+  Scenario: A quick swipe does not start a section drag
+    Given I am using a mobile device
+    And layout edit mode is active
+    When I swipe from the "Cyphers" section towards the "Abilities" section
+    Then the "Abilities" section should appear before the "Cyphers" section
+    And the page should have scrolled

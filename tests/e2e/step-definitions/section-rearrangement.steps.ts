@@ -6,6 +6,15 @@ import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
 import { openSettingsPanel } from "../support/settings.js";
+import {
+  dragSectionTo,
+  LONG_PRESS_HOLD_MS,
+  nearTopOf,
+  sectionId,
+  sectionLocator,
+  TouchGesture,
+  withFullHeightViewport,
+} from "../support/sections.js";
 
 // ============================================
 // Edit Mode Entry/Exit Steps
@@ -238,36 +247,7 @@ Given("I have the default layout", async function (this: CustomWorld) {
 When(
   "I drag the {string} section above the {string} section",
   async function (this: CustomWorld, sourceSection: string, targetSection: string) {
-    const page = this.page;
-
-    const sectionIdMap: Record<string, string> = {
-      Cyphers: "cyphers",
-      Abilities: "abilities",
-      "Special Abilities": "specialAbilities",
-      Attacks: "attacks",
-      Items: "items",
-      Background: "background",
-      Notes: "notes",
-    };
-
-    const sourceId = sectionIdMap[sourceSection];
-    const targetId = sectionIdMap[targetSection];
-
-    if (!sourceId || !targetId) {
-      throw new Error(`Unknown section: ${sourceSection} or ${targetSection}`);
-    }
-
-    // Get the source and target elements
-    const sourceElement = page.locator(`[data-section-id="${sourceId}"]`);
-    const targetElement = page.locator(`[data-section-id="${targetId}"]`);
-
-    // Use Playwright's native dragTo for proper HTML5 drag events
-    await sourceElement.dragTo(targetElement, {
-      targetPosition: { x: 10, y: 10 }, // Drop near the top of target
-    });
-
-    // Wait for re-render
-    await page.waitForTimeout(200);
+    await dragSectionTo(this.page, sourceSection, targetSection);
   }
 );
 
@@ -276,18 +256,8 @@ Then(
   async function (this: CustomWorld, firstSection: string, secondSection: string) {
     const page = this.page;
 
-    const sectionIdMap: Record<string, string> = {
-      Cyphers: "cyphers",
-      Abilities: "abilities",
-      "Special Abilities": "specialAbilities",
-      Attacks: "attacks",
-      Items: "items",
-      Background: "background",
-      Notes: "notes",
-    };
-
-    const firstId = sectionIdMap[firstSection];
-    const secondId = sectionIdMap[secondSection];
+    const firstId = sectionId(firstSection);
+    const secondId = sectionId(secondSection);
 
     // Get the positions of the sections in the DOM
     const positions = await page.evaluate(
@@ -317,24 +287,11 @@ Given(
   async function (this: CustomWorld, sectionName: string) {
     const page = this.page;
 
-    const sectionIdMap: Record<string, string> = {
-      Cyphers: "cyphers",
-      Abilities: "abilities",
-      "Special Abilities": "specialAbilities",
-      Attacks: "attacks",
-      Items: "items",
-      Background: "background",
-      Notes: "notes",
-    };
-
-    const sectionId = sectionIdMap[sectionName];
-    if (!sectionId) {
-      throw new Error(`Unknown section: ${sectionName}`);
-    }
+    const id = sectionId(sectionName);
 
     // Move the section to top by modifying the layout in localStorage
     // Create a proper layout with the section at top of rearrangeable sections
-    await page.evaluate((sectionId) => {
+    await page.evaluate((id) => {
       // Build a layout with the section moved to the top of rearrangeable sections
       const fixedSections = ["basicInfo", "stats", "recoveryDamage"];
       const rearrangeableSections = [
@@ -348,8 +305,8 @@ Given(
       ];
 
       // Remove the section from rearrangeableSections and put it first
-      const filtered = rearrangeableSections.filter((id) => id !== sectionId);
-      const newOrder = [sectionId, ...filtered];
+      const filtered = rearrangeableSections.filter((existingId) => existingId !== id);
+      const newOrder = [id, ...filtered];
 
       const layout = [
         ...fixedSections.map((id) => ({ type: "single", id })),
@@ -357,7 +314,7 @@ Given(
       ];
 
       localStorage.setItem("numenera-layout", JSON.stringify(layout));
-    }, sectionId);
+    }, id);
 
     // Reload to apply the new layout
     await page.reload();
@@ -386,28 +343,18 @@ Then(
   async function (this: CustomWorld, sectionName: string) {
     const page = this.page;
 
-    const sectionIdMap: Record<string, string> = {
-      Cyphers: "cyphers",
-      Abilities: "abilities",
-      "Special Abilities": "specialAbilities",
-      Attacks: "attacks",
-      Items: "items",
-      Background: "background",
-      Notes: "notes",
-    };
-
-    const sectionId = sectionIdMap[sectionName];
+    const id = sectionId(sectionName);
 
     // Check that this section appears right after recoveryDamage
-    const position = await page.evaluate((sectionId) => {
+    const position = await page.evaluate((id) => {
       const allSections = Array.from(document.querySelectorAll("[data-section-id]"));
       const sectionIds = allSections.map((el) => el.getAttribute("data-section-id"));
       // Find position after the non-rearrangeable sections
       const rearrangeableSections = sectionIds.filter(
-        (id) => !["basicInfo", "stats", "recoveryDamage"].includes(id || "")
+        (existingId) => !["basicInfo", "stats", "recoveryDamage"].includes(existingId || "")
       );
-      return rearrangeableSections[0] === sectionId;
-    }, sectionId);
+      return rearrangeableSections[0] === id;
+    }, id);
 
     expect(position).toBe(true);
   }
@@ -422,25 +369,8 @@ When(
   async function (this: CustomWorld, sourceSection: string, targetSection: string) {
     const page = this.page;
 
-    const sectionIdMap: Record<string, string> = {
-      Background: "background",
-      Notes: "notes",
-      Abilities: "abilities",
-      "Special Abilities": "specialAbilities",
-      Attacks: "attacks",
-      Cyphers: "cyphers",
-      Items: "items",
-    };
-
-    const sourceId = sectionIdMap[sourceSection];
-    const targetId = sectionIdMap[targetSection];
-
-    if (!sourceId || !targetId) {
-      throw new Error(`Unknown section: ${sourceSection} or ${targetSection}`);
-    }
-
-    const sourceElement = page.locator(`[data-section-id="${sourceId}"]`);
-    const targetElement = page.locator(`[data-section-id="${targetId}"]`);
+    const sourceElement = sectionLocator(page, sourceSection);
+    const targetElement = sectionLocator(page, targetSection);
 
     const sourceBox = await sourceElement.boundingBox();
     const targetBox = await targetElement.boundingBox();
@@ -464,18 +394,8 @@ Then(
   async function (this: CustomWorld, section1: string, section2: string) {
     const page = this.page;
 
-    const sectionIdMap: Record<string, string> = {
-      Background: "background",
-      Notes: "notes",
-      Abilities: "abilities",
-      "Special Abilities": "specialAbilities",
-      Attacks: "attacks",
-      Cyphers: "cyphers",
-      Items: "items",
-    };
-
-    const id1 = sectionIdMap[section1];
-    const id2 = sectionIdMap[section2];
+    const id1 = sectionId(section1);
+    const id2 = sectionId(section2);
 
     // Check that both sections are within a grid container
     const inGrid = await page.evaluate(
@@ -503,23 +423,9 @@ When(
   async function (this: CustomWorld, sourceSection: string, targetSection: string) {
     const page = this.page;
 
-    const sectionIdMap: Record<string, string> = {
-      Stats: "stats",
-      "Basic Info": "basicInfo",
-      Background: "background",
-      Notes: "notes",
-    };
-
-    const sourceId = sectionIdMap[sourceSection];
-    const targetId = sectionIdMap[targetSection];
-
-    if (!sourceId || !targetId) {
-      throw new Error(`Unknown section: ${sourceSection} or ${targetSection}`);
-    }
-
     // Try to drag - this may not work for non-eligible sections
-    const sourceElement = page.locator(`[data-section-id="${sourceId}"]`);
-    const targetElement = page.locator(`[data-section-id="${targetId}"]`);
+    const sourceElement = sectionLocator(page, sourceSection);
+    const targetElement = sectionLocator(page, targetSection);
 
     const sourceBox = await sourceElement.boundingBox();
     const targetBox = await targetElement.boundingBox();
@@ -563,13 +469,8 @@ Given(
   async function (this: CustomWorld, section1: string, section2: string) {
     const page = this.page;
 
-    const sectionIdMap: Record<string, string> = {
-      Background: "background",
-      Notes: "notes",
-    };
-
-    const id1 = sectionIdMap[section1];
-    const id2 = sectionIdMap[section2];
+    const id1 = sectionId(section1);
+    const id2 = sectionId(section2);
 
     // Set up a grid layout
     await page.evaluate(
@@ -602,17 +503,7 @@ Given(
 When("I drag {string} out of the grid", async function (this: CustomWorld, sectionName: string) {
   const page = this.page;
 
-  const sectionIdMap: Record<string, string> = {
-    Background: "background",
-    Notes: "notes",
-  };
-
-  const sectionId = sectionIdMap[sectionName];
-  if (!sectionId) {
-    throw new Error(`Unknown section: ${sectionName}`);
-  }
-
-  const sourceElement = page.locator(`[data-section-id="${sectionId}"]`);
+  const sourceElement = sectionLocator(page, sectionName);
   const sourceBox = await sourceElement.boundingBox();
 
   if (!sourceBox) {
@@ -631,19 +522,14 @@ When("I drag {string} out of the grid", async function (this: CustomWorld, secti
 Then("{string} should be in its own row", async function (this: CustomWorld, sectionName: string) {
   const page = this.page;
 
-  const sectionIdMap: Record<string, string> = {
-    Background: "background",
-    Notes: "notes",
-  };
-
-  const sectionId = sectionIdMap[sectionName];
+  const id = sectionId(sectionName);
 
   // Check that section is not in a grid
-  const notInGrid = await page.evaluate((sectionId) => {
-    const section = document.querySelector(`[data-section-id="${sectionId}"]`);
+  const notInGrid = await page.evaluate((id) => {
+    const section = document.querySelector(`[data-section-id="${id}"]`);
     if (!section) return false;
     return section.closest(".layout-grid") === null;
-  }, sectionId);
+  }, id);
 
   expect(notInGrid).toBe(true);
 });
@@ -890,49 +776,77 @@ Then("the character should be imported normally", async function (this: CustomWo
 });
 
 // ============================================
-// Mobile Long-tap Steps
+// Touch Long-press Steps
 // ============================================
 
-When("I long-tap on a section for 250ms", async function (this: CustomWorld) {
-  const page = this.page;
-
-  // Long-tap on a draggable section (e.g., abilities)
-  const section = page.locator('[data-section-id="abilities"]');
-  const box = await section.boundingBox();
-
-  if (!box) {
-    throw new Error("Could not get bounding box for section");
-  }
-
-  // Simulate long-tap with touch events
-  await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
-  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-  await page.mouse.down();
-  await page.waitForTimeout(250);
+When("I long-press the {string} section", async function (this: CustomWorld, name: string) {
+  const section = sectionLocator(this.page, name);
+  await section.scrollIntoViewIfNeeded();
+  // The gesture is deliberately left held: the Then step asserts the drag state.
+  await TouchGesture.start(this.page, await nearTopOf(section));
+  await this.page.waitForTimeout(LONG_PRESS_HOLD_MS);
 });
 
-Then("the section should enter drag mode", async function (this: CustomWorld) {
-  const page = this.page;
-
-  // Check for visual indicator that drag mode is active
-  const section = page.locator('[data-section-id="abilities"]');
-  await expect(section).toHaveClass(/dragging|drag-active/);
-});
-
-Then("I should be able to drag it to a new position", async function (this: CustomWorld) {
-  const page = this.page;
-
-  // Complete the drag operation
-  const targetSection = page.locator('[data-section-id="cyphers"]');
-  const targetBox = await targetSection.boundingBox();
-
-  if (!targetBox) {
-    throw new Error("Could not get bounding box for target section");
+Then(
+  "the {string} section should be in drag mode",
+  async function (this: CustomWorld, name: string) {
+    await expect(sectionLocator(this.page, name)).toHaveClass(/\bdragging\b/);
   }
+);
 
-  await page.mouse.move(targetBox.x + targetBox.width / 2, targetBox.y - 10);
-  await page.mouse.up();
+When(
+  "I long-press the {string} section and drag it above the {string} section",
+  async function (this: CustomWorld, sourceName: string, targetName: string) {
+    const page = this.page;
+    // No edge auto-scroll yet, so keep both sections on screen for the gesture.
+    await withFullHeightViewport(page, async () => {
+      const gesture = await TouchGesture.start(
+        page,
+        await nearTopOf(sectionLocator(page, sourceName))
+      );
+      await page.waitForTimeout(LONG_PRESS_HOLD_MS);
+      // A late app timer on a loaded runner could still cancel a pending
+      // gesture; confirm the drag actually activated before moving.
+      await expect(sectionLocator(page, sourceName)).toHaveClass(/\bdragging\b/);
+      await gesture.moveTo(await nearTopOf(sectionLocator(page, targetName)));
+      // The target section is marked as the drop target while the drag is
+      // held over it, before the finger lifts.
+      await expect(sectionLocator(page, targetName)).toHaveClass(/\bdrop-target\b/);
+      await gesture.end();
+    });
+  }
+);
 
-  // Verify the move was possible
-  await page.waitForTimeout(100);
+When(
+  "I swipe from the {string} section towards the {string} section",
+  async function (this: CustomWorld, sourceName: string, targetName: string) {
+    const page = this.page;
+    const source = sectionLocator(page, sourceName);
+    const target = sectionLocator(page, targetName);
+    await source.scrollIntoViewIfNeeded();
+
+    this.scrollYBeforeSwipe = await page.evaluate(() => window.scrollY);
+
+    const from = await nearTopOf(source);
+    const targetBox = await target.boundingBox();
+    // Swipe a fixed, generous distance in the target's direction rather than
+    // straight to its (possibly off-screen) position: far enough to scroll a
+    // normal, un-enlarged mobile viewport.
+    const direction = targetBox && targetBox.y < from.y ? -1 : 1;
+    const to = { x: from.x, y: from.y + direction * 400 };
+
+    const gesture = await TouchGesture.start(page, from);
+    await gesture.moveTo(to);
+    await gesture.end();
+  }
+);
+
+Then("the page should have scrolled", async function (this: CustomWorld) {
+  const page = this.page;
+  const before = this.scrollYBeforeSwipe;
+  if (before === undefined) {
+    throw new Error("No scrollY recorded before the swipe");
+  }
+  const after = await page.evaluate(() => window.scrollY);
+  expect(after).not.toBe(before);
 });
