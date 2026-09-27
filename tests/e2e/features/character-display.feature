@@ -123,17 +123,18 @@ Feature: Single Character Display
             | 1024  |
             | 1280  |
 
-    @validation @skip
-    Scenario: View all character sections in correct order
+    @validation
+    Scenario: Sections appear in the default layout order
         Given I am on the character sheet page
+        And I have the default layout
         Then I should see sections in this order:
-            | Section Order |
-            | Basic Info    |
-            | Stat Pools    |
-            | Cyphers       |
-            | Artifacts     |
-            | Oddities      |
-            | Background    |
-            | Notes         |
-            | Equipment     |
-            | Abilities     |
+            | Basic Info        |
+            | Stats             |
+            | Recovery & Damage |
+            | Abilities         |
+            | Special Abilities |
+            | Attacks           |
+            | Cyphers           |
+            | Items             |
+            | Background        |
+            | Notes             |

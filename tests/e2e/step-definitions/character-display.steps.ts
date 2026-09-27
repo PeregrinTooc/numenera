@@ -3,6 +3,7 @@ import { expect } from "@playwright/test";
 import { waitForCharacterSheetReady, startNewCharacter } from "../support/app-ready.js";
 import type { CustomWorld } from "../support/world.js";
 import type { Character } from "../../../src/types/character.js";
+import { sectionId } from "../support/sections.js";
 
 Given("a character exists with the following data:", function (_dataTable) {
   // Test data is defined in the feature file Background
@@ -281,4 +282,13 @@ Then("the page should not scroll horizontally", async function (this: CustomWorl
     clientWidth: document.documentElement.clientWidth,
   }));
   expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+});
+
+// Scenario: Sections appear in the default layout order
+Then("I should see sections in this order:", async function (this: CustomWorld, table: DataTable) {
+  const expected = table.raw().map(([name]) => sectionId(name));
+  const actual = await this.page
+    .locator("[data-section-id]")
+    .evaluateAll((els) => els.map((el) => el.getAttribute("data-section-id")));
+  expect(actual).toEqual(expected);
 });
