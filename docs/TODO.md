@@ -44,7 +44,7 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ## 📊 Current Status
 
-**Test Coverage**: `npm run test:unit` — 895 tests passing. `npm run test:e2e:prod` —
+**Test Coverage**: `npm run test:unit` — 901 tests passing. `npm run test:e2e:prod` —
 405 scenarios passing, 14 `@skip`ped (see below for why). The 365/16 figure
 previously recorded here was stale (never re-measured); re-verified at the
 start of `tests/implementation-plan.md` Phase 1, and again after the
@@ -259,4 +259,4 @@ Let the gamemaster prepare cards (cyphers, artifacts...) and export them as file
 
 ---
 
-**Last Updated**: August 2, 2026
+**Last Updated**: September 27, 2026

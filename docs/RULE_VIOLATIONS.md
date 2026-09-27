@@ -31,12 +31,13 @@ editing the rule to match the code.
 
 ## Open
 
-### 1. Rule #5 — path aliases are not used anywhere
+### 1. Rule #5 — path aliases are barely used
 
 **Rule:** "Use path aliases: `@/` prefix for src imports."
 
-Every file under `src/` uses relative imports with an explicit `.js` extension
-(`import { t } from "../i18n/index.js"`). Zero files use `@/`.
+Nearly every file under `src/` still uses relative imports with an explicit
+`.js` extension (`import { t } from "../i18n/index.js"`). Only one file,
+`src/components/CharacterSheet.ts`, imports via `@/`.
 
 Aliases are already configured in all three places that need them —
 `tsconfig.json` (`compilerOptions.paths`), `vite.config.ts` and
@@ -52,12 +53,12 @@ worse than either end state.
 from `tsconfig.json`. If any step definition imports from `src/`, still confirm
 alias resolution works there before converting those imports.
 
-### 2. Rule #5 — 257 `any` usages, and the linter only warns
+### 2. Rule #5 — 193 `any` usages, and the linter only warns
 
 **Rule:** "NO `any` types allowed. Exception: **None.** Linter enforces this."
 
 The linter does **not** enforce it: `eslint.config.js:79` sets
-`"@typescript-eslint/no-explicit-any": "warn"`. There are 257 warnings — 12 files
+`"@typescript-eslint/no-explicit-any": "warn"`. There are 193 warnings — 11 files
 under `src/`, 21 under `tests/`.
 
 **Fix:** eliminate the usages, then set the rule to `"error"` so it is enforced
@@ -74,17 +75,18 @@ despite `Character` existing.
 
 | File                                           | Lines |
 | ---------------------------------------------- | ----- |
-| `src/main.ts`                                  | 1158  |
-| `src/utils/unified-validation.ts`              | 847   |
-| `src/components/CharacterSheet.ts`             | 544   |
-| `src/components/helpers/CollectionBehavior.ts` | 398   |
-| `src/components/ItemsBox.ts`                   | 397   |
-| `src/services/versionHistoryService.ts`        | 371   |
+| `src/main.ts`                                  | 917   |
+| `src/utils/unified-validation.ts`              | 890   |
+| `src/components/CharacterSheet.ts`             | 786   |
+| `src/components/helpers/CollectionBehavior.ts` | 418   |
+| `src/components/ItemsBox.ts`                   | 401   |
+| `src/services/versionHistoryService.ts`        | 381   |
 | `src/services/conflictDetectionService.ts`     | 348   |
 | `src/storage/fileStorage.ts`                   | 309   |
 
-`main.ts` is the worst offender and the easiest win: ~200 of its lines are the
-"force re-render collection sections" block copy-pasted four times.
+`main.ts` is still the worst offender, though it has shrunk from 1158 lines
+since this was last measured. `CharacterSheet.ts` grew the most in the same
+window (544 → 786) and is worth a look too.
 
 ### 4. Code quality — errors are swallowed
 

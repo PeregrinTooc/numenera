@@ -19,10 +19,11 @@ All features listed below have full BDD test coverage and are verified working.
   - Load character data on page refresh
   - Persist all character changes
 
-- **Character DOM Structure** ([character-dom.feature](../tests/e2e/features/character-dom.feature))
+- **Character DOM Structure** ([domStructure.test.ts](../tests/unit/domStructure.test.ts))
   - Semantic HTML structure
   - Accessible component hierarchy
   - Proper data-testid attributes for testing
+  - Migrated from E2E to unit tests (see "Testing Notes" below)
 
 #### Basic Information Editing
 
@@ -55,7 +56,7 @@ All features listed below have full BDD test coverage and are verified working.
   - Edit Armor value
   - Edit Effort
 
-- **Stats Visual Styling** ([stats-visual-styling.feature](../tests/e2e/features/stats-visual-styling.feature))
+- **Stats Visual Styling** ([visualStyling.test.ts](../tests/unit/visualStyling.test.ts))
   - Consistent stat display styling
   - Pool indicators with color coding
   - Responsive stat layout
@@ -106,19 +107,25 @@ All features listed below have full BDD test coverage and are verified working.
 
 ### Visual Styling
 
-- **Equipment Visual Styling** ([equipment-visual-styling.feature](../tests/e2e/features/equipment-visual-styling.feature))
+- **Equipment Visual Styling** ([visualStyling.test.ts](../tests/unit/visualStyling.test.ts))
   - Consistent card styling for equipment
   - Hover states and interactions
   - Responsive card layout
 
-- **Items Visual Styling** ([items-visual-styling.feature](../tests/e2e/features/items-visual-styling.feature))
+- **Items Visual Styling** ([visualStyling.test.ts](../tests/unit/visualStyling.test.ts))
   - Unified styling for Artifacts, Oddities
   - Visual consistency across item types
 
-- **Text Fields Visual Styling** ([text-fields-visual-styling.feature](../tests/e2e/features/text-fields-visual-styling.feature))
+- **Text Fields Visual Styling** ([visualStyling.test.ts](../tests/unit/visualStyling.test.ts))
   - Consistent text field appearance
   - Edit state indicators
   - Focus and hover states
+
+> **Testing Notes.** DOM structure and visual styling were originally covered by
+> five E2E feature files. They were migrated to `tests/unit/domStructure.test.ts`
+> and `tests/unit/visualStyling.test.ts` (~35 E2E scenarios → 43 unit tests) to
+> cut suite runtime; the old `.feature` files and their step definitions were
+> deleted.
 
 ### Layout & Customization
 
@@ -186,25 +193,26 @@ All features listed below have full BDD test coverage and are verified working.
 
 ### Cloud Storage Integration
 
-- **Phase 1: Export Enhancement** ([cloud-storage-phase1-export.feature](../tests/e2e/features/cloud-storage-phase1-export.feature))
+- **Export Enhancement** ([export-enhancement.feature](../tests/e2e/features/export-enhancement.feature))
   - File System Access API detection
   - Quick Export button (when API available)
   - "Save As..." renamed from "Export"
   - File handle persistence
   - Graceful degradation for unsupported browsers
 
-- **Phase 2: Auto-Save & Timestamp** ([cloud-storage-phase2-autosave.feature](../tests/e2e/features/cloud-storage-phase2-autosave.feature))
+- **Auto-Save Indicator** ([auto-save-indicator.feature](../tests/e2e/features/auto-save-indicator.feature))
   - Debounced auto-save (300ms after edits)
   - Save indicator component (lower-right corner)
   - Timestamp display on save
   - Subtle, non-intrusive styling
 
-- **IndexedDB Storage** ([cloud-storage-phase4-indexeddb.feature](../tests/e2e/features/cloud-storage-phase4-indexeddb.feature))
+- **IndexedDB Storage** ([indexedDBStorageImpl.test.ts](../tests/unit/indexedDBStorageImpl.test.ts), [storageFactory.test.ts](../tests/unit/storageFactory.test.ts))
   - IndexedDB primary storage
   - localStorage fallback
   - Data migration from localStorage
   - Browser sync capability
   - Persistence across browser restarts
+  - Unit-tested only; no dedicated E2E feature file
 
 ### Internationalization
 
@@ -270,6 +278,20 @@ All features listed below have full BDD test coverage and are verified working.
     - Conflict resolution modal UI
     - 51 unit tests (ConflictDetectionService + ConflictWarningModal)
 
+- **Version Comparison View** ([version-comparison.feature](../tests/e2e/features/version-comparison.feature))
+  - Opt-in, off by default; toggled from Settings and persists across reload
+  - Opens to the two most recent versions; each pane navigates independently
+  - Change header lists every changed field between the two panes (not just top 3)
+  - Field/card highlighting: changed (yellow, both panes), added (green,
+    right pane only), removed (red, left pane only); renamed cards show as
+    remove + add rather than a modify
+  - Per-pane restore (creates a new latest version with a
+    "Restored: <description>" label); other pane keeps pointing at the same
+    version even across a 99-version FIFO eviction
+  - Read-only: no editing or add/delete controls inside comparison view
+  - Unavailable on phone-width viewports (falls back to single-pane
+    navigation); available from tablet width up
+
 ---
 
 ## Related Documentation
@@ -280,4 +302,4 @@ All features listed below have full BDD test coverage and are verified working.
 
 ---
 
-**Last Updated**: February 21, 2026
+**Last Updated**: September 27, 2026
