@@ -1,6 +1,7 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { waitForCharacterSheetReady, startNewCharacter } from "../support/app-ready.js";
+import type { CustomWorld } from "../support/world.js";
 
 Given("a character exists with the following data:", function (_dataTable) {
   // Test data is defined in the feature file Background
@@ -158,31 +159,16 @@ Then("all text field labels should use translation keys", async function () {
   // For minimal implementation, we'll skip i18n validation
 });
 
-// Scenario 6: View empty character items sections
-Given("the character has no cyphers", async function () {
-  // Click the "New" button to start with empty character
+Given("the character has no {cardTypes}", async function (this: CustomWorld, _emptyTestId: string) {
   await startNewCharacter(this.page, this.getBaseUrl());
 });
 
-Given("the character has no artifacts", function () {
-  // Already navigated with empty parameter
-});
-
-Given("the character has no oddities", function () {
-  // Already navigated with empty parameter
-});
-
-Then("I should see an empty cyphers section", async function () {
-  await expect(this.dom.getByTestId("empty-cyphers")).toBeVisible();
-});
-
-Then("I should see an empty artifacts section", async function () {
-  await expect(this.dom.getByTestId("empty-artifacts")).toBeVisible();
-});
-
-Then("I should see an empty oddities section", async function () {
-  await expect(this.dom.getByTestId("empty-oddities")).toBeVisible();
-});
+Then(
+  "I should see an empty {cardTypes} section",
+  async function (this: CustomWorld, emptyTestId: string) {
+    await expect(this.dom.getByTestId(emptyTestId)).toBeVisible();
+  }
+);
 
 Then("empty states should use translation keys", async function () {
   // For minimal implementation, we'll skip i18n validation

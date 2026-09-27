@@ -1,6 +1,5 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
-import { startNewCharacter } from "../support/app-ready.js";
 
 // Attack step definitions
 
@@ -10,10 +9,6 @@ Given(
 );
 
 Given("the character has an attack {string}", async function (_attackName: string) {});
-
-Given("the character has no attacks", async function () {
-  await startNewCharacter(this.page, this.getBaseUrl());
-});
 
 Then("I should see the attack {string}", async function (attackName: string) {
   // Attack items use generic data-testid="attack-item" without name suffix
@@ -103,10 +98,6 @@ Then(
   }
 );
 
-Then("I should see an empty attacks section", async function () {
-  await expect(this.dom.getByTestId("empty-attacks")).toBeVisible();
-});
-
 Then("the empty attacks state should use translation keys", async function () {
   const emptyState = this.dom.getByTestId("empty-attacks");
   await expect(emptyState).not.toBeEmpty();
@@ -130,10 +121,6 @@ Given(
 
 Given("the character has a special ability {string}", async function (abilityName: string) {
   this.testSpecialAbilityName = abilityName;
-});
-
-Given("the character has no special abilities", async function () {
-  await startNewCharacter(this.page, this.getBaseUrl());
 });
 
 Then("I should see the special ability {string}", async function (abilityName: string) {
@@ -183,10 +170,6 @@ Then(
     expect(classAttr).toContain("from-cyan-50");
   }
 );
-
-Then("I should see an empty special abilities section", async function () {
-  await expect(this.dom.getByTestId("empty-special-abilities")).toBeVisible();
-});
 
 Then("the empty special abilities state should use translation keys", async function () {
   const emptyState = this.dom.getByTestId("empty-special-abilities");
