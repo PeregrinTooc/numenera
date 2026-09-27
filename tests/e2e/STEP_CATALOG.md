@@ -26,10 +26,10 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **676** in 25 files
+- Step definitions: **680** in 25 files
 - Feature step lines: **2035**
 - Definitions with no feature usage: **0**
-- Feature lines matching no definition: **5**
+- Feature lines matching no definition: **1**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
@@ -41,7 +41,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [card-deletion.steps.ts](#carddeletionstepsts) | 40 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 12 | 0 |
-| [character-display.steps.ts](#characterdisplaystepsts) | 39 | 0 |
+| [character-display.steps.ts](#characterdisplaystepsts) | 43 | 0 |
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
@@ -64,11 +64,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 These would be reported as *undefined* by Cucumber (or are matched by a
 pattern this script does not understand):
 
-- `character-display.feature:111` — the character has a background with 500+ characters
-- `character-display.feature:112` — the long text should be displayed without layout issues
-- `character-display.feature:113` — the text should wrap properly within its container
-- `character-display.feature:114` — the page should remain readable
-- `character-display.feature:119` — I should see sections in this order:
+- `character-display.feature:129` — I should see sections in this order:
 
 ## ability-enhancements.steps.ts
 
@@ -399,6 +395,8 @@ pattern this script does not understand):
 | Then | `I should see tier {string} displayed` | 1 | 21 |
 | Then | `I should see type {string} displayed` | 1 | 25 |
 | Then | `no markup from the text should be rendered as HTML` | 1 | 249 |
+| Given | `the character has a {int}-character background without spaces` | 1 | 268 |
+| Given | `the character has a {int}-character name without spaces` | 1 | 259 |
 | Given | `the character has empty text fields` | 1 | 179 |
 | Given | `the character has no {cardTypes}` | 6 | 162 |
 | Given | `the character has the following artifacts:` | 1 | 89 |
@@ -410,6 +408,8 @@ pattern this script does not understand):
 | Then | `the character text should read exactly:` | 1 | 233 |
 | Then | `the cyphers section label should use translation keys` | 1 | 83 |
 | Then | `the items section labels should use translation keys` | 1 | 118 |
+| Then | `the page should not scroll horizontally` | 1 | 277 |
+| Given | `the viewport is {int} pixels wide` | 1 | 256 |
 
 ## character-file-export.steps.ts
 

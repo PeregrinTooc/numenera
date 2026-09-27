@@ -251,3 +251,34 @@ Then("no markup from the text should be rendered as HTML", async function (this:
   // "<Unknown Location>" would parse as an <unknown> element if interpolated as HTML.
   await expect(this.page.locator("unknown")).toHaveCount(0);
 });
+
+// Scenario Outline: Long unbroken text does not make the sheet scroll sideways
+Given("the viewport is {int} pixels wide", async function (this: CustomWorld, width: number) {
+  await this.page.setViewportSize({ width, height: 800 });
+});
+
+Given(
+  "the character has a {int}-character name without spaces",
+  async function (this: CustomWorld, length: number) {
+    await this.setup.updateCharacter((character) => {
+      character.name = "W".repeat(length);
+    });
+  }
+);
+
+Given(
+  "the character has a {int}-character background without spaces",
+  async function (this: CustomWorld, length: number) {
+    await this.setup.updateCharacter((character) => {
+      character.textFields.background = "W".repeat(length);
+    });
+  }
+);
+
+Then("the page should not scroll horizontally", async function (this: CustomWorld) {
+  const { scrollWidth, clientWidth } = await this.page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    clientWidth: document.documentElement.clientWidth,
+  }));
+  expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+});

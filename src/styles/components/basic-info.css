@@ -32,6 +32,9 @@
   color: #2d2416;
   margin-bottom: 0.5rem;
   line-height: 1.3;
+  /* "anywhere" (unlike "break-word") also shrinks the min-content width, so an
+     unbroken name can't stretch the grid column past the viewport. */
+  overflow-wrap: anywhere;
 }
 
 /* Character sentence: "A tier X Descriptor Type who Focus" */

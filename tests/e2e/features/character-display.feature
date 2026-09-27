@@ -105,13 +105,23 @@ Feature: Single Character Display
             | Background | Born in <Unknown Location> & raised alone |
         And no markup from the text should be rendered as HTML
 
-    @validation @skip
-    Scenario: View character with long text content
-        Given I am on the character sheet page
-        And the character has a background with 500+ characters
-        Then the long text should be displayed without layout issues
-        And the text should wrap properly within its container
-        And the page should remain readable
+    # The Cucumber suite runs one desktop Chromium context, so each width the
+    # Playwright device profiles cover (plus the narrowest phone) is listed.
+    @validation
+    Scenario Outline: Long unbroken text does not make the sheet scroll sideways at <width>px
+        Given the viewport is <width> pixels wide
+        And I am on the character sheet page
+        And the character has a 50-character name without spaces
+        And the character has a 600-character background without spaces
+        Then the page should not scroll horizontally
+
+        Examples:
+            | width |
+            | 320   |
+            | 390   |
+            | 393   |
+            | 1024  |
+            | 1280  |
 
     @validation @skip
     Scenario: View all character sections in correct order
