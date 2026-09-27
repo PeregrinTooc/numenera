@@ -27,9 +27,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 ## Summary
 
 - Step definitions: **673** in 25 files
-- Feature step lines: **2056**
+- Feature step lines: **2035**
 - Definitions with no feature usage: **0**
-- Feature lines matching no definition: **24**
+- Feature lines matching no definition: **8**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
@@ -64,30 +64,14 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 These would be reported as *undefined* by Cucumber (or are matched by a
 pattern this script does not understand):
 
-- `character-display.feature:99` — the character sheet should be displayed in a single column layout
-- `character-display.feature:100` — all content should be readable without horizontal scrolling
-- `character-display.feature:101` — stat pools should be stacked vertically
-- `character-display.feature:102` — items should be displayed in a mobile-friendly format
-- `character-display.feature:106` — I am viewing on a tablet device with width "768px"
-- `character-display.feature:108` — the character sheet should be displayed in a responsive layout
-- `character-display.feature:109` — stat pools should be displayed in an optimized arrangement
-- `character-display.feature:110` — items should be organized efficiently for the viewport
-- `character-display.feature:114` — I am viewing on a desktop device with width "1280px"
-- `character-display.feature:116` — the character sheet should be displayed in a multi-column layout
-- `character-display.feature:117` — stat pools should be displayed side by side
-- `character-display.feature:118` — items should be organized in columns for optimal readability
-- `character-display.feature:123` — the character is tier "3"
-- `character-display.feature:124` — the character has 3 cyphers
-- `character-display.feature:125` — I should see all 3 cyphers displayed
-- `character-display.feature:126` — the cypher limit indicator should show "3/3" or equivalent
-- `character-display.feature:131` — the character has text fields containing special characters:
-- `character-display.feature:135` — the special characters should be properly displayed
-- `character-display.feature:136` — the text should not be corrupted or escaped incorrectly
-- `character-display.feature:141` — the character has a background with 500+ characters
-- `character-display.feature:142` — the long text should be displayed without layout issues
-- `character-display.feature:143` — the text should wrap properly within its container
-- `character-display.feature:144` — the page should remain readable
-- `character-display.feature:149` — I should see sections in this order:
+- `character-display.feature:98` — the character has text fields containing special characters:
+- `character-display.feature:102` — the special characters should be properly displayed
+- `character-display.feature:103` — the text should not be corrupted or escaped incorrectly
+- `character-display.feature:108` — the character has a background with 500+ characters
+- `character-display.feature:109` — the long text should be displayed without layout issues
+- `character-display.feature:110` — the text should wrap properly within its container
+- `character-display.feature:111` — the page should remain readable
+- `character-display.feature:116` — I should see sections in this order:
 
 ## ability-enhancements.steps.ts
 
@@ -174,7 +158,7 @@ pattern this script does not understand):
 | Then | `an error or validation message may appear` | 1 | 134 |
 | Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 208 |
 | Then | `focus should not leave the modal` | 1 | 242 |
-| Given | `I am viewing on a mobile device with width {string}` | 7 | 297 |
+| Given | `I am viewing on a mobile device with width {string}` | 6 | 297 |
 | Then | `I can cancel with Escape key` | 1 | 267 |
 | Then | `I can confirm with Enter key` | 1 | 260 |
 | Then | `I can navigate with Tab key` | 1 | 252 |
@@ -395,7 +379,7 @@ pattern this script does not understand):
 | Then | `all stat labels should use translation keys` | 1 | 59 |
 | Then | `all text field labels should use translation keys` | 1 | 157 |
 | Then | `empty states should use translation keys` | 1 | 172 |
-| Given | `I am on the character sheet page` | 50 | 11 |
+| Given | `I am on the character sheet page` | 46 | 11 |
 | Then | `I should see {int} artifact displayed` | 1 | 95 |
 | Then | `I should see {int} cyphers displayed` | 1 | 69 |
 | Then | `I should see {int} oddities displayed` | 1 | 108 |
