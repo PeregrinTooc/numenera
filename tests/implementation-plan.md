@@ -1,5 +1,9 @@
 # Test Suite DSL — Implementation Plan
 
+> **Status (2026-09-27):** complete. Phases 1–6 landed in #7; the remaining
+> §7.3 families, §7.5 `@skip` triage and §11 reload metric were finished by
+> `docs/superpowers/plans/2026-09-27-test-tech-debt-cleanup.md`.
+
 Date: 2026-09-18
 Source: [`tests/analysis.md`](./analysis.md) (findings §2–§4, recommendations §6)
 

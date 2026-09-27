@@ -485,7 +485,7 @@ When("I create a new version by editing the name", async function (this: CustomW
   await this.page.waitForTimeout(200);
 });
 
-// Note: "I click the export button" already exists in character-file-export.steps.ts
+// Note: "I export the character" is defined in character-file-export.steps.ts
 // Note: "I edit the character name" can use the existing step with parameter
 
 // Then steps

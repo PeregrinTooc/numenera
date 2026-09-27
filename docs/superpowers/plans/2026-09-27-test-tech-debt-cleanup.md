@@ -13,6 +13,8 @@
 - The `@skip` triage is decided per scenario. Delete the 3 responsive scenarios and the tier-3 scenario. Implement the special-characters scenario. Replace long-text with a concrete "no horizontal overflow" scenario. Rewrite section-order against `DEFAULT_LAYOUT`.
 - Scope includes the leftover "seed storage → reload" sites. Targets: a setup DSL for "mutate stored character → reload" and for "seed layout → reload".
 
+> **Correction (found during Task 8):** this plan assumes every Cucumber scenario runs on all four `playwright.config.ts` device profiles. It doesn't: `tests/e2e/support/hooks.ts` uses one desktop Chromium context. Task 8 therefore became a Scenario Outline over explicit widths, and the Task 6 deletions rest on that outline instead. See the "Cucumber suite never exercises the Rule 9 device profiles" entry in `docs/TODO.md`.
+
 ## Global Constraints
 
 - CLAUDE.md's 11 rules apply. The ones that bite here:
