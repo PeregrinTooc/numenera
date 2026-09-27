@@ -34,7 +34,7 @@ Feature: Enhanced File Export
 
     Scenario: Exported file contains complete character data
         Given my browser supports File System Access API
-        When I click the export button
+        When I export the character
         Then the exported file should have version "1.0"
         And the exported file should have schemaVersion "1.0.0"
         And the exported file should have an exportDate

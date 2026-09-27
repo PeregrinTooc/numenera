@@ -815,57 +815,24 @@ Then("the portrait should remain unchanged", async function (this: CustomWorld) 
 Then(
   "the exported file should contain version {int} data",
   async function (this: CustomWorld, versionNumber: number) {
-    // Wait for export to complete
-    await this.page.waitForTimeout(1000);
-
-    // Retrieve the captured data from window (same as character-file-export.steps.ts)
-    const capturedData = await this.page.evaluate(() => {
-      return {
-        data: (window as any).__exportedData,
-      };
-    });
-
-    expect(capturedData.data).toBeTruthy();
-    const exportedData = JSON.parse(capturedData.data);
-
-    // Verify it matches the expected version
+    const exported = this.exportedFileData;
+    expect(exported).toBeTruthy();
     const versions = await this.storageHelper.getAllVersions();
-    const expectedVersion = versions[versionNumber - 1];
-    expect(exportedData.character.name).toBe(expectedVersion.character.name);
+    expect(exported?.character.name).toBe(versions[versionNumber - 1].character.name);
   }
 );
 
 Then("the exported file should not contain version history", async function (this: CustomWorld) {
-  // Retrieve the captured data from window (same as character-file-export.steps.ts)
-  const capturedData = await this.page.evaluate(() => {
-    return {
-      data: (window as any).__exportedData,
-    };
-  });
-
-  expect(capturedData.data).toBeTruthy();
-  const exportedData = JSON.parse(capturedData.data);
-
-  // Version history should not be in the exported file
-  expect(exportedData.versionHistory).toBeUndefined();
+  const exported = this.exportedFileData;
+  expect(exported).toBeTruthy();
+  expect(exported?.versionHistory).toBeUndefined();
 });
 
 Then("the exported file should use the current portrait", async function (this: CustomWorld) {
-  // Get the current character's portrait
+  const exported = this.exportedFileData;
+  expect(exported).toBeTruthy();
   const currentChar = await this.storageHelper.getCharacter();
-
-  // Retrieve the captured data from window (same as character-file-export.steps.ts)
-  const capturedData = await this.page.evaluate(() => {
-    return {
-      data: (window as any).__exportedData,
-    };
-  });
-
-  expect(capturedData.data).toBeTruthy();
-  const exportedData = JSON.parse(capturedData.data);
-
-  // Portrait should match current character's portrait
-  expect(exportedData.character.portrait).toBe(currentChar.portrait);
+  expect(exported?.character.portrait).toBe(currentChar.portrait);
 });
 
 Then("a new version should be created", async function (this: CustomWorld) {

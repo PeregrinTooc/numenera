@@ -174,7 +174,7 @@ Feature: Version History (Character Time Travel)
     Scenario: Export works from old version
         Given the character has 3 versions in history
         And I am viewing version 1
-        When I click the export button
+        When I export the character
         Then the exported file should contain version 1 data
         And the exported file should not contain version history
         And the exported file should use the current portrait

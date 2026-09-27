@@ -493,75 +493,10 @@ Then("{string} should be in its own row", async function (this: CustomWorld, sec
 // Export/Import Steps
 // ============================================
 
-When("I export the character", async function (this: CustomWorld) {
-  const page = this.page;
-
-  // Mock the file export functionality to capture the data
-  await page.evaluate(() => {
-    // Clear previous data
-    delete (window as any).__exportedData;
-
-    // Mock showSaveFilePicker (Chromium) - used by ExportManager
-    (window as any).showSaveFilePicker = async (options: any) => {
-      // Return a mock file handle
-      return {
-        name: options.suggestedName,
-        kind: "file",
-        createWritable: async () => ({
-          write: async (data: string) => {
-            // Capture the exported data
-            (window as any).__exportedData = data;
-          },
-          close: async () => {},
-        }),
-        queryPermission: async () => "granted",
-      };
-    };
-
-    // Store original createElement
-    const originalCreateElement = document.createElement.bind(document);
-
-    // Mock createElement for blob download (Safari/Firefox fallback)
-    document.createElement = function (tagName: string) {
-      const element = originalCreateElement(tagName);
-      if (tagName === "a") {
-        // Override click to capture download info
-        element.click = function () {
-          const anchor = element as any;
-
-          // Extract data from blob URL if present
-          if (anchor.href && anchor.href.startsWith("blob:")) {
-            window
-              .fetch(anchor.href)
-              .then((res: any) => res.text())
-              .then((data: any) => {
-                (window as any).__exportedData = data;
-              });
-          }
-        };
-      }
-      return element;
-    };
-  });
-
-  // Click the export button
-  await page.click('[data-testid="export-button"]');
-
-  // Wait for the export to complete
-  await page.waitForTimeout(1000);
-
-  // Retrieve the captured data
-  const capturedData = await page.evaluate(() => {
-    return (window as any).__exportedData;
-  });
-
-  this.exportedLayoutData = capturedData ? JSON.parse(capturedData) : null;
-});
-
 Then(
   "the exported file should contain the layout configuration",
   async function (this: CustomWorld) {
-    const data = this.exportedLayoutData;
+    const data = this.exportedFileData;
     if (!data) {
       throw new Error("No exported data available");
     }

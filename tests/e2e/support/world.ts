@@ -18,6 +18,8 @@ export interface ExportedCharacterFile {
   version: string;
   schemaVersion: number;
   exportDate: string;
+  layout?: unknown[];
+  versionHistory?: unknown;
 }
 
 export interface CustomWorld extends World {
@@ -32,7 +34,6 @@ export interface CustomWorld extends World {
   setup: SetupDsl;
   previousCardCount?: number;
   // section-rearrangement.steps.ts
-  exportedLayoutData?: { layout?: unknown[] } | null;
   importedLayout?: Array<{ type: string; id: string }> | null;
   scrollYBeforeSwipe?: number;
   // version-history.steps.ts
@@ -58,7 +59,6 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   cards!: CardsDsl;
   setup!: SetupDsl;
   previousCardCount?: number;
-  exportedLayoutData?: { layout?: unknown[] } | null;
   importedLayout?: Array<{ type: string; id: string }> | null;
   scrollYBeforeSwipe?: number;
   originalCharacterName?: string;
