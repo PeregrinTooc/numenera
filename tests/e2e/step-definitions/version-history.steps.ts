@@ -261,12 +261,10 @@ Given("the character has a portrait image", async function (this: CustomWorld) {
   // Set a portrait on the character (base64 encoded 1x1 pixel)
   const portrait =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
-  const character = await this.storageHelper.getCharacter();
-  character.portrait = portrait;
-  await this.storageHelper.setCharacter(character);
+  await this.setup.updateCharacter((character) => {
+    character.portrait = portrait;
+  });
   this.uploadedPortrait = portrait;
-  await this.page.reload();
-  await waitForCharacterSheetReady(this.page);
 });
 
 Given(

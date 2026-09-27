@@ -373,18 +373,18 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag ability {string} before ability {string}` | 2 | 264 |
-| When | `I drag cypher {string} after cypher {string}` | 1 | 63 |
-| When | `I drag cypher {string} before cypher {string}` | 3 | 43 |
-| When | `I drag cypher {string} into the abilities section` | 1 | 307 |
-| When | `I hover over cypher {string}` | 1 | 118 |
-| When | `I start dragging cypher {string}` | 2 | 89 |
-| Then | `the abilities should be in order {string}` | 4 | 282 |
-| Given | `the character has {int} abilities named {string}` | 4 | 236 |
-| Given | `the character has {int} cyphers named {string}` | 8 | 9 |
-| Then | `the cypher {string} should have a dragging visual state` | 1 | 172 |
-| Then | `the cyphers should be in order {string}` | 6 | 145 |
-| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 192 |
+| When | `I drag ability {string} before ability {string}` | 2 | 244 |
+| When | `I drag cypher {string} after cypher {string}` | 1 | 48 |
+| When | `I drag cypher {string} before cypher {string}` | 3 | 28 |
+| When | `I drag cypher {string} into the abilities section` | 1 | 287 |
+| When | `I hover over cypher {string}` | 1 | 103 |
+| When | `I start dragging cypher {string}` | 2 | 74 |
+| Then | `the abilities should be in order {string}` | 4 | 262 |
+| Given | `the character has {int} abilities named {string}` | 4 | 221 |
+| Given | `the character has {int} cyphers named {string}` | 8 | 8 |
+| Then | `the cypher {string} should have a dragging visual state` | 1 | 157 |
+| Then | `the cyphers should be in order {string}` | 6 | 130 |
+| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 177 |
 
 ## character-display.steps.ts
 
@@ -620,54 +620,54 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all recovery checkboxes should be unchecked` | 1 | 177 |
-| When | `I click on the recovery modifier display` | 1 | 190 |
-| When | `I click the {string} recovery checkbox` | 1 | 214 |
-| When | `I confirm the edit` | 3 | 206 |
-| When | `I enter {string} in the modifier field` | 1 | 196 |
-| When | `I select the {string} damage status` | 1 | 221 |
-| Then | `I should see {int} damage status options` | 1 | 51 |
-| Then | `I should see {int} recovery roll checkboxes` | 1 | 18 |
-| Then | `I should see {string} in the recovery section` | 3 | 161 |
-| Then | `I should see a section titled {string}` | 2 | 7 |
-| Then | `I should see an edit modal` | 1 | 201 |
-| Then | `I should see damage status {string}` | 1 | 56 |
-| Then | `I should see damage status {string} with description {string}` | 2 | 61 |
-| Then | `I should see recovery roll {string} with time {string}` | 4 | 23 |
-| Then | `I should see the recovery modifier display {string}` | 1 | 12 |
-| Then | `the {string} radio button should be selected` | 4 | 98 |
-| Then | `the {string} radio button should not be selected` | 6 | 104 |
-| Then | `the {string} recovery checkbox should be checked` | 2 | 37 |
-| Then | `the {string} recovery checkbox should be unchecked` | 3 | 43 |
-| Given | `the character has {string} recovery used` | 1 | 32 |
-| Given | `the character has recovery modifier {int}` | 2 | 132 |
-| Given | `the character is {string}` | 3 | 70 |
-| Given | `the character is new` | 1 | 168 |
-| Then | `the damage track section should have red styling` | 1 | 121 |
-| Then | `the recovery rolls section should have green styling` | 1 | 112 |
+| Then | `all recovery checkboxes should be unchecked` | 1 | 161 |
+| When | `I click on the recovery modifier display` | 1 | 174 |
+| When | `I click the {string} recovery checkbox` | 1 | 198 |
+| When | `I confirm the edit` | 3 | 190 |
+| When | `I enter {string} in the modifier field` | 1 | 180 |
+| When | `I select the {string} damage status` | 1 | 205 |
+| Then | `I should see {int} damage status options` | 1 | 52 |
+| Then | `I should see {int} recovery roll checkboxes` | 1 | 19 |
+| Then | `I should see {string} in the recovery section` | 3 | 145 |
+| Then | `I should see a section titled {string}` | 2 | 8 |
+| Then | `I should see an edit modal` | 1 | 185 |
+| Then | `I should see damage status {string}` | 1 | 57 |
+| Then | `I should see damage status {string} with description {string}` | 2 | 62 |
+| Then | `I should see recovery roll {string} with time {string}` | 4 | 24 |
+| Then | `I should see the recovery modifier display {string}` | 1 | 13 |
+| Then | `the {string} radio button should be selected` | 4 | 89 |
+| Then | `the {string} radio button should not be selected` | 6 | 95 |
+| Then | `the {string} recovery checkbox should be checked` | 2 | 38 |
+| Then | `the {string} recovery checkbox should be unchecked` | 3 | 44 |
+| Given | `the character has {string} recovery used` | 1 | 33 |
+| Given | `the character has recovery modifier {int}` | 2 | 123 |
+| Given | `the character is {string}` | 3 | 71 |
+| Given | `the character is new` | 1 | 152 |
+| Then | `the damage track section should have red styling` | 1 | 112 |
+| Then | `the recovery rolls section should have green styling` | 1 | 103 |
 
 ## resource-tracker-editing.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `the Armor badge should show {string}` | 5 | 155 |
-| Then | `the character data should have armor {int}` | 1 | 213 |
-| Then | `the character data should have currentXp {int}` | 1 | 183 |
-| Then | `the character data should have effort {int}` | 1 | 233 |
-| Then | `the character data should have maxCyphers {int}` | 1 | 223 |
-| Then | `the character data should have shins {int}` | 1 | 203 |
-| Then | `the character data should have totalXp {int}` | 1 | 193 |
-| Given | `the character has {int} {resource}` | 13 | 112 |
-| Given | `the character has {int} current XP and {int} total XP` | 9 | 25 |
-| Given | `the character has {resource} {int}` | 8 | 119 |
-| Given | `the character was saved with a single legacy XP value of {int}` | 1 | 50 |
-| Then | `the Current XP badge should show {string}` | 7 | 131 |
-| Then | `the Effort badge should show {string}` | 3 | 171 |
-| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 163 |
-| Then | `the modal confirm button should be disabled` | 2 | 243 |
-| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 248 |
-| Then | `the Shins badge should show {string}` | 5 | 147 |
-| Then | `the Total XP badge should show {string}` | 5 | 139 |
+| Then | `the Armor badge should show {string}` | 5 | 135 |
+| Then | `the character data should have armor {int}` | 1 | 193 |
+| Then | `the character data should have currentXp {int}` | 1 | 163 |
+| Then | `the character data should have effort {int}` | 1 | 213 |
+| Then | `the character data should have maxCyphers {int}` | 1 | 203 |
+| Then | `the character data should have shins {int}` | 1 | 183 |
+| Then | `the character data should have totalXp {int}` | 1 | 173 |
+| Given | `the character has {int} {resource}` | 13 | 92 |
+| Given | `the character has {int} current XP and {int} total XP` | 9 | 9 |
+| Given | `the character has {resource} {int}` | 8 | 99 |
+| Given | `the character was saved with a single legacy XP value of {int}` | 1 | 34 |
+| Then | `the Current XP badge should show {string}` | 7 | 111 |
+| Then | `the Effort badge should show {string}` | 3 | 151 |
+| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 143 |
+| Then | `the modal confirm button should be disabled` | 2 | 223 |
+| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 228 |
+| Then | `the Shins badge should show {string}` | 5 | 127 |
+| Then | `the Total XP badge should show {string}` | 5 | 119 |
 
 ## section-rearrangement.steps.ts
 
@@ -805,86 +805,86 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a new version should be created` | 1 | 872 |
-| Then | `a new version should be created with description {string}` | 3 | 925 |
-| Then | `all edit controls should be enabled` | 2 | 518 |
-| Then | `both navigation arrows should be enabled` | 2 | 588 |
-| Given | `I am viewing that version` | 3 | 297 |
+| Then | `a new version should be created` | 1 | 870 |
+| Then | `a new version should be created with description {string}` | 3 | 923 |
+| Then | `all edit controls should be enabled` | 2 | 516 |
+| Then | `both navigation arrows should be enabled` | 2 | 586 |
+| Given | `I am viewing that version` | 3 | 295 |
 | Given | `I am viewing the latest version` | 6 | 50 |
 | Given | `I am viewing version {int}` | 8 | 55 |
-| When | `I click the backward navigation arrow` | 17 | 374 |
-| Then | `I click the backward navigation arrow {int} times` | 1 | 956 |
-| When | `I click the backward navigation arrow again` | 1 | 381 |
-| When | `I click the forward navigation arrow` | 3 | 393 |
-| When | `I click the forward navigation arrow again` | 1 | 399 |
-| When | `I click the restore button in the warning banner` | 3 | 405 |
-| When | `I click the return to latest button` | 1 | 387 |
-| When | `I create a new version by editing the name` | 1 | 487 |
-| Given | `I have made buffered edits that were undone` | 2 | 306 |
-| When | `I make {int} rapid edits that are buffered` | 1 | 1132 |
-| When | `I navigate backward` | 1 | 451 |
-| When | `I navigate forward twice` | 1 | 457 |
-| When | `I navigate to version {int}` | 8 | 411 |
-| When | `I press {string}` | 5 | 666 |
-| When | `I press {string} again` | 2 | 1010 |
-| When | `I press {string} again before the squash timer expires` | 2 | 1045 |
-| When | `I press {string} before the squash timer expires` | 11 | 971 |
-| When | `I press {string} to navigate to previous version` | 1 | 1199 |
-| When | `I press {string} to undo buffered changes` | 1 | 1153 |
-| When | `I rapidly click the backward arrow {int} times` | 1 | 465 |
-| When | `I refresh the browser` | 6 | 479 |
-| Then | `I should be viewing the latest version` | 3 | 878 |
-| Then | `I should be viewing version {int}` | 1 | 1239 |
-| Then | `I should navigate to version {int}` | 2 | 891 |
-| Then | `I should see {int} versions in history` | 2 | 1112 |
-| When | `I view the character sheet` | 2 | 367 |
-| When | `I wait for {int} milliseconds` | 4 | 651 |
-| When | `I wait for squash timer to complete` | 15 | 1194 |
-| Then | `no new version should be created yet` | 2 | 1093 |
-| Then | `no warning banner should be visible` | 6 | 537 |
-| Then | `the backward arrow should be disabled` | 1 | 600 |
-| Then | `the backward arrow should be enabled` | 3 | 542 |
-| Then | `the change description should be displayed` | 1 | 570 |
-| Then | `the changes should be reapplied` | 2 | 1120 |
-| Then | `the character data should be correct for version {int}` | 1 | 901 |
-| Then | `the character data should match version {int}` | 5 | 552 |
-| Then | `the character equipment should match version {int} equipment` | 2 | 780 |
+| When | `I click the backward navigation arrow` | 17 | 372 |
+| Then | `I click the backward navigation arrow {int} times` | 1 | 954 |
+| When | `I click the backward navigation arrow again` | 1 | 379 |
+| When | `I click the forward navigation arrow` | 3 | 391 |
+| When | `I click the forward navigation arrow again` | 1 | 397 |
+| When | `I click the restore button in the warning banner` | 3 | 403 |
+| When | `I click the return to latest button` | 1 | 385 |
+| When | `I create a new version by editing the name` | 1 | 485 |
+| Given | `I have made buffered edits that were undone` | 2 | 304 |
+| When | `I make {int} rapid edits that are buffered` | 1 | 1130 |
+| When | `I navigate backward` | 1 | 449 |
+| When | `I navigate forward twice` | 1 | 455 |
+| When | `I navigate to version {int}` | 8 | 409 |
+| When | `I press {string}` | 5 | 664 |
+| When | `I press {string} again` | 2 | 1008 |
+| When | `I press {string} again before the squash timer expires` | 2 | 1043 |
+| When | `I press {string} before the squash timer expires` | 11 | 969 |
+| When | `I press {string} to navigate to previous version` | 1 | 1197 |
+| When | `I press {string} to undo buffered changes` | 1 | 1151 |
+| When | `I rapidly click the backward arrow {int} times` | 1 | 463 |
+| When | `I refresh the browser` | 6 | 477 |
+| Then | `I should be viewing the latest version` | 3 | 876 |
+| Then | `I should be viewing version {int}` | 1 | 1237 |
+| Then | `I should navigate to version {int}` | 2 | 889 |
+| Then | `I should see {int} versions in history` | 2 | 1110 |
+| When | `I view the character sheet` | 2 | 365 |
+| When | `I wait for {int} milliseconds` | 4 | 649 |
+| When | `I wait for squash timer to complete` | 15 | 1192 |
+| Then | `no new version should be created yet` | 2 | 1091 |
+| Then | `no warning banner should be visible` | 6 | 535 |
+| Then | `the backward arrow should be disabled` | 1 | 598 |
+| Then | `the backward arrow should be enabled` | 3 | 540 |
+| Then | `the change description should be displayed` | 1 | 568 |
+| Then | `the changes should be reapplied` | 2 | 1118 |
+| Then | `the character data should be correct for version {int}` | 1 | 899 |
+| Then | `the character data should match version {int}` | 5 | 550 |
+| Then | `the character equipment should match version {int} equipment` | 2 | 778 |
 | Given | `the character has {int} versions in history` | 41 | 13 |
 | Given | `the character has {int} versions with different data` | 3 | 195 |
 | Given | `the character has {int} versions with different names` | 2 | 230 |
 | Given | `the character has a legacy version with a {string} description for a name change and an added ability` | 1 | 165 |
 | Given | `the character has a legacy version with an {string} description for an added cypher` | 1 | 133 |
 | Given | `the character has a portrait image` | 2 | 259 |
-| Given | `the character has a version from {int} minutes ago` | 1 | 271 |
+| Given | `the character has a version from {int} minutes ago` | 1 | 269 |
 | Given | `the character has a version with multiple basic info changes` | 2 | 98 |
 | Given | `the character has a version with name change` | 1 | 69 |
 | Given | `the character has no version history yet` | 4 | 8 |
-| Then | `the character name should be {string}` | 8 | 1084 |
-| Then | `the character name should match version {int} name` | 4 | 755 |
-| Then | `the character name should revert to the original value` | 2 | 1102 |
-| Then | `the character stats should match version {int} stats` | 2 | 767 |
-| Then | `the exported file should contain version {int} data` | 1 | 816 |
-| Then | `the exported file should not contain version history` | 1 | 839 |
-| Then | `the exported file should use the current portrait` | 1 | 854 |
-| Then | `the forward arrow should be disabled` | 4 | 547 |
-| Then | `the forward arrow should be enabled` | 1 | 605 |
-| Then | `the import button should be disabled` | 1 | 1262 |
-| Then | `the import button should be enabled` | 2 | 1257 |
-| Then | `the oldest version should have been removed` | 2 | 950 |
-| Then | `the portrait should remain unchanged` | 3 | 804 |
-| When | `the squash timer has completed` | 2 | 661 |
-| Then | `the timestamp should be displayed` | 1 | 579 |
-| Then | `the timestamp should be in human-readable format` | 1 | 735 |
-| Then | `the timestamp should show a relative time like {string}` | 1 | 744 |
-| Then | `the UI should remain responsive` | 2 | 915 |
-| Then | `the undo buffer should contain exactly {int} changes` | 1 | 640 |
-| Then | `the version counter should show {string}` | 25 | 529 |
-| Then | `the version description should contain {string}` | 11 | 727 |
-| Then | `the version description should contain the tier change` | 1 | 940 |
-| Then | `the version navigator should be visible` | 4 | 524 |
-| Then | `the version navigator should not be visible` | 2 | 512 |
-| Then | `the warning banner should be visible` | 7 | 595 |
-| Then | `the warning banner should contain text {string}` | 1 | 610 |
-| Then | `the warning banner should have a restore button` | 1 | 618 |
-| Then | `the warning banner should not be visible` | 2 | 935 |
+| Then | `the character name should be {string}` | 8 | 1082 |
+| Then | `the character name should match version {int} name` | 4 | 753 |
+| Then | `the character name should revert to the original value` | 2 | 1100 |
+| Then | `the character stats should match version {int} stats` | 2 | 765 |
+| Then | `the exported file should contain version {int} data` | 1 | 814 |
+| Then | `the exported file should not contain version history` | 1 | 837 |
+| Then | `the exported file should use the current portrait` | 1 | 852 |
+| Then | `the forward arrow should be disabled` | 4 | 545 |
+| Then | `the forward arrow should be enabled` | 1 | 603 |
+| Then | `the import button should be disabled` | 1 | 1260 |
+| Then | `the import button should be enabled` | 2 | 1255 |
+| Then | `the oldest version should have been removed` | 2 | 948 |
+| Then | `the portrait should remain unchanged` | 3 | 802 |
+| When | `the squash timer has completed` | 2 | 659 |
+| Then | `the timestamp should be displayed` | 1 | 577 |
+| Then | `the timestamp should be in human-readable format` | 1 | 733 |
+| Then | `the timestamp should show a relative time like {string}` | 1 | 742 |
+| Then | `the UI should remain responsive` | 2 | 913 |
+| Then | `the undo buffer should contain exactly {int} changes` | 1 | 638 |
+| Then | `the version counter should show {string}` | 25 | 527 |
+| Then | `the version description should contain {string}` | 11 | 725 |
+| Then | `the version description should contain the tier change` | 1 | 938 |
+| Then | `the version navigator should be visible` | 4 | 522 |
+| Then | `the version navigator should not be visible` | 2 | 510 |
+| Then | `the warning banner should be visible` | 7 | 593 |
+| Then | `the warning banner should contain text {string}` | 1 | 608 |
+| Then | `the warning banner should have a restore button` | 1 | 616 |
+| Then | `the warning banner should not be visible` | 2 | 933 |
 

@@ -2,26 +2,10 @@ import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { FULL_CHARACTER, EMPTY_ARRAYS } from "../support/cardTestFixtures.js";
-import { waitForCharacterSheetReady } from "../support/app-ready.js";
 
 // ============================================================================
 // GIVEN STEPS - Setup character state with specific resource values
 // ============================================================================
-
-// Helper function to create character state, overriding one resource field
-// on the shared demo character.
-function createCharacterState(fieldKey: string, value: number) {
-  const character = {
-    ...FULL_CHARACTER,
-    ...EMPTY_ARRAYS,
-    [fieldKey]: value,
-  };
-
-  return {
-    schemaVersion: 4,
-    character: character,
-  };
-}
 
 Given(
   "the character has {int} current XP and {int} total XP",
@@ -55,15 +39,11 @@ Given(
       currentXp: _currentXp,
       totalXp: _totalXp,
       ...rest
-    } = createCharacterState("currentXp", legacyXp).character as any;
-    const character = { ...rest, xp: legacyXp };
-
-    await this.page.waitForTimeout(500);
-    await this.storageHelper.setCharacter(character);
-    await this.page.waitForTimeout(500);
-
-    await this.page.reload();
-    await waitForCharacterSheetReady(this.page);
+    } = {
+      ...FULL_CHARACTER,
+      ...EMPTY_ARRAYS,
+    };
+    await this.setup.replaceCharacter({ ...rest, xp: legacyXp });
 
     await this.page.waitForFunction(
       ({ expectedCurrent, expectedTotal }) => {
