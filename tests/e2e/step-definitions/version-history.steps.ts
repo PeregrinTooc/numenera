@@ -67,33 +67,15 @@ Given("I am viewing version {int}", async function (this: CustomWorld, versionNu
   }
 });
 
-Given("the character has a version with name change", async function (this: CustomWorld) {
-  // Wait for page to be fully loaded before creating versions
-  await this.page.waitForLoadState("networkidle");
-  await this.page.waitForTimeout(500);
-
-  // Create a version with a name change
-  // Note: Version 1 is "Initial state", so this creates version 2 with "Changed name"
-  const baseCharacter = await this.storageHelper.getCharacter();
-  const versionCharacter = {
-    ...baseCharacter,
-    name: "New Name",
-  };
-  await this.storageHelper.createVersion(versionCharacter, "Changed name");
-
-  // Wait for version navigator to show updated count (2 versions)
-  const versionCounter = this.page.locator('[data-testid="version-counter"]');
-  await expect(versionCounter).toContainText("Version 2 of 2", { timeout: 10000 });
-
-  // Create one more version so we can navigate back to see version 2's description
-  const anotherCharacter = {
-    ...versionCharacter,
-    name: "Latest Version",
-  };
-  await this.storageHelper.createVersion(anotherCharacter, "Another change");
-
-  // Wait for version navigator to show updated count (3 versions)
-  await expect(versionCounter).toContainText("Version 3 of 3", { timeout: 10000 });
+Given("the character has a later version", async function (this: CustomWorld) {
+  const versions = await this.storageHelper.getAllVersions();
+  const latest = versions[versions.length - 1].character;
+  await this.storageHelper.createVersion({ ...latest, name: "Latest Version" }, "Another change");
+  const count = versions.length + 1;
+  await expect(this.page.locator('[data-testid="version-counter"]')).toContainText(
+    `Version ${count} of ${count}`,
+    { timeout: 10000 }
+  );
 });
 
 Given(
@@ -295,7 +277,7 @@ Given(
 
 Given("I am viewing that version", async function (this: CustomWorld) {
   // Navigate backward to view the version we're interested in
-  // For "version with name change": We created 3 versions, click back once to see v2
+  // For "a version with a name change" + "a later version": 3 versions, click back once to see v2
   // For "version from X minutes ago": We created 2 versions, click back once to see v1
   const backwardArrow = this.page.locator('[data-testid="version-nav-backward"]');
   await backwardArrow.click();

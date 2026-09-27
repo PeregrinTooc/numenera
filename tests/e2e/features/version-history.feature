@@ -121,7 +121,8 @@ Feature: Version History (Character Time Travel)
         Then the character name should be "Edited Before Navigating"
 
     Scenario: Version description shows what changed
-        Given the character has a version with name change
+        Given the character has a version with a name change
+        And the character has a later version
         And I am viewing that version
         Then the version description should contain "Changed name"
         And the timestamp should be in human-readable format
