@@ -92,15 +92,18 @@ Feature: Single Character Display
         And I should see empty state for equipment
         And I should see empty state for abilities
 
-    @validation @skip
-    Scenario: View character with special characters in text fields
+    @validation
+    Scenario: Text with quotes, ampersands and angle brackets is shown verbatim
         Given I am on the character sheet page
-        And the character has text fields containing special characters:
+        And the character has the following text:
             | Field      | Content                                   |
             | Name       | Kael "The Swift" O'Connor                 |
             | Background | Born in <Unknown Location> & raised alone |
-        Then the special characters should be properly displayed
-        And the text should not be corrupted or escaped incorrectly
+        Then the character text should read exactly:
+            | Field      | Content                                   |
+            | Name       | Kael "The Swift" O'Connor                 |
+            | Background | Born in <Unknown Location> & raised alone |
+        And no markup from the text should be rendered as HTML
 
     @validation @skip
     Scenario: View character with long text content

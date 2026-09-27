@@ -1,7 +1,8 @@
-import { Given, Then } from "@cucumber/cucumber";
+import { Given, Then, type DataTable } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { waitForCharacterSheetReady, startNewCharacter } from "../support/app-ready.js";
 import type { CustomWorld } from "../support/world.js";
+import type { Character } from "../../../src/types/character.js";
 
 Given("a character exists with the following data:", function (_dataTable) {
   // Test data is defined in the feature file Background
@@ -202,4 +203,51 @@ Then("I should see empty state for equipment", async function () {
 
 Then("I should see empty state for abilities", async function () {
   await expect(this.dom.getByTestId("empty-abilities")).toBeVisible();
+});
+
+// Scenario: Text with quotes, ampersands and angle brackets is shown verbatim
+type TextRow = { Field: string; Content: string };
+
+const TEXT_FIELD_SETTERS: Record<string, (character: Character, value: string) => void> = {
+  Name: (character, value) => {
+    character.name = value;
+  },
+  Background: (character, value) => {
+    character.textFields.background = value;
+  },
+};
+
+Given(
+  "the character has the following text:",
+  async function (this: CustomWorld, table: DataTable) {
+    const rows = table.hashes() as TextRow[];
+    await this.setup.updateCharacter((character) => {
+      for (const { Field, Content } of rows) {
+        const set = TEXT_FIELD_SETTERS[Field];
+        if (!set) throw new Error(`Unknown text field: ${Field}`);
+        set(character, Content);
+      }
+    });
+  }
+);
+
+Then(
+  "the character text should read exactly:",
+  async function (this: CustomWorld, table: DataTable) {
+    for (const { Field, Content } of table.hashes() as TextRow[]) {
+      if (Field === "Name") {
+        await expect(this.dom.getByTestId("character-name")).toHaveText(Content);
+      } else if (Field === "Background") {
+        // Background renders as a <textarea>, so its text is the element's value.
+        await expect(this.dom.getByTestId("character-background")).toHaveValue(Content);
+      } else {
+        throw new Error(`Unknown text field: ${Field}`);
+      }
+    }
+  }
+);
+
+Then("no markup from the text should be rendered as HTML", async function (this: CustomWorld) {
+  // "<Unknown Location>" would parse as an <unknown> element if interpolated as HTML.
+  await expect(this.page.locator("unknown")).toHaveCount(0);
 });
