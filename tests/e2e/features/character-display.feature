@@ -97,11 +97,11 @@ Feature: Single Character Display
         Given I am on the character sheet page
         And the character has the following text:
             | Field      | Content                                   |
-            | Name       | Kael "The Swift" O'Connor                 |
+            | Name       | Kael <The Swift> & "Red" O'Connor         |
             | Background | Born in <Unknown Location> & raised alone |
         Then the character text should read exactly:
             | Field      | Content                                   |
-            | Name       | Kael "The Swift" O'Connor                 |
+            | Name       | Kael <The Swift> & "Red" O'Connor         |
             | Background | Born in <Unknown Location> & raised alone |
         And no markup from the text should be rendered as HTML
 
