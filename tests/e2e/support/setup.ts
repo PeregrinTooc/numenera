@@ -1,5 +1,7 @@
 import type { CustomWorld } from "./world.js";
 import type { Character } from "../../../src/types/character.js";
+import type { Layout } from "../../../src/types/layout.js";
+import { LAYOUT_STORAGE_KEY } from "../../../src/storage/storageConstants.js";
 import { waitForCharacterSheetReady } from "./app-ready.js";
 import { FULL_CHARACTER, EMPTY_ARRAYS } from "./cardTestFixtures.js";
 
@@ -39,5 +41,21 @@ export class SetupDsl {
     }
     mutate(character);
     await this.replaceCharacter(character);
+  }
+
+  /**
+   * Seeds the saved section layout (null = none saved, so the app uses
+   * DEFAULT_LAYOUT), reloads, and waits for the sheet to be ready.
+   */
+  async layout(layout: Layout | null): Promise<void> {
+    await this.world.page.evaluate(
+      ({ key, value }) => {
+        if (value === null) localStorage.removeItem(key);
+        else localStorage.setItem(key, value);
+      },
+      { key: LAYOUT_STORAGE_KEY, value: layout === null ? null : JSON.stringify(layout) }
+    );
+    await this.world.page.reload();
+    await waitForCharacterSheetReady(this.world.page);
   }
 }
