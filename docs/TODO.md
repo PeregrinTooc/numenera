@@ -50,19 +50,23 @@ runs the Cucumber suite once per Rule 9 device profile (`DEVICE`, see
 
 | Profile           | Engine   | Scenarios passing | Excluded by tag                                                     |
 | ----------------- | -------- | ----------------- | ------------------------------------------------------------------- |
-| desktop (default) | Chromium | 415 / 415         | 7 `@skip`ped (Grid Merge/Split below); 0 `@desktop-only`            |
-| `DEVICE=pixel5`   | Chromium | 394 / 394         | 21 `@not-phone`                                                     |
-| `DEVICE=iphone12` | WebKit   | 390 / 390         | 21 `@not-phone`, 3 `@chromium-only`, 1 `@known-issue-webkit-unload` |
-| `DEVICE=ipadpro`  | WebKit   | 411 / 411         | 3 `@chromium-only`, 1 `@known-issue-webkit-unload`                  |
+| desktop (default) | Chromium | 416 / 416         | 7 `@skip`ped (Grid Merge/Split below); 0 `@desktop-only`            |
+| `DEVICE=pixel5`   | Chromium | 395 / 395         | 21 `@not-phone`                                                     |
+| `DEVICE=iphone12` | WebKit   | 391 / 391         | 21 `@not-phone`, 3 `@chromium-only`, 1 `@known-issue-webkit-unload` |
+| `DEVICE=ipadpro`  | WebKit   | 412 / 412         | 3 `@chromium-only`, 1 `@known-issue-webkit-unload`                  |
 
 The `I reload the page` step now always waits out the 300 ms auto-save debounce
 (the save indicator stays hidden until the first save completes, so it cannot
 signal a pending one); this fixed the "Ability order persists after page reload"
-flake. Of 4 full iPad Pro runs after the fix, 3 were 411 / 411 and 1 had a single
-unidentified failure that did not recur.
+flake. Of 4 full local iPad Pro runs after the fix, 3 were clean and 1 had a
+single unidentified failure that did not recur; both CI `e2e-devices` runs on
+PR #10 were clean on every profile.
 
-665 step definitions, all used (`npm run check:steps`). Measured at the end of the
-remaining-test-tech-debt work.  
+Export scenarios on the WebKit profiles run the real `<a download>` blob
+fallback; only Chromium gets the `showSaveFilePicker` stub.
+
+666 step definitions, all used (`npm run check:steps`). Measured from the CI run
+that merged PR #10.  
 **Documentation**: See [FEATURES.md](./FEATURES.md) for complete feature list
 
 ---
