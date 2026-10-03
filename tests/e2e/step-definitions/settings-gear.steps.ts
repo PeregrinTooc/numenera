@@ -55,8 +55,24 @@ Given("I have opened the settings panel", async function (this: CustomWorld) {
 });
 
 When("I click outside the settings panel", async function (this: CustomWorld) {
-  // Click on the page title which is outside the settings panel
-  await this.page.locator('[data-testid="page-title"]').click();
+  // Click the page title's top-left corner. On phones the title wraps and the
+  // panel covers its centre, so a centre click would land on the panel itself.
+  const title = this.page.locator('[data-testid="page-title"]');
+  const titleBox = await title.boundingBox();
+  const panelBox = await this.dom.getByTestId("settings-panel").boundingBox();
+  if (!titleBox || !panelBox) {
+    throw new Error("Page title or settings panel has no bounding box");
+  }
+  const offset = { x: 2, y: 2 };
+  const point = { x: titleBox.x + offset.x, y: titleBox.y + offset.y };
+  const insidePanel =
+    point.x >= panelBox.x &&
+    point.x <= panelBox.x + panelBox.width &&
+    point.y >= panelBox.y &&
+    point.y <= panelBox.y + panelBox.height;
+  expect(insidePanel, "click point must be outside the settings panel").toBe(false);
+  // locator.click also verifies the title (not the panel) receives the click.
+  await title.click({ position: offset });
 });
 
 // Note: "I press the Escape key" is defined in common-steps.ts

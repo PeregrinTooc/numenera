@@ -9,8 +9,13 @@ import { waitForCharacterSheetReady } from "../support/app-ready.js";
 Given("the character has no version history yet", async function (this: CustomWorld) {
   // The app always records one "Initial state" version on first load; "no history yet" means
   // nothing beyond it (the navigator stays hidden until a second version exists).
-  const versions = await this.storageHelper.getAllVersions();
-  expect(versions.map((version) => version.description)).toEqual(["Initial state"]);
+  // Poll: that save is asynchronous after the sheet renders, so on a slow
+  // engine under load a single read can run before it lands.
+  await expect
+    .poll(async () =>
+      (await this.storageHelper.getAllVersions()).map((version) => version.description)
+    )
+    .toEqual(["Initial state"]);
 });
 
 Given(

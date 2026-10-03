@@ -1,21 +1,38 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
+import type { CustomWorld } from "../support/world";
+import { waitForCharacterSheetReady } from "../support/app-ready.js";
 
 // ========================================
 // Given Steps - Setup
 // ========================================
 
-Given("my browser supports File System Access API", async function () {
-  // Mock File System Access API
-  await this.page.evaluate(() => {
+/** Window globals the File System Access mock records for later assertions. */
+interface FsaMockWindow {
+  _lastWrittenData?: string;
+  _exportedData?: string;
+  _cancelFilePicker?: boolean;
+  _saveDialogShown?: boolean;
+  _suggestedFilename?: string;
+  showSaveFilePicker?: (options?: { suggestedName?: string }) => Promise<unknown>;
+}
+
+Given("my browser supports File System Access API", async function (this: CustomWorld) {
+  // Install the mock before the app boots, then reload: the header decides
+  // once, at construction, whether to offer Quick Export / Save As
+  // ("showSaveFilePicker" in window). WebKit has no native API, so a mock
+  // added after load would never reach that check.
+  await this.page.addInitScript(() => {
+    const mockWindow = window as unknown as FsaMockWindow;
+
     // Create mock file handle
     const createMockHandle = (name: string) => ({
       name,
       kind: "file" as const,
       createWritable: async () => ({
         write: async (data: string) => {
-          (window as any)._lastWrittenData = data;
-          (window as any)._exportedData = data;
+          mockWindow._lastWrittenData = data;
+          mockWindow._exportedData = data;
         },
         close: async () => {},
       }),
@@ -23,16 +40,18 @@ Given("my browser supports File System Access API", async function () {
     });
 
     // Mock showSaveFilePicker
-    (window as any).showSaveFilePicker = async (options?: any) => {
-      if ((window as any)._cancelFilePicker) {
+    mockWindow.showSaveFilePicker = async (options?: { suggestedName?: string }) => {
+      if (mockWindow._cancelFilePicker) {
         throw new window.DOMException("User cancelled", "AbortError");
       }
-      (window as any)._saveDialogShown = true;
-      (window as any)._suggestedFilename = options?.suggestedName || "character.json";
+      mockWindow._saveDialogShown = true;
+      mockWindow._suggestedFilename = options?.suggestedName || "character.json";
       const filename = options?.suggestedName || "character.json";
       return createMockHandle(filename);
     };
   });
+  await this.page.reload();
+  await waitForCharacterSheetReady(this.page);
 });
 
 Given("my browser does not support File System Access API", async function () {

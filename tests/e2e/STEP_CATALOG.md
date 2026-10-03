@@ -340,18 +340,18 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag ability {string} before ability {string}` | 2 | 244 |
-| When | `I drag cypher {string} after cypher {string}` | 1 | 48 |
-| When | `I drag cypher {string} before cypher {string}` | 3 | 28 |
-| When | `I drag cypher {string} into the abilities section` | 1 | 287 |
-| When | `I hover over cypher {string}` | 1 | 103 |
-| When | `I start dragging cypher {string}` | 2 | 74 |
-| Then | `the abilities should be in order {string}` | 4 | 262 |
-| Given | `the character has {int} abilities named {string}` | 4 | 221 |
-| Given | `the character has {int} cyphers named {string}` | 8 | 8 |
-| Then | `the cypher {string} should have a dragging visual state` | 1 | 157 |
-| Then | `the cyphers should be in order {string}` | 6 | 130 |
-| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 177 |
+| When | `I drag ability {string} before ability {string}` | 2 | 251 |
+| When | `I drag cypher {string} after cypher {string}` | 1 | 52 |
+| When | `I drag cypher {string} before cypher {string}` | 3 | 29 |
+| When | `I drag cypher {string} into the abilities section` | 1 | 297 |
+| When | `I hover over cypher {string}` | 1 | 110 |
+| When | `I start dragging cypher {string}` | 2 | 81 |
+| Then | `the abilities should be in order {string}` | 4 | 272 |
+| Given | `the character has {int} abilities named {string}` | 4 | 228 |
+| Given | `the character has {int} cyphers named {string}` | 8 | 9 |
+| Then | `the cypher {string} should have a dragging visual state` | 1 | 164 |
+| Then | `the cyphers should be in order {string}` | 6 | 137 |
+| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 184 |
 
 ## character-display.steps.ts
 
@@ -525,27 +525,27 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a file download should be triggered` | 1 | 176 |
-| When | `I cancel the file save dialog` | 1 | 112 |
-| When | `I click the Export button` | 7 | 105 |
-| When | `I click the Quick Export button` | 1 | 119 |
-| When | `I click the Save As button` | 1 | 125 |
-| Then | `I should not see an {string} button` | 1 | 145 |
-| Then | `I should see a {string} button` | 2 | 140 |
-| Then | `I should see an {string} button` | 2 | 135 |
-| When | `I view the export buttons` | 1 | 100 |
-| Given | `my browser does not support File System Access API` | 1 | 37 |
-| Given | `my browser supports File System Access API` | 7 | 7 |
-| Then | `no file should be saved` | 1 | 218 |
-| Given | `the character name is {string}` | 1 | 67 |
-| Then | `the download filename should contain {string}` | 1 | 186 |
-| Then | `the download should have correct file structure` | 1 | 194 |
-| Then | `the Export button should still be visible` | 1 | 225 |
-| Then | `the export dialog should be triggered` | 1 | 245 |
-| Then | `the export dialog should be triggered with filename containing {string}` | 1 | 151 |
-| Then | `the exported data should have correct structure` | 1 | 163 |
-| Then | `the file should be saved without prompting` | 1 | 230 |
-| Then | `the suggested filename should be {string}` | 1 | 211 |
+| Then | `a file download should be triggered` | 1 | 195 |
+| When | `I cancel the file save dialog` | 1 | 131 |
+| When | `I click the Export button` | 7 | 124 |
+| When | `I click the Quick Export button` | 1 | 138 |
+| When | `I click the Save As button` | 1 | 144 |
+| Then | `I should not see an {string} button` | 1 | 164 |
+| Then | `I should see a {string} button` | 2 | 159 |
+| Then | `I should see an {string} button` | 2 | 154 |
+| When | `I view the export buttons` | 1 | 119 |
+| Given | `my browser does not support File System Access API` | 1 | 56 |
+| Given | `my browser supports File System Access API` | 7 | 19 |
+| Then | `no file should be saved` | 1 | 237 |
+| Given | `the character name is {string}` | 1 | 86 |
+| Then | `the download filename should contain {string}` | 1 | 205 |
+| Then | `the download should have correct file structure` | 1 | 213 |
+| Then | `the Export button should still be visible` | 1 | 244 |
+| Then | `the export dialog should be triggered` | 1 | 264 |
+| Then | `the export dialog should be triggered with filename containing {string}` | 1 | 170 |
+| Then | `the exported data should have correct structure` | 1 | 182 |
+| Then | `the file should be saved without prompting` | 1 | 249 |
+| Then | `the suggested filename should be {string}` | 1 | 230 |
 
 ## i18n.steps.ts
 
@@ -692,21 +692,21 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am viewing an old version with the version navigator visible` | 1 | 104 |
+| Given | `I am viewing an old version with the version navigator visible` | 1 | 120 |
 | Given | `I am viewing the character sheet` | 1 | 11 |
 | When | `I click outside the settings panel` | 1 | 56 |
-| When | `I click the British flag icon` | 1 | 71 |
-| When | `I click the German flag icon` | 2 | 67 |
+| When | `I click the British flag icon` | 1 | 87 |
+| When | `I click the German flag icon` | 2 | 83 |
 | When | `I click the settings gear icon` | 1 | 40 |
 | Given | `I have opened the settings panel` | 9 | 52 |
 | Then | `I should be able to click the settings gear icon` | 1 | 28 |
-| Then | `I should see a {string} option` | 1 | 119 |
+| Then | `I should see a {string} option` | 1 | 135 |
 | Then | `I should see a settings gear icon in the header` | 1 | 20 |
 | Then | `I should see the settings panel` | 1 | 44 |
-| Then | `the {string} option should be disabled` | 1 | 125 |
-| Given | `the interface is in German` | 1 | 87 |
-| Then | `the interface should display in English` | 1 | 81 |
-| Then | `the interface should display in German` | 1 | 75 |
+| Then | `the {string} option should be disabled` | 1 | 141 |
+| Given | `the interface is in German` | 1 | 103 |
+| Then | `the interface should display in English` | 1 | 97 |
+| Then | `the interface should display in German` | 1 | 91 |
 | Then | `the settings gear icon should still be visible` | 1 | 24 |
 | Then | `the settings panel should close` | 4 | 48 |
 
@@ -766,88 +766,88 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a new version should be created` | 1 | 821 |
-| Then | `a new version should be created with description {string}` | 3 | 874 |
-| Then | `all edit controls should be enabled` | 2 | 500 |
-| Then | `both navigation arrows should be enabled` | 2 | 570 |
-| Given | `I am viewing that version` | 3 | 278 |
-| Given | `I am viewing the latest version` | 6 | 52 |
-| Given | `I am viewing version {int}` | 8 | 56 |
-| When | `I click the backward navigation arrow` | 17 | 356 |
-| Then | `I click the backward navigation arrow {int} times` | 1 | 905 |
-| When | `I click the backward navigation arrow again` | 1 | 363 |
-| When | `I click the forward navigation arrow` | 3 | 375 |
-| When | `I click the forward navigation arrow again` | 1 | 381 |
-| When | `I click the restore button in the warning banner` | 3 | 387 |
-| When | `I click the return to latest button` | 1 | 369 |
-| When | `I create a new version by editing the name` | 1 | 469 |
-| Given | `I have made buffered edits that were undone` | 2 | 287 |
-| When | `I make {int} rapid edits that are buffered` | 1 | 1081 |
-| When | `I navigate backward` | 1 | 433 |
-| When | `I navigate forward twice` | 1 | 439 |
-| When | `I navigate to version {int}` | 8 | 393 |
-| When | `I press {string}` | 5 | 648 |
-| When | `I press {string} again` | 2 | 959 |
-| When | `I press {string} again before the squash timer expires` | 2 | 994 |
-| When | `I press {string} before the squash timer expires` | 11 | 920 |
-| When | `I press {string} to navigate to previous version` | 1 | 1148 |
-| When | `I press {string} to undo buffered changes` | 1 | 1102 |
-| When | `I rapidly click the backward arrow {int} times` | 1 | 447 |
-| When | `I refresh the browser` | 6 | 461 |
-| Then | `I should be viewing the latest version` | 3 | 827 |
-| Then | `I should be viewing version {int}` | 1 | 1188 |
-| Then | `I should navigate to version {int}` | 2 | 840 |
-| Then | `I should see {int} versions in history` | 2 | 1061 |
-| When | `I view the character sheet` | 2 | 348 |
-| When | `I wait for {int} milliseconds` | 4 | 633 |
-| When | `I wait for squash timer to complete` | 15 | 1143 |
-| Then | `no new version should be created yet` | 2 | 1042 |
-| Then | `no warning banner should be visible` | 6 | 519 |
-| Then | `the backward arrow should be disabled` | 1 | 582 |
-| Then | `the backward arrow should be enabled` | 3 | 524 |
-| Then | `the change description should be displayed` | 1 | 552 |
-| Then | `the changes should be reapplied` | 2 | 1069 |
-| Then | `the character data should be correct for version {int}` | 1 | 850 |
-| Then | `the character data should match version {int}` | 5 | 534 |
-| Then | `the character equipment should match version {int} equipment` | 2 | 762 |
-| Given | `the character has {int} versions in history` | 41 | 15 |
-| Given | `the character has {int} versions with different data` | 3 | 178 |
-| Given | `the character has {int} versions with different names` | 2 | 213 |
-| Given | `the character has a later version` | 1 | 70 |
-| Given | `the character has a legacy version with a {string} description for a name change and an added ability` | 1 | 148 |
-| Given | `the character has a legacy version with an {string} description for an added cypher` | 1 | 116 |
-| Given | `the character has a portrait image` | 2 | 242 |
-| Given | `the character has a version from {int} minutes ago` | 1 | 252 |
-| Given | `the character has a version with multiple basic info changes` | 2 | 81 |
+| Then | `a new version should be created` | 1 | 826 |
+| Then | `a new version should be created with description {string}` | 3 | 879 |
+| Then | `all edit controls should be enabled` | 2 | 505 |
+| Then | `both navigation arrows should be enabled` | 2 | 575 |
+| Given | `I am viewing that version` | 3 | 283 |
+| Given | `I am viewing the latest version` | 6 | 57 |
+| Given | `I am viewing version {int}` | 8 | 61 |
+| When | `I click the backward navigation arrow` | 17 | 361 |
+| Then | `I click the backward navigation arrow {int} times` | 1 | 910 |
+| When | `I click the backward navigation arrow again` | 1 | 368 |
+| When | `I click the forward navigation arrow` | 3 | 380 |
+| When | `I click the forward navigation arrow again` | 1 | 386 |
+| When | `I click the restore button in the warning banner` | 3 | 392 |
+| When | `I click the return to latest button` | 1 | 374 |
+| When | `I create a new version by editing the name` | 1 | 474 |
+| Given | `I have made buffered edits that were undone` | 2 | 292 |
+| When | `I make {int} rapid edits that are buffered` | 1 | 1086 |
+| When | `I navigate backward` | 1 | 438 |
+| When | `I navigate forward twice` | 1 | 444 |
+| When | `I navigate to version {int}` | 8 | 398 |
+| When | `I press {string}` | 5 | 653 |
+| When | `I press {string} again` | 2 | 964 |
+| When | `I press {string} again before the squash timer expires` | 2 | 999 |
+| When | `I press {string} before the squash timer expires` | 11 | 925 |
+| When | `I press {string} to navigate to previous version` | 1 | 1153 |
+| When | `I press {string} to undo buffered changes` | 1 | 1107 |
+| When | `I rapidly click the backward arrow {int} times` | 1 | 452 |
+| When | `I refresh the browser` | 6 | 466 |
+| Then | `I should be viewing the latest version` | 3 | 832 |
+| Then | `I should be viewing version {int}` | 1 | 1193 |
+| Then | `I should navigate to version {int}` | 2 | 845 |
+| Then | `I should see {int} versions in history` | 2 | 1066 |
+| When | `I view the character sheet` | 2 | 353 |
+| When | `I wait for {int} milliseconds` | 4 | 638 |
+| When | `I wait for squash timer to complete` | 15 | 1148 |
+| Then | `no new version should be created yet` | 2 | 1047 |
+| Then | `no warning banner should be visible` | 6 | 524 |
+| Then | `the backward arrow should be disabled` | 1 | 587 |
+| Then | `the backward arrow should be enabled` | 3 | 529 |
+| Then | `the change description should be displayed` | 1 | 557 |
+| Then | `the changes should be reapplied` | 2 | 1074 |
+| Then | `the character data should be correct for version {int}` | 1 | 855 |
+| Then | `the character data should match version {int}` | 5 | 539 |
+| Then | `the character equipment should match version {int} equipment` | 2 | 767 |
+| Given | `the character has {int} versions in history` | 41 | 20 |
+| Given | `the character has {int} versions with different data` | 3 | 183 |
+| Given | `the character has {int} versions with different names` | 2 | 218 |
+| Given | `the character has a later version` | 1 | 75 |
+| Given | `the character has a legacy version with a {string} description for a name change and an added ability` | 1 | 153 |
+| Given | `the character has a legacy version with an {string} description for an added cypher` | 1 | 121 |
+| Given | `the character has a portrait image` | 2 | 247 |
+| Given | `the character has a version from {int} minutes ago` | 1 | 257 |
+| Given | `the character has a version with multiple basic info changes` | 2 | 86 |
 | Given | `the character has no version history yet` | 4 | 8 |
-| Then | `the character name should be {string}` | 8 | 1033 |
-| Then | `the character name should match version {int} name` | 4 | 737 |
-| Then | `the character name should revert to the original value` | 2 | 1051 |
-| Then | `the character stats should match version {int} stats` | 2 | 749 |
-| Then | `the exported file should contain version {int} data` | 1 | 798 |
-| Then | `the exported file should not contain version history` | 1 | 808 |
-| Then | `the exported file should use the current portrait` | 1 | 814 |
-| Then | `the forward arrow should be disabled` | 4 | 529 |
-| Then | `the forward arrow should be enabled` | 1 | 587 |
-| Then | `the import button should be disabled` | 1 | 1211 |
-| Then | `the import button should be enabled` | 2 | 1206 |
-| Then | `the oldest version should have been removed` | 2 | 899 |
-| Then | `the portrait should remain unchanged` | 3 | 786 |
-| When | `the squash timer has completed` | 2 | 643 |
-| Then | `the timestamp should be displayed` | 1 | 561 |
-| Then | `the timestamp should be in human-readable format` | 1 | 717 |
-| Then | `the timestamp should show a relative time like {string}` | 1 | 726 |
-| Then | `the UI should remain responsive` | 2 | 864 |
-| Then | `the undo buffer should contain exactly {int} changes` | 1 | 622 |
-| Then | `the version counter should show {string}` | 25 | 511 |
-| Then | `the version description should contain {string}` | 11 | 709 |
-| Then | `the version description should contain the tier change` | 1 | 889 |
-| Then | `the version navigator should be visible` | 4 | 506 |
-| Then | `the version navigator should not be visible` | 2 | 494 |
-| Then | `the warning banner should be visible` | 7 | 577 |
-| Then | `the warning banner should contain text {string}` | 1 | 592 |
-| Then | `the warning banner should have a restore button` | 1 | 600 |
-| Then | `the warning banner should not be visible` | 2 | 884 |
+| Then | `the character name should be {string}` | 8 | 1038 |
+| Then | `the character name should match version {int} name` | 4 | 742 |
+| Then | `the character name should revert to the original value` | 2 | 1056 |
+| Then | `the character stats should match version {int} stats` | 2 | 754 |
+| Then | `the exported file should contain version {int} data` | 1 | 803 |
+| Then | `the exported file should not contain version history` | 1 | 813 |
+| Then | `the exported file should use the current portrait` | 1 | 819 |
+| Then | `the forward arrow should be disabled` | 4 | 534 |
+| Then | `the forward arrow should be enabled` | 1 | 592 |
+| Then | `the import button should be disabled` | 1 | 1216 |
+| Then | `the import button should be enabled` | 2 | 1211 |
+| Then | `the oldest version should have been removed` | 2 | 904 |
+| Then | `the portrait should remain unchanged` | 3 | 791 |
+| When | `the squash timer has completed` | 2 | 648 |
+| Then | `the timestamp should be displayed` | 1 | 566 |
+| Then | `the timestamp should be in human-readable format` | 1 | 722 |
+| Then | `the timestamp should show a relative time like {string}` | 1 | 731 |
+| Then | `the UI should remain responsive` | 2 | 869 |
+| Then | `the undo buffer should contain exactly {int} changes` | 1 | 627 |
+| Then | `the version counter should show {string}` | 25 | 516 |
+| Then | `the version description should contain {string}` | 11 | 714 |
+| Then | `the version description should contain the tier change` | 1 | 894 |
+| Then | `the version navigator should be visible` | 4 | 511 |
+| Then | `the version navigator should not be visible` | 2 | 499 |
+| Then | `the warning banner should be visible` | 7 | 582 |
+| Then | `the warning banner should contain text {string}` | 1 | 597 |
+| Then | `the warning banner should have a restore button` | 1 | 605 |
+| Then | `the warning banner should not be visible` | 2 | 889 |
 
 ## viewport.steps.ts
 
