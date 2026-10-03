@@ -117,7 +117,7 @@ Feature: Single Character Display
             | 320   |
             | 390   |
             | 393   |
-            | 1024  |
+            | 834   |
             | 1280  |
 
     @validation

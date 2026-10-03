@@ -180,16 +180,11 @@ When("I press the Enter key", async function (this: CustomWorld) {
 });
 
 When("I reload the page", async function (this: CustomWorld) {
-  // Wait for debounced auto-save to complete before reloading (if save indicator is visible)
-  const saveIndicator = this.page.locator('[data-testid="save-indicator"]');
-  const isVisible = await saveIndicator.isVisible().catch(() => false);
-
-  if (isVisible) {
-    await waitForSaveComplete(this.page);
-  } else {
-    // No pending saves, just wait a short time for any in-flight operations
-    await this.page.waitForTimeout(100);
-  }
+  // Always wait out the 300ms auto-save debounce. The save indicator can't
+  // tell us whether a save is pending: it stays hidden until the first
+  // auto-save has completed, so right after the first edit it is hidden even
+  // though a save is queued. When nothing is pending this is just a fixed wait.
+  await waitForSaveComplete(this.page);
 
   await this.page.reload();
   // Wait for both the rendered DOM and the app's own bootstrap persist to

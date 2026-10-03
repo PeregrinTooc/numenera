@@ -17,6 +17,10 @@ Given(
     if (data.type !== undefined) overrides.type = data.type;
     if (data.descriptor !== undefined) overrides.descriptor = data.descriptor;
     if (data.focus !== undefined) overrides.focus = data.focus;
+    const known = ["name", "tier", "type", "descriptor", "focus"];
+    for (const key of Object.keys(data)) {
+      if (!known.includes(key)) throw new Error(`Unknown property: ${key}`);
+    }
     await this.setup.character(overrides);
   }
 );
@@ -158,7 +162,6 @@ Then("I should see oddity {string}", async function (description: string) {
   await expect(this.dom.getByTestId(`oddity-${description}`)).toContainText(description);
 });
 
-// Scenario 5: View character text fields — see "the character has the following text:" below
 Given("the character has no {cardTypes}", async function (this: CustomWorld, _emptyTestId: string) {
   await startNewCharacter(this.page, this.getBaseUrl());
 });

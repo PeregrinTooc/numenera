@@ -358,37 +358,37 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 47 | 23 |
-| Then | `I should see {int} artifact displayed` | 1 | 138 |
-| Then | `I should see {int} cyphers displayed` | 1 | 100 |
-| Then | `I should see {int} oddities displayed` | 1 | 151 |
-| Then | `I should see an empty {cardTypes} section` | 6 | 165 |
-| Then | `I should see artifact {string} with level {string}` | 1 | 143 |
-| Then | `I should see cypher {string} with level {string}` | 2 | 105 |
-| Then | `I should see descriptor {string} displayed` | 1 | 42 |
-| Then | `I should see empty state for abilities` | 1 | 198 |
-| Then | `I should see empty state for background` | 1 | 178 |
-| Then | `I should see empty state for equipment` | 1 | 194 |
-| Then | `I should see empty state for notes` | 1 | 186 |
-| Then | `I should see focus {string} displayed` | 1 | 46 |
-| Then | `I should see oddity {string}` | 2 | 156 |
-| Then | `I should see sections in this order:` | 1 | 274 |
-| Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 74 |
-| Then | `I should see the character name {string}` | 1 | 28 |
-| Then | `I should see tier {string} displayed` | 1 | 32 |
-| Then | `I should see type {string} displayed` | 1 | 36 |
-| Then | `no markup from the text should be rendered as HTML` | 1 | 249 |
-| Then | `no untranslated text keys should be visible` | 6 | 50 |
-| Given | `the character has a {int}-character name without spaces` | 1 | 256 |
-| Given | `the character has empty text fields` | 1 | 174 |
-| Given | `the character has no {cardTypes}` | 6 | 162 |
-| Given | `the character has the following artifacts:` | 1 | 115 |
-| Given | `the character has the following cyphers:` | 1 | 87 |
-| Given | `the character has the following oddities:` | 1 | 128 |
-| Given | `the character has the following stats:` | 1 | 57 |
-| Given | `the character has the following text:` | 2 | 217 |
-| Then | `the character text should read exactly:` | 2 | 231 |
-| Then | `the page should not scroll horizontally` | 2 | 264 |
+| Given | `I am on the character sheet page` | 47 | 27 |
+| Then | `I should see {int} artifact displayed` | 1 | 142 |
+| Then | `I should see {int} cyphers displayed` | 1 | 104 |
+| Then | `I should see {int} oddities displayed` | 1 | 155 |
+| Then | `I should see an empty {cardTypes} section` | 6 | 168 |
+| Then | `I should see artifact {string} with level {string}` | 1 | 147 |
+| Then | `I should see cypher {string} with level {string}` | 2 | 109 |
+| Then | `I should see descriptor {string} displayed` | 1 | 46 |
+| Then | `I should see empty state for abilities` | 1 | 201 |
+| Then | `I should see empty state for background` | 1 | 181 |
+| Then | `I should see empty state for equipment` | 1 | 197 |
+| Then | `I should see empty state for notes` | 1 | 189 |
+| Then | `I should see focus {string} displayed` | 1 | 50 |
+| Then | `I should see oddity {string}` | 2 | 160 |
+| Then | `I should see sections in this order:` | 1 | 277 |
+| Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 78 |
+| Then | `I should see the character name {string}` | 1 | 32 |
+| Then | `I should see tier {string} displayed` | 1 | 36 |
+| Then | `I should see type {string} displayed` | 1 | 40 |
+| Then | `no markup from the text should be rendered as HTML` | 1 | 252 |
+| Then | `no untranslated text keys should be visible` | 6 | 54 |
+| Given | `the character has a {int}-character name without spaces` | 1 | 259 |
+| Given | `the character has empty text fields` | 1 | 177 |
+| Given | `the character has no {cardTypes}` | 6 | 164 |
+| Given | `the character has the following artifacts:` | 1 | 119 |
+| Given | `the character has the following cyphers:` | 1 | 91 |
+| Given | `the character has the following oddities:` | 1 | 132 |
+| Given | `the character has the following stats:` | 1 | 61 |
+| Given | `the character has the following text:` | 2 | 220 |
+| Then | `the character text should read exactly:` | 2 | 234 |
+| Then | `the page should not scroll horizontally` | 2 | 267 |
 
 ## character-file-export.steps.ts
 
@@ -459,7 +459,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 10 | 245 |
+| Then | `an edit modal should appear` | 10 | 240 |
 | When | `I clear the input field` | 18 | 114 |
 | When | `I click on the {string} value` | 9 | 26 |
 | When | `I click on the character name {string}` | 12 | 73 |
@@ -477,7 +477,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I press the Enter key` | 2 | 177 |
 | When | `I press the Escape key` | 4 | 173 |
 | When | `I reload the page` | 48 | 181 |
-| Then | `I should see the {string} value displayed` | 1 | 204 |
+| Then | `I should see the {string} value displayed` | 1 | 199 |
 | When | `I tap on the {string} value` | 1 | 34 |
 | When | `I tap on the character name {string}` | 4 | 92 |
 | When | `I tap on the tier {string}` | 1 | 97 |
@@ -485,14 +485,14 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I tap the {badge} badge` | 2 | 66 |
 | When | `I tap the modal confirm button` | 3 | 110 |
 | When | `I type {string} in the modal input` | 40 | 118 |
-| Then | `the {string} value should display {string}` | 6 | 213 |
-| Then | `the {string} value should not have changed` | 2 | 222 |
-| Then | `the edit modal should open` | 8 | 246 |
-| Then | `the input field should be focused` | 1 | 262 |
-| Then | `the input field should contain the current {string} value` | 1 | 264 |
-| Then | `the input field should receive focus automatically` | 1 | 261 |
-| Then | `the modal input should contain {string}` | 10 | 252 |
-| Then | `the modal should close` | 21 | 253 |
+| Then | `the {string} value should display {string}` | 6 | 208 |
+| Then | `the {string} value should not have changed` | 2 | 217 |
+| Then | `the edit modal should open` | 8 | 241 |
+| Then | `the input field should be focused` | 1 | 257 |
+| Then | `the input field should contain the current {string} value` | 1 | 259 |
+| Then | `the input field should receive focus automatically` | 1 | 256 |
+| Then | `the modal input should contain {string}` | 10 | 247 |
+| Then | `the modal should close` | 21 | 248 |
 
 ## data-validation.steps.ts
 
@@ -853,5 +853,5 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 19 | 8 |
+| Given | `the viewport is {int} pixels wide` | 19 | 9 |
 

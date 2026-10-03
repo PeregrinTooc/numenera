@@ -51,12 +51,12 @@ Feature: Combat & Special Abilities
         And the empty special abilities state should use translation keys
 
     Scenario: Visual styling for attacks
-        Given the character has an attack "Broadsword"
-        Then the attack "Broadsword" should have red combat theme styling
+        Given the character has an attack "Halberd"
+        Then the attack "Halberd" should have red combat theme styling
 
     Scenario: Visual styling for special abilities
-        Given the character has a special ability "Lightning Bolt"
-        Then the special ability "Lightning Bolt" should have teal theme styling
+        Given the character has a special ability "Storm Call"
+        Then the special ability "Storm Call" should have teal theme styling
 
     Scenario: Two-column layout for combat section
         Given the character has special abilities and attacks

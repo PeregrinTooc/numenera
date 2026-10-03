@@ -44,8 +44,8 @@ Before(async function (this: CustomWorld) {
   if (!descriptor) throw new Error(`Playwright has no device "${DEVICE.descriptor}"`);
   this.context = await browser.newContext({
     ...descriptor,
-    // Kept from before device profiles: touch-gesture scenarios run on every
-    // profile, including desktop.
+    // Kept from before device profiles: the desktop profile needs touch for
+    // tap() and the Chromium touch-gesture scenarios.
     hasTouch: true,
     locale: "en-US",
   });
