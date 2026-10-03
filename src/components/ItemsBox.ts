@@ -102,7 +102,6 @@ export class ItemsBox {
       this.dragState[section].draggedIndex = index;
       this.dragState[section].previewOrder = null;
       dragEvent.dataTransfer?.setData("text/plain", index.toString());
-      dragEvent.dataTransfer?.setData("application/x-section", section);
       item.setAttribute("data-dragging", "true");
     }
   }
@@ -131,25 +130,13 @@ export class ItemsBox {
 
   private handleDrop(e: Event, section: ItemSection, testIdSelector: string): void {
     e.preventDefault();
-    const dragEvent = e as globalThis.DragEvent;
     const state = this.dragState[section];
 
-    // Check section to prevent cross-section drops
-    const sourceSection = dragEvent.dataTransfer?.getData("application/x-section");
-    if (sourceSection !== section) {
-      this.handleDragEnd(e, section, testIdSelector);
-      return;
-    }
-
-    let draggedIndex = state.draggedIndex;
+    // A drag that started in another section leaves this section's state
+    // untouched, so a null index means the drag is not ours. Decided from
+    // component state because WebKit drops custom dataTransfer types.
+    const draggedIndex = state.draggedIndex;
     if (draggedIndex === null) {
-      const transferData = dragEvent.dataTransfer?.getData("text/plain");
-      if (transferData) {
-        draggedIndex = parseInt(transferData, 10);
-      }
-    }
-
-    if (draggedIndex === null || isNaN(draggedIndex)) {
       this.handleDragEnd(e, section, testIdSelector);
       return;
     }
