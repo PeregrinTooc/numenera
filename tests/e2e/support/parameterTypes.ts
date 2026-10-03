@@ -34,3 +34,20 @@ defineParameterType({
   regexp: /shins|armor|effort|max cyphers/,
   transformer: (s: string) => RESOURCE_FIELDS[s],
 });
+
+// Plural card words as written in empty-state steps, mapped to the
+// data-testid of that section's empty-state element.
+const EMPTY_STATE_TEST_IDS: Record<string, string> = {
+  cyphers: "empty-cyphers",
+  artifacts: "empty-artifacts",
+  oddities: "empty-oddities",
+  attacks: "empty-attacks",
+  abilities: "empty-abilities",
+  "special abilities": "empty-special-abilities",
+};
+
+defineParameterType({
+  name: "cardTypes",
+  regexp: /special abilities|abilities|cyphers|artifacts|oddities|attacks/,
+  transformer: (s: string) => EMPTY_STATE_TEST_IDS[s],
+});

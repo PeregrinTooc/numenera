@@ -1,7 +1,6 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
-import { waitForCharacterSheetReady } from "../support/app-ready.js";
 
 // ============================================================================
 // SETUP STEPS - Create cyphers for testing
@@ -16,24 +15,10 @@ Given(
 );
 
 async function setupCyphersWithNames(world: CustomWorld, names: string[]): Promise<void> {
-  // Create cyphers with specific names
-  const cyphers = names.map((name) => ({
-    name,
-    level: "1d6",
-    effect: `Effect of ${name}`,
-  }));
-
-  // Use TestStorageHelper to interact with the app's actual storage (IndexedDB)
-  // Get current character state and update cyphers
-  const character = await world.storageHelper.getCharacter();
-  if (character) {
+  const cyphers = names.map((name) => ({ name, level: "1d6", effect: `Effect of ${name}` }));
+  await world.setup.updateCharacter((character) => {
     character.cyphers = cyphers;
-    await world.storageHelper.setCharacter(character);
-  }
-
-  // Reload page to reflect changes
-  await world.page.reload();
-  await waitForCharacterSheetReady(world.page);
+  });
   await world.page.waitForSelector('[data-testid="cyphers-section"]');
 }
 
@@ -251,14 +236,9 @@ async function setupAbilitiesWithNames(world: CustomWorld, names: string[]): Pro
     action: "Action",
   }));
 
-  const character = await world.storageHelper.getCharacter();
-  if (character) {
+  await world.setup.updateCharacter((character) => {
     character.abilities = abilities;
-    await world.storageHelper.setCharacter(character);
-  }
-
-  await world.page.reload();
-  await waitForCharacterSheetReady(world.page);
+  });
   await world.page.waitForSelector('[data-testid="abilities-section"]');
 }
 

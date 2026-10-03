@@ -45,57 +45,75 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 ## 📊 Current Status
 
 **Test Coverage**: `npm run test:unit` — 901 tests passing. `npm run test:e2e:prod` —
-405 scenarios passing, 14 `@skip`ped (see below for why). The 365/16 figure
-previously recorded here was stale (never re-measured); re-verified at the
-start of `tests/implementation-plan.md` Phase 1, and again after the
-section-dnd-e2e branch automated the section-drag scenarios.  
+412 scenarios passing, 7 `@skip`ped (all in `section-rearrangement.feature`,
+waiting on Grid Merge/Split below). 681 step definitions, all used
+(`npm run check:steps`). Re-measured after the test tech-debt cleanup
+(`docs/superpowers/plans/2026-09-27-test-tech-debt-cleanup.md`).  
 **Documentation**: See [FEATURES.md](./FEATURES.md) for complete feature list
 
 ---
 
 ## 🚨 Must-Have (Technical Debt)
 
-### Test Suite DSL Consolidation
+### Cucumber suite never exercises the Rule 9 device profiles
 
-`tests/analysis.md` found no common test DSL, ~131 unreachable Cucumber step
-definitions, and twelve independent unit character factories. The ordered,
-per-commit plan is in `tests/implementation-plan.md` (Phase 1: delete dead
-code; Phases 3–4: `CustomWorld` DSL and one `createTestCharacter` factory;
-Phase 7: consolidate Gherkin wording). The step catalog
-(`tests/e2e/STEP_CATALOG.md`, `npm run docs:steps`) and the `check:steps`
-guardrail already exist.
-
-### Undocumented `@skip` Scenarios in character-display.feature
-
-**Overview**  
-`character-display.feature:99-149` has 7 `@skip` scenarios (responsive
-mobile/tablet/desktop layouts, tier-3 cypher limit, special characters, long
-text, section order) that were never implemented — zero matching step
-definitions, unrelated to the drag/drop limitation above. Found during
-`tests/implementation-plan.md` Phase 7 (`npm run docs:steps` catalog's
-"Feature lines with no matching step definition" section) and previously
-untracked anywhere.
-
-**Decision needed**
-
-- Implement the steps (real feature work, needs its own planning), or
-- Delete the scenarios if the behaviour they describe is out of scope
-
-### Ability / Special-Ability Wording Unification (blocked on shared code)
-
-**Overview**  
-`ability-enhancements.steps.ts` and `combat.steps.ts` separately hardcode
-`the character has no abilities` / `no special abilities` and the matching
-empty-section assertions. They don't fit the existing `{cardType}` parameter
-type cleanly (irregular pluralisation, split across two files), so Phase 7
-of `tests/implementation-plan.md` left this family alone rather than forcing
-a wording-only fix onto what is really a shared-helper gap.
+**Overview**
+`tests/e2e/support/hooks.ts` launches one desktop Chromium context (default
+1280×720) for every scenario. The Desktop Chrome / Pixel 5 / iPhone 12 / iPad
+Pro projects in `playwright.config.ts` only apply to `playwright test`, which
+runs no Gherkin. So Rule 9 ("features must work on all of them") is not
+checked by the suite CI runs; only scenarios that call `setViewportSize`
+themselves (e.g. `the viewport is {int} pixels wide`) see other widths. Found
+when `character-display.feature`'s overflow outline exposed two layout bugs
+(long names, attack badges at 320px) that no existing scenario had caught.
 
 **Goals**
 
-- Extend `{cardType}` (or add a sibling parameter type) to cover "ability" /
-  "special ability" pluralisation
-- Then collapse the two files' near-duplicate Given/Then pairs onto it
+- Decide how Rule 9 is enforced: run the Cucumber suite once per device
+  profile (a `DEVICE` env var read in `hooks.ts`, one CI job each), or tag
+  the viewport-sensitive scenarios and run only those per profile
+- Update `docs/rules/testing.md` to say which one it is
+- Until then, `character-display.feature`'s no-sideways-scroll outline works
+  around the gap by naming five widths explicitly (320, 390, 393, 1024, 1280)
+
+### `a character exists with the following data:` ignores its table
+
+**Overview**
+`character-display.feature`'s Background passes a data table that
+`character-display.steps.ts` discards; the scenarios pass only because the
+default character happens to match. Wire it to `this.setup.character()` or
+delete the Background.
+
+### Tracked elsewhere
+
+Open debt that has its own home, listed here so the backlog is complete. The
+detail lives in the linked file.
+
+- [RULE_VIOLATIONS.md](./RULE_VIOLATIONS.md) "Open": `@/` path aliases barely
+  used, `any` usages with `no-explicit-any` only warning, files over 300 lines,
+  swallowed storage write errors, `console.log` in `src/`, and the E2E import
+  path bypassing the real sanitizer
+- [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) "Not addressed":
+  `beforeunload` flushing of the buffered version-history change needs a
+  deliberate decision
+
+---
+
+## 🧹 Should-Have (Minor Debt)
+
+Left over from the PR #9 review; none of these breaks a scenario today.
+
+- **Long attack names at 320px.** An attack name with no spaces can still
+  overflow the card at 320px, and when the damage/modifier badges wrap onto
+  their own line they sit on the left instead of the right
+- **Export capture is fragile.** `tests/e2e/support/exportCapture.ts` has no
+  timeout of its own and swallows errors from the blob `fetch`, so a broken
+  export surfaces as an unrelated wait timeout
+- **Four ways to set the viewport.** `I am using a mobile device`,
+  `I am using a phone-width viewport`, `I am using a tablet-width viewport` and
+  `the viewport is {int} pixels wide` overlap; collapse them onto the last one
+- **Dead weight in the overflow outline.** Its 600-character background adds
+  nothing, because the textarea wraps internally
 
 ---
 
@@ -106,10 +124,12 @@ a wording-only fix onto what is really a shared-helper gap.
 **Overview**  
 `CharacterSheet.mergeSections()`, `splitGrid()`, `updateLayout()` and `getLayout()`
 are implemented and unit-tested in isolation, but have zero callers — `handleDrop`
-only ever calls `reorderSections`. Separately, `fileStorage.ts` already computes a
-`hasLayoutDifference` flag on import that `main.ts`'s `handleLoadFromFile` reads
-but discards. Decided: build this rather than delete the dead code — see
-`docs/PROJECT_REVIEW.md` §2.7 for the original defect writeup.
+only ever calls `reorderSections`. Separately, `fileStorage.ts` already computes
+`layout` and a `hasLayoutDifference` flag on import, but `main.ts`'s
+`handleLoadFromFile` reads only `character` and `warnings`, so the imported
+layout is dropped. Decided: build this rather than delete the dead code — see
+`docs/IMPLEMENTATION_PLAN.md` §3.1 (the original review, `PROJECT_REVIEW.md`
+§2.7, was removed in `ad0f8b5` and is in git history).
 
 **Goals**
 
@@ -200,6 +220,8 @@ Add help modals with game reference information for character types, descriptors
   - Search cypher reference
   - View artifact and oddity descriptions
 
+### Character Sharing
+
 **Overview**  
 Share characters with other players via export links or shareable JSON.
 
@@ -259,4 +281,4 @@ Let the gamemaster prepare cards (cyphers, artifacts...) and export them as file
 
 ---
 
-**Last Updated**: September 27, 2026
+**Last Updated**: October 3, 2026

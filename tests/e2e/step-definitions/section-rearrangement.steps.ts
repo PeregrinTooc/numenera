@@ -15,6 +15,7 @@ import {
   TouchGesture,
   withFullHeightViewport,
 } from "../support/sections.js";
+import type { LayoutItem, SectionId } from "../../../src/types/layout.js";
 
 // ============================================
 // Edit Mode Entry/Exit Steps
@@ -172,26 +173,16 @@ Then("it should be touch-friendly", async function (this: CustomWorld) {
 // ============================================
 
 Given("I have customized the layout", async function (this: CustomWorld) {
-  const page = this.page;
-
-  // Save a custom layout to localStorage
-  await page.evaluate(() => {
-    const customLayout = [
-      { type: "single", id: "basicInfo" },
-      { type: "single", id: "stats" },
-      { type: "single", id: "recoveryDamage" },
-      { type: "single", id: "cyphers" }, // Moved cyphers up
-      { type: "single", id: "abilities" },
-      { type: "grid", items: ["specialAbilities", "attacks"] },
-      { type: "single", id: "items" },
-      { type: "grid", items: ["background", "notes"] },
-    ];
-    localStorage.setItem("numenera-layout", JSON.stringify(customLayout));
-  });
-
-  // Reload to apply the custom layout
-  await page.reload();
-  await page.waitForSelector('[data-testid="character-name"]');
+  await this.setup.layout([
+    { type: "single", id: "basicInfo" },
+    { type: "single", id: "stats" },
+    { type: "single", id: "recoveryDamage" },
+    { type: "single", id: "cyphers" }, // moved up
+    { type: "single", id: "abilities" },
+    { type: "grid", items: ["specialAbilities", "attacks"] },
+    { type: "single", id: "items" },
+    { type: "grid", items: ["background", "notes"] },
+  ]);
 });
 
 Given("I open the settings panel", async function (this: CustomWorld) {
@@ -228,16 +219,7 @@ Then("the {string} option should be enabled", async function (this: CustomWorld,
 });
 
 Given("I have the default layout", async function (this: CustomWorld) {
-  const page = this.page;
-
-  // Remove any custom layout from localStorage
-  await page.evaluate(() => {
-    localStorage.removeItem("numenera-layout");
-  });
-
-  // Reload to apply default layout
-  await page.reload();
-  await page.waitForSelector('[data-testid="character-name"]');
+  await this.setup.layout(null);
 });
 
 // ============================================
@@ -286,39 +268,23 @@ Given(
   "I have moved the {string} section to the top",
   async function (this: CustomWorld, sectionName: string) {
     const page = this.page;
-
     const id = sectionId(sectionName);
 
-    // Move the section to top by modifying the layout in localStorage
-    // Create a proper layout with the section at top of rearrangeable sections
-    await page.evaluate((id) => {
-      // Build a layout with the section moved to the top of rearrangeable sections
-      const fixedSections = ["basicInfo", "stats", "recoveryDamage"];
-      const rearrangeableSections = [
-        "abilities",
-        "specialAbilities",
-        "attacks",
-        "cyphers",
-        "items",
-        "background",
-        "notes",
-      ];
-
-      // Remove the section from rearrangeableSections and put it first
-      const filtered = rearrangeableSections.filter((existingId) => existingId !== id);
-      const newOrder = [id, ...filtered];
-
-      const layout = [
-        ...fixedSections.map((id) => ({ type: "single", id })),
-        ...newOrder.map((id) => ({ type: "single", id })),
-      ];
-
-      localStorage.setItem("numenera-layout", JSON.stringify(layout));
-    }, id);
-
-    // Reload to apply the new layout
-    await page.reload();
-    await page.waitForSelector('[data-testid="character-name"]');
+    // Put the section first among the rearrangeable sections, all single-column
+    const fixed: SectionId[] = ["basicInfo", "stats", "recoveryDamage"];
+    const rearrangeable: SectionId[] = [
+      "abilities",
+      "specialAbilities",
+      "attacks",
+      "cyphers",
+      "items",
+      "background",
+      "notes",
+    ];
+    const order = [id, ...rearrangeable.filter((existing) => existing !== id)];
+    await this.setup.layout(
+      [...fixed, ...order].map((sid): LayoutItem => ({ type: "single", id: sid }))
+    );
 
     // Re-enter layout edit mode since we reloaded
     await page.click('[data-testid="edit-layout-button"]');
@@ -472,28 +438,17 @@ Given(
     const id1 = sectionId(section1);
     const id2 = sectionId(section2);
 
-    // Set up a grid layout
-    await page.evaluate(
-      ({ id1, id2 }) => {
-        const layout = [
-          { type: "single", id: "basicInfo" },
-          { type: "single", id: "stats" },
-          { type: "single", id: "recoveryDamage" },
-          { type: "single", id: "abilities" },
-          { type: "single", id: "specialAbilities" },
-          { type: "single", id: "attacks" },
-          { type: "single", id: "cyphers" },
-          { type: "single", id: "items" },
-          { type: "grid", items: [id1, id2] },
-        ];
-        localStorage.setItem("numenera-layout", JSON.stringify(layout));
-      },
-      { id1, id2 }
-    );
-
-    // Reload to apply
-    await page.reload();
-    await page.waitForSelector('[data-testid="character-name"]');
+    await this.setup.layout([
+      { type: "single", id: "basicInfo" },
+      { type: "single", id: "stats" },
+      { type: "single", id: "recoveryDamage" },
+      { type: "single", id: "abilities" },
+      { type: "single", id: "specialAbilities" },
+      { type: "single", id: "attacks" },
+      { type: "single", id: "cyphers" },
+      { type: "single", id: "items" },
+      { type: "grid", items: [id1, id2] },
+    ]);
 
     // Re-enter edit mode
     await page.click('[data-testid="edit-layout-button"]');
@@ -538,75 +493,10 @@ Then("{string} should be in its own row", async function (this: CustomWorld, sec
 // Export/Import Steps
 // ============================================
 
-When("I export the character", async function (this: CustomWorld) {
-  const page = this.page;
-
-  // Mock the file export functionality to capture the data
-  await page.evaluate(() => {
-    // Clear previous data
-    delete (window as any).__exportedData;
-
-    // Mock showSaveFilePicker (Chromium) - used by ExportManager
-    (window as any).showSaveFilePicker = async (options: any) => {
-      // Return a mock file handle
-      return {
-        name: options.suggestedName,
-        kind: "file",
-        createWritable: async () => ({
-          write: async (data: string) => {
-            // Capture the exported data
-            (window as any).__exportedData = data;
-          },
-          close: async () => {},
-        }),
-        queryPermission: async () => "granted",
-      };
-    };
-
-    // Store original createElement
-    const originalCreateElement = document.createElement.bind(document);
-
-    // Mock createElement for blob download (Safari/Firefox fallback)
-    document.createElement = function (tagName: string) {
-      const element = originalCreateElement(tagName);
-      if (tagName === "a") {
-        // Override click to capture download info
-        element.click = function () {
-          const anchor = element as any;
-
-          // Extract data from blob URL if present
-          if (anchor.href && anchor.href.startsWith("blob:")) {
-            window
-              .fetch(anchor.href)
-              .then((res: any) => res.text())
-              .then((data: any) => {
-                (window as any).__exportedData = data;
-              });
-          }
-        };
-      }
-      return element;
-    };
-  });
-
-  // Click the export button
-  await page.click('[data-testid="export-button"]');
-
-  // Wait for the export to complete
-  await page.waitForTimeout(1000);
-
-  // Retrieve the captured data
-  const capturedData = await page.evaluate(() => {
-    return (window as any).__exportedData;
-  });
-
-  this.exportedLayoutData = capturedData ? JSON.parse(capturedData) : null;
-});
-
 Then(
   "the exported file should contain the layout configuration",
   async function (this: CustomWorld) {
-    const data = this.exportedLayoutData;
+    const data = this.exportedFileData;
     if (!data) {
       throw new Error("No exported data available");
     }

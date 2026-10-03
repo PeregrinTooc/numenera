@@ -1,6 +1,9 @@
-import { Given, Then } from "@cucumber/cucumber";
+import { Given, Then, type DataTable } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { waitForCharacterSheetReady, startNewCharacter } from "../support/app-ready.js";
+import type { CustomWorld } from "../support/world.js";
+import type { Character } from "../../../src/types/character.js";
+import { sectionId } from "../support/sections.js";
 
 Given("a character exists with the following data:", function (_dataTable) {
   // Test data is defined in the feature file Background
@@ -158,31 +161,16 @@ Then("all text field labels should use translation keys", async function () {
   // For minimal implementation, we'll skip i18n validation
 });
 
-// Scenario 6: View empty character items sections
-Given("the character has no cyphers", async function () {
-  // Click the "New" button to start with empty character
+Given("the character has no {cardTypes}", async function (this: CustomWorld, _emptyTestId: string) {
   await startNewCharacter(this.page, this.getBaseUrl());
 });
 
-Given("the character has no artifacts", function () {
-  // Already navigated with empty parameter
-});
-
-Given("the character has no oddities", function () {
-  // Already navigated with empty parameter
-});
-
-Then("I should see an empty cyphers section", async function () {
-  await expect(this.dom.getByTestId("empty-cyphers")).toBeVisible();
-});
-
-Then("I should see an empty artifacts section", async function () {
-  await expect(this.dom.getByTestId("empty-artifacts")).toBeVisible();
-});
-
-Then("I should see an empty oddities section", async function () {
-  await expect(this.dom.getByTestId("empty-oddities")).toBeVisible();
-});
+Then(
+  "I should see an empty {cardTypes} section",
+  async function (this: CustomWorld, emptyTestId: string) {
+    await expect(this.dom.getByTestId(emptyTestId)).toBeVisible();
+  }
+);
 
 Then("empty states should use translation keys", async function () {
   // For minimal implementation, we'll skip i18n validation
@@ -216,4 +204,91 @@ Then("I should see empty state for equipment", async function () {
 
 Then("I should see empty state for abilities", async function () {
   await expect(this.dom.getByTestId("empty-abilities")).toBeVisible();
+});
+
+// Scenario: Text with quotes, ampersands and angle brackets is shown verbatim
+type TextRow = { Field: string; Content: string };
+
+const TEXT_FIELD_SETTERS: Record<string, (character: Character, value: string) => void> = {
+  Name: (character, value) => {
+    character.name = value;
+  },
+  Background: (character, value) => {
+    character.textFields.background = value;
+  },
+};
+
+Given(
+  "the character has the following text:",
+  async function (this: CustomWorld, table: DataTable) {
+    const rows = table.hashes() as TextRow[];
+    await this.setup.updateCharacter((character) => {
+      for (const { Field, Content } of rows) {
+        const set = TEXT_FIELD_SETTERS[Field];
+        if (!set) throw new Error(`Unknown text field: ${Field}`);
+        set(character, Content);
+      }
+    });
+  }
+);
+
+Then(
+  "the character text should read exactly:",
+  async function (this: CustomWorld, table: DataTable) {
+    for (const { Field, Content } of table.hashes() as TextRow[]) {
+      if (Field === "Name") {
+        await expect(this.dom.getByTestId("character-name")).toHaveText(Content);
+      } else if (Field === "Background") {
+        // Background renders as a <textarea>, so its text is the element's value.
+        await expect(this.dom.getByTestId("character-background")).toHaveValue(Content);
+      } else {
+        throw new Error(`Unknown text field: ${Field}`);
+      }
+    }
+  }
+);
+
+Then("no markup from the text should be rendered as HTML", async function (this: CustomWorld) {
+  // "<Unknown Location>" would parse as an <unknown> element if interpolated as HTML.
+  await expect(this.page.locator("unknown")).toHaveCount(0);
+});
+
+// Scenario Outline: Long unbroken text does not make the sheet scroll sideways
+Given("the viewport is {int} pixels wide", async function (this: CustomWorld, width: number) {
+  await this.page.setViewportSize({ width, height: 800 });
+});
+
+Given(
+  "the character has a {int}-character name without spaces",
+  async function (this: CustomWorld, length: number) {
+    await this.setup.updateCharacter((character) => {
+      character.name = "W".repeat(length);
+    });
+  }
+);
+
+Given(
+  "the character has a {int}-character background without spaces",
+  async function (this: CustomWorld, length: number) {
+    await this.setup.updateCharacter((character) => {
+      character.textFields.background = "W".repeat(length);
+    });
+  }
+);
+
+Then("the page should not scroll horizontally", async function (this: CustomWorld) {
+  const { scrollWidth, clientWidth } = await this.page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    clientWidth: document.documentElement.clientWidth,
+  }));
+  expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+});
+
+// Scenario: Sections appear in the default layout order
+Then("I should see sections in this order:", async function (this: CustomWorld, table: DataTable) {
+  const expected = table.raw().map(([name]) => sectionId(name));
+  const actual = await this.page
+    .locator("[data-section-id]")
+    .evaluateAll((els) => els.map((el) => el.getAttribute("data-section-id")));
+  expect(actual).toEqual(expected);
 });

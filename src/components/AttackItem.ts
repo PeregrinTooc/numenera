@@ -135,7 +135,7 @@ export class AttackItem {
           colorTheme: "red",
         })}
 
-        <div class="attack-header flex justify-between items-start mb-2 pr-8 pl-8">
+        <div class="attack-header flex flex-wrap justify-between items-start gap-2 mb-2 pr-8 pl-8">
           <h4
             data-testid="attack-name-${this.attack.name}"
             class="attack-name font-bold text-lg text-red-900"

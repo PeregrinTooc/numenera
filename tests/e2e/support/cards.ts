@@ -5,7 +5,6 @@ import {
   createTestCharacterWithCardCount,
   createEmptyAbilitiesCharacter,
 } from "./cardTestFixtures.js";
-import { waitForCharacterSheetReady } from "./app-ready.js";
 
 export class CardsDsl {
   constructor(private world: CustomWorld) {}
@@ -31,9 +30,7 @@ export class CardsDsl {
     if (cardType === "ability" && count === 0) {
       await this.page.evaluate(() => localStorage.clear());
       await this.world.storageHelper.clearVersions();
-      await this.world.storageHelper.setCharacter(createEmptyAbilitiesCharacter());
-      await this.page.reload();
-      await waitForCharacterSheetReady(this.page);
+      await this.world.setup.replaceCharacter(createEmptyAbilitiesCharacter());
       return;
     }
 
@@ -44,12 +41,7 @@ export class CardsDsl {
     }
 
     if (count > 0) {
-      const character = createTestCharacterWithCardCount(cardType, count);
-      await this.page.waitForTimeout(500);
-      await this.world.storageHelper.setCharacter(character);
-      await this.page.waitForTimeout(500);
-      await this.page.reload();
-      await waitForCharacterSheetReady(this.page);
+      await this.world.setup.replaceCharacter(createTestCharacterWithCardCount(cardType, count));
       await this.page.waitForSelector(config.itemTestId, { timeout: 5000 });
     }
   }

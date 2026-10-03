@@ -121,7 +121,8 @@ Feature: Version History (Character Time Travel)
         Then the character name should be "Edited Before Navigating"
 
     Scenario: Version description shows what changed
-        Given the character has a version with name change
+        Given the character has a version with a name change
+        And the character has a later version
         And I am viewing that version
         Then the version description should contain "Changed name"
         And the timestamp should be in human-readable format
@@ -174,7 +175,7 @@ Feature: Version History (Character Time Travel)
     Scenario: Export works from old version
         Given the character has 3 versions in history
         And I am viewing version 1
-        When I click the export button
+        When I export the character
         Then the exported file should contain version 1 data
         And the exported file should not contain version history
         And the exported file should use the current portrait

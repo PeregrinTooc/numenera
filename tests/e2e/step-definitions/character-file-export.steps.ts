@@ -1,6 +1,7 @@
 import { When, Then, Given } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
-import { CustomWorld } from "../support/world.js";
+import type { CustomWorld, ExportedCharacterFile } from "../support/world.js";
+import { installExportCapture, waitForExportCapture } from "../support/exportCapture.js";
 
 // Scenario: Export button creates downloadable file
 Given("the character has name {string}", async function (this: CustomWorld, name: string) {
@@ -32,81 +33,12 @@ Given("the character has name {string}", async function (this: CustomWorld, name
   await expect(nameElement).toHaveText(name, { timeout: 5000 });
 });
 
-When("I click the export button", async function (this: CustomWorld) {
-  // Mock the file export functionality to capture the data
-  await this.page.evaluate(() => {
-    // Clear previous data
-    delete (window as any).__exportedFilename;
-    delete (window as any).__exportedData;
-
-    // Mock showSaveFilePicker (Chromium) - used by ExportManager
-    (window as any).showSaveFilePicker = async (options: any) => {
-      // Capture the filename
-      (window as any).__exportedFilename = options.suggestedName;
-
-      // Return a mock file handle
-      return {
-        name: options.suggestedName,
-        kind: "file",
-        createWritable: async () => ({
-          write: async (data: string) => {
-            // Capture the exported data
-            (window as any).__exportedData = data;
-          },
-          close: async () => {},
-        }),
-        queryPermission: async () => "granted",
-      };
-    };
-
-    // Store original createElement
-    const originalCreateElement = document.createElement.bind(document);
-
-    // Mock createElement for blob download (Safari/Firefox fallback)
-    document.createElement = function (tagName: string) {
-      const element = originalCreateElement(tagName);
-      if (tagName === "a") {
-        // Override click to capture download info
-        element.click = function () {
-          const anchor = element as any;
-          (window as any).__exportedFilename = anchor.download;
-
-          // Extract data from blob URL if present
-          if (anchor.href && anchor.href.startsWith("blob:")) {
-            window
-              .fetch(anchor.href)
-              .then((res: any) => res.text())
-              .then((data: any) => {
-                (window as any).__exportedData = data;
-              });
-          }
-
-          // Don't actually trigger download in test
-        };
-      }
-      return element;
-    };
-  });
-
-  // Click the export button
-  const exportButton = this.page.getByTestId("export-button");
-  await exportButton.click();
-
-  // Wait for the export to complete
-  await this.page.waitForTimeout(1000);
-
-  // Retrieve the captured data
-  const capturedData = await this.page.evaluate(() => {
-    return {
-      filename: (window as any).__exportedFilename,
-      data: (window as any).__exportedData,
-    };
-  });
-
-  this.exportedFilename = capturedData.filename;
-  if (capturedData.data) {
-    this.exportedFileData = JSON.parse(capturedData.data);
-  }
+When("I export the character", async function (this: CustomWorld) {
+  await installExportCapture(this.page);
+  await this.page.getByTestId("export-button").click();
+  const captured = await waitForExportCapture(this.page);
+  this.exportedFilename = captured.filename;
+  this.exportedFileData = JSON.parse(captured.data) as ExportedCharacterFile;
 });
 
 Then("a file export should be triggered", async function (this: CustomWorld) {

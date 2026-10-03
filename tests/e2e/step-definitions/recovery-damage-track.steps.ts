@@ -1,7 +1,8 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { waitForSaveComplete } from "../support/save.js";
-import { waitForCharacterSheetReady } from "../support/app-ready.js";
+import type { CustomWorld } from "../support/world.js";
+import type { DamageTrack } from "../../../src/types/character.js";
 
 // Recovery Rolls step definitions
 
@@ -68,20 +69,10 @@ Then(
   }
 );
 
-Given("the character is {string}", async function (impairmentStatus: string) {
-  // Use TestStorageHelper to modify character with IndexedDB
-  const character = await this.storageHelper.getCharacter();
-
-  if (character && character.damageTrack) {
-    character.damageTrack.impairment = impairmentStatus;
-    await this.page.waitForTimeout(500);
-    await this.storageHelper.setCharacter(character);
-  }
-
-  // Reload page to pick up the changes
-  await this.page.waitForTimeout(500);
-  await this.page.reload();
-  await waitForCharacterSheetReady(this.page);
+Given("the character is {string}", async function (this: CustomWorld, impairmentStatus: string) {
+  await this.setup.updateCharacter((character) => {
+    character.damageTrack.impairment = impairmentStatus as DamageTrack["impairment"];
+  });
 
   // Wait for damage track section to be visible and correct radio button to be selected
   await this.page.waitForSelector('[data-testid="damage-track-section"]', { state: "visible" });
@@ -130,34 +121,27 @@ Then("the damage track section should have red styling", async function () {
 
 // Recovery modifier step definitions
 
-Given("the character has recovery modifier {int}", async function (modifier: number) {
-  // Use TestStorageHelper to modify character with IndexedDB
-  const character = await this.storageHelper.getCharacter();
+Given(
+  "the character has recovery modifier {int}",
+  async function (this: CustomWorld, modifier: number) {
+    await this.setup.updateCharacter((character) => {
+      character.recoveryRolls.modifier = modifier;
+    });
 
-  if (character && character.recoveryRolls) {
-    character.recoveryRolls.modifier = modifier;
-    await this.page.waitForTimeout(500);
-    await this.storageHelper.setCharacter(character);
+    // Wait for recovery modifier display to show correct value
+    // The display shows "1d6 + X" format
+    await this.page.waitForFunction(
+      (expectedModifier: number) => {
+        const display = document.querySelector('[data-testid="recovery-modifier-display"]');
+        const sign = expectedModifier >= 0 ? "+" : "";
+        const expectedText = `1d6 ${sign} ${expectedModifier}`;
+        return display?.textContent?.includes(expectedText) === true;
+      },
+      modifier,
+      { timeout: 2000 }
+    );
   }
-
-  // Reload page to pick up the changes
-  await this.page.waitForTimeout(500);
-  await this.page.reload();
-  await waitForCharacterSheetReady(this.page);
-
-  // Wait for recovery modifier display to show correct value
-  // The display shows "1d6 + X" format
-  await this.page.waitForFunction(
-    (expectedModifier: number) => {
-      const display = document.querySelector('[data-testid="recovery-modifier-display"]');
-      const sign = expectedModifier >= 0 ? "+" : "";
-      const expectedText = `1d6 ${sign} ${expectedModifier}`;
-      return display?.textContent?.includes(expectedText) === true;
-    },
-    modifier,
-    { timeout: 2000 }
-  );
-});
+);
 
 Then("I should see {string} in the recovery section", async function (text: string) {
   const recoverySection = this.dom.getByTestId("recovery-rolls-section");

@@ -67,33 +67,15 @@ Given("I am viewing version {int}", async function (this: CustomWorld, versionNu
   }
 });
 
-Given("the character has a version with name change", async function (this: CustomWorld) {
-  // Wait for page to be fully loaded before creating versions
-  await this.page.waitForLoadState("networkidle");
-  await this.page.waitForTimeout(500);
-
-  // Create a version with a name change
-  // Note: Version 1 is "Initial state", so this creates version 2 with "Changed name"
-  const baseCharacter = await this.storageHelper.getCharacter();
-  const versionCharacter = {
-    ...baseCharacter,
-    name: "New Name",
-  };
-  await this.storageHelper.createVersion(versionCharacter, "Changed name");
-
-  // Wait for version navigator to show updated count (2 versions)
-  const versionCounter = this.page.locator('[data-testid="version-counter"]');
-  await expect(versionCounter).toContainText("Version 2 of 2", { timeout: 10000 });
-
-  // Create one more version so we can navigate back to see version 2's description
-  const anotherCharacter = {
-    ...versionCharacter,
-    name: "Latest Version",
-  };
-  await this.storageHelper.createVersion(anotherCharacter, "Another change");
-
-  // Wait for version navigator to show updated count (3 versions)
-  await expect(versionCounter).toContainText("Version 3 of 3", { timeout: 10000 });
+Given("the character has a later version", async function (this: CustomWorld) {
+  const versions = await this.storageHelper.getAllVersions();
+  const latest = versions[versions.length - 1].character;
+  await this.storageHelper.createVersion({ ...latest, name: "Latest Version" }, "Another change");
+  const count = versions.length + 1;
+  await expect(this.page.locator('[data-testid="version-counter"]')).toContainText(
+    `Version ${count} of ${count}`,
+    { timeout: 10000 }
+  );
 });
 
 Given(
@@ -261,12 +243,10 @@ Given("the character has a portrait image", async function (this: CustomWorld) {
   // Set a portrait on the character (base64 encoded 1x1 pixel)
   const portrait =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
-  const character = await this.storageHelper.getCharacter();
-  character.portrait = portrait;
-  await this.storageHelper.setCharacter(character);
+  await this.setup.updateCharacter((character) => {
+    character.portrait = portrait;
+  });
   this.uploadedPortrait = portrait;
-  await this.page.reload();
-  await waitForCharacterSheetReady(this.page);
 });
 
 Given(
@@ -297,7 +277,7 @@ Given(
 
 Given("I am viewing that version", async function (this: CustomWorld) {
   // Navigate backward to view the version we're interested in
-  // For "version with name change": We created 3 versions, click back once to see v2
+  // For "a version with a name change" + "a later version": 3 versions, click back once to see v2
   // For "version from X minutes ago": We created 2 versions, click back once to see v1
   const backwardArrow = this.page.locator('[data-testid="version-nav-backward"]');
   await backwardArrow.click();
@@ -505,7 +485,7 @@ When("I create a new version by editing the name", async function (this: CustomW
   await this.page.waitForTimeout(200);
 });
 
-// Note: "I click the export button" already exists in character-file-export.steps.ts
+// Note: "I export the character" is defined in character-file-export.steps.ts
 // Note: "I edit the character name" can use the existing step with parameter
 
 // Then steps
@@ -817,57 +797,24 @@ Then("the portrait should remain unchanged", async function (this: CustomWorld) 
 Then(
   "the exported file should contain version {int} data",
   async function (this: CustomWorld, versionNumber: number) {
-    // Wait for export to complete
-    await this.page.waitForTimeout(1000);
-
-    // Retrieve the captured data from window (same as character-file-export.steps.ts)
-    const capturedData = await this.page.evaluate(() => {
-      return {
-        data: (window as any).__exportedData,
-      };
-    });
-
-    expect(capturedData.data).toBeTruthy();
-    const exportedData = JSON.parse(capturedData.data);
-
-    // Verify it matches the expected version
+    const exported = this.exportedFileData;
+    expect(exported).toBeTruthy();
     const versions = await this.storageHelper.getAllVersions();
-    const expectedVersion = versions[versionNumber - 1];
-    expect(exportedData.character.name).toBe(expectedVersion.character.name);
+    expect(exported?.character.name).toBe(versions[versionNumber - 1].character.name);
   }
 );
 
 Then("the exported file should not contain version history", async function (this: CustomWorld) {
-  // Retrieve the captured data from window (same as character-file-export.steps.ts)
-  const capturedData = await this.page.evaluate(() => {
-    return {
-      data: (window as any).__exportedData,
-    };
-  });
-
-  expect(capturedData.data).toBeTruthy();
-  const exportedData = JSON.parse(capturedData.data);
-
-  // Version history should not be in the exported file
-  expect(exportedData.versionHistory).toBeUndefined();
+  const exported = this.exportedFileData;
+  expect(exported).toBeTruthy();
+  expect(exported?.versionHistory).toBeUndefined();
 });
 
 Then("the exported file should use the current portrait", async function (this: CustomWorld) {
-  // Get the current character's portrait
+  const exported = this.exportedFileData;
+  expect(exported).toBeTruthy();
   const currentChar = await this.storageHelper.getCharacter();
-
-  // Retrieve the captured data from window (same as character-file-export.steps.ts)
-  const capturedData = await this.page.evaluate(() => {
-    return {
-      data: (window as any).__exportedData,
-    };
-  });
-
-  expect(capturedData.data).toBeTruthy();
-  const exportedData = JSON.parse(capturedData.data);
-
-  // Portrait should match current character's portrait
-  expect(exportedData.character.portrait).toBe(currentChar.portrait);
+  expect(exported?.character.portrait).toBe(currentChar.portrait);
 });
 
 Then("a new version should be created", async function (this: CustomWorld) {
