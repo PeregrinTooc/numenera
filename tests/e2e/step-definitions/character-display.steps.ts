@@ -268,8 +268,8 @@ Then(
 );
 
 Then("no markup from the text should be rendered as HTML", async function (this: CustomWorld) {
-  // "<Unknown Location>" would parse as an <unknown> element if interpolated as HTML.
-  await expect(this.page.locator("unknown")).toHaveCount(0);
+  // The name binding is a text node; any child element means user text was parsed as HTML.
+  await expect(this.dom.getByTestId("character-name").locator("*")).toHaveCount(0);
 });
 
 // Scenario Outline: Long unbroken text does not make the sheet scroll sideways
