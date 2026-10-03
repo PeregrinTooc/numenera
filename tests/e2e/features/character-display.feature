@@ -19,7 +19,7 @@ Feature: Single Character Display
         And I should see type "Nano" displayed
         And I should see descriptor "Clever" displayed
         And I should see focus "Talks to Machines" displayed
-        And all labels should use translation keys
+        And no untranslated text keys should be visible
 
     Scenario: View character stat pools
         Given I am on the character sheet page
@@ -31,7 +31,7 @@ Feature: Single Character Display
         Then I should see the "Might" stat with pool "18", edge "3", and current "14"
         And I should see the "Speed" stat with pool "9", edge "0", and current "7"
         And I should see the "Intellect" stat with pool "11", edge "1", and current "11"
-        And all stat labels should use translation keys
+        And no untranslated text keys should be visible
 
     Scenario: View character items - Cyphers
         Given I am on the character sheet page
@@ -42,7 +42,7 @@ Feature: Single Character Display
         Then I should see 2 cyphers displayed
         And I should see cypher "Rejuvenator (Pill)" with level "1d6+1"
         And I should see cypher "Phase Changer (Belt)" with level "1d6+3"
-        And the cyphers section label should use translation keys
+        And no untranslated text keys should be visible
 
     Scenario: View character items - Artifacts and Oddities
         Given I am on the character sheet page
@@ -58,7 +58,7 @@ Feature: Single Character Display
         And I should see 2 oddities displayed
         And I should see oddity "A feather that falls upward"
         And I should see oddity "A coin that is always warm"
-        And the items section labels should use translation keys
+        And no untranslated text keys should be visible
 
     Scenario: View character text fields
         Given I am on the character sheet page
@@ -70,7 +70,7 @@ Feature: Single Character Display
             | Field      | Content                                        |
             | Background | Raised by a seskii pack beyond the Black Riage |
             | Notes      | Owes the Aeon Priests of Qi a favour           |
-        And all text field labels should use translation keys
+        And no untranslated text keys should be visible
 
     Scenario: View empty character items sections
         Given I am on the character sheet page
@@ -80,7 +80,7 @@ Feature: Single Character Display
         Then I should see an empty cyphers section
         And I should see an empty artifacts section
         And I should see an empty oddities section
-        And empty states should use translation keys
+        And no untranslated text keys should be visible
 
     Scenario: View empty character text fields
         Given I am on the character sheet page

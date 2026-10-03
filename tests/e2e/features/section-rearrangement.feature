@@ -66,7 +66,6 @@ Feature: Section Re-arrangement
     Given I have customized the layout
     And I open the settings panel
     When I click the Reset Layout button
-    And I confirm the reset
     Then the layout should return to the default arrangement
 
   Scenario: Reset layout option is enabled

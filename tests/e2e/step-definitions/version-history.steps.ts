@@ -7,8 +7,10 @@ import { waitForCharacterSheetReady } from "../support/app-ready.js";
 // Given steps
 
 Given("the character has no version history yet", async function (this: CustomWorld) {
-  // Version history starts empty - no setup needed
-  // The versionHistory manager will be initialized but empty
+  // The app always records one "Initial state" version on first load; "no history yet" means
+  // nothing beyond it (the navigator stays hidden until a second version exists).
+  const versions = await this.storageHelper.getAllVersions();
+  expect(versions.map((version) => version.description)).toEqual(["Initial state"]);
 });
 
 Given(
@@ -49,8 +51,7 @@ Given(
 );
 
 Given("I am viewing the latest version", async function (this: CustomWorld) {
-  // Default state - no action needed
-  // We're always at the latest version unless we navigate
+  await expect(this.page.getByTestId("version-nav-forward")).toBeDisabled();
 });
 
 Given("I am viewing version {int}", async function (this: CustomWorld, versionNumber: number) {
@@ -346,7 +347,8 @@ Given("I have made buffered edits that were undone", async function (this: Custo
 // When steps
 
 When("I view the character sheet", async function (this: CustomWorld) {
-  // Already on character sheet from background - no action needed
+  await this.page.reload();
+  await waitForCharacterSheetReady(this.page);
 });
 
 // Note: "I edit the character name to {string}" already exists in auto-save-indicator.steps.ts

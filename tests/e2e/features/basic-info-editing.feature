@@ -75,8 +75,7 @@ Feature: Edit Basic Character Information
         And I clear the input field
         And I type "7" in the modal input
         And I click the "Confirm" button
-        Then the tier should be constrained to "6"
-        And the modal should close
+        Then the modal should close
         And the tier should display "6"
 
     Scenario: Edit tier with invalid value (below minimum)
@@ -84,8 +83,7 @@ Feature: Edit Basic Character Information
         And I clear the input field
         And I type "0" in the modal input
         And I click the "Confirm" button
-        Then the tier should be constrained to "1"
-        And the modal should close
+        Then the modal should close
         And the tier should display "1"
 
     Scenario: Click on descriptor opens edit modal
@@ -155,7 +153,6 @@ Feature: Edit Basic Character Information
         And I clear the input field
         Then the modal confirm button should be disabled
         And the modal should not close
-        And an error or validation message may appear
 
     Scenario: Modal maintains focus trap
         When I click on the character name "Kael the Wanderer"

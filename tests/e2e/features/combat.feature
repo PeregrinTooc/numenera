@@ -9,15 +9,15 @@ Feature: Combat & Special Abilities
     Scenario: Display attack with all properties
         Given the character has an attack "Broadsword" with:
             | Property | Value                     |
-            | Damage   | 4                         |
-            | Modifier | 1                         |
-            | Range    | Immediate                 |
-            | Notes    | Heavy weapon, two-handed  |
+            | Damage   | 6                         |
+            | Modifier | 2                         |
+            | Range    | Short                     |
+            | Notes    | Notched blade, two-handed |
         Then I should see the attack "Broadsword"
-        And the attack "Broadsword" should show damage "4"
-        And the attack "Broadsword" should show modifier "+1"
-        And the attack "Broadsword" should show range "Immediate"
-        And the attack "Broadsword" should show notes "Heavy weapon, two-handed"
+        And the attack "Broadsword" should show damage "6"
+        And the attack "Broadsword" should show modifier "+2"
+        And the attack "Broadsword" should show range "Short"
+        And the attack "Broadsword" should show notes "Notched blade, two-handed"
 
     Scenario: Display attack without optional notes
         Then I should see the attack "Crossbow"
@@ -29,11 +29,11 @@ Feature: Combat & Special Abilities
     Scenario: Display special ability
         Given the character has a special ability "Lightning Bolt" with:
             | Property    | Value                                                        |
-            | Description | Projects a bolt of lightning up to long range                |
-            | Source      | Lightning Rod artifact                                       |
+            | Description | Arcs between up to three targets in short range              |
+            | Source      | Storm Lens artifact                                          |
         Then I should see the special ability "Lightning Bolt"
-        And the special ability "Lightning Bolt" should show description "Projects a bolt of lightning up to long range"
-        And the special ability "Lightning Bolt" should show source "Lightning Rod artifact"
+        And the special ability "Lightning Bolt" should show description "Arcs between up to three targets in short range"
+        And the special ability "Lightning Bolt" should show source "Storm Lens artifact"
 
     Scenario: Display armor badge in attacks section
         Given the character has 2 armor

@@ -4,6 +4,7 @@ import { waitForCharacterSheetReady, startNewCharacter } from "../support/app-re
 import type { CustomWorld } from "../support/world.js";
 import type { Character } from "../../../src/types/character.js";
 import { sectionId } from "../support/sections.js";
+import { RAW_I18N_KEY } from "../support/i18nKeys.js";
 import { intCell, lowerCaseHashes, propertyTable } from "../support/tableRows.js";
 
 Given(
@@ -47,9 +48,9 @@ Then("I should see focus {string} displayed", async function (focus: string) {
   await expect(this.dom.getByTestId("character-focus")).toContainText(focus);
 });
 
-Then("all labels should use translation keys", async function () {
-  // For minimal implementation, we'll skip i18n validation
-  // This can be implemented in a future iteration
+Then("no untranslated text keys should be visible", async function (this: CustomWorld) {
+  const text = await this.page.locator("body").innerText();
+  expect(text).not.toMatch(RAW_I18N_KEY);
 });
 
 // Scenario 2: View character stat pools
@@ -82,11 +83,6 @@ Then(
   }
 );
 
-Then("all stat labels should use translation keys", async function () {
-  // For minimal implementation, we'll skip i18n validation
-  // This can be implemented in a future iteration
-});
-
 // Scenario 3: View character items - Cyphers
 Given(
   "the character has the following cyphers:",
@@ -114,10 +110,6 @@ Then(
     await expect(this.dom.getByTestId(`cypher-level-${name}`)).toContainText(level);
   }
 );
-
-Then("the cyphers section label should use translation keys", async function () {
-  // For minimal implementation, we'll skip i18n validation
-});
 
 // Scenario 4: View character items - Artifacts and Oddities
 Given(
@@ -166,15 +158,7 @@ Then("I should see oddity {string}", async function (description: string) {
   await expect(this.dom.getByTestId(`oddity-${description}`)).toContainText(description);
 });
 
-Then("the items section labels should use translation keys", async function () {
-  // For minimal implementation, we'll skip i18n validation
-});
-
 // Scenario 5: View character text fields — see "the character has the following text:" below
-Then("all text field labels should use translation keys", async function () {
-  // For minimal implementation, we'll skip i18n validation
-});
-
 Given("the character has no {cardTypes}", async function (this: CustomWorld, _emptyTestId: string) {
   await startNewCharacter(this.page, this.getBaseUrl());
 });
@@ -185,10 +169,6 @@ Then(
     await expect(this.dom.getByTestId(emptyTestId)).toBeVisible();
   }
 );
-
-Then("empty states should use translation keys", async function () {
-  // For minimal implementation, we'll skip i18n validation
-});
 
 // Scenario 7: View empty character text fields
 Given("the character has empty text fields", async function () {

@@ -119,22 +119,9 @@ Then("the focus should display {string}", async function (this: CustomWorld, foc
 // UNIQUE THEN STEPS - Validation Assertions
 // ============================================================================
 
-Then(
-  "the tier should be constrained to {string}",
-  async function (this: CustomWorld, _tier: string) {
-    // This happens automatically during validation
-    // The assertion happens in the next step when we check the displayed value
-  }
-);
-
 Then("the modal should not close", async function (this: CustomWorld) {
   const modal = this.page.locator('[data-testid="edit-modal"]');
   await expect(modal).toBeVisible();
-});
-
-Then("an error or validation message may appear", async function (this: CustomWorld) {
-  // This is an optional assertion - error messages might appear
-  // We don't strictly require them, so this is a no-op
 });
 
 // ============================================================================
