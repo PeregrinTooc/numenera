@@ -29,7 +29,8 @@ export default defineConfig({
     },
     {
       name: "Tablet",
-      use: { ...devices["iPad Pro"] },
+      // "iPad Pro" is not a Playwright descriptor; spreading undefined gave a desktop context.
+      use: { ...devices["iPad Pro 11"] },
     },
   ],
   webServer: {
