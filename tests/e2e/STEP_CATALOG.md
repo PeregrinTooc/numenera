@@ -26,26 +26,26 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **681** in 25 files
-- Feature step lines: **2036**
+- Step definitions: **666** in 26 files
+- Feature step lines: **2038**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
 | [ability-enhancements.steps.ts](#abilityenhancementsstepsts) | 13 | 0 |
-| [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 37 | 0 |
+| [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 36 | 0 |
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
-| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 37 | 0 |
+| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 34 | 0 |
 | [card-creation.steps.ts](#cardcreationstepsts) | 89 | 0 |
 | [card-deletion.steps.ts](#carddeletionstepsts) | 40 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
-| [card-reordering.steps.ts](#cardreorderingstepsts) | 12 | 0 |
-| [character-display.steps.ts](#characterdisplaystepsts) | 44 | 0 |
+| [card-reordering.steps.ts](#cardreorderingstepsts) | 13 | 0 |
+| [character-display.steps.ts](#characterdisplaystepsts) | 32 | 0 |
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
-| [combat.steps.ts](#combatstepsts) | 22 | 0 |
+| [combat.steps.ts](#combatstepsts) | 24 | 0 |
 | [common-steps.ts](#commonstepsts) | 34 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 5 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 12 | 0 |
@@ -53,11 +53,12 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
-| [section-rearrangement.steps.ts](#sectionrearrangementstepsts) | 50 | 0 |
+| [section-rearrangement.steps.ts](#sectionrearrangementstepsts) | 49 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
-| [version-comparison.steps.ts](#versioncomparisonstepsts) | 43 | 0 |
+| [version-comparison.steps.ts](#versioncomparisonstepsts) | 41 | 0 |
 | [version-history.steps.ts](#versionhistorystepsts) | 82 | 0 |
+| [viewport.steps.ts](#viewportstepsts) | 1 | 0 |
 
 ## ability-enhancements.steps.ts
 
@@ -81,43 +82,42 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am using a mobile device` | 9 | 308 |
-| When | `I clear the {textarea} textarea` | 4 | 151 |
-| When | `I click outside the {textarea} textarea` | 11 | 162 |
-| When | `I click the {textarea} textarea` | 20 | 147 |
-| When | `I select {string} from the mobile picker` | 1 | 339 |
-| When | `I select {string} from the type dropdown` | 4 | 39 |
-| When | `I tap outside the {textarea} textarea` | 2 | 366 |
-| When | `I tap the {textarea} textarea` | 2 | 344 |
-| When | `I tap the type dropdown` | 1 | 327 |
-| When | `I type {string} in the {textarea} textarea` | 12 | 155 |
-| When | `I type a {int} character string in the background textarea` | 1 | 240 |
-| When | `I type a {int} character string in the notes textarea` | 1 | 249 |
-| Then | `the {textarea} placeholder should be {string}` | 2 | 214 |
-| When | `the {textarea} textarea is empty` | 2 | 210 |
-| Then | `the {textarea} textarea should be empty` | 2 | 200 |
-| Then | `the {textarea} textarea should be focused` | 4 | 182 |
-| Then | `the {textarea} textarea should be readonly` | 8 | 120 |
-| Then | `the {textarea} textarea should become editable` | 2 | 348 |
-| Then | `the {textarea} textarea should have a pointer cursor` | 2 | 137 |
-| Then | `the {textarea} textarea should have an edit state visual indicator` | 2 | 189 |
-| Then | `the {textarea} textarea should not be readonly` | 4 | 172 |
-| Then | `the {textarea} textarea should show {string}` | 14 | 127 |
-| Then | `the background textarea should contain the full {int} character text` | 1 | 258 |
-| Then | `the background textarea should still be editable` | 1 | 204 |
-| Then | `the character data should have {textarea} {string}` | 5 | 222 |
-| Then | `the character data should have the full background text` | 1 | 278 |
-| Then | `the character data should have the full notes text` | 1 | 291 |
-| Then | `the character data should have type {string}` | 1 | 73 |
-| Given | `the character has the following data:` | 1 | 10 |
-| Then | `the mobile OS picker should open` | 1 | 332 |
-| Then | `the notes textarea should contain the full {int} character text` | 1 | 268 |
-| Then | `the type dropdown label should be {string}` | 1 | 87 |
-| Then | `the type dropdown option for {string} should display as {string}` | 3 | 96 |
-| Then | `the type dropdown options should be {string}, {string}, {string}` | 1 | 61 |
-| Then | `the type dropdown should have {int} options` | 1 | 52 |
-| Then | `the type dropdown should show {string} as selected` | 6 | 44 |
-| Then | `the virtual keyboard should appear` | 2 | 357 |
+| When | `I clear the {textarea} textarea` | 4 | 150 |
+| When | `I click outside the {textarea} textarea` | 11 | 161 |
+| When | `I click the {textarea} textarea` | 20 | 146 |
+| When | `I select {string} from the mobile picker` | 1 | 315 |
+| When | `I select {string} from the type dropdown` | 4 | 38 |
+| When | `I tap outside the {textarea} textarea` | 2 | 342 |
+| When | `I tap the {textarea} textarea` | 2 | 320 |
+| When | `I tap the type dropdown` | 1 | 303 |
+| When | `I type {string} in the {textarea} textarea` | 12 | 154 |
+| When | `I type a {int} character string in the background textarea` | 1 | 239 |
+| When | `I type a {int} character string in the notes textarea` | 1 | 248 |
+| Then | `the {textarea} placeholder should be {string}` | 2 | 213 |
+| When | `the {textarea} textarea is empty` | 2 | 209 |
+| Then | `the {textarea} textarea should be empty` | 2 | 199 |
+| Then | `the {textarea} textarea should be focused` | 4 | 181 |
+| Then | `the {textarea} textarea should be readonly` | 8 | 119 |
+| Then | `the {textarea} textarea should become editable` | 2 | 324 |
+| Then | `the {textarea} textarea should have a pointer cursor` | 2 | 136 |
+| Then | `the {textarea} textarea should have an edit state visual indicator` | 2 | 188 |
+| Then | `the {textarea} textarea should not be readonly` | 4 | 171 |
+| Then | `the {textarea} textarea should show {string}` | 14 | 126 |
+| Then | `the background textarea should contain the full {int} character text` | 1 | 257 |
+| Then | `the background textarea should still be editable` | 1 | 203 |
+| Then | `the character data should have {textarea} {string}` | 5 | 221 |
+| Then | `the character data should have the full background text` | 1 | 277 |
+| Then | `the character data should have the full notes text` | 1 | 290 |
+| Then | `the character data should have type {string}` | 1 | 72 |
+| Given | `the character has the following data:` | 1 | 9 |
+| Then | `the mobile OS picker should open` | 1 | 308 |
+| Then | `the notes textarea should contain the full {int} character text` | 1 | 267 |
+| Then | `the type dropdown label should be {string}` | 1 | 86 |
+| Then | `the type dropdown option for {string} should display as {string}` | 3 | 95 |
+| Then | `the type dropdown options should be {string}, {string}, {string}` | 1 | 60 |
+| Then | `the type dropdown should have {int} options` | 1 | 51 |
+| Then | `the type dropdown should show {string} as selected` | 6 | 43 |
+| Then | `the virtual keyboard should appear` | 2 | 333 |
 
 ## auto-save-indicator.steps.ts
 
@@ -141,43 +141,40 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an error or validation message may appear` | 1 | 134 |
-| Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 208 |
-| Then | `focus should not leave the modal` | 1 | 242 |
-| Given | `I am viewing on a mobile device with width {string}` | 6 | 297 |
-| Then | `I can cancel with Escape key` | 1 | 267 |
-| Then | `I can confirm with Enter key` | 1 | 260 |
-| Then | `I can navigate with Tab key` | 1 | 252 |
+| Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 195 |
+| Then | `focus should not leave the modal` | 1 | 229 |
+| Then | `I can cancel with Escape key` | 1 | 254 |
+| Then | `I can confirm with Enter key` | 1 | 247 |
+| Then | `I can navigate with Tab key` | 1 | 239 |
 | When | `I press Tab repeatedly` | 1 | 30 |
-| Then | `the backdrop should have aria-hidden={string}` | 1 | 284 |
-| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 349 |
-| Then | `the cancel button should have an X icon` | 1 | 158 |
-| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 377 |
+| Then | `the backdrop should have aria-hidden={string}` | 1 | 271 |
+| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 328 |
+| Then | `the cancel button should have an X icon` | 1 | 145 |
+| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 356 |
 | Then | `the character name should display {string}` | 6 | 82 |
 | Then | `the character name should still display {string}` | 6 | 90 |
-| Then | `the confirm button should have a checkmark icon` | 1 | 152 |
-| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 397 |
+| Then | `the confirm button should have a checkmark icon` | 1 | 139 |
+| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 376 |
 | Then | `the descriptor should display {string}` | 4 | 104 |
-| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 407 |
+| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 386 |
 | Then | `the focus should display {string}` | 4 | 112 |
-| Then | `the input field should be large enough for touch input` | 1 | 369 |
+| Then | `the input field should be large enough for touch input` | 1 | 348 |
 | Then | `the input field should be of type {string}` | 1 | 69 |
-| Then | `the input field should have inputmode={string} for mobile` | 1 | 320 |
-| Then | `the mobile keyboard should appear` | 1 | 314 |
-| Then | `the modal backdrop should be semi-transparent` | 1 | 164 |
-| Then | `the modal should be sized appropriately for mobile` | 1 | 305 |
-| Then | `the modal should fill most of the screen width` | 1 | 329 |
+| Then | `the input field should have inputmode={string} for mobile` | 1 | 299 |
+| Then | `the mobile keyboard should appear` | 1 | 293 |
+| Then | `the modal backdrop should be semi-transparent` | 1 | 151 |
+| Then | `the modal should be sized appropriately for mobile` | 1 | 284 |
+| Then | `the modal should fill most of the screen width` | 1 | 308 |
 | Then | `the modal should have a cancel button with icon` | 1 | 62 |
 | Then | `the modal should have a confirm button with icon` | 1 | 55 |
-| Then | `the modal should have Numenera-themed styling` | 1 | 143 |
-| Then | `the modal should have role={string}` | 1 | 278 |
-| Then | `the modal should not close` | 1 | 129 |
-| Then | `the modal should not overflow the viewport` | 1 | 339 |
-| Then | `the name should show a hover state indicating it's editable` | 1 | 182 |
-| Then | `the tier should be constrained to {string}` | 2 | 121 |
-| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 387 |
+| Then | `the modal should have Numenera-themed styling` | 1 | 130 |
+| Then | `the modal should have role={string}` | 1 | 265 |
+| Then | `the modal should not close` | 1 | 121 |
+| Then | `the modal should not overflow the viewport` | 1 | 318 |
+| Then | `the name should show a hover state indicating it's editable` | 1 | 169 |
+| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 366 |
 | Then | `the tier should display {string}` | 6 | 98 |
-| Then | `the tier should show a hover state indicating it's editable` | 1 | 193 |
+| Then | `the tier should show a hover state indicating it's editable` | 1 | 180 |
 
 ## card-creation.steps.ts
 
@@ -343,67 +340,56 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag ability {string} before ability {string}` | 2 | 244 |
-| When | `I drag cypher {string} after cypher {string}` | 1 | 48 |
-| When | `I drag cypher {string} before cypher {string}` | 3 | 28 |
-| When | `I drag cypher {string} into the abilities section` | 1 | 287 |
-| When | `I hover over cypher {string}` | 1 | 103 |
-| When | `I start dragging cypher {string}` | 2 | 74 |
-| Then | `the abilities should be in order {string}` | 4 | 262 |
-| Given | `the character has {int} abilities named {string}` | 4 | 221 |
-| Given | `the character has {int} cyphers named {string}` | 8 | 8 |
-| Then | `the cypher {string} should have a dragging visual state` | 1 | 157 |
-| Then | `the cyphers should be in order {string}` | 6 | 130 |
-| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 177 |
+| When | `I drag ability {string} before ability {string}` | 2 | 251 |
+| When | `I drag ability {string} onto cypher {string}` | 1 | 314 |
+| When | `I drag cypher {string} after cypher {string}` | 1 | 52 |
+| When | `I drag cypher {string} before cypher {string}` | 3 | 29 |
+| When | `I drag cypher {string} into the abilities section` | 1 | 297 |
+| When | `I hover over cypher {string}` | 1 | 110 |
+| When | `I start dragging cypher {string}` | 2 | 81 |
+| Then | `the abilities should be in order {string}` | 5 | 272 |
+| Given | `the character has {int} abilities named {string}` | 5 | 228 |
+| Given | `the character has {int} cyphers named {string}` | 9 | 9 |
+| Then | `the cypher {string} should have a dragging visual state` | 1 | 164 |
+| Then | `the cyphers should be in order {string}` | 7 | 137 |
+| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 184 |
 
 ## character-display.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `a character exists with the following data:` | 2 | 7 |
-| Then | `all labels should use translation keys` | 1 | 40 |
-| Then | `all stat labels should use translation keys` | 1 | 61 |
-| Then | `all text field labels should use translation keys` | 1 | 159 |
-| Then | `empty states should use translation keys` | 1 | 174 |
-| Given | `I am on the character sheet page` | 46 | 13 |
-| Then | `I should see {int} artifact displayed` | 1 | 97 |
-| Then | `I should see {int} cyphers displayed` | 1 | 71 |
-| Then | `I should see {int} oddities displayed` | 1 | 110 |
-| Then | `I should see an empty {cardTypes} section` | 6 | 167 |
-| Then | `I should see artifact {string} with level {string}` | 1 | 102 |
-| Then | `I should see cypher {string} with level {string}` | 2 | 76 |
-| Then | `I should see descriptor {string} displayed` | 1 | 32 |
-| Then | `I should see empty state for abilities` | 1 | 204 |
-| Then | `I should see empty state for background` | 1 | 184 |
-| Then | `I should see empty state for equipment` | 1 | 200 |
-| Then | `I should see empty state for notes` | 1 | 192 |
-| Then | `I should see focus {string} displayed` | 1 | 36 |
-| Then | `I should see oddity {string}` | 2 | 115 |
-| Then | `I should see sections in this order:` | 1 | 288 |
-| Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 50 |
-| Then | `I should see the abilities text` | 1 | 152 |
-| Then | `I should see the background text` | 1 | 128 |
-| Then | `I should see the character name {string}` | 1 | 18 |
-| Then | `I should see the equipment text` | 1 | 144 |
-| Then | `I should see the notes text` | 1 | 136 |
-| Then | `I should see tier {string} displayed` | 1 | 22 |
-| Then | `I should see type {string} displayed` | 1 | 26 |
-| Then | `no markup from the text should be rendered as HTML` | 1 | 250 |
-| Given | `the character has a {int}-character background without spaces` | 1 | 269 |
-| Given | `the character has a {int}-character name without spaces` | 1 | 260 |
-| Given | `the character has empty text fields` | 1 | 180 |
-| Given | `the character has no {cardTypes}` | 6 | 163 |
-| Given | `the character has the following artifacts:` | 1 | 90 |
-| Given | `the character has the following cyphers:` | 1 | 68 |
-| Given | `the character has the following oddities:` | 1 | 93 |
-| Given | `the character has the following stats:` | 1 | 47 |
-| Given | `the character has the following text fields:` | 1 | 125 |
-| Given | `the character has the following text:` | 1 | 220 |
-| Then | `the character text should read exactly:` | 1 | 234 |
-| Then | `the cyphers section label should use translation keys` | 1 | 84 |
-| Then | `the items section labels should use translation keys` | 1 | 119 |
-| Then | `the page should not scroll horizontally` | 1 | 278 |
-| Given | `the viewport is {int} pixels wide` | 1 | 257 |
+| Given | `a character exists with the following data:` | 2 | 9 |
+| Given | `I am on the character sheet page` | 47 | 27 |
+| Then | `I should see {int} artifact displayed` | 1 | 142 |
+| Then | `I should see {int} cyphers displayed` | 1 | 104 |
+| Then | `I should see {int} oddities displayed` | 1 | 155 |
+| Then | `I should see an empty {cardTypes} section` | 6 | 168 |
+| Then | `I should see artifact {string} with level {string}` | 1 | 147 |
+| Then | `I should see cypher {string} with level {string}` | 2 | 109 |
+| Then | `I should see descriptor {string} displayed` | 1 | 46 |
+| Then | `I should see empty state for abilities` | 1 | 201 |
+| Then | `I should see empty state for background` | 1 | 181 |
+| Then | `I should see empty state for equipment` | 1 | 197 |
+| Then | `I should see empty state for notes` | 1 | 189 |
+| Then | `I should see focus {string} displayed` | 1 | 50 |
+| Then | `I should see oddity {string}` | 2 | 160 |
+| Then | `I should see sections in this order:` | 1 | 277 |
+| Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 78 |
+| Then | `I should see the character name {string}` | 1 | 32 |
+| Then | `I should see tier {string} displayed` | 1 | 36 |
+| Then | `I should see type {string} displayed` | 1 | 40 |
+| Then | `no markup from the text should be rendered as HTML` | 1 | 252 |
+| Then | `no untranslated text keys should be visible` | 6 | 54 |
+| Given | `the character has a {int}-character name without spaces` | 1 | 259 |
+| Given | `the character has empty text fields` | 1 | 177 |
+| Given | `the character has no {cardTypes}` | 6 | 164 |
+| Given | `the character has the following artifacts:` | 1 | 119 |
+| Given | `the character has the following cyphers:` | 1 | 91 |
+| Given | `the character has the following oddities:` | 1 | 132 |
+| Given | `the character has the following stats:` | 1 | 61 |
+| Given | `the character has the following text:` | 2 | 220 |
+| Then | `the character text should read exactly:` | 2 | 234 |
+| Then | `the page should not scroll horizontally` | 2 | 267 |
 
 ## character-file-export.steps.ts
 
@@ -445,34 +431,36 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `I should see the armor badge in the attacks section` | 1 | 180 |
-| Then | `I should see the attack {string}` | 2 | 12 |
-| Then | `I should see the special ability {string}` | 1 | 125 |
-| Then | `the attack {string} should have red combat theme styling` | 1 | 87 |
-| Then | `the attack {string} should not show notes` | 1 | 77 |
-| Then | `the attack {string} should show damage {string}` | 2 | 21 |
-| Then | `the attack {string} should show modifier {string}` | 2 | 35 |
-| Then | `the attack {string} should show notes {string}` | 1 | 63 |
-| Then | `the attack {string} should show range {string}` | 2 | 49 |
-| Then | `the attacks section should be in the right column` | 1 | 196 |
-| Given | `the character has a special ability {string}` | 1 | 121 |
-| Given | `the character has a special ability {string} with:` | 1 | 107 |
-| Given | `the character has an attack {string}` | 1 | 10 |
-| Given | `the character has an attack {string} with:` | 1 | 5 |
-| Given | `the character has special abilities and attacks` | 1 | 186 |
-| Then | `the empty attacks state should use translation keys` | 1 | 100 |
-| Then | `the empty special abilities state should use translation keys` | 1 | 173 |
-| Then | `the sections should stack vertically on mobile` | 1 | 201 |
-| Then | `the special abilities section should be in the left column` | 1 | 191 |
-| Then | `the special ability {string} should have teal theme styling` | 1 | 160 |
-| Then | `the special ability {string} should show description {string}` | 1 | 134 |
-| Then | `the special ability {string} should show source {string}` | 1 | 146 |
+| Then | `I should see the armor badge in the attacks section` | 1 | 211 |
+| Then | `I should see the attack {string}` | 2 | 34 |
+| Then | `I should see the special ability {string}` | 1 | 154 |
+| Then | `the attack {string} should have red combat theme styling` | 1 | 109 |
+| Then | `the attack {string} should not show notes` | 1 | 99 |
+| Then | `the attack {string} should show damage {string}` | 2 | 43 |
+| Then | `the attack {string} should show modifier {string}` | 2 | 57 |
+| Then | `the attack {string} should show notes {string}` | 1 | 85 |
+| Then | `the attack {string} should show range {string}` | 2 | 71 |
+| Then | `the attack badges should sit at the right edge of their card` | 1 | 251 |
+| Then | `the attacks section should be in the right column` | 1 | 229 |
+| Given | `the character has a special ability {string}` | 1 | 143 |
+| Given | `the character has a special ability {string} with:` | 1 | 129 |
+| Given | `the character has an attack {string}` | 1 | 26 |
+| Given | `the character has an attack {string} with:` | 1 | 9 |
+| Given | `the character has an attack with a {int}-character name without spaces` | 1 | 242 |
+| Given | `the character has special abilities and attacks` | 1 | 217 |
+| Then | `the empty attacks state should use translation keys` | 1 | 122 |
+| Then | `the empty special abilities state should use translation keys` | 1 | 204 |
+| Then | `the sections should stack vertically on mobile` | 1 | 234 |
+| Then | `the special abilities section should be in the left column` | 1 | 224 |
+| Then | `the special ability {string} should have teal theme styling` | 1 | 191 |
+| Then | `the special ability {string} should show description {string}` | 1 | 163 |
+| Then | `the special ability {string} should show source {string}` | 1 | 177 |
 
 ## common-steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 10 | 245 |
+| Then | `an edit modal should appear` | 10 | 240 |
 | When | `I clear the input field` | 18 | 114 |
 | When | `I click on the {string} value` | 9 | 26 |
 | When | `I click on the character name {string}` | 12 | 73 |
@@ -490,7 +478,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I press the Enter key` | 2 | 177 |
 | When | `I press the Escape key` | 4 | 173 |
 | When | `I reload the page` | 48 | 181 |
-| Then | `I should see the {string} value displayed` | 1 | 204 |
+| Then | `I should see the {string} value displayed` | 1 | 199 |
 | When | `I tap on the {string} value` | 1 | 34 |
 | When | `I tap on the character name {string}` | 4 | 92 |
 | When | `I tap on the tier {string}` | 1 | 97 |
@@ -498,14 +486,14 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I tap the {badge} badge` | 2 | 66 |
 | When | `I tap the modal confirm button` | 3 | 110 |
 | When | `I type {string} in the modal input` | 40 | 118 |
-| Then | `the {string} value should display {string}` | 6 | 213 |
-| Then | `the {string} value should not have changed` | 2 | 222 |
-| Then | `the edit modal should open` | 8 | 246 |
-| Then | `the input field should be focused` | 1 | 262 |
-| Then | `the input field should contain the current {string} value` | 1 | 264 |
-| Then | `the input field should receive focus automatically` | 1 | 261 |
-| Then | `the modal input should contain {string}` | 10 | 252 |
-| Then | `the modal should close` | 21 | 253 |
+| Then | `the {string} value should display {string}` | 6 | 208 |
+| Then | `the {string} value should not have changed` | 2 | 217 |
+| Then | `the edit modal should open` | 8 | 241 |
+| Then | `the input field should be focused` | 1 | 257 |
+| Then | `the input field should contain the current {string} value` | 1 | 259 |
+| Then | `the input field should receive focus automatically` | 1 | 256 |
+| Then | `the modal input should contain {string}` | 10 | 247 |
+| Then | `the modal should close` | 21 | 248 |
 
 ## data-validation.steps.ts
 
@@ -538,27 +526,27 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a file download should be triggered` | 1 | 176 |
-| When | `I cancel the file save dialog` | 1 | 112 |
-| When | `I click the Export button` | 7 | 105 |
-| When | `I click the Quick Export button` | 1 | 119 |
-| When | `I click the Save As button` | 1 | 125 |
-| Then | `I should not see an {string} button` | 1 | 145 |
-| Then | `I should see a {string} button` | 2 | 140 |
-| Then | `I should see an {string} button` | 2 | 135 |
-| When | `I view the export buttons` | 1 | 100 |
-| Given | `my browser does not support File System Access API` | 1 | 37 |
-| Given | `my browser supports File System Access API` | 7 | 7 |
-| Then | `no file should be saved` | 1 | 218 |
-| Given | `the character name is {string}` | 1 | 67 |
-| Then | `the download filename should contain {string}` | 1 | 186 |
-| Then | `the download should have correct file structure` | 1 | 194 |
-| Then | `the Export button should still be visible` | 1 | 225 |
-| Then | `the export dialog should be triggered` | 1 | 245 |
-| Then | `the export dialog should be triggered with filename containing {string}` | 1 | 151 |
-| Then | `the exported data should have correct structure` | 1 | 163 |
-| Then | `the file should be saved without prompting` | 1 | 230 |
-| Then | `the suggested filename should be {string}` | 1 | 211 |
+| Then | `a file download should be triggered` | 1 | 195 |
+| When | `I cancel the file save dialog` | 1 | 131 |
+| When | `I click the Export button` | 7 | 124 |
+| When | `I click the Quick Export button` | 1 | 138 |
+| When | `I click the Save As button` | 1 | 144 |
+| Then | `I should not see an {string} button` | 1 | 164 |
+| Then | `I should see a {string} button` | 2 | 159 |
+| Then | `I should see an {string} button` | 2 | 154 |
+| When | `I view the export buttons` | 1 | 119 |
+| Given | `my browser does not support File System Access API` | 1 | 56 |
+| Given | `my browser supports File System Access API` | 7 | 19 |
+| Then | `no file should be saved` | 1 | 237 |
+| Given | `the character name is {string}` | 1 | 86 |
+| Then | `the download filename should contain {string}` | 1 | 205 |
+| Then | `the download should have correct file structure` | 1 | 213 |
+| Then | `the Export button should still be visible` | 1 | 244 |
+| Then | `the export dialog should be triggered` | 1 | 264 |
+| Then | `the export dialog should be triggered with filename containing {string}` | 1 | 170 |
+| Then | `the exported data should have correct structure` | 1 | 182 |
+| Then | `the file should be saved without prompting` | 1 | 249 |
+| Then | `the suggested filename should be {string}` | 1 | 230 |
 
 ## i18n.steps.ts
 
@@ -651,54 +639,53 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `{string} and {string} are in a grid` | 1 | 432 |
-| Then | `{string} and {string} should be displayed side by side in a grid` | 1 | 357 |
-| Then | `{string} should be in its own row` | 2 | 476 |
-| When | `I attempt to drag {string} onto {string}` | 1 | 386 |
-| When | `I choose to {string}` | 2 | 591 |
+| Given | `{string} and {string} are in a grid` | 1 | 427 |
+| Then | `{string} and {string} should be displayed side by side in a grid` | 1 | 352 |
+| Then | `{string} should be in its own row` | 2 | 471 |
+| When | `I attempt to drag {string} onto {string}` | 1 | 381 |
+| When | `I choose to {string}` | 2 | 586 |
 | When | `I click the Edit Layout button` | 1 | 23 |
 | When | `I click the Exit Edit Layout button` | 2 | 28 |
 | When | `I click the Reset Layout button` | 1 | 33 |
-| When | `I confirm the reset` | 1 | 191 |
-| When | `I drag {string} out of the grid` | 1 | 457 |
-| When | `I drag the {string} section above the {string} section` | 1 | 228 |
-| When | `I drag the {string} section onto the {string} section` | 1 | 332 |
-| When | `I exit layout edit mode` | 1 | 295 |
-| Given | `I have a character file with a different layout` | 3 | 508 |
-| Given | `I have a character file with the default layout` | 1 | 523 |
+| When | `I drag {string} out of the grid` | 1 | 452 |
+| When | `I drag the {string} section above the {string} section` | 1 | 223 |
+| When | `I drag the {string} section onto the {string} section` | 1 | 327 |
+| When | `I exit layout edit mode` | 1 | 290 |
+| Given | `I have a character file with a different layout` | 3 | 503 |
+| Given | `I have a character file with the default layout` | 1 | 518 |
 | Given | `I have customized the layout` | 5 | 174 |
-| Given | `I have moved the {string} section to the top` | 1 | 266 |
+| Given | `I have moved the {string} section to the top` | 1 | 261 |
 | Given | `I have reordered sections` | 1 | 98 |
-| Given | `I have the default layout` | 2 | 220 |
-| When | `I import the character file` | 4 | 527 |
-| When | `I long-press the {string} section` | 1 | 671 |
-| When | `I long-press the {string} section and drag it above the {string} section` | 1 | 686 |
+| Given | `I have the default layout` | 2 | 215 |
+| When | `I import the character file` | 4 | 522 |
+| When | `I long-press the {string} section` | 1 | 666 |
+| When | `I long-press the {string} section and drag it above the {string} section` | 1 | 681 |
 | Given | `I open the settings panel` | 2 | 187 |
-| Then | `I should not see a layout choice prompt` | 1 | 568 |
-| Then | `I should see a layout choice prompt` | 1 | 560 |
+| Then | `I should not see a layout choice prompt` | 1 | 563 |
+| Then | `I should see a layout choice prompt` | 1 | 555 |
 | Then | `I should see layout edit mode is active` | 1 | 38 |
-| Then | `I should see options to {string} or {string}` | 1 | 578 |
+| Then | `I should see options to {string} or {string}` | 1 | 573 |
 | Then | `I should see the {string} button` | 1 | 145 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 50 |
-| When | `I swipe from the {string} section towards the {string} section` | 1 | 709 |
+| When | `I swipe from the {string} section towards the {string} section` | 1 | 704 |
 | Then | `it should be touch-friendly` | 1 | 156 |
 | Given | `layout edit mode is active` | 10 | 62 |
 | Then | `layout edit mode should be inactive` | 1 | 73 |
-| Then | `my current layout should be preserved` | 1 | 603 |
-| Then | `no grid should be created` | 1 | 407 |
-| Then | `only the character data should be imported` | 1 | 625 |
-| Then | `the {string} option should be enabled` | 1 | 208 |
-| Then | `the {string} section should appear before the {string} section` | 3 | 235 |
-| Then | `the {string} section should be in drag mode` | 1 | 679 |
-| Then | `the {string} section should still be at the top` | 1 | 306 |
-| Then | `the character data should be imported` | 1 | 653 |
-| Then | `the character should be imported normally` | 1 | 660 |
-| Then | `the exported file should contain the layout configuration` | 1 | 495 |
-| Then | `the layout from the imported file should be applied` | 1 | 633 |
+| Then | `my current layout should be preserved` | 1 | 598 |
+| Then | `no grid should be created` | 1 | 402 |
+| Then | `only the character data should be imported` | 1 | 620 |
+| Then | `the {string} option should be enabled` | 1 | 203 |
+| Then | `the {string} section should appear before the {string} section` | 3 | 230 |
+| Then | `the {string} section should be in drag mode` | 1 | 674 |
+| Then | `the {string} section should still be at the top` | 1 | 301 |
+| Then | `the character data should be imported` | 1 | 648 |
+| Then | `the character should be imported normally` | 1 | 655 |
+| Then | `the exported file should contain the layout configuration` | 1 | 490 |
+| Then | `the layout from the imported file should be applied` | 1 | 628 |
 | Then | `the layout should be saved` | 1 | 120 |
-| Then | `the layout should return to the default arrangement` | 1 | 196 |
-| Then | `the page should have scrolled` | 1 | 733 |
-| Then | `the sections should remain in single-column layout` | 1 | 427 |
+| Then | `the layout should return to the default arrangement` | 1 | 191 |
+| Then | `the page should have scrolled` | 1 | 728 |
+| Then | `the sections should remain in single-column layout` | 1 | 422 |
 | Then | `the sections should remain in the new order` | 1 | 131 |
 | Then | `the visual indicators should be removed` | 1 | 85 |
 
@@ -706,21 +693,21 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am viewing an old version with the version navigator visible` | 1 | 104 |
+| Given | `I am viewing an old version with the version navigator visible` | 1 | 120 |
 | Given | `I am viewing the character sheet` | 1 | 11 |
 | When | `I click outside the settings panel` | 1 | 56 |
-| When | `I click the British flag icon` | 1 | 71 |
-| When | `I click the German flag icon` | 2 | 67 |
+| When | `I click the British flag icon` | 1 | 87 |
+| When | `I click the German flag icon` | 2 | 83 |
 | When | `I click the settings gear icon` | 1 | 40 |
 | Given | `I have opened the settings panel` | 9 | 52 |
 | Then | `I should be able to click the settings gear icon` | 1 | 28 |
-| Then | `I should see a {string} option` | 1 | 119 |
+| Then | `I should see a {string} option` | 1 | 135 |
 | Then | `I should see a settings gear icon in the header` | 1 | 20 |
 | Then | `I should see the settings panel` | 1 | 44 |
-| Then | `the {string} option should be disabled` | 1 | 125 |
-| Given | `the interface is in German` | 1 | 87 |
-| Then | `the interface should display in English` | 1 | 81 |
-| Then | `the interface should display in German` | 1 | 75 |
+| Then | `the {string} option should be disabled` | 1 | 141 |
+| Given | `the interface is in German` | 1 | 103 |
+| Then | `the interface should display in English` | 1 | 97 |
+| Then | `the interface should display in German` | 1 | 91 |
 | Then | `the settings gear icon should still be visible` | 1 | 24 |
 | Then | `the settings panel should close` | 4 | 48 |
 
@@ -736,8 +723,6 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | --- | --- | ---: | ---: |
 | Given | `comparison view is enabled in settings` | 23 | 42 |
 | Then | `comparison view should show as enabled in settings` | 1 | 58 |
-| Given | `I am using a phone-width viewport` | 1 | 416 |
-| Given | `I am using a tablet-width viewport` | 1 | 420 |
 | Given | `I am viewing the comparison view` | 19 | 66 |
 | When | `I click the left pane's backward arrow` | 3 | 163 |
 | When | `I click the left pane's backward arrow {int} time(s)` | 2 | 175 |
@@ -782,86 +767,92 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a new version should be created` | 1 | 819 |
-| Then | `a new version should be created with description {string}` | 3 | 872 |
-| Then | `all edit controls should be enabled` | 2 | 498 |
-| Then | `both navigation arrows should be enabled` | 2 | 568 |
-| Given | `I am viewing that version` | 3 | 277 |
-| Given | `I am viewing the latest version` | 6 | 50 |
-| Given | `I am viewing version {int}` | 8 | 55 |
-| When | `I click the backward navigation arrow` | 17 | 354 |
-| Then | `I click the backward navigation arrow {int} times` | 1 | 903 |
-| When | `I click the backward navigation arrow again` | 1 | 361 |
-| When | `I click the forward navigation arrow` | 3 | 373 |
-| When | `I click the forward navigation arrow again` | 1 | 379 |
-| When | `I click the restore button in the warning banner` | 3 | 385 |
-| When | `I click the return to latest button` | 1 | 367 |
-| When | `I create a new version by editing the name` | 1 | 467 |
-| Given | `I have made buffered edits that were undone` | 2 | 286 |
-| When | `I make {int} rapid edits that are buffered` | 1 | 1079 |
-| When | `I navigate backward` | 1 | 431 |
-| When | `I navigate forward twice` | 1 | 437 |
-| When | `I navigate to version {int}` | 8 | 391 |
-| When | `I press {string}` | 5 | 646 |
-| When | `I press {string} again` | 2 | 957 |
-| When | `I press {string} again before the squash timer expires` | 2 | 992 |
-| When | `I press {string} before the squash timer expires` | 11 | 918 |
-| When | `I press {string} to navigate to previous version` | 1 | 1146 |
-| When | `I press {string} to undo buffered changes` | 1 | 1100 |
-| When | `I rapidly click the backward arrow {int} times` | 1 | 445 |
-| When | `I refresh the browser` | 6 | 459 |
-| Then | `I should be viewing the latest version` | 3 | 825 |
-| Then | `I should be viewing version {int}` | 1 | 1186 |
-| Then | `I should navigate to version {int}` | 2 | 838 |
-| Then | `I should see {int} versions in history` | 2 | 1059 |
-| When | `I view the character sheet` | 2 | 347 |
-| When | `I wait for {int} milliseconds` | 4 | 631 |
-| When | `I wait for squash timer to complete` | 15 | 1141 |
-| Then | `no new version should be created yet` | 2 | 1040 |
-| Then | `no warning banner should be visible` | 6 | 517 |
-| Then | `the backward arrow should be disabled` | 1 | 580 |
-| Then | `the backward arrow should be enabled` | 3 | 522 |
-| Then | `the change description should be displayed` | 1 | 550 |
-| Then | `the changes should be reapplied` | 2 | 1067 |
-| Then | `the character data should be correct for version {int}` | 1 | 848 |
-| Then | `the character data should match version {int}` | 5 | 532 |
-| Then | `the character equipment should match version {int} equipment` | 2 | 760 |
-| Given | `the character has {int} versions in history` | 41 | 13 |
-| Given | `the character has {int} versions with different data` | 3 | 177 |
-| Given | `the character has {int} versions with different names` | 2 | 212 |
-| Given | `the character has a later version` | 1 | 69 |
-| Given | `the character has a legacy version with a {string} description for a name change and an added ability` | 1 | 147 |
-| Given | `the character has a legacy version with an {string} description for an added cypher` | 1 | 115 |
-| Given | `the character has a portrait image` | 2 | 241 |
-| Given | `the character has a version from {int} minutes ago` | 1 | 251 |
-| Given | `the character has a version with multiple basic info changes` | 2 | 80 |
+| Then | `a new version should be created` | 1 | 826 |
+| Then | `a new version should be created with description {string}` | 3 | 879 |
+| Then | `all edit controls should be enabled` | 2 | 505 |
+| Then | `both navigation arrows should be enabled` | 2 | 575 |
+| Given | `I am viewing that version` | 3 | 283 |
+| Given | `I am viewing the latest version` | 6 | 57 |
+| Given | `I am viewing version {int}` | 8 | 61 |
+| When | `I click the backward navigation arrow` | 17 | 361 |
+| Then | `I click the backward navigation arrow {int} times` | 1 | 910 |
+| When | `I click the backward navigation arrow again` | 1 | 368 |
+| When | `I click the forward navigation arrow` | 3 | 380 |
+| When | `I click the forward navigation arrow again` | 1 | 386 |
+| When | `I click the restore button in the warning banner` | 3 | 392 |
+| When | `I click the return to latest button` | 1 | 374 |
+| When | `I create a new version by editing the name` | 1 | 474 |
+| Given | `I have made buffered edits that were undone` | 2 | 292 |
+| When | `I make {int} rapid edits that are buffered` | 1 | 1086 |
+| When | `I navigate backward` | 1 | 438 |
+| When | `I navigate forward twice` | 1 | 444 |
+| When | `I navigate to version {int}` | 8 | 398 |
+| When | `I press {string}` | 5 | 653 |
+| When | `I press {string} again` | 2 | 964 |
+| When | `I press {string} again before the squash timer expires` | 2 | 999 |
+| When | `I press {string} before the squash timer expires` | 11 | 925 |
+| When | `I press {string} to navigate to previous version` | 1 | 1153 |
+| When | `I press {string} to undo buffered changes` | 1 | 1107 |
+| When | `I rapidly click the backward arrow {int} times` | 1 | 452 |
+| When | `I refresh the browser` | 6 | 466 |
+| Then | `I should be viewing the latest version` | 3 | 832 |
+| Then | `I should be viewing version {int}` | 1 | 1193 |
+| Then | `I should navigate to version {int}` | 2 | 845 |
+| Then | `I should see {int} versions in history` | 2 | 1066 |
+| When | `I view the character sheet` | 2 | 353 |
+| When | `I wait for {int} milliseconds` | 4 | 638 |
+| When | `I wait for squash timer to complete` | 15 | 1148 |
+| Then | `no new version should be created yet` | 2 | 1047 |
+| Then | `no warning banner should be visible` | 6 | 524 |
+| Then | `the backward arrow should be disabled` | 1 | 587 |
+| Then | `the backward arrow should be enabled` | 3 | 529 |
+| Then | `the change description should be displayed` | 1 | 557 |
+| Then | `the changes should be reapplied` | 2 | 1074 |
+| Then | `the character data should be correct for version {int}` | 1 | 855 |
+| Then | `the character data should match version {int}` | 5 | 539 |
+| Then | `the character equipment should match version {int} equipment` | 2 | 767 |
+| Given | `the character has {int} versions in history` | 41 | 20 |
+| Given | `the character has {int} versions with different data` | 3 | 183 |
+| Given | `the character has {int} versions with different names` | 2 | 218 |
+| Given | `the character has a later version` | 1 | 75 |
+| Given | `the character has a legacy version with a {string} description for a name change and an added ability` | 1 | 153 |
+| Given | `the character has a legacy version with an {string} description for an added cypher` | 1 | 121 |
+| Given | `the character has a portrait image` | 2 | 247 |
+| Given | `the character has a version from {int} minutes ago` | 1 | 257 |
+| Given | `the character has a version with multiple basic info changes` | 2 | 86 |
 | Given | `the character has no version history yet` | 4 | 8 |
-| Then | `the character name should be {string}` | 8 | 1031 |
-| Then | `the character name should match version {int} name` | 4 | 735 |
-| Then | `the character name should revert to the original value` | 2 | 1049 |
-| Then | `the character stats should match version {int} stats` | 2 | 747 |
-| Then | `the exported file should contain version {int} data` | 1 | 796 |
-| Then | `the exported file should not contain version history` | 1 | 806 |
-| Then | `the exported file should use the current portrait` | 1 | 812 |
-| Then | `the forward arrow should be disabled` | 4 | 527 |
-| Then | `the forward arrow should be enabled` | 1 | 585 |
-| Then | `the import button should be disabled` | 1 | 1209 |
-| Then | `the import button should be enabled` | 2 | 1204 |
-| Then | `the oldest version should have been removed` | 2 | 897 |
-| Then | `the portrait should remain unchanged` | 3 | 784 |
-| When | `the squash timer has completed` | 2 | 641 |
-| Then | `the timestamp should be displayed` | 1 | 559 |
-| Then | `the timestamp should be in human-readable format` | 1 | 715 |
-| Then | `the timestamp should show a relative time like {string}` | 1 | 724 |
-| Then | `the UI should remain responsive` | 2 | 862 |
-| Then | `the undo buffer should contain exactly {int} changes` | 1 | 620 |
-| Then | `the version counter should show {string}` | 25 | 509 |
-| Then | `the version description should contain {string}` | 11 | 707 |
-| Then | `the version description should contain the tier change` | 1 | 887 |
-| Then | `the version navigator should be visible` | 4 | 504 |
-| Then | `the version navigator should not be visible` | 2 | 492 |
-| Then | `the warning banner should be visible` | 7 | 575 |
-| Then | `the warning banner should contain text {string}` | 1 | 590 |
-| Then | `the warning banner should have a restore button` | 1 | 598 |
-| Then | `the warning banner should not be visible` | 2 | 882 |
+| Then | `the character name should be {string}` | 8 | 1038 |
+| Then | `the character name should match version {int} name` | 4 | 742 |
+| Then | `the character name should revert to the original value` | 2 | 1056 |
+| Then | `the character stats should match version {int} stats` | 2 | 754 |
+| Then | `the exported file should contain version {int} data` | 1 | 803 |
+| Then | `the exported file should not contain version history` | 1 | 813 |
+| Then | `the exported file should use the current portrait` | 1 | 819 |
+| Then | `the forward arrow should be disabled` | 4 | 534 |
+| Then | `the forward arrow should be enabled` | 1 | 592 |
+| Then | `the import button should be disabled` | 1 | 1216 |
+| Then | `the import button should be enabled` | 2 | 1211 |
+| Then | `the oldest version should have been removed` | 2 | 904 |
+| Then | `the portrait should remain unchanged` | 3 | 791 |
+| When | `the squash timer has completed` | 2 | 648 |
+| Then | `the timestamp should be displayed` | 1 | 566 |
+| Then | `the timestamp should be in human-readable format` | 1 | 722 |
+| Then | `the timestamp should show a relative time like {string}` | 1 | 731 |
+| Then | `the UI should remain responsive` | 2 | 869 |
+| Then | `the undo buffer should contain exactly {int} changes` | 1 | 627 |
+| Then | `the version counter should show {string}` | 25 | 516 |
+| Then | `the version description should contain {string}` | 11 | 714 |
+| Then | `the version description should contain the tier change` | 1 | 894 |
+| Then | `the version navigator should be visible` | 4 | 511 |
+| Then | `the version navigator should not be visible` | 2 | 499 |
+| Then | `the warning banner should be visible` | 7 | 582 |
+| Then | `the warning banner should contain text {string}` | 1 | 597 |
+| Then | `the warning banner should have a restore button` | 1 | 605 |
+| Then | `the warning banner should not be visible` | 2 | 889 |
+
+## viewport.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| Given | `the viewport is {int} pixels wide` | 19 | 9 |
 

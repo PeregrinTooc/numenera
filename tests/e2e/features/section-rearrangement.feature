@@ -66,7 +66,6 @@ Feature: Section Re-arrangement
     Given I have customized the layout
     And I open the settings panel
     When I click the Reset Layout button
-    And I confirm the reset
     Then the layout should return to the default arrangement
 
   Scenario: Reset layout option is enabled
@@ -115,24 +114,30 @@ Feature: Section Re-arrangement
 
   # Mobile Support
   Scenario: Edit layout button is accessible on mobile
-    Given I am using a mobile device
+    Given the viewport is 768 pixels wide
     Then I should see the "Edit Layout" button
     And it should be touch-friendly
 
+  # The gesture helper uses CDP touch input, which Playwright offers only on Chromium; covered on Pixel 5.
+  @chromium-only
   Scenario: Long-press puts a section into drag mode
-    Given I am using a mobile device
+    Given the viewport is 768 pixels wide
     And layout edit mode is active
     When I long-press the "Cyphers" section
     Then the "Cyphers" section should be in drag mode
 
+  # The gesture helper uses CDP touch input, which Playwright offers only on Chromium; covered on Pixel 5.
+  @chromium-only
   Scenario: Reorder sections by long-press dragging on a touch device
-    Given I am using a mobile device
+    Given the viewport is 768 pixels wide
     And layout edit mode is active
     When I long-press the "Cyphers" section and drag it above the "Abilities" section
     Then the "Cyphers" section should appear before the "Abilities" section
 
+  # The gesture helper uses CDP touch input, which Playwright offers only on Chromium; covered on Pixel 5.
+  @chromium-only
   Scenario: A quick swipe does not start a section drag
-    Given I am using a mobile device
+    Given the viewport is 768 pixels wide
     And layout edit mode is active
     When I swipe from the "Cyphers" section towards the "Abilities" section
     Then the "Abilities" section should appear before the "Cyphers" section

@@ -44,45 +44,30 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ## 📊 Current Status
 
-**Test Coverage**: `npm run test:unit` — 901 tests passing. `npm run test:e2e:prod` —
-412 scenarios passing, 7 `@skip`ped (all in `section-rearrangement.feature`,
-waiting on Grid Merge/Split below). 681 step definitions, all used
-(`npm run check:steps`). Re-measured after the test tech-debt cleanup
-(`docs/superpowers/plans/2026-09-27-test-tech-debt-cleanup.md`).  
+**Test Coverage**: `npm run test:unit` — 906 tests passing. `npm run test:e2e:prod`
+runs the Cucumber suite once per Rule 9 device profile (`DEVICE`, see
+`docs/rules/testing.md`; CI runs all four in the `e2e-devices` job):
+
+| Profile           | Engine   | Scenarios passing | Excluded by tag                                                     |
+| ----------------- | -------- | ----------------- | ------------------------------------------------------------------- |
+| desktop (default) | Chromium | 415 / 415         | 7 `@skip`ped (Grid Merge/Split below); 0 `@desktop-only`            |
+| `DEVICE=pixel5`   | Chromium | 394 / 394         | 21 `@not-phone`                                                     |
+| `DEVICE=iphone12` | WebKit   | 390 / 390         | 21 `@not-phone`, 3 `@chromium-only`, 1 `@known-issue-webkit-unload` |
+| `DEVICE=ipadpro`  | WebKit   | 411 / 411         | 3 `@chromium-only`, 1 `@known-issue-webkit-unload`                  |
+
+The `I reload the page` step now always waits out the 300 ms auto-save debounce
+(the save indicator stays hidden until the first save completes, so it cannot
+signal a pending one); this fixed the "Ability order persists after page reload"
+flake. Of 4 full iPad Pro runs after the fix, 3 were 411 / 411 and 1 had a single
+unidentified failure that did not recur.
+
+665 step definitions, all used (`npm run check:steps`). Measured at the end of the
+remaining-test-tech-debt work.  
 **Documentation**: See [FEATURES.md](./FEATURES.md) for complete feature list
 
 ---
 
 ## 🚨 Must-Have (Technical Debt)
-
-### Cucumber suite never exercises the Rule 9 device profiles
-
-**Overview**
-`tests/e2e/support/hooks.ts` launches one desktop Chromium context (default
-1280×720) for every scenario. The Desktop Chrome / Pixel 5 / iPhone 12 / iPad
-Pro projects in `playwright.config.ts` only apply to `playwright test`, which
-runs no Gherkin. So Rule 9 ("features must work on all of them") is not
-checked by the suite CI runs; only scenarios that call `setViewportSize`
-themselves (e.g. `the viewport is {int} pixels wide`) see other widths. Found
-when `character-display.feature`'s overflow outline exposed two layout bugs
-(long names, attack badges at 320px) that no existing scenario had caught.
-
-**Goals**
-
-- Decide how Rule 9 is enforced: run the Cucumber suite once per device
-  profile (a `DEVICE` env var read in `hooks.ts`, one CI job each), or tag
-  the viewport-sensitive scenarios and run only those per profile
-- Update `docs/rules/testing.md` to say which one it is
-- Until then, `character-display.feature`'s no-sideways-scroll outline works
-  around the gap by naming five widths explicitly (320, 390, 393, 1024, 1280)
-
-### `a character exists with the following data:` ignores its table
-
-**Overview**
-`character-display.feature`'s Background passes a data table that
-`character-display.steps.ts` discards; the scenarios pass only because the
-default character happens to match. Wire it to `this.setup.character()` or
-delete the Background.
 
 ### Tracked elsewhere
 
@@ -96,24 +81,22 @@ detail lives in the linked file.
 - [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) "Not addressed":
   `beforeunload` flushing of the buffered version-history change needs a
   deliberate decision
+  - The 300 ms auto-save debounce is not flushed on unload either. The
+    `beforeunload` handler (`src/main.ts:767-772`) flushes only
+    `versionHistoryService`, so an edit followed by a reload or tab close
+    within about 300 ms is lost on any browser.
 
----
+### Test and Component Debt
 
-## 🧹 Should-Have (Minor Debt)
-
-Left over from the PR #9 review; none of these breaks a scenario today.
-
-- **Long attack names at 320px.** An attack name with no spaces can still
-  overflow the card at 320px, and when the damage/modifier badges wrap onto
-  their own line they sit on the left instead of the right
-- **Export capture is fragile.** `tests/e2e/support/exportCapture.ts` has no
-  timeout of its own and swallows errors from the blob `fetch`, so a broken
-  export surfaces as an unrelated wait timeout
-- **Four ways to set the viewport.** `I am using a mobile device`,
-  `I am using a phone-width viewport`, `I am using a tablet-width viewport` and
-  `the viewport is {int} pixels wide` overlap; collapse them onto the last one
-- **Dead weight in the overflow outline.** Its 600-character background adds
-  nothing, because the textarea wraps internally
+- **Reorder coverage gaps.** No reorder scenario exists for attacks, special
+  abilities or items; add them. Cross-section drops are covered only for
+  cypher → abilities and ability → cypher. Add a unit test per component that a
+  drop with a null `draggedIndex` leaves the array unchanged.
+- **Untranslated-key check (low priority).** It reads body `innerText` only, so
+  it misses `aria-label` and `title`. The three "...empty state should use
+  translation keys" Thens (`combat.steps.ts` around lines 123 and 205,
+  `ability-enhancements.steps.ts` around line 114) only assert non-empty and
+  could use `RAW_I18N_KEY` (`tests/e2e/support/i18nKeys.ts`).
 
 ---
 
@@ -155,7 +138,9 @@ layout is dropped. Decided: build this rather than delete the dead code — see
 **E2E Tests**
 
 - File: `tests/e2e/features/section-rearrangement.feature` (scenarios already
-  written, currently `@skip`ped)
+  written, currently `@skip`ped). Note: the step
+  `the sections should remain in single-column layout` is a no-op (empty body) that this feature must
+  implement when un-skipping the scenarios.
   - Merge sections into grid by dragging onto another section
   - Cannot merge non-eligible sections into grid
   - Split sections from grid by dragging out

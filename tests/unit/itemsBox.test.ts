@@ -93,9 +93,6 @@ describe("ItemsBox", () => {
 
       const dragEvent = {
         preventDefault: vi.fn(),
-        dataTransfer: {
-          getData: (type: string) => (type === "application/x-section" ? "equipment" : ""),
-        },
         target: document.createElement("div"),
       };
 
@@ -127,7 +124,6 @@ describe("ItemsBox", () => {
       const internal = itemsBox as any;
       const dataTransfer = {
         setData: vi.fn(),
-        getData: (type: string) => (type === "application/x-section" ? "equipment" : ""),
       };
 
       internal.handleDragStart({ target: items[0], dataTransfer }, "equipment", "equipment-item");

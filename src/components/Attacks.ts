@@ -48,7 +48,6 @@ export class Attacks {
       this.draggedIndex = index;
       this.previewOrder = null;
       dragEvent.dataTransfer?.setData("text/plain", index.toString());
-      dragEvent.dataTransfer?.setData("application/x-section", "attacks");
       item.setAttribute("data-dragging", "true");
     }
   }
@@ -75,24 +74,12 @@ export class Attacks {
 
   private handleDrop(e: Event): void {
     e.preventDefault();
-    const dragEvent = e as globalThis.DragEvent;
 
-    // Check section to prevent cross-section drops
-    const sourceSection = dragEvent.dataTransfer?.getData("application/x-section");
-    if (sourceSection !== "attacks") {
-      this.handleDragEnd(e);
-      return;
-    }
-
-    let draggedIndex = this.draggedIndex;
+    // A drag that started in another section leaves this section's state
+    // untouched, so a null index means the drag is not ours. Decided from
+    // component state because WebKit drops custom dataTransfer types.
+    const draggedIndex = this.draggedIndex;
     if (draggedIndex === null) {
-      const transferData = dragEvent.dataTransfer?.getData("text/plain");
-      if (transferData) {
-        draggedIndex = parseInt(transferData, 10);
-      }
-    }
-
-    if (draggedIndex === null || isNaN(draggedIndex)) {
       this.handleDragEnd(e);
       return;
     }

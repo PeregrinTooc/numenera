@@ -9,15 +9,15 @@ Feature: Combat & Special Abilities
     Scenario: Display attack with all properties
         Given the character has an attack "Broadsword" with:
             | Property | Value                     |
-            | Damage   | 4                         |
-            | Modifier | 1                         |
-            | Range    | Immediate                 |
-            | Notes    | Heavy weapon, two-handed  |
+            | Damage   | 6                         |
+            | Modifier | 2                         |
+            | Range    | Short                     |
+            | Notes    | Notched blade, two-handed |
         Then I should see the attack "Broadsword"
-        And the attack "Broadsword" should show damage "4"
-        And the attack "Broadsword" should show modifier "+1"
-        And the attack "Broadsword" should show range "Immediate"
-        And the attack "Broadsword" should show notes "Heavy weapon, two-handed"
+        And the attack "Broadsword" should show damage "6"
+        And the attack "Broadsword" should show modifier "+2"
+        And the attack "Broadsword" should show range "Short"
+        And the attack "Broadsword" should show notes "Notched blade, two-handed"
 
     Scenario: Display attack without optional notes
         Then I should see the attack "Crossbow"
@@ -29,11 +29,11 @@ Feature: Combat & Special Abilities
     Scenario: Display special ability
         Given the character has a special ability "Lightning Bolt" with:
             | Property    | Value                                                        |
-            | Description | Projects a bolt of lightning up to long range                |
-            | Source      | Lightning Rod artifact                                       |
+            | Description | Arcs between up to three targets in short range              |
+            | Source      | Storm Lens artifact                                          |
         Then I should see the special ability "Lightning Bolt"
-        And the special ability "Lightning Bolt" should show description "Projects a bolt of lightning up to long range"
-        And the special ability "Lightning Bolt" should show source "Lightning Rod artifact"
+        And the special ability "Lightning Bolt" should show description "Arcs between up to three targets in short range"
+        And the special ability "Lightning Bolt" should show source "Storm Lens artifact"
 
     Scenario: Display armor badge in attacks section
         Given the character has 2 armor
@@ -51,15 +51,29 @@ Feature: Combat & Special Abilities
         And the empty special abilities state should use translation keys
 
     Scenario: Visual styling for attacks
-        Given the character has an attack "Broadsword"
-        Then the attack "Broadsword" should have red combat theme styling
+        Given the character has an attack "Halberd"
+        Then the attack "Halberd" should have red combat theme styling
 
     Scenario: Visual styling for special abilities
-        Given the character has a special ability "Lightning Bolt"
-        Then the special ability "Lightning Bolt" should have teal theme styling
+        Given the character has a special ability "Storm Call"
+        Then the special ability "Storm Call" should have teal theme styling
 
     Scenario: Two-column layout for combat section
         Given the character has special abilities and attacks
         Then the special abilities section should be in the left column
         And the attacks section should be in the right column
         And the sections should stack vertically on mobile
+
+    @validation
+    Scenario Outline: A long unbroken attack name stays inside its card at <width>px
+        Given the viewport is <width> pixels wide
+        And I am on the character sheet page
+        And the character has an attack with a 40-character name without spaces
+        Then the page should not scroll horizontally
+        And the attack badges should sit at the right edge of their card
+
+        Examples:
+            | width |
+            | 320   |
+            | 390   |
+            | 1280  |

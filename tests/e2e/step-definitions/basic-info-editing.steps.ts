@@ -1,4 +1,4 @@
-import { Given, When, Then } from "@cucumber/cucumber";
+import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 
@@ -119,22 +119,9 @@ Then("the focus should display {string}", async function (this: CustomWorld, foc
 // UNIQUE THEN STEPS - Validation Assertions
 // ============================================================================
 
-Then(
-  "the tier should be constrained to {string}",
-  async function (this: CustomWorld, _tier: string) {
-    // This happens automatically during validation
-    // The assertion happens in the next step when we check the displayed value
-  }
-);
-
 Then("the modal should not close", async function (this: CustomWorld) {
   const modal = this.page.locator('[data-testid="edit-modal"]');
   await expect(modal).toBeVisible();
-});
-
-Then("an error or validation message may appear", async function (this: CustomWorld) {
-  // This is an optional assertion - error messages might appear
-  // We don't strictly require them, so this is a no-op
 });
 
 // ============================================================================
@@ -294,14 +281,6 @@ Then(
 // ============================================================================
 // UNIQUE GIVEN/THEN STEPS - Mobile Device Configuration
 // ============================================================================
-
-Given(
-  "I am viewing on a mobile device with width {string}",
-  async function (this: CustomWorld, width: string) {
-    const widthNum = parseInt(width);
-    await this.page.setViewportSize({ width: widthNum, height: 667 });
-  }
-);
 
 Then("the modal should be sized appropriately for mobile", async function (this: CustomWorld) {
   const modal = this.page.locator('[data-testid="edit-modal"]');

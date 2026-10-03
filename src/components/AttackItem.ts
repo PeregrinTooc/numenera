@@ -138,11 +138,11 @@ export class AttackItem {
         <div class="attack-header flex flex-wrap justify-between items-start gap-2 mb-2 pr-8 pl-8">
           <h4
             data-testid="attack-name-${this.attack.name}"
-            class="attack-name font-bold text-lg text-red-900"
+            class="attack-name min-w-0 font-bold text-lg text-red-900"
           >
             ${this.attack.name}
           </h4>
-          <div class="attack-badges flex gap-2">
+          <div class="attack-badges ml-auto flex gap-2">
             <span
               data-testid="attack-damage-${this.index}"
               class="attack-badge attack-damage px-2 py-1 bg-amber-100 border border-amber-300 rounded text-xs font-semibold text-amber-900"

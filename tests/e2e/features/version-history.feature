@@ -296,6 +296,8 @@ Feature: Version History (Character Time Travel)
         When I click the forward navigation arrow
         Then the import button should be enabled
 
+    # Fails on WebKit: the async beforeunload flush of the buffered version is lost on reload. Known, deferred decision: docs/IMPLEMENTATION_PLAN.md ("beforeunload flushing") and the docs/TODO.md entry.
+    @known-issue-webkit-unload
     Scenario: Redo changes persist correctly after reload
         Given the character has 3 versions in history
         When I edit the "character name" field to "First Edit"

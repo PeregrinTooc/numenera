@@ -1,14 +1,36 @@
-import { Given, Then } from "@cucumber/cucumber";
+import { Given, Then, type DataTable } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
+import type { Attack, SpecialAbility } from "../../../src/types/character.js";
+import { FULL_CHARACTER } from "../../../src/data/mockCharacters.js";
+import type { CustomWorld } from "../support/world.js";
+import { intCell, propertyTable } from "../support/tableRows.js";
 
 // Attack step definitions
 
 Given(
   "the character has an attack {string} with:",
-  async function (_attackName: string, _dataTable) {}
+  async function (this: CustomWorld, name: string, table: DataTable) {
+    const data = propertyTable(table);
+    const attack: Attack = {
+      name,
+      damage: intCell(data.damage, "Damage"),
+      modifier: intCell(data.modifier, "Modifier"),
+      range: data.range,
+      ...(data.notes ? { notes: data.notes } : {}),
+    };
+    await this.setup.updateCharacter((character) => {
+      character.attacks = [...character.attacks.filter((a) => a.name !== name), attack];
+    });
+  }
 );
 
-Given("the character has an attack {string}", async function (_attackName: string) {});
+Given("the character has an attack {string}", async function (this: CustomWorld, name: string) {
+  await this.setup.updateCharacter((character) => {
+    if (!character.attacks.some((a) => a.name === name)) {
+      character.attacks.push({ name, damage: 4, modifier: 0, range: "Immediate" });
+    }
+  });
+});
 
 Then("I should see the attack {string}", async function (attackName: string) {
   // Attack items use generic data-testid="attack-item" without name suffix
@@ -107,21 +129,28 @@ Then("the empty attacks state should use translation keys", async function () {
 
 Given(
   "the character has a special ability {string} with:",
-  async function (abilityName: string, dataTable) {
-    this.testSpecialAbilityName = abilityName;
-    this.testSpecialAbilityProperties = {};
-
-    const rows = dataTable.raw();
-    for (let i = 0; i < rows.length; i++) {
-      const [property, value] = rows[i];
-      this.testSpecialAbilityProperties[property] = value;
-    }
+  async function (this: CustomWorld, name: string, table: DataTable) {
+    const data = propertyTable(table);
+    const ability: SpecialAbility = { name, description: data.description, source: data.source };
+    await this.setup.updateCharacter((character) => {
+      character.specialAbilities = [
+        ...character.specialAbilities.filter((a) => a.name !== name),
+        ability,
+      ];
+    });
   }
 );
 
-Given("the character has a special ability {string}", async function (abilityName: string) {
-  this.testSpecialAbilityName = abilityName;
-});
+Given(
+  "the character has a special ability {string}",
+  async function (this: CustomWorld, name: string) {
+    await this.setup.updateCharacter((character) => {
+      if (!character.specialAbilities.some((a) => a.name === name)) {
+        character.specialAbilities.push({ name, description: name, source: name });
+      }
+    });
+  }
+);
 
 Then("I should see the special ability {string}", async function (abilityName: string) {
   // Special ability items use generic data-testid="special-ability-item" without name suffix
@@ -134,11 +163,13 @@ Then("I should see the special ability {string}", async function (abilityName: s
 
 Then(
   "the special ability {string} should show description {string}",
-  async function (_abilityName: string, description: string) {
-    // Note: abilityName parameter required by Cucumber but not used in implementation
-    const descriptionElement = this.page
-      .locator(`[data-testid^="special-ability-description-"]`)
-      .first();
+  async function (abilityName: string, description: string) {
+    const specialAbilityItem = this.page.locator(
+      `[data-testid="special-ability-item"]:has([data-testid="special-ability-name-${abilityName}"])`
+    );
+    const descriptionElement = specialAbilityItem.locator(
+      '[data-testid^="special-ability-description-"]'
+    );
     await expect(descriptionElement).toBeVisible();
     await expect(descriptionElement).toContainText(description);
   }
@@ -184,9 +215,11 @@ Then("I should see the armor badge in the attacks section", async function () {
 
 // Layout step definitions
 
-Given("the character has special abilities and attacks", async function () {
-  // The default character should have both
-  // This is already the case with FULL_CHARACTER
+Given("the character has special abilities and attacks", async function (this: CustomWorld) {
+  await this.setup.character({
+    attacks: FULL_CHARACTER.attacks,
+    specialAbilities: FULL_CHARACTER.specialAbilities,
+  });
 });
 
 Then("the special abilities section should be in the left column", async function () {
@@ -206,3 +239,25 @@ Then("the sections should stack vertically on mobile", async function () {
   await expect(this.dom.getByTestId("special-abilities-section")).toBeVisible();
   await expect(this.dom.getByTestId("attacks-section")).toBeVisible();
 });
+
+Given(
+  "the character has an attack with a {int}-character name without spaces",
+  async function (this: CustomWorld, length: number) {
+    await this.setup.updateCharacter((character) => {
+      character.attacks = [{ name: "W".repeat(length), damage: 4, modifier: 1, range: "Short" }];
+    });
+  }
+);
+
+Then(
+  "the attack badges should sit at the right edge of their card",
+  async function (this: CustomWorld) {
+    const card = this.page.getByTestId("attack-item").first();
+    const badges = card.locator(".attack-badges");
+    const cardBox = await card.boundingBox();
+    const badgeBox = await badges.boundingBox();
+    if (!cardBox || !badgeBox) throw new Error("attack card or badges not rendered");
+    // pr-8 (2rem) leaves room for the edit/delete buttons; allow that plus border/padding.
+    expect(cardBox.x + cardBox.width - (badgeBox.x + badgeBox.width)).toBeLessThanOrEqual(56);
+  }
+);

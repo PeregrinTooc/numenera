@@ -189,11 +189,6 @@ Given("I open the settings panel", async function (this: CustomWorld) {
   await openSettingsPanel(this);
 });
 
-When("I confirm the reset", async function (this: CustomWorld) {
-  // For now, reset happens immediately without confirmation
-  // When confirmation dialog is added, we'll update this
-});
-
 Then("the layout should return to the default arrangement", async function (this: CustomWorld) {
   const page = this.page;
 

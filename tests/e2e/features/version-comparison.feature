@@ -15,6 +15,8 @@ Feature: Version Comparison View
         Then the version counter should show "Version 2 of 3"
         And the comparison view should not be visible
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Enabling comparison view in settings
         Given the character has 3 versions in history
         And I have opened the settings panel
@@ -33,6 +35,8 @@ Feature: Version Comparison View
 
     # Opening and default versions
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Opening comparison view defaults to the last two versions
         Given comparison view is enabled in settings
         And the character has 5 versions in history
@@ -48,6 +52,8 @@ Feature: Version Comparison View
 
     # Independent per-pane navigation
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Navigating the left pane does not move the right pane
         Given comparison view is enabled in settings
         And the character has 5 versions in history
@@ -56,6 +62,8 @@ Feature: Version Comparison View
         Then the left pane should show version 3
         And the right pane should show version 5
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Navigating the right pane does not move the left pane
         Given comparison view is enabled in settings
         And the character has 5 versions in history
@@ -64,6 +72,8 @@ Feature: Version Comparison View
         Then the right pane should show version 4
         And the left pane should show version 4
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Either pane can be moved to an arbitrary version
         Given comparison view is enabled in settings
         And the character has 10 versions in history
@@ -75,6 +85,8 @@ Feature: Version Comparison View
 
     # Change header
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Header lists every changed field between the two panes
         Given comparison view is enabled in settings
         And the character has a version with multiple basic info changes
@@ -82,6 +94,8 @@ Feature: Version Comparison View
         When I click the left pane's backward arrow
         Then the comparison header should list every changed field, not just the top 3
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Header updates when either pane moves
         Given comparison view is enabled in settings
         And the character has 5 versions with different data
@@ -89,6 +103,8 @@ Feature: Version Comparison View
         When I click the left pane's backward arrow
         Then the comparison header should reflect the new left pane version
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Header shows no differences when both panes show the same version
         Given comparison view is enabled in settings
         And the character has 5 versions in history
@@ -99,6 +115,8 @@ Feature: Version Comparison View
 
     # Highlighting
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: A changed scalar field is highlighted yellow in both panes
         Given comparison view is enabled in settings
         And the character has a version with a name change
@@ -106,6 +124,8 @@ Feature: Version Comparison View
         Then the "character name" field should be highlighted as changed in the left pane
         And the "character name" field should be highlighted as changed in the right pane
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: An added cypher is highlighted green in the right pane only
         Given comparison view is enabled in settings
         And the character has a version with an added cypher
@@ -113,6 +133,8 @@ Feature: Version Comparison View
         Then the added cypher card should be highlighted as added in the right pane
         And the left pane should not show the added cypher card
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: A removed cypher is highlighted red in the left pane only
         Given comparison view is enabled in settings
         And the character has a version with a removed cypher
@@ -120,6 +142,8 @@ Feature: Version Comparison View
         Then the removed cypher card should be highlighted as removed in the left pane
         And the right pane should not show the removed cypher card
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: A modified cypher is highlighted yellow in both panes
         Given comparison view is enabled in settings
         And the character has a version with a modified cypher effect
@@ -127,6 +151,8 @@ Feature: Version Comparison View
         Then the modified cypher card should be highlighted as changed in the left pane
         And the modified cypher card should be highlighted as changed in the right pane
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Renaming a card shows as removed and added, not modified
         Given comparison view is enabled in settings
         And the character has a version where a cypher was renamed
@@ -134,6 +160,8 @@ Feature: Version Comparison View
         Then the old cypher name should be highlighted as removed in the left pane
         And the new cypher name should be highlighted as added in the right pane
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Unchanged fields and cards show no highlight
         Given comparison view is enabled in settings
         And the character has a version with a name change
@@ -143,6 +171,8 @@ Feature: Version Comparison View
 
     # Restore per pane
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Restoring the left pane saves it as the new latest version
         Given comparison view is enabled in settings
         And the character has 5 versions in history
@@ -152,6 +182,8 @@ Feature: Version Comparison View
         Then a new version should be created with description "Restored: <version 4 description>"
         And the left pane should show the newly restored version
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Restoring the right pane saves it as the new latest version
         Given comparison view is enabled in settings
         And the character has 5 versions in history
@@ -160,12 +192,16 @@ Feature: Version Comparison View
         When I click the right pane's restore button
         Then a new version should be created with description "Restored: <version 3 description>"
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: A pane's restore button is disabled when it already shows the latest version
         Given comparison view is enabled in settings
         And the character has 5 versions in history
         And I am viewing the comparison view
         Then the right pane's restore button should be disabled
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: The other pane keeps pointing at the same version after a FIFO eviction
         Given comparison view is enabled in settings
         And the character has 99 versions in history
@@ -177,6 +213,8 @@ Feature: Version Comparison View
 
     # Exiting
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Return to editing closes comparison view
         Given comparison view is enabled in settings
         And the character has 3 versions in history
@@ -186,6 +224,8 @@ Feature: Version Comparison View
         And I should be viewing the latest version
         And all edit controls should be enabled
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Comparison view does not affect single-pane version position
         Given comparison view is enabled in settings
         And the character has 5 versions in history
@@ -196,6 +236,8 @@ Feature: Version Comparison View
 
     # Editability
 
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Fields in comparison view are read-only
         Given comparison view is enabled in settings
         And the character has 3 versions in history
@@ -206,7 +248,7 @@ Feature: Version Comparison View
     # Responsive fallback
 
     Scenario: Comparison view is unavailable on phone-width viewports
-        Given I am using a phone-width viewport
+        Given the viewport is 390 pixels wide
         And comparison view is enabled in settings
         And the character has 3 versions in history
         When I click the backward navigation arrow
@@ -214,7 +256,7 @@ Feature: Version Comparison View
         And the version counter should show "Version 2 of 3"
 
     Scenario: Comparison view is available on tablet-width viewports
-        Given I am using a tablet-width viewport
+        Given the viewport is 1024 pixels wide
         And comparison view is enabled in settings
         And the character has 3 versions in history
         When I click the backward navigation arrow

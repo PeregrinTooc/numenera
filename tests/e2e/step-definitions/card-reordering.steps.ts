@@ -1,6 +1,7 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
+import { withFullHeightViewport } from "../support/sections.js";
 
 // ============================================================================
 // SETUP STEPS - Create cyphers for testing
@@ -36,10 +37,13 @@ When(
       .locator(`[data-testid="cypher-name-${targetName}"]`)
       .locator("xpath=ancestor::div[@data-testid='cypher-item']");
 
-    // Use Playwright's dragTo method which properly triggers HTML5 drag events
-    await sourceCard.dragTo(targetCard, {
-      targetPosition: { x: 10, y: 5 }, // Drop near top of target
-    });
+    // Use Playwright's dragTo method which properly triggers HTML5 drag events.
+    // Full-height viewport: on phones the stacked cards don't all fit on screen.
+    await withFullHeightViewport(this.page, () =>
+      sourceCard.dragTo(targetCard, {
+        targetPosition: { x: 10, y: 5 }, // Drop near top of target
+      })
+    );
 
     // Wait for DOM update after reorder
     await this.page.waitForTimeout(200);
@@ -56,15 +60,18 @@ When(
       .locator(`[data-testid="cypher-name-${targetName}"]`)
       .locator("xpath=ancestor::div[@data-testid='cypher-item']");
 
-    // Get target bounding box to calculate bottom position
-    const targetBBox = await targetCard.boundingBox();
-    if (!targetBBox) {
-      throw new Error(`Could not find cypher card: ${targetName}`);
-    }
+    // Full-height viewport: on phones the stacked cards don't all fit on screen.
+    await withFullHeightViewport(this.page, async () => {
+      // Get target bounding box to calculate bottom position
+      const targetBBox = await targetCard.boundingBox();
+      if (!targetBBox) {
+        throw new Error(`Could not find cypher card: ${targetName}`);
+      }
 
-    // Use Playwright's dragTo method - drop at bottom of target
-    await sourceCard.dragTo(targetCard, {
-      targetPosition: { x: targetBBox.width / 2, y: targetBBox.height - 5 },
+      // Use Playwright's dragTo method - drop at bottom of target
+      await sourceCard.dragTo(targetCard, {
+        targetPosition: { x: targetBBox.width / 2, y: targetBBox.height - 5 },
+      });
     });
 
     // Wait for DOM update after reorder
@@ -252,9 +259,12 @@ When(
       .locator(`[data-testid="ability-name-${targetName}"]`)
       .locator("xpath=ancestor::div[starts-with(@data-testid,'ability-item')]");
 
-    await sourceCard.dragTo(targetCard, {
-      targetPosition: { x: 10, y: 5 },
-    });
+    // Full-height viewport: on phones the stacked cards don't all fit on screen.
+    await withFullHeightViewport(this.page, () =>
+      sourceCard.dragTo(targetCard, {
+        targetPosition: { x: 10, y: 5 },
+      })
+    );
 
     await this.page.waitForTimeout(200);
   }
@@ -297,6 +307,27 @@ When(
     await sourceCard.dragTo(abilitiesSection, {
       targetPosition: { x: 50, y: 50 },
     });
+
+    await this.page.waitForTimeout(200);
+  }
+);
+
+When(
+  "I drag ability {string} onto cypher {string}",
+  async function (this: CustomWorld, abilityName: string, cypherName: string) {
+    const sourceCard = this.page
+      .locator(`[data-testid="ability-name-${abilityName}"]`)
+      .locator("xpath=ancestor::div[starts-with(@data-testid,'ability-item')]");
+    const targetCard = this.page
+      .locator(`[data-testid="cypher-name-${cypherName}"]`)
+      .locator("xpath=ancestor::div[@data-testid='cypher-item']");
+
+    // Full-height viewport: on phones the two sections don't both fit on screen.
+    await withFullHeightViewport(this.page, () =>
+      sourceCard.dragTo(targetCard, {
+        targetPosition: { x: 10, y: 5 },
+      })
+    );
 
     await this.page.waitForTimeout(200);
   }

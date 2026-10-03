@@ -1,6 +1,7 @@
 import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
-import { chromium, Browser } from "@playwright/test";
+import { chromium, webkit, devices, Browser } from "@playwright/test";
 import { CustomWorld } from "./world";
+import { resolveDevice } from "./device.js";
 import { TestStorageHelper } from "./testStorageHelper.js";
 import { DOMHelpers } from "./dom-helpers.js";
 import { ModalDsl } from "./modal.js";
@@ -10,6 +11,9 @@ import { SetupDsl } from "./setup.js";
 
 let browser: Browser;
 
+const DEVICE = resolveDevice(process.env.DEVICE);
+const ENGINES = { chromium, webkit } as const;
+
 // Server is managed by concurrently + wait-on in package.json scripts
 // We just need to know which port to connect to
 const SERVER_PORT = process.env.TEST_PROD === "true" ? 4173 : 3000;
@@ -18,12 +22,14 @@ const BASE_URL = `http://localhost:${SERVER_PORT}`;
 BeforeAll({ timeout: 60000 }, async function () {
   // Server is already running (started by concurrently, verified by wait-on)
   // Just launch the browser
-  browser = await chromium.launch({
+  browser = await ENGINES[DEVICE.engine].launch({
     headless: !process.env.HEADED,
     // Optional escape hatch for environments where Playwright's pinned
     // browser download isn't reachable. Unset by default (undefined), so
     // normal local/CI runs are unaffected and use Playwright's own browser.
-    executablePath: process.env.PW_EXEC_PATH || undefined,
+    // PW_EXEC_PATH points at a Chromium binary; never hand it to WebKit.
+    executablePath:
+      DEVICE.engine === "chromium" ? process.env.PW_EXEC_PATH || undefined : undefined,
   });
 });
 
@@ -34,7 +40,12 @@ Before(async function (this: CustomWorld) {
   // definitions assert on hardcoded English strings, so an unpinned locale
   // makes every scenario fail deterministically on a non-English machine
   // (doesn't show up in CI, which already runs en-US).
+  const descriptor = devices[DEVICE.descriptor];
+  if (!descriptor) throw new Error(`Playwright has no device "${DEVICE.descriptor}"`);
   this.context = await browser.newContext({
+    ...descriptor,
+    // Kept from before device profiles: the desktop profile needs touch for
+    // tap() and the Chromium touch-gesture scenarios.
     hasTouch: true,
     locale: "en-US",
   });

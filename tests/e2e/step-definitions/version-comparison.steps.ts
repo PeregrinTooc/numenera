@@ -413,11 +413,3 @@ Then(
 // ----------------------------------------------------------------------------
 // Responsive fallback
 // ----------------------------------------------------------------------------
-
-Given("I am using a phone-width viewport", async function (this: CustomWorld) {
-  await this.page.setViewportSize({ width: 390, height: 844 }); // iPhone 12 width
-});
-
-Given("I am using a tablet-width viewport", async function (this: CustomWorld) {
-  await this.page.setViewportSize({ width: 1024, height: 1366 }); // iPad Pro portrait width
-});

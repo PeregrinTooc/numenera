@@ -69,7 +69,7 @@ Feature: Resource Tracker Fields Editing
         And the modal should show a real validation error, not a raw translation key
 
     Scenario: XP badges on mobile devices
-        Given I am using a mobile device
+        Given the viewport is 768 pixels wide
         And the character has 5 current XP and 45 total XP
         When I tap the Current XP badge
         Then the edit modal should open
@@ -120,7 +120,7 @@ Feature: Resource Tracker Fields Editing
         Then the Shins badge should show "0"
 
     Scenario: Shins on mobile devices
-        Given I am using a mobile device
+        Given the viewport is 768 pixels wide
         And the character has 100 shins
         When I tap the Shins badge
         Then the edit modal should open
