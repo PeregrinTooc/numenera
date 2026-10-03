@@ -26,22 +26,22 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **681** in 25 files
-- Feature step lines: **2036**
+- Step definitions: **676** in 26 files
+- Feature step lines: **2035**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
 | [ability-enhancements.steps.ts](#abilityenhancementsstepsts) | 13 | 0 |
-| [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 37 | 0 |
+| [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 36 | 0 |
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
-| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 37 | 0 |
+| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 36 | 0 |
 | [card-creation.steps.ts](#cardcreationstepsts) | 89 | 0 |
 | [card-deletion.steps.ts](#carddeletionstepsts) | 40 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 12 | 0 |
-| [character-display.steps.ts](#characterdisplaystepsts) | 44 | 0 |
+| [character-display.steps.ts](#characterdisplaystepsts) | 42 | 0 |
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
@@ -56,8 +56,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [section-rearrangement.steps.ts](#sectionrearrangementstepsts) | 50 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
-| [version-comparison.steps.ts](#versioncomparisonstepsts) | 43 | 0 |
+| [version-comparison.steps.ts](#versioncomparisonstepsts) | 41 | 0 |
 | [version-history.steps.ts](#versionhistorystepsts) | 82 | 0 |
+| [viewport.steps.ts](#viewportstepsts) | 1 | 0 |
 
 ## ability-enhancements.steps.ts
 
@@ -81,43 +82,42 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am using a mobile device` | 9 | 308 |
-| When | `I clear the {textarea} textarea` | 4 | 151 |
-| When | `I click outside the {textarea} textarea` | 11 | 162 |
-| When | `I click the {textarea} textarea` | 20 | 147 |
-| When | `I select {string} from the mobile picker` | 1 | 339 |
-| When | `I select {string} from the type dropdown` | 4 | 39 |
-| When | `I tap outside the {textarea} textarea` | 2 | 366 |
-| When | `I tap the {textarea} textarea` | 2 | 344 |
-| When | `I tap the type dropdown` | 1 | 327 |
-| When | `I type {string} in the {textarea} textarea` | 12 | 155 |
-| When | `I type a {int} character string in the background textarea` | 1 | 240 |
-| When | `I type a {int} character string in the notes textarea` | 1 | 249 |
-| Then | `the {textarea} placeholder should be {string}` | 2 | 214 |
-| When | `the {textarea} textarea is empty` | 2 | 210 |
-| Then | `the {textarea} textarea should be empty` | 2 | 200 |
-| Then | `the {textarea} textarea should be focused` | 4 | 182 |
-| Then | `the {textarea} textarea should be readonly` | 8 | 120 |
-| Then | `the {textarea} textarea should become editable` | 2 | 348 |
-| Then | `the {textarea} textarea should have a pointer cursor` | 2 | 137 |
-| Then | `the {textarea} textarea should have an edit state visual indicator` | 2 | 189 |
-| Then | `the {textarea} textarea should not be readonly` | 4 | 172 |
-| Then | `the {textarea} textarea should show {string}` | 14 | 127 |
-| Then | `the background textarea should contain the full {int} character text` | 1 | 258 |
-| Then | `the background textarea should still be editable` | 1 | 204 |
-| Then | `the character data should have {textarea} {string}` | 5 | 222 |
-| Then | `the character data should have the full background text` | 1 | 278 |
-| Then | `the character data should have the full notes text` | 1 | 291 |
-| Then | `the character data should have type {string}` | 1 | 73 |
-| Given | `the character has the following data:` | 1 | 10 |
-| Then | `the mobile OS picker should open` | 1 | 332 |
-| Then | `the notes textarea should contain the full {int} character text` | 1 | 268 |
-| Then | `the type dropdown label should be {string}` | 1 | 87 |
-| Then | `the type dropdown option for {string} should display as {string}` | 3 | 96 |
-| Then | `the type dropdown options should be {string}, {string}, {string}` | 1 | 61 |
-| Then | `the type dropdown should have {int} options` | 1 | 52 |
-| Then | `the type dropdown should show {string} as selected` | 6 | 44 |
-| Then | `the virtual keyboard should appear` | 2 | 357 |
+| When | `I clear the {textarea} textarea` | 4 | 150 |
+| When | `I click outside the {textarea} textarea` | 11 | 161 |
+| When | `I click the {textarea} textarea` | 20 | 146 |
+| When | `I select {string} from the mobile picker` | 1 | 315 |
+| When | `I select {string} from the type dropdown` | 4 | 38 |
+| When | `I tap outside the {textarea} textarea` | 2 | 342 |
+| When | `I tap the {textarea} textarea` | 2 | 320 |
+| When | `I tap the type dropdown` | 1 | 303 |
+| When | `I type {string} in the {textarea} textarea` | 12 | 154 |
+| When | `I type a {int} character string in the background textarea` | 1 | 239 |
+| When | `I type a {int} character string in the notes textarea` | 1 | 248 |
+| Then | `the {textarea} placeholder should be {string}` | 2 | 213 |
+| When | `the {textarea} textarea is empty` | 2 | 209 |
+| Then | `the {textarea} textarea should be empty` | 2 | 199 |
+| Then | `the {textarea} textarea should be focused` | 4 | 181 |
+| Then | `the {textarea} textarea should be readonly` | 8 | 119 |
+| Then | `the {textarea} textarea should become editable` | 2 | 324 |
+| Then | `the {textarea} textarea should have a pointer cursor` | 2 | 136 |
+| Then | `the {textarea} textarea should have an edit state visual indicator` | 2 | 188 |
+| Then | `the {textarea} textarea should not be readonly` | 4 | 171 |
+| Then | `the {textarea} textarea should show {string}` | 14 | 126 |
+| Then | `the background textarea should contain the full {int} character text` | 1 | 257 |
+| Then | `the background textarea should still be editable` | 1 | 203 |
+| Then | `the character data should have {textarea} {string}` | 5 | 221 |
+| Then | `the character data should have the full background text` | 1 | 277 |
+| Then | `the character data should have the full notes text` | 1 | 290 |
+| Then | `the character data should have type {string}` | 1 | 72 |
+| Given | `the character has the following data:` | 1 | 9 |
+| Then | `the mobile OS picker should open` | 1 | 308 |
+| Then | `the notes textarea should contain the full {int} character text` | 1 | 267 |
+| Then | `the type dropdown label should be {string}` | 1 | 86 |
+| Then | `the type dropdown option for {string} should display as {string}` | 3 | 95 |
+| Then | `the type dropdown options should be {string}, {string}, {string}` | 1 | 60 |
+| Then | `the type dropdown should have {int} options` | 1 | 51 |
+| Then | `the type dropdown should show {string} as selected` | 6 | 43 |
+| Then | `the virtual keyboard should appear` | 2 | 333 |
 
 ## auto-save-indicator.steps.ts
 
@@ -144,38 +144,37 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `an error or validation message may appear` | 1 | 134 |
 | Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 208 |
 | Then | `focus should not leave the modal` | 1 | 242 |
-| Given | `I am viewing on a mobile device with width {string}` | 6 | 297 |
 | Then | `I can cancel with Escape key` | 1 | 267 |
 | Then | `I can confirm with Enter key` | 1 | 260 |
 | Then | `I can navigate with Tab key` | 1 | 252 |
 | When | `I press Tab repeatedly` | 1 | 30 |
 | Then | `the backdrop should have aria-hidden={string}` | 1 | 284 |
-| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 349 |
+| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 341 |
 | Then | `the cancel button should have an X icon` | 1 | 158 |
-| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 377 |
+| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 369 |
 | Then | `the character name should display {string}` | 6 | 82 |
 | Then | `the character name should still display {string}` | 6 | 90 |
 | Then | `the confirm button should have a checkmark icon` | 1 | 152 |
-| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 397 |
+| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 389 |
 | Then | `the descriptor should display {string}` | 4 | 104 |
-| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 407 |
+| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 399 |
 | Then | `the focus should display {string}` | 4 | 112 |
-| Then | `the input field should be large enough for touch input` | 1 | 369 |
+| Then | `the input field should be large enough for touch input` | 1 | 361 |
 | Then | `the input field should be of type {string}` | 1 | 69 |
-| Then | `the input field should have inputmode={string} for mobile` | 1 | 320 |
-| Then | `the mobile keyboard should appear` | 1 | 314 |
+| Then | `the input field should have inputmode={string} for mobile` | 1 | 312 |
+| Then | `the mobile keyboard should appear` | 1 | 306 |
 | Then | `the modal backdrop should be semi-transparent` | 1 | 164 |
-| Then | `the modal should be sized appropriately for mobile` | 1 | 305 |
-| Then | `the modal should fill most of the screen width` | 1 | 329 |
+| Then | `the modal should be sized appropriately for mobile` | 1 | 297 |
+| Then | `the modal should fill most of the screen width` | 1 | 321 |
 | Then | `the modal should have a cancel button with icon` | 1 | 62 |
 | Then | `the modal should have a confirm button with icon` | 1 | 55 |
 | Then | `the modal should have Numenera-themed styling` | 1 | 143 |
 | Then | `the modal should have role={string}` | 1 | 278 |
 | Then | `the modal should not close` | 1 | 129 |
-| Then | `the modal should not overflow the viewport` | 1 | 339 |
+| Then | `the modal should not overflow the viewport` | 1 | 331 |
 | Then | `the name should show a hover state indicating it's editable` | 1 | 182 |
 | Then | `the tier should be constrained to {string}` | 2 | 121 |
-| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 387 |
+| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 379 |
 | Then | `the tier should display {string}` | 6 | 98 |
 | Then | `the tier should show a hover state indicating it's editable` | 1 | 193 |
 
@@ -379,7 +378,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `I should see empty state for notes` | 1 | 192 |
 | Then | `I should see focus {string} displayed` | 1 | 36 |
 | Then | `I should see oddity {string}` | 2 | 115 |
-| Then | `I should see sections in this order:` | 1 | 288 |
+| Then | `I should see sections in this order:` | 1 | 275 |
 | Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 50 |
 | Then | `I should see the abilities text` | 1 | 152 |
 | Then | `I should see the background text` | 1 | 128 |
@@ -389,8 +388,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `I should see tier {string} displayed` | 1 | 22 |
 | Then | `I should see type {string} displayed` | 1 | 26 |
 | Then | `no markup from the text should be rendered as HTML` | 1 | 250 |
-| Given | `the character has a {int}-character background without spaces` | 1 | 269 |
-| Given | `the character has a {int}-character name without spaces` | 1 | 260 |
+| Given | `the character has a {int}-character name without spaces` | 1 | 257 |
 | Given | `the character has empty text fields` | 1 | 180 |
 | Given | `the character has no {cardTypes}` | 6 | 163 |
 | Given | `the character has the following artifacts:` | 1 | 90 |
@@ -402,8 +400,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the character text should read exactly:` | 1 | 234 |
 | Then | `the cyphers section label should use translation keys` | 1 | 84 |
 | Then | `the items section labels should use translation keys` | 1 | 119 |
-| Then | `the page should not scroll horizontally` | 1 | 278 |
-| Given | `the viewport is {int} pixels wide` | 1 | 257 |
+| Then | `the page should not scroll horizontally` | 1 | 265 |
 
 ## character-file-export.steps.ts
 
@@ -736,8 +733,6 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | --- | --- | ---: | ---: |
 | Given | `comparison view is enabled in settings` | 23 | 42 |
 | Then | `comparison view should show as enabled in settings` | 1 | 58 |
-| Given | `I am using a phone-width viewport` | 1 | 416 |
-| Given | `I am using a tablet-width viewport` | 1 | 420 |
 | Given | `I am viewing the comparison view` | 19 | 66 |
 | When | `I click the left pane's backward arrow` | 3 | 163 |
 | When | `I click the left pane's backward arrow {int} time(s)` | 2 | 175 |
@@ -864,4 +859,10 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the warning banner should contain text {string}` | 1 | 590 |
 | Then | `the warning banner should have a restore button` | 1 | 598 |
 | Then | `the warning banner should not be visible` | 2 | 882 |
+
+## viewport.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| Given | `the viewport is {int} pixels wide` | 18 | 8 |
 

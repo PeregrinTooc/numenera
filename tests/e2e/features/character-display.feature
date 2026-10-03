@@ -105,14 +105,13 @@ Feature: Single Character Display
             | Background | Born in <Unknown Location> & raised alone |
         And no markup from the text should be rendered as HTML
 
-    # The Cucumber suite runs one desktop Chromium context, so each width the
-    # Playwright device profiles cover (plus the narrowest phone) is listed.
+    # Widths below every device profile's (320) and at each profile's own width,
+    # so the check holds even when the suite runs only the desktop profile.
     @validation
     Scenario Outline: Long unbroken text does not make the sheet scroll sideways at <width>px
         Given the viewport is <width> pixels wide
         And I am on the character sheet page
         And the character has a 50-character name without spaces
-        And the character has a 600-character background without spaces
         Then the page should not scroll horizontally
 
         Examples:

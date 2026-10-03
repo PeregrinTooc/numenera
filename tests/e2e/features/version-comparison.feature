@@ -206,7 +206,7 @@ Feature: Version Comparison View
     # Responsive fallback
 
     Scenario: Comparison view is unavailable on phone-width viewports
-        Given I am using a phone-width viewport
+        Given the viewport is 390 pixels wide
         And comparison view is enabled in settings
         And the character has 3 versions in history
         When I click the backward navigation arrow
@@ -214,7 +214,7 @@ Feature: Version Comparison View
         And the version counter should show "Version 2 of 3"
 
     Scenario: Comparison view is available on tablet-width viewports
-        Given I am using a tablet-width viewport
+        Given the viewport is 1024 pixels wide
         And comparison view is enabled in settings
         And the character has 3 versions in history
         When I click the backward navigation arrow

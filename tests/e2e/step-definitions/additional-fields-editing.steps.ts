@@ -2,7 +2,6 @@ import { When, Then, Given } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { waitForSaveComplete } from "../support/save.js";
-import { waitForCharacterSheetReady } from "../support/app-ready.js";
 
 // ============================================================================
 // BACKGROUND DATA SETUP - Unique to additional fields
@@ -300,29 +299,6 @@ Then("the character data should have the full notes text", async function (this:
   const notes = storedData.textFields.notes;
   expect(notes.length).toBe(2000);
   expect(notes).toBe("B".repeat(2000));
-});
-
-// ============================================================================
-// MOBILE DEVICE STEPS - Unique to additional fields
-// ============================================================================
-
-Given("I am using a mobile device", async function (this: CustomWorld) {
-  // Set mobile viewport for tablet (iPad)
-  await this.page.setViewportSize({ width: 768, height: 1024 });
-
-  // Set user agent via context
-  const context = this.page.context();
-  await context.addInitScript(() => {
-    // eslint-disable-next-line no-undef
-    Object.defineProperty(navigator, "userAgent", {
-      get: () =>
-        "Mozilla/5.0 (iPad; CPU OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1",
-    });
-  });
-
-  // Reload page to apply changes
-  await this.page.reload();
-  await waitForCharacterSheetReady(this.page);
 });
 
 When("I tap the type dropdown", async function (this: CustomWorld) {

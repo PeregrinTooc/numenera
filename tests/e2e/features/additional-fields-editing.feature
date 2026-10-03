@@ -32,7 +32,7 @@ Feature: Additional Character Fields Editing
         Then the type dropdown should show "Jack" as selected
 
     Scenario: Type dropdown works on mobile devices
-        Given I am using a mobile device
+        Given the viewport is 768 pixels wide
         When I tap the type dropdown
         Then the mobile OS picker should open
         When I select "Glaive" from the mobile picker
@@ -92,7 +92,7 @@ Feature: Additional Character Fields Editing
         And the character data should have the full background text
 
     Scenario: Background field works on mobile devices
-        Given I am using a mobile device
+        Given the viewport is 768 pixels wide
         When I tap the background textarea
         Then the background textarea should become editable
         And the virtual keyboard should appear
@@ -154,7 +154,7 @@ Feature: Additional Character Fields Editing
         And the character data should have the full notes text
 
     Scenario: Notes field works on mobile devices
-        Given I am using a mobile device
+        Given the viewport is 768 pixels wide
         When I tap the notes textarea
         Then the notes textarea should become editable
         And the virtual keyboard should appear

@@ -179,7 +179,7 @@ Feature: Edit Basic Character Information
 
     @mobile
     Scenario: Tap on character name opens edit modal on mobile
-        Given I am viewing on a mobile device with width "375px"
+        Given the viewport is 375 pixels wide
         When I tap on the character name "Kael the Wanderer"
         Then an edit modal should appear
         And the modal should be sized appropriately for mobile
@@ -187,7 +187,7 @@ Feature: Edit Basic Character Information
 
     @mobile
     Scenario: Edit character name on mobile device
-        Given I am viewing on a mobile device with width "375px"
+        Given the viewport is 375 pixels wide
         When I tap on the character name "Kael the Wanderer"
         And I clear the input field
         And I type "Kael the Wise" in the modal input
@@ -199,7 +199,7 @@ Feature: Edit Basic Character Information
 
     @mobile
     Scenario: Edit tier on mobile device with number keyboard
-        Given I am viewing on a mobile device with width "375px"
+        Given the viewport is 375 pixels wide
         When I tap on the tier "3"
         Then an edit modal should appear
         And the input field should have inputmode="numeric" for mobile
@@ -211,7 +211,7 @@ Feature: Edit Basic Character Information
 
     @mobile
     Scenario: Modal is properly sized on mobile viewport
-        Given I am viewing on a mobile device with width "375px"
+        Given the viewport is 375 pixels wide
         When I tap on the character name "Kael the Wanderer"
         Then the modal should fill most of the screen width
         And the modal should not overflow the viewport
@@ -220,7 +220,7 @@ Feature: Edit Basic Character Information
 
     @mobile
     Scenario: Cancel edit by tapping outside modal on mobile
-        Given I am viewing on a mobile device with width "375px"
+        Given the viewport is 375 pixels wide
         When I tap on the character name "Kael the Wanderer"
         And I type "New Name" in the modal input
         And I tap outside the modal on the backdrop
@@ -231,7 +231,7 @@ Feature: Edit Basic Character Information
 
     @mobile
     Scenario: Editable fields show touch-friendly tap targets on mobile
-        Given I am viewing on a mobile device with width "375px"
+        Given the viewport is 375 pixels wide
         When I am on the character sheet page
         Then the character name should be large enough for touch (min 44x44px)
         And the tier should be large enough for touch (min 44x44px)

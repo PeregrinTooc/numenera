@@ -115,24 +115,24 @@ Feature: Section Re-arrangement
 
   # Mobile Support
   Scenario: Edit layout button is accessible on mobile
-    Given I am using a mobile device
+    Given the viewport is 768 pixels wide
     Then I should see the "Edit Layout" button
     And it should be touch-friendly
 
   Scenario: Long-press puts a section into drag mode
-    Given I am using a mobile device
+    Given the viewport is 768 pixels wide
     And layout edit mode is active
     When I long-press the "Cyphers" section
     Then the "Cyphers" section should be in drag mode
 
   Scenario: Reorder sections by long-press dragging on a touch device
-    Given I am using a mobile device
+    Given the viewport is 768 pixels wide
     And layout edit mode is active
     When I long-press the "Cyphers" section and drag it above the "Abilities" section
     Then the "Cyphers" section should appear before the "Abilities" section
 
   Scenario: A quick swipe does not start a section drag
-    Given I am using a mobile device
+    Given the viewport is 768 pixels wide
     And layout edit mode is active
     When I swipe from the "Cyphers" section towards the "Abilities" section
     Then the "Abilities" section should appear before the "Cyphers" section

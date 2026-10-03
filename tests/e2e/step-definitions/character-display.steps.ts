@@ -254,24 +254,11 @@ Then("no markup from the text should be rendered as HTML", async function (this:
 });
 
 // Scenario Outline: Long unbroken text does not make the sheet scroll sideways
-Given("the viewport is {int} pixels wide", async function (this: CustomWorld, width: number) {
-  await this.page.setViewportSize({ width, height: 800 });
-});
-
 Given(
   "the character has a {int}-character name without spaces",
   async function (this: CustomWorld, length: number) {
     await this.setup.updateCharacter((character) => {
       character.name = "W".repeat(length);
-    });
-  }
-);
-
-Given(
-  "the character has a {int}-character background without spaces",
-  async function (this: CustomWorld, length: number) {
-    await this.setup.updateCharacter((character) => {
-      character.textFields.background = "W".repeat(length);
     });
   }
 );

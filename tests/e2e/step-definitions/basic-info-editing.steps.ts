@@ -1,4 +1,4 @@
-import { Given, When, Then } from "@cucumber/cucumber";
+import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 
@@ -294,14 +294,6 @@ Then(
 // ============================================================================
 // UNIQUE GIVEN/THEN STEPS - Mobile Device Configuration
 // ============================================================================
-
-Given(
-  "I am viewing on a mobile device with width {string}",
-  async function (this: CustomWorld, width: string) {
-    const widthNum = parseInt(width);
-    await this.page.setViewportSize({ width: widthNum, height: 667 });
-  }
-);
 
 Then("the modal should be sized appropriately for mobile", async function (this: CustomWorld) {
   const modal = this.page.locator('[data-testid="edit-modal"]');
