@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **663** in 26 files
-- Feature step lines: **2028**
+- Step definitions: **665** in 26 files
+- Feature step lines: **2033**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
@@ -45,7 +45,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
-| [combat.steps.ts](#combatstepsts) | 22 | 0 |
+| [combat.steps.ts](#combatstepsts) | 24 | 0 |
 | [common-steps.ts](#commonstepsts) | 34 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 5 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 12 | 0 |
@@ -358,7 +358,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 46 | 23 |
+| Given | `I am on the character sheet page` | 47 | 23 |
 | Then | `I should see {int} artifact displayed` | 1 | 138 |
 | Then | `I should see {int} cyphers displayed` | 1 | 100 |
 | Then | `I should see {int} oddities displayed` | 1 | 151 |
@@ -388,7 +388,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Given | `the character has the following stats:` | 1 | 57 |
 | Given | `the character has the following text:` | 2 | 217 |
 | Then | `the character text should read exactly:` | 2 | 231 |
-| Then | `the page should not scroll horizontally` | 1 | 264 |
+| Then | `the page should not scroll horizontally` | 2 | 264 |
 
 ## character-file-export.steps.ts
 
@@ -439,11 +439,13 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the attack {string} should show modifier {string}` | 2 | 57 |
 | Then | `the attack {string} should show notes {string}` | 1 | 85 |
 | Then | `the attack {string} should show range {string}` | 2 | 71 |
+| Then | `the attack badges should sit at the right edge of their card` | 1 | 251 |
 | Then | `the attacks section should be in the right column` | 1 | 229 |
 | Given | `the character has a special ability {string}` | 1 | 143 |
 | Given | `the character has a special ability {string} with:` | 1 | 129 |
 | Given | `the character has an attack {string}` | 1 | 26 |
 | Given | `the character has an attack {string} with:` | 1 | 9 |
+| Given | `the character has an attack with a {int}-character name without spaces` | 1 | 242 |
 | Given | `the character has special abilities and attacks` | 1 | 217 |
 | Then | `the empty attacks state should use translation keys` | 1 | 122 |
 | Then | `the empty special abilities state should use translation keys` | 1 | 204 |
@@ -851,5 +853,5 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 18 | 8 |
+| Given | `the viewport is {int} pixels wide` | 19 | 8 |
 

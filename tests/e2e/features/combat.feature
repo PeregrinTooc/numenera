@@ -63,3 +63,17 @@ Feature: Combat & Special Abilities
         Then the special abilities section should be in the left column
         And the attacks section should be in the right column
         And the sections should stack vertically on mobile
+
+    @validation
+    Scenario Outline: A long unbroken attack name stays inside its card at <width>px
+        Given the viewport is <width> pixels wide
+        And I am on the character sheet page
+        And the character has an attack with a 40-character name without spaces
+        Then the page should not scroll horizontally
+        And the attack badges should sit at the right edge of their card
+
+        Examples:
+            | width |
+            | 320   |
+            | 390   |
+            | 1280  |

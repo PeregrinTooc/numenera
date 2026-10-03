@@ -239,3 +239,25 @@ Then("the sections should stack vertically on mobile", async function () {
   await expect(this.dom.getByTestId("special-abilities-section")).toBeVisible();
   await expect(this.dom.getByTestId("attacks-section")).toBeVisible();
 });
+
+Given(
+  "the character has an attack with a {int}-character name without spaces",
+  async function (this: CustomWorld, length: number) {
+    await this.setup.updateCharacter((character) => {
+      character.attacks = [{ name: "W".repeat(length), damage: 4, modifier: 1, range: "Short" }];
+    });
+  }
+);
+
+Then(
+  "the attack badges should sit at the right edge of their card",
+  async function (this: CustomWorld) {
+    const card = this.page.getByTestId("attack-item").first();
+    const badges = card.locator(".attack-badges");
+    const cardBox = await card.boundingBox();
+    const badgeBox = await badges.boundingBox();
+    if (!cardBox || !badgeBox) throw new Error("attack card or badges not rendered");
+    // pr-8 (2rem) leaves room for the edit/delete buttons; allow that plus border/padding.
+    expect(cardBox.x + cardBox.width - (badgeBox.x + badgeBox.width)).toBeLessThanOrEqual(56);
+  }
+);
