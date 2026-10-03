@@ -53,10 +53,13 @@ runs the Cucumber suite once per Rule 9 device profile (`DEVICE`, see
 | desktop (default) | Chromium | 415 / 415         | 7 `@skip`ped (Grid Merge/Split below); 0 `@desktop-only`            |
 | `DEVICE=pixel5`   | Chromium | 394 / 394         | 21 `@not-phone`                                                     |
 | `DEVICE=iphone12` | WebKit   | 390 / 390         | 21 `@not-phone`, 3 `@chromium-only`, 1 `@known-issue-webkit-unload` |
-| `DEVICE=ipadpro`  | WebKit   | 410 / 411 (flake) | 3 `@chromium-only`, 1 `@known-issue-webkit-unload`                  |
+| `DEVICE=ipadpro`  | WebKit   | 411 / 411         | 3 `@chromium-only`, 1 `@known-issue-webkit-unload`                  |
 
-The iPad Pro run had one intermittent WebKit failure, "Ability order persists
-after page reload" (`card-reordering.feature`); it passed 2/2 on isolated re-runs.
+The `I reload the page` step now always waits out the 300 ms auto-save debounce
+(the save indicator stays hidden until the first save completes, so it cannot
+signal a pending one); this fixed the "Ability order persists after page reload"
+flake. Of 4 full iPad Pro runs after the fix, 3 were 411 / 411 and 1 had a single
+unidentified failure that did not recur.
 
 665 step definitions, all used (`npm run check:steps`). Measured at the end of the
 remaining-test-tech-debt work.  
@@ -78,6 +81,27 @@ detail lives in the linked file.
 - [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) "Not addressed":
   `beforeunload` flushing of the buffered version-history change needs a
   deliberate decision
+  - The 300 ms auto-save debounce is not flushed on unload either. The
+    `beforeunload` handler (`src/main.ts:767-772`) flushes only
+    `versionHistoryService`, so an edit followed by a reload or tab close
+    within about 300 ms is lost on any browser.
+
+### Test and Component Debt
+
+- **CyphersBox cross-section drop (desktop bug, predates the test-debt work).**
+  The `text/plain` fallback in `src/components/CyphersBox.ts` (around lines
+  129-137) means dropping a card from another section (e.g. an ability card) on
+  a cypher card reorders cyphers. Fix: delete the fallback and keep the
+  `draggedIndex === null` guard. Write the scenario first ("Cannot drag ability
+  into cyphers section").
+- **Reorder coverage gaps.** No reorder scenario exists for attacks, special
+  abilities or items; add them. Add a unit test per component that a drop with a
+  null `draggedIndex` leaves the array unchanged.
+- **Untranslated-key check (low priority).** It reads body `innerText` only, so
+  it misses `aria-label` and `title`. The three "...empty state should use
+  translation keys" Thens (`combat.steps.ts` around lines 123 and 205,
+  `ability-enhancements.steps.ts` around line 114) only assert non-empty and
+  could use `RAW_I18N_KEY` (`tests/e2e/support/i18nKeys.ts`).
 
 ---
 
