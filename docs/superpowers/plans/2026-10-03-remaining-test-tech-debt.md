@@ -1,6 +1,6 @@
 # Remaining Test Tech-Debt Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task (the maintainer chose it). Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Clear the remaining test-suite debt listed in `docs/TODO.md` after PR #9:
 
@@ -22,7 +22,8 @@ The plan touches production code in two places: the attack-card CSS (Task 6), an
 
 **Spec:** No separate spec. The requirements come from:
 
-- `docs/TODO.md` on PR #9's head (`e6732b3`): the two "🚨 Must-Have (Technical Debt)" entries and the four "🧹 Should-Have (Minor Debt)" entries
+- maintainer decisions (2026-10-03): Rule 9 is enforced by running the whole Cucumber suite once per device profile, skipping only `@desktop-only` scenarios (Task 8). Execution is subagent-driven.
+- `docs/TODO.md` as merged with PR #9 (`821bc78`): the two "🚨 Must-Have (Technical Debt)" entries and the four "🧹 Should-Have (Minor Debt)" entries
 - findings made on 2026-10-03 while planning, listed below. Each one is verified against the code.
 
 1. **22 step definitions have empty bodies.** They are listed in Task 4's table. The "ignored table" in the TODO is one of 8 setup Givens that seed nothing. 7 `… should use translation keys` Thens assert nothing.
@@ -958,7 +959,7 @@ git commit -m "test(e2e): select the Playwright device profile from DEVICE" -m "
 
 Must-Have #1, part 2. This task is **discovery**: its failures can't be listed in advance. Its deliverable is the full suite passing on all four profiles, with every exclusion justified.
 
-**Decision recorded here (the maintainer may override at review):** run the **whole** suite on every profile, minus scenarios tagged `@desktop-only`. Don't run only a hand-picked `@responsive` subset. Reasons:
+**Decided (maintainer, 2026-10-03):** run the **whole** suite on every profile, minus scenarios tagged `@desktop-only`. Don't run only a hand-picked `@responsive` subset. Don't reopen this during execution. Reasons:
 
 - A subset needs someone to remember to tag each new scenario, and today's gap came from exactly that kind of omission.
 - In CI the matrix jobs run in parallel, so wall-clock time stays close to one run.
