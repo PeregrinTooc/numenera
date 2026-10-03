@@ -122,19 +122,12 @@ export class CyphersBox {
 
   private handleDrop(e: Event): void {
     e.preventDefault();
-    const dragEvent = e as globalThis.DragEvent;
 
-    // Get dragged index from dataTransfer (more reliable than instance state)
-    // Instance state may be lost if component re-renders during drag
-    let draggedIndex = this.draggedIndex;
+    // A drag that started in another section leaves this section's state
+    // untouched, so a null index means the drag is not ours. Every section
+    // writes its own index to text/plain, so that can't identify the source.
+    const draggedIndex = this.draggedIndex;
     if (draggedIndex === null) {
-      const transferData = dragEvent.dataTransfer?.getData("text/plain");
-      if (transferData) {
-        draggedIndex = parseInt(transferData, 10);
-      }
-    }
-
-    if (draggedIndex === null || isNaN(draggedIndex)) {
       this.handleDragEnd(e);
       return;
     }

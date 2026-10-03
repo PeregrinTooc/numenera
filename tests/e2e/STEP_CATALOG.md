@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **665** in 26 files
-- Feature step lines: **2033**
+- Step definitions: **666** in 26 files
+- Feature step lines: **2038**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
@@ -40,7 +40,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [card-creation.steps.ts](#cardcreationstepsts) | 89 | 0 |
 | [card-deletion.steps.ts](#carddeletionstepsts) | 40 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
-| [card-reordering.steps.ts](#cardreorderingstepsts) | 12 | 0 |
+| [card-reordering.steps.ts](#cardreorderingstepsts) | 13 | 0 |
 | [character-display.steps.ts](#characterdisplaystepsts) | 32 | 0 |
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
@@ -341,16 +341,17 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I drag ability {string} before ability {string}` | 2 | 251 |
+| When | `I drag ability {string} onto cypher {string}` | 1 | 314 |
 | When | `I drag cypher {string} after cypher {string}` | 1 | 52 |
 | When | `I drag cypher {string} before cypher {string}` | 3 | 29 |
 | When | `I drag cypher {string} into the abilities section` | 1 | 297 |
 | When | `I hover over cypher {string}` | 1 | 110 |
 | When | `I start dragging cypher {string}` | 2 | 81 |
-| Then | `the abilities should be in order {string}` | 4 | 272 |
-| Given | `the character has {int} abilities named {string}` | 4 | 228 |
-| Given | `the character has {int} cyphers named {string}` | 8 | 9 |
+| Then | `the abilities should be in order {string}` | 5 | 272 |
+| Given | `the character has {int} abilities named {string}` | 5 | 228 |
+| Given | `the character has {int} cyphers named {string}` | 9 | 9 |
 | Then | `the cypher {string} should have a dragging visual state` | 1 | 164 |
-| Then | `the cyphers should be in order {string}` | 6 | 137 |
+| Then | `the cyphers should be in order {string}` | 7 | 137 |
 | Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 184 |
 
 ## character-display.steps.ts

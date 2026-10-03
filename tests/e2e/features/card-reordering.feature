@@ -89,3 +89,10 @@ Feature: Card Reordering
     When I drag cypher "Cypher1" into the abilities section
     Then the cyphers should be in order "Cypher1, Cypher2"
     And the abilities should be in order "Ability1, Ability2"
+
+  Scenario: Dropping an ability on a cypher does not reorder the cyphers
+    Given the character has 3 cyphers named "Alpha, Beta, Gamma"
+    And the character has 3 abilities named "Ability1, Ability2, Ability3"
+    When I drag ability "Ability3" onto cypher "Alpha"
+    Then the cyphers should be in order "Alpha, Beta, Gamma"
+    And the abilities should be in order "Ability1, Ability2, Ability3"
