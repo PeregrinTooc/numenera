@@ -53,7 +53,10 @@ runs the Cucumber suite once per Rule 9 device profile (`DEVICE`, see
 | desktop (default) | Chromium | 415 / 415         | 7 `@skip`ped (Grid Merge/Split below); 0 `@desktop-only`            |
 | `DEVICE=pixel5`   | Chromium | 394 / 394         | 21 `@not-phone`                                                     |
 | `DEVICE=iphone12` | WebKit   | 390 / 390         | 21 `@not-phone`, 3 `@chromium-only`, 1 `@known-issue-webkit-unload` |
-| `DEVICE=ipadpro`  | WebKit   | 411 / 411         | 3 `@chromium-only`, 1 `@known-issue-webkit-unload`                  |
+| `DEVICE=ipadpro`  | WebKit   | 410 / 411 (flake) | 3 `@chromium-only`, 1 `@known-issue-webkit-unload`                  |
+
+The iPad Pro run had one intermittent WebKit failure, "Ability order persists
+after page reload" (`card-reordering.feature`); it passed 2/2 on isolated re-runs.
 
 665 step definitions, all used (`npm run check:steps`). Measured at the end of the
 remaining-test-tech-debt work.  
@@ -116,8 +119,8 @@ layout is dropped. Decided: build this rather than delete the dead code — see
 **E2E Tests**
 
 - File: `tests/e2e/features/section-rearrangement.feature` (scenarios already
-  written, currently `@skip`ped). Note: the step `the sections should remain
-in single-column layout` is a no-op (empty body) that this feature must
+  written, currently `@skip`ped). Note: the step
+  `the sections should remain in single-column layout` is a no-op (empty body) that this feature must
   implement when un-skipping the scenarios.
   - Merge sections into grid by dragging onto another section
   - Cannot merge non-eligible sections into grid
