@@ -88,15 +88,10 @@ detail lives in the linked file.
 
 ### Test and Component Debt
 
-- **CyphersBox cross-section drop (desktop bug, predates the test-debt work).**
-  The `text/plain` fallback in `src/components/CyphersBox.ts` (around lines
-  129-137) means dropping a card from another section (e.g. an ability card) on
-  a cypher card reorders cyphers. Fix: delete the fallback and keep the
-  `draggedIndex === null` guard. Write the scenario first ("Cannot drag ability
-  into cyphers section").
 - **Reorder coverage gaps.** No reorder scenario exists for attacks, special
-  abilities or items; add them. Add a unit test per component that a drop with a
-  null `draggedIndex` leaves the array unchanged.
+  abilities or items; add them. Cross-section drops are covered only for
+  cypher → abilities and ability → cypher. Add a unit test per component that a
+  drop with a null `draggedIndex` leaves the array unchanged.
 - **Untranslated-key check (low priority).** It reads body `innerText` only, so
   it misses `aria-label` and `title`. The three "...empty state should use
   translation keys" Thens (`combat.steps.ts` around lines 123 and 205,
