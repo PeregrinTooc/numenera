@@ -76,9 +76,53 @@ jobs:
         with:
           path: "./dist"
 
+  # The desktop profile runs inside build-test; the other Rule 9 profiles run
+  # here, one job each. Selected by the DEVICE env var (tests/e2e/support/device.ts).
+  e2e-devices:
+    name: E2E (${{ matrix.device }})
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    concurrency:
+      group: e2e-${{ matrix.device }}-${{ github.ref }}
+      cancel-in-progress: true
+    strategy:
+      fail-fast: false
+      matrix:
+        device: [pixel5, iphone12, ipadpro]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm ci
+
+      # All browsers: iphone12 and ipadpro need WebKit, pixel5 needs Chromium.
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Build and run E2E tests on ${{ matrix.device }}
+        run: npm run test:e2e:prod
+        env:
+          DEVICE: ${{ matrix.device }}
+
   deploy:
     name: Deploy to GitHub Pages
-    needs: build-test
+    needs: [build-test, e2e-devices]
     runs-on: ubuntu-24.04
     # Only ever publish the default branch. Pull requests run the full test
     # suite above but must never reach production.

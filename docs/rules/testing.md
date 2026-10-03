@@ -14,7 +14,27 @@
 - Mobile Safari (iPhone 12)
 - Tablet (iPad Pro)
 
-E2E tests verify all four automatically via `playwright.config.ts`.
+The Cucumber suite runs once per profile, selected by the `DEVICE` env var
+(`tests/e2e/support/device.ts`): `desktop` (default), `pixel5`, `iphone12`,
+`ipadpro`. iPhone 12 and iPad Pro 11 run on WebKit. CI runs all four as
+parallel jobs; a deploy needs all four green.
+
+    DEVICE=iphone12 npm run test:e2e -- tests/e2e/features/some.feature
+
+Scenarios that describe behaviour a device does not have (mouse hover, the
+comparison view on a phone) carry a device tag and a `#` comment above it
+saying why; the affected runs skip them. The filter lives in `cucumber.cjs`.
+Everything else must pass on all four.
+
+| Tag                          | Skipped on                | Use for                                                               |
+| ---------------------------- | ------------------------- | --------------------------------------------------------------------- |
+| `@desktop-only`              | every non-desktop profile | behaviour only a desktop has (e.g. mouse hover)                       |
+| `@not-phone`                 | `pixel5`, `iphone12`      | features unavailable below 768px (e.g. the version comparison view)   |
+| `@chromium-only`             | `iphone12`, `ipadpro`     | helpers that need Chromium-only APIs (e.g. CDP touch gestures)        |
+| `@known-issue-webkit-unload` | `iphone12`, `ipadpro`     | the deferred async `beforeunload` flush, which WebKit does not honour |
+
+A scenario that needs a width no profile has (e.g. 320px) uses
+`the viewport is N pixels wide`.
 
 ---
 
@@ -192,31 +212,6 @@ describe("StatPool", () => {
 ```
 
 **Reference:** See `workflow.md` for the canonical Red-Green-Refactor example (Rule #3).
-
----
-
-## E2E Tests (Playwright)
-
-### Test Across All Viewports:
-
-```typescript
-import { test, expect } from "@playwright/test";
-
-test.describe("Character Sheet", () => {
-  test("should display character name on all viewports", async ({ page }) => {
-    await page.goto("/");
-
-    await page.setViewportSize({ width: 1280, height: 720 }); // Desktop
-    await expect(page.locator('[data-testid="character-name"]')).toBeVisible();
-
-    await page.setViewportSize({ width: 375, height: 667 }); // Mobile
-    await expect(page.locator('[data-testid="character-name"]')).toBeVisible();
-
-    await page.setViewportSize({ width: 768, height: 1024 }); // Tablet
-    await expect(page.locator('[data-testid="character-name"]')).toBeVisible();
-  });
-});
-```
 
 ---
 

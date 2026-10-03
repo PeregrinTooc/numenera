@@ -161,8 +161,8 @@ Unit tests, E2E tests and the linter all pass first. Husky enforces this.
 
 ### 9. Responsive across all viewports
 
-Desktop Chrome, Pixel 5, iPhone 12, iPad Pro — configured in
-`playwright.config.ts`. Features must work on all of them.
+Desktop Chrome, Pixel 5, iPhone 12, iPad Pro — run per profile via `DEVICE`
+(see `docs/rules/testing.md`). Features must work on all of them.
 → `docs/rules/testing.md`
 
 ### 10. One test at a time
