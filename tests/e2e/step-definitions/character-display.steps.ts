@@ -4,12 +4,21 @@ import { waitForCharacterSheetReady, startNewCharacter } from "../support/app-re
 import type { CustomWorld } from "../support/world.js";
 import type { Character } from "../../../src/types/character.js";
 import { sectionId } from "../support/sections.js";
+import { intCell, lowerCaseHashes, propertyTable } from "../support/tableRows.js";
 
-Given("a character exists with the following data:", function (_dataTable) {
-  // Test data is defined in the feature file Background
-  // We'll use hard-coded data in the implementation for now
-  // _dataTable parameter is required even if we don't use it yet
-});
+Given(
+  "a character exists with the following data:",
+  async function (this: CustomWorld, table: DataTable) {
+    const data = propertyTable(table);
+    const overrides: Partial<Character> = {};
+    if (data.name !== undefined) overrides.name = data.name;
+    if (data.tier !== undefined) overrides.tier = intCell(data.tier, "Tier");
+    if (data.type !== undefined) overrides.type = data.type;
+    if (data.descriptor !== undefined) overrides.descriptor = data.descriptor;
+    if (data.focus !== undefined) overrides.focus = data.focus;
+    await this.setup.character(overrides);
+  }
+);
 
 Given("I am on the character sheet page", async function () {
   await this.page.goto(this.getBaseUrl() + "");
@@ -44,9 +53,23 @@ Then("all labels should use translation keys", async function () {
 });
 
 // Scenario 2: View character stat pools
-Given("the character has the following stats:", function (_dataTable) {
-  // Stat data will be hard-coded in the UI for now
-});
+Given(
+  "the character has the following stats:",
+  async function (this: CustomWorld, table: DataTable) {
+    const rows = lowerCaseHashes(table);
+    await this.setup.updateCharacter((character) => {
+      for (const row of rows) {
+        const key = row.stat.toLowerCase() as keyof Character["stats"];
+        if (!(key in character.stats)) throw new Error(`Unknown stat: ${row.stat}`);
+        character.stats[key] = {
+          pool: intCell(row.pool, `${row.stat} pool`),
+          edge: intCell(row.edge, `${row.stat} edge`),
+          current: intCell(row.current, `${row.stat} current`),
+        };
+      }
+    });
+  }
+);
 
 Then(
   "I should see the {string} stat with pool {string}, edge {string}, and current {string}",
@@ -65,9 +88,19 @@ Then("all stat labels should use translation keys", async function () {
 });
 
 // Scenario 3: View character items - Cyphers
-Given("the character has the following cyphers:", function (_dataTable) {
-  // Cypher data will be hard-coded in the UI for now
-});
+Given(
+  "the character has the following cyphers:",
+  async function (this: CustomWorld, table: DataTable) {
+    const cyphers = lowerCaseHashes(table).map(({ name, level, effect }) => ({
+      name,
+      level,
+      effect,
+    }));
+    await this.setup.updateCharacter((character) => {
+      character.cyphers = cyphers;
+    });
+  }
+);
 
 Then("I should see {int} cyphers displayed", async function (count: number) {
   const actualCount = await this.dom.count("cypher-item");
@@ -87,13 +120,29 @@ Then("the cyphers section label should use translation keys", async function () 
 });
 
 // Scenario 4: View character items - Artifacts and Oddities
-Given("the character has the following artifacts:", function (_dataTable) {
-  // Artifact data will be hard-coded in the UI for now
-});
+Given(
+  "the character has the following artifacts:",
+  async function (this: CustomWorld, table: DataTable) {
+    const artifacts = lowerCaseHashes(table).map(({ name, level, effect }) => ({
+      name,
+      level,
+      effect,
+    }));
+    await this.setup.updateCharacter((character) => {
+      character.artifacts = artifacts;
+    });
+  }
+);
 
-Given("the character has the following oddities:", function (_dataTable) {
-  // Oddity data will be hard-coded in the UI for now
-});
+Given(
+  "the character has the following oddities:",
+  async function (this: CustomWorld, table: DataTable) {
+    const oddities = lowerCaseHashes(table).map(({ description }) => description);
+    await this.setup.updateCharacter((character) => {
+      character.oddities = oddities;
+    });
+  }
+);
 
 Then("I should see {int} artifact displayed", async function (count: number) {
   const actualCount = await this.dom.count("artifact-item");
@@ -121,42 +170,7 @@ Then("the items section labels should use translation keys", async function () {
   // For minimal implementation, we'll skip i18n validation
 });
 
-// Scenario 5: View character text fields
-Given("the character has the following text fields:", function (_dataTable) {
-  // Text field data will be hard-coded in the UI for now
-});
-
-Then("I should see the background text", async function () {
-  // Background is now an editable textarea
-  const textarea = this.page.locator('[data-testid="character-background"]');
-  await expect(textarea).toBeVisible();
-  const value = await textarea.inputValue();
-  expect(value.length).toBeGreaterThan(0);
-});
-
-Then("I should see the notes text", async function () {
-  // Notes is now an editable textarea
-  const textarea = this.page.locator('[data-testid="character-notes"]');
-  await expect(textarea).toBeVisible();
-  const value = await textarea.inputValue();
-  expect(value.length).toBeGreaterThan(0);
-});
-
-Then("I should see the equipment text", async function () {
-  // Equipment is now displayed as individual items, not a text field
-  // Check for equipment section and at least one equipment item
-  await expect(this.dom.getByTestId("equipment-heading")).toBeVisible();
-  const equipmentCount = await this.dom.count("equipment-item");
-  expect(equipmentCount).toBeGreaterThan(0);
-});
-
-Then("I should see the abilities text", async function () {
-  // Abilities are now cards, check for abilities section and at least one ability
-  await expect(this.dom.getByTestId("abilities-section")).toBeVisible();
-  const abilityCount = await this.dom.count("ability-item");
-  expect(abilityCount).toBeGreaterThan(0);
-});
-
+// Scenario 5: View character text fields — see "the character has the following text:" below
 Then("all text field labels should use translation keys", async function () {
   // For minimal implementation, we'll skip i18n validation
 });
@@ -216,6 +230,9 @@ const TEXT_FIELD_SETTERS: Record<string, (character: Character, value: string) =
   Background: (character, value) => {
     character.textFields.background = value;
   },
+  Notes: (character, value) => {
+    character.textFields.notes = value;
+  },
 };
 
 Given(
@@ -241,6 +258,8 @@ Then(
       } else if (Field === "Background") {
         // Background renders as a <textarea>, so its text is the element's value.
         await expect(this.dom.getByTestId("character-background")).toHaveValue(Content);
+      } else if (Field === "Notes") {
+        await expect(this.dom.getByTestId("character-notes")).toHaveValue(Content);
       } else {
         throw new Error(`Unknown text field: ${Field}`);
       }

@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **676** in 26 files
-- Feature step lines: **2035**
+- Step definitions: **671** in 26 files
+- Feature step lines: **2032**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
@@ -41,7 +41,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [card-deletion.steps.ts](#carddeletionstepsts) | 40 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 12 | 0 |
-| [character-display.steps.ts](#characterdisplaystepsts) | 42 | 0 |
+| [character-display.steps.ts](#characterdisplaystepsts) | 37 | 0 |
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
@@ -359,48 +359,43 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `a character exists with the following data:` | 2 | 7 |
-| Then | `all labels should use translation keys` | 1 | 40 |
-| Then | `all stat labels should use translation keys` | 1 | 61 |
-| Then | `all text field labels should use translation keys` | 1 | 159 |
-| Then | `empty states should use translation keys` | 1 | 174 |
-| Given | `I am on the character sheet page` | 46 | 13 |
-| Then | `I should see {int} artifact displayed` | 1 | 97 |
-| Then | `I should see {int} cyphers displayed` | 1 | 71 |
-| Then | `I should see {int} oddities displayed` | 1 | 110 |
-| Then | `I should see an empty {cardTypes} section` | 6 | 167 |
-| Then | `I should see artifact {string} with level {string}` | 1 | 102 |
-| Then | `I should see cypher {string} with level {string}` | 2 | 76 |
-| Then | `I should see descriptor {string} displayed` | 1 | 32 |
-| Then | `I should see empty state for abilities` | 1 | 204 |
-| Then | `I should see empty state for background` | 1 | 184 |
-| Then | `I should see empty state for equipment` | 1 | 200 |
-| Then | `I should see empty state for notes` | 1 | 192 |
-| Then | `I should see focus {string} displayed` | 1 | 36 |
-| Then | `I should see oddity {string}` | 2 | 115 |
-| Then | `I should see sections in this order:` | 1 | 275 |
-| Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 50 |
-| Then | `I should see the abilities text` | 1 | 152 |
-| Then | `I should see the background text` | 1 | 128 |
-| Then | `I should see the character name {string}` | 1 | 18 |
-| Then | `I should see the equipment text` | 1 | 144 |
-| Then | `I should see the notes text` | 1 | 136 |
-| Then | `I should see tier {string} displayed` | 1 | 22 |
-| Then | `I should see type {string} displayed` | 1 | 26 |
-| Then | `no markup from the text should be rendered as HTML` | 1 | 250 |
-| Given | `the character has a {int}-character name without spaces` | 1 | 257 |
-| Given | `the character has empty text fields` | 1 | 180 |
-| Given | `the character has no {cardTypes}` | 6 | 163 |
-| Given | `the character has the following artifacts:` | 1 | 90 |
-| Given | `the character has the following cyphers:` | 1 | 68 |
-| Given | `the character has the following oddities:` | 1 | 93 |
-| Given | `the character has the following stats:` | 1 | 47 |
-| Given | `the character has the following text fields:` | 1 | 125 |
-| Given | `the character has the following text:` | 1 | 220 |
-| Then | `the character text should read exactly:` | 1 | 234 |
-| Then | `the cyphers section label should use translation keys` | 1 | 84 |
-| Then | `the items section labels should use translation keys` | 1 | 119 |
-| Then | `the page should not scroll horizontally` | 1 | 265 |
+| Given | `a character exists with the following data:` | 2 | 8 |
+| Then | `all labels should use translation keys` | 1 | 49 |
+| Then | `all stat labels should use translation keys` | 1 | 84 |
+| Then | `all text field labels should use translation keys` | 1 | 174 |
+| Then | `empty states should use translation keys` | 1 | 188 |
+| Given | `I am on the character sheet page` | 46 | 22 |
+| Then | `I should see {int} artifact displayed` | 1 | 146 |
+| Then | `I should see {int} cyphers displayed` | 1 | 104 |
+| Then | `I should see {int} oddities displayed` | 1 | 159 |
+| Then | `I should see an empty {cardTypes} section` | 6 | 181 |
+| Then | `I should see artifact {string} with level {string}` | 1 | 151 |
+| Then | `I should see cypher {string} with level {string}` | 2 | 109 |
+| Then | `I should see descriptor {string} displayed` | 1 | 41 |
+| Then | `I should see empty state for abilities` | 1 | 218 |
+| Then | `I should see empty state for background` | 1 | 198 |
+| Then | `I should see empty state for equipment` | 1 | 214 |
+| Then | `I should see empty state for notes` | 1 | 206 |
+| Then | `I should see focus {string} displayed` | 1 | 45 |
+| Then | `I should see oddity {string}` | 2 | 164 |
+| Then | `I should see sections in this order:` | 1 | 294 |
+| Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 73 |
+| Then | `I should see the character name {string}` | 1 | 27 |
+| Then | `I should see tier {string} displayed` | 1 | 31 |
+| Then | `I should see type {string} displayed` | 1 | 35 |
+| Then | `no markup from the text should be rendered as HTML` | 1 | 269 |
+| Given | `the character has a {int}-character name without spaces` | 1 | 276 |
+| Given | `the character has empty text fields` | 1 | 194 |
+| Given | `the character has no {cardTypes}` | 6 | 177 |
+| Given | `the character has the following artifacts:` | 1 | 123 |
+| Given | `the character has the following cyphers:` | 1 | 91 |
+| Given | `the character has the following oddities:` | 1 | 136 |
+| Given | `the character has the following stats:` | 1 | 56 |
+| Given | `the character has the following text:` | 2 | 237 |
+| Then | `the character text should read exactly:` | 2 | 251 |
+| Then | `the cyphers section label should use translation keys` | 1 | 117 |
+| Then | `the items section labels should use translation keys` | 1 | 168 |
+| Then | `the page should not scroll horizontally` | 1 | 284 |
 
 ## character-file-export.steps.ts
 
