@@ -73,6 +73,8 @@ when `character-display.feature`'s overflow outline exposed two layout bugs
   profile (a `DEVICE` env var read in `hooks.ts`, one CI job each), or tag
   the viewport-sensitive scenarios and run only those per profile
 - Update `docs/rules/testing.md` to say which one it is
+- Until then, `character-display.feature`'s no-sideways-scroll outline works
+  around the gap by naming five widths explicitly (320, 390, 393, 1024, 1280)
 
 ### `a character exists with the following data:` ignores its table
 
@@ -81,6 +83,37 @@ when `character-display.feature`'s overflow outline exposed two layout bugs
 `character-display.steps.ts` discards; the scenarios pass only because the
 default character happens to match. Wire it to `this.setup.character()` or
 delete the Background.
+
+### Tracked elsewhere
+
+Open debt that has its own home, listed here so the backlog is complete. The
+detail lives in the linked file.
+
+- [RULE_VIOLATIONS.md](./RULE_VIOLATIONS.md) "Open": `@/` path aliases barely
+  used, `any` usages with `no-explicit-any` only warning, files over 300 lines,
+  swallowed storage write errors, `console.log` in `src/`, and the E2E import
+  path bypassing the real sanitizer
+- [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) "Not addressed":
+  `beforeunload` flushing of the buffered version-history change needs a
+  deliberate decision
+
+---
+
+## 🧹 Should-Have (Minor Debt)
+
+Left over from the PR #9 review; none of these breaks a scenario today.
+
+- **Long attack names at 320px.** An attack name with no spaces can still
+  overflow the card at 320px, and when the damage/modifier badges wrap onto
+  their own line they sit on the left instead of the right
+- **Export capture is fragile.** `tests/e2e/support/exportCapture.ts` has no
+  timeout of its own and swallows errors from the blob `fetch`, so a broken
+  export surfaces as an unrelated wait timeout
+- **Four ways to set the viewport.** `I am using a mobile device`,
+  `I am using a phone-width viewport`, `I am using a tablet-width viewport` and
+  `the viewport is {int} pixels wide` overlap; collapse them onto the last one
+- **Dead weight in the overflow outline.** Its 600-character background adds
+  nothing, because the textarea wraps internally
 
 ---
 
@@ -91,10 +124,12 @@ delete the Background.
 **Overview**  
 `CharacterSheet.mergeSections()`, `splitGrid()`, `updateLayout()` and `getLayout()`
 are implemented and unit-tested in isolation, but have zero callers — `handleDrop`
-only ever calls `reorderSections`. Separately, `fileStorage.ts` already computes a
-`hasLayoutDifference` flag on import that `main.ts`'s `handleLoadFromFile` reads
-but discards. Decided: build this rather than delete the dead code — see
-`docs/PROJECT_REVIEW.md` §2.7 for the original defect writeup.
+only ever calls `reorderSections`. Separately, `fileStorage.ts` already computes
+`layout` and a `hasLayoutDifference` flag on import, but `main.ts`'s
+`handleLoadFromFile` reads only `character` and `warnings`, so the imported
+layout is dropped. Decided: build this rather than delete the dead code — see
+`docs/IMPLEMENTATION_PLAN.md` §3.1 (the original review, `PROJECT_REVIEW.md`
+§2.7, was removed in `ad0f8b5` and is in git history).
 
 **Goals**
 
@@ -246,4 +281,4 @@ Let the gamemaster prepare cards (cyphers, artifacts...) and export them as file
 
 ---
 
-**Last Updated**: September 27, 2026
+**Last Updated**: October 3, 2026
