@@ -676,6 +676,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Expose autoSaveService for E2E tests
   window.__autoSaveService = autoSaveService;
 
+  // Flush a pending debounced save on unload so a last-moment edit is not lost.
+  // Best effort: the save is initiated synchronously, but unload cannot await it.
+  // pagehide covers mobile Safari / bfcache; a second flush is a no-op.
+  const flushAutoSaveOnUnload = (): void => {
+    void autoSaveService.flush();
+  };
+  window.addEventListener("beforeunload", flushAutoSaveOnUnload);
+  window.addEventListener("pagehide", flushAutoSaveOnUnload);
+
   // Expose file importer API for E2E tests
   window.__testFileImporter = {
     setFileImporter,

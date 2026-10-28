@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **666** in 26 files
-- Feature step lines: **2038**
+- Step definitions: **668** in 26 files
+- Feature step lines: **2042**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
@@ -46,7 +46,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [combat.steps.ts](#combatstepsts) | 24 | 0 |
-| [common-steps.ts](#commonstepsts) | 34 | 0 |
+| [common-steps.ts](#commonstepsts) | 36 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 5 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 12 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
@@ -126,7 +126,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I note the current save timestamp` | 1 | 13 |
 | When | `I rapidly edit the character name multiple times` | 1 | 26 |
 | When | `I wait for {int} second(s)` | 1 | 19 |
-| Given | `the character sheet is displayed` | 5 | 4 |
+| Given | `the character sheet is displayed` | 6 | 4 |
 | Then | `the character should be saved only once after changes stop` | 1 | 119 |
 | Then | `the save indicator should be in the lower-right corner` | 1 | 146 |
 | Then | `the save indicator should be visible` | 2 | 88 |
@@ -151,7 +151,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 328 |
 | Then | `the cancel button should have an X icon` | 1 | 145 |
 | Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 356 |
-| Then | `the character name should display {string}` | 6 | 82 |
+| Then | `the character name should display {string}` | 7 | 82 |
 | Then | `the character name should still display {string}` | 6 | 90 |
 | Then | `the confirm button should have a checkmark icon` | 1 | 139 |
 | Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 376 |
@@ -460,40 +460,42 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 10 | 240 |
+| Then | `an edit modal should appear` | 10 | 262 |
 | When | `I clear the input field` | 18 | 114 |
 | When | `I click on the {string} value` | 9 | 26 |
 | When | `I click on the character name {string}` | 12 | 73 |
 | When | `I click on the descriptor {string}` | 2 | 82 |
 | When | `I click on the focus {string}` | 2 | 87 |
 | When | `I click on the tier {string}` | 5 | 77 |
-| When | `I click outside the modal on the backdrop` | 1 | 155 |
+| When | `I click outside the modal on the backdrop` | 1 | 170 |
 | When | `I click the "Cancel" button` | 3 | 51 |
 | When | `I click the "Confirm" button` | 27 | 46 |
 | When | `I click the "New" button` | 7 | 52 |
 | When | `I click the {badge} badge` | 22 | 62 |
-| When | `I edit the {string} field to {string}` | 23 | 126 |
+| When | `I edit the {string} field to {string}` | 23 | 153 |
+| When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 163 |
 | When | `I hover over the character name {string}` | 1 | 102 |
 | When | `I hover over the tier {string}` | 1 | 106 |
-| When | `I press the Enter key` | 2 | 177 |
-| When | `I press the Escape key` | 4 | 173 |
-| When | `I reload the page` | 48 | 181 |
-| Then | `I should see the {string} value displayed` | 1 | 199 |
+| When | `I press the Enter key` | 2 | 192 |
+| When | `I press the Escape key` | 4 | 188 |
+| When | `I reload the page` | 48 | 196 |
+| When | `I reload the page immediately` | 1 | 210 |
+| Then | `I should see the {string} value displayed` | 1 | 221 |
 | When | `I tap on the {string} value` | 1 | 34 |
 | When | `I tap on the character name {string}` | 4 | 92 |
 | When | `I tap on the tier {string}` | 1 | 97 |
-| When | `I tap outside the modal on the backdrop` | 1 | 164 |
+| When | `I tap outside the modal on the backdrop` | 1 | 179 |
 | When | `I tap the {badge} badge` | 2 | 66 |
 | When | `I tap the modal confirm button` | 3 | 110 |
 | When | `I type {string} in the modal input` | 40 | 118 |
-| Then | `the {string} value should display {string}` | 6 | 208 |
-| Then | `the {string} value should not have changed` | 2 | 217 |
-| Then | `the edit modal should open` | 8 | 241 |
-| Then | `the input field should be focused` | 1 | 257 |
-| Then | `the input field should contain the current {string} value` | 1 | 259 |
-| Then | `the input field should receive focus automatically` | 1 | 256 |
-| Then | `the modal input should contain {string}` | 10 | 247 |
-| Then | `the modal should close` | 21 | 248 |
+| Then | `the {string} value should display {string}` | 6 | 230 |
+| Then | `the {string} value should not have changed` | 2 | 239 |
+| Then | `the edit modal should open` | 8 | 263 |
+| Then | `the input field should be focused` | 1 | 279 |
+| Then | `the input field should contain the current {string} value` | 1 | 281 |
+| Then | `the input field should receive focus automatically` | 1 | 278 |
+| Then | `the modal input should contain {string}` | 10 | 269 |
+| Then | `the modal should close` | 21 | 270 |
 
 ## data-validation.steps.ts
 

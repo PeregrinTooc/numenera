@@ -40,3 +40,9 @@ Feature: Auto-Save Indicator
         When I edit the "character name" field to "Test Hero"
         Then the save indicator should be in the lower-right corner
         And the save indicator should have subtle styling
+
+    Scenario: Edit made immediately before reload is not lost
+        Given the character sheet is displayed
+        When I edit the "character name" field to "Quick Reload Hero" without waiting for the auto-save
+        And I reload the page immediately
+        Then the character name should display "Quick Reload Hero"

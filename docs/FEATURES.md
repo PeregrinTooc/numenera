@@ -246,6 +246,17 @@ All features listed below have full BDD test coverage and are verified working.
   - Migration skips gracefully when database is not ready
   - 4 unit tests for object store validation
 
+- **Auto-Save Flush on Page Unload** ([auto-save-indicator.feature](../tests/e2e/features/auto-save-indicator.feature))
+  - An edit made inside the 300 ms debounce window survives a reload or tab close
+  - `AutoSaveService.flush()` saves only when a save is pending (or awaits an in-flight one)
+  - `src/main.ts` flushes on both `beforeunload` and `pagehide`
+  - Root cause of the remaining loss: the IndexedDB write issued during unload committed too late;
+    `IndexedDBStorageImpl.saveInternal` now calls an explicit `transaction.commit()` after `put`
+    (without it 8 of 10 diagnostic reloads lost the edit on Pixel 5; with it 0 of 10 on Pixel 5,
+    Desktop Chrome and iPhone 12)
+  - Scenario "Edit made immediately before reload is not lost" passed 3 of 3 runs on desktop,
+    pixel5, iphone12 and ipadpro; no `@known-issue-webkit-unload` tag needed
+
 ### Version History
 
 - **Version History (Character Time Travel)** ([version-history.feature](../tests/e2e/features/version-history.feature))

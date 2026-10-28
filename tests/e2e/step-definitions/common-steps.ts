@@ -124,32 +124,47 @@ When("I type {string} in the modal input", async function (this: CustomWorld, va
 // UNIFIED EDIT FIELD STEP - Replaces duplicates across multiple files
 // ============================================================================
 
+async function editFieldViaModal(
+  world: CustomWorld,
+  fieldName: string,
+  value: string
+): Promise<void> {
+  const testId = getTestId(fieldName);
+  const field = world.page.locator(`[data-testid="${testId}"]`);
+
+  // Click field to open modal
+  await field.click();
+
+  // Wait for modal to appear
+  const modal = world.page.locator('[data-testid="edit-modal"]');
+  await expect(modal).toBeVisible({ timeout: 5000 });
+
+  // Fill input with new value
+  const input = world.page.locator('[data-testid="edit-modal-input"]');
+  await input.fill(value);
+
+  // Click confirm button
+  const confirmButton = world.page.locator('[data-testid="modal-confirm-button"]');
+  await confirmButton.click();
+
+  // Wait for modal to close
+  await expect(modal).toHaveCount(0, { timeout: 2000 });
+}
+
 When(
   "I edit the {string} field to {string}",
   async function (this: CustomWorld, fieldName: string, value: string) {
-    const testId = getTestId(fieldName);
-    const field = this.page.locator(`[data-testid="${testId}"]`);
-
-    // Click field to open modal
-    await field.click();
-
-    // Wait for modal to appear
-    const modal = this.page.locator('[data-testid="edit-modal"]');
-    await expect(modal).toBeVisible({ timeout: 5000 });
-
-    // Fill input with new value
-    const input = this.page.locator('[data-testid="edit-modal-input"]');
-    await input.fill(value);
-
-    // Click confirm button
-    const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
-    await confirmButton.click();
-
-    // Wait for modal to close
-    await expect(modal).toHaveCount(0, { timeout: 2000 });
+    await editFieldViaModal(this, fieldName, value);
 
     // Wait for auto-save to complete
     await waitForSaveComplete(this.page);
+  }
+);
+
+When(
+  "I edit the {string} field to {string} without waiting for the auto-save",
+  async function (this: CustomWorld, fieldName: string, value: string) {
+    await editFieldViaModal(this, fieldName, value);
   }
 );
 
@@ -190,6 +205,13 @@ When("I reload the page", async function (this: CustomWorld) {
   // Wait for both the rendered DOM and the app's own bootstrap persist to
   // land, so callers checking rendered/persisted state right after don't
   // race the app's async bootstrap (see waitForCharacterSheetReady).
+  await waitForCharacterSheetReady(this.page);
+});
+
+When("I reload the page immediately", async function (this: CustomWorld) {
+  // Deliberately does NOT wait out the 300ms auto-save debounce: this exercises
+  // an edit that is still pending when the page unloads.
+  await this.page.reload();
   await waitForCharacterSheetReady(this.page);
 });
 

@@ -77,20 +77,17 @@ export class AutoSaveService {
    * Flush pending saves immediately
    * Useful for tests and page unload
    */
-  async flush(): Promise<void> {
-    // Clear any pending timer
+  flush(): Promise<void> {
+    // A pending timer means there are unsaved changes: save them now.
+    // Not awaited on purpose (unload handlers cannot await): the write is issued in this same task
+    // (after the storage-singleton microtask), not after the debounce.
     if (this.timerId !== null) {
       this.timer.clearTimeout(this.timerId);
-      this.timerId = null;
+      return this.performSave();
     }
 
-    // If a save is in progress, wait for it
-    if (this.savePromise) {
-      await this.savePromise;
-    } else {
-      // Otherwise perform a save now
-      await this.performSave();
-    }
+    // If a save is in progress, wait for it; otherwise nothing is pending
+    return this.savePromise ?? Promise.resolve();
   }
 
   /**

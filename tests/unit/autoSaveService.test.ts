@@ -53,6 +53,25 @@ describe("AutoSaveService", () => {
     });
   });
 
+  describe("flush", () => {
+    it("should not save when no save is pending", async () => {
+      await service.flush();
+
+      expect(mockSaveCallback).not.toHaveBeenCalled();
+    });
+
+    it("should save immediately when a save is pending and not save again on the timer tick", async () => {
+      service.requestSave();
+      expect(mockSaveCallback).not.toHaveBeenCalled();
+
+      await service.flush();
+      expect(mockSaveCallback).toHaveBeenCalledTimes(1);
+
+      await vi.advanceTimersByTimeAsync(300);
+      expect(mockSaveCallback).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe("custom debounce time", () => {
     it("should use custom debounce time", () => {
       const customCallback = vi.fn().mockResolvedValue(undefined);

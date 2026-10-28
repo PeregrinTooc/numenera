@@ -67,6 +67,11 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
 
       request.onsuccess = () => resolve();
       request.onerror = () => reject(new Error("Failed to save character"));
+
+      // Commit as soon as the request is queued instead of waiting for the implicit
+      // auto-commit. A save issued from an unload handler otherwise commits too late:
+      // the reloaded page can read the previous value and overwrite the edit.
+      transaction.commit();
     });
   }
 
