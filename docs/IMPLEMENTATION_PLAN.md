@@ -136,7 +136,8 @@ as any)` casts in `main.ts` and in test files.~~ `main.ts`'s casts are gone
 
 ## Not addressed
 
-- **`beforeunload` flushing** (§3). `beforeunload` cannot await a promise; the
-  buffered change is best-effort by construction. A real fix means writing
-  synchronously on unload or accepting the loss. Worth a deliberate decision
-  rather than a patch.
+- **`beforeunload` flushing** (§3). The auto-save debounce is now flushed on
+  `beforeunload`/`pagehide`. The buffered version-history change is still only
+  best-effort on unload (the handler cannot await a promise); a real fix means
+  writing synchronously on unload or accepting the loss. Worth a deliberate
+  decision rather than a patch.

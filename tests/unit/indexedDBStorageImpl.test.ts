@@ -80,6 +80,15 @@ describe("IndexedDBStorageImpl", () => {
       expect(loaded).toEqual(mockCharacter);
     });
 
+    it("should request an explicit commit so a save issued during unload is not left pending", async () => {
+      const commitSpy = vi.spyOn(globalThis.IDBTransaction.prototype, "commit");
+
+      await storage.save(mockCharacter);
+
+      expect(commitSpy).toHaveBeenCalled();
+      commitSpy.mockRestore();
+    });
+
     it("should return null when no data is stored", async () => {
       const loaded = await storage.load();
       expect(loaded).toBeNull();

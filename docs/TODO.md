@@ -44,13 +44,13 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ## 📊 Current Status
 
-**Test Coverage**: `npm run test:unit` — 906 tests passing. `npm run test:e2e:prod`
+**Test Coverage**: `npm run test:unit` — 909 tests passing. `npm run test:e2e:prod`
 runs the Cucumber suite once per Rule 9 device profile (`DEVICE`, see
 `docs/rules/testing.md`; CI runs all four in the `e2e-devices` job):
 
 | Profile           | Engine   | Scenarios passing | Excluded by tag                                                     |
 | ----------------- | -------- | ----------------- | ------------------------------------------------------------------- |
-| desktop (default) | Chromium | 416 / 416         | 7 `@skip`ped (Grid Merge/Split below); 0 `@desktop-only`            |
+| desktop (default) | Chromium | 417 / 417         | 7 `@skip`ped (Grid Merge/Split below); 0 `@desktop-only`            |
 | `DEVICE=pixel5`   | Chromium | 395 / 395         | 21 `@not-phone`                                                     |
 | `DEVICE=iphone12` | WebKit   | 391 / 391         | 21 `@not-phone`, 3 `@chromium-only`, 1 `@known-issue-webkit-unload` |
 | `DEVICE=ipadpro`  | WebKit   | 412 / 412         | 3 `@chromium-only`, 1 `@known-issue-webkit-unload`                  |
@@ -89,12 +89,8 @@ detail lives in the linked file.
   swallowed storage write errors, `console.log` in `src/`, and the E2E import
   path bypassing the real sanitizer
 - [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) "Not addressed":
-  `beforeunload` flushing of the buffered version-history change needs a
-  deliberate decision
-  - The 300 ms auto-save debounce is not flushed on unload either. The
-    `beforeunload` handler (`src/main.ts:767-772`) flushes only
-    `versionHistoryService`, so an edit followed by a reload or tab close
-    within about 300 ms is lost on any browser.
+  the auto-save debounce is now flushed on unload; flushing the buffered
+  version-history change on `beforeunload` still needs a deliberate decision
 
 ### Test and Component Debt
 
