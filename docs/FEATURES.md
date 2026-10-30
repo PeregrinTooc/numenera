@@ -51,7 +51,8 @@ All features listed below have full BDD test coverage and are verified working.
   - Visual indicators for pool status
 
 - **Resource Tracker Editing** ([resource-tracker-editing.feature](../tests/e2e/features/resource-tracker-editing.feature))
-  - Edit XP (Experience Points)
+  - XP badge with separate Current (unspent) and Total (lifetime) values,
+    each editable on its own; legacy single-`xp` data fills both
   - Edit Shins (currency)
   - Edit Armor value
   - Edit Effort
@@ -178,6 +179,23 @@ All features listed below have full BDD test coverage and are verified working.
     mid-drag otherwise
   - Touch drags use real CDP touch input (`TouchGesture`)
   - Spec: `docs/superpowers/specs/2026-09-26-section-dnd-e2e-design.md`
+
+### Layout Robustness
+
+- **No Horizontal Scroll With Long Text** ([character-display.feature](../tests/e2e/features/character-display.feature))
+  - A 50-character unbroken name wraps instead of stretching the sheet
+    sideways, checked at 320, 390, 393, 834 and 1280 px
+  - Attack headers wrap their badges onto a new line on narrow screens
+  - Names, quotes, `&` and `<…>` are shown verbatim, never parsed as HTML
+
+### Per-Device E2E Testing
+
+- **Rule 9 Enforced by the Suite** ([testing.md](./rules/testing.md))
+  - The Cucumber suite runs once per device profile via `DEVICE`:
+    desktop, Pixel 5, iPhone 12 and iPad Pro (the last two on WebKit)
+  - CI runs all four profiles; a deploy needs every one green
+  - Device-specific exclusions are tagged (`@not-phone`, `@chromium-only`)
+    with a comment explaining why
 
 ### File Management
 
