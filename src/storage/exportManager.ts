@@ -1,6 +1,12 @@
 import type { Character } from "@/types/character";
-import type { Layout } from "@/types/layout";
-import { SCHEMA_VERSION, FILE_HANDLES_DB_NAME } from "./storageConstants";
+import { SCHEMA_VERSION } from "./storageConstants";
+import type { CharacterFileData } from "./fileStorage";
+import {
+  HANDLE_STORAGE_KEY,
+  persistFileHandle,
+  deleteFileHandle,
+  loadPersistedFileHandle,
+} from "./fileHandleStore";
 import { loadLayout } from "./layoutStorage";
 
 // Type declarations for File System Access API
@@ -19,23 +25,11 @@ interface SaveFilePickerOptions {
 }
 
 /**
- * File format structure for exported characters
- */
-interface CharacterFileData {
-  version: string;
-  schemaVersion: string;
-  exportDate: string;
-  character: Character;
-  layout?: Layout;
-}
-
-/**
  * ExportManager handles file exports with File System Access API support
  * Provides Quick Export, Save As, and fallback download functionality
  */
 export class ExportManager {
   private fileHandle: FileSystemFileHandle | null = null;
-  private readonly HANDLE_STORAGE_KEY = "lastExportFileHandle";
   private initPromise: Promise<void>;
 
   constructor() {
@@ -83,7 +77,7 @@ export class ExportManager {
 
       await this.writeToHandle(handle, character);
       this.fileHandle = handle;
-      await this.persistHandle(handle);
+      await persistFileHandle(handle);
 
       // Trigger button update event
       window.dispatchEvent(new CustomEvent("export-handle-updated"));
@@ -133,7 +127,7 @@ export class ExportManager {
 
     await this.writeToHandle(handle, character);
     this.fileHandle = handle;
-    await this.persistHandle(handle);
+    await persistFileHandle(handle);
 
     // Trigger button update event
     window.dispatchEvent(new CustomEvent("export-handle-updated"));
@@ -144,8 +138,8 @@ export class ExportManager {
    */
   clearRememberedLocation(): void {
     this.fileHandle = null;
-    localStorage.removeItem(this.HANDLE_STORAGE_KEY);
-    this.deleteHandle().catch((error) => {
+    localStorage.removeItem(HANDLE_STORAGE_KEY);
+    deleteFileHandle().catch((error) => {
       console.warn("Failed to delete persisted file handle:", error);
     });
     window.dispatchEvent(new CustomEvent("export-handle-updated"));
@@ -228,78 +222,10 @@ export class ExportManager {
     return `${sanitized}.numenera`;
   }
 
-  private async persistHandle(handle: FileSystemFileHandle): Promise<void> {
-    try {
-      // Store handle in IndexedDB (can't use localStorage for handles)
-      const db = await this.openHandleDB();
-      const tx = db.transaction("handles", "readwrite");
-      const store = tx.objectStore("handles");
-      store.put(handle, this.HANDLE_STORAGE_KEY);
-      await new Promise<void>((resolve, reject) => {
-        tx.oncomplete = () => resolve();
-        tx.onerror = () => reject(tx.error);
-      });
-    } catch (error) {
-      console.warn("Failed to persist file handle:", error);
-    }
-  }
-
-  private async deleteHandle(): Promise<void> {
-    const db = await this.openHandleDB();
-    const tx = db.transaction("handles", "readwrite");
-    const store = tx.objectStore("handles");
-    store.delete(this.HANDLE_STORAGE_KEY);
-    await new Promise<void>((resolve, reject) => {
-      tx.oncomplete = () => resolve();
-      tx.onerror = () => reject(tx.error);
-    });
-  }
-
   private async loadPersistedHandle(): Promise<void> {
-    try {
-      const db = await this.openHandleDB();
-      const tx = db.transaction("handles", "readonly");
-      const store = tx.objectStore("handles");
-      const request = store.get(this.HANDLE_STORAGE_KEY);
-
-      // Wait for the request to complete
-      const handle = await new Promise<FileSystemFileHandle | undefined>((resolve) => {
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => resolve(undefined);
-      });
-
-      if (handle) {
-        // Verify we still have permission (if queryPermission exists)
-        const queryPermission = (handle as any).queryPermission;
-        if (typeof queryPermission === "function") {
-          const permission = await queryPermission.call(handle, { mode: "readwrite" });
-          if (permission === "granted") {
-            this.fileHandle = handle;
-          }
-        } else {
-          // In test/mock environments, assume we have permission
-          this.fileHandle = handle;
-        }
-      }
-    } catch (error) {
-      // Ignore errors - just means no persisted handle
-      console.warn("Failed to load persisted file handle:", error);
+    const handle = await loadPersistedFileHandle();
+    if (handle) {
+      this.fileHandle = handle;
     }
-  }
-
-  private openHandleDB(): Promise<IDBDatabase> {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(FILE_HANDLES_DB_NAME, 1);
-
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => resolve(request.result);
-
-      request.onupgradeneeded = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-        if (!db.objectStoreNames.contains("handles")) {
-          db.createObjectStore("handles");
-        }
-      };
-    });
   }
 }

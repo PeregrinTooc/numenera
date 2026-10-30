@@ -67,7 +67,7 @@ banning the disable comments leaves the hidden 44.
 **Rule:** "Keep files small and focused (< 300 lines)." Tests count; pure data
 does not (see `code-quality.md`).
 
-**`src/` — 10 files**
+**`src/` — 8 files**
 
 | File                                           | Lines | Natural seam                                                                   |
 | ---------------------------------------------- | ----- | ------------------------------------------------------------------------------ |
@@ -79,10 +79,8 @@ does not (see `code-quality.md`).
 | `src/services/versionHistoryService.ts`        | 381   | undo/redo stack                                                                |
 | `src/components/DiffCharacterSheet.ts`         | 363   | 7 near-identical collection renderers → one generic                            |
 | `src/services/conflictDetectionService.ts`     | 348   | BroadcastChannel transport vs dirty tracking                                   |
-| `src/storage/fileStorage.ts`                   | 309   | `exportCharacterToFile` and helpers are dead (superseded by `ExportManager`)   |
-| `src/storage/exportManager.ts`                 | 305   | persisted file-handle store                                                    |
 
-**`tests/` — 25 files**
+**`tests/` — 24 files**
 
 | File                                                            | Lines |
 | --------------------------------------------------------------- | ----- |
@@ -94,7 +92,6 @@ does not (see `code-quality.md`).
 | `tests/e2e/features/card-creation.feature`                      | 581   |
 | `tests/unit/conflictWarningModal.test.ts`                       | 566   |
 | `tests/unit/exportManager.test.ts`                              | 563   |
-| `tests/unit/fileStorage.test.ts`                                | 504   |
 | `tests/unit/editFieldModal.test.ts`                             | 477   |
 | `tests/e2e/features/version-history.feature`                    | 464   |
 | `tests/unit/conflictDetectionService.test.ts`                   | 452   |
@@ -195,7 +192,7 @@ need no feature file; steps 8 and 9 change behaviour and start with a scenario.
 | --- | ------------------------------------------------------------------------------------------------------- | -------- |
 | 1   | ~~Logger and `no-console` as error for `src/` (#5); split `modalBehavior.ts` and `timer.ts` (#8)~~ done | refactor |
 | 2   | ~~`@/` codemod across `src/` and `tests/`, plus the `no-restricted-imports` guard (#1)~~ done           | refactor |
-| 3   | Delete the dead `fileStorage` export code; move the `exportManager` handle store out (#3)               | refactor |
+| 3   | ~~Delete the dead `fileStorage` export code; move the `exportManager` handle store out (#3)~~ done      | refactor |
 | 4   | Remove `any` from `src/`, including the `vi` sniff (#2, #9)                                             | refactor |
 | 5   | `tsconfig.test.json` and `typecheck:tests` in hook and CI; fix the test type errors (#7)                | tooling  |
 | 6   | Remove `any` from `tests/`; `no-explicit-any` as error, disabling it banned (#2)                        | refactor |
