@@ -95,9 +95,10 @@ export class VersionHistoryService {
    * Combines buffered changes into single version
    */
   private async performSquash(): Promise<void> {
-    // flush() can race an in-flight timer-triggered squash - without this
-    // guard, the second call would still see the not-yet-cleared buffer and
-    // save it again as a duplicate version.
+    // An edit during an in-flight squash restarts the timer, which can fire
+    // before that squash's save resolves - without this guard, the second call
+    // would still see the not-yet-cleared buffer and save it again as a
+    // duplicate version.
     if (this.isSquashInProgress) {
       return;
     }
@@ -160,18 +161,6 @@ export class VersionHistoryService {
     } finally {
       this.isSquashInProgress = false;
     }
-  }
-
-  /**
-   * Flush buffered changes (called on page unload)
-   * Saves any pending changes before page closes
-   */
-  async flush(): Promise<void> {
-    if (this.globalTimer !== null) {
-      this.timer.clearTimeout(this.globalTimer);
-      this.globalTimer = null;
-    }
-    await this.performSquash();
   }
 
   /**

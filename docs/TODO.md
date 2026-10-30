@@ -44,7 +44,7 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ## 📊 Current Status
 
-**Test Coverage**: `npm run test:unit` — 909 tests passing. `npm run test:e2e:prod`
+**Test Coverage**: `npm run test:unit` — 911 tests passing. `npm run test:e2e:prod`
 runs the Cucumber suite once per Rule 9 device profile (`DEVICE`, see
 `docs/rules/testing.md`; CI runs all four in the `e2e-devices` job):
 

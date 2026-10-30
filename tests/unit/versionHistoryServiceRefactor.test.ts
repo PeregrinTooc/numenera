@@ -359,40 +359,10 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
     });
   });
 
-  describe("Page Unload (flush)", () => {
-    it("should flush buffered changes on page unload", async () => {
-      service.bufferChange(mockCharacter, "Change 1");
-      service.bufferChange(mockCharacter, "Change 2");
-
-      const flushPromise = service.flush();
-      await vi.runAllTimersAsync(); // Process any pending timers
-      await flushPromise;
-
-      expect(mockManager.saveVersion).toHaveBeenCalledTimes(1);
-      expect(service.getBufferLength()).toBe(0);
-    });
-
-    it("should cancel timer when flushing", async () => {
-      service.bufferChange(mockCharacter, "Change 1");
-
-      const flushPromise = service.flush();
-      await vi.runAllTimersAsync();
-      await flushPromise;
-
-      expect(service.isTimerActive()).toBe(false);
-    });
-
-    it("should not save if buffer is empty on flush", async () => {
-      const flushPromise = service.flush();
-      await vi.runAllTimersAsync();
-      await flushPromise;
-
-      expect(mockManager.saveVersion).not.toHaveBeenCalled();
-    });
-
-    it("should not double-save when flush() races an in-flight timer-triggered squash", async () => {
+  describe("Squash race", () => {
+    it("should not double-save when the timer fires again during an in-flight squash", async () => {
       // Make saveVersion controllable so we can catch the window between the
-      // timer-triggered squash starting and it actually finishing.
+      // first squash starting and it actually finishing.
       let resolveSave: (value: unknown) => void = () => {};
       const pendingSave = new Promise((resolve) => {
         resolveSave = resolve;
@@ -406,9 +376,11 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
       vi.advanceTimersByTime(1000);
       await Promise.resolve();
 
-      // flush() (e.g. from beforeunload) races in while that first squash is
-      // still in flight and sees a non-empty buffer.
-      const flushPromise = service.flush();
+      // A further edit restarts the timer, which fires while the first
+      // squash is still in flight and sees a non-empty buffer.
+      service.bufferChange(mockCharacter, "Change 2");
+      vi.advanceTimersByTime(1000);
+      await Promise.resolve();
 
       resolveSave({
         id: "version-123",
@@ -416,7 +388,6 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
         description: "Change 1",
         timestamp: Date.now(),
       });
-      await flushPromise;
       await vi.runAllTimersAsync();
 
       expect(mockManager.saveVersion).toHaveBeenCalledTimes(1);
