@@ -118,7 +118,9 @@ Never hand-format to a different style — run `npm run format`. If this table a
 
 - Group by feature/domain, not by technical layer (see `architecture.md` for
   the current directory layout)
-- Keep files small and focused (< 300 lines)
+- Keep files small and focused (< 300 lines). This applies to tests too —
+  unit specs, step definitions and `.feature` files are first-class code.
+  Pure data (locale JSON, fixtures) does not count per se.
 - One component/class per file
 - Co-locate related files
 
@@ -146,6 +148,19 @@ Never hand-format to a different style — run `npm run format`. If this table a
 - Use specific error types
 - Log errors with context
 - User-facing error messages in translation files
+
+### When is log-and-continue "swallowing"?
+
+Judge the failure by its severity — likelihood × impact — measured by what the
+user ends up believing:
+
+- **Must surface** when a user could reasonably believe something was saved,
+  sent or applied when it was not (e.g. a character save failing while the save
+  indicator still shows the last success). Logging alone is swallowing here.
+- **Log-and-continue is fine** when the failure leaves the user's data and
+  their understanding of it intact — cosmetic or preference state that visibly
+  reverts — or when the app repairs it automatically later. Say so in a comment
+  in the `catch` block, so the next reviewer does not re-flag it.
 
 ### Examples:
 

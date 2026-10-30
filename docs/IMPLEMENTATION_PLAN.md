@@ -134,6 +134,17 @@ as any)` casts in `main.ts` and in test files.~~ `main.ts`'s casts are gone
 
 ---
 
+## Open bugs
+
+- **A failed load deletes the stored character.** `LocalStorageImpl.load()`
+  (`src/storage/localStorageImpl.ts`) calls `clear()` on any load error. A JSON
+  parse error does mean the data is damaged, but deleting it destroys the
+  user's only copy and any chance of manual recovery. Move the raw value to a
+  backup key before falling back to the default character. Found while
+  rating the swallowed-error paths (`RULE_VIOLATIONS.md` #4).
+
+---
+
 ## Not addressed
 
 - **`beforeunload` flushing** (§3). The auto-save debounce is now flushed on

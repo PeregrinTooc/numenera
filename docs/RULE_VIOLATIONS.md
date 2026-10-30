@@ -31,99 +31,220 @@ editing the rule to match the code.
 
 ## Open
 
+Re-measured on `main` at `b9b81c1` (2026-10-30).
+
 ### 1. Rule #5 — path aliases are barely used
 
 **Rule:** "Use path aliases: `@/` prefix for src imports."
 
-Nearly every file under `src/` still uses relative imports with an explicit
-`.js` extension (`import { t } from "../i18n/index.js"`). Only one file,
-`src/components/CharacterSheet.ts`, imports via `@/`.
+| Where    | Relative imports                                         | Count           |
+| -------- | -------------------------------------------------------- | --------------- |
+| `src/`   | cross-directory `../`                                    | 138 in 56 files |
+| `src/`   | same-directory `./`                                      | 95 in 35 files  |
+| `tests/` | `../../src/…` (68 files, 9 of them E2E support or steps) | 136             |
+| `tests/` | `vi.mock("../../src/…")` specifiers                      | 4               |
 
-Aliases are already configured in all three places that need them —
-`tsconfig.json` (`compilerOptions.paths`), `vite.config.ts` and
-`vitest.config.ts` (`resolve.alias`) — so the rule is implementable today.
+Only `src/components/CharacterSheet.ts` and two test files use `@/` today.
 
-**Fix:** mechanical sweep of ~40 files, replacing cross-directory relative
-imports with `@/…` and dropping the `.js` extension. Verify with `tsc --noEmit`,
-`npm run build` and the unit suite. Do it as one commit; a half-migrated tree is
-worse than either end state.
+Aliases are configured in `tsconfig.json`, `vite.config.ts` and
+`vitest.config.ts`. The old caveat is resolved: a probe through `npx tsx` from
+the repo root resolves `@/…` in E2E step definitions too, even though
+`tsconfig.json` excludes `tests/`.
 
-**Caveat to check first:** Cucumber loads step definitions through `tsx` (see
-`tests/e2e/support/tsx-register.js`), which honours `compilerOptions.paths`
-from `tsconfig.json`. If any step definition imports from `src/`, still confirm
-alias resolution works there before converting those imports.
+**Fix:** mechanical codemod. Rewrite every cross-directory specifier into `src/`
+as `@/<path>` without extension, in `src/` and `tests/` (including the
+`vi.mock` strings), in one commit. Then add `no-restricted-imports` (ban `../*`
+in `src/`, `**/src/*` in `tests/`) so it cannot regress.
 
-### 2. Rule #5 — 193 `any` usages, and the linter only warns
+### 2. Rule #5 — 201 `any` usages, and the linter only warns
 
 **Rule:** "NO `any` types allowed. Exception: **None.** Linter enforces this."
 
-The linter does **not** enforce it: `eslint.config.js:79` sets
-`"@typescript-eslint/no-explicit-any": "warn"`. There are 193 warnings — 11 files
-under `src/`, 21 under `tests/`.
+`eslint.config.js` sets `no-explicit-any` to `"warn"`, and 44 more usages hide
+behind `eslint-disable-next-line` comments, so the lint count understates it:
 
-**Fix:** eliminate the usages, then set the rule to `"error"` so it is enforced
-as written. Order matters — flipping to `error` first turns the build red.
+|          | Reported by lint | Behind `eslint-disable`     | Total          |
+| -------- | ---------------- | --------------------------- | -------------- |
+| `src/`   | 30 in 11 files   | 4 (`CollectionBehavior.ts`) | 34 in 12 files |
+| `tests/` | 127 in 17 files  | 40                          | 167            |
 
-Concentrations in `src/`: the `(currentSheet as any)` casts in `main.ts` (giving
-`CharacterSheet` real accessors for its child components removes most of them),
-and the storage layer, where `ICharacterStorage.save/load` are typed `any`
-despite `Character` existing.
+Concentrations in `src/`: the storage interfaces (`ICharacterStorage.save/load`
+typed `any` although `Character` exists — `load()` should return `unknown`
+narrowed by a type guard), the `unified-validation.ts` inputs (take `unknown`),
+the File System Access APIs (declare them in a `.d.ts`), the auto-save event
+payloads, and `(this.manager as any).db` in `versionHistoryService.ts`.
+
+In `tests/`: `window as any` (~35, needs a typed test-window interface),
+`null as any` (17, mostly gone once validators take `unknown`), and
+private-member access (~28).
+
+**Fix:** remove the usages, then set the rule to `"error"` and forbid disabling
+it. Order matters — flipping first turns the build red, and flipping without
+banning the disable comments leaves the hidden 44.
 
 ### 3. Code quality — files over 300 lines
 
-**Rule:** "Keep files small and focused (< 300 lines)."
+**Rule:** "Keep files small and focused (< 300 lines)." Tests count; pure data
+does not (see `code-quality.md`).
 
-| File                                           | Lines |
-| ---------------------------------------------- | ----- |
-| `src/main.ts`                                  | 917   |
-| `src/utils/unified-validation.ts`              | 890   |
-| `src/components/CharacterSheet.ts`             | 786   |
-| `src/components/helpers/CollectionBehavior.ts` | 418   |
-| `src/components/ItemsBox.ts`                   | 401   |
-| `src/services/versionHistoryService.ts`        | 381   |
-| `src/services/conflictDetectionService.ts`     | 348   |
-| `src/storage/fileStorage.ts`                   | 309   |
+**`src/` — 10 files**
 
-`main.ts` is still the worst offender, though it has shrunk from 1158 lines
-since this was last measured. `CharacterSheet.ts` grew the most in the same
-window (544 → 786) and is worth a look too.
+| File                                           | Lines | Natural seam                                                                   |
+| ---------------------------------------------- | ----- | ------------------------------------------------------------------------------ |
+| `src/main.ts`                                  | 926   | test hooks, compare-view controller, version navigation, import/export, events |
+| `src/utils/unified-validation.ts`              | 890   | field validation / character validation / sanitizer (already banner-separated) |
+| `src/components/CharacterSheet.ts`             | 786   | drag/touch controller; reorder/merge/split as pure layout operations           |
+| `src/components/helpers/CollectionBehavior.ts` | 418   | render helpers                                                                 |
+| `src/components/ItemsBox.ts`                   | 388   | drag-reorder handlers into a reusable helper                                   |
+| `src/services/versionHistoryService.ts`        | 381   | undo/redo stack                                                                |
+| `src/components/DiffCharacterSheet.ts`         | 363   | 7 near-identical collection renderers → one generic                            |
+| `src/services/conflictDetectionService.ts`     | 348   | BroadcastChannel transport vs dirty tracking                                   |
+| `src/storage/fileStorage.ts`                   | 309   | `exportCharacterToFile` and helpers are dead (superseded by `ExportManager`)   |
+| `src/storage/exportManager.ts`                 | 305   | persisted file-handle store                                                    |
+
+**`tests/` — 25 files**
+
+| File                                                            | Lines |
+| --------------------------------------------------------------- | ----- |
+| `tests/e2e/step-definitions/version-history.steps.ts`           | 1221  |
+| `tests/e2e/step-definitions/section-rearrangement.steps.ts`     | 737   |
+| `tests/unit/characterValidation.test.ts`                        | 716   |
+| `tests/unit/versionHistoryServiceRefactor.test.ts`              | 685   |
+| `tests/e2e/step-definitions/card-creation.steps.ts`             | 645   |
+| `tests/e2e/features/card-creation.feature`                      | 581   |
+| `tests/unit/conflictWarningModal.test.ts`                       | 566   |
+| `tests/unit/exportManager.test.ts`                              | 563   |
+| `tests/unit/fileStorage.test.ts`                                | 504   |
+| `tests/unit/editFieldModal.test.ts`                             | 477   |
+| `tests/e2e/features/version-history.feature`                    | 464   |
+| `tests/unit/conflictDetectionService.test.ts`                   | 452   |
+| `tests/unit/fieldValidation.test.ts`                            | 445   |
+| `tests/e2e/step-definitions/version-comparison.steps.ts`        | 415   |
+| `tests/unit/indexedDBStorageImpl.test.ts`                       | 412   |
+| `tests/unit/changeDetection.test.ts`                            | 407   |
+| `tests/unit/versionState.test.ts`                               | 401   |
+| `tests/e2e/step-definitions/basic-info-editing.steps.ts`        | 395   |
+| `tests/unit/basicInfo.test.ts`                                  | 386   |
+| `tests/unit/stateManagement.test.ts`                            | 349   |
+| `tests/e2e/step-definitions/additional-fields-editing.steps.ts` | 348   |
+| `tests/e2e/step-definitions/card-reordering.steps.ts`           | 334   |
+| `tests/unit/itemsBox.test.ts`                                   | 328   |
+| `tests/unit/layoutTypes.test.ts`                                | 324   |
+| `tests/unit/domStructure.test.ts`                               | 323   |
+
+Feature files split along their `# ===` section banners into several
+`.feature` files; step definitions follow the feature split.
 
 ### 4. Code quality — errors are swallowed
 
-**Rule:** "Never swallow errors silently."
+**Rule:** "Never swallow errors silently." Judged by severity — likelihood ×
+impact on what the user believes — see `code-quality.md`.
 
-`src/storage/layoutStorage.ts` catches write failures and only `console.error`,
-so the caller believes the layout was saved. `LocalStorageImpl.clear()` does the
-same.
+| Path                                                          | Likelihood | Impact                                                                                        | Verdict                                                                                               |
+| ------------------------------------------------------------- | ---------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Auto-save: `save-error` is emitted, nothing in `src/` listens | low–medium | **critical** — every later edit is lost on reload while the indicator shows the old timestamp | **violation — must surface**                                                                          |
+| `persistCharacterState` (7 call sites incl. portrait upload)  | low–medium | **critical** — same cascade; a ~2.7 MB base64 portrait is the likeliest trigger               | **violation — must surface**                                                                          |
+| Version squash: logs, `squash-error` unheard, buffer cleared  | low        | moderate — one history entry lost, the character itself is safe                               | acceptable once reconcile-on-load (`fix/version-history-unload`) lands: it rebuilds the entry on boot |
+| `layoutStorage` save/reset                                    | low        | cosmetic — section order visibly reverts                                                      | acceptable; comment the `catch`                                                                       |
+| `comparisonViewPreference` save                               | low        | trivial — one toggle reverts                                                                  | acceptable; comment the `catch`                                                                       |
+| `exportManager` handle cache                                  | low        | trivial — Quick Export asks for the location again                                            | acceptable; comment the `catch`                                                                       |
+| `LocalStorageImpl.clear()`                                    | very low   | none — the next load falls back to the default character again                                | acceptable; comment the `catch`                                                                       |
 
-A `QuotaExceededError` is very reachable here — portraits are stored as base64
-inside the character — and when it happens the save indicator still reports
-success while nothing was written.
+Likelihood drivers: WebKit drops IndexedDB connections after iOS backgrounds a
+tab, quota on the localStorage fallback, and a full disk. Once one write fails
+on size, every later save of the same character fails too.
+
+**Fix:** no notification mechanism exists today. Proposed: storage writers
+throw; one `storage-write-failed` event (quota vs other) fed by both save paths
+and documented in `EVENT_CATALOG.md`; `SaveIndicator` gains an error state with
+`role="alert"` and new `autoSave.*` keys in both locales, cleared by the next
+successful save. Behaviour change, so Rule 2 applies: scenario first,
+simulating `QuotaExceededError` via `addInitScript`, on all four profiles.
 
 ### 5. Git checklist — `console.log` in production code
 
 **Rule:** "No console.log statements (use proper logging)."
 
-8 occurrences under `src/`, mostly storage lifecycle messages in
-`storageFactory.ts` and `indexedDBStorageImpl.ts`.
+8 occurrences, all storage lifecycle messages: `storageFactory.ts` (4),
+`indexedDBStorageImpl.ts` (3), `localStorageImpl.ts` (1). Plus a leftover
+debug line in `tests/e2e/step-definitions/basic-info-editing.steps.ts:222`
+(`tests/e2e/support/hooks.ts:78` forwards the browser console deliberately).
+
+**Fix:** a small `src/utils/logger.ts` (`debug`/`info` only under
+`import.meta.env.DEV`), then `no-console` as `"error"` for `src/`.
+
+### 6. Rule #4 — hardcoded user-facing text
+
+**Rule:** "i18n everything — no hardcoded user-facing text."
+
+7 `alert()` calls in English (`BasicInfo.ts:27,33`, `main.ts` ~362–425), the
+import-warning "Note: …" strings in `main.ts`, and English `Error` messages
+that reach users through those alerts (3 in `exportManager.ts`, 3 in
+`fileStorage.ts`). `check:i18n` only verifies that `t()` keys exist, so it
+cannot catch these. Fix together with #4's notification mechanism.
+
+### 7. Rule #5 — tests are never type-checked
+
+`tsconfig.json` excludes `tests/`, and `build` checks only `src/`. A probe with
+`tests/` included found 96 real type errors in 13 files (largest:
+`fileStorage.test` 20, `basicInfo.test` 19, `conflictWarningModal.test` 16),
+plus 74 that are only missing Vitest globals. Replacing test `any`s means
+little until something checks them.
+
+**Fix:** `tsconfig.test.json` (`types: ["vitest/globals"]`) and a
+`typecheck:tests` step in the pre-commit hook and CI.
+
+### 8. Code organisation — one class per file
+
+`src/services/modalBehavior.ts` holds 3 classes (`ModalBehavior`,
+`FocusTrappingBehavior`, `ModalContainer`); `src/services/timer.ts` holds 2
+(`RealTimer`, `TestTimer`).
+
+### 9. Test-environment sniffing in production code
+
+`src/storage/indexedDBStorageImpl.ts:185` checks `(globalThis as any).vi` to
+detect Vitest. Inject the timeout instead.
 
 ---
 
-## 6. Test architecture — the E2E import path cannot cover validation
+## 10. Test architecture — the E2E import path cannot cover validation
 
 Not a rule violation, but it hid one of the bugs above and is worth fixing.
 
 `TestStorageHelper.setMockFileImporter` replaces `IFileImporter.importCharacter()`
-wholesale and returns `{ character, warnings }` verbatim. The real implementation
-routes through `fileStorage.parseAndSanitizeCharacter` → `sanitizeCharacter`, so
-**no E2E scenario ever executes the sanitizer**. The other import step
-(`character-file-import.steps.ts`) is worse: it writes straight to storage and
-reloads.
+wholesale, so **no E2E scenario ever executes the sanitizer**. The other import
+step (`character-file-import.steps.ts`) writes straight to storage and reloads,
+so the real import flow's versioning is untested too.
 
-That is why the oddity-deleting bug survived a suite with 359 scenarios. A
-Gherkin scenario for it today would pass whether or not the bug exists, which is
-worse than no scenario — so the regression coverage is unit-level for now.
+**Fix:** drive the real importer with no app hook. Delete
+`window.showOpenFilePicker` in the step to force the `<input type=file>` path
+(WebKit has no picker anyway), click Import, and feed the raw file through
+Playwright's `filechooser` event. Then remove the `__testFileImporter` seam and
+add the oddity-import regression scenario (review §2.3).
 
-**Fix:** have the mock importer accept raw file _content_ and run it through the
-real parse/sanitize path, so import scenarios exercise validation as production
-does.
+---
+
+## Plan — a sequence of commits on `main`
+
+Each step is one green commit, reviewed before committing (Rule 1). Refactors
+need no feature file; steps 8 and 9 change behaviour and start with a scenario.
+
+| #   | Commit                                                                                           | Kind     |
+| --- | ------------------------------------------------------------------------------------------------ | -------- |
+| 1   | Logger and `no-console` as error for `src/` (#5); split `modalBehavior.ts` and `timer.ts` (#8)   | refactor |
+| 2   | `@/` codemod across `src/` and `tests/`, plus the `no-restricted-imports` guard (#1)             | refactor |
+| 3   | Delete the dead `fileStorage` export code; move the `exportManager` handle store out (#3)        | refactor |
+| 4   | Remove `any` from `src/`, including the `vi` sniff (#2, #9)                                      | refactor |
+| 5   | `tsconfig.test.json` and `typecheck:tests` in hook and CI; fix the test type errors (#7)         | tooling  |
+| 6   | Remove `any` from `tests/`; `no-explicit-any` as error, disabling it banned (#2)                 | refactor |
+| 7   | Real-path E2E import, drop the importer seam, oddity scenario (#10)                              | test     |
+| 8   | Surface storage write failures (#4)                                                              | feature  |
+| 9   | Replace the `alert()`s and English errors with step 8's mechanism (#6)                           | feature  |
+| 10  | Split `unified-validation.ts` and its oversized test files (#3)                                  | refactor |
+| 11  | Split `CollectionBehavior`, `ItemsBox`, `DiffCharacterSheet` and their tests (#3)                | refactor |
+| 12  | Split `versionHistoryService`, `conflictDetectionService`, `CharacterSheet` and their tests (#3) | refactor |
+| 13  | Split `main.ts`; split the remaining oversized step definitions and feature files (#3)           | refactor |
+
+Dependencies: aliases (2) before any split, so new files are born with `@/`;
+`src/` types (4) before the test typecheck (5) before the test `any`s (6); the
+notification mechanism (8) before the alert cleanup (9).
