@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **668** in 26 files
-- Feature step lines: **2042**
+- Step definitions: **673** in 27 files
+- Feature step lines: **2058**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
@@ -55,6 +55,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
 | [section-rearrangement.steps.ts](#sectionrearrangementstepsts) | 49 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
+| [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
 | [version-comparison.steps.ts](#versioncomparisonstepsts) | 41 | 0 |
 | [version-history.steps.ts](#versionhistorystepsts) | 82 | 0 |
@@ -359,7 +360,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 47 | 27 |
+| Given | `I am on the character sheet page` | 48 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 142 |
 | Then | `I should see {int} cyphers displayed` | 1 | 104 |
 | Then | `I should see {int} oddities displayed` | 1 | 155 |
@@ -471,7 +472,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I click the "Cancel" button` | 3 | 51 |
 | When | `I click the "Confirm" button` | 27 | 46 |
 | When | `I click the "New" button` | 7 | 52 |
-| When | `I click the {badge} badge` | 22 | 62 |
+| When | `I click the {badge} badge` | 23 | 62 |
 | When | `I edit the {string} field to {string}` | 23 | 153 |
 | When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 163 |
 | When | `I hover over the character name {string}` | 1 | 102 |
@@ -490,11 +491,11 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I type {string} in the modal input` | 40 | 118 |
 | Then | `the {string} value should display {string}` | 6 | 230 |
 | Then | `the {string} value should not have changed` | 2 | 239 |
-| Then | `the edit modal should open` | 8 | 263 |
+| Then | `the edit modal should open` | 9 | 263 |
 | Then | `the input field should be focused` | 1 | 279 |
 | Then | `the input field should contain the current {string} value` | 1 | 281 |
 | Then | `the input field should receive focus automatically` | 1 | 278 |
-| Then | `the modal input should contain {string}` | 10 | 269 |
+| Then | `the modal input should contain {string}` | 11 | 269 |
 | Then | `the modal should close` | 21 | 270 |
 
 ## data-validation.steps.ts
@@ -627,7 +628,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the character data should have totalXp {int}` | 1 | 173 |
 | Given | `the character has {int} {resource}` | 13 | 92 |
 | Given | `the character has {int} current XP and {int} total XP` | 9 | 9 |
-| Given | `the character has {resource} {int}` | 8 | 99 |
+| Given | `the character has {resource} {int}` | 9 | 99 |
 | Given | `the character was saved with a single legacy XP value of {int}` | 1 | 34 |
 | Then | `the Current XP badge should show {string}` | 7 | 111 |
 | Then | `the Effort badge should show {string}` | 3 | 151 |
@@ -712,6 +713,16 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the interface should display in German` | 1 | 91 |
 | Then | `the settings gear icon should still be visible` | 1 | 24 |
 | Then | `the settings panel should close` | 4 | 48 |
+
+## sheet-toolbar.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I scroll to the bottom of the page` | 1 | 33 |
+| Then | `the Edit Layout button should be in view` | 1 | 58 |
+| Then | `the Edit Layout button should not overlap the character sheet` | 1 | 47 |
+| Then | `the version navigator should be in view` | 1 | 54 |
+| Then | `the version navigator should not overlap the character sheet` | 1 | 40 |
 
 ## stat-pool-editing.steps.ts
 
@@ -801,7 +812,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `I should be viewing version {int}` | 1 | 1194 |
 | Then | `I should navigate to version {int}` | 2 | 846 |
 | Then | `I should see {int} versions in history` | 2 | 1067 |
-| When | `I view the character sheet` | 2 | 353 |
+| When | `I view the character sheet` | 4 | 353 |
 | When | `I wait for {int} milliseconds` | 4 | 639 |
 | When | `I wait for squash timer to complete` | 15 | 1149 |
 | Then | `no new version should be created yet` | 2 | 1048 |
@@ -813,7 +824,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the character data should be correct for version {int}` | 1 | 856 |
 | Then | `the character data should match version {int}` | 5 | 539 |
 | Then | `the character equipment should match version {int} equipment` | 2 | 768 |
-| Given | `the character has {int} versions in history` | 41 | 20 |
+| Given | `the character has {int} versions in history` | 44 | 20 |
 | Given | `the character has {int} versions with different data` | 3 | 183 |
 | Given | `the character has {int} versions with different names` | 2 | 218 |
 | Given | `the character has a later version` | 1 | 75 |
@@ -845,7 +856,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the version counter should show {string}` | 25 | 516 |
 | Then | `the version description should contain {string}` | 11 | 715 |
 | Then | `the version description should contain the tier change` | 1 | 895 |
-| Then | `the version navigator should be visible` | 4 | 511 |
+| Then | `the version navigator should be visible` | 5 | 511 |
 | Then | `the version navigator should not be visible` | 2 | 499 |
 | Then | `the warning banner should be visible` | 7 | 582 |
 | Then | `the warning banner should contain text {string}` | 1 | 597 |

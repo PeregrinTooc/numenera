@@ -53,11 +53,8 @@ export class VersionNavigator {
       }
     }
 
-    // Apply inline styles for fixed positioning in top right corner
+    // Positioned by its container in the sheet toolbar (.sheet-toolbar)
     this.element.style.cssText = `
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
             display: flex;
             align-items: center;
             gap: 0.75rem;
@@ -65,7 +62,6 @@ export class VersionNavigator {
             padding: 0.5rem 1rem;
             border-radius: 0.5rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            z-index: 40;
             font-size: 0.875rem;
         `;
 

@@ -1,16 +1,32 @@
 /* Layout Editor Styles */
 
-/* Floating Edit Layout Button */
-.edit-layout-button {
-  position: fixed;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 100;
+/* Sheet toolbar: holds the version navigator and the Edit Layout button.
+   Sticky and in flow, so at rest it sits above the sheet instead of floating
+   over it. The bar itself is transparent and click-through; only its
+   controls take pointer events, so the gap between them never blocks the
+   sheet scrolling underneath. */
+.sheet-toolbar {
+  position: sticky;
+  top: 0.5rem;
+  z-index: 40;
   display: flex;
-  flex-direction: column;
+  justify-content: flex-end;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.75rem;
+  max-width: 72rem;
+  margin: 0 auto 1rem;
+  pointer-events: none;
+}
+
+.sheet-toolbar > * {
+  pointer-events: auto;
+}
+
+/* Edit Layout Button */
+.edit-layout-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.75rem;
   background-color: var(--color-numenera-primary, #1a5490);
   color: white;
@@ -186,7 +202,6 @@
 /* Mobile Styles */
 @media (max-width: 768px) {
   .edit-layout-button {
-    right: 0.5rem;
     padding: 0.5rem;
   }
 
@@ -209,13 +224,6 @@
 @media (min-width: 769px) {
   .edit-layout-button {
     padding: 0.75rem 1rem;
-  }
-}
-
-/* Large screens - position further from edge */
-@media (min-width: 1280px) {
-  .edit-layout-button {
-    right: 2rem;
   }
 }
 

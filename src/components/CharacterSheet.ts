@@ -772,7 +772,10 @@ export class CharacterSheet {
 
     return html`
       <div class="min-h-screen p-4">
-        ${this.renderEditLayoutButton()}
+        <div class="sheet-toolbar" data-testid="sheet-toolbar">
+          <div id="version-navigator-container"></div>
+          ${this.renderEditLayoutButton()}
+        </div>
         <div
           class="max-w-6xl mx-auto shadow rounded-lg p-6 parchment-container ${this.isLayoutEditMode
             ? "layout-edit-mode"
