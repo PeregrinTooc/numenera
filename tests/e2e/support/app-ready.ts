@@ -1,9 +1,18 @@
 import type { Page } from "@playwright/test";
+import type { VersionHistoryService } from "../../../src/services/versionHistoryService.js";
 import "./testStorageHelper.js";
+
+// Exposed by src/main.ts once its bootstrap has set up version history.
+declare global {
+  interface Window {
+    __versionHistoryService?: VersionHistoryService | null;
+  }
+}
 
 /**
  * Wait for the character sheet page to be fully ready after a navigation:
- * rendered AND the app's own initial persist-to-storage has landed.
+ * rendered, the app's own initial persist-to-storage has landed, AND the
+ * version history service is exposed.
  *
  * "load"/"domcontentloaded" fire before the app's async bootstrap
  * (renderCharacterSheet -> saveCharacterState, see src/main.ts) has run.
@@ -12,6 +21,11 @@ import "./testStorageHelper.js";
  * step that only writes when it sees a non-null character silently
  * no-ops. Waiting for both the rendered DOM and a persisted character
  * closes that window.
+ *
+ * The bootstrap also renders the sheet several IndexedDB reads before it
+ * sets window.__versionHistoryService, so a step that buffers or squashes
+ * versions as soon as the sheet is visible can run before the service
+ * exists — on WebKit under CI load, often enough to flake.
  */
 export async function waitForCharacterSheetReady(page: Page): Promise<void> {
   await page.waitForSelector('[data-testid="character-name"]');
@@ -20,6 +34,7 @@ export async function waitForCharacterSheetReady(page: Page): Promise<void> {
     const character = await window.__testStorage.loadCharacterState();
     return character !== null;
   });
+  await page.waitForFunction(() => Boolean(window.__versionHistoryService));
 }
 
 /**

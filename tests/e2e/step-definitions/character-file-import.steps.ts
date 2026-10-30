@@ -2,6 +2,7 @@ import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { Character } from "../../../src/types/character.js";
 import { FULL_CHARACTER } from "../support/cardTestFixtures.js";
+import { waitForCharacterSheetReady } from "../support/app-ready.js";
 
 // Test character data fixtures — overrides of the shared demo character so
 // only what makes each imported file distinctive needs to be spelled out.
@@ -101,6 +102,7 @@ When("I import a valid character file {string}", async function (filename: strin
   // Remove any query parameters to ensure clean reload
   const currentUrl = this.page.url().split("?")[0];
   await this.page.goto(currentUrl, { waitUntil: "domcontentloaded" });
+  await waitForCharacterSheetReady(this.page);
 
   // Wait for the character name element to appear with the expected value
   const expectedName = character.name;
@@ -113,10 +115,11 @@ When("I import a valid character file {string}", async function (filename: strin
   // Buffer a version change for the imported character
   // This simulates what would happen in a real import flow
   await this.page.evaluate((char: Character) => {
-    const service = (window as any).__versionHistoryService;
-    if (service) {
-      service.bufferChange(char, "Imported character");
+    const service = window.__versionHistoryService;
+    if (!service) {
+      throw new Error("Version history service not available. Make sure the app has loaded.");
     }
+    service.bufferChange(char, "Imported character");
   }, character);
 });
 

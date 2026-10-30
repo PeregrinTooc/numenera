@@ -616,10 +616,11 @@ Then("the warning banner should have a restore button", async function (this: Cu
  */
 async function forceSquash(page: Page): Promise<void> {
   await page.evaluate(async () => {
-    const service = (window as any).__versionHistoryService;
-    if (service) {
-      await service.forceSquash();
+    const service = window.__versionHistoryService;
+    if (!service) {
+      throw new Error("Version history service not available. Make sure the app has loaded.");
     }
+    await service.forceSquash();
   });
   // Small wait for UI to update after squash
   await page.waitForTimeout(100);
@@ -629,7 +630,7 @@ Then(
   "the undo buffer should contain exactly {int} changes",
   async function (this: CustomWorld, expectedLength: number) {
     const bufferLength = await this.page.evaluate(() => {
-      const service = (window as any).__versionHistoryService;
+      const service = window.__versionHistoryService;
       return service ? service.getBufferLength() : -1;
     });
     expect(bufferLength).toBe(expectedLength);

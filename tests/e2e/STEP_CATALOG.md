@@ -408,9 +408,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I import a valid character file {string}` | 4 | 86 |
-| Then | `the character {string} should still be displayed` | 1 | 124 |
-| Then | `the previous character should be replaced` | 1 | 131 |
+| When | `I import a valid character file {string}` | 4 | 87 |
+| Then | `the character {string} should still be displayed` | 1 | 127 |
+| Then | `the previous character should be replaced` | 1 | 134 |
 
 ## character-storage.steps.ts
 
@@ -767,15 +767,15 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a new version should be created` | 1 | 826 |
-| Then | `a new version should be created with description {string}` | 3 | 879 |
+| Then | `a new version should be created` | 1 | 827 |
+| Then | `a new version should be created with description {string}` | 3 | 880 |
 | Then | `all edit controls should be enabled` | 2 | 505 |
 | Then | `both navigation arrows should be enabled` | 2 | 575 |
 | Given | `I am viewing that version` | 3 | 283 |
 | Given | `I am viewing the latest version` | 6 | 57 |
 | Given | `I am viewing version {int}` | 8 | 61 |
 | When | `I click the backward navigation arrow` | 17 | 361 |
-| Then | `I click the backward navigation arrow {int} times` | 1 | 910 |
+| Then | `I click the backward navigation arrow {int} times` | 1 | 911 |
 | When | `I click the backward navigation arrow again` | 1 | 368 |
 | When | `I click the forward navigation arrow` | 3 | 380 |
 | When | `I click the forward navigation arrow again` | 1 | 386 |
@@ -783,34 +783,34 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I click the return to latest button` | 1 | 374 |
 | When | `I create a new version by editing the name` | 1 | 474 |
 | Given | `I have made buffered edits that were undone` | 2 | 292 |
-| When | `I make {int} rapid edits that are buffered` | 1 | 1086 |
+| When | `I make {int} rapid edits that are buffered` | 1 | 1087 |
 | When | `I navigate backward` | 1 | 438 |
 | When | `I navigate forward twice` | 1 | 444 |
 | When | `I navigate to version {int}` | 8 | 398 |
-| When | `I press {string}` | 5 | 653 |
-| When | `I press {string} again` | 2 | 964 |
-| When | `I press {string} again before the squash timer expires` | 2 | 999 |
-| When | `I press {string} before the squash timer expires` | 11 | 925 |
-| When | `I press {string} to navigate to previous version` | 1 | 1153 |
-| When | `I press {string} to undo buffered changes` | 1 | 1107 |
+| When | `I press {string}` | 5 | 654 |
+| When | `I press {string} again` | 2 | 965 |
+| When | `I press {string} again before the squash timer expires` | 2 | 1000 |
+| When | `I press {string} before the squash timer expires` | 11 | 926 |
+| When | `I press {string} to navigate to previous version` | 1 | 1154 |
+| When | `I press {string} to undo buffered changes` | 1 | 1108 |
 | When | `I rapidly click the backward arrow {int} times` | 1 | 452 |
 | When | `I refresh the browser` | 6 | 466 |
-| Then | `I should be viewing the latest version` | 3 | 832 |
-| Then | `I should be viewing version {int}` | 1 | 1193 |
-| Then | `I should navigate to version {int}` | 2 | 845 |
-| Then | `I should see {int} versions in history` | 2 | 1066 |
+| Then | `I should be viewing the latest version` | 3 | 833 |
+| Then | `I should be viewing version {int}` | 1 | 1194 |
+| Then | `I should navigate to version {int}` | 2 | 846 |
+| Then | `I should see {int} versions in history` | 2 | 1067 |
 | When | `I view the character sheet` | 2 | 353 |
-| When | `I wait for {int} milliseconds` | 4 | 638 |
-| When | `I wait for squash timer to complete` | 15 | 1148 |
-| Then | `no new version should be created yet` | 2 | 1047 |
+| When | `I wait for {int} milliseconds` | 4 | 639 |
+| When | `I wait for squash timer to complete` | 15 | 1149 |
+| Then | `no new version should be created yet` | 2 | 1048 |
 | Then | `no warning banner should be visible` | 6 | 524 |
 | Then | `the backward arrow should be disabled` | 1 | 587 |
 | Then | `the backward arrow should be enabled` | 3 | 529 |
 | Then | `the change description should be displayed` | 1 | 557 |
-| Then | `the changes should be reapplied` | 2 | 1074 |
-| Then | `the character data should be correct for version {int}` | 1 | 855 |
+| Then | `the changes should be reapplied` | 2 | 1075 |
+| Then | `the character data should be correct for version {int}` | 1 | 856 |
 | Then | `the character data should match version {int}` | 5 | 539 |
-| Then | `the character equipment should match version {int} equipment` | 2 | 767 |
+| Then | `the character equipment should match version {int} equipment` | 2 | 768 |
 | Given | `the character has {int} versions in history` | 41 | 20 |
 | Given | `the character has {int} versions with different data` | 3 | 183 |
 | Given | `the character has {int} versions with different names` | 2 | 218 |
@@ -821,34 +821,34 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Given | `the character has a version from {int} minutes ago` | 1 | 257 |
 | Given | `the character has a version with multiple basic info changes` | 2 | 86 |
 | Given | `the character has no version history yet` | 4 | 8 |
-| Then | `the character name should be {string}` | 8 | 1038 |
-| Then | `the character name should match version {int} name` | 4 | 742 |
-| Then | `the character name should revert to the original value` | 2 | 1056 |
-| Then | `the character stats should match version {int} stats` | 2 | 754 |
-| Then | `the exported file should contain version {int} data` | 1 | 803 |
-| Then | `the exported file should not contain version history` | 1 | 813 |
-| Then | `the exported file should use the current portrait` | 1 | 819 |
+| Then | `the character name should be {string}` | 8 | 1039 |
+| Then | `the character name should match version {int} name` | 4 | 743 |
+| Then | `the character name should revert to the original value` | 2 | 1057 |
+| Then | `the character stats should match version {int} stats` | 2 | 755 |
+| Then | `the exported file should contain version {int} data` | 1 | 804 |
+| Then | `the exported file should not contain version history` | 1 | 814 |
+| Then | `the exported file should use the current portrait` | 1 | 820 |
 | Then | `the forward arrow should be disabled` | 4 | 534 |
 | Then | `the forward arrow should be enabled` | 1 | 592 |
-| Then | `the import button should be disabled` | 1 | 1216 |
-| Then | `the import button should be enabled` | 2 | 1211 |
-| Then | `the oldest version should have been removed` | 2 | 904 |
-| Then | `the portrait should remain unchanged` | 3 | 791 |
-| When | `the squash timer has completed` | 2 | 648 |
+| Then | `the import button should be disabled` | 1 | 1217 |
+| Then | `the import button should be enabled` | 2 | 1212 |
+| Then | `the oldest version should have been removed` | 2 | 905 |
+| Then | `the portrait should remain unchanged` | 3 | 792 |
+| When | `the squash timer has completed` | 2 | 649 |
 | Then | `the timestamp should be displayed` | 1 | 566 |
-| Then | `the timestamp should be in human-readable format` | 1 | 722 |
-| Then | `the timestamp should show a relative time like {string}` | 1 | 731 |
-| Then | `the UI should remain responsive` | 2 | 869 |
-| Then | `the undo buffer should contain exactly {int} changes` | 1 | 627 |
+| Then | `the timestamp should be in human-readable format` | 1 | 723 |
+| Then | `the timestamp should show a relative time like {string}` | 1 | 732 |
+| Then | `the UI should remain responsive` | 2 | 870 |
+| Then | `the undo buffer should contain exactly {int} changes` | 1 | 628 |
 | Then | `the version counter should show {string}` | 25 | 516 |
-| Then | `the version description should contain {string}` | 11 | 714 |
-| Then | `the version description should contain the tier change` | 1 | 894 |
+| Then | `the version description should contain {string}` | 11 | 715 |
+| Then | `the version description should contain the tier change` | 1 | 895 |
 | Then | `the version navigator should be visible` | 4 | 511 |
 | Then | `the version navigator should not be visible` | 2 | 499 |
 | Then | `the warning banner should be visible` | 7 | 582 |
 | Then | `the warning banner should contain text {string}` | 1 | 597 |
 | Then | `the warning banner should have a restore button` | 1 | 605 |
-| Then | `the warning banner should not be visible` | 2 | 889 |
+| Then | `the warning banner should not be visible` | 2 | 890 |
 
 ## viewport.steps.ts
 
