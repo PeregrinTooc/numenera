@@ -187,6 +187,13 @@ All features listed below have full BDD test coverage and are verified working.
     sideways, checked at 320, 390, 393, 834 and 1280 px
   - Attack headers wrap their badges onto a new line on narrow screens
   - Names, quotes, `&` and `<…>` are shown verbatim, never parsed as HTML
+- **Sheet Toolbar** ([sheet-toolbar.feature](../tests/e2e/features/sheet-toolbar.feature))
+  - The version navigator and the Edit Layout button share one sticky toolbar above the sheet
+    instead of floating over it (`position: fixed`); at rest neither covers any part of the sheet
+  - Fixes the Edit Layout button covering the Effort badge on iPad Pro, and the navigator covering
+    top-right section badges on every viewport once version history exists
+  - The bar is transparent and click-through (`pointer-events: none`, controls opt back in), so
+    while scrolling only the two controls float, never the gap between them
 
 ### Per-Device E2E Testing
 
