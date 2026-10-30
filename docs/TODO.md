@@ -51,9 +51,9 @@ runs the Cucumber suite once per Rule 9 device profile (`DEVICE`, see
 | Profile           | Engine   | Scenarios passing | Excluded by tag                                                     |
 | ----------------- | -------- | ----------------- | ------------------------------------------------------------------- |
 | desktop (default) | Chromium | 417 / 417         | 7 `@skip`ped (Grid Merge/Split below); 0 `@desktop-only`            |
-| `DEVICE=pixel5`   | Chromium | 395 / 395         | 21 `@not-phone`                                                     |
-| `DEVICE=iphone12` | WebKit   | 391 / 391         | 21 `@not-phone`, 3 `@chromium-only`, 1 `@known-issue-webkit-unload` |
-| `DEVICE=ipadpro`  | WebKit   | 412 / 412         | 3 `@chromium-only`, 1 `@known-issue-webkit-unload`                  |
+| `DEVICE=pixel5`   | Chromium | 396 / 396         | 21 `@not-phone`                                                     |
+| `DEVICE=iphone12` | WebKit   | 392 / 392         | 21 `@not-phone`, 3 `@chromium-only`, 1 `@known-issue-webkit-unload` |
+| `DEVICE=ipadpro`  | WebKit   | 413 / 413         | 3 `@chromium-only`, 1 `@known-issue-webkit-unload`                  |
 
 The `I reload the page` step now always waits out the 300 ms auto-save debounce
 (the save indicator stays hidden until the first save completes, so it cannot
