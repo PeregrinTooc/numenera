@@ -28,6 +28,7 @@ import type { SectionId } from "./types/layout.js";
 import { applyFieldUpdate } from "./utils/characterFieldUpdate.js";
 import { describeCharacterChange } from "./services/versionDescriptions.js";
 import { migrateLegacyVersionDescriptions } from "./services/versionDescriptionMigration.js";
+import { reconcileVersionHistory } from "@/services/versionHistoryReconciliation";
 import { CompareView } from "./components/CompareView.js";
 import { loadComparisonViewEnabled } from "./storage/comparisonViewPreference.js";
 import { isPhoneViewport } from "./utils/viewport.js";
@@ -757,6 +758,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   // already-migrated descriptions on this same load.
   await migrateLegacyVersionDescriptions(versionHistory, versions);
 
+  // Recover a squash lost to the last unload. Only a stored character counts:
+  // the default character was never edited, so it has nothing to recover.
+  if (initialCharacter === storedCharacter) {
+    await reconcileVersionHistory(versionHistory, initialCharacter);
+  }
+
   // Initialize VersionHistoryService
   // Use configured delay if available (for tests), otherwise default 5000ms
   const squashDelay =
@@ -772,14 +779,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Expose versionHistoryService globally for components to access
   window.__versionHistoryService = versionHistoryService;
-
-  // Add beforeunload handler to flush buffered changes
-  window.addEventListener("beforeunload", async () => {
-    if (versionHistoryService) {
-      // Flush any buffered changes before page unload
-      await versionHistoryService.flush();
-    }
-  });
 
   // Only create initial version if no versions exist yet
   if (versions.length === 0) {

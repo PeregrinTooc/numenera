@@ -48,12 +48,12 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 runs the Cucumber suite once per Rule 9 device profile (`DEVICE`, see
 `docs/rules/testing.md`; CI runs all four in the `e2e-devices` job):
 
-| Profile           | Engine   | Scenarios passing | Excluded by tag                                                     |
-| ----------------- | -------- | ----------------- | ------------------------------------------------------------------- |
-| desktop (default) | Chromium | 420 / 420         | 7 `@skip`ped (Grid Merge/Split below); 0 `@desktop-only`            |
-| `DEVICE=pixel5`   | Chromium | 399 / 399         | 21 `@not-phone`                                                     |
-| `DEVICE=iphone12` | WebKit   | 395 / 395         | 21 `@not-phone`, 3 `@chromium-only`, 1 `@known-issue-webkit-unload` |
-| `DEVICE=ipadpro`  | WebKit   | 416 / 416         | 3 `@chromium-only`, 1 `@known-issue-webkit-unload`                  |
+| Profile           | Engine   | Scenarios passing | Excluded by tag                                          |
+| ----------------- | -------- | ----------------- | -------------------------------------------------------- |
+| desktop (default) | Chromium | 421 / 421         | 7 `@skip`ped (Grid Merge/Split below); 0 `@desktop-only` |
+| `DEVICE=pixel5`   | Chromium | 400 / 400         | 21 `@not-phone`                                          |
+| `DEVICE=iphone12` | WebKit   | 397 / 397         | 21 `@not-phone`, 3 `@chromium-only`                      |
+| `DEVICE=ipadpro`  | WebKit   | 418 / 418         | 3 `@chromium-only`                                       |
 
 The `I reload the page` step now always waits out the 300 ms auto-save debounce
 (the save indicator stays hidden until the first save completes, so it cannot
@@ -88,9 +88,6 @@ detail lives in the linked file.
   used, `any` usages with `no-explicit-any` only warning, files over 300 lines,
   swallowed storage write errors, `console.log` in `src/`, and the E2E import
   path bypassing the real sanitizer
-- [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) "Not addressed":
-  the auto-save debounce is now flushed on unload; flushing the buffered
-  version-history change on `beforeunload` still needs a deliberate decision
 
 ### Test and Component Debt
 

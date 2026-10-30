@@ -302,6 +302,11 @@ All features listed below have full BDD test coverage and are verified working.
   - Edit from old version creates new version (no read-only mode)
   - Portrait excluded from versioning
   - Export from old version works
+  - Edits still in the squash buffer when the page closes are recovered on the next load:
+    `reconcileVersionHistory` compares the stored character's etag with the latest version
+    and rebuilds the missing version, described from the diff. Replaces the old async
+    `beforeunload` flush, which WebKit never completed; scenario "Buffered edit survives a
+    reload before the squash timer expires" runs on every device profile
   - **Buffer-Based Undo/Redo (Ctrl+Z/Y)**:
     - Undo/redo buffered changes before squash timer fires
     - Granular undo of individual edits within the 5s buffer window

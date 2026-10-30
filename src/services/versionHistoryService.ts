@@ -145,6 +145,8 @@ export class VersionHistoryService {
         window.dispatchEvent(new CustomEvent("squash-completed"));
       }
     } catch (error) {
+      // Log-and-continue is deliberate: the character itself was auto-saved,
+      // and reconcileVersionHistory rebuilds the missing version on next boot.
       console.error("Error performing squash:", error);
       // Clear state on error
       this.buffer = [];

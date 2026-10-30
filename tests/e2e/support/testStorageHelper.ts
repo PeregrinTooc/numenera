@@ -109,6 +109,10 @@ export class TestStorageHelper {
   /**
    * Create a version in version history
    *
+   * Also stores the character, as the app does: its latest version always
+   * matches the stored character, and on boot reconcileVersionHistory would
+   * otherwise rebuild a phantom version from the mismatch.
+   *
    * @param character Character data to save as a version
    * @param description Description of the changes
    */
@@ -122,6 +126,7 @@ export class TestStorageHelper {
       },
       { char: character, desc: description }
     );
+    await this.setCharacter(character);
   }
 
   /**

@@ -27,7 +27,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 ## Summary
 
 - Step definitions: **673** in 27 files
-- Feature step lines: **2058**
+- Feature step lines: **2068**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
@@ -410,8 +410,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I import a valid character file {string}` | 4 | 87 |
-| Then | `the character {string} should still be displayed` | 1 | 127 |
-| Then | `the previous character should be replaced` | 1 | 134 |
+| Then | `the character {string} should still be displayed` | 1 | 119 |
+| Then | `the previous character should be replaced` | 1 | 126 |
 
 ## character-storage.steps.ts
 
@@ -473,7 +473,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I click the "Confirm" button` | 27 | 46 |
 | When | `I click the "New" button` | 7 | 52 |
 | When | `I click the {badge} badge` | 23 | 62 |
-| When | `I edit the {string} field to {string}` | 23 | 153 |
+| When | `I edit the {string} field to {string}` | 25 | 153 |
 | When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 163 |
 | When | `I hover over the character name {string}` | 1 | 102 |
 | When | `I hover over the tier {string}` | 1 | 106 |
@@ -787,7 +787,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Given | `I am viewing that version` | 3 | 283 |
 | Given | `I am viewing the latest version` | 6 | 57 |
 | Given | `I am viewing version {int}` | 8 | 61 |
-| When | `I click the backward navigation arrow` | 17 | 361 |
+| When | `I click the backward navigation arrow` | 18 | 361 |
 | Then | `I click the backward navigation arrow {int} times` | 1 | 911 |
 | When | `I click the backward navigation arrow again` | 1 | 368 |
 | When | `I click the forward navigation arrow` | 3 | 380 |
@@ -807,14 +807,14 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I press {string} to navigate to previous version` | 1 | 1154 |
 | When | `I press {string} to undo buffered changes` | 1 | 1108 |
 | When | `I rapidly click the backward arrow {int} times` | 1 | 452 |
-| When | `I refresh the browser` | 6 | 466 |
+| When | `I refresh the browser` | 7 | 466 |
 | Then | `I should be viewing the latest version` | 3 | 833 |
 | Then | `I should be viewing version {int}` | 1 | 1194 |
 | Then | `I should navigate to version {int}` | 2 | 846 |
-| Then | `I should see {int} versions in history` | 2 | 1067 |
+| Then | `I should see {int} versions in history` | 3 | 1067 |
 | When | `I view the character sheet` | 4 | 353 |
 | When | `I wait for {int} milliseconds` | 4 | 639 |
-| When | `I wait for squash timer to complete` | 15 | 1149 |
+| When | `I wait for squash timer to complete` | 16 | 1149 |
 | Then | `no new version should be created yet` | 2 | 1048 |
 | Then | `no warning banner should be visible` | 6 | 524 |
 | Then | `the backward arrow should be disabled` | 1 | 587 |
@@ -824,7 +824,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the character data should be correct for version {int}` | 1 | 856 |
 | Then | `the character data should match version {int}` | 5 | 539 |
 | Then | `the character equipment should match version {int} equipment` | 2 | 768 |
-| Given | `the character has {int} versions in history` | 44 | 20 |
+| Given | `the character has {int} versions in history` | 45 | 20 |
 | Given | `the character has {int} versions with different data` | 3 | 183 |
 | Given | `the character has {int} versions with different names` | 2 | 218 |
 | Given | `the character has a later version` | 1 | 75 |
@@ -834,7 +834,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Given | `the character has a version from {int} minutes ago` | 1 | 257 |
 | Given | `the character has a version with multiple basic info changes` | 2 | 86 |
 | Given | `the character has no version history yet` | 4 | 8 |
-| Then | `the character name should be {string}` | 8 | 1039 |
+| Then | `the character name should be {string}` | 10 | 1039 |
 | Then | `the character name should match version {int} name` | 4 | 743 |
 | Then | `the character name should revert to the original value` | 2 | 1057 |
 | Then | `the character stats should match version {int} stats` | 2 | 755 |
@@ -854,7 +854,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the UI should remain responsive` | 2 | 870 |
 | Then | `the undo buffer should contain exactly {int} changes` | 1 | 628 |
 | Then | `the version counter should show {string}` | 25 | 516 |
-| Then | `the version description should contain {string}` | 11 | 715 |
+| Then | `the version description should contain {string}` | 12 | 715 |
 | Then | `the version description should contain the tier change` | 1 | 895 |
 | Then | `the version navigator should be visible` | 5 | 511 |
 | Then | `the version navigator should not be visible` | 2 | 499 |

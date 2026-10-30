@@ -147,8 +147,10 @@ as any)` casts in `main.ts` and in test files.~~ `main.ts`'s casts are gone
 
 ## Not addressed
 
-- **`beforeunload` flushing** (§3). The auto-save debounce is now flushed on
-  `beforeunload`/`pagehide`. The buffered version-history change is still only
-  best-effort on unload (the handler cannot await a promise); a real fix means
-  writing synchronously on unload or accepting the loss. Worth a deliberate
-  decision rather than a patch.
+- ~~**`beforeunload` flushing** (§3).~~ Resolved by not flushing at all. The
+  auto-save debounce is flushed on `beforeunload`/`pagehide` with one eagerly
+  committed write, so the stored character always holds the latest edit. The
+  version-history buffer is no longer flushed on unload; instead
+  `reconcileVersionHistory` (`src/services/versionHistoryReconciliation.ts`)
+  rebuilds the lost squash on the next boot from the stored character, on every
+  browser including WebKit.

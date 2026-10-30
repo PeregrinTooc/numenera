@@ -11,7 +11,7 @@ const excludedTags = ["@skip", "@wip", "@deprecated"];
 if (device !== "desktop") excludedTags.push("@desktop-only");
 if (PHONE_DEVICES.includes(device)) excludedTags.push("@not-phone");
 if (WEBKIT_DEVICES.includes(device)) {
-  excludedTags.push("@chromium-only", "@known-issue-webkit-unload");
+  excludedTags.push("@chromium-only");
 }
 
 module.exports = {

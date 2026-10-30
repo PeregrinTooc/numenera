@@ -111,16 +111,8 @@ When("I import a valid character file {string}", async function (filename: strin
   // Wait for element to be visible and contain the expected text
   await expect(nameElement).toBeVisible({ timeout: 15000 });
   await expect(nameElement).toHaveText(expectedName, { timeout: 15000 });
-
-  // Buffer a version change for the imported character
-  // This simulates what would happen in a real import flow
-  await this.page.evaluate((char: Character) => {
-    const service = window.__versionHistoryService;
-    if (!service) {
-      throw new Error("Version history service not available. Make sure the app has loaded.");
-    }
-    service.bufferChange(char, "Imported character");
-  }, character);
+  // No version is buffered here: the reload above already records the stored
+  // import as a version (reconcileVersionHistory on boot).
 });
 
 // Scenario: Imported character persists in localStorage

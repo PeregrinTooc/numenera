@@ -26,12 +26,11 @@ comparison view on a phone) carry a device tag and a `#` comment above it
 saying why; the affected runs skip them. The filter lives in `cucumber.cjs`.
 Everything else must pass on all four.
 
-| Tag                          | Skipped on                | Use for                                                               |
-| ---------------------------- | ------------------------- | --------------------------------------------------------------------- |
-| `@desktop-only`              | every non-desktop profile | behaviour only a desktop has (e.g. mouse hover)                       |
-| `@not-phone`                 | `pixel5`, `iphone12`      | features unavailable below 768px (e.g. the version comparison view)   |
-| `@chromium-only`             | `iphone12`, `ipadpro`     | helpers that need Chromium-only APIs (e.g. CDP touch gestures)        |
-| `@known-issue-webkit-unload` | `iphone12`, `ipadpro`     | the deferred async `beforeunload` flush, which WebKit does not honour |
+| Tag              | Skipped on                | Use for                                                             |
+| ---------------- | ------------------------- | ------------------------------------------------------------------- |
+| `@desktop-only`  | every non-desktop profile | behaviour only a desktop has (e.g. mouse hover)                     |
+| `@not-phone`     | `pixel5`, `iphone12`      | features unavailable below 768px (e.g. the version comparison view) |
+| `@chromium-only` | `iphone12`, `ipadpro`     | helpers that need Chromium-only APIs (e.g. CDP touch gestures)      |
 
 A scenario that needs a width no profile has (e.g. 320px) uses
 `the viewport is N pixels wide`.
