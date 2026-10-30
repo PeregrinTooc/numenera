@@ -144,37 +144,37 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 195 |
-| Then | `focus should not leave the modal` | 1 | 229 |
-| Then | `I can cancel with Escape key` | 1 | 254 |
-| Then | `I can confirm with Enter key` | 1 | 247 |
-| Then | `I can navigate with Tab key` | 1 | 239 |
+| Then | `focus should not leave the modal` | 1 | 210 |
+| Then | `I can cancel with Escape key` | 1 | 235 |
+| Then | `I can confirm with Enter key` | 1 | 228 |
+| Then | `I can navigate with Tab key` | 1 | 220 |
 | When | `I press Tab repeatedly` | 1 | 30 |
-| Then | `the backdrop should have aria-hidden={string}` | 1 | 271 |
-| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 328 |
+| Then | `the backdrop should have aria-hidden={string}` | 1 | 252 |
+| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 309 |
 | Then | `the cancel button should have an X icon` | 1 | 145 |
-| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 356 |
+| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 337 |
 | Then | `the character name should display {string}` | 7 | 82 |
 | Then | `the character name should still display {string}` | 6 | 90 |
 | Then | `the confirm button should have a checkmark icon` | 1 | 139 |
-| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 376 |
+| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 357 |
 | Then | `the descriptor should display {string}` | 4 | 104 |
-| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 386 |
+| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 367 |
 | Then | `the focus should display {string}` | 4 | 112 |
-| Then | `the input field should be large enough for touch input` | 1 | 348 |
+| Then | `the input field should be large enough for touch input` | 1 | 329 |
 | Then | `the input field should be of type {string}` | 1 | 69 |
-| Then | `the input field should have inputmode={string} for mobile` | 1 | 299 |
-| Then | `the mobile keyboard should appear` | 1 | 293 |
+| Then | `the input field should have inputmode={string} for mobile` | 1 | 280 |
+| Then | `the mobile keyboard should appear` | 1 | 274 |
 | Then | `the modal backdrop should be semi-transparent` | 1 | 151 |
-| Then | `the modal should be sized appropriately for mobile` | 1 | 284 |
-| Then | `the modal should fill most of the screen width` | 1 | 308 |
+| Then | `the modal should be sized appropriately for mobile` | 1 | 265 |
+| Then | `the modal should fill most of the screen width` | 1 | 289 |
 | Then | `the modal should have a cancel button with icon` | 1 | 62 |
 | Then | `the modal should have a confirm button with icon` | 1 | 55 |
 | Then | `the modal should have Numenera-themed styling` | 1 | 130 |
-| Then | `the modal should have role={string}` | 1 | 265 |
+| Then | `the modal should have role={string}` | 1 | 246 |
 | Then | `the modal should not close` | 1 | 121 |
-| Then | `the modal should not overflow the viewport` | 1 | 318 |
+| Then | `the modal should not overflow the viewport` | 1 | 299 |
 | Then | `the name should show a hover state indicating it's editable` | 1 | 169 |
-| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 366 |
+| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 347 |
 | Then | `the tier should display {string}` | 6 | 98 |
 | Then | `the tier should show a hover state indicating it's editable` | 1 | 180 |
 

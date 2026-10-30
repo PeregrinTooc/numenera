@@ -204,26 +204,7 @@ Then(
     // Check that focus is on one of the modal interactive elements
     const validElements = ["edit-modal-input", "modal-confirm-button", "modal-cancel-button"];
 
-    // Log for debugging if needed
-    if (!focusedElement || !validElements.includes(focusedElement)) {
-      const debugInfo = await this.page.evaluate(() => {
-        const el = document.activeElement;
-        const isDisabled =
-          el && "disabled" in el ? (el as { disabled: boolean }).disabled : undefined;
-        return {
-          tagName: el?.tagName,
-          testId: el?.getAttribute("data-testid"),
-          isInput: el?.tagName === "INPUT",
-          isButton: el?.tagName === "BUTTON",
-          isDisabled,
-          classList: el?.className,
-        };
-      });
-      console.log("Focus debugging:", debugInfo);
-    }
-
-    expect(focusedElement).toBeTruthy();
-    expect(validElements.includes(focusedElement || "")).toBe(true);
+    expect(validElements).toContain(focusedElement);
   }
 );
 

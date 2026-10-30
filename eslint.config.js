@@ -87,6 +87,19 @@ export default [
     },
   },
   {
+    files: ["src/**/*.ts"],
+    rules: {
+      "no-console": ["error", { allow: ["warn", "error"] }],
+    },
+  },
+  {
+    // The logger is the one place production code may write diagnostics.
+    files: ["src/utils/logger.ts"],
+    rules: {
+      "no-console": "off",
+    },
+  },
+  {
     files: ["tests/e2e/**/*.ts"],
     rules: {
       "@typescript-eslint/no-non-null-assertion": "error",

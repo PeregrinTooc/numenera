@@ -12,11 +12,8 @@ import {
   getMaxLength,
   isNumericField,
 } from "../utils/unified-validation.js";
-import {
-  ModalBehavior,
-  FocusTrappingBehavior,
-  renderModalButtons,
-} from "../services/modalBehavior.js";
+import { ModalBehavior, renderModalButtons } from "@/services/modalBehavior";
+import { FocusTrappingBehavior } from "@/services/focusTrappingBehavior";
 import type { VersionHistoryService } from "../services/versionHistoryService.js";
 import { CompletionNotifier } from "../utils/completionNotifier.js";
 

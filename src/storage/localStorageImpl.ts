@@ -4,6 +4,7 @@
 import { ICharacterStorage } from "./ICharacterStorage.js";
 import { STORAGE_KEY } from "./storageConstants.js";
 import { CompletionNotifier } from "../utils/completionNotifier.js";
+import { logger } from "@/utils/logger";
 
 /**
  * LocalStorage-based character persistence
@@ -54,7 +55,7 @@ export class LocalStorageImpl implements ICharacterStorage {
       // Migration: Check if data has old schema version wrapper
       if (data.schemaVersion !== undefined && data.character !== undefined) {
         // Old format detected: extract character and re-save in new format
-        console.log("Migrating from old versioned format to new raw format");
+        logger.info("Migrating from old versioned format to new raw format");
         const character = data.character;
         this.saveInternal(character);
         notifier.complete({ source: "localStorage", found: true, migrated: true });

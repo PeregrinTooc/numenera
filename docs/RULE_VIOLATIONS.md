@@ -26,6 +26,8 @@ editing the rule to match the code.
 | Architecture — theme fonts             | `edit-modal.css` consumed `var(--font-handwritten)`, which resolved to nothing                                                                                                                                      | `--font-sans`, `--font-serif`, `--font-handwritten` declared in `@theme`                                                                                                    |
 | Code quality — one formatting standard | `code-quality.md` said "No semicolons (Prettier default)" while `.prettierrc` set `"semi": true` and the whole codebase used them — and the parenthetical was wrong, since Prettier's default _is_ semicolons       | the rule now restates `.prettierrc` in a table and names `.prettierrc` as authoritative, so the two cannot drift again                                                      |
 | Dead code                              | `tailwind.config.js` was never read by Tailwind v4, and `src/storage/localStorage.ts` had no importers left in `src/` after the Rule #11 fix — while remaining an easy way to re-enter that violation               | both deleted, with `localStorage.test.ts`; `cyphersBox.test.ts` now asserts persistence goes through the factory instead of mocking the deleted module                      |
+| Git checklist — no `console.log`       | 8 storage lifecycle `console.log` calls in `src/`; `no-console` was only a warning                                                                                                                                  | routed through `src/utils/logger.ts` (debug/info print in dev builds only); `no-console` is an error for `src/`, with the logger as the one exemption                       |
+| Code organisation — one class per file | `modalBehavior.ts` held 3 classes, `timer.ts` 2                                                                                                                                                                     | `FocusTrappingBehavior` → `focusTrappingBehavior.ts`, `ModalContainer` → `modalContainer.ts`, `TestTimer` → `testTimer.ts`                                                  |
 
 ---
 
@@ -161,18 +163,6 @@ and documented in `EVENT_CATALOG.md`; `SaveIndicator` gains an error state with
 successful save. Behaviour change, so Rule 2 applies: scenario first,
 simulating `QuotaExceededError` via `addInitScript`, on all four profiles.
 
-### 5. Git checklist — `console.log` in production code
-
-**Rule:** "No console.log statements (use proper logging)."
-
-8 occurrences, all storage lifecycle messages: `storageFactory.ts` (4),
-`indexedDBStorageImpl.ts` (3), `localStorageImpl.ts` (1). Plus a leftover
-debug line in `tests/e2e/step-definitions/basic-info-editing.steps.ts:222`
-(`tests/e2e/support/hooks.ts:78` forwards the browser console deliberately).
-
-**Fix:** a small `src/utils/logger.ts` (`debug`/`info` only under
-`import.meta.env.DEV`), then `no-console` as `"error"` for `src/`.
-
 ### 6. Rule #4 — hardcoded user-facing text
 
 **Rule:** "i18n everything — no hardcoded user-facing text."
@@ -193,12 +183,6 @@ little until something checks them.
 
 **Fix:** `tsconfig.test.json` (`types: ["vitest/globals"]`) and a
 `typecheck:tests` step in the pre-commit hook and CI.
-
-### 8. Code organisation — one class per file
-
-`src/services/modalBehavior.ts` holds 3 classes (`ModalBehavior`,
-`FocusTrappingBehavior`, `ModalContainer`); `src/services/timer.ts` holds 2
-(`RealTimer`, `TestTimer`).
 
 ### 9. Test-environment sniffing in production code
 
@@ -229,21 +213,21 @@ add the oddity-import regression scenario (review §2.3).
 Each step is one green commit, reviewed before committing (Rule 1). Refactors
 need no feature file; steps 8 and 9 change behaviour and start with a scenario.
 
-| #   | Commit                                                                                           | Kind     |
-| --- | ------------------------------------------------------------------------------------------------ | -------- |
-| 1   | Logger and `no-console` as error for `src/` (#5); split `modalBehavior.ts` and `timer.ts` (#8)   | refactor |
-| 2   | `@/` codemod across `src/` and `tests/`, plus the `no-restricted-imports` guard (#1)             | refactor |
-| 3   | Delete the dead `fileStorage` export code; move the `exportManager` handle store out (#3)        | refactor |
-| 4   | Remove `any` from `src/`, including the `vi` sniff (#2, #9)                                      | refactor |
-| 5   | `tsconfig.test.json` and `typecheck:tests` in hook and CI; fix the test type errors (#7)         | tooling  |
-| 6   | Remove `any` from `tests/`; `no-explicit-any` as error, disabling it banned (#2)                 | refactor |
-| 7   | Real-path E2E import, drop the importer seam, oddity scenario (#10)                              | test     |
-| 8   | Surface storage write failures (#4)                                                              | feature  |
-| 9   | Replace the `alert()`s and English errors with step 8's mechanism (#6)                           | feature  |
-| 10  | Split `unified-validation.ts` and its oversized test files (#3)                                  | refactor |
-| 11  | Split `CollectionBehavior`, `ItemsBox`, `DiffCharacterSheet` and their tests (#3)                | refactor |
-| 12  | Split `versionHistoryService`, `conflictDetectionService`, `CharacterSheet` and their tests (#3) | refactor |
-| 13  | Split `main.ts`; split the remaining oversized step definitions and feature files (#3)           | refactor |
+| #   | Commit                                                                                                  | Kind     |
+| --- | ------------------------------------------------------------------------------------------------------- | -------- |
+| 1   | ~~Logger and `no-console` as error for `src/` (#5); split `modalBehavior.ts` and `timer.ts` (#8)~~ done | refactor |
+| 2   | `@/` codemod across `src/` and `tests/`, plus the `no-restricted-imports` guard (#1)                    | refactor |
+| 3   | Delete the dead `fileStorage` export code; move the `exportManager` handle store out (#3)               | refactor |
+| 4   | Remove `any` from `src/`, including the `vi` sniff (#2, #9)                                             | refactor |
+| 5   | `tsconfig.test.json` and `typecheck:tests` in hook and CI; fix the test type errors (#7)                | tooling  |
+| 6   | Remove `any` from `tests/`; `no-explicit-any` as error, disabling it banned (#2)                        | refactor |
+| 7   | Real-path E2E import, drop the importer seam, oddity scenario (#10)                                     | test     |
+| 8   | Surface storage write failures (#4)                                                                     | feature  |
+| 9   | Replace the `alert()`s and English errors with step 8's mechanism (#6)                                  | feature  |
+| 10  | Split `unified-validation.ts` and its oversized test files (#3)                                         | refactor |
+| 11  | Split `CollectionBehavior`, `ItemsBox`, `DiffCharacterSheet` and their tests (#3)                       | refactor |
+| 12  | Split `versionHistoryService`, `conflictDetectionService`, `CharacterSheet` and their tests (#3)        | refactor |
+| 13  | Split `main.ts`; split the remaining oversized step definitions and feature files (#3)                  | refactor |
 
 Dependencies: aliases (2) before any split, so new files are born with `@/`;
 `src/` types (4) before the test typecheck (5) before the test `any`s (6); the

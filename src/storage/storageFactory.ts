@@ -9,6 +9,7 @@ import { LocalStorageImpl } from "./localStorageImpl.js";
 import { VersionHistoryManager } from "./versionHistory.js";
 import { CHARACTER_DB_NAME } from "./storageConstants.js";
 import { sanitizeCharacter } from "../utils/unified-validation.js";
+import { logger } from "@/utils/logger";
 
 let storageInstance: ICharacterStorage | null = null;
 let versionHistoryPromise: Promise<VersionHistoryManager> | null = null;
@@ -22,7 +23,7 @@ async function deleteCorruptedIndexedDB(): Promise<void> {
   return new Promise((resolve) => {
     const request = indexedDB.deleteDatabase(DB_NAME);
     request.onsuccess = () => {
-      console.log("Deleted corrupted IndexedDB, will recreate fresh");
+      logger.info("Deleted corrupted IndexedDB, will recreate fresh");
       resolve();
     };
     request.onerror = () => {
@@ -72,13 +73,13 @@ export async function getStorage(): Promise<ICharacterStorage> {
 
         // Verify again after recreation
         await indexedDB.load();
-        console.log("IndexedDB recreated successfully");
+        logger.info("IndexedDB recreated successfully");
       }
 
       // Migrate data from localStorage if it exists
       await indexedDB.migrateFromLocalStorage();
       storageInstance = indexedDB;
-      console.log("Using IndexedDB for character storage");
+      logger.info("Using IndexedDB for character storage");
       return storageInstance;
     } catch (error) {
       console.warn("IndexedDB initialization failed, falling back to localStorage:", error);
@@ -88,7 +89,7 @@ export async function getStorage(): Promise<ICharacterStorage> {
   // Fallback to localStorage
   storageInstance = new LocalStorageImpl();
   await storageInstance.init();
-  console.log("Using localStorage for character storage");
+  logger.info("Using localStorage for character storage");
   return storageInstance;
 }
 

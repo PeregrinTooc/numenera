@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import { VersionHistoryService } from "@/services/versionHistoryService";
-import { TestTimer } from "@/services/timer";
+import { TestTimer } from "@/services/testTimer";
 import type { Character } from "@/types/character";
 import { createTestCharacter as createMockCharacter } from "../factories/character";
 

@@ -2,6 +2,7 @@ import type { ICharacterStorage } from "./ICharacterStorage.js";
 import { STORAGE_KEY, CHARACTER_DB_NAME } from "./storageConstants.js";
 import { CompletionNotifier } from "../utils/completionNotifier.js";
 import type { Character } from "../types/character.js";
+import { logger } from "@/utils/logger";
 
 const DB_NAME = CHARACTER_DB_NAME;
 const STORE_NAME = "characters";
@@ -216,7 +217,7 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
       const existing = await this.loadInternal();
       if (existing !== null) {
         localStorage.removeItem(STORAGE_KEY);
-        console.log("IndexedDB already populated; discarded stale localStorage copy");
+        logger.info("IndexedDB already populated; discarded stale localStorage copy");
         return;
       }
 
@@ -226,7 +227,7 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
 
         // Handle old versioned format: { version: 1, data: {...} }
         if (parsed && typeof parsed === "object" && "version" in parsed && "data" in parsed) {
-          console.log("Migrating from old versioned format to IndexedDB");
+          logger.info("Migrating from old versioned format to IndexedDB");
           character = parsed.data;
         } else {
           // New format: raw character object
@@ -242,7 +243,7 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
 
       // Remove from localStorage after successful migration
       localStorage.removeItem(STORAGE_KEY);
-      console.log("Successfully migrated character data from localStorage to IndexedDB");
+      logger.info("Successfully migrated character data from localStorage to IndexedDB");
     } catch (error) {
       console.error("Failed to migrate from localStorage:", error);
       // Don't throw - we want the app to continue even if migration fails

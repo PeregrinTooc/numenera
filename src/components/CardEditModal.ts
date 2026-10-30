@@ -3,12 +3,9 @@
 
 import { html, render, TemplateResult } from "lit-html";
 import { t } from "../i18n/index.js";
-import {
-  ModalBehavior,
-  ModalContainer,
-  renderModalButtons,
-  FocusTrappingBehavior,
-} from "../services/modalBehavior.js";
+import { ModalBehavior, renderModalButtons } from "@/services/modalBehavior";
+import { ModalContainer } from "@/services/modalContainer";
+import { FocusTrappingBehavior } from "@/services/focusTrappingBehavior";
 import type { VersionHistoryService } from "../services/versionHistoryService.js";
 import { CompletionNotifier } from "../utils/completionNotifier.js";
 

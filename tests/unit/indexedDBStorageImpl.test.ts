@@ -171,8 +171,8 @@ describe("IndexedDBStorageImpl", () => {
       // Setup: Store data in localStorage (old versioned format)
       localStorage.setItem(STORAGE_KEY, JSON.stringify(oldVersionedFormat));
 
-      // Spy on console.log to verify migration message
-      const consoleLogSpy = vi.spyOn(console, "log");
+      // Spy on console.info to verify migration message (logger.info, dev builds)
+      const consoleLogSpy = vi.spyOn(console, "info");
 
       // Execute migration
       await storage.migrateFromLocalStorage();
