@@ -124,7 +124,7 @@ All features listed below have full BDD test coverage and are verified working.
 
 > **Testing Notes.** DOM structure and visual styling were originally covered by
 > five E2E feature files. They were migrated to `tests/unit/domStructure.test.ts`
-> and `tests/unit/visualStyling.test.ts` (~35 E2E scenarios → 43 unit tests) to
+> and `tests/unit/visualStyling.test.ts` to
 > cut suite runtime; the old `.feature` files and their step definitions were
 > deleted.
 
@@ -269,7 +269,7 @@ All features listed below have full BDD test coverage and are verified working.
   - Graceful fallback to localStorage if IndexedDB recreation fails
   - Prevents app crashes from Safari/browser storage corruption
   - Migration skips gracefully when database is not ready
-  - 4 unit tests for object store validation
+  - Unit tests for object store validation
 
 - **Auto-Save Flush on Page Unload** ([auto-save-indicator.feature](../tests/e2e/features/auto-save-indicator.feature))
   - An edit made inside the 300 ms debounce window survives a reload or tab close
@@ -317,7 +317,7 @@ All features listed below have full BDD test coverage and are verified working.
     - BroadcastChannel API for cross-tab communication
     - ETag-based conflict detection
     - Conflict resolution modal UI
-    - 51 unit tests (ConflictDetectionService + ConflictWarningModal)
+    - Unit tests for ConflictDetectionService and ConflictWarningModal
 
 - **Version Comparison View** ([version-comparison.feature](../tests/e2e/features/version-comparison.feature))
   - Opt-in, off by default; toggled from Settings and persists across reload

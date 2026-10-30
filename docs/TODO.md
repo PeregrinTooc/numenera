@@ -42,41 +42,6 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ---
 
-## 📊 Current Status
-
-**Test Coverage**: `npm run test:unit` — 911 tests passing. `npm run test:e2e:prod`
-runs the Cucumber suite once per Rule 9 device profile (`DEVICE`, see
-`docs/rules/testing.md`; CI runs all four in the `e2e-devices` job):
-
-| Profile           | Engine   | Scenarios passing | Excluded by tag                                          |
-| ----------------- | -------- | ----------------- | -------------------------------------------------------- |
-| desktop (default) | Chromium | 421 / 421         | 7 `@skip`ped (Grid Merge/Split below); 0 `@desktop-only` |
-| `DEVICE=pixel5`   | Chromium | 400 / 400         | 21 `@not-phone`                                          |
-| `DEVICE=iphone12` | WebKit   | 397 / 397         | 21 `@not-phone`, 3 `@chromium-only`                      |
-| `DEVICE=ipadpro`  | WebKit   | 418 / 418         | 3 `@chromium-only`                                       |
-
-The `I reload the page` step now always waits out the 300 ms auto-save debounce
-(the save indicator stays hidden until the first save completes, so it cannot
-signal a pending one); this fixed the "Ability order persists after page reload"
-flake. Of 4 full local iPad Pro runs after the fix, 3 were clean and 1 had a
-single unidentified failure that did not recur; both CI `e2e-devices` runs on
-PR #10 were clean on every profile.
-
-"Importing a character creates a version" then flaked on iPad Pro in CI: the
-bootstrap renders the sheet before it sets `window.__versionHistoryService`, and
-the import step's `bufferChange` silently skipped when the service was not there
-yet. `waitForCharacterSheetReady` now waits for the service, and the steps that
-call it throw instead of skipping.
-
-Export scenarios on the WebKit profiles run the real `<a download>` blob
-fallback; only Chromium gets the `showSaveFilePicker` stub.
-
-666 step definitions, all used (`npm run check:steps`). Measured from the CI run
-that merged PR #10.  
-**Documentation**: See [FEATURES.md](./FEATURES.md) for complete feature list
-
----
-
 ## 🚨 Must-Have (Technical Debt)
 
 ### Tracked elsewhere
