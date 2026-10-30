@@ -7,15 +7,27 @@ import type { ITimer, TimerHandle } from "./timer.js";
 import { RealTimer } from "./timer.js";
 
 type SaveCallback = () => Promise<void>;
-type EventType = "save-requested" | "save-completed" | "save-error";
-type EventListener = (event: any) => void;
+
+/** Payload of every event the service emits, keyed by event name. */
+export interface AutoSaveEvents {
+  "save-requested": Record<string, never>;
+  "save-completed": { timestamp: number };
+  "save-error": { error: unknown };
+}
+
+type EventType = keyof AutoSaveEvents;
+type EventListener<E extends EventType> = (event: AutoSaveEvents[E]) => void;
 
 export class AutoSaveService {
   private saveCallback: SaveCallback;
   private debounceMs: number;
   private timer: ITimer;
   private timerId: TimerHandle | null = null;
-  private listeners: Map<EventType, Set<EventListener>> = new Map();
+  private listeners: { [E in EventType]: Set<EventListener<E>> } = {
+    "save-requested": new Set(),
+    "save-completed": new Set(),
+    "save-error": new Set(),
+  };
   private savePromise: Promise<void> | null = null;
 
   /**
@@ -93,31 +105,22 @@ export class AutoSaveService {
   /**
    * Add event listener
    */
-  on(event: EventType, listener: EventListener): void {
-    if (!this.listeners.has(event)) {
-      this.listeners.set(event, new Set());
-    }
-    this.listeners.get(event)!.add(listener);
+  on<E extends EventType>(event: E, listener: EventListener<E>): void {
+    this.listeners[event].add(listener);
   }
 
   /**
    * Remove event listener
    */
-  off(event: EventType, listener: EventListener): void {
-    const eventListeners = this.listeners.get(event);
-    if (eventListeners) {
-      eventListeners.delete(listener);
-    }
+  off<E extends EventType>(event: E, listener: EventListener<E>): void {
+    this.listeners[event].delete(listener);
   }
 
   /**
    * Emit an event to all listeners
    */
-  private emit(event: EventType, data: any): void {
-    const eventListeners = this.listeners.get(event);
-    if (eventListeners) {
-      eventListeners.forEach((listener) => listener(data));
-    }
+  private emit<E extends EventType>(event: E, data: AutoSaveEvents[E]): void {
+    this.listeners[event].forEach((listener) => listener(data));
   }
 
   /**

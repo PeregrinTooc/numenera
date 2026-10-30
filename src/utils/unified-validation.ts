@@ -3,6 +3,7 @@
 
 import { Character } from "@/types/character";
 import { t } from "@/i18n/index";
+import { asRecord, isRecord } from "@/utils/typeGuards";
 
 // ============================================================================
 // VALIDATION RESULT TYPES
@@ -275,8 +276,10 @@ export function isNumericField(fieldType: FieldType): boolean {
  * Validates a character object against the Character type schema
  * Returns validation result with typed character or list of errors
  */
-export function validateCharacter(data: any): CharacterValidationResult {
+export function validateCharacter(input: unknown): CharacterValidationResult {
   const errors: string[] = [];
+  // Anything that is not an object validates as an empty one: every required field is reported missing
+  const data = asRecord(input);
 
   // Validate required string fields
   if (data.name === undefined) {
@@ -349,28 +352,16 @@ export function validateCharacter(data: any): CharacterValidationResult {
   // Validate stats object
   if (data.stats === undefined) {
     errors.push("Missing required field: stats");
-  } else if (typeof data.stats !== "object" || data.stats === null) {
+  } else if (!isRecord(data.stats)) {
     errors.push("Field 'stats' must be an object");
   } else {
-    // Validate stats.might
-    if (data.stats.might === undefined) {
-      errors.push("Missing required field: stats.might");
-    } else {
-      validateStatPool(data.stats.might, "stats.might", errors);
-    }
-
-    // Validate stats.speed
-    if (data.stats.speed === undefined) {
-      errors.push("Missing required field: stats.speed");
-    } else {
-      validateStatPool(data.stats.speed, "stats.speed", errors);
-    }
-
-    // Validate stats.intellect
-    if (data.stats.intellect === undefined) {
-      errors.push("Missing required field: stats.intellect");
-    } else {
-      validateStatPool(data.stats.intellect, "stats.intellect", errors);
+    // Validate stats.might, stats.speed and stats.intellect
+    for (const stat of ["might", "speed", "intellect"]) {
+      if (data.stats[stat] === undefined) {
+        errors.push(`Missing required field: stats.${stat}`);
+      } else {
+        validateStatPool(data.stats[stat], `stats.${stat}`, errors);
+      }
     }
   }
 
@@ -386,7 +377,7 @@ export function validateCharacter(data: any): CharacterValidationResult {
   // Validate recoveryRolls
   if (data.recoveryRolls === undefined) {
     errors.push("Missing required field: recoveryRolls");
-  } else if (typeof data.recoveryRolls !== "object" || data.recoveryRolls === null) {
+  } else if (!isRecord(data.recoveryRolls)) {
     errors.push("Field 'recoveryRolls' must be an object");
   } else {
     validateBooleanField(data.recoveryRolls, "action", "recoveryRolls.action", errors);
@@ -399,7 +390,7 @@ export function validateCharacter(data: any): CharacterValidationResult {
   // Validate damageTrack
   if (data.damageTrack === undefined) {
     errors.push("Missing required field: damageTrack");
-  } else if (typeof data.damageTrack !== "object" || data.damageTrack === null) {
+  } else if (!isRecord(data.damageTrack)) {
     errors.push("Field 'damageTrack' must be an object");
   } else {
     if (data.damageTrack.impairment === undefined) {
@@ -412,7 +403,7 @@ export function validateCharacter(data: any): CharacterValidationResult {
   // Validate textFields
   if (data.textFields === undefined) {
     errors.push("Missing required field: textFields");
-  } else if (typeof data.textFields !== "object" || data.textFields === null) {
+  } else if (!isRecord(data.textFields)) {
     errors.push("Field 'textFields' must be an object");
   } else {
     if (data.textFields.background === undefined) {
@@ -438,7 +429,8 @@ export function validateCharacter(data: any): CharacterValidationResult {
 
   return {
     valid: true,
-    character: data as Character,
+    // All required fields were checked above, so the shape is a Character
+    character: data as unknown as Character,
     errors: [],
   };
 }
@@ -450,7 +442,8 @@ export function validateCharacter(data: any): CharacterValidationResult {
 /**
  * Helper: Validate a StatPool object
  */
-function validateStatPool(pool: any, path: string, errors: string[]): void {
+function validateStatPool(value: unknown, path: string, errors: string[]): void {
+  const pool = asRecord(value);
   if (pool.pool === undefined) {
     errors.push(`Missing required field: ${path}.pool`);
   } else if (typeof pool.pool !== "number") {
@@ -473,7 +466,11 @@ function validateStatPool(pool: any, path: string, errors: string[]): void {
 /**
  * Helper: Validate an array field exists and is an array
  */
-function validateArrayField(data: any, fieldName: string, errors: string[]): void {
+function validateArrayField(
+  data: Record<string, unknown>,
+  fieldName: string,
+  errors: string[]
+): void {
   if (data[fieldName] === undefined) {
     errors.push(`Missing required field: ${fieldName}`);
   } else if (!Array.isArray(data[fieldName])) {
@@ -484,7 +481,12 @@ function validateArrayField(data: any, fieldName: string, errors: string[]): voi
 /**
  * Helper: Validate a boolean field
  */
-function validateBooleanField(obj: any, fieldName: string, path: string, errors: string[]): void {
+function validateBooleanField(
+  obj: Record<string, unknown>,
+  fieldName: string,
+  path: string,
+  errors: string[]
+): void {
   if (obj[fieldName] === undefined) {
     errors.push(`Missing required field: ${path}`);
   } else if (typeof obj[fieldName] !== "boolean") {
@@ -495,7 +497,12 @@ function validateBooleanField(obj: any, fieldName: string, path: string, errors:
 /**
  * Helper: Validate a number field
  */
-function validateNumberField(obj: any, fieldName: string, path: string, errors: string[]): void {
+function validateNumberField(
+  obj: Record<string, unknown>,
+  fieldName: string,
+  path: string,
+  errors: string[]
+): void {
   if (obj[fieldName] === undefined) {
     errors.push(`Missing required field: ${path}`);
   } else if (typeof obj[fieldName] !== "number") {

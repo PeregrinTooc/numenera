@@ -26,6 +26,8 @@ import { ConflictWarningModal } from "./components/ConflictWarningModal.js";
 import type { ITimer } from "@/services/timer";
 import type { TestTimer } from "@/services/testTimer";
 import type { SectionId } from "./types/layout.js";
+import type { CharacterVersion } from "@/types/versionHistory";
+import { isCompleteCharacter } from "@/utils/typeGuards";
 import { applyFieldUpdate } from "./utils/characterFieldUpdate.js";
 import { describeCharacterChange } from "./services/versionDescriptions.js";
 import { migrateLegacyVersionDescriptions } from "./services/versionDescriptionMigration.js";
@@ -45,7 +47,7 @@ declare global {
     };
     __testVersionHistory?: {
       createVersion: (character: Character, description: string) => Promise<void>;
-      getAllVersions: () => Promise<any[]>;
+      getAllVersions: () => Promise<CharacterVersion[]>;
       clearVersions: () => Promise<void>;
     };
     __testFileImporter?: {
@@ -56,6 +58,8 @@ declare global {
     __conflictDetectionService?: ConflictDetectionService | null;
     __testTimer?: TestTimer;
     __autoSaveService?: AutoSaveService;
+    /** E2E hook: overrides the version-history squash delay (ms). */
+    __SQUASH_DELAY_MS__?: number;
   }
 }
 
@@ -711,28 +715,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Select and render initial character data
   // Validate that stored character has required structure
-  const isValidCharacter = (char: any): boolean => {
-    return (
-      char &&
-      char.stats &&
-      char.stats.might &&
-      char.stats.speed &&
-      char.stats.intellect &&
-      Array.isArray(char.abilities) &&
-      Array.isArray(char.cyphers) &&
-      Array.isArray(char.artifacts) &&
-      Array.isArray(char.equipment) &&
-      Array.isArray(char.attacks) &&
-      Array.isArray(char.specialAbilities) &&
-      Array.isArray(char.oddities) &&
-      char.recoveryRolls &&
-      char.damageTrack &&
-      char.textFields
-    );
-  };
-
   let initialCharacter = FULL_CHARACTER;
-  if (isValidCharacter(storedCharacter)) {
+  if (isCompleteCharacter(storedCharacter)) {
     initialCharacter = storedCharacter;
   } else if (storedCharacter) {
     console.warn("Stored character data is incomplete or corrupted, using default character");
@@ -767,8 +751,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Initialize VersionHistoryService
   // Use configured delay if available (for tests), otherwise default 5000ms
-  const squashDelay =
-    (typeof window !== "undefined" && (window as any).__SQUASH_DELAY_MS__) || 5000;
+  const squashDelay = (typeof window !== "undefined" && window.__SQUASH_DELAY_MS__) || 5000;
 
   // Use test timer if available (for E2E tests)
   const timerForVersionHistory = testTimer || undefined;

@@ -99,7 +99,7 @@ export async function getStorage(): Promise<ICharacterStorage> {
  *
  * @param character The character object to save
  */
-export async function saveCharacterState(character: any): Promise<void> {
+export async function saveCharacterState(character: Character): Promise<void> {
   const storage = await getStorage();
   await storage.save(character);
 }
@@ -135,7 +135,7 @@ export function persistCharacterState(character: Character): void {
  *
  * @returns The stored character object, or null if not found
  */
-export async function loadCharacterState(): Promise<any | null> {
+export async function loadCharacterState(): Promise<Character | null> {
   const storage = await getStorage();
   const raw = await storage.load();
   if (!raw) {

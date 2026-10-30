@@ -89,9 +89,7 @@ describe("fileStorage", () => {
 
     it("should return null when user cancels file picker", async () => {
       // Mock user canceling the picker
-      global.showOpenFilePicker = vi
-        .fn()
-        .mockRejectedValue(Object.assign(new Error(""), { name: "AbortError" }));
+      global.showOpenFilePicker = vi.fn().mockRejectedValue(new DOMException("", "AbortError"));
 
       const result = await importCharacterFromFile();
 

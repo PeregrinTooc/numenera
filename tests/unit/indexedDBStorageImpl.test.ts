@@ -24,12 +24,14 @@ const oldVersionedFormat = {
   data: mockCharacter,
 };
 
+const TEST_AVAILABILITY_TIMEOUT_MS = 50;
+
 describe("IndexedDBStorageImpl", () => {
   let storage: IndexedDBStorageImpl;
 
   beforeEach(async () => {
     localStorage.clear();
-    storage = new IndexedDBStorageImpl();
+    storage = new IndexedDBStorageImpl(TEST_AVAILABILITY_TIMEOUT_MS);
     await storage.init();
     // Clear any existing data from previous tests
     await storage.clear();
@@ -46,6 +48,17 @@ describe("IndexedDBStorageImpl", () => {
     it("should return true when IndexedDB is available", async () => {
       const result = await storage.isAvailable();
       expect(result).toBe(true);
+    });
+
+    it("should report unavailable when opening the probe database never completes", async () => {
+      const openSpy = vi
+        .spyOn(indexedDB, "open")
+        .mockReturnValue({} as unknown as IDBOpenDBRequest);
+
+      const result = await storage.isAvailable();
+
+      expect(result).toBe(false);
+      openSpy.mockRestore();
     });
 
     it("should handle environment without IndexedDB", async () => {

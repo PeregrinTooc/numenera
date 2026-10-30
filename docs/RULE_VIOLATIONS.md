@@ -18,17 +18,18 @@ editing the rule to match the code.
 
 ## Fixed
 
-| Rule                                   | Violation                                                                                                                                                                                                           | Fixed in                                                                                                                                                                    |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| #11 Storage through adapters only      | `CollectionBehavior.ts`, `BasicInfo.ts` and `RecoveryDamageSection.ts` imported `saveCharacterState` from `src/storage/localStorage.ts`, bypassing the factory and writing a second diverging copy of the character | routed through `persistCharacterState()` in `storageFactory.ts`                                                                                                             |
-| #11 (consequence)                      | `migrateFromLocalStorage()` ran on every page load and overwrote newer IndexedDB data with the stale localStorage copy                                                                                              | now adopts localStorage only when IndexedDB is empty; test `should handle migration when IndexedDB already has data` had asserted the data-loss behaviour and was corrected |
-| Architecture — responsive breakpoints  | `xs: 480px` was documented but did not exist: Tailwind v4 never read `tailwind.config.js`                                                                                                                           | declared as `--breakpoint-xs: 30rem` in the `@theme` block of `src/styles/main.css`                                                                                         |
-| Architecture — theme fonts             | `edit-modal.css` consumed `var(--font-handwritten)`, which resolved to nothing                                                                                                                                      | `--font-sans`, `--font-serif`, `--font-handwritten` declared in `@theme`                                                                                                    |
-| Code quality — one formatting standard | `code-quality.md` said "No semicolons (Prettier default)" while `.prettierrc` set `"semi": true` and the whole codebase used them — and the parenthetical was wrong, since Prettier's default _is_ semicolons       | the rule now restates `.prettierrc` in a table and names `.prettierrc` as authoritative, so the two cannot drift again                                                      |
-| Dead code                              | `tailwind.config.js` was never read by Tailwind v4, and `src/storage/localStorage.ts` had no importers left in `src/` after the Rule #11 fix — while remaining an easy way to re-enter that violation               | both deleted, with `localStorage.test.ts`; `cyphersBox.test.ts` now asserts persistence goes through the factory instead of mocking the deleted module                      |
-| Git checklist — no `console.log`       | 8 storage lifecycle `console.log` calls in `src/`; `no-console` was only a warning                                                                                                                                  | routed through `src/utils/logger.ts` (debug/info print in dev builds only); `no-console` is an error for `src/`, with the logger as the one exemption                       |
-| Code organisation — one class per file | `modalBehavior.ts` held 3 classes, `timer.ts` 2                                                                                                                                                                     | `FocusTrappingBehavior` → `focusTrappingBehavior.ts`, `ModalContainer` → `modalContainer.ts`, `TestTimer` → `testTimer.ts`                                                  |
-| Rule #5 — path aliases                 | 138 cross-directory `../` imports in `src/` and 140 relative imports into `src/` from `tests/` (including `vi.mock` specifiers) instead of `@/`                                                                     | every one rewritten to `@/<path>`; `no-restricted-imports` bans `../*` in `src/` and `**/src/**` in `tests/`                                                                |
+| Rule                                      | Violation                                                                                                                                                                                                                                            | Fixed in                                                                                                                                                                                                                                                                                  |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| #11 Storage through adapters only         | `CollectionBehavior.ts`, `BasicInfo.ts` and `RecoveryDamageSection.ts` imported `saveCharacterState` from `src/storage/localStorage.ts`, bypassing the factory and writing a second diverging copy of the character                                  | routed through `persistCharacterState()` in `storageFactory.ts`                                                                                                                                                                                                                           |
+| #11 (consequence)                         | `migrateFromLocalStorage()` ran on every page load and overwrote newer IndexedDB data with the stale localStorage copy                                                                                                                               | now adopts localStorage only when IndexedDB is empty; test `should handle migration when IndexedDB already has data` had asserted the data-loss behaviour and was corrected                                                                                                               |
+| Architecture — responsive breakpoints     | `xs: 480px` was documented but did not exist: Tailwind v4 never read `tailwind.config.js`                                                                                                                                                            | declared as `--breakpoint-xs: 30rem` in the `@theme` block of `src/styles/main.css`                                                                                                                                                                                                       |
+| Architecture — theme fonts                | `edit-modal.css` consumed `var(--font-handwritten)`, which resolved to nothing                                                                                                                                                                       | `--font-sans`, `--font-serif`, `--font-handwritten` declared in `@theme`                                                                                                                                                                                                                  |
+| Code quality — one formatting standard    | `code-quality.md` said "No semicolons (Prettier default)" while `.prettierrc` set `"semi": true` and the whole codebase used them — and the parenthetical was wrong, since Prettier's default _is_ semicolons                                        | the rule now restates `.prettierrc` in a table and names `.prettierrc` as authoritative, so the two cannot drift again                                                                                                                                                                    |
+| Dead code                                 | `tailwind.config.js` was never read by Tailwind v4, and `src/storage/localStorage.ts` had no importers left in `src/` after the Rule #11 fix — while remaining an easy way to re-enter that violation                                                | both deleted, with `localStorage.test.ts`; `cyphersBox.test.ts` now asserts persistence goes through the factory instead of mocking the deleted module                                                                                                                                    |
+| Git checklist — no `console.log`          | 8 storage lifecycle `console.log` calls in `src/`; `no-console` was only a warning                                                                                                                                                                   | routed through `src/utils/logger.ts` (debug/info print in dev builds only); `no-console` is an error for `src/`, with the logger as the one exemption                                                                                                                                     |
+| Code organisation — one class per file    | `modalBehavior.ts` held 3 classes, `timer.ts` 2                                                                                                                                                                                                      | `FocusTrappingBehavior` → `focusTrappingBehavior.ts`, `ModalContainer` → `modalContainer.ts`, `TestTimer` → `testTimer.ts`                                                                                                                                                                |
+| Rule #5 — path aliases                    | 138 cross-directory `../` imports in `src/` and 140 relative imports into `src/` from `tests/` (including `vi.mock` specifiers) instead of `@/`                                                                                                      | every one rewritten to `@/<path>`; `no-restricted-imports` bans `../*` in `src/` and `**/src/**` in `tests/`                                                                                                                                                                              |
+| Rule #5 — `any` in `src/` / test sniffing | 34 `any` usages in 12 files of `src/` (storage interfaces, validation inputs, File System Access calls, auto-save events, `(manager as any).db`, collection access), and `indexedDBStorageImpl.ts` checked `(globalThis as any).vi` to detect Vitest | typed storage (`load()` returns `unknown`), `unknown` + guards in `typeGuards.ts`, `src/types/fileSystemAccess.d.ts`, an `AutoSaveEvents` map, `VersionHistoryManager.updateVersionMetadata`, `characterCollections.ts` accessors; the availability timeout is now a constructor argument |
 
 ---
 
@@ -36,31 +37,25 @@ editing the rule to match the code.
 
 Re-measured on `main` at `b9b81c1` (2026-10-30).
 
-### 2. Rule #5 — 201 `any` usages, and the linter only warns
+### 2. Rule #5 — 157 `any` usages left in `tests/`, and the linter only warns
 
 **Rule:** "NO `any` types allowed. Exception: **None.** Linter enforces this."
 
-`eslint.config.js` sets `no-explicit-any` to `"warn"`, and 44 more usages hide
-behind `eslint-disable-next-line` comments, so the lint count understates it:
+`src/` is clean. `tests/` is not, and `eslint.config.js` still sets
+`no-explicit-any` to `"warn"`; 40 more usages in `tests/` hide behind
+`eslint-disable-next-line` comments, so the lint count understates it:
 
-|          | Reported by lint | Behind `eslint-disable`     | Total          |
-| -------- | ---------------- | --------------------------- | -------------- |
-| `src/`   | 30 in 11 files   | 4 (`CollectionBehavior.ts`) | 34 in 12 files |
-| `tests/` | 127 in 17 files  | 40                          | 167            |
-
-Concentrations in `src/`: the storage interfaces (`ICharacterStorage.save/load`
-typed `any` although `Character` exists — `load()` should return `unknown`
-narrowed by a type guard), the `unified-validation.ts` inputs (take `unknown`),
-the File System Access APIs (declare them in a `.d.ts`), the auto-save event
-payloads, and `(this.manager as any).db` in `versionHistoryService.ts`.
+|          | Reported by lint | Behind `eslint-disable` | Total |
+| -------- | ---------------- | ----------------------- | ----- |
+| `tests/` | 117 in 16 files  | 40 (in 3 files)         | 157   |
 
 In `tests/`: `window as any` (~35, needs a typed test-window interface),
-`null as any` (17, mostly gone once validators take `unknown`), and
-private-member access (~28).
+`null as any` (mostly gone once validators take `unknown`, which they now do),
+and private-member access (~28).
 
 **Fix:** remove the usages, then set the rule to `"error"` and forbid disabling
 it. Order matters — flipping first turns the build red, and flipping without
-banning the disable comments leaves the hidden 44.
+banning the disable comments leaves the hidden 40.
 
 ### 3. Code quality — files over 300 lines
 
@@ -71,12 +66,12 @@ does not (see `code-quality.md`).
 
 | File                                           | Lines | Natural seam                                                                   |
 | ---------------------------------------------- | ----- | ------------------------------------------------------------------------------ |
-| `src/main.ts`                                  | 926   | test hooks, compare-view controller, version navigation, import/export, events |
-| `src/utils/unified-validation.ts`              | 890   | field validation / character validation / sanitizer (already banner-separated) |
+| `src/main.ts`                                  | 909   | test hooks, compare-view controller, version navigation, import/export, events |
+| `src/utils/unified-validation.ts`              | 897   | field validation / character validation / sanitizer (already banner-separated) |
 | `src/components/CharacterSheet.ts`             | 786   | drag/touch controller; reorder/merge/split as pure layout operations           |
-| `src/components/helpers/CollectionBehavior.ts` | 418   | render helpers                                                                 |
+| `src/components/helpers/CollectionBehavior.ts` | 415   | render helpers                                                                 |
 | `src/components/ItemsBox.ts`                   | 388   | drag-reorder handlers into a reusable helper                                   |
-| `src/services/versionHistoryService.ts`        | 381   | undo/redo stack                                                                |
+| `src/services/versionHistoryService.ts`        | 339   | undo/redo stack                                                                |
 | `src/components/DiffCharacterSheet.ts`         | 363   | 7 near-identical collection renderers → one generic                            |
 | `src/services/conflictDetectionService.ts`     | 348   | BroadcastChannel transport vs dirty tracking                                   |
 
@@ -87,7 +82,7 @@ does not (see `code-quality.md`).
 | `tests/e2e/step-definitions/version-history.steps.ts`           | 1221  |
 | `tests/e2e/step-definitions/section-rearrangement.steps.ts`     | 737   |
 | `tests/unit/characterValidation.test.ts`                        | 716   |
-| `tests/unit/versionHistoryServiceRefactor.test.ts`              | 685   |
+| `tests/unit/versionHistoryServiceRefactor.test.ts`              | 609   |
 | `tests/e2e/step-definitions/card-creation.steps.ts`             | 645   |
 | `tests/e2e/features/card-creation.feature`                      | 581   |
 | `tests/unit/conflictWarningModal.test.ts`                       | 566   |
@@ -97,7 +92,7 @@ does not (see `code-quality.md`).
 | `tests/unit/conflictDetectionService.test.ts`                   | 452   |
 | `tests/unit/fieldValidation.test.ts`                            | 445   |
 | `tests/e2e/step-definitions/version-comparison.steps.ts`        | 415   |
-| `tests/unit/indexedDBStorageImpl.test.ts`                       | 412   |
+| `tests/unit/indexedDBStorageImpl.test.ts`                       | 425   |
 | `tests/unit/changeDetection.test.ts`                            | 407   |
 | `tests/unit/versionState.test.ts`                               | 401   |
 | `tests/e2e/step-definitions/basic-info-editing.steps.ts`        | 395   |
@@ -159,11 +154,6 @@ little until something checks them.
 **Fix:** `tsconfig.test.json` (`types: ["vitest/globals"]`) and a
 `typecheck:tests` step in the pre-commit hook and CI.
 
-### 9. Test-environment sniffing in production code
-
-`src/storage/indexedDBStorageImpl.ts:185` checks `(globalThis as any).vi` to
-detect Vitest. Inject the timeout instead.
-
 ---
 
 ## 10. Test architecture — the E2E import path cannot cover validation
@@ -193,7 +183,7 @@ need no feature file; steps 8 and 9 change behaviour and start with a scenario.
 | 1   | ~~Logger and `no-console` as error for `src/` (#5); split `modalBehavior.ts` and `timer.ts` (#8)~~ done | refactor |
 | 2   | ~~`@/` codemod across `src/` and `tests/`, plus the `no-restricted-imports` guard (#1)~~ done           | refactor |
 | 3   | ~~Delete the dead `fileStorage` export code; move the `exportManager` handle store out (#3)~~ done      | refactor |
-| 4   | Remove `any` from `src/`, including the `vi` sniff (#2, #9)                                             | refactor |
+| 4   | ~~Remove `any` from `src/`, including the `vi` sniff (#2, #9)~~ done                                    | refactor |
 | 5   | `tsconfig.test.json` and `typecheck:tests` in hook and CI; fix the test type errors (#7)                | tooling  |
 | 6   | Remove `any` from `tests/`; `no-explicit-any` as error, disabling it banned (#2)                        | refactor |
 | 7   | Real-path E2E import, drop the importer seam, oddity scenario (#10)                                     | test     |

@@ -5,6 +5,13 @@ import { ICharacterStorage } from "./ICharacterStorage.js";
 import { STORAGE_KEY } from "./storageConstants.js";
 import { CompletionNotifier } from "@/utils/completionNotifier";
 import { logger } from "@/utils/logger";
+import { isRecord } from "@/utils/typeGuards";
+import type { Character } from "@/types/character";
+
+/** True for the legacy `{ schemaVersion, character }` wrapper format. */
+function isVersionedWrapper(data: unknown): data is { character: unknown } {
+  return isRecord(data) && data.schemaVersion !== undefined && data.character !== undefined;
+}
 
 /**
  * LocalStorage-based character persistence
@@ -16,7 +23,7 @@ export class LocalStorageImpl implements ICharacterStorage {
     // It's always available in browsers
   }
 
-  async save(character: any): Promise<void> {
+  async save(character: Character): Promise<void> {
     const notifier = new CompletionNotifier("character-save", { data: { source: "localStorage" } });
     notifier.start();
 
@@ -34,12 +41,12 @@ export class LocalStorageImpl implements ICharacterStorage {
    * Internal save without event emissions
    * Used during migration to avoid nested events
    */
-  private saveInternal(character: any): void {
+  private saveInternal(character: unknown): void {
     const serialized = JSON.stringify(character);
     localStorage.setItem(STORAGE_KEY, serialized);
   }
 
-  async load(): Promise<any | null> {
+  async load(): Promise<unknown> {
     const notifier = new CompletionNotifier("character-load", { data: { source: "localStorage" } });
     notifier.start();
 
@@ -50,10 +57,10 @@ export class LocalStorageImpl implements ICharacterStorage {
         return null;
       }
 
-      const data = JSON.parse(stored);
+      const data: unknown = JSON.parse(stored);
 
       // Migration: Check if data has old schema version wrapper
-      if (data.schemaVersion !== undefined && data.character !== undefined) {
+      if (isVersionedWrapper(data)) {
         // Old format detected: extract character and re-save in new format
         logger.info("Migrating from old versioned format to new raw format");
         const character = data.character;

@@ -3,12 +3,12 @@
 
 import { html, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
-import { StatPool } from "./StatPool.js";
+import { StatPool, type StatPoolFieldType } from "./StatPool.js";
 import { ModalService } from "@/services/modalService";
 import { t } from "@/i18n/index";
 import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
 
-type FieldType = "effort";
+type FieldType = "effort" | StatPoolFieldType;
 
 export class Stats {
   constructor(
@@ -31,15 +31,15 @@ export class Stats {
 
   render(): TemplateResult {
     const mightPool = new StatPool("might", this.character.stats.might, (field, value) =>
-      this.onFieldUpdate(field as any, value)
+      this.onFieldUpdate(field, value)
     );
     const speedPool = new StatPool("speed", this.character.stats.speed, (field, value) =>
-      this.onFieldUpdate(field as any, value)
+      this.onFieldUpdate(field, value)
     );
     const intellectPool = new StatPool(
       "intellect",
       this.character.stats.intellect,
-      (field, value) => this.onFieldUpdate(field as any, value)
+      (field, value) => this.onFieldUpdate(field, value)
     );
 
     return html`

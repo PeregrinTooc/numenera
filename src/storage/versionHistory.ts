@@ -211,6 +211,25 @@ export class VersionHistoryManager {
   }
 
   /**
+   * Update the squash metadata of an existing version in place.
+   */
+  async updateVersionMetadata(
+    id: string,
+    updates: Pick<CharacterVersion, "isSquashed" | "squashedCount">
+  ): Promise<void> {
+    const existing = await this.getVersionById(id);
+    if (!existing) {
+      throw new Error(`Version ${id} not found`);
+    }
+
+    await this.saveToDb({
+      ...existing,
+      ...(updates.isSquashed !== undefined && { isSquashed: updates.isSquashed }),
+      ...(updates.squashedCount !== undefined && { squashedCount: updates.squashedCount }),
+    });
+  }
+
+  /**
    * Clear all versions from storage
    */
   async clear(): Promise<void> {

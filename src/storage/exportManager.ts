@@ -9,21 +9,6 @@ import {
 } from "./fileHandleStore";
 import { loadLayout } from "./layoutStorage";
 
-// Type declarations for File System Access API
-declare global {
-  interface Window {
-    showSaveFilePicker?: (options?: SaveFilePickerOptions) => Promise<FileSystemFileHandle>;
-  }
-}
-
-interface SaveFilePickerOptions {
-  suggestedName?: string;
-  types?: Array<{
-    description: string;
-    accept: Record<string, string[]>;
-  }>;
-}
-
 /**
  * ExportManager handles file exports with File System Access API support
  * Provides Quick Export, Save As, and fallback download functionality

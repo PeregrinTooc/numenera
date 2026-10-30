@@ -5,10 +5,6 @@ export const HANDLE_STORAGE_KEY = "lastExportFileHandle";
 
 const HANDLES_STORE_NAME = "handles";
 
-interface PermissionAwareHandle {
-  queryPermission?: (descriptor: { mode: "read" | "readwrite" }) => Promise<string>;
-}
-
 function openHandleDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(FILE_HANDLES_DB_NAME, 1);
@@ -76,9 +72,8 @@ export async function loadPersistedFileHandle(): Promise<FileSystemFileHandle | 
     if (!handle) return undefined;
 
     // Verify we still have permission (if queryPermission exists)
-    const queryPermission = (handle as PermissionAwareHandle).queryPermission;
-    if (typeof queryPermission === "function") {
-      const permission = await queryPermission.call(handle, { mode: "readwrite" });
+    if (typeof handle.queryPermission === "function") {
+      const permission = await handle.queryPermission({ mode: "readwrite" });
       return permission === "granted" ? handle : undefined;
     }
     // In test/mock environments, assume we have permission

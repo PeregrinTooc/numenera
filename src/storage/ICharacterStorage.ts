@@ -1,3 +1,5 @@
+import type { Character } from "@/types/character";
+
 /**
  * Interface for character persistence implementations
  *
@@ -23,15 +25,15 @@ export interface ICharacterStorage {
    * @param character The character object to save
    * @throws Error if save operation fails
    */
-  save(character: any): Promise<void>;
+  save(character: Character): Promise<void>;
 
   /**
    * Load character state from storage
    *
-   * @returns The stored character object, or null if not found
+   * @returns The raw stored data (untrusted, validate before use), or null if not found
    * @throws Error if load operation fails
    */
-  load(): Promise<any | null>;
+  load(): Promise<unknown>;
 
   /**
    * Clear stored character state

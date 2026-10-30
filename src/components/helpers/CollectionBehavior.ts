@@ -5,6 +5,7 @@ import { html, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { persistCharacterState } from "@/storage/storageFactory";
 import { CompletionNotifier } from "@/utils/completionNotifier";
+import { readCollection, writeCollection } from "./characterCollections";
 
 /**
  * Configuration for creating an add handler for a collection
@@ -45,11 +46,9 @@ export function createAddHandler<T, ItemComponent extends { handleEdit: () => vo
       if (character && collectionKey) {
         // Event-based update - IMMUTABLE: create new array with added item
         // Read current collection from character (not captured reference)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const currentCollection = (character as any)[collectionKey] as T[];
+        const currentCollection = readCollection<T>(character, collectionKey);
         const newCollection = [...currentCollection, updated];
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (character as any)[collectionKey] = newCollection;
+        writeCollection(character, collectionKey, newCollection);
 
         // Emit card-added event
         const cardNotifier = new CompletionNotifier("card", {
@@ -167,8 +166,7 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
           if (collectionKey) {
             const newCollection = [...collection];
             newCollection[index] = updated;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (character as any)[collectionKey] = newCollection;
+            writeCollection(character, collectionKey, newCollection);
           } else {
             // Fallback to mutation if collectionKey not provided (legacy support)
             collection[index] = updated;
@@ -250,8 +248,7 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
           // This ensures version history snapshots don't share array references
           const filtered = collection.filter((_, i) => i !== index);
           if (collectionKey) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (character as any)[collectionKey] = filtered;
+            writeCollection(character, collectionKey, filtered);
           } else {
             // Fallback to mutation if collectionKey not provided (legacy support)
             collection.length = 0;

@@ -105,7 +105,10 @@ function parseAndSanitizeCharacter(text: string): ImportResult {
 async function importWithFileSystemAPI(): Promise<ImportResult | null> {
   try {
     // Open file picker
-    const [fileHandle] = await (window as any).showOpenFilePicker({
+    if (!window.showOpenFilePicker) {
+      throw new Error("File System Access API is not available");
+    }
+    const [fileHandle] = await window.showOpenFilePicker({
       types: [
         {
           description: "Numenera Character Files",
@@ -122,9 +125,9 @@ async function importWithFileSystemAPI(): Promise<ImportResult | null> {
     const text = await file.text();
 
     return parseAndSanitizeCharacter(text);
-  } catch (error: any) {
+  } catch (error: unknown) {
     // User cancelled the file picker
-    if (error.name === "AbortError") {
+    if (error instanceof DOMException && error.name === "AbortError") {
       return null;
     }
 

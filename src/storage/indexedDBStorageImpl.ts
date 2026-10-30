@@ -8,9 +8,16 @@ const DB_NAME = CHARACTER_DB_NAME;
 const STORE_NAME = "characters";
 const DB_VERSION = 1;
 const CHARACTER_KEY = "current";
+const DEFAULT_AVAILABILITY_TIMEOUT_MS = 1000;
 
 export class IndexedDBStorageImpl implements ICharacterStorage {
   private db: IDBDatabase | null = null;
+
+  /**
+   * @param availabilityTimeoutMs How long isAvailable() waits for the probe database to
+   *   open before reporting IndexedDB as unusable (some browsers hang in private mode).
+   */
+  constructor(private readonly availabilityTimeoutMs: number = DEFAULT_AVAILABILITY_TIMEOUT_MS) {}
 
   async init(): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -34,7 +41,7 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
     });
   }
 
-  async save(character: any): Promise<void> {
+  async save(character: Character): Promise<void> {
     const notifier = new CompletionNotifier("character-save", { data: { source: "indexedDB" } });
     notifier.start();
 
@@ -51,7 +58,7 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
    * Internal save without event emissions
    * Used during migration to avoid nested events
    */
-  private async saveInternal(character: any): Promise<void> {
+  private async saveInternal(character: Character): Promise<void> {
     if (!this.db) {
       throw new Error("IndexedDB not initialized");
     }
@@ -76,7 +83,7 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
     });
   }
 
-  async load(): Promise<any | null> {
+  async load(): Promise<unknown> {
     const notifier = new CompletionNotifier("character-load", { data: { source: "indexedDB" } });
     notifier.start();
 
@@ -181,12 +188,7 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
           resolve(false);
         };
 
-        // Only set timeout in browser (not in test environment)
-        // In test environment with vitest globals, 'vi' will be available
-        const isTestEnv = typeof (globalThis as any).vi !== "undefined";
-        if (!isTestEnv) {
-          setTimeout(() => resolve(false), 1000);
-        }
+        setTimeout(() => resolve(false), this.availabilityTimeoutMs);
       });
     } catch {
       return false;

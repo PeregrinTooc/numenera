@@ -131,7 +131,7 @@ export class VersionHistoryService {
       const version = await this.manager.saveVersion(latest.character, combinedDescription);
 
       // Mark as squashed with metadata
-      await this.updateVersionMetadata(version.id, {
+      await this.manager.updateVersionMetadata(version.id, {
         isSquashed: true,
         squashedCount,
       });
@@ -172,50 +172,6 @@ export class VersionHistoryService {
     } finally {
       this.isSquashInProgress = false;
     }
-  }
-
-  /**
-   * Update version metadata in IndexedDB
-   * @param versionId The ID of the version to update
-   * @param updates The metadata to update
-   */
-  private async updateVersionMetadata(
-    versionId: string,
-    updates: { isSquashed?: boolean; squashedCount?: number }
-  ): Promise<void> {
-    const db = (this.manager as any).db as IDBDatabase;
-    if (!db) {
-      throw new Error("Database not initialized");
-    }
-
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction(["versions"], "readwrite");
-      const store = transaction.objectStore("versions");
-      const getRequest = store.get(versionId);
-
-      getRequest.onsuccess = () => {
-        const versionData = getRequest.result;
-        if (!versionData) {
-          reject(new Error(`Version ${versionId} not found`));
-          return;
-        }
-
-        // Update metadata
-        if (updates.isSquashed !== undefined) {
-          versionData.isSquashed = updates.isSquashed;
-        }
-        if (updates.squashedCount !== undefined) {
-          versionData.squashedCount = updates.squashedCount;
-        }
-
-        // Save updated version
-        const putRequest = store.put(versionData);
-        putRequest.onsuccess = () => resolve();
-        putRequest.onerror = () => reject(new Error("Failed to update version metadata"));
-      };
-
-      getRequest.onerror = () => reject(new Error("Failed to get version for update"));
-    });
   }
 
   /**

@@ -53,51 +53,7 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
       },
     } as Character;
 
-    // Create mock VersionHistoryManager with properly mocked IndexedDB
-    const mockGetRequest = {
-      onsuccess: null as any,
-      onerror: null as any,
-      result: {
-        id: "version-123",
-        character: mockCharacter,
-        description: "Test",
-        timestamp: Date.now(),
-      },
-    };
-
-    const mockPutRequest = {
-      onsuccess: null as any,
-      onerror: null as any,
-    };
-
-    const mockStore = {
-      delete: vi.fn(),
-      get: vi.fn(() => {
-        // Synchronously trigger success
-        Promise.resolve().then(() => {
-          if (mockGetRequest.onsuccess) {
-            mockGetRequest.onsuccess();
-          }
-        });
-        return mockGetRequest;
-      }),
-      put: vi.fn(() => {
-        // Synchronously trigger success
-        Promise.resolve().then(() => {
-          if (mockPutRequest.onsuccess) {
-            mockPutRequest.onsuccess();
-          }
-        });
-        return mockPutRequest;
-      }),
-    };
-
-    const mockTransaction = {
-      objectStore: vi.fn(() => mockStore),
-      oncomplete: null as any,
-      onerror: null as any,
-    };
-
+    // Create mock VersionHistoryManager
     mockManager = {
       saveVersion: vi.fn().mockResolvedValue({
         id: "version-123",
@@ -107,17 +63,7 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
       }),
       getVersionById: vi.fn().mockResolvedValue(null),
       getAllVersions: vi.fn().mockResolvedValue([]),
-      db: {
-        transaction: vi.fn(() => {
-          // Synchronously trigger transaction complete
-          Promise.resolve().then(() => {
-            if (mockTransaction.oncomplete) {
-              mockTransaction.oncomplete();
-            }
-          });
-          return mockTransaction;
-        }),
-      },
+      updateVersionMetadata: vi.fn().mockResolvedValue(undefined),
     };
 
     service = new VersionHistoryService(mockManager, 1000);
@@ -291,8 +237,10 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
       await vi.runAllTimersAsync();
       await vi.runAllTimersAsync(); // Run again for async operations
 
-      // Verify metadata update was attempted via transaction
-      expect(mockManager.db.transaction).toHaveBeenCalled();
+      expect(mockManager.updateVersionMetadata).toHaveBeenCalledWith("version-123", {
+        isSquashed: true,
+        squashedCount: 2,
+      });
     });
 
     it("should clear buffer after squashing", async () => {

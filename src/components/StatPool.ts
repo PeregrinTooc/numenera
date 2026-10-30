@@ -7,7 +7,7 @@ import { StatPool as StatPoolType } from "@/types/character";
 import { ModalService } from "@/services/modalService";
 import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
 
-type FieldType =
+export type StatPoolFieldType =
   | "mightPool"
   | "mightEdge"
   | "mightCurrent"
@@ -22,13 +22,13 @@ export class StatPool {
   constructor(
     private statType: "might" | "speed" | "intellect",
     private stats: StatPoolType,
-    private onFieldUpdate: (field: FieldType, value: number) => void
+    private onFieldUpdate: (field: StatPoolFieldType, value: number) => void
   ) {}
 
   private openEditModal(fieldName: "pool" | "edge" | "current"): void {
     // Construct the full field type (e.g., "mightPool", "speedEdge", "intellectCurrent")
     const fieldType =
-      `${this.statType}${fieldName.charAt(0).toUpperCase()}${fieldName.slice(1)}` as FieldType;
+      `${this.statType}${fieldName.charAt(0).toUpperCase()}${fieldName.slice(1)}` as StatPoolFieldType;
 
     // Get the current value for this field
     const currentValue = this.stats[fieldName];
