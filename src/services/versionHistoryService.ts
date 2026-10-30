@@ -116,8 +116,12 @@ export class VersionHistoryService {
     }
 
     try {
+      // Edits buffered while the save below is pending belong to the next
+      // squash, so remember how many entries this one covers.
+      const squashedCount = this.buffer.length;
+
       // Use the latest character state
-      const latest = this.buffer[this.buffer.length - 1];
+      const latest = this.buffer[squashedCount - 1];
 
       // Combine all descriptions
       const descriptions = this.buffer.map((b) => b.description);
@@ -129,16 +133,23 @@ export class VersionHistoryService {
       // Mark as squashed with metadata
       await this.updateVersionMetadata(version.id, {
         isSquashed: true,
-        squashedCount: this.buffer.length,
+        squashedCount,
       });
 
-      // Clear buffer, timer, initial state, AND redo stack
+      // Drop the squashed entries and the redo stack
       // Redo stack must be cleared because buffered changes are now committed to a version
       // If user wants to undo the version, they use version navigation (not buffer redo)
-      this.buffer = [];
+      this.buffer = this.buffer.slice(squashedCount);
       this.redoStack = [];
-      this.globalTimer = null;
-      this.initialState = null;
+      if (this.buffer.length === 0) {
+        this.globalTimer = null;
+        this.initialState = null;
+      } else {
+        // Late edits now build on the version just saved. Their timer may have
+        // fired into the in-progress guard above, so give them a fresh window.
+        this.initialState = latest.character;
+        this.resetTimer();
+      }
 
       // Dispatch custom event to notify that a version was created
       if (typeof window !== "undefined") {

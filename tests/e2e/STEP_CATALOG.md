@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **673** in 27 files
-- Feature step lines: **2068**
+- Step definitions: **676** in 28 files
+- Feature step lines: **2077**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
@@ -58,6 +58,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
 | [version-comparison.steps.ts](#versioncomparisonstepsts) | 41 | 0 |
+| [version-history-squash-race.steps.ts](#versionhistorysquashracestepsts) | 3 | 0 |
 | [version-history.steps.ts](#versionhistorystepsts) | 82 | 0 |
 | [viewport.steps.ts](#viewportstepsts) | 1 | 0 |
 
@@ -360,7 +361,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 48 | 27 |
+| Given | `I am on the character sheet page` | 49 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 142 |
 | Then | `I should see {int} cyphers displayed` | 1 | 104 |
 | Then | `I should see {int} oddities displayed` | 1 | 155 |
@@ -473,7 +474,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I click the "Confirm" button` | 27 | 46 |
 | When | `I click the "New" button` | 7 | 52 |
 | When | `I click the {badge} badge` | 23 | 62 |
-| When | `I edit the {string} field to {string}` | 25 | 153 |
+| When | `I edit the {string} field to {string}` | 27 | 153 |
 | When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 163 |
 | When | `I hover over the character name {string}` | 1 | 102 |
 | When | `I hover over the tier {string}` | 1 | 106 |
@@ -776,6 +777,14 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Given | `the right pane shows version {int}` | 1 | 214 |
 | Then | `the right pane's restore button should be disabled` | 1 | 355 |
 
+## version-history-squash-race.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `the held version save is released` | 1 | 42 |
+| When | `the squash starts while version saves are held` | 1 | 31 |
+| Given | `version saves are held` | 1 | 16 |
+
 ## version-history.steps.ts
 
 | Keyword | Phrase | Uses | Line |
@@ -811,10 +820,10 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `I should be viewing the latest version` | 3 | 833 |
 | Then | `I should be viewing version {int}` | 1 | 1194 |
 | Then | `I should navigate to version {int}` | 2 | 846 |
-| Then | `I should see {int} versions in history` | 3 | 1067 |
+| Then | `I should see {int} versions in history` | 4 | 1067 |
 | When | `I view the character sheet` | 4 | 353 |
 | When | `I wait for {int} milliseconds` | 4 | 639 |
-| When | `I wait for squash timer to complete` | 16 | 1149 |
+| When | `I wait for squash timer to complete` | 17 | 1149 |
 | Then | `no new version should be created yet` | 2 | 1048 |
 | Then | `no warning banner should be visible` | 6 | 524 |
 | Then | `the backward arrow should be disabled` | 1 | 587 |
@@ -833,7 +842,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Given | `the character has a portrait image` | 2 | 247 |
 | Given | `the character has a version from {int} minutes ago` | 1 | 257 |
 | Given | `the character has a version with multiple basic info changes` | 2 | 86 |
-| Given | `the character has no version history yet` | 4 | 8 |
+| Given | `the character has no version history yet` | 5 | 8 |
 | Then | `the character name should be {string}` | 10 | 1039 |
 | Then | `the character name should match version {int} name` | 4 | 743 |
 | Then | `the character name should revert to the original value` | 2 | 1057 |

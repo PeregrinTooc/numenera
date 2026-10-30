@@ -390,7 +390,12 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
       });
       await vi.runAllTimersAsync();
 
-      expect(mockManager.saveVersion).toHaveBeenCalledTimes(1);
+      // Change 1 saved once by the in-flight squash, then Change 2 on its own
+      // once that finished - never Change 1 again as a duplicate.
+      const descriptions = mockManager.saveVersion.mock.calls.map(
+        (call: [Character, string]) => call[1]
+      );
+      expect(descriptions).toEqual(["Change 1", "Change 2"]);
     });
   });
 
