@@ -62,6 +62,12 @@ flake. Of 4 full local iPad Pro runs after the fix, 3 were clean and 1 had a
 single unidentified failure that did not recur; both CI `e2e-devices` runs on
 PR #10 were clean on every profile.
 
+"Importing a character creates a version" then flaked on iPad Pro in CI: the
+bootstrap renders the sheet before it sets `window.__versionHistoryService`, and
+the import step's `bufferChange` silently skipped when the service was not there
+yet. `waitForCharacterSheetReady` now waits for the service, and the steps that
+call it throw instead of skipping.
+
 Export scenarios on the WebKit profiles run the real `<a download>` blob
 fallback; only Chromium gets the `showSaveFilePicker` stub.
 
