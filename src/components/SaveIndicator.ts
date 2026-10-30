@@ -1,7 +1,7 @@
 // SaveIndicator component - Shows last save timestamp
 
 import { html, TemplateResult } from "lit-html";
-import { t } from "../i18n/index.js";
+import { t } from "@/i18n/index";
 
 export class SaveIndicator {
   private timestamp: string | null = null;

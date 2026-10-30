@@ -1,5 +1,5 @@
 // Unit tests for OddityItem component
-import { OddityItem } from "../../src/components/OddityItem.js";
+import { OddityItem } from "@/components/OddityItem";
 import { testItemEditAndDelete } from "./helpers/itemTestSuite.js";
 
 const mockOddity = "A crystal that hums when near water";

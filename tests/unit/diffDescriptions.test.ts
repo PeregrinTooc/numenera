@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { describeDiff } from "../../src/services/diffDescriptions.js";
-import { diffCharacters } from "../../src/utils/characterDiff.js";
+import { describeDiff } from "@/services/diffDescriptions";
+import { diffCharacters } from "@/utils/characterDiff";
 import { createTestCharacter as createBaseCharacter } from "../factories/character.js";
 
 describe("describeDiff", () => {

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { BasicInfo } from "../../src/components/BasicInfo";
-import type { Character } from "../../src/types/character";
+import { BasicInfo } from "@/components/BasicInfo";
+import type { Character } from "@/types/character";
 import { render } from "lit-html";
 import { setupTestContainer } from "./helpers/testSetup.js";
 

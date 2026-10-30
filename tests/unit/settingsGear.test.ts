@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { SettingsGear } from "../../src/components/SettingsGear";
+import { SettingsGear } from "@/components/SettingsGear";
 import { render } from "lit-html";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
 // Mock i18n
-vi.mock("../../src/i18n/index.js", () => ({
+vi.mock("@/i18n/index", () => ({
   t: (key: string) => {
     const translations: Record<string, string> = {
       "settings.title": "Settings",

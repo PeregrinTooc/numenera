@@ -11,11 +11,11 @@ import {
   getMaxValue,
   getMaxLength,
   isNumericField,
-} from "../utils/unified-validation.js";
+} from "@/utils/unified-validation";
 import { ModalBehavior, renderModalButtons } from "@/services/modalBehavior";
 import { FocusTrappingBehavior } from "@/services/focusTrappingBehavior";
-import type { VersionHistoryService } from "../services/versionHistoryService.js";
-import { CompletionNotifier } from "../utils/completionNotifier.js";
+import type { VersionHistoryService } from "@/services/versionHistoryService";
+import { CompletionNotifier } from "@/utils/completionNotifier";
 
 interface EditFieldModalConfig {
   fieldType: FieldType;

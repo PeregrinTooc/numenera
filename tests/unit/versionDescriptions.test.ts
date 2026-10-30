@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { describeCharacterChange } from "../../src/services/versionDescriptions.js";
+import { describeCharacterChange } from "@/services/versionDescriptions";
 import { createTestCharacter as createBaseCharacter } from "../factories/character.js";
 
 describe("describeCharacterChange", () => {

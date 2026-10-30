@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { CompareView } from "../../src/components/CompareView";
-import { VersionState } from "../../src/services/versionState";
-import { VersionHistoryManager } from "../../src/storage/versionHistory";
-import type { CharacterVersion } from "../../src/types/versionHistory";
+import { CompareView } from "@/components/CompareView";
+import { VersionState } from "@/services/versionState";
+import { VersionHistoryManager } from "@/storage/versionHistory";
+import type { CharacterVersion } from "@/types/versionHistory";
 import { createTestCharacter } from "../factories/character.js";
 import { setupTestContainer } from "./helpers/testSetup.js";
 

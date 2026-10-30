@@ -1,6 +1,6 @@
 // Unit tests for ArtifactItem component
-import { ArtifactItem } from "../../src/components/ArtifactItem.js";
-import { Artifact } from "../../src/types/character.js";
+import { ArtifactItem } from "@/components/ArtifactItem";
+import { Artifact } from "@/types/character";
 import { testItemEditAndDelete } from "./helpers/itemTestSuite.js";
 
 const mockArtifact: Artifact = {

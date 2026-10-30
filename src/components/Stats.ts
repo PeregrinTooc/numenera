@@ -2,11 +2,11 @@
 // Arranged side-by-side on tablet/desktop to match official character sheet
 
 import { html, TemplateResult } from "lit-html";
-import { Character } from "../types/character.js";
+import { Character } from "@/types/character";
 import { StatPool } from "./StatPool.js";
-import { ModalService } from "../services/modalService.js";
-import { t } from "../i18n/index.js";
-import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
+import { ModalService } from "@/services/modalService";
+import { t } from "@/i18n/index";
+import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
 
 type FieldType = "effort";
 

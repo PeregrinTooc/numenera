@@ -12,16 +12,16 @@
 
 import { describe, it, expect, vi } from "vitest";
 import { render } from "lit-html";
-import { CypherItem } from "../../src/components/CypherItem.js";
-import { ArtifactItem } from "../../src/components/ArtifactItem.js";
-import { OddityItem } from "../../src/components/OddityItem.js";
-import { EquipmentItem } from "../../src/components/EquipmentItem.js";
-import { CyphersBox } from "../../src/components/CyphersBox.js";
-import { ItemsBox } from "../../src/components/ItemsBox.js";
-import { Stats } from "../../src/components/Stats.js";
-import { StatPool } from "../../src/components/StatPool.js";
-import { BottomTextFields } from "../../src/components/BottomTextFields.js";
-import type { Cypher, Artifact } from "../../src/types/character.js";
+import { CypherItem } from "@/components/CypherItem";
+import { ArtifactItem } from "@/components/ArtifactItem";
+import { OddityItem } from "@/components/OddityItem";
+import { EquipmentItem } from "@/components/EquipmentItem";
+import { CyphersBox } from "@/components/CyphersBox";
+import { ItemsBox } from "@/components/ItemsBox";
+import { Stats } from "@/components/Stats";
+import { StatPool } from "@/components/StatPool";
+import { BottomTextFields } from "@/components/BottomTextFields";
+import type { Cypher, Artifact } from "@/types/character";
 import { setupTestContainer } from "./helpers/testSetup.js";
 import {
   createTestCharacter as createMockCharacter,

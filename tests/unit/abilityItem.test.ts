@@ -1,6 +1,6 @@
 // Unit tests for AbilityItem edit functionality
-import { AbilityItem } from "../../src/components/AbilityItem.js";
-import { Ability } from "../../src/types/character.js";
+import { AbilityItem } from "@/components/AbilityItem";
+import { Ability } from "@/types/character";
 import { testItemEditAndDelete } from "./helpers/itemTestSuite.js";
 
 const sampleAbility: Ability = {

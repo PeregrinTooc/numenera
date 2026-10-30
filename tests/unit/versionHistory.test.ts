@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { VersionHistoryManager } from "../../src/storage/versionHistory.js";
-import type { Character } from "../../src/types/character.js";
+import { VersionHistoryManager } from "@/storage/versionHistory";
+import type { Character } from "@/types/character";
 import { createTestCharacter as createMockCharacter } from "../factories/character.js";
 
 // Helper for async delays

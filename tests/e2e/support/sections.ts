@@ -1,5 +1,5 @@
 import type { CDPSession, Locator, Page } from "@playwright/test";
-import { SECTION_DISPLAY_NAMES, type SectionId } from "../../../src/types/layout.js";
+import { SECTION_DISPLAY_NAMES, type SectionId } from "@/types/layout";
 
 /**
  * Resolve a section's display name as written in Gherkin ("Special Abilities")

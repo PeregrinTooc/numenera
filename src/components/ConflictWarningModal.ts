@@ -1,5 +1,5 @@
-import { t } from "../i18n/index.js";
-import type { ConflictDetail, ConflictResolution } from "../services/conflictDetectionService";
+import { t } from "@/i18n/index";
+import type { ConflictDetail, ConflictResolution } from "@/services/conflictDetectionService";
 
 /**
  * Modal that displays when a version conflict is detected between tabs.

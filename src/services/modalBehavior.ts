@@ -2,7 +2,7 @@
 // Eliminates duplication across EditFieldModal and CardEditModal
 
 import { html, TemplateResult } from "lit-html";
-import { t } from "../i18n/index.js";
+import { t } from "@/i18n/index";
 
 /**
  * Base configuration for modal behavior

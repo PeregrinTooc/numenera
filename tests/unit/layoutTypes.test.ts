@@ -14,7 +14,7 @@ import {
   GRID_ELIGIBLE_SECTIONS,
   SINGLE_ONLY_SECTIONS,
   Layout,
-} from "../../src/types/layout";
+} from "@/types/layout";
 
 describe("Layout Types", () => {
   describe("isGridEligible", () => {

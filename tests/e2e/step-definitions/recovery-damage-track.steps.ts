@@ -2,7 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { waitForSaveComplete } from "../support/save.js";
 import type { CustomWorld } from "../support/world.js";
-import type { DamageTrack } from "../../../src/types/character.js";
+import type { DamageTrack } from "@/types/character";
 
 // Recovery Rolls step definitions
 

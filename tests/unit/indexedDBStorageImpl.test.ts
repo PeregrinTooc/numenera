@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { IndexedDBStorageImpl } from "../../src/storage/indexedDBStorageImpl.js";
-import { STORAGE_KEY } from "../../src/storage/storageConstants.js";
+import { IndexedDBStorageImpl } from "@/storage/indexedDBStorageImpl";
+import { STORAGE_KEY } from "@/storage/storageConstants";
 
 // Mock character data
 const mockCharacter = {

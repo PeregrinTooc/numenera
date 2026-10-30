@@ -9,9 +9,9 @@ import {
   resetLayout,
   hasCustomLayout,
   getDefaultLayout,
-} from "../../src/storage/layoutStorage";
-import { DEFAULT_LAYOUT, Layout, layoutsAreEqual } from "../../src/types/layout";
-import { LAYOUT_STORAGE_KEY } from "../../src/storage/storageConstants";
+} from "@/storage/layoutStorage";
+import { DEFAULT_LAYOUT, Layout, layoutsAreEqual } from "@/types/layout";
+import { LAYOUT_STORAGE_KEY } from "@/storage/storageConstants";
 
 describe("Layout Storage", () => {
   beforeEach(() => {

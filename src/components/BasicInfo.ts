@@ -1,12 +1,12 @@
 // BasicInfo component - Displays character basic information
 
 import { html, TemplateResult } from "lit-html";
-import { Character } from "../types/character.js";
-import { FieldType as ValidationFieldType } from "../utils/unified-validation.js";
-import { ModalService } from "../services/modalService.js";
-import { persistCharacterState } from "../storage/storageFactory.js";
-import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
-import { t } from "../i18n/index.js";
+import { Character } from "@/types/character";
+import { FieldType as ValidationFieldType } from "@/utils/unified-validation";
+import { ModalService } from "@/services/modalService";
+import { persistCharacterState } from "@/storage/storageFactory";
+import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
+import { t } from "@/i18n/index";
 
 type FieldType = "name" | "tier" | "descriptor" | "focus" | "currentXp" | "totalXp";
 

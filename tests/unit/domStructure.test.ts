@@ -8,13 +8,13 @@
 
 import { describe, it, expect, vi } from "vitest";
 import { render } from "lit-html";
-import { CharacterSheet } from "../../src/components/CharacterSheet.js";
-import { Header } from "../../src/components/Header.js";
-import { BasicInfo } from "../../src/components/BasicInfo.js";
-import { Stats } from "../../src/components/Stats.js";
-import { CyphersBox } from "../../src/components/CyphersBox.js";
-import { ItemsBox } from "../../src/components/ItemsBox.js";
-import { BottomTextFields } from "../../src/components/BottomTextFields.js";
+import { CharacterSheet } from "@/components/CharacterSheet";
+import { Header } from "@/components/Header";
+import { BasicInfo } from "@/components/BasicInfo";
+import { Stats } from "@/components/Stats";
+import { CyphersBox } from "@/components/CyphersBox";
+import { ItemsBox } from "@/components/ItemsBox";
+import { BottomTextFields } from "@/components/BottomTextFields";
 import { setupTestContainer } from "./helpers/testSetup.js";
 import {
   createTestCharacter as createMockCharacter,

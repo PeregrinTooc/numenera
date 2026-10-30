@@ -2,7 +2,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { screen, fireEvent } from "@testing-library/dom";
 import { html } from "lit-html";
-import { openCardEditModal } from "../../src/components/CardEditModal.js";
+import { openCardEditModal } from "@/components/CardEditModal";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("CardEditModal", () => {

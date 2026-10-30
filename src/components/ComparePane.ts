@@ -5,10 +5,10 @@
 // mount lifecycle needed since it owns no DOM-level state of its own.
 
 import { html, TemplateResult } from "lit-html";
-import type { Character } from "../types/character.js";
-import type { CharacterDiff } from "../utils/characterDiff.js";
+import type { Character } from "@/types/character";
+import type { CharacterDiff } from "@/utils/characterDiff";
 import { DiffCharacterSheet } from "./DiffCharacterSheet.js";
-import { t } from "../i18n/index.js";
+import { t } from "@/i18n/index";
 
 export interface ComparePaneProps {
   side: "left" | "right";

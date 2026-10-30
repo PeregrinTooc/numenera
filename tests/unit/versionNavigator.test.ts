@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { VersionNavigator } from "../../src/components/VersionNavigator";
+import { VersionNavigator } from "@/components/VersionNavigator";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("VersionNavigator", () => {

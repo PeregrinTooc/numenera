@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
-import { ExportManager } from "../../src/storage/exportManager";
-import type { Character } from "../../src/types/character";
+import { ExportManager } from "@/storage/exportManager";
+import type { Character } from "@/types/character";
 
 // Mock character data
 const mockCharacter: Character = {

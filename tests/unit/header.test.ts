@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { Header } from "../../src/components/Header.js";
+import { Header } from "@/components/Header";
 
 describe("Header", () => {
   afterEach(() => {

@@ -12,11 +12,11 @@
 // disturbs the single-pane navigation state underneath it.
 
 import { html, render, TemplateResult } from "lit-html";
-import type { VersionState } from "../services/versionState.js";
-import { diffCharacters } from "../utils/characterDiff.js";
-import { describeDiff } from "../services/diffDescriptions.js";
+import type { VersionState } from "@/services/versionState";
+import { diffCharacters } from "@/utils/characterDiff";
+import { describeDiff } from "@/services/diffDescriptions";
 import { ComparePane } from "./ComparePane.js";
-import { t } from "../i18n/index.js";
+import { t } from "@/i18n/index";
 
 export interface CompareViewProps {
   versionState: VersionState;

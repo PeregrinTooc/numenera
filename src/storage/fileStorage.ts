@@ -1,10 +1,10 @@
 // File storage utilities for character import/export
 // Uses File System Access API for Chromium browsers, falls back to input element for others
 
-import { Character } from "../types/character.js";
-import { Layout, isValidLayout } from "../types/layout.js";
+import { Character } from "@/types/character";
+import { Layout, isValidLayout } from "@/types/layout";
 import { SCHEMA_VERSION } from "./storageConstants.js";
-import { sanitizeCharacter } from "../utils/unified-validation.js";
+import { sanitizeCharacter } from "@/utils/unified-validation";
 import { loadLayout } from "./layoutStorage.js";
 
 /**

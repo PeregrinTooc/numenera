@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { getVersionHistory, loadCharacterState } from "../../src/storage/storageFactory.js";
-import { VersionHistoryManager } from "../../src/storage/versionHistory.js";
-import { IndexedDBStorageImpl } from "../../src/storage/indexedDBStorageImpl.js";
+import { getVersionHistory, loadCharacterState } from "@/storage/storageFactory";
+import { VersionHistoryManager } from "@/storage/versionHistory";
+import { IndexedDBStorageImpl } from "@/storage/indexedDBStorageImpl";
 
 describe("storageFactory", () => {
   describe("loadCharacterState", () => {

@@ -1,8 +1,8 @@
 import { html, TemplateResult } from "lit-html";
-import { RecoveryRolls as RecoveryRollsType } from "../types/character.js";
-import { t } from "../i18n/index.js";
-import { ModalService } from "../services/modalService.js";
-import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
+import { RecoveryRolls as RecoveryRollsType } from "@/types/character";
+import { t } from "@/i18n/index";
+import { ModalService } from "@/services/modalService";
+import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
 
 type RecoveryRollField = "action" | "tenMinutes" | "oneHour" | "tenHours";
 

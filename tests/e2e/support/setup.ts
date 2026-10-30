@@ -1,7 +1,7 @@
 import type { CustomWorld } from "./world.js";
-import type { Character } from "../../../src/types/character.js";
-import type { Layout } from "../../../src/types/layout.js";
-import { LAYOUT_STORAGE_KEY } from "../../../src/storage/storageConstants.js";
+import type { Character } from "@/types/character";
+import type { Layout } from "@/types/layout";
+import { LAYOUT_STORAGE_KEY } from "@/storage/storageConstants";
 import { waitForCharacterSheetReady } from "./app-ready.js";
 import { FULL_CHARACTER, EMPTY_ARRAYS } from "./cardTestFixtures.js";
 

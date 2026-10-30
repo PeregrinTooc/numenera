@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { ConflictDetectionService } from "../../src/services/conflictDetectionService";
+import { ConflictDetectionService } from "@/services/conflictDetectionService";
 
 // Mock MessageEvent interface for tests
 interface MockMessageEvent<T = unknown> {

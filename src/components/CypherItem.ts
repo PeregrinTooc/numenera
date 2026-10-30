@@ -1,8 +1,8 @@
 // CypherItem component - Displays a single cypher card
 
 import { html, TemplateResult } from "lit-html";
-import { Cypher } from "../types/character.js";
-import { t } from "../i18n/index.js";
+import { Cypher } from "@/types/character";
+import { t } from "@/i18n/index";
 import { createEditHandler, renderCardButtons } from "./helpers/CardEditorBehavior.js";
 
 export class CypherItem {

@@ -2,10 +2,10 @@
 // These are always displayed together as they represent related game mechanics
 
 import { html, TemplateResult } from "lit-html";
-import { Character } from "../types/character.js";
+import { Character } from "@/types/character";
 import { RecoveryRolls } from "./RecoveryRolls.js";
 import { DamageTrack } from "./DamageTrack.js";
-import { persistCharacterState } from "../storage/storageFactory.js";
+import { persistCharacterState } from "@/storage/storageFactory";
 
 export class RecoveryDamageSection {
   private recoveryRolls: RecoveryRolls;

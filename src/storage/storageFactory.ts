@@ -3,12 +3,12 @@
 // Future: IndexedDB, remote server
 
 import { ICharacterStorage } from "./ICharacterStorage.js";
-import type { Character } from "../types/character.js";
+import type { Character } from "@/types/character";
 import { IndexedDBStorageImpl } from "./indexedDBStorageImpl.js";
 import { LocalStorageImpl } from "./localStorageImpl.js";
 import { VersionHistoryManager } from "./versionHistory.js";
 import { CHARACTER_DB_NAME } from "./storageConstants.js";
-import { sanitizeCharacter } from "../utils/unified-validation.js";
+import { sanitizeCharacter } from "@/utils/unified-validation";
 import { logger } from "@/utils/logger";
 
 let storageInstance: ICharacterStorage | null = null;

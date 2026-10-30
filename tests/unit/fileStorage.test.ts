@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { importCharacterFromFile, exportCharacterToFile } from "../../src/storage/fileStorage";
-import { Character } from "../../src/types/character";
-import { SCHEMA_VERSION } from "../../src/storage/storageConstants";
+import { importCharacterFromFile, exportCharacterToFile } from "@/storage/fileStorage";
+import { Character } from "@/types/character";
+import { SCHEMA_VERSION } from "@/storage/storageConstants";
 
 // Mock CSSStyleDeclaration for test environment
 interface MockCSSStyleDeclaration {

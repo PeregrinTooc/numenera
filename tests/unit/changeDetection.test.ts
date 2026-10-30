@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { detectChanges } from "../../src/utils/changeDetection.js";
+import { detectChanges } from "@/utils/changeDetection";
 import { createTestCharacter as createBaseCharacter } from "../factories/character.js";
 
 describe("Change Detection", () => {

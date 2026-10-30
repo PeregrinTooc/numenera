@@ -2,10 +2,10 @@
 // Redesigned to match official Numenera character sheet aesthetic
 
 import { html, TemplateResult } from "lit-html";
-import { t } from "../i18n/index.js";
-import { StatPool as StatPoolType } from "../types/character.js";
-import { ModalService } from "../services/modalService.js";
-import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
+import { t } from "@/i18n/index";
+import { StatPool as StatPoolType } from "@/types/character";
+import { ModalService } from "@/services/modalService";
+import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
 
 type FieldType =
   | "mightPool"

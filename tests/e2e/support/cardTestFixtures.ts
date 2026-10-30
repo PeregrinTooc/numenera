@@ -3,7 +3,7 @@
  * Eliminates duplication of FULL_CHARACTER object across step definitions
  */
 
-import { FULL_CHARACTER } from "../../../src/data/mockCharacters.js";
+import { FULL_CHARACTER } from "@/data/mockCharacters";
 
 // Re-exported so every card fixture builds on the same demo character the
 // app itself ships (src/data/mockCharacters.ts), instead of a hand-copied

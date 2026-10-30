@@ -1,6 +1,6 @@
 // Unit tests for CypherItem component
-import { CypherItem } from "../../src/components/CypherItem.js";
-import { Cypher } from "../../src/types/character.js";
+import { CypherItem } from "@/components/CypherItem";
+import { Cypher } from "@/types/character";
 import { testItemEditAndDelete } from "./helpers/itemTestSuite.js";
 
 const mockCypher: Cypher = {

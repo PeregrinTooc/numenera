@@ -2,6 +2,16 @@ import js from "@eslint/js";
 import typescript from "@typescript-eslint/eslint-plugin";
 import typescriptParser from "@typescript-eslint/parser";
 
+const SRC_RELATIVE_IMPORT_PATTERN = {
+  group: ["../*"],
+  message: "Use the @/ alias for cross-directory src imports (Rule 5).",
+};
+
+const TESTS_SRC_IMPORT_PATTERN = {
+  group: ["**/src/**"],
+  message: "Import src modules through the @/ alias, not a relative path into src/ (Rule 5).",
+};
+
 export default [
   js.configs.recommended,
   {
@@ -93,6 +103,18 @@ export default [
     },
   },
   {
+    files: ["src/**/*.ts"],
+    rules: {
+      "no-restricted-imports": ["error", { patterns: [SRC_RELATIVE_IMPORT_PATTERN] }],
+    },
+  },
+  {
+    files: ["tests/**/*.ts"],
+    rules: {
+      "no-restricted-imports": ["error", { patterns: [TESTS_SRC_IMPORT_PATTERN] }],
+    },
+  },
+  {
     // The logger is the one place production code may write diagnostics.
     files: ["src/utils/logger.ts"],
     rules: {
@@ -125,6 +147,7 @@ export default [
               message:
                 "Step files must not import from each other. Move shared logic into tests/e2e/support/.",
             },
+            TESTS_SRC_IMPORT_PATTERN,
           ],
         },
       ],

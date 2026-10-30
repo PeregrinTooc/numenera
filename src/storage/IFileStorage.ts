@@ -6,7 +6,7 @@
  * File System Access API.
  */
 
-import { Character } from "../types/character.js";
+import { Character } from "@/types/character";
 
 /**
  * Result of importing a character file

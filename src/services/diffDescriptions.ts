@@ -1,5 +1,5 @@
-import type { CharacterDiff } from "../utils/characterDiff.js";
-import { t } from "../i18n/index.js";
+import type { CharacterDiff } from "@/utils/characterDiff";
+import { t } from "@/i18n/index";
 
 /**
  * Translates a CharacterDiff into the uncapped list of change lines shown in

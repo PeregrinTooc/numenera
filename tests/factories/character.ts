@@ -1,5 +1,5 @@
-import type { Character } from "../../src/types/character.js";
-import { FULL_CHARACTER } from "../../src/data/mockCharacters.js";
+import type { Character } from "@/types/character";
+import { FULL_CHARACTER } from "@/data/mockCharacters";
 
 /**
  * Shared unit-test character factory (docs/rules/testing.md "Use Factories").

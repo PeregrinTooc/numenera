@@ -6,9 +6,9 @@
  * - Three separate concerns: resetTimer, bufferChange, performSquash
  */
 
-import type { Character } from "../types/character.js";
-import { VersionHistoryManager } from "../storage/versionHistory.js";
-import { squashDescriptions } from "../utils/squashDescriptions.js";
+import type { Character } from "@/types/character";
+import { VersionHistoryManager } from "@/storage/versionHistory";
+import { squashDescriptions } from "@/utils/squashDescriptions";
 import type { ITimer, TimerHandle } from "./timer.js";
 import { RealTimer } from "./timer.js";
 

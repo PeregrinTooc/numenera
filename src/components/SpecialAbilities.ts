@@ -1,9 +1,9 @@
 // SpecialAbilities component - Displays character special abilities in grid
 
 import { html, TemplateResult } from "lit-html";
-import { Character } from "../types/character.js";
+import { Character } from "@/types/character";
 import { SpecialAbilityItem } from "./SpecialAbilityItem.js";
-import { t } from "../i18n/index.js";
+import { t } from "@/i18n/index";
 import {
   createAddHandler,
   createItemInstances,

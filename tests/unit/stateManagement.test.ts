@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { RecoveryRolls } from "../../src/components/RecoveryRolls";
-import { DamageTrack } from "../../src/components/DamageTrack";
-import { CharacterSheet } from "../../src/components/CharacterSheet";
+import { RecoveryRolls } from "@/components/RecoveryRolls";
+import { DamageTrack } from "@/components/DamageTrack";
+import { CharacterSheet } from "@/components/CharacterSheet";
 import type {
   Character,
   RecoveryRolls as RecoveryRollsType,
   DamageTrack as DamageTrackType,
-} from "../../src/types/character";
+} from "@/types/character";
 import { render } from "lit-html";
 import { setupTestContainer } from "./helpers/testSetup.js";
 

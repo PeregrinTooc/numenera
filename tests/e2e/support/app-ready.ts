@@ -1,5 +1,5 @@
 import type { Page } from "@playwright/test";
-import type { VersionHistoryService } from "../../../src/services/versionHistoryService.js";
+import type { VersionHistoryService } from "@/services/versionHistoryService";
 import "./testStorageHelper.js";
 
 // Exposed by src/main.ts once its bootstrap has set up version history.

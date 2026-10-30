@@ -1,7 +1,7 @@
 // CharacterSheet component - Main container that composes all sections
 
 import { html, nothing, render, TemplateResult } from "lit-html";
-import { Character } from "../types/character.js";
+import { Character } from "@/types/character";
 import { Header } from "./Header.js";
 import { BasicInfo } from "./BasicInfo.js";
 import { Stats } from "./Stats.js";
@@ -14,7 +14,7 @@ import { ItemsBox } from "./ItemsBox.js";
 import { BottomTextFields } from "./BottomTextFields.js";
 import { VersionNavigator } from "./VersionNavigator.js";
 import { VersionWarningBanner } from "./VersionWarningBanner.js";
-import { changeLanguage, t } from "../i18n/index.js";
+import { changeLanguage, t } from "@/i18n/index";
 import {
   Layout,
   LayoutItem,
@@ -22,8 +22,8 @@ import {
   isGridEligible,
   isSectionId,
   cloneLayout,
-} from "../types/layout.js";
-import { loadLayout, saveLayout, resetLayout } from "../storage/layoutStorage.js";
+} from "@/types/layout";
+import { loadLayout, saveLayout, resetLayout } from "@/storage/layoutStorage";
 import { LongPressDrag } from "@/components/helpers/LongPressDrag";
 
 /**

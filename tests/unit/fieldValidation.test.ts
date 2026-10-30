@@ -9,7 +9,7 @@ import {
   getMaxLength,
   isNumericField,
   type FieldType,
-} from "../../src/utils/unified-validation.js";
+} from "@/utils/unified-validation";
 
 describe("fieldValidation", () => {
   describe("FIELD_CONFIGS", () => {

@@ -3,10 +3,10 @@
  * Separates concerns: latest character (for editing) vs displayed character (for viewing)
  */
 
-import { Character } from "../types/character.js";
-import { VersionHistoryManager } from "../storage/versionHistory.js";
-import { CharacterVersion } from "../types/versionHistory.js";
-import { sanitizeCharacter } from "../utils/unified-validation.js";
+import { Character } from "@/types/character";
+import { VersionHistoryManager } from "@/storage/versionHistory";
+import { CharacterVersion } from "@/types/versionHistory";
+import { sanitizeCharacter } from "@/utils/unified-validation";
 
 export class VersionState {
   private latestCharacter: Character;

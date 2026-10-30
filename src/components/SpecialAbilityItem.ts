@@ -1,8 +1,8 @@
 // SpecialAbilityItem component - Individual special ability card with teal styling
 
 import { html, TemplateResult } from "lit-html";
-import { SpecialAbility } from "../types/character.js";
-import { t } from "../i18n/index.js";
+import { SpecialAbility } from "@/types/character";
+import { t } from "@/i18n/index";
 import { createEditHandler, renderCardButtons } from "./helpers/CardEditorBehavior.js";
 
 export class SpecialAbilityItem {

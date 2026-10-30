@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { Attacks } from "../../src/components/Attacks";
-import { Abilities } from "../../src/components/Abilities";
-import { SpecialAbilities } from "../../src/components/SpecialAbilities";
-import type { Character } from "../../src/types/character";
+import { Attacks } from "@/components/Attacks";
+import { Abilities } from "@/components/Abilities";
+import { SpecialAbilities } from "@/components/SpecialAbilities";
+import type { Character } from "@/types/character";
 import { render } from "lit-html";
 import { createMockCharacter } from "./helpers/containerTestSuite";
 import { setupTestContainer } from "./helpers/testSetup.js";

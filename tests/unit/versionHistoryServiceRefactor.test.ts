@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
-import { VersionHistoryService } from "../../src/services/versionHistoryService.js";
-import type { Character } from "../../src/types/character.js";
+import { VersionHistoryService } from "@/services/versionHistoryService";
+import type { Character } from "@/types/character";
 
 describe("VersionHistoryService - Smart Squashing Refactor", () => {
   let service: VersionHistoryService;

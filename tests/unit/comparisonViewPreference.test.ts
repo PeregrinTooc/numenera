@@ -6,8 +6,8 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
   saveComparisonViewEnabled,
   loadComparisonViewEnabled,
-} from "../../src/storage/comparisonViewPreference";
-import { COMPARISON_VIEW_STORAGE_KEY } from "../../src/storage/storageConstants";
+} from "@/storage/comparisonViewPreference";
+import { COMPARISON_VIEW_STORAGE_KEY } from "@/storage/storageConstants";
 
 describe("Comparison View Preference", () => {
   beforeEach(() => {

@@ -1,6 +1,6 @@
 // Pure field-update logic for the character sheet's inline field editing.
 
-import { Character } from "../types/character.js";
+import { Character } from "@/types/character";
 
 export interface FieldUpdateResult {
   character: Character;

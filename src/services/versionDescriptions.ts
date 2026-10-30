@@ -1,6 +1,6 @@
-import type { Character } from "../types/character.js";
-import { detectChanges } from "../utils/changeDetection.js";
-import { t } from "../i18n/index.js";
+import type { Character } from "@/types/character";
+import { detectChanges } from "@/utils/changeDetection";
+import { t } from "@/i18n/index";
 
 /**
  * Translates detectChanges' i18n key output into the final description text

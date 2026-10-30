@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { ConflictWarningModal } from "../../src/components/ConflictWarningModal";
-import type { ConflictDetail } from "../../src/services/conflictDetectionService";
+import { ConflictWarningModal } from "@/components/ConflictWarningModal";
+import type { ConflictDetail } from "@/services/conflictDetectionService";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("ConflictWarningModal", () => {

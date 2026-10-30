@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { EditFieldModal } from "../../src/components/EditFieldModal";
+import { EditFieldModal } from "@/components/EditFieldModal";
 import { render } from "lit-html";
 import { setupTestContainer } from "./helpers/testSetup.js";
 

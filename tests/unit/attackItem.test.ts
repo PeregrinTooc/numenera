@@ -1,6 +1,6 @@
 // Unit tests for AttackItem edit functionality
-import { AttackItem } from "../../src/components/AttackItem.js";
-import { Attack } from "../../src/types/character.js";
+import { AttackItem } from "@/components/AttackItem";
+import { Attack } from "@/types/character";
 import { testItemEditAndDelete } from "./helpers/itemTestSuite.js";
 
 const sampleAttack: Attack = {

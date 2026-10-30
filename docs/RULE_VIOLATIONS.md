@@ -28,35 +28,13 @@ editing the rule to match the code.
 | Dead code                              | `tailwind.config.js` was never read by Tailwind v4, and `src/storage/localStorage.ts` had no importers left in `src/` after the Rule #11 fix — while remaining an easy way to re-enter that violation               | both deleted, with `localStorage.test.ts`; `cyphersBox.test.ts` now asserts persistence goes through the factory instead of mocking the deleted module                      |
 | Git checklist — no `console.log`       | 8 storage lifecycle `console.log` calls in `src/`; `no-console` was only a warning                                                                                                                                  | routed through `src/utils/logger.ts` (debug/info print in dev builds only); `no-console` is an error for `src/`, with the logger as the one exemption                       |
 | Code organisation — one class per file | `modalBehavior.ts` held 3 classes, `timer.ts` 2                                                                                                                                                                     | `FocusTrappingBehavior` → `focusTrappingBehavior.ts`, `ModalContainer` → `modalContainer.ts`, `TestTimer` → `testTimer.ts`                                                  |
+| Rule #5 — path aliases                 | 138 cross-directory `../` imports in `src/` and 140 relative imports into `src/` from `tests/` (including `vi.mock` specifiers) instead of `@/`                                                                     | every one rewritten to `@/<path>`; `no-restricted-imports` bans `../*` in `src/` and `**/src/**` in `tests/`                                                                |
 
 ---
 
 ## Open
 
 Re-measured on `main` at `b9b81c1` (2026-10-30).
-
-### 1. Rule #5 — path aliases are barely used
-
-**Rule:** "Use path aliases: `@/` prefix for src imports."
-
-| Where    | Relative imports                                         | Count           |
-| -------- | -------------------------------------------------------- | --------------- |
-| `src/`   | cross-directory `../`                                    | 138 in 56 files |
-| `src/`   | same-directory `./`                                      | 95 in 35 files  |
-| `tests/` | `../../src/…` (68 files, 9 of them E2E support or steps) | 136             |
-| `tests/` | `vi.mock("../../src/…")` specifiers                      | 4               |
-
-Only `src/components/CharacterSheet.ts` and two test files use `@/` today.
-
-Aliases are configured in `tsconfig.json`, `vite.config.ts` and
-`vitest.config.ts`. The old caveat is resolved: a probe through `npx tsx` from
-the repo root resolves `@/…` in E2E step definitions too, even though
-`tsconfig.json` excludes `tests/`.
-
-**Fix:** mechanical codemod. Rewrite every cross-directory specifier into `src/`
-as `@/<path>` without extension, in `src/` and `tests/` (including the
-`vi.mock` strings), in one commit. Then add `no-restricted-imports` (ban `../*`
-in `src/`, `**/src/*` in `tests/`) so it cannot regress.
 
 ### 2. Rule #5 — 201 `any` usages, and the linter only warns
 
@@ -216,7 +194,7 @@ need no feature file; steps 8 and 9 change behaviour and start with a scenario.
 | #   | Commit                                                                                                  | Kind     |
 | --- | ------------------------------------------------------------------------------------------------------- | -------- |
 | 1   | ~~Logger and `no-console` as error for `src/` (#5); split `modalBehavior.ts` and `timer.ts` (#8)~~ done | refactor |
-| 2   | `@/` codemod across `src/` and `tests/`, plus the `no-restricted-imports` guard (#1)                    | refactor |
+| 2   | ~~`@/` codemod across `src/` and `tests/`, plus the `no-restricted-imports` guard (#1)~~ done           | refactor |
 | 3   | Delete the dead `fileStorage` export code; move the `exportManager` handle store out (#3)               | refactor |
 | 4   | Remove `any` from `src/`, including the `vi` sniff (#2, #9)                                             | refactor |
 | 5   | `tsconfig.test.json` and `typecheck:tests` in hook and CI; fix the test type errors (#7)                | tooling  |

@@ -2,9 +2,9 @@
 
 import { html, TemplateResult } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
-import { Character } from "../types/character.js";
+import { Character } from "@/types/character";
 import { AbilityItem } from "./AbilityItem.js";
-import { t } from "../i18n/index.js";
+import { t } from "@/i18n/index";
 import {
   createAddHandler,
   createItemInstances,

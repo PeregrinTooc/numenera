@@ -2,9 +2,9 @@
 // Eliminates duplication across Abilities, Attacks, Cyphers, Items, and SpecialAbilities
 
 import { html, TemplateResult } from "lit-html";
-import { Character } from "../../types/character.js";
-import { persistCharacterState } from "../../storage/storageFactory.js";
-import { CompletionNotifier } from "../../utils/completionNotifier.js";
+import { Character } from "@/types/character";
+import { persistCharacterState } from "@/storage/storageFactory";
+import { CompletionNotifier } from "@/utils/completionNotifier";
 
 /**
  * Configuration for creating an add handler for a collection

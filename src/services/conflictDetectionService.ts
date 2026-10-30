@@ -1,5 +1,5 @@
-import type { Character } from "../types/character";
-import { generateETag } from "../utils/etag";
+import type { Character } from "@/types/character";
+import { generateETag } from "@/utils/etag";
 
 // BroadcastChannel and MessageEvent are DOM globals
 /* eslint-disable no-undef */

@@ -2,7 +2,7 @@
 // Promotes DRY principles and consistent testing across all container types
 
 import { render } from "lit-html";
-import { Character } from "../../../src/types/character.js";
+import { Character } from "@/types/character";
 import { createTestCharacter as createMockCharacter } from "../../factories/character.js";
 
 export { createMockCharacter };

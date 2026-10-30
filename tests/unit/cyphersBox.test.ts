@@ -1,13 +1,13 @@
 // Unit tests for CyphersBox component
 
 import { render } from "lit-html";
-import { CyphersBox } from "../../src/components/CyphersBox.js";
-import { Character, Cypher } from "../../src/types/character.js";
-import { CypherItem } from "../../src/components/CypherItem.js";
-import { createItemInstances } from "../../src/components/helpers/CollectionBehavior.js";
+import { CyphersBox } from "@/components/CyphersBox";
+import { Character, Cypher } from "@/types/character";
+import { CypherItem } from "@/components/CypherItem";
+import { createItemInstances } from "@/components/helpers/CollectionBehavior";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
-vi.mock("../../src/storage/storageFactory.js");
+vi.mock("@/storage/storageFactory");
 
 describe("CyphersBox", () => {
   const getContainer = setupTestContainer();
@@ -202,7 +202,7 @@ describe("CyphersBox", () => {
   });
 
   it("should persist through the storage adapter when a cypher is edited", async () => {
-    const { persistCharacterState } = await import("../../src/storage/storageFactory.js");
+    const { persistCharacterState } = await import("@/storage/storageFactory");
     vi.mocked(persistCharacterState).mockClear();
 
     const component = new CyphersBox(mockCharacter, mockOnFieldUpdate);

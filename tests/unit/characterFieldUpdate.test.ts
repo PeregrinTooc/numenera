@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { applyFieldUpdate } from "../../src/utils/characterFieldUpdate.js";
+import { applyFieldUpdate } from "@/utils/characterFieldUpdate";
 import { createTestCharacter as makeCharacter } from "../factories/character.js";
 
 describe("applyFieldUpdate", () => {

@@ -2,12 +2,12 @@
 // Provides consistent modal behavior across all card types
 
 import { html, render, TemplateResult } from "lit-html";
-import { t } from "../i18n/index.js";
+import { t } from "@/i18n/index";
 import { ModalBehavior, renderModalButtons } from "@/services/modalBehavior";
 import { ModalContainer } from "@/services/modalContainer";
 import { FocusTrappingBehavior } from "@/services/focusTrappingBehavior";
-import type { VersionHistoryService } from "../services/versionHistoryService.js";
-import { CompletionNotifier } from "../utils/completionNotifier.js";
+import type { VersionHistoryService } from "@/services/versionHistoryService";
+import { CompletionNotifier } from "@/utils/completionNotifier";
 
 export interface CardEditModalConfig {
   content: TemplateResult; // The editable card content

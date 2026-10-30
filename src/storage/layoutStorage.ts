@@ -5,7 +5,7 @@
  * Layout is stored in localStorage as a user preference.
  */
 
-import { Layout, DEFAULT_LAYOUT, isValidLayout, cloneLayout } from "../types/layout.js";
+import { Layout, DEFAULT_LAYOUT, isValidLayout, cloneLayout } from "@/types/layout";
 import { LAYOUT_STORAGE_KEY } from "./storageConstants.js";
 
 /**

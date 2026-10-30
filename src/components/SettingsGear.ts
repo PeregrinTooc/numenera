@@ -1,13 +1,13 @@
 // SettingsGear component - Settings dropdown with language switcher
 
 import { html, TemplateResult, nothing } from "lit-html";
-import { t } from "../i18n/index.js";
-import { hasCustomLayout } from "../storage/layoutStorage.js";
+import { t } from "@/i18n/index";
+import { hasCustomLayout } from "@/storage/layoutStorage";
 import {
   loadComparisonViewEnabled,
   saveComparisonViewEnabled,
-} from "../storage/comparisonViewPreference.js";
-import { isPhoneViewport } from "../utils/viewport.js";
+} from "@/storage/comparisonViewPreference";
+import { isPhoneViewport } from "@/utils/viewport";
 
 export class SettingsGear {
   private _isOpen: boolean = false;

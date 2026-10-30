@@ -1,6 +1,6 @@
 import { html, TemplateResult } from "lit-html";
-import { DamageTrack as DamageTrackType } from "../types/character.js";
-import { t } from "../i18n/index.js";
+import { DamageTrack as DamageTrackType } from "@/types/character";
+import { t } from "@/i18n/index";
 
 export class DamageTrack {
   constructor(

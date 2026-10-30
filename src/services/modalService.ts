@@ -2,9 +2,9 @@
 // Eliminates duplicate modal creation code across components
 
 import { render } from "lit-html";
-import { EditFieldModal } from "../components/EditFieldModal.js";
-import { PortraitDisplayModal } from "../components/PortraitDisplayModal.js";
-import { FieldType } from "../utils/unified-validation.js";
+import { EditFieldModal } from "@/components/EditFieldModal";
+import { PortraitDisplayModal } from "@/components/PortraitDisplayModal";
+import { FieldType } from "@/utils/unified-validation";
 import { ModalContainer } from "@/services/modalContainer";
 import type { VersionHistoryService } from "./versionHistoryService.js";
 

@@ -1,6 +1,6 @@
 // Unit tests for EquipmentItem component
-import { EquipmentItem } from "../../src/components/EquipmentItem.js";
-import { EquipmentItem as EquipmentItemType } from "../../src/types/character.js";
+import { EquipmentItem } from "@/components/EquipmentItem";
+import { EquipmentItem as EquipmentItemType } from "@/types/character";
 import { testItemEditAndDelete } from "./helpers/itemTestSuite.js";
 
 const mockEquipment: EquipmentItemType = {

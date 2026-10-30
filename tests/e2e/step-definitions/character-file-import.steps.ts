@@ -1,6 +1,6 @@
 import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
-import type { Character } from "../../../src/types/character.js";
+import type { Character } from "@/types/character";
 import { FULL_CHARACTER } from "../support/cardTestFixtures.js";
 import { waitForCharacterSheetReady } from "../support/app-ready.js";
 

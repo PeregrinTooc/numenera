@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { AutoSaveService } from "../../src/services/autoSaveService.js";
+import { AutoSaveService } from "@/services/autoSaveService";
 
 describe("AutoSaveService", () => {
   let service: AutoSaveService;

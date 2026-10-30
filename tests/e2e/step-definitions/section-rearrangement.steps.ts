@@ -15,7 +15,7 @@ import {
   TouchGesture,
   withFullHeightViewport,
 } from "../support/sections.js";
-import type { LayoutItem, SectionId } from "../../../src/types/layout.js";
+import type { LayoutItem, SectionId } from "@/types/layout";
 
 // ============================================
 // Edit Mode Entry/Exit Steps

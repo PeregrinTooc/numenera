@@ -3,8 +3,8 @@ import {
   validateCharacter,
   sanitizeCharacter,
   CHARACTER_DEFAULTS,
-} from "../../src/utils/unified-validation.js";
-import { Character } from "../../src/types/character";
+} from "@/utils/unified-validation";
+import { Character } from "@/types/character";
 
 describe("characterValidation", () => {
   describe("validateCharacter", () => {

@@ -3,9 +3,9 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { CharacterSheet } from "../../src/components/CharacterSheet.js";
-import { Character } from "../../src/types/character.js";
-import * as RecoveryDamageSectionModule from "../../src/components/RecoveryDamageSection.js";
+import { CharacterSheet } from "@/components/CharacterSheet";
+import { Character } from "@/types/character";
+import * as RecoveryDamageSectionModule from "@/components/RecoveryDamageSection";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("CharacterSheet - Version History Integration", () => {

@@ -3,7 +3,7 @@
 
 import { ICharacterStorage } from "./ICharacterStorage.js";
 import { STORAGE_KEY } from "./storageConstants.js";
-import { CompletionNotifier } from "../utils/completionNotifier.js";
+import { CompletionNotifier } from "@/utils/completionNotifier";
 import { logger } from "@/utils/logger";
 
 /**

@@ -1,7 +1,7 @@
-import type { Character } from "../types/character.js";
-import type { CharacterVersion } from "../types/versionHistory.js";
-import { generateETag } from "../utils/etag.js";
-import { CompletionNotifier } from "../utils/completionNotifier.js";
+import type { Character } from "@/types/character";
+import type { CharacterVersion } from "@/types/versionHistory";
+import { generateETag } from "@/utils/etag";
+import { CompletionNotifier } from "@/utils/completionNotifier";
 import { VERSION_HISTORY_DB_NAME } from "./storageConstants.js";
 
 const DEFAULT_DB_NAME = VERSION_HISTORY_DB_NAME;

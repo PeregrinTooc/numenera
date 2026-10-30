@@ -13,7 +13,7 @@ describe("reorderArray", () => {
   let reorderArray: <T>(array: T[], fromIndex: number, toIndex: number) => T[];
 
   beforeEach(async () => {
-    const module = await import("../../src/components/helpers/DragDropBehavior.js");
+    const module = await import("@/components/helpers/DragDropBehavior");
     reorderArray = module.reorderArray;
   });
 
@@ -122,7 +122,7 @@ describe("previewOrderEquals", () => {
   let previewOrderEquals: (current: number[] | null, newOrder: number[]) => boolean;
 
   beforeEach(async () => {
-    const module = await import("../../src/components/helpers/DragDropBehavior.js");
+    const module = await import("@/components/helpers/DragDropBehavior");
     previewOrderEquals = module.previewOrderEquals;
   });
 

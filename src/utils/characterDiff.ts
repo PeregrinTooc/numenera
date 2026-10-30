@@ -6,7 +6,7 @@ import type {
   EquipmentItem,
   Attack,
   SpecialAbility,
-} from "../types/character.js";
+} from "@/types/character";
 
 /**
  * Fine-grained, field-by-field diff between two character snapshots, for the

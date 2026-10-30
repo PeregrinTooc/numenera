@@ -1,6 +1,6 @@
-import type { CharacterVersion } from "../types/versionHistory.js";
-import type { VersionHistoryManager } from "../storage/versionHistory.js";
-import { sanitizeCharacter } from "../utils/unified-validation.js";
+import type { CharacterVersion } from "@/types/versionHistory";
+import type { VersionHistoryManager } from "@/storage/versionHistory";
+import { sanitizeCharacter } from "@/utils/unified-validation";
 import { describeCharacterChange } from "./versionDescriptions.js";
 
 // Pre-fix raw literal used by the old hardcoded "Updated character" fallback

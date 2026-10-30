@@ -17,13 +17,13 @@ import type {
   EquipmentItem,
   Attack,
   SpecialAbility,
-} from "../types/character.js";
+} from "@/types/character";
 import type {
   CharacterDiff,
   CollectionDiffEntry,
   CollectionItemStatus,
-} from "../utils/characterDiff.js";
-import { t } from "../i18n/index.js";
+} from "@/utils/characterDiff";
+import { t } from "@/i18n/index";
 
 function diffClass(status: CollectionItemStatus): string {
   switch (status) {

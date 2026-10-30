@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { generateETag } from "../../src/utils/etag";
+import { generateETag } from "@/utils/etag";
 
 describe("generateETag", () => {
   const baseCharacter = {

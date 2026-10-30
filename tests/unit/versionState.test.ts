@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { VersionState } from "../../src/services/versionState";
-import { VersionHistoryManager } from "../../src/storage/versionHistory";
-import { Character } from "../../src/types/character";
-import { CharacterVersion } from "../../src/types/versionHistory";
+import { VersionState } from "@/services/versionState";
+import { VersionHistoryManager } from "@/storage/versionHistory";
+import { Character } from "@/types/character";
+import { CharacterVersion } from "@/types/versionHistory";
 import { createTestCharacter } from "../factories/character.js";
 
 describe("VersionState", () => {

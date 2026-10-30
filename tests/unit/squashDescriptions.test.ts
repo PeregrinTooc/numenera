@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { squashDescriptions } from "../../src/utils/squashDescriptions.js";
+import { squashDescriptions } from "@/utils/squashDescriptions";
 
 describe("Squash Descriptions", () => {
   describe("Empty Input", () => {

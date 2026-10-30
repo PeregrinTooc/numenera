@@ -1,6 +1,6 @@
 // Unit tests for Abilities component - Add Ability Button
-import { Abilities } from "../../src/components/Abilities.js";
-import { Ability } from "../../src/types/character.js";
+import { Abilities } from "@/components/Abilities";
+import { Ability } from "@/types/character";
 import { testContainerAddButton } from "./helpers/containerTestSuite.js";
 
 // Use shared test suite for add button functionality

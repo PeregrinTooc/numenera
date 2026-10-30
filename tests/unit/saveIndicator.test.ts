@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { SaveIndicator } from "../../src/components/SaveIndicator.js";
+import { SaveIndicator } from "@/components/SaveIndicator";
 
 describe("SaveIndicator", () => {
   let indicator: SaveIndicator;

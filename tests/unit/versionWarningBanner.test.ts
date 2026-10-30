@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { VersionWarningBanner } from "../../src/components/VersionWarningBanner";
+import { VersionWarningBanner } from "@/components/VersionWarningBanner";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("VersionWarningBanner", () => {

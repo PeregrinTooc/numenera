@@ -3,7 +3,7 @@
  * Displays version metadata and provides a restore button to return to latest
  */
 
-import { t } from "../i18n/index.js";
+import { t } from "@/i18n/index";
 
 export interface VersionWarningBannerProps {
   description: string;

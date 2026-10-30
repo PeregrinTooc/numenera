@@ -1,16 +1,16 @@
 // CyphersBox component - Displays cyphers in a standalone section with max cyphers badge
 
 import { html, TemplateResult } from "lit-html";
-import { Character } from "../types/character.js";
+import { Character } from "@/types/character";
 import { CypherItem } from "./CypherItem.js";
-import { ModalService } from "../services/modalService.js";
-import { t } from "../i18n/index.js";
+import { ModalService } from "@/services/modalService";
+import { t } from "@/i18n/index";
 import {
   createAddHandler,
   createItemInstances,
   renderAddButton,
 } from "./helpers/CollectionBehavior.js";
-import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
+import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
 import { reorderArray, previewOrderEquals } from "./helpers/DragDropBehavior.js";
 
 type FieldType = "maxCyphers";

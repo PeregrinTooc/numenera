@@ -1,7 +1,7 @@
 import { Given, Then, type DataTable } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
-import type { Attack, SpecialAbility } from "../../../src/types/character.js";
-import { FULL_CHARACTER } from "../../../src/data/mockCharacters.js";
+import type { Attack, SpecialAbility } from "@/types/character";
+import { FULL_CHARACTER } from "@/data/mockCharacters";
 import type { CustomWorld } from "../support/world.js";
 import { intCell, propertyTable } from "../support/tableRows.js";
 

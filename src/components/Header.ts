@@ -1,7 +1,7 @@
 // Header component - Displays page header with Load/Clear buttons
 
 import { html, TemplateResult } from "lit-html";
-import { t } from "../i18n/index.js";
+import { t } from "@/i18n/index";
 import { SettingsGear } from "./SettingsGear.js";
 
 export class Header {

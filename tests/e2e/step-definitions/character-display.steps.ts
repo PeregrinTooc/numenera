@@ -2,7 +2,7 @@ import { Given, Then, type DataTable } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { waitForCharacterSheetReady, startNewCharacter } from "../support/app-ready.js";
 import type { CustomWorld } from "../support/world.js";
-import type { Character } from "../../../src/types/character.js";
+import type { Character } from "@/types/character";
 import { sectionId } from "../support/sections.js";
 import { RAW_I18N_KEY } from "../support/i18nKeys.js";
 import { intCell, lowerCaseHashes, propertyTable } from "../support/tableRows.js";

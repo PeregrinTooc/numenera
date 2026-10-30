@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from "vitest";
-import { isPhoneViewport } from "../../src/utils/viewport";
+import { isPhoneViewport } from "@/utils/viewport";
 
 describe("isPhoneViewport", () => {
   afterEach(() => {

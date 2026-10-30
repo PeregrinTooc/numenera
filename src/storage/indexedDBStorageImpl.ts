@@ -1,7 +1,7 @@
 import type { ICharacterStorage } from "./ICharacterStorage.js";
 import { STORAGE_KEY, CHARACTER_DB_NAME } from "./storageConstants.js";
-import { CompletionNotifier } from "../utils/completionNotifier.js";
-import type { Character } from "../types/character.js";
+import { CompletionNotifier } from "@/utils/completionNotifier";
+import type { Character } from "@/types/character";
 import { logger } from "@/utils/logger";
 
 const DB_NAME = CHARACTER_DB_NAME;

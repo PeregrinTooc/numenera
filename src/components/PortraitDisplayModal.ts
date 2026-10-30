@@ -1,8 +1,8 @@
 // PortraitDisplayModal component - Displays character portrait at full size
 
 import { html, TemplateResult } from "lit-html";
-import { t } from "../i18n/index.js";
-import { CompletionNotifier } from "../utils/completionNotifier.js";
+import { t } from "@/i18n/index";
+import { CompletionNotifier } from "@/utils/completionNotifier";
 
 export interface PortraitDisplayModalConfig {
   portraitSrc: string;

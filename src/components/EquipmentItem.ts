@@ -1,8 +1,8 @@
 // EquipmentItem component - Renders a single equipment item with green theme
 
 import { html, TemplateResult } from "lit-html";
-import { EquipmentItem as EquipmentItemType } from "../types/character.js";
-import { t } from "../i18n/index.js";
+import { EquipmentItem as EquipmentItemType } from "@/types/character";
+import { t } from "@/i18n/index";
 import { createEditHandler, renderCardButtons } from "./helpers/CardEditorBehavior.js";
 
 export class EquipmentItem {

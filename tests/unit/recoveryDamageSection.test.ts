@@ -1,11 +1,11 @@
 // Unit tests for RecoveryDamageSection component
 
 import { render } from "lit-html";
-import { RecoveryDamageSection } from "../../src/components/RecoveryDamageSection.js";
-import { Character } from "../../src/types/character.js";
+import { RecoveryDamageSection } from "@/components/RecoveryDamageSection";
+import { Character } from "@/types/character";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
-vi.mock("../../src/storage/storageFactory.js");
+vi.mock("@/storage/storageFactory");
 
 describe("RecoveryDamageSection", () => {
   const getContainer = setupTestContainer();
@@ -60,7 +60,7 @@ describe("RecoveryDamageSection", () => {
   });
 
   it("should update and persist the model when a recovery checkbox is ticked", async () => {
-    const { persistCharacterState } = await import("../../src/storage/storageFactory.js");
+    const { persistCharacterState } = await import("@/storage/storageFactory");
     vi.mocked(persistCharacterState).mockClear();
 
     const component = new RecoveryDamageSection(mockCharacter);
@@ -91,7 +91,7 @@ describe("RecoveryDamageSection", () => {
   });
 
   it("should update and persist the model when a damage status is selected", async () => {
-    const { persistCharacterState } = await import("../../src/storage/storageFactory.js");
+    const { persistCharacterState } = await import("@/storage/storageFactory");
     vi.mocked(persistCharacterState).mockClear();
 
     const component = new RecoveryDamageSection(mockCharacter);

@@ -1,8 +1,8 @@
 // Unified validation system for Numenera Character Sheet
 // Consolidates field validation, character validation, sanitization, and business rules
 
-import { Character } from "../types/character.js";
-import { t } from "../i18n/index.js";
+import { Character } from "@/types/character";
+import { t } from "@/i18n/index";
 
 // ============================================================================
 // VALIDATION RESULT TYPES

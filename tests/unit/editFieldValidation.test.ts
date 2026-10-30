@@ -5,7 +5,7 @@ import {
   validateName,
   validateDescriptor,
   validateFocus,
-} from "../../src/utils/unified-validation.js";
+} from "@/utils/unified-validation";
 
 // Tests
 describe("Tier Validation", () => {

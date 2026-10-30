@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { ItemsBox } from "../../src/components/ItemsBox";
-import type { Character } from "../../src/types/character";
+import { ItemsBox } from "@/components/ItemsBox";
+import type { Character } from "@/types/character";
 import { render } from "lit-html";
 import { setupTestContainer } from "./helpers/testSetup.js";
 

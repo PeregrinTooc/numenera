@@ -1,8 +1,8 @@
 // ArtifactItem component - Displays a single artifact card
 
 import { html, TemplateResult } from "lit-html";
-import { Artifact } from "../types/character.js";
-import { t } from "../i18n/index.js";
+import { Artifact } from "@/types/character";
+import { t } from "@/i18n/index";
 import { createEditHandler, renderCardButtons } from "./helpers/CardEditorBehavior.js";
 
 export class ArtifactItem {

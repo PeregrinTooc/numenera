@@ -1,17 +1,17 @@
 // Attacks component - Displays character attacks in grid
 
 import { html, TemplateResult } from "lit-html";
-import { Character } from "../types/character.js";
+import { Character } from "@/types/character";
 import { AttackItem } from "./AttackItem.js";
-import { ModalService } from "../services/modalService.js";
-import { t } from "../i18n/index.js";
+import { ModalService } from "@/services/modalService";
+import { t } from "@/i18n/index";
 import {
   createAddHandler,
   createItemInstances,
   renderAddButton,
 } from "./helpers/CollectionBehavior.js";
 import { reorderArray, previewOrderEquals } from "./helpers/DragDropBehavior.js";
-import { getVersionHistoryService } from "../services/versionHistoryServiceAccess.js";
+import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
 
 type FieldType = "armor";
 

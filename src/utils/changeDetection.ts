@@ -1,4 +1,4 @@
-import type { Character } from "../types/character.js";
+import type { Character } from "@/types/character";
 
 /**
  * Detects changes between two character versions and returns i18n key

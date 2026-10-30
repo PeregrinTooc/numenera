@@ -1,8 +1,8 @@
 // BottomTextFields component - Editable Background and Notes fields
 
 import { html, TemplateResult } from "lit-html";
-import { Character } from "../types/character.js";
-import { t } from "../i18n/index.js";
+import { Character } from "@/types/character";
+import { t } from "@/i18n/index";
 
 export class BottomTextFields {
   private editingField: "background" | "notes" | null = null;

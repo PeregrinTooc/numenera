@@ -1,5 +1,5 @@
-import type { Character } from "../types/character";
-import type { Layout } from "../types/layout";
+import type { Character } from "@/types/character";
+import type { Layout } from "@/types/layout";
 import { SCHEMA_VERSION, FILE_HANDLES_DB_NAME } from "./storageConstants";
 import { loadLayout } from "./layoutStorage";
 

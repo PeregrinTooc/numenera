@@ -8,10 +8,10 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { CharacterSheet } from "../../src/components/CharacterSheet.js";
-import { Layout } from "../../src/types/layout.js";
-import { loadLayout } from "../../src/storage/layoutStorage.js";
-import { LAYOUT_STORAGE_KEY } from "../../src/storage/storageConstants.js";
+import { CharacterSheet } from "@/components/CharacterSheet";
+import { Layout } from "@/types/layout";
+import { loadLayout } from "@/storage/layoutStorage";
+import { LAYOUT_STORAGE_KEY } from "@/storage/storageConstants";
 import { createTestCharacter as createMockCharacter } from "../factories/character.js";
 
 const REORDERED_LAYOUT: Layout = [

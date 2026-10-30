@@ -1,6 +1,6 @@
 // Unit tests for SpecialAbilityItem edit functionality
-import { SpecialAbilityItem } from "../../src/components/SpecialAbilityItem.js";
-import { SpecialAbility } from "../../src/types/character.js";
+import { SpecialAbilityItem } from "@/components/SpecialAbilityItem";
+import { SpecialAbility } from "@/types/character";
 import { testItemEditAndDelete } from "./helpers/itemTestSuite.js";
 
 const sampleAbility: SpecialAbility = {

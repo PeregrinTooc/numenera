@@ -1,6 +1,6 @@
 // Unit tests for Attacks component - Add Attack Button
-import { Attacks } from "../../src/components/Attacks.js";
-import { Attack } from "../../src/types/character.js";
+import { Attacks } from "@/components/Attacks";
+import { Attack } from "@/types/character";
 import { testContainerAddButton } from "./helpers/containerTestSuite.js";
 
 // Use shared test suite for add button functionality

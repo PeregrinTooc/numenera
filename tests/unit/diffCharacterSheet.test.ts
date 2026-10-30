@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render } from "lit-html";
-import { DiffCharacterSheet } from "../../src/components/DiffCharacterSheet";
-import { diffCharacters } from "../../src/utils/characterDiff";
+import { DiffCharacterSheet } from "@/components/DiffCharacterSheet";
+import { diffCharacters } from "@/utils/characterDiff";
 import { createTestCharacter as createBaseCharacter } from "../factories/character.js";
 import { setupTestContainer } from "./helpers/testSetup.js";
 

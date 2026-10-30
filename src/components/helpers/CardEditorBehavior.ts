@@ -2,9 +2,9 @@
 // Provides common edit handler and button rendering for all item components
 
 import { html, TemplateResult } from "lit-html";
-import { openCardEditModal } from "../CardEditModal.js";
-import { t } from "../../i18n/index.js";
-import type { VersionHistoryService } from "../../services/versionHistoryService.js";
+import { openCardEditModal } from "@/components/CardEditModal";
+import { t } from "@/i18n/index";
+import type { VersionHistoryService } from "@/services/versionHistoryService";
 
 /**
  * Configuration for card editor behavior

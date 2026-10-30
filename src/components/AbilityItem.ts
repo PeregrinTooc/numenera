@@ -1,9 +1,9 @@
 // AbilityItem component - Individual ability card with cost, pool, and action information
 
 import { html, TemplateResult } from "lit-html";
-import { Ability } from "../types/character.js";
-import { t } from "../i18n/index.js";
-import { sanitizeForTestId } from "../utils/testHelpers.js";
+import { Ability } from "@/types/character";
+import { t } from "@/i18n/index";
+import { sanitizeForTestId } from "@/utils/testHelpers";
 import { createEditHandler, renderCardButtons } from "./helpers/CardEditorBehavior.js";
 
 export class AbilityItem {
