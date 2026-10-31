@@ -44,55 +44,54 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ## 🚨 Must-Have (Technical Debt)
 
-None.
+### Remaining English text (found while translating labels, 2026-10-31)
+
+Left out of `fix(i18n): translate hardcoded labels and text` because each needs a
+decision first:
+
+- **Version-history descriptions are stored as English data.** `"Initial state"`
+  (`src/app/bootstrap.ts`), `"Imported character"` (`src/app/fileActions.ts`),
+  the `"Changed name"`-style strings in `characterFieldUpdate.ts`, and
+  `LEGACY_DESCRIPTION = "Updated character"` in
+  `src/services/versionDescriptionMigration.ts`. `versionHistory.*` description
+  keys already exist in both locales. Translating these means storing a key (or
+  translating at render time) and migrating versions already saved.
+- **File-picker type label.** `"Numenera Character Files"` in
+  `src/storage/exportManager.ts` and `src/storage/fileStorage.ts` shows in the
+  OS open/save dialog. It's user-visible, so it probably belongs in `t()`.
+- **English text nobody renders.** `SECTION_DISPLAY_NAMES` in
+  `src/types/layout.ts` is only used as the key set behind `isSectionId` (the UI
+  uses `layout.sections.*`), and the `errors.push(...)` strings in
+  `characterValidation.ts` are never shown. Replace them with a plain id list
+  and drop or key the strings rather than translating dead text.
+- **German game terms to confirm.** `de.json` keeps "Cypher", "Edge", "Pool"
+  and "Shins". The new keys use "EINMALIG" (ONE-USE) and "Deskriptor". Decide
+  whether to use the German rulebook's terms (e.g. "Chiffre", "Vorteil")
+  consistently instead.
 
 ---
 
 ## 📋 Feature Backlog
 
-### Grid Merge/Split & Import-Layout Conflict Prompt
+### Import-Layout Conflict Prompt
 
 **Overview**  
-`CharacterSheet.mergeSections()`, `splitGrid()`, `updateLayout()` and `getLayout()`
-(thin wrappers over the pure functions in `src/utils/layoutOperations.ts`, which
-are unit-tested) have zero callers — `SectionDragController` only ever asks the
-sheet to reorder. Separately, `fileStorage.ts` already computes
-`layout` and a `hasLayoutDifference` flag on import, but `main.ts`'s
-`handleLoadFromFile` reads only `character` and `warnings`, so the imported
-layout is dropped. Decided: build this rather than delete the dead code — see
-`docs/IMPLEMENTATION_PLAN.md` §3.1 (the original review, `PROJECT_REVIEW.md`
-§2.7, was removed in `ad0f8b5` and is in git history).
+`fileStorage.ts` already computes `layout` and a `hasLayoutDifference` flag on
+import, but `handleLoadFromFile` in `src/app/fileActions.ts` reads only
+`character` and `warnings`, so the imported layout is dropped. Split out of
+"Grid Merge/Split & Import-Layout Conflict Prompt"; the drag half is in
+`CURRENT_FEATURE.md`. Needs its own design before building.
 
 **Goals**
 
-- Let users create a new side-by-side grid pairing by dragging one section onto
-  another (needs drop-position disambiguation in `handleDrop`/`handleDragOver`:
-  centre of target = merge, edge = reorder, plus matching drop-zone CSS)
-- Let users split an existing grid pairing back into two single-column sections
-  by dragging one out of it
 - Warn on import when the imported file's layout differs from the current one,
   offering "Keep current layout" / "Use imported layout" via a new prompt,
   wired to the existing `hasLayoutDifference` flag
 
-**Implementation notes**
-
-- The four `CharacterSheet` methods above already exist and persist correctly
-  once called — the missing piece is gesture wiring and the import prompt
-  component, not the underlying layout logic.
-- Section drags are automatable: use `dragSectionTo` (mouse) or `TouchGesture`
-  inside `withFullHeightViewport` (touch) from `tests/e2e/support/sections.ts`.
-  `locator.dragTo()` fails when it has to scroll mid-drag — see
-  `docs/superpowers/specs/2026-09-26-section-dnd-e2e-design.md`.
-
 **E2E Tests**
 
 - File: `tests/e2e/features/section-rearrangement.feature` (scenarios already
-  written, currently `@skip`ped). Note: the step
-  `the sections should remain in single-column layout` is a no-op (empty body) that this feature must
-  implement when un-skipping the scenarios.
-  - Merge sections into grid by dragging onto another section
-  - Cannot merge non-eligible sections into grid
-  - Split sections from grid by dragging out
+  written, currently `@skip`ped)
   - Import with different layout shows prompt
   - Keep existing layout on import
   - Use imported layout on import
