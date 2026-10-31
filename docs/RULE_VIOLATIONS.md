@@ -41,7 +41,7 @@ editing the rule to match the code.
 
 ## Open
 
-Re-measured on `main` after step 12 (2026-10-31).
+Re-measured on `main` after step 14 (2026-10-31).
 
 ### 3. Code quality — files over 300 lines
 
@@ -50,20 +50,15 @@ does not (see `code-quality.md`).
 
 **`src/` — 0 files**
 
-**`tests/` — 13 files**
+**`tests/` — 8 files**
 
 | File                                                            | Lines |
 | --------------------------------------------------------------- | ----- |
 | `tests/e2e/step-definitions/version-history.steps.ts`           | 1221  |
 | `tests/e2e/step-definitions/card-creation.steps.ts`             | 645   |
 | `tests/e2e/features/card-creation.feature`                      | 581   |
-| `tests/unit/exportManager.test.ts`                              | 534   |
-| `tests/unit/editFieldModal.test.ts`                             | 477   |
 | `tests/e2e/features/version-history.feature`                    | 474   |
-| `tests/unit/indexedDBStorageImpl.test.ts`                       | 428   |
 | `tests/e2e/step-definitions/version-comparison.steps.ts`        | 415   |
-| `tests/unit/changeDetection.test.ts`                            | 407   |
-| `tests/unit/basicInfo.test.ts`                                  | 386   |
 | `tests/e2e/step-definitions/basic-info-editing.steps.ts`        | 376   |
 | `tests/e2e/step-definitions/additional-fields-editing.steps.ts` | 349   |
 | `tests/e2e/step-definitions/card-reordering.steps.ts`           | 334   |
@@ -91,7 +86,7 @@ need no feature file; steps 8 and 9 change behaviour and start with a scenario.
 | 11                                  | ~~Split `CollectionBehavior`, `ItemsBox`, `DiffCharacterSheet` and their tests (#3)~~ done                                          | refactor                                                                                                                                                                                                                       |
 | 12                                  | ~~Split `versionHistoryService`, `conflictDetectionService`, `CharacterSheet` and their tests (#3)~~ done                           | refactor                                                                                                                                                                                                                       |
 | 13                                  | ~~Split `main.ts` (#3)~~ done; the remaining oversized test files continue in steps 14 and 15                                       | refactor                                                                                                                                                                                                                       |
-| 14                                  | Split the remaining oversized unit test files (#3)                                                                                  | refactor                                                                                                                                                                                                                       |
+| 14                                  | ~~Split the remaining oversized unit test files (#3)~~ done                                                                         | refactor                                                                                                                                                                                                                       |
 | 15                                  | Split the remaining oversized step definitions and feature files (#3)                                                               | refactor                                                                                                                                                                                                                       |
 | Test architecture � E2E import path | No E2E scenario ran the sanitizer: `setMockFileImporter` replaced the importer, and the other import step wrote straight to storage | import steps feed the raw file through the real `<input type="file">` chooser (`tests/e2e/support/fileImport.ts`); the `__testFileImporter` seam and `IFileImporter` are gone; "Imported oddities are kept" guards review �2.3 |
 

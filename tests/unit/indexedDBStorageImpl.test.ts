@@ -1,74 +1,14 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { IndexedDBStorageImpl } from "@/storage/indexedDBStorageImpl";
-import { STORAGE_KEY } from "@/storage/storageConstants";
 import type { Character } from "@/types/character";
-import { createTestCharacter } from "../factories/character";
-
-// Mock character data
-const mockCharacter = createTestCharacter({
-  name: "Test Character",
-  descriptor: "Clever",
-  type: "Jack",
-  focus: "Battles Robots",
-  tier: 3,
-  effort: 3,
-  currentXp: 5,
-  totalXp: 5,
-});
-
-const oldVersionedFormat = {
-  version: 1,
-  data: mockCharacter,
-};
-
-const TEST_AVAILABILITY_TIMEOUT_MS = 50;
-
-/**
- * Private members the failure-path tests swap out to simulate a broken
- * database. A structural view of the class, not `any`.
- */
-interface StorageInternals {
-  db: IDBDatabase | null;
-  saveInternal: (character: Character) => Promise<void>;
-}
-
-function internalsOf(storage: IndexedDBStorageImpl): StorageInternals {
-  return storage as unknown as StorageInternals;
-}
-
-/** Swaps in a database without the object store; returns a function that restores the real one. */
-function replaceDbWithoutObjectStore(storage: IndexedDBStorageImpl): () => void {
-  const internals = internalsOf(storage);
-  const originalDb = internals.db;
-  internals.db = {
-    objectStoreNames: { contains: () => false },
-  } as unknown as IDBDatabase;
-  return () => {
-    internals.db = originalDb;
-  };
-}
+import { mockCharacter, setupIndexedDBStorage } from "./helpers/indexedDBStorageFixture";
 
 describe("IndexedDBStorageImpl", () => {
-  let storage: IndexedDBStorageImpl;
-
-  beforeEach(async () => {
-    localStorage.clear();
-    storage = new IndexedDBStorageImpl(TEST_AVAILABILITY_TIMEOUT_MS);
-    await storage.init();
-    // Clear any existing data from previous tests
-    await storage.clear();
-  });
-
-  afterEach(() => {
-    if (storage) {
-      storage.close();
-    }
-    localStorage.clear();
-  });
+  const ctx = setupIndexedDBStorage();
 
   describe("isAvailable", () => {
     it("should return true when IndexedDB is available", async () => {
-      const result = await storage.isAvailable();
+      const result = await ctx.storage.isAvailable();
       expect(result).toBe(true);
     });
 
@@ -77,7 +17,7 @@ describe("IndexedDBStorageImpl", () => {
         .spyOn(indexedDB, "open")
         .mockReturnValue({} as unknown as IDBOpenDBRequest);
 
-      const result = await storage.isAvailable();
+      const result = await ctx.storage.isAvailable();
 
       expect(result).toBe(false);
       openSpy.mockRestore();
@@ -88,7 +28,7 @@ describe("IndexedDBStorageImpl", () => {
       // @ts-expect-error - Testing undefined scenario
       delete global.indexedDB;
 
-      const result = await storage.isAvailable();
+      const result = await ctx.storage.isAvailable();
       expect(result).toBe(false);
 
       // Restore
@@ -98,42 +38,42 @@ describe("IndexedDBStorageImpl", () => {
 
   describe("init", () => {
     it("should initialize IndexedDB successfully", async () => {
-      await expect(storage.init()).resolves.toBeUndefined();
+      await expect(ctx.storage.init()).resolves.toBeUndefined();
     });
 
     it("should create the object store on first initialization", async () => {
-      await storage.init();
+      await ctx.storage.init();
       // Verify by checking if we can perform operations
-      await expect(storage.save(mockCharacter)).resolves.toBeUndefined();
+      await expect(ctx.storage.save(mockCharacter)).resolves.toBeUndefined();
     });
   });
 
   describe("save and load", () => {
     it("should save and load character data", async () => {
-      await storage.save(mockCharacter);
-      const loaded = (await storage.load()) as Character;
+      await ctx.storage.save(mockCharacter);
+      const loaded = (await ctx.storage.load()) as Character;
       expect(loaded).toEqual(mockCharacter);
     });
 
     it("should request an explicit commit so a save issued during unload is not left pending", async () => {
       const commitSpy = vi.spyOn(globalThis.IDBTransaction.prototype, "commit");
 
-      await storage.save(mockCharacter);
+      await ctx.storage.save(mockCharacter);
 
       expect(commitSpy).toHaveBeenCalled();
       commitSpy.mockRestore();
     });
 
     it("should return null when no data is stored", async () => {
-      const loaded = (await storage.load()) as Character;
+      const loaded = (await ctx.storage.load()) as Character;
       expect(loaded).toBeNull();
     });
 
     it("should overwrite existing data when saving", async () => {
-      await storage.save(mockCharacter);
+      await ctx.storage.save(mockCharacter);
       const updatedCharacter = { ...mockCharacter, name: "Updated Character" };
-      await storage.save(updatedCharacter);
-      const loaded = (await storage.load()) as Character;
+      await ctx.storage.save(updatedCharacter);
+      const loaded = (await ctx.storage.load()) as Character;
       expect(loaded).toEqual(updatedCharacter);
       expect(loaded.name).toBe("Updated Character");
     });
@@ -153,276 +93,19 @@ describe("IndexedDBStorageImpl", () => {
 
   describe("clear", () => {
     it("should clear stored character data", async () => {
-      await storage.save(mockCharacter);
-      await storage.clear();
-      const loaded = (await storage.load()) as Character;
+      await ctx.storage.save(mockCharacter);
+      await ctx.storage.clear();
+      const loaded = (await ctx.storage.load()) as Character;
       expect(loaded).toBeNull();
     });
 
     it("should handle clearing when no data exists", async () => {
-      await expect(storage.clear()).resolves.toBeUndefined();
+      await expect(ctx.storage.clear()).resolves.toBeUndefined();
     });
 
     it("should throw error when clearing without initialization", async () => {
       const uninitializedStorage = new IndexedDBStorageImpl();
       await expect(uninitializedStorage.clear()).rejects.toThrow("IndexedDB not initialized");
-    });
-  });
-
-  describe("migrateFromLocalStorage", () => {
-    it("should not overwrite an existing IndexedDB record with stale localStorage data", async () => {
-      // Setup: IndexedDB already holds the authoritative character...
-      await storage.save({ ...mockCharacter, currentXp: 50 });
-      // ...while a stale copy lingers in localStorage from an earlier session.
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...mockCharacter, currentXp: 5 }));
-
-      // Execute migration, as happens on every page load
-      await storage.migrateFromLocalStorage();
-
-      // Verify: the newer IndexedDB record wins
-      const loaded = (await storage.load()) as Character;
-      expect(loaded.currentXp).toBe(50);
-
-      // Verify: the stale copy is cleared so it cannot resurface
-      expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
-    });
-
-    it("should migrate data from localStorage to IndexedDB (new format)", async () => {
-      // Setup: Store data in localStorage (new raw format)
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(mockCharacter));
-
-      // Execute migration
-      await storage.migrateFromLocalStorage();
-
-      // Verify: Data should be in IndexedDB
-      const loaded = (await storage.load()) as Character;
-      expect(loaded).toEqual(mockCharacter);
-
-      // Verify: Data should be removed from localStorage
-      expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
-    });
-
-    it("should migrate data from localStorage to IndexedDB (old versioned format)", async () => {
-      // Setup: Store data in localStorage (old versioned format)
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(oldVersionedFormat));
-
-      // Spy on console.info to verify migration message (logger.info, dev builds)
-      const consoleLogSpy = vi.spyOn(console, "info");
-
-      // Execute migration
-      await storage.migrateFromLocalStorage();
-
-      // Verify: Data should be in IndexedDB (unwrapped from versioned format)
-      const loaded = (await storage.load()) as Character;
-      expect(loaded).toEqual(mockCharacter);
-
-      // Verify: Migration message was logged
-      expect(consoleLogSpy).toHaveBeenCalledWith(
-        "Migrating from old versioned format to IndexedDB"
-      );
-
-      // Verify: Data should be removed from localStorage
-      expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
-
-      // Verify: Success message was logged
-      expect(consoleLogSpy).toHaveBeenCalledWith(
-        "Successfully migrated character data from localStorage to IndexedDB"
-      );
-
-      consoleLogSpy.mockRestore();
-    });
-
-    it("should handle migration when localStorage is empty", async () => {
-      // Execute migration with no localStorage data
-      await expect(storage.migrateFromLocalStorage()).resolves.toBeUndefined();
-
-      // Verify: No data in IndexedDB
-      const loaded = (await storage.load()) as Character;
-      expect(loaded).toBeNull();
-    });
-
-    it("should handle corrupted localStorage data gracefully", async () => {
-      // Setup: Store corrupted data in localStorage
-      localStorage.setItem(STORAGE_KEY, "invalid json{");
-
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
-      // Execute migration - should not throw
-      await expect(storage.migrateFromLocalStorage()).resolves.toBeUndefined();
-
-      // Verify: Error was logged
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Failed to parse localStorage data during migration:",
-        expect.any(Error)
-      );
-
-      // Verify: No data in IndexedDB (migration skipped)
-      const loaded = (await storage.load()) as Character;
-      expect(loaded).toBeNull();
-
-      // Verify: Corrupted data remains in localStorage (not removed since migration failed)
-      expect(localStorage.getItem(STORAGE_KEY)).toBe("invalid json{");
-
-      consoleErrorSpy.mockRestore();
-    });
-
-    it("should not fail the app if migration fails", async () => {
-      // Setup: Valid data in localStorage
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(mockCharacter));
-
-      // Mock IndexedDB saveInternal to fail
-      const internals = internalsOf(storage);
-      const originalSaveInternal = internals.saveInternal.bind(storage);
-      internals.saveInternal = vi.fn().mockRejectedValue(new Error("Save failed"));
-
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
-      // Execute migration - should not throw despite save failure
-      await expect(storage.migrateFromLocalStorage()).resolves.toBeUndefined();
-
-      // Verify: Error was logged
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Failed to migrate from localStorage:",
-        expect.any(Error)
-      );
-
-      // Restore
-      internals.saveInternal = originalSaveInternal;
-      consoleErrorSpy.mockRestore();
-    });
-
-    it("should handle migration when IndexedDB already has data", async () => {
-      // Setup: Data in both localStorage and IndexedDB
-      const existingCharacter = { ...mockCharacter, name: "Existing in IndexedDB" };
-      await storage.save(existingCharacter);
-
-      const localStorageCharacter = { ...mockCharacter, name: "From localStorage" };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(localStorageCharacter));
-
-      // Execute migration
-      await storage.migrateFromLocalStorage();
-
-      // Verify: IndexedDB is authoritative once populated. This assertion was
-      // previously inverted — it expected localStorage to win, which is the
-      // data-loss path: migration runs on every page load, so a stale
-      // localStorage entry would silently revert newer IndexedDB data.
-      const loaded = (await storage.load()) as Character;
-      expect(loaded.name).toBe("Existing in IndexedDB");
-
-      // Verify: localStorage data should be removed
-      expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
-    });
-  });
-
-  describe("edge cases", () => {
-    it("should handle saving complex nested objects", async () => {
-      const complexCharacter = {
-        ...mockCharacter,
-        attacks: [
-          { name: "Sword", damage: 5, modifier: 2, range: "Immediate" },
-          { name: "Crossbow", damage: 4, modifier: 1, range: "Long" },
-        ],
-        cyphers: [
-          { name: "Cypher 1", level: "3", effect: "Effect 1" },
-          { name: "Cypher 2", level: "5", effect: "Effect 2" },
-        ],
-      };
-
-      await storage.save(complexCharacter);
-      const loaded = (await storage.load()) as Character;
-      expect(loaded).toEqual(complexCharacter);
-    });
-
-    it("should handle saving null values in character data", async () => {
-      const characterWithNulls = {
-        ...mockCharacter,
-        optionalField: null,
-      };
-
-      await storage.save(characterWithNulls);
-      const loaded = (await storage.load()) as Character;
-      expect(loaded).toEqual(characterWithNulls);
-    });
-
-    it("should handle multiple rapid save operations", async () => {
-      const promises = [];
-      for (let i = 0; i < 10; i++) {
-        const char = { ...mockCharacter, name: `Character ${i}` };
-        promises.push(storage.save(char));
-      }
-
-      await Promise.all(promises);
-
-      // Last save should win
-      const loaded = (await storage.load()) as Character;
-      expect(loaded.name).toMatch(/Character \d/);
-    });
-  });
-
-  describe("object store validation", () => {
-    it("should skip migration gracefully when object store does not exist", async () => {
-      // Setup: Store data in localStorage
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(mockCharacter));
-
-      // Create a mock that simulates missing object store
-      const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
-      // Mock objectStoreNames to not contain the store
-      const restoreDb = replaceDbWithoutObjectStore(storage);
-
-      // Execute migration - should skip gracefully, not throw
-      await expect(storage.migrateFromLocalStorage()).resolves.toBeUndefined();
-
-      // Verify: Warning was logged
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        "IndexedDB not ready for migration, skipping localStorage migration"
-      );
-
-      // Verify: localStorage data was NOT removed (migration was skipped)
-      expect(localStorage.getItem(STORAGE_KEY)).not.toBeNull();
-
-      // Restore
-      restoreDb();
-      consoleWarnSpy.mockRestore();
-    });
-
-    it("should throw when save is called and object store does not exist", async () => {
-      // Mock objectStoreNames to not contain the store
-      const restoreDb = replaceDbWithoutObjectStore(storage);
-
-      // Execute - should throw error for save
-      await expect(storage.save(mockCharacter)).rejects.toThrow(
-        "Object store 'characters' not found in database"
-      );
-
-      // Restore
-      restoreDb();
-    });
-
-    it("should throw when load is called and object store does not exist", async () => {
-      // Mock objectStoreNames to not contain the store
-      const restoreDb = replaceDbWithoutObjectStore(storage);
-
-      // Execute - should throw error for load
-      await expect(storage.load()).rejects.toThrow(
-        "Object store 'characters' not found in database"
-      );
-
-      // Restore
-      restoreDb();
-    });
-
-    it("should throw when clear is called and object store does not exist", async () => {
-      // Mock objectStoreNames to not contain the store
-      const restoreDb = replaceDbWithoutObjectStore(storage);
-
-      // Execute - should throw error for clear
-      await expect(storage.clear()).rejects.toThrow(
-        "Object store 'characters' not found in database"
-      );
-
-      // Restore
-      restoreDb();
     });
   });
 });
