@@ -29,6 +29,12 @@ export const SCHEMA_VERSION = "1.0.0";
 export const STORAGE_KEY = "numenera-character-state";
 
 /**
+ * localStorage key for the copy of an unreadable character (localStorage fallback only;
+ * IndexedDB keeps its copy as a second record in the character store).
+ */
+export const UNREADABLE_BACKUP_STORAGE_KEY = "numenera-character-unreadable-backup";
+
+/**
  * localStorage key for layout preferences
  * Stored separately from character data as it's a user preference
  */

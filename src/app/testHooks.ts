@@ -3,6 +3,7 @@ import {
   loadCharacterState,
   clearCharacterState,
   getVersionHistory,
+  loadCorruptedCharacterBackup,
 } from "@/storage/storageFactory";
 import type { AppContext } from "./appContext";
 import type { Character } from "@/types/character";
@@ -20,6 +21,7 @@ declare global {
       saveCharacterState: typeof saveCharacterState;
       loadCharacterState: typeof loadCharacterState;
       clearCharacterState: () => Promise<void>;
+      loadCorruptedCharacterBackup: typeof loadCorruptedCharacterBackup;
     };
     __testVersionHistory?: {
       createVersion: (character: Character, description: string) => Promise<void>;
@@ -40,6 +42,7 @@ export function installTestHooks(ctx: AppContext): void {
   window.__testStorage = {
     saveCharacterState,
     loadCharacterState,
+    loadCorruptedCharacterBackup,
     clearCharacterState: async () => {
       localStorage.clear();
       // Go through the real adapter rather than deleting a database by name:

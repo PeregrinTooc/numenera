@@ -43,6 +43,18 @@ export interface ICharacterStorage {
   clear(): Promise<void>;
 
   /**
+   * Keep a copy of stored data the app could not read, exactly as it was stored
+   * (a string for text that is not valid JSON). Only the latest copy is kept.
+   */
+  saveCorruptedBackup(raw: unknown): Promise<void>;
+
+  /** @returns The kept unreadable data, or null if there is none */
+  loadCorruptedBackup(): Promise<unknown>;
+
+  /** Remove the kept unreadable data (the user downloaded or discarded it) */
+  clearCorruptedBackup(): Promise<void>;
+
+  /**
    * Check if this storage mechanism is available
    *
    * @returns true if storage is available and functional

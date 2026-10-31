@@ -368,6 +368,13 @@
       "resourcesHeading": "Resources"
     }
   },
+  "unreadableCharacter": {
+    "title": "Saved character could not be read",
+    "message": "Your saved character could not be read, so a default character was loaded. A copy of the unreadable data was kept.",
+    "download": "Download",
+    "discard": "Discard",
+    "later": "Ask me later"
+  },
   "conflict": {
     "title": "Version Conflict Detected",
     "message": "Another tab has saved changes to this character while you were editing. Your unsaved changes may be lost.",

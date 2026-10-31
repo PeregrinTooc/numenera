@@ -1,15 +1,27 @@
 import {
   loadCharacterState,
-  clearCharacterState,
+  loadRawCharacterState,
+  saveCharacterState,
+  saveCorruptedCharacterBackup,
+  loadCorruptedCharacterBackup,
+  deleteCorruptedCharacterBackup,
   getVersionHistory,
 } from "@/storage/storageFactory";
+import { ModalService } from "@/services/modalService";
+import { downloadTextFile } from "@/utils/downloadFile";
+import { logger } from "@/utils/logger";
+import { sanitizeCharacter } from "@/utils/characterSanitizer";
+import {
+  isUnreadableCharacter,
+  keepUnreadableCharacter,
+  offerUnreadableBackup,
+} from "./unreadableCharacter";
 import { VersionState } from "@/services/versionState";
 import { VersionHistoryService } from "@/services/versionHistoryService";
 import { ConflictDetectionService } from "@/services/conflictDetectionService";
 import { ConflictWarningModal } from "@/components/ConflictWarningModal";
 import { FULL_CHARACTER } from "@/data/mockCharacters";
 import { initI18n, onLanguageChanged } from "@/i18n/index";
-import { isCompleteCharacter } from "@/utils/typeGuards";
 import { migrateLegacyVersionDescriptions } from "@/services/versionDescriptionMigration";
 import { reconcileVersionHistory } from "@/services/versionHistoryReconciliation";
 import { registerAppEventListeners } from "./appEvents";
@@ -88,19 +100,22 @@ export async function bootstrap(ctx: AppContext): Promise<void> {
     }
   });
 
-  // Priority: localStorage > default
-  const storedCharacter = await loadCharacterState();
+  // Priority: stored character > default
+  const rawStored = await loadRawCharacterState();
 
-  // Select and render initial character data
-  // Validate that stored character has required structure
-  let initialCharacter = FULL_CHARACTER;
-  if (isCompleteCharacter(storedCharacter)) {
-    initialCharacter = storedCharacter;
-  } else if (storedCharacter) {
-    console.warn("Stored character data is incomplete or corrupted, using default character");
-    // Clear the corrupted data
-    await clearCharacterState();
+  // Unreadable data is copied to a backup before the default character takes over;
+  // it is never deleted here.
+  let storedCharacter: Character | null = null;
+  if (isUnreadableCharacter(rawStored)) {
+    await keepUnreadableCharacter(rawStored, {
+      saveBackup: saveCorruptedCharacterBackup,
+      persistDefault: () => saveCharacterState(FULL_CHARACTER),
+      warn: (message, detail) => logger.warn(message, detail),
+    });
+  } else if (rawStored) {
+    storedCharacter = sanitizeCharacter(rawStored).character;
   }
+  const initialCharacter = storedCharacter ?? FULL_CHARACTER;
 
   // Register the app-level event listeners once, before the first render
   const appElement = document.getElementById("app");
@@ -110,6 +125,15 @@ export async function bootstrap(ctx: AppContext): Promise<void> {
 
   // Render the initial character sheet
   await ctx.actions.renderCharacterSheet(initialCharacter);
+
+  // While a kept copy of unreadable data exists, ask what to do with it on every load
+  await offerUnreadableBackup({
+    loadBackup: loadCorruptedCharacterBackup,
+    deleteBackup: deleteCorruptedCharacterBackup,
+    download: (filename, content) => downloadTextFile(filename, content, "application/json"),
+    showChoice: (handlers) => ModalService.openUnreadableCharacterModal(handlers),
+    now: () => new Date(),
+  });
 
   // Save the initial state as Version 1
   const versionHistory = await getVersionHistory();

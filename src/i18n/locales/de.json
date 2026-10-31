@@ -368,6 +368,13 @@
       "resourcesHeading": "Ressourcen"
     }
   },
+  "unreadableCharacter": {
+    "title": "Gespeicherter Charakter nicht lesbar",
+    "message": "Dein gespeicherter Charakter konnte nicht gelesen werden, deshalb wurde ein Standardcharakter geladen. Eine Kopie der unlesbaren Daten wurde aufbewahrt.",
+    "download": "Herunterladen",
+    "discard": "Verwerfen",
+    "later": "Später erinnern"
+  },
   "conflict": {
     "title": "Versionskonflikt erkannt",
     "message": "Ein anderer Tab hat Änderungen an diesem Charakter gespeichert, während Sie bearbeitet haben. Ihre ungespeicherten Änderungen könnten verloren gehen.",

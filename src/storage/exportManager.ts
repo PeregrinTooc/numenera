@@ -1,3 +1,4 @@
+import { downloadTextFile } from "@/utils/downloadFile";
 import type { Character } from "@/types/character";
 import { SCHEMA_VERSION } from "./storageConstants";
 import type { CharacterFileData } from "./fileStorage";
@@ -169,19 +170,7 @@ export class ExportManager {
     const filename = this.generateFilename(character);
     const fileData = this.createFileData(character);
     const json = JSON.stringify(fileData, null, 2);
-    const blob = new Blob([json], { type: "application/json" });
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    // Revoke on the next tick, not synchronously - Firefox needs the object
-    // URL to still be valid when it starts the download after click().
-    setTimeout(() => URL.revokeObjectURL(url), 0);
+    downloadTextFile(filename, json, "application/json");
   }
 
   private createFileData(character: Character): CharacterFileData {

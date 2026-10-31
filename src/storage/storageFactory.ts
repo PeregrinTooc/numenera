@@ -136,12 +136,38 @@ export function persistCharacterState(character: Character): void {
  * @returns The stored character object, or null if not found
  */
 export async function loadCharacterState(): Promise<Character | null> {
-  const storage = await getStorage();
-  const raw = await storage.load();
+  const raw = await loadRawCharacterState();
   if (!raw) {
     return null;
   }
   return sanitizeCharacter(raw).character;
+}
+
+/**
+ * Load the stored data exactly as stored (untrusted, may not be a character).
+ * Used by boot to keep unreadable data instead of sanitizing it away.
+ */
+export async function loadRawCharacterState(): Promise<unknown> {
+  const storage = await getStorage();
+  return storage.load();
+}
+
+/** Keep a copy of unreadable stored data; a later copy replaces an earlier one. */
+export async function saveCorruptedCharacterBackup(raw: unknown): Promise<void> {
+  const storage = await getStorage();
+  await storage.saveCorruptedBackup(raw);
+}
+
+/** @returns The kept unreadable data exactly as stored, or null if there is none */
+export async function loadCorruptedCharacterBackup(): Promise<unknown> {
+  const storage = await getStorage();
+  return storage.loadCorruptedBackup();
+}
+
+/** Remove the kept unreadable data once the user has downloaded or discarded it. */
+export async function deleteCorruptedCharacterBackup(): Promise<void> {
+  const storage = await getStorage();
+  await storage.clearCorruptedBackup();
 }
 
 /**

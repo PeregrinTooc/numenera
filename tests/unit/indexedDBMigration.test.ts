@@ -83,7 +83,7 @@ describe("IndexedDBStorageImpl", () => {
       expect(loaded).toBeNull();
     });
 
-    it("should handle corrupted localStorage data gracefully", async () => {
+    it("should keep unparseable localStorage text as the stored value instead of dropping it", async () => {
       // Setup: Store corrupted data in localStorage
       localStorage.setItem(STORAGE_KEY, "invalid json{");
 
@@ -98,12 +98,10 @@ describe("IndexedDBStorageImpl", () => {
         expect.any(Error)
       );
 
-      // Verify: No data in IndexedDB (migration skipped)
-      const loaded = (await ctx.storage.load()) as Character;
-      expect(loaded).toBeNull();
-
-      // Verify: Corrupted data remains in localStorage (not removed since migration failed)
-      expect(localStorage.getItem(STORAGE_KEY)).toBe("invalid json{");
+      // Verify: the raw text is adopted as-is so the app can back it up (a later load would
+      // otherwise discard the stale localStorage copy and lose it)
+      expect(await ctx.storage.load()).toBe("invalid json{");
+      expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
 
       consoleErrorSpy.mockRestore();
     });

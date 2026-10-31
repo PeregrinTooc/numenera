@@ -27,6 +27,7 @@
 @import "./components/card-edit-modal.css";
 @import "./components/portrait-display-modal.css";
 @import "./components/conflict-modal.css";
+@import "./components/unreadable-modal.css";
 @import "./components/settings-gear.css";
 @import "./components/layout-editor.css";
 @import "./components/compare-view.css";

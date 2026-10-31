@@ -2,7 +2,7 @@
 // Wraps browser localStorage with async interface for consistency
 
 import { ICharacterStorage } from "./ICharacterStorage.js";
-import { STORAGE_KEY } from "./storageConstants.js";
+import { STORAGE_KEY, UNREADABLE_BACKUP_STORAGE_KEY } from "./storageConstants.js";
 import { CompletionNotifier } from "@/utils/completionNotifier";
 import { logger } from "@/utils/logger";
 import { isRecord } from "@/utils/typeGuards";
@@ -57,7 +57,15 @@ export class LocalStorageImpl implements ICharacterStorage {
         return null;
       }
 
-      const data: unknown = JSON.parse(stored);
+      let data: unknown;
+      try {
+        data = JSON.parse(stored);
+      } catch (error) {
+        // Hand the text back untouched so the app can keep it as a backup; never delete it.
+        console.error("Stored character is not valid JSON:", error);
+        notifier.complete({ source: "localStorage", found: true, unreadable: true });
+        return stored;
+      }
 
       // Migration: Check if data has old schema version wrapper
       if (isVersionedWrapper(data)) {
@@ -75,10 +83,24 @@ export class LocalStorageImpl implements ICharacterStorage {
     } catch (error) {
       console.error("Failed to load character state:", error);
       notifier.error(error);
-      // On error, clear potentially corrupted data
-      await this.clear();
+      // Leave the stored data alone: it may still be the user's only copy.
       return null;
     }
+  }
+
+  async saveCorruptedBackup(raw: unknown): Promise<void> {
+    localStorage.setItem(
+      UNREADABLE_BACKUP_STORAGE_KEY,
+      typeof raw === "string" ? raw : JSON.stringify(raw)
+    );
+  }
+
+  async loadCorruptedBackup(): Promise<unknown> {
+    return localStorage.getItem(UNREADABLE_BACKUP_STORAGE_KEY);
+  }
+
+  async clearCorruptedBackup(): Promise<void> {
+    localStorage.removeItem(UNREADABLE_BACKUP_STORAGE_KEY);
   }
 
   async clear(): Promise<void> {

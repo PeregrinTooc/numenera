@@ -1,0 +1,29 @@
+/* Unreadable character modal: builds on the edit-modal look */
+
+.unreadable-modal {
+  max-width: min(420px, 92vw);
+}
+
+.unreadable-modal-message {
+  font-family: var(--font-serif);
+  color: #2c1810;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.unreadable-modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.unreadable-modal-buttons .edit-modal-button {
+  justify-content: center;
+}
+
+.unreadable-modal-buttons .edit-modal-button.unreadable-later {
+  background: #f5f1e8;
+  color: #2c1810;
+  border: 2px solid #8b6914;
+}

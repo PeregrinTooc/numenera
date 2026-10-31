@@ -3,6 +3,7 @@
 
 import { render } from "lit-html";
 import { EditFieldModal } from "@/components/EditFieldModal";
+import { UnreadableCharacterModal } from "@/components/UnreadableCharacterModal";
 import { PortraitDisplayModal } from "@/components/PortraitDisplayModal";
 import { FieldType } from "@/utils/fieldValidation";
 import { ModalContainer } from "@/services/modalContainer";
@@ -68,5 +69,30 @@ export class ModalService {
 
     // Focus the modal for keyboard navigation
     container.focusElement(".portrait-display-backdrop");
+  }
+
+  /**
+   * Opens the modal offering a kept copy of an unreadable character.
+   * Every choice closes it; the handlers decide what happens to the data.
+   */
+  static openUnreadableCharacterModal(handlers: {
+    onDownload: () => void;
+    onDiscard: () => void;
+    onLater: () => void;
+  }): void {
+    const container = new ModalContainer();
+    const closeAfter = (handler: () => void) => () => {
+      handler();
+      container.remove();
+    };
+
+    const modal = new UnreadableCharacterModal({
+      onDownload: closeAfter(handlers.onDownload),
+      onDiscard: closeAfter(handlers.onDiscard),
+      onLater: closeAfter(handlers.onLater),
+    });
+
+    render(modal.render(), container.getElement());
+    container.focusElement('[data-testid="unreadable-download-button"]');
   }
 }

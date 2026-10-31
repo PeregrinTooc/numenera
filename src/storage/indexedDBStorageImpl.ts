@@ -8,6 +8,7 @@ const DB_NAME = CHARACTER_DB_NAME;
 const STORE_NAME = "characters";
 const DB_VERSION = 1;
 const CHARACTER_KEY = "current";
+const UNREADABLE_BACKUP_KEY = "unreadable-backup";
 const DEFAULT_AVAILABILITY_TIMEOUT_MS = 1000;
 
 export class IndexedDBStorageImpl implements ICharacterStorage {
@@ -58,7 +59,11 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
    * Internal save without event emissions
    * Used during migration to avoid nested events
    */
-  private async saveInternal(character: Character): Promise<void> {
+  private async saveInternal(character: unknown): Promise<void> {
+    return this.putInternal(CHARACTER_KEY, character);
+  }
+
+  private async putInternal(key: string, value: unknown): Promise<void> {
     if (!this.db) {
       throw new Error("IndexedDB not initialized");
     }
@@ -71,7 +76,7 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
     return new Promise<void>((resolve, reject) => {
       const transaction = this.db!.transaction([STORE_NAME], "readwrite");
       const store = transaction.objectStore(STORE_NAME);
-      const request = store.put(character, CHARACTER_KEY);
+      const request = store.put(value, key);
 
       // Settle on the transaction, not the request: a write that exceeds the storage
       // quota succeeds as a request and only aborts the transaction at commit. The
@@ -116,7 +121,11 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
    * Internal load without event emissions
    * Used during migration to avoid nested events
    */
-  private async loadInternal(): Promise<Character | null> {
+  private async loadInternal(): Promise<unknown> {
+    return this.getInternal(CHARACTER_KEY);
+  }
+
+  private async getInternal(key: string): Promise<unknown> {
     if (!this.db) {
       throw new Error("IndexedDB not initialized");
     }
@@ -125,17 +134,33 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
       throw new Error(`Object store '${STORE_NAME}' not found in database`);
     }
 
-    return new Promise<Character | null>((resolve, reject) => {
+    return new Promise<unknown>((resolve, reject) => {
       const transaction = this.db!.transaction([STORE_NAME], "readonly");
       const store = transaction.objectStore(STORE_NAME);
-      const request = store.get(CHARACTER_KEY);
+      const request = store.get(key);
 
       request.onsuccess = () => resolve(request.result || null);
       request.onerror = () => reject(new Error("Failed to load character"));
     });
   }
 
+  async saveCorruptedBackup(raw: unknown): Promise<void> {
+    await this.putInternal(UNREADABLE_BACKUP_KEY, raw);
+  }
+
+  async loadCorruptedBackup(): Promise<unknown> {
+    return (await this.getInternal(UNREADABLE_BACKUP_KEY)) ?? null;
+  }
+
+  async clearCorruptedBackup(): Promise<void> {
+    await this.deleteInternal(UNREADABLE_BACKUP_KEY);
+  }
+
   async clear(): Promise<void> {
+    await this.deleteInternal(CHARACTER_KEY);
+  }
+
+  private async deleteInternal(key: string): Promise<void> {
     if (!this.db) {
       throw new Error("IndexedDB not initialized");
     }
@@ -148,7 +173,7 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([STORE_NAME], "readwrite");
       const store = transaction.objectStore(STORE_NAME);
-      const request = store.delete(CHARACTER_KEY);
+      const request = store.delete(key);
 
       request.onsuccess = () => resolve();
       request.onerror = () => reject(new Error("Failed to clear character"));
@@ -241,8 +266,11 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
           character = parsed;
         }
       } catch (error) {
+        // Adopt the unparseable text as-is instead of leaving it behind: the stale-copy
+        // cleanup above would delete it on a later load. The app sees a value that is no
+        // character, keeps it as the unreadable backup and offers it for download.
         console.error("Failed to parse localStorage data during migration:", error);
-        return; // Don't migrate corrupted data
+        character = stored;
       }
 
       // Save to IndexedDB using internal method to avoid nested events

@@ -58,6 +58,18 @@ export class TestStorageHelper {
   }
 
   /**
+   * The kept copy of unreadable stored data, exactly as stored (null when none is kept)
+   */
+  async getUnreadableBackup(): Promise<unknown> {
+    return await this.page.evaluate(async () => {
+      if (!window.__testStorage) {
+        throw new Error("Test storage API not available. Make sure the app has loaded.");
+      }
+      return await window.__testStorage.loadCorruptedCharacterBackup();
+    });
+  }
+
+  /**
    * Clear all character storage
    */
   async clearStorage(): Promise<void> {

@@ -276,6 +276,11 @@ All features listed below have full BDD test coverage and are verified working.
   - Migration skips gracefully when database is not ready
   - Unit tests for object store validation
 
+- **Unreadable Character Is Kept** ([unreadable-character.feature](../tests/e2e/features/unreadable-character.feature))
+  - Stored data that cannot be read (e.g. text that is not valid JSON) is no longer deleted
+  - The raw value is copied to a backup record (IndexedDB and localStorage fallback) before the default character is loaded; the latest copy wins
+  - A modal on every load offers Download (saves the raw data as a file, then removes the copy), Discard (removes the copy) or Ask me later (keeps it; Escape and backdrop click do the same)
+
 - **Auto-Save Flush on Page Unload** ([auto-save-indicator.feature](../tests/e2e/features/auto-save-indicator.feature))
   - An edit made inside the 300 ms debounce window survives a reload or tab close
   - `AutoSaveService.flush()` saves only when a save is pending (or awaits an in-flight one)

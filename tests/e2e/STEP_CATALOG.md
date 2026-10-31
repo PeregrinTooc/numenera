@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **692** in 50 files
-- Feature step lines: **2133**
+- Step definitions: **702** in 51 files
+- Feature step lines: **2170**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
@@ -70,6 +70,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
 | [storage-failure.steps.ts](#storagefailurestepsts) | 8 | 0 |
+| [unreadable-character.steps.ts](#unreadablecharacterstepsts) | 10 | 0 |
 | [version-comparison-highlighting.steps.ts](#versioncomparisonhighlightingstepsts) | 17 | 0 |
 | [version-comparison-navigation.steps.ts](#versioncomparisonnavigationstepsts) | 12 | 0 |
 | [version-comparison-setup.steps.ts](#versioncomparisonsetupstepsts) | 12 | 0 |
@@ -413,7 +414,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 56 | 27 |
+| Given | `I am on the character sheet page` | 57 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 142 |
 | Then | `I should see {int} cyphers displayed` | 1 | 104 |
 | Then | `I should see {int} oddities displayed` | 1 | 155 |
@@ -429,7 +430,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `I should see oddity {string}` | 2 | 160 |
 | Then | `I should see sections in this order:` | 1 | 277 |
 | Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 78 |
-| Then | `I should see the character name {string}` | 1 | 32 |
+| Then | `I should see the character name {string}` | 3 | 32 |
 | Then | `I should see tier {string} displayed` | 1 | 36 |
 | Then | `I should see type {string} displayed` | 1 | 40 |
 | Then | `no markup from the text should be rendered as HTML` | 1 | 252 |
@@ -540,8 +541,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I hover over the character name {string}` | 1 | 102 |
 | When | `I hover over the tier {string}` | 1 | 106 |
 | When | `I press the Enter key` | 2 | 192 |
-| When | `I press the Escape key` | 4 | 188 |
-| When | `I reload the page` | 49 | 196 |
+| When | `I press the Escape key` | 5 | 188 |
+| When | `I reload the page` | 58 | 196 |
 | When | `I reload the page immediately` | 1 | 210 |
 | Then | `I should see the {string} value displayed` | 1 | 221 |
 | When | `I tap on the {string} value` | 1 | 34 |
@@ -833,6 +834,21 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the save indicator should report that changes could not be saved` | 1 | 23 |
 | Then | `the save indicator should report that storage is full` | 5 | 17 |
 | Given | `writing to the browser storage fails` | 1 | 9 |
+
+## unreadable-character.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I choose {string} for the unreadable character` | 2 | 37 |
+| When | `I download the unreadable character` | 1 | 44 |
+| Then | `I should be asked what to do with the unreadable character` | 4 | 25 |
+| Then | `I should not be asked about an unreadable character` | 4 | 33 |
+| Then | `no unreadable data should be kept` | 2 | 79 |
+| Given | `the browser holds the unparseable character text {string}` | 1 | 16 |
+| Then | `the downloaded file should be named like {string}` | 1 | 50 |
+| Then | `the downloaded file should contain exactly {string}` | 1 | 63 |
+| Then | `the kept unreadable data should be {string}` | 4 | 72 |
+| Given | `the stored character data is the unreadable text {string}` | 4 | 9 |
 
 ## version-comparison-highlighting.steps.ts
 
