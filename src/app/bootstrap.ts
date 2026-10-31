@@ -10,6 +10,7 @@ import {
 import { ModalService } from "@/services/modalService";
 import { downloadTextFile } from "@/utils/downloadFile";
 import { logger } from "@/utils/logger";
+import { reportStorageWriteFailure } from "@/storage/storageWriteFailure";
 import { sanitizeCharacter } from "@/utils/characterSanitizer";
 import {
   isUnreadableCharacter,
@@ -111,6 +112,7 @@ export async function bootstrap(ctx: AppContext): Promise<void> {
       saveBackup: saveCorruptedCharacterBackup,
       persistDefault: () => saveCharacterState(FULL_CHARACTER),
       warn: (message, detail) => logger.warn(message, detail),
+      reportFailure: reportStorageWriteFailure,
     });
   } else if (rawStored) {
     storedCharacter = sanitizeCharacter(rawStored).character;

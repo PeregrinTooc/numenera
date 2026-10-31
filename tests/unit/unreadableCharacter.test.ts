@@ -53,6 +53,7 @@ describe("keepUnreadableCharacter", () => {
         saveBackup: vi.fn(async () => void calls.push("backup")),
         persistDefault: vi.fn(async () => void calls.push("default")),
         warn: vi.fn(),
+        reportFailure: vi.fn(),
       },
     };
   }
@@ -76,6 +77,16 @@ describe("keepUnreadableCharacter", () => {
 
     expect(kept).toBe(false);
     expect(deps.persistDefault).not.toHaveBeenCalled();
+  });
+
+  it("reports a failed backup write so the user is told saving is not working", async () => {
+    const { deps } = makeDeps();
+    const failure = new Error("full");
+    deps.saveBackup.mockRejectedValue(failure);
+
+    await keepUnreadableCharacter("{raw", deps);
+
+    expect(deps.reportFailure).toHaveBeenCalledWith(failure);
   });
 });
 

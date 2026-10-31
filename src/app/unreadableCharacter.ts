@@ -13,6 +13,8 @@ export interface KeepUnreadableDeps {
   /** Replaces the stored value with the default character so it is not detected again. */
   persistDefault: () => Promise<void>;
   warn: (message: string, raw: unknown) => void;
+  /** Tells the user saving is failing (save indicator), since the default will overwrite the data. */
+  reportFailure: (error: unknown) => void;
 }
 
 export interface OfferUnreadableDeps {
@@ -60,6 +62,7 @@ export async function keepUnreadableCharacter(
     await deps.saveBackup(raw);
   } catch (error) {
     deps.warn("Could not keep a copy of the unreadable character; leaving it stored", error);
+    deps.reportFailure(error);
     return false;
   }
   await deps.persistDefault();
