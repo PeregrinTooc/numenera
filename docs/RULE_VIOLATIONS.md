@@ -41,46 +41,36 @@ editing the rule to match the code.
 
 ## Open
 
-Re-measured on `main` after step 11 (2026-10-31).
+Re-measured on `main` after step 12 (2026-10-31).
 
 ### 3. Code quality — files over 300 lines
 
 **Rule:** "Keep files small and focused (< 300 lines)." Tests count; pure data
 does not (see `code-quality.md`).
 
-**`src/` — 4 files**
+**`src/` — 1 file**
 
-| File                                       | Lines | Natural seam                                                                   |
-| ------------------------------------------ | ----- | ------------------------------------------------------------------------------ |
-| `src/main.ts`                              | 914   | test hooks, compare-view controller, version navigation, import/export, events |
-| `src/components/CharacterSheet.ts`         | 789   | drag/touch controller; reorder/merge/split as pure layout operations           |
-| `src/services/versionHistoryService.ts`    | 339   | undo/redo stack                                                                |
-| `src/services/conflictDetectionService.ts` | 348   | BroadcastChannel transport vs dirty tracking                                   |
+| File          | Lines | Natural seam                                                                   |
+| ------------- | ----- | ------------------------------------------------------------------------------ |
+| `src/main.ts` | 914   | test hooks, compare-view controller, version navigation, import/export, events |
 
-**`tests/` — 20 files**
+**`tests/` — 13 files**
 
 | File                                                            | Lines |
 | --------------------------------------------------------------- | ----- |
 | `tests/e2e/step-definitions/version-history.steps.ts`           | 1221  |
-| `tests/e2e/step-definitions/section-rearrangement.steps.ts`     | 733   |
 | `tests/e2e/step-definitions/card-creation.steps.ts`             | 645   |
-| `tests/unit/conflictWarningModal.test.ts`                       | 593   |
 | `tests/e2e/features/card-creation.feature`                      | 581   |
-| `tests/unit/versionHistoryServiceRefactor.test.ts`              | 580   |
 | `tests/unit/exportManager.test.ts`                              | 534   |
 | `tests/unit/editFieldModal.test.ts`                             | 477   |
 | `tests/e2e/features/version-history.feature`                    | 474   |
-| `tests/unit/conflictDetectionService.test.ts`                   | 435   |
 | `tests/unit/indexedDBStorageImpl.test.ts`                       | 428   |
 | `tests/e2e/step-definitions/version-comparison.steps.ts`        | 415   |
 | `tests/unit/changeDetection.test.ts`                            | 407   |
-| `tests/unit/versionState.test.ts`                               | 406   |
 | `tests/unit/basicInfo.test.ts`                                  | 386   |
 | `tests/e2e/step-definitions/basic-info-editing.steps.ts`        | 376   |
 | `tests/e2e/step-definitions/additional-fields-editing.steps.ts` | 349   |
 | `tests/e2e/step-definitions/card-reordering.steps.ts`           | 334   |
-| `tests/unit/layoutTypes.test.ts`                                | 324   |
-| `tests/unit/domStructure.test.ts`                               | 313   |
 
 Feature files split along their `# ===` section banners into several
 `.feature` files; step definitions follow the feature split.
@@ -103,7 +93,7 @@ need no feature file; steps 8 and 9 change behaviour and start with a scenario.
 | 9                                   | ~~Translate the `alert()` text and English errors; native `alert()` kept, errors carry an i18n key (#6)~~ done                      | feature                                                                                                                                                                                                                        |
 | 10                                  | ~~Split `unified-validation.ts` and its oversized test files (#3)~~ done                                                            | refactor                                                                                                                                                                                                                       |
 | 11                                  | ~~Split `CollectionBehavior`, `ItemsBox`, `DiffCharacterSheet` and their tests (#3)~~ done                                          | refactor                                                                                                                                                                                                                       |
-| 12                                  | Split `versionHistoryService`, `conflictDetectionService`, `CharacterSheet` and their tests (#3)                                    | refactor                                                                                                                                                                                                                       |
+| 12                                  | ~~Split `versionHistoryService`, `conflictDetectionService`, `CharacterSheet` and their tests (#3)~~ done                           | refactor                                                                                                                                                                                                                       |
 | 13                                  | Split `main.ts`; split the remaining oversized step definitions and feature files (#3)                                              | refactor                                                                                                                                                                                                                       |
 | Test architecture � E2E import path | No E2E scenario ran the sanitizer: `setMockFileImporter` replaced the importer, and the other import step wrote straight to storage | import steps feed the raw file through the real `<input type="file">` chooser (`tests/e2e/support/fileImport.ts`); the `__testFileImporter` seam and `IFileImporter` are gone; "Imported oddities are kept" guards review �2.3 |
 

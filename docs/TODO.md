@@ -74,8 +74,9 @@ detail lives in the linked file.
 
 **Overview**  
 `CharacterSheet.mergeSections()`, `splitGrid()`, `updateLayout()` and `getLayout()`
-are implemented and unit-tested in isolation, but have zero callers — `handleDrop`
-only ever calls `reorderSections`. Separately, `fileStorage.ts` already computes
+(thin wrappers over the pure functions in `src/utils/layoutOperations.ts`, which
+are unit-tested) have zero callers — `SectionDragController` only ever asks the
+sheet to reorder. Separately, `fileStorage.ts` already computes
 `layout` and a `hasLayoutDifference` flag on import, but `main.ts`'s
 `handleLoadFromFile` reads only `character` and `warnings`, so the imported
 layout is dropped. Decided: build this rather than delete the dead code — see

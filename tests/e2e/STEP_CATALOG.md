@@ -26,7 +26,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **688** in 30 files
+- Step definitions: **688** in 34 files
 - Feature step lines: **2118**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
@@ -50,11 +50,15 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 12 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
+| [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 8 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
+| [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
+| [layout-import-export.steps.ts](#layoutimportexportstepsts) | 13 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
-| [section-rearrangement.steps.ts](#sectionrearrangementstepsts) | 49 | 0 |
+| [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
+| [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 5 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
@@ -556,6 +560,19 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the file should be saved without prompting` | 1 | 240 |
 | Then | `the suggested filename should be {string}` | 1 | 221 |
 
+## grid-merge-split.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| Given | `{string} and {string} are in a grid` | 1 | 109 |
+| Then | `{string} and {string} should be displayed side by side in a grid` | 1 | 34 |
+| Then | `{string} should be in its own row` | 2 | 153 |
+| When | `I attempt to drag {string} onto {string}` | 1 | 63 |
+| When | `I drag {string} out of the grid` | 1 | 134 |
+| When | `I drag the {string} section onto the {string} section` | 1 | 9 |
+| Then | `no grid should be created` | 1 | 84 |
+| Then | `the sections should remain in single-column layout` | 1 | 104 |
+
 ## i18n.steps.ts
 
 | Keyword | Phrase | Uses | Line |
@@ -596,6 +613,44 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | --- | --- | ---: | ---: |
 | When | `I import a file without character data` | 2 | 6 |
 | Then | `the alert should read {string}` | 2 | 14 |
+
+## layout-edit-mode.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I click the Edit Layout button` | 1 | 9 |
+| When | `I click the Exit Edit Layout button` | 2 | 14 |
+| When | `I click the Reset Layout button` | 1 | 19 |
+| Given | `I have customized the layout` | 5 | 105 |
+| Given | `I have the default layout` | 2 | 146 |
+| Given | `I open the settings panel` | 2 | 118 |
+| Then | `I should see layout edit mode is active` | 1 | 24 |
+| Then | `I should see the {string} button` | 1 | 80 |
+| Then | `I should see visual indicators on rearrangeable sections` | 1 | 36 |
+| Then | `it should be touch-friendly` | 1 | 91 |
+| Given | `layout edit mode is active` | 10 | 48 |
+| Then | `layout edit mode should be inactive` | 1 | 59 |
+| Then | `the {string} option should be enabled` | 1 | 134 |
+| Then | `the layout should return to the default arrangement` | 1 | 122 |
+| Then | `the visual indicators should be removed` | 1 | 71 |
+
+## layout-import-export.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I choose to {string}` | 2 | 104 |
+| Given | `I have a character file with a different layout` | 3 | 21 |
+| Given | `I have a character file with the default layout` | 1 | 36 |
+| When | `I import the character file` | 4 | 40 |
+| Then | `I should not see a layout choice prompt` | 1 | 81 |
+| Then | `I should see a layout choice prompt` | 1 | 73 |
+| Then | `I should see options to {string} or {string}` | 1 | 91 |
+| Then | `my current layout should be preserved` | 1 | 116 |
+| Then | `only the character data should be imported` | 1 | 136 |
+| Then | `the character data should be imported` | 1 | 162 |
+| Then | `the character should be imported normally` | 1 | 169 |
+| Then | `the exported file should contain the layout configuration` | 1 | 8 |
+| Then | `the layout from the imported file should be applied` | 1 | 144 |
 
 ## recovery-damage-track.steps.ts
 
@@ -650,59 +705,28 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the Shins badge should show {string}` | 5 | 127 |
 | Then | `the Total XP badge should show {string}` | 5 | 119 |
 
-## section-rearrangement.steps.ts
+## section-reordering.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `{string} and {string} are in a grid` | 1 | 427 |
-| Then | `{string} and {string} should be displayed side by side in a grid` | 1 | 352 |
-| Then | `{string} should be in its own row` | 2 | 471 |
-| When | `I attempt to drag {string} onto {string}` | 1 | 381 |
-| When | `I choose to {string}` | 2 | 586 |
-| When | `I click the Edit Layout button` | 1 | 23 |
-| When | `I click the Exit Edit Layout button` | 2 | 28 |
-| When | `I click the Reset Layout button` | 1 | 33 |
-| When | `I drag {string} out of the grid` | 1 | 452 |
-| When | `I drag the {string} section above the {string} section` | 1 | 223 |
-| When | `I drag the {string} section onto the {string} section` | 1 | 327 |
-| When | `I exit layout edit mode` | 1 | 290 |
-| Given | `I have a character file with a different layout` | 3 | 503 |
-| Given | `I have a character file with the default layout` | 1 | 518 |
-| Given | `I have customized the layout` | 5 | 174 |
-| Given | `I have moved the {string} section to the top` | 1 | 261 |
-| Given | `I have reordered sections` | 1 | 98 |
-| Given | `I have the default layout` | 2 | 215 |
-| When | `I import the character file` | 4 | 522 |
-| When | `I long-press the {string} section` | 1 | 662 |
-| When | `I long-press the {string} section and drag it above the {string} section` | 1 | 677 |
-| Given | `I open the settings panel` | 2 | 187 |
-| Then | `I should not see a layout choice prompt` | 1 | 563 |
-| Then | `I should see a layout choice prompt` | 1 | 555 |
-| Then | `I should see layout edit mode is active` | 1 | 38 |
-| Then | `I should see options to {string} or {string}` | 1 | 573 |
-| Then | `I should see the {string} button` | 1 | 145 |
-| Then | `I should see visual indicators on rearrangeable sections` | 1 | 50 |
-| When | `I swipe from the {string} section towards the {string} section` | 1 | 700 |
-| Then | `it should be touch-friendly` | 1 | 156 |
-| Given | `layout edit mode is active` | 10 | 62 |
-| Then | `layout edit mode should be inactive` | 1 | 73 |
-| Then | `my current layout should be preserved` | 1 | 598 |
-| Then | `no grid should be created` | 1 | 402 |
-| Then | `only the character data should be imported` | 1 | 618 |
-| Then | `the {string} option should be enabled` | 1 | 203 |
-| Then | `the {string} section should appear before the {string} section` | 3 | 230 |
-| Then | `the {string} section should be in drag mode` | 1 | 670 |
-| Then | `the {string} section should still be at the top` | 1 | 301 |
-| Then | `the character data should be imported` | 1 | 644 |
-| Then | `the character should be imported normally` | 1 | 651 |
-| Then | `the exported file should contain the layout configuration` | 1 | 490 |
-| Then | `the layout from the imported file should be applied` | 1 | 626 |
-| Then | `the layout should be saved` | 1 | 120 |
-| Then | `the layout should return to the default arrangement` | 1 | 191 |
-| Then | `the page should have scrolled` | 1 | 724 |
-| Then | `the sections should remain in single-column layout` | 1 | 422 |
-| Then | `the sections should remain in the new order` | 1 | 131 |
-| Then | `the visual indicators should be removed` | 1 | 85 |
+| When | `I drag the {string} section above the {string} section` | 1 | 53 |
+| When | `I exit layout edit mode` | 1 | 120 |
+| Given | `I have moved the {string} section to the top` | 1 | 91 |
+| Given | `I have reordered sections` | 1 | 10 |
+| Then | `the {string} section should appear before the {string} section` | 3 | 60 |
+| Then | `the {string} section should still be at the top` | 1 | 131 |
+| Then | `the layout should be saved` | 1 | 32 |
+| Then | `the sections should remain in the new order` | 1 | 43 |
+
+## section-touch-drag.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I long-press the {string} section` | 1 | 15 |
+| When | `I long-press the {string} section and drag it above the {string} section` | 1 | 30 |
+| When | `I swipe from the {string} section towards the {string} section` | 1 | 53 |
+| Then | `the {string} section should be in drag mode` | 1 | 23 |
+| Then | `the page should have scrolled` | 1 | 77 |
 
 ## settings-gear.steps.ts
 

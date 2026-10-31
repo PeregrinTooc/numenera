@@ -1,122 +1,30 @@
 // CharacterSheet component - Main container that composes all sections
 
-import { html, nothing, render, TemplateResult } from "lit-html";
+import { html, render, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { Header } from "./Header.js";
-import { BasicInfo } from "./BasicInfo.js";
-import { Stats } from "./Stats.js";
-import { RecoveryDamageSection } from "./RecoveryDamageSection.js";
-import { Abilities } from "./Abilities.js";
-import { SpecialAbilities } from "./SpecialAbilities.js";
-import { Attacks } from "./Attacks.js";
-import { CyphersBox } from "./CyphersBox.js";
-import { ItemsBox } from "./ItemsBox.js";
-import { BottomTextFields } from "./BottomTextFields.js";
-import { VersionNavigator } from "./VersionNavigator.js";
-import { VersionWarningBanner } from "./VersionWarningBanner.js";
-import { changeLanguage, t } from "@/i18n/index";
-import {
-  Layout,
-  LayoutItem,
-  SectionId,
-  isGridEligible,
-  isSectionId,
-  cloneLayout,
-} from "@/types/layout";
+import { SheetSections } from "@/components/helpers/SheetSections";
+import { changeLanguage } from "@/i18n/index";
+import { Layout, LayoutItem, SectionId } from "@/types/layout";
 import { loadLayout, saveLayout, resetLayout } from "@/storage/layoutStorage";
-import { LongPressDrag } from "@/components/helpers/LongPressDrag";
-
-/**
- * Sections backed by a CollectionBehavior component. Each one is mounted into
- * its own lit-html root so it can be re-rendered on its own, without diffing
- * the rest of the sheet.
- */
-const COLLECTION_SECTION_IDS = [
-  "cyphers",
-  "abilities",
-  "specialAbilities",
-  "attacks",
-  "items",
-] as const;
-
-type CollectionSectionId = (typeof COLLECTION_SECTION_IDS)[number];
-
-function isCollectionSection(sectionId: SectionId): sectionId is CollectionSectionId {
-  return (COLLECTION_SECTION_IDS as readonly SectionId[]).includes(sectionId);
-}
+import { reorderLayout, mergeSectionsInLayout, splitGridInLayout } from "@/utils/layoutOperations";
+import { SectionDragController } from "@/components/helpers/SectionDragController";
+import { SheetVersionUi } from "@/components/helpers/SheetVersionUi";
+import { renderEditLayoutButton } from "@/components/helpers/layoutEditButton";
 
 export class CharacterSheet {
   private header: Header;
-  private basicInfo: BasicInfo;
-  private bottomTextFields: BottomTextFields;
-  private itemsBox: ItemsBox;
-  private attacks: Attacks;
-  private cyphersBox: CyphersBox;
-  private stats: Stats;
-  private abilities: Abilities;
-  private specialAbilities: SpecialAbilities;
-  private recoveryDamageSection: RecoveryDamageSection;
-  private versionNavigator: VersionNavigator | null = null;
-  private versionWarningBanner: VersionWarningBanner | null = null;
+  private sections: SheetSections;
+  private readonly versionUi = new SheetVersionUi();
   private layout: Layout;
   private isLayoutEditMode: boolean = false;
-  private draggedSectionId: SectionId | null = null;
-  private dropTargetId: SectionId | null = null;
   private container: HTMLElement | null = null;
 
-  /** Touch long-press → section drag; mouse drags use native HTML5 DnD. */
-  private readonly longPress = new LongPressDrag<SectionId>({
-    onActivate: (id) => this.handleTouchDragActivate(id),
-    onHover: (x, y) => this.handleTouchDragHover(x, y),
-    onDrop: () => this.handleTouchDrop(),
-    onAbort: () => this.clearDragState(),
+  private readonly drag = new SectionDragController({
+    isEditMode: () => this.isLayoutEditMode,
+    requestRender: () => this.rerender(),
+    onReorder: (sourceId, targetId) => this.reorderSections(sourceId, targetId),
   });
-
-  /**
-   * Lit listener object so the touchmove listener is registered non-passive:
-   * an active touch drag must be able to preventDefault() the page scroll.
-   * Kept as one stable object so lit doesn't re-add it on every render.
-   *
-   * Bound only while `isLayoutEditMode` is true (see `renderDraggableSection`):
-   * unconditionally, this would make every scroll on the sheet non-passive,
-   * even outside layout editing.
-   */
-  private readonly touchMoveListener = {
-    handleEvent: (e: TouchEvent): void => this.handleTouchMove(e),
-    passive: false,
-  };
-
-  /**
-   * Lit listener object for touchstart, registered passive: it never calls
-   * preventDefault(), so the browser is free to start scrolling immediately.
-   * Reads the section id off `currentTarget` so one instance covers every
-   * section wrapper.
-   */
-  private readonly touchStartListener = {
-    handleEvent: (e: TouchEvent): void => {
-      const sectionId = (e.currentTarget as HTMLElement).dataset.sectionId;
-      if (sectionId && isSectionId(sectionId)) {
-        this.handleTouchStart(e, sectionId);
-      }
-    },
-    passive: true,
-  };
-
-  /**
-   * Lit listener object for dragstart, registered in the capture phase so it
-   * runs before a card's own dragstart handler inside the section (e.g.
-   * Abilities). During an active touch drag, `handleDragStart` stops the
-   * event here so the card never sees it and never marks itself as dragging.
-   */
-  private readonly dragStartListener = {
-    handleEvent: (e: Event): void => {
-      const sectionId = (e.currentTarget as HTMLElement).dataset.sectionId;
-      if (sectionId && isSectionId(sectionId)) {
-        this.handleDragStart(e as DragEvent, sectionId);
-      }
-    },
-    capture: true,
-  };
 
   constructor(
     private character: Character,
@@ -139,100 +47,18 @@ export class CharacterSheet {
       (lang: string) => changeLanguage(lang),
       () => this.resetLayoutToDefault()
     );
-    this.basicInfo = new BasicInfo(this.character, this.onFieldUpdate);
-    this.bottomTextFields = new BottomTextFields(this.character);
-    this.itemsBox = new ItemsBox(this.character, this.onFieldUpdate);
-    // Attacks component uses event-based pattern for updates/deletes
-    this.attacks = new Attacks(this.character, this.onFieldUpdate);
-    this.cyphersBox = new CyphersBox(this.character, this.onFieldUpdate);
-    this.stats = new Stats(this.character, this.onFieldUpdate);
-
-    // Create abilities and specialAbilities using event-based pattern
-    // These use CollectionBehavior helpers which handle immutable updates
-    // for proper version history undo support
-    this.abilities = new Abilities(this.character);
-    this.specialAbilities = new SpecialAbilities(this.character);
-    this.recoveryDamageSection = new RecoveryDamageSection(this.character);
+    this.sections = new SheetSections(this.character, this.onFieldUpdate);
 
     // Load layout from storage
     this.layout = loadLayout();
   }
 
   /**
-   * Get the template for a specific section.
-   *
-   * Collection sections contribute an empty host element instead of their
-   * content: `mountCollectionSections()` fills each host from its own
-   * lit-html root, so the sheet's template never owns those nodes. `contents`
-   * keeps the host out of the layout entirely.
-   */
-  private getSectionTemplate(sectionId: SectionId): TemplateResult {
-    if (isCollectionSection(sectionId)) {
-      return html`<div class="contents" data-section-host=${sectionId}></div>`;
-    }
-
-    switch (sectionId) {
-      case "basicInfo":
-        return this.basicInfo.render();
-      case "stats":
-        return this.stats.render();
-      case "recoveryDamage":
-        return this.recoveryDamageSection.render();
-      case "background":
-        return this.bottomTextFields.renderBackground();
-      case "notes":
-        return this.bottomTextFields.renderNotes();
-      default:
-        return html``;
-    }
-  }
-
-  /**
-   * Get the template for a collection section's content.
-   */
-  private getCollectionSectionTemplate(sectionId: CollectionSectionId): TemplateResult {
-    switch (sectionId) {
-      case "cyphers":
-        return this.cyphersBox.render();
-      case "abilities":
-        return this.abilities.render();
-      case "specialAbilities":
-        return this.specialAbilities.render();
-      case "attacks":
-        return this.attacks.render();
-      case "items":
-        return this.itemsBox.render();
-    }
-  }
-
-  /**
    * Re-render a single collection section, leaving the rest of the sheet's DOM
    * untouched.
-   *
-   * The section is rendered into its host element, which the sheet's template
-   * leaves empty. That host is the boundary between the two lit-html roots:
-   * rendering a section anywhere inside the region the sheet's own template
-   * owns detaches those nodes from the sheet's part, after which every later
-   * sheet render silently updates orphaned DOM.
    */
   rerenderSection(sectionId: SectionId): void {
-    if (!isCollectionSection(sectionId)) return;
-
-    const root = this.container ?? document;
-    const host = root.querySelector<HTMLElement>(`[data-section-host="${sectionId}"]`);
-    if (!host) return;
-
-    render(this.getCollectionSectionTemplate(sectionId), host);
-  }
-
-  /**
-   * Fill every collection section's host. Called after each sheet render, since
-   * a layout change can replace the host elements.
-   */
-  private mountCollectionSections(): void {
-    for (const sectionId of COLLECTION_SECTION_IDS) {
-      this.rerenderSection(sectionId);
-    }
+    this.sections.rerenderSection(sectionId, this.container ?? document);
   }
 
   /**
@@ -256,315 +82,36 @@ export class CharacterSheet {
     `;
   }
 
-  /**
-   * Render a section wrapped for layout editing (drag handle, drop target)
-   */
   private renderDraggableSection(sectionId: SectionId): TemplateResult {
-    const isDragging = this.draggedSectionId === sectionId;
-    const isDropTarget = this.dropTargetId === sectionId;
-    const wrapperClass = this.isLayoutEditMode
-      ? `layout-section layout-draggable${isDragging ? " dragging" : ""}${isDropTarget ? " drop-target" : ""}`
-      : "";
-    const draggable = this.isLayoutEditMode ? "true" : "false";
-
-    return html`
-      <div
-        class=${wrapperClass}
-        data-section-id=${sectionId}
-        data-testid="layout-section-${sectionId}"
-        draggable=${draggable}
-        @dragstart=${this.dragStartListener}
-        @dragend=${() => this.handleDragEnd()}
-        @dragover=${(e: DragEvent) => this.handleDragOver(e, sectionId)}
-        @dragleave=${() => this.handleDragLeave()}
-        @drop=${(e: DragEvent) => this.handleDrop(e, sectionId)}
-        @touchstart=${this.isLayoutEditMode ? this.touchStartListener : nothing}
-        @touchmove=${this.isLayoutEditMode ? this.touchMoveListener : nothing}
-        @touchend=${this.isLayoutEditMode ? () => this.longPress.end() : nothing}
-        @touchcancel=${this.isLayoutEditMode ? () => this.longPress.cancel() : nothing}
-        @contextmenu=${(e: Event) => this.handleContextMenu(e)}
-      >
-        ${this.getSectionTemplate(sectionId)}
-      </div>
-    `;
-  }
-
-  /**
-   * Suppress the long-press context menu while a touch drag is in progress
-   */
-  private handleContextMenu(e: Event): void {
-    if (this.longPress.isActive()) {
-      e.preventDefault();
-    }
-  }
-
-  /**
-   * Handle drag start event
-   */
-  private handleDragStart(e: DragEvent, sectionId: SectionId): void {
-    if (this.longPress.isActive()) {
-      // Android can start its own long-press drag; the touch drag owns this
-      // gesture. This listener runs in the capture phase (see
-      // dragStartListener), so stopping it here keeps a card inside the
-      // section (e.g. Abilities) from ever seeing the event and marking
-      // itself as dragging.
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
-    if (!this.isLayoutEditMode) return;
-
-    this.draggedSectionId = sectionId;
-    if (e.dataTransfer) {
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", sectionId);
-    }
-    this.rerender();
-  }
-
-  /**
-   * Handle drag end event
-   */
-  private handleDragEnd(): void {
-    this.clearDragState();
-  }
-
-  /**
-   * Handle drag over event
-   */
-  private handleDragOver(e: DragEvent, targetId: SectionId): void {
-    if (!this.isLayoutEditMode || !this.draggedSectionId) return;
-    if (targetId === this.draggedSectionId) return;
-
-    e.preventDefault();
-    if (e.dataTransfer) {
-      e.dataTransfer.dropEffect = "move";
-    }
-
-    if (this.dropTargetId !== targetId) {
-      this.dropTargetId = targetId;
-      this.rerender();
-    }
-  }
-
-  /**
-   * Handle drag leave event
-   */
-  private handleDragLeave(): void {
-    // Note: We don't clear dropTargetId here because dragleave fires
-    // when entering child elements. We let dragover set the target.
-  }
-
-  /**
-   * Handle drop event
-   */
-  private handleDrop(e: DragEvent, targetId: SectionId): void {
-    e.preventDefault();
-    if (!this.isLayoutEditMode || !this.draggedSectionId) return;
-    if (targetId === this.draggedSectionId) return;
-
-    // Perform the reorder
-    this.reorderSections(this.draggedSectionId, targetId);
-
-    // Clear drag state
-    this.draggedSectionId = null;
-    this.dropTargetId = null;
-  }
-
-  /**
-   * Handle touch start: begin a long-press that may become a section drag
-   */
-  private handleTouchStart(e: TouchEvent, sectionId: SectionId): void {
-    if (!this.isLayoutEditMode) return;
-    if (e.touches.length !== 1) {
-      this.longPress.cancel();
-      return;
-    }
-    const touch = e.touches[0];
-    this.longPress.start(sectionId, touch.clientX, touch.clientY);
-  }
-
-  /**
-   * Handle touch move: once a long-press is active, the finger drags instead of scrolling
-   */
-  private handleTouchMove(e: TouchEvent): void {
-    if (e.touches.length !== 1) {
-      // A second finger landed outside any section wrapper (touchstart only
-      // sees touches inside it) — a pinch, not a drag.
-      this.longPress.cancel();
-      return;
-    }
-    if (this.longPress.isActive() && !e.cancelable) {
-      // The browser has already committed to scrolling; let it.
-      this.longPress.cancel();
-      return;
-    }
-    const touch = e.touches[0];
-    if (!touch) return;
-    if (this.longPress.move(touch.clientX, touch.clientY)) {
-      e.preventDefault();
-    }
-  }
-
-  /**
-   * A long-press activated: show the section as being dragged
-   */
-  private handleTouchDragActivate(sectionId: SectionId): void {
-    this.draggedSectionId = sectionId;
-    this.dropTargetId = null;
-    this.rerender();
-  }
-
-  /**
-   * During a touch drag, mark the section under the finger as the drop target
-   */
-  private handleTouchDragHover(x: number, y: number): void {
-    const hovered = document.elementFromPoint(x, y)?.closest<HTMLElement>("[data-section-id]");
-    const hoveredId = hovered?.dataset.sectionId;
-    const targetId =
-      hoveredId && isSectionId(hoveredId) && hoveredId !== this.draggedSectionId ? hoveredId : null;
-
-    if (targetId !== this.dropTargetId) {
-      this.dropTargetId = targetId;
-      this.rerender();
-    }
-  }
-
-  /**
-   * Touch drag released: move the dragged section before the drop target, if any
-   */
-  private handleTouchDrop(): void {
-    const sourceId = this.draggedSectionId;
-    const targetId = this.dropTargetId;
-    if (sourceId && targetId) {
-      this.draggedSectionId = null;
-      this.dropTargetId = null;
-      this.reorderSections(sourceId, targetId); // persists and re-renders
-    } else {
-      this.clearDragState();
-    }
-  }
-
-  /**
-   * Clear drag/drop-target styling and re-render
-   */
-  private clearDragState(): void {
-    this.draggedSectionId = null;
-    this.dropTargetId = null;
-    this.rerender();
+    return this.drag.renderSection(sectionId, this.sections.getSectionTemplate(sectionId));
   }
 
   /**
    * Reorder sections by moving source to before target
    */
   private reorderSections(sourceId: SectionId, targetId: SectionId): void {
-    const newLayout = cloneLayout(this.layout);
-
-    // Find source position and remove it
-    let sourceItem: LayoutItem | null = null;
-
-    for (let i = 0; i < newLayout.length; i++) {
-      const item = newLayout[i];
-      if (item.type === "single" && item.id === sourceId) {
-        sourceItem = item;
-        newLayout.splice(i, 1);
-        break;
-      } else if (item.type === "grid") {
-        const gridIndex = item.items.indexOf(sourceId);
-        if (gridIndex !== -1) {
-          // Extract from grid - other item becomes single
-          const otherId = item.items[1 - gridIndex];
-          sourceItem = { type: "single", id: sourceId };
-          newLayout[i] = { type: "single", id: otherId };
-          break;
-        }
-      }
-    }
-
-    if (!sourceItem) return;
-
-    // Find target position
-    let targetIndex = -1;
-    for (let i = 0; i < newLayout.length; i++) {
-      const item = newLayout[i];
-      if (item.type === "single" && item.id === targetId) {
-        targetIndex = i;
-        break;
-      } else if (item.type === "grid" && item.items.includes(targetId)) {
-        targetIndex = i;
-        break;
-      }
-    }
-
-    if (targetIndex === -1) return;
-
-    // Insert source before target
-    newLayout.splice(targetIndex, 0, sourceItem);
-
-    this.layout = newLayout;
-    saveLayout(this.layout);
-    this.rerender();
+    this.applyLayout(reorderLayout(this.layout, sourceId, targetId));
   }
 
   /**
    * Merge two sections into a grid
    */
   mergeSections(sectionId1: SectionId, sectionId2: SectionId): void {
-    if (!isGridEligible(sectionId1) || !isGridEligible(sectionId2)) {
-      return; // Cannot merge non-eligible sections
-    }
-
-    const newLayout = cloneLayout(this.layout);
-
-    // Find and remove both sections
-    let index1 = -1;
-    let index2 = -1;
-
-    for (let i = 0; i < newLayout.length; i++) {
-      const item = newLayout[i];
-      if (item.type === "single") {
-        if (item.id === sectionId1) index1 = i;
-        if (item.id === sectionId2) index2 = i;
-      }
-    }
-
-    if (index1 === -1 || index2 === -1) return;
-
-    // Remove both (higher index first to preserve indices)
-    const minIndex = Math.min(index1, index2);
-    const maxIndex = Math.max(index1, index2);
-    newLayout.splice(maxIndex, 1);
-    newLayout.splice(minIndex, 1);
-
-    // Insert grid at the first position
-    const gridItem: LayoutItem = { type: "grid", items: [sectionId1, sectionId2] };
-    newLayout.splice(minIndex, 0, gridItem);
-
-    this.layout = newLayout;
-    saveLayout(this.layout);
-    this.rerender();
+    this.applyLayout(mergeSectionsInLayout(this.layout, sectionId1, sectionId2));
   }
 
   /**
    * Split a grid into two single sections
    */
   splitGrid(sectionId: SectionId): void {
-    const newLayout = cloneLayout(this.layout);
+    this.applyLayout(splitGridInLayout(this.layout, sectionId));
+  }
 
-    for (let i = 0; i < newLayout.length; i++) {
-      const item = newLayout[i];
-      if (item.type === "grid" && item.items.includes(sectionId)) {
-        // Replace grid with two singles
-        newLayout.splice(
-          i,
-          1,
-          { type: "single", id: item.items[0] },
-          { type: "single", id: item.items[1] }
-        );
-        break;
-      }
-    }
-
+  /**
+   * Adopt, persist and render the result of a layout operation (null: no-op)
+   */
+  private applyLayout(newLayout: Layout | null): void {
+    if (!newLayout) return;
     this.layout = newLayout;
     saveLayout(this.layout);
     this.rerender();
@@ -574,7 +121,7 @@ export class CharacterSheet {
    * Toggle layout edit mode
    */
   toggleLayoutEditMode(): void {
-    this.longPress.cancel();
+    this.drag.cancelTouchDrag();
     this.isLayoutEditMode = !this.isLayoutEditMode;
     if (this.isLayoutEditMode) {
       // Re-sync with storage on entry so a long-lived instance (or one whose
@@ -641,7 +188,7 @@ export class CharacterSheet {
   mount(container: HTMLElement): void {
     this.container = container;
     render(this.render(), container);
-    this.mountCollectionSections();
+    this.sections.mountCollectionSections(container);
   }
 
   /**
@@ -664,13 +211,12 @@ export class CharacterSheet {
     onNavigateBackward: () => void,
     onNavigateForward: () => void
   ): void {
-    this.versionNavigator = new VersionNavigator({
+    this.versionUi.mountNavigator(container, {
       versionCount,
       currentIndex,
       onNavigateBackward,
       onNavigateForward,
     });
-    this.versionNavigator.mount(container);
   }
 
   /**
@@ -682,14 +228,12 @@ export class CharacterSheet {
     onNavigateBackward: () => void,
     onNavigateForward: () => void
   ): void {
-    if (this.versionNavigator) {
-      this.versionNavigator.update({
-        versionCount,
-        currentIndex,
-        onNavigateBackward,
-        onNavigateForward,
-      });
-    }
+    this.versionUi.updateNavigator({
+      versionCount,
+      currentIndex,
+      onNavigateBackward,
+      onNavigateForward,
+    });
   }
 
   /**
@@ -702,23 +246,14 @@ export class CharacterSheet {
     onReturn: () => void,
     onRestore: () => void
   ): void {
-    this.versionWarningBanner = new VersionWarningBanner({
-      description,
-      timestamp,
-      onReturn,
-      onRestore,
-    });
-    this.versionWarningBanner.mount(container);
+    this.versionUi.mountWarningBanner(container, description, timestamp, onReturn, onRestore);
   }
 
   /**
    * Unmount version warning banner
    */
   unmountVersionWarningBanner(): void {
-    if (this.versionWarningBanner) {
-      this.versionWarningBanner.unmount();
-      this.versionWarningBanner = null;
-    }
+    this.versionUi.unmountWarningBanner();
   }
 
   /**
@@ -731,41 +266,6 @@ export class CharacterSheet {
     this.rerender();
   }
 
-  /**
-   * Render the edit layout button
-   */
-  private renderEditLayoutButton(): TemplateResult {
-    const buttonText = this.isLayoutEditMode
-      ? t("layout.editButton.exit")
-      : t("layout.editButton.edit");
-    const buttonClass = this.isLayoutEditMode
-      ? "edit-layout-button edit-layout-button--active"
-      : "edit-layout-button";
-
-    return html`
-      <button
-        data-testid="edit-layout-button"
-        class=${buttonClass}
-        aria-label=${buttonText}
-        @click=${() => this.toggleLayoutEditMode()}
-      >
-        <svg
-          class="edit-layout-icon"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <rect x="3" y="3" width="7" height="7"></rect>
-          <rect x="14" y="3" width="7" height="7"></rect>
-          <rect x="3" y="14" width="7" height="7"></rect>
-          <rect x="14" y="14" width="7" height="7"></rect>
-        </svg>
-        <span class="edit-layout-text">${buttonText}</span>
-      </button>
-    `;
-  }
-
   render(): TemplateResult {
     // Render sections based on layout order
     const layoutSections = this.layout.map((item) => this.renderLayoutItem(item));
@@ -774,7 +274,7 @@ export class CharacterSheet {
       <div class="min-h-screen p-4">
         <div class="sheet-toolbar" data-testid="sheet-toolbar">
           <div id="version-navigator-container"></div>
-          ${this.renderEditLayoutButton()}
+          ${renderEditLayoutButton(this.isLayoutEditMode, () => this.toggleLayoutEditMode())}
         </div>
         <div
           class="max-w-6xl mx-auto shadow rounded-lg p-6 parchment-container ${this.isLayoutEditMode

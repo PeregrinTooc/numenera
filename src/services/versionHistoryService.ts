@@ -9,13 +9,14 @@
 import type { Character } from "@/types/character";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import { squashDescriptions } from "@/utils/squashDescriptions";
+import { ChangeBuffer } from "./changeBuffer.js";
 import type { ITimer, TimerHandle } from "./timer.js";
 import { RealTimer } from "./timer.js";
 
-interface BufferedChange {
-  character: Character;
-  description: string;
-  timestamp: number;
+function emit(name: string, detail?: unknown): void {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent(name, detail === undefined ? undefined : { detail }));
+  }
 }
 
 export class VersionHistoryService {
@@ -23,9 +24,7 @@ export class VersionHistoryService {
   private squashDelayMs: number;
   private timer: ITimer;
   private globalTimer: TimerHandle | null = null;
-  private buffer: BufferedChange[] = [];
-  private redoStack: BufferedChange[] = [];
-  private initialState: Character | null = null;
+  private buffer = new ChangeBuffer();
   private isSquashInProgress: boolean = false;
 
   /**
@@ -49,13 +48,17 @@ export class VersionHistoryService {
    * Called on every user interaction (keystrokes, field changes)
    */
   resetTimer(): void {
-    if (this.globalTimer !== null) {
-      this.timer.clearTimeout(this.globalTimer);
-    }
-
+    this.cancelTimer();
     this.globalTimer = this.timer.setTimeout(() => {
       this.performSquash();
     }, this.squashDelayMs);
+  }
+
+  private cancelTimer(): void {
+    if (this.globalTimer !== null) {
+      this.timer.clearTimeout(this.globalTimer);
+      this.globalTimer = null;
+    }
   }
 
   /**
@@ -65,15 +68,8 @@ export class VersionHistoryService {
    * @param description Description of the change
    */
   bufferChange(character: Character, description: string): void {
-    // Deep clone to prevent mutations
-    this.buffer.push({
-      character: globalThis.structuredClone(character),
-      description,
-      timestamp: Date.now(),
-    });
-
-    // Clear redo stack when new change is made
-    this.redoStack = [];
+    // Buffer clones the character and clears the redo stack
+    this.buffer.push(character, description);
 
     // Reset timer when buffering
     this.resetTimer();
@@ -111,9 +107,7 @@ export class VersionHistoryService {
     this.isSquashInProgress = true;
 
     // Emit squash-started event
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("squash-started"));
-    }
+    emit("squash-started");
 
     try {
       // Edits buffered while the save below is pending belong to the next
@@ -121,11 +115,10 @@ export class VersionHistoryService {
       const squashedCount = this.buffer.length;
 
       // Use the latest character state
-      const latest = this.buffer[squashedCount - 1];
+      const latest = this.buffer.latest()!;
 
       // Combine all descriptions
-      const descriptions = this.buffer.map((b) => b.description);
-      const combinedDescription = squashDescriptions(descriptions);
+      const combinedDescription = squashDescriptions(this.buffer.descriptions());
 
       // Save one squashed version
       const version = await this.manager.saveVersion(latest.character, combinedDescription);
@@ -139,36 +132,29 @@ export class VersionHistoryService {
       // Drop the squashed entries and the redo stack
       // Redo stack must be cleared because buffered changes are now committed to a version
       // If user wants to undo the version, they use version navigation (not buffer redo)
-      this.buffer = this.buffer.slice(squashedCount);
-      this.redoStack = [];
+      this.buffer.dropSquashed(squashedCount, latest.character);
       if (this.buffer.length === 0) {
         this.globalTimer = null;
-        this.initialState = null;
       } else {
-        // Late edits now build on the version just saved. Their timer may have
-        // fired into the in-progress guard above, so give them a fresh window.
-        this.initialState = latest.character;
+        // Late edits now build on the version just saved (the new initial
+        // state). Their timer may have fired into the in-progress guard above,
+        // so give them a fresh window.
         this.resetTimer();
       }
 
       // Dispatch custom event to notify that a version was created
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("version-squashed"));
-        window.dispatchEvent(new CustomEvent("squash-completed"));
-      }
+      emit("version-squashed");
+      emit("squash-completed");
     } catch (error) {
       // Log-and-continue is deliberate: the character itself was auto-saved,
       // and reconcileVersionHistory rebuilds the missing version on next boot.
       console.error("Error performing squash:", error);
       // Clear state on error
-      this.buffer = [];
+      this.buffer.clear();
       this.globalTimer = null;
-      this.initialState = null;
 
       // Emit error event
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("squash-error", { detail: { error } }));
-      }
+      emit("squash-error", { error });
     } finally {
       this.isSquashInProgress = false;
     }
@@ -201,7 +187,7 @@ export class VersionHistoryService {
    * Returns true if the buffer has at least one change
    */
   canUndo(): boolean {
-    return this.buffer.length > 0;
+    return this.buffer.canUndo();
   }
 
   /**
@@ -209,7 +195,7 @@ export class VersionHistoryService {
    * This allows undo to revert back to the state before editing started
    */
   setInitialState(character: Character): void {
-    this.initialState = globalThis.structuredClone(character);
+    this.buffer.setInitialState(character);
   }
 
   /**
@@ -217,18 +203,15 @@ export class VersionHistoryService {
    * Returns the previous character state, or null if nothing to undo
    */
   undo(): Character | null {
-    if (this.buffer.length === 0) {
+    if (!this.buffer.canUndo()) {
       return null;
     }
 
-    // Emit undo-started event
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("undo-started"));
-    }
+    emit("undo-started");
 
-    // Move the last buffered change to redo stack
-    const undoneChange = this.buffer.pop()!;
-    this.redoStack.push(undoneChange);
+    // Move the last buffered change to redo stack; the result is the previous
+    // state (or the initial state when the buffer is now empty)
+    const result = this.buffer.undo();
 
     // If buffer still has changes, reset the timer to give it a fresh delay
     // This ensures the remaining buffered changes get squashed after the full delay
@@ -236,21 +219,10 @@ export class VersionHistoryService {
       this.resetTimer();
     } else {
       // If buffer is now empty, cancel the timer (nothing to squash)
-      if (this.globalTimer !== null) {
-        this.timer.clearTimeout(this.globalTimer);
-        this.globalTimer = null;
-      }
+      this.cancelTimer();
     }
 
-    // Return the previous state (now the last item in buffer)
-    // If buffer is now empty, return initial state
-    const result =
-      this.buffer.length === 0 ? this.initialState : this.buffer[this.buffer.length - 1].character;
-
-    // Emit undo-completed event
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("undo-completed"));
-    }
+    emit("undo-completed");
 
     return result;
   }
@@ -260,7 +232,7 @@ export class VersionHistoryService {
    * Returns true if the redo stack has at least one change
    */
   canRedo(): boolean {
-    return this.redoStack.length > 0;
+    return this.buffer.canRedo();
   }
 
   /**
@@ -268,30 +240,23 @@ export class VersionHistoryService {
    * Returns the redone character state, or null if nothing to redo
    */
   redo(): Character | null {
-    if (this.redoStack.length === 0) {
+    if (!this.buffer.canRedo()) {
       return null;
     }
 
-    // Emit redo-started event
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("redo-started"));
-    }
+    emit("redo-started");
 
     // Move the last undone change back to buffer
-    const redoneChange = this.redoStack.pop()!;
-    this.buffer.push(redoneChange);
+    const redone = this.buffer.redo();
 
     // Reset the timer to give the buffered changes a fresh delay
     // This ensures changes get squashed after the full delay period
     this.resetTimer();
 
-    // Emit redo-completed event
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("redo-completed"));
-    }
+    emit("redo-completed");
 
     // Return the redone state
-    return redoneChange.character;
+    return redone;
   }
 
   /**
@@ -301,15 +266,11 @@ export class VersionHistoryService {
    * Note: Does NOT clear the redo stack, only the buffer
    */
   clearBuffer(): void {
-    this.buffer = [];
-    // Don't clear redoStack - it's needed for subsequent redos
-    this.initialState = null;
+    // Doesn't clear the redo stack - it's needed for subsequent redos
+    this.buffer.clear();
 
     // Clear any active timer since we're clearing the buffer
-    if (this.globalTimer !== null) {
-      this.timer.clearTimeout(this.globalTimer);
-      this.globalTimer = null;
-    }
+    this.cancelTimer();
   }
 
   /**
@@ -328,10 +289,7 @@ export class VersionHistoryService {
    */
   async forceSquash(): Promise<void> {
     // Cancel any pending timer
-    if (this.globalTimer !== null) {
-      this.timer.clearTimeout(this.globalTimer);
-      this.globalTimer = null;
-    }
+    this.cancelTimer();
 
     // Perform squash immediately
     await this.performSquash();

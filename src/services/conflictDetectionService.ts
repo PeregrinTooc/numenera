@@ -1,25 +1,7 @@
 import type { Character } from "@/types/character";
 import { generateETag } from "@/utils/etag";
 
-// BroadcastChannel and MessageEvent are DOM globals
-/* eslint-disable no-undef */
-
-/**
- * Message types for cross-tab communication
- */
-interface ConflictMessage {
-  type:
-    | "version-saved"
-    | "request-latest"
-    | "respond-latest"
-    | "conflict-resolved"
-    | "tab-opened"
-    | "tab-closed";
-  tabId: string;
-  etag?: string;
-  timestamp?: number;
-  characterName?: string;
-}
+import { CrossTabChannel, type ConflictMessage } from "./crossTabChannel.js";
 
 /**
  * Conflict resolution options
@@ -44,59 +26,23 @@ export interface ConflictDetail {
  * Uses BroadcastChannel API for cross-tab communication.
  */
 export class ConflictDetectionService {
-  private channel: BroadcastChannel;
-  private tabId: string;
+  private transport: CrossTabChannel;
   private currentEtag: string | null = null;
   private pendingCharacter: Character | null = null;
   private hasDirtyChanges: boolean = false;
-  private isEnabled: boolean = true;
+  // Remote update received while not dirty; lets us detect stale state when
+  // the user starts editing
+  private remoteEtagReceived: string | null = null;
+  private remoteTimestampReceived: number | null = null;
 
   constructor() {
-    this.tabId = this.generateTabId();
-    this.channel = new BroadcastChannel("numenera-character-sync");
-
-    // Set up message handler
-    this.channel.onmessage = (event: MessageEvent) => {
-      this.handleMessage(event.data as ConflictMessage);
-    };
-
-    // Announce tab opened
-    this.broadcast({ type: "tab-opened", tabId: this.tabId });
-
-    // Clean up on page unload
-    if (typeof window !== "undefined") {
-      window.addEventListener("beforeunload", () => {
-        this.broadcast({ type: "tab-closed", tabId: this.tabId });
-        this.channel.close();
-      });
-    }
-  }
-
-  /**
-   * Generate a unique tab ID
-   */
-  private generateTabId(): string {
-    return `tab-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  }
-
-  /**
-   * Broadcast a message to all other tabs
-   */
-  private broadcast(message: ConflictMessage): void {
-    if (this.isEnabled) {
-      this.channel.postMessage(message);
-    }
+    this.transport = new CrossTabChannel((message) => this.handleMessage(message));
   }
 
   /**
    * Handle incoming messages from other tabs
    */
   private handleMessage(message: ConflictMessage): void {
-    // Ignore messages from self
-    if (message.tabId === this.tabId) {
-      return;
-    }
-
     switch (message.type) {
       case "version-saved":
         this.handleVersionSaved(message);
@@ -155,9 +101,8 @@ export class ConflictDetectionService {
    */
   private handleRequestLatest(_message: ConflictMessage): void {
     if (this.currentEtag) {
-      this.broadcast({
+      this.transport.broadcast({
         type: "respond-latest",
-        tabId: this.tabId,
         etag: this.currentEtag,
         timestamp: Date.now(),
       });
@@ -208,9 +153,8 @@ export class ConflictDetectionService {
     );
 
     // Notify other tabs
-    this.broadcast({
+    this.transport.broadcast({
       type: "conflict-resolved",
-      tabId: this.tabId,
       etag: resolution === "save-local" ? this.currentEtag || undefined : remoteEtag,
     });
   }
@@ -233,7 +177,7 @@ export class ConflictDetectionService {
     }
 
     // Request latest version from other tabs
-    this.broadcast({ type: "request-latest", tabId: this.tabId });
+    this.transport.broadcast({ type: "request-latest" });
 
     // Give other tabs a moment to respond
     // In real usage, this would be handled asynchronously via events
@@ -255,9 +199,8 @@ export class ConflictDetectionService {
     this.currentEtag = etag;
     this.pendingCharacter = null;
 
-    this.broadcast({
+    this.transport.broadcast({
       type: "version-saved",
-      tabId: this.tabId,
       etag,
       timestamp: Date.now(),
       characterName: character.name,
@@ -282,22 +225,15 @@ export class ConflictDetectionService {
    * Enable or disable conflict detection
    */
   public setEnabled(enabled: boolean): void {
-    this.isEnabled = enabled;
+    this.transport.setEnabled(enabled);
   }
 
   /**
    * Check if conflict detection is enabled
    */
   public isConflictDetectionEnabled(): boolean {
-    return this.isEnabled;
+    return this.transport.isEnabled();
   }
-
-  /**
-   * Track if we received a remote update while not dirty
-   * This allows us to detect stale state when user starts editing
-   */
-  private remoteEtagReceived: string | null = null;
-  private remoteTimestampReceived: number | null = null;
 
   /**
    * Mark that the current tab has unsaved/dirty changes
@@ -342,7 +278,6 @@ export class ConflictDetectionService {
    * Close the broadcast channel
    */
   public close(): void {
-    this.broadcast({ type: "tab-closed", tabId: this.tabId });
-    this.channel.close();
+    this.transport.close();
   }
 }

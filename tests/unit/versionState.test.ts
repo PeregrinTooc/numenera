@@ -1,45 +1,18 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { VersionState } from "@/services/versionState";
-import { VersionHistoryManager } from "@/storage/versionHistory";
-import { Character } from "@/types/character";
-import { CharacterVersion } from "@/types/versionHistory";
-import { createTestCharacter } from "../factories/character.js";
-import { createMockVersionHistoryManager } from "../factories/versionHistoryManager";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { CharacterVersion } from "@/types/versionHistory";
+import {
+  createMockCharacter,
+  createMockVersion,
+  setupVersionState,
+} from "./helpers/versionStateFixture";
 
 describe("VersionState", () => {
-  let mockVersionHistory: VersionHistoryManager;
-  let mockCharacter: Character;
-  let versionState: VersionState;
-
-  const createMockCharacter = (name: string): Character => createTestCharacter({ name });
-
-  const createMockVersion = (
-    name: string,
-    description: string,
-    timestamp: number
-  ): CharacterVersion => {
-    const character = createMockCharacter(name);
-    const { portrait: _portrait, ...characterWithoutPortrait } = character;
-    return {
-      id: `version-${name}`,
-      character: characterWithoutPortrait,
-      timestamp,
-      description,
-      etag: `etag-${name}`,
-    };
-  };
-
-  beforeEach(() => {
-    mockCharacter = createMockCharacter("Test Character");
-    mockVersionHistory = createMockVersionHistoryManager();
-
-    versionState = new VersionState(mockCharacter, mockVersionHistory);
-  });
+  const fx = setupVersionState();
 
   describe("initialization", () => {
     it("should start with latest character as displayed character", () => {
-      expect(versionState.getDisplayedCharacter()).toBe(mockCharacter);
-      expect(versionState.getLatestCharacter()).toBe(mockCharacter);
+      expect(fx.versionState.getDisplayedCharacter()).toBe(fx.mockCharacter);
+      expect(fx.versionState.getLatestCharacter()).toBe(fx.mockCharacter);
     });
 
     it("should load versions on init", async () => {
@@ -48,22 +21,22 @@ describe("VersionState", () => {
         createMockVersion("Version 1", "Initial", timestamp),
         createMockVersion("Version 2", "Edit 1", timestamp),
       ];
-      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
+      vi.mocked(fx.mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
 
-      await versionState.init();
+      await fx.versionState.init();
 
-      expect(mockVersionHistory.getAllVersions).toHaveBeenCalled();
-      expect(versionState.getVersionCount()).toBe(2);
-      expect(versionState.getCurrentVersionIndex()).toBe(1); // Latest version
+      expect(fx.mockVersionHistory.getAllVersions).toHaveBeenCalled();
+      expect(fx.versionState.getVersionCount()).toBe(2);
+      expect(fx.versionState.getCurrentVersionIndex()).toBe(1); // Latest version
     });
 
     it("should handle no versions", async () => {
-      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue([]);
+      vi.mocked(fx.mockVersionHistory.getAllVersions).mockResolvedValue([]);
 
-      await versionState.init();
+      await fx.versionState.init();
 
-      expect(versionState.getVersionCount()).toBe(0);
-      expect(versionState.getCurrentVersionIndex()).toBe(-1);
+      expect(fx.versionState.getVersionCount()).toBe(0);
+      expect(fx.versionState.getCurrentVersionIndex()).toBe(-1);
     });
   });
 
@@ -74,11 +47,11 @@ describe("VersionState", () => {
         createMockVersion("Version 1", "Initial", timestamp),
         createMockVersion("Version 2", "Edit 1", timestamp),
       ];
-      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
+      vi.mocked(fx.mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
 
-      await versionState.init();
+      await fx.versionState.init();
 
-      expect(versionState.isViewingOldVersion()).toBe(false);
+      expect(fx.versionState.isViewingOldVersion()).toBe(false);
     });
 
     it("should return true when viewing historical version", async () => {
@@ -87,16 +60,16 @@ describe("VersionState", () => {
         createMockVersion("Version 1", "Initial", timestamp),
         createMockVersion("Version 2", "Edit 1", timestamp),
       ];
-      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
+      vi.mocked(fx.mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
 
-      await versionState.init();
-      await versionState.navigateBackward();
+      await fx.versionState.init();
+      await fx.versionState.navigateBackward();
 
-      expect(versionState.isViewingOldVersion()).toBe(true);
+      expect(fx.versionState.isViewingOldVersion()).toBe(true);
     });
 
     it("should return false when no versions exist", () => {
-      expect(versionState.isViewingOldVersion()).toBe(false);
+      expect(fx.versionState.isViewingOldVersion()).toBe(false);
     });
   });
 
@@ -108,46 +81,46 @@ describe("VersionState", () => {
         createMockVersion("Version 2", "Edit 1", timestamp),
         createMockVersion("Version 3", "Edit 2", timestamp),
       ];
-      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
-      await versionState.init();
+      vi.mocked(fx.mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
+      await fx.versionState.init();
     });
 
     it("should navigate backward", async () => {
-      await versionState.navigateBackward();
+      await fx.versionState.navigateBackward();
 
-      expect(versionState.getCurrentVersionIndex()).toBe(1);
-      expect(versionState.getDisplayedCharacter().name).toBe("Version 2");
+      expect(fx.versionState.getCurrentVersionIndex()).toBe(1);
+      expect(fx.versionState.getDisplayedCharacter().name).toBe("Version 2");
     });
 
     it("should navigate forward", async () => {
-      await versionState.navigateBackward();
-      await versionState.navigateForward();
+      await fx.versionState.navigateBackward();
+      await fx.versionState.navigateForward();
 
-      expect(versionState.getCurrentVersionIndex()).toBe(2);
-      expect(versionState.getDisplayedCharacter().name).toBe("Version 3");
+      expect(fx.versionState.getCurrentVersionIndex()).toBe(2);
+      expect(fx.versionState.getDisplayedCharacter().name).toBe("Version 3");
     });
 
     it("should not navigate backward past first version", async () => {
-      await versionState.navigateBackward();
-      await versionState.navigateBackward();
-      await versionState.navigateBackward(); // Should not go below 0
+      await fx.versionState.navigateBackward();
+      await fx.versionState.navigateBackward();
+      await fx.versionState.navigateBackward(); // Should not go below 0
 
-      expect(versionState.getCurrentVersionIndex()).toBe(0);
+      expect(fx.versionState.getCurrentVersionIndex()).toBe(0);
     });
 
     it("should not navigate forward past last version", async () => {
-      await versionState.navigateBackward();
-      await versionState.navigateForward();
-      await versionState.navigateForward(); // Should not go above last
+      await fx.versionState.navigateBackward();
+      await fx.versionState.navigateForward();
+      await fx.versionState.navigateForward(); // Should not go above last
 
-      expect(versionState.getCurrentVersionIndex()).toBe(2);
+      expect(fx.versionState.getCurrentVersionIndex()).toBe(2);
     });
 
     it("should navigate to specific version", async () => {
-      await versionState.navigateToVersion(0);
+      await fx.versionState.navigateToVersion(0);
 
-      expect(versionState.getCurrentVersionIndex()).toBe(0);
-      expect(versionState.getDisplayedCharacter().name).toBe("Version 1");
+      expect(fx.versionState.getCurrentVersionIndex()).toBe(0);
+      expect(fx.versionState.getDisplayedCharacter().name).toBe("Version 1");
     });
 
     describe("legacy version migration", () => {
@@ -170,237 +143,32 @@ describe("VersionState", () => {
           description: "Old save",
           etag: "etag-legacy",
         };
-        vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue([legacyVersion]);
+        vi.mocked(fx.mockVersionHistory.getAllVersions).mockResolvedValue([legacyVersion]);
 
-        await versionState.init();
-        await versionState.navigateToVersion(0);
+        await fx.versionState.init();
+        await fx.versionState.navigateToVersion(0);
 
-        const displayed = versionState.getDisplayedCharacter();
+        const displayed = fx.versionState.getDisplayedCharacter();
         expect(displayed.currentXp).toBe(12);
         expect(displayed.totalXp).toBe(12);
       });
     });
 
     it("should throw error for invalid version index", async () => {
-      await expect(versionState.navigateToVersion(-1)).rejects.toThrow("Invalid version index");
-      await expect(versionState.navigateToVersion(999)).rejects.toThrow("Invalid version index");
+      await expect(fx.versionState.navigateToVersion(-1)).rejects.toThrow("Invalid version index");
+      await expect(fx.versionState.navigateToVersion(999)).rejects.toThrow("Invalid version index");
     });
 
     it("should keep the current portrait when navigating to a version (versions never store one)", async () => {
-      versionState.setLatestCharacter({ ...mockCharacter, portrait: "data:image/png;base64,AAAA" });
+      fx.versionState.setLatestCharacter({
+        ...fx.mockCharacter,
+        portrait: "data:image/png;base64,AAAA",
+      });
 
-      await versionState.navigateToVersion(0);
+      await fx.versionState.navigateToVersion(0);
 
-      expect(versionState.getDisplayedCharacter().portrait).toBe("data:image/png;base64,AAAA");
-      expect(versionState.getDisplayedCharacter().name).toBe("Version 1");
-    });
-  });
-
-  describe("restoreToLatest", () => {
-    it("should restore to latest version", async () => {
-      const timestamp = Date.now();
-      const mockVersions = [
-        createMockVersion("Version 1", "Initial", timestamp),
-        createMockVersion("Version 2", "Edit 1", timestamp),
-      ];
-      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
-      await versionState.init();
-
-      await versionState.navigateBackward();
-      expect(versionState.isViewingOldVersion()).toBe(true);
-
-      versionState.restoreToLatest();
-
-      expect(versionState.isViewingOldVersion()).toBe(false);
-      expect(versionState.getCurrentVersionIndex()).toBe(1);
-    });
-  });
-
-  describe("restoreCurrentVersion", () => {
-    it("should keep the current portrait on the new latest character", async () => {
-      versionState.setLatestCharacter({ ...mockCharacter, portrait: "data:image/png;base64,AAAA" });
-      const timestamp = Date.now();
-      const mockVersions = [
-        createMockVersion("Version 1", "Initial", timestamp),
-        createMockVersion("Version 2", "Edit 1", timestamp),
-      ];
-      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
-      await versionState.init();
-      await versionState.navigateBackward();
-
-      await versionState.restoreCurrentVersion();
-
-      expect(versionState.getLatestCharacter().portrait).toBe("data:image/png;base64,AAAA");
-      expect(versionState.getLatestCharacter().name).toBe("Version 1");
-    });
-  });
-
-  describe("setLatestCharacter", () => {
-    it("should update latest character", () => {
-      const newCharacter = createMockCharacter("Updated Character");
-
-      versionState.setLatestCharacter(newCharacter);
-
-      expect(versionState.getLatestCharacter()).toBe(newCharacter);
-    });
-
-    it("should update displayed character when viewing latest", () => {
-      const newCharacter = createMockCharacter("Updated Character");
-
-      versionState.setLatestCharacter(newCharacter);
-
-      expect(versionState.getDisplayedCharacter()).toBe(newCharacter);
-    });
-
-    it("should not update displayed character when viewing old version", async () => {
-      const timestamp = Date.now();
-      const mockVersions = [
-        createMockVersion("Version 1", "Initial", timestamp),
-        createMockVersion("Version 2", "Edit 1", timestamp),
-      ];
-      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
-      await versionState.init();
-      await versionState.navigateBackward();
-
-      const newCharacter = createMockCharacter("Updated Character");
-      versionState.setLatestCharacter(newCharacter);
-
-      expect(versionState.getLatestCharacter()).toBe(newCharacter);
-      expect(versionState.getDisplayedCharacter()).not.toBe(newCharacter);
-      expect(versionState.getDisplayedCharacter().name).toBe("Version 1");
-    });
-  });
-
-  describe("reload", () => {
-    it("should reload versions from storage", async () => {
-      const timestamp = Date.now();
-      const mockVersions1 = [createMockVersion("Version 1", "Initial", timestamp)];
-      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValueOnce(mockVersions1);
-      await versionState.init();
-
-      expect(versionState.getVersionCount()).toBe(1);
-
-      const mockVersions2 = [
-        createMockVersion("Version 1", "Initial", timestamp),
-        createMockVersion("Version 2", "Edit 1", timestamp),
-      ];
-      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValueOnce(mockVersions2);
-      await versionState.reload();
-
-      expect(versionState.getVersionCount()).toBe(2);
-      expect(versionState.getCurrentVersionIndex()).toBe(1);
-    });
-  });
-
-  describe("getCharacterAtVersion", () => {
-    beforeEach(async () => {
-      const timestamp = Date.now();
-      const mockVersions = [
-        createMockVersion("Version 1", "Initial", timestamp),
-        createMockVersion("Version 2", "Edit 1", timestamp),
-        createMockVersion("Version 3", "Edit 2", timestamp),
-      ];
-      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
-      await versionState.init();
-    });
-
-    it("returns the character snapshot at the given index without mutating state", () => {
-      const character = versionState.getCharacterAtVersion(0);
-
-      expect(character.name).toBe("Version 1");
-      expect(versionState.getCurrentVersionIndex()).toBe(2); // unchanged (still latest)
-      expect(versionState.getDisplayedCharacter().name).toBe("Test Character"); // unchanged
-    });
-
-    it("re-attaches the current portrait, since versions never store one", () => {
-      versionState.setLatestCharacter({ ...mockCharacter, portrait: "data:image/png;base64,AAAA" });
-
-      const character = versionState.getCharacterAtVersion(1);
-
-      expect(character.portrait).toBe("data:image/png;base64,AAAA");
-      expect(character.name).toBe("Version 2");
-    });
-
-    it("throws for an invalid index", () => {
-      expect(() => versionState.getCharacterAtVersion(-1)).toThrow("Invalid version index");
-      expect(() => versionState.getCharacterAtVersion(999)).toThrow("Invalid version index");
-    });
-  });
-
-  describe("getVersionIdAtIndex / findVersionIndexById", () => {
-    beforeEach(async () => {
-      const timestamp = Date.now();
-      const mockVersions = [
-        createMockVersion("Version 1", "Initial", timestamp),
-        createMockVersion("Version 2", "Edit 1", timestamp),
-      ];
-      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
-      await versionState.init();
-    });
-
-    it("round-trips an index through its stable id", () => {
-      const id = versionState.getVersionIdAtIndex(0);
-
-      expect(versionState.findVersionIndexById(id)).toBe(0);
-    });
-
-    it("returns -1 for an id that no longer exists (e.g. evicted by FIFO cap)", () => {
-      expect(versionState.findVersionIndexById("some-evicted-id")).toBe(-1);
-    });
-  });
-
-  describe("restoreVersionAtIndex", () => {
-    it("saves the character at the given index as a new latest version", async () => {
-      const timestamp = Date.now();
-      const mockVersions = [
-        createMockVersion("Version 1", "Initial", timestamp),
-        createMockVersion("Version 2", "Edit 1", timestamp),
-      ];
-      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
-      await versionState.init();
-
-      await versionState.restoreVersionAtIndex(0);
-
-      expect(mockVersionHistory.saveVersion).toHaveBeenCalledWith(
-        expect.objectContaining({ name: "Version 1" }),
-        "Restored: Initial"
-      );
-      expect(versionState.getLatestCharacter().name).toBe("Version 1");
-    });
-
-    it("is a no-op when the index already is the latest version", async () => {
-      const timestamp = Date.now();
-      const mockVersions = [
-        createMockVersion("Version 1", "Initial", timestamp),
-        createMockVersion("Version 2", "Edit 1", timestamp),
-      ];
-      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
-      await versionState.init();
-
-      await versionState.restoreVersionAtIndex(1);
-
-      expect(mockVersionHistory.saveVersion).not.toHaveBeenCalled();
-    });
-  });
-
-  describe("getCurrentVersionMetadata", () => {
-    it("should return metadata for current version", async () => {
-      const timestamp = Date.now();
-      const mockVersions = [createMockVersion("Version 1", "Initial state", timestamp)];
-      vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
-      await versionState.init();
-
-      const metadata = versionState.getCurrentVersionMetadata();
-
-      expect(metadata).not.toBeNull();
-      expect(metadata!.description).toBe("Initial state");
-      expect(metadata!.timestamp).toBeInstanceOf(Date);
-    });
-
-    it("should return null when no versions exist", () => {
-      const metadata = versionState.getCurrentVersionMetadata();
-
-      expect(metadata).toBeNull();
+      expect(fx.versionState.getDisplayedCharacter().portrait).toBe("data:image/png;base64,AAAA");
+      expect(fx.versionState.getDisplayedCharacter().name).toBe("Version 1");
     });
   });
 });
