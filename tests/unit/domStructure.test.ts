@@ -164,9 +164,7 @@ describe("DOM Structure Tests", () => {
   describe("ItemsBox Component", () => {
     it("should render artifacts section with heading and list", () => {
       const character = createMockCharacter({
-        artifacts: [
-          { name: "Lightning Rod", level: "6", depletion: "1 in 1d20", effect: "Shoots lightning" },
-        ],
+        artifacts: [{ name: "Lightning Rod", level: "6", effect: "Shoots lightning" }],
       });
       const itemsBox = new ItemsBox(character, vi.fn());
       render(itemsBox.render(), getContainer());
@@ -178,10 +176,7 @@ describe("DOM Structure Tests", () => {
 
     it("should render oddities section with heading and list", () => {
       const character = createMockCharacter({
-        oddities: [
-          { description: "A glowing cube that hums" },
-          { description: "A metal flower that blooms at night" },
-        ],
+        oddities: ["A glowing cube that hums", "A metal flower that blooms at night"],
       });
       const itemsBox = new ItemsBox(character, vi.fn());
       render(itemsBox.render(), getContainer());
@@ -193,9 +188,7 @@ describe("DOM Structure Tests", () => {
 
     it("should render correct number of artifact items", () => {
       const character = createMockCharacter({
-        artifacts: [
-          { name: "Lightning Rod", level: "6", depletion: "1 in 1d20", effect: "Shoots lightning" },
-        ],
+        artifacts: [{ name: "Lightning Rod", level: "6", effect: "Shoots lightning" }],
       });
       const itemsBox = new ItemsBox(character, vi.fn());
       render(itemsBox.render(), getContainer());
@@ -206,10 +199,7 @@ describe("DOM Structure Tests", () => {
 
     it("should render correct number of oddity items", () => {
       const character = createMockCharacter({
-        oddities: [
-          { description: "A glowing cube that hums" },
-          { description: "A metal flower that blooms at night" },
-        ],
+        oddities: ["A glowing cube that hums", "A metal flower that blooms at night"],
       });
       const itemsBox = new ItemsBox(character, vi.fn());
       render(itemsBox.render(), getContainer());
@@ -265,8 +255,8 @@ describe("DOM Structure Tests", () => {
 
     it("should not show empty markers when items exist", () => {
       const character = createMockCharacter({
-        artifacts: [{ name: "Test", level: "5", depletion: "1", effect: "" }],
-        oddities: [{ description: "Test oddity" }],
+        artifacts: [{ name: "Test", level: "5", effect: "" }],
+        oddities: ["Test oddity"],
       });
       const itemsBox = new ItemsBox(character, vi.fn());
       render(itemsBox.render(), getContainer());

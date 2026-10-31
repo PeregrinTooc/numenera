@@ -258,7 +258,14 @@ describe("State Management Components", () => {
   describe("CharacterSheet Component", () => {
     it("should render all major sections", () => {
       const onFieldUpdate = vi.fn();
-      const sheet = new CharacterSheet(mockCharacter, onFieldUpdate);
+      const sheet = new CharacterSheet(
+        mockCharacter,
+        vi.fn(),
+        vi.fn(),
+        vi.fn(),
+        vi.fn(),
+        onFieldUpdate
+      );
       sheet.mount(container);
 
       // Check for major sections
@@ -274,9 +281,6 @@ describe("State Management Components", () => {
     });
 
     it("should propagate stat pool updates via callbacks", () => {
-      const onFieldUpdate = vi.fn();
-      const _sheet = new CharacterSheet(mockCharacter, onFieldUpdate);
-
       // Simulate stat update callback being called
       const newValue = 15;
 
@@ -289,9 +293,6 @@ describe("State Management Components", () => {
 
     it("should propagate attack updates via callbacks", () => {
       mockCharacter.attacks = [{ name: "Sword", damage: 4, modifier: 0, range: "Immediate" }];
-
-      const onFieldUpdate = vi.fn();
-      const _sheet = new CharacterSheet(mockCharacter, onFieldUpdate);
 
       // Simulate attack update
       const updatedAttack = { name: "Enhanced Sword", damage: 6, modifier: 1, range: "Immediate" };
@@ -337,9 +338,6 @@ describe("State Management Components", () => {
     });
 
     it("should handle recovery modifier updates", () => {
-      const onFieldUpdate = vi.fn();
-      const _sheet = new CharacterSheet(mockCharacter, onFieldUpdate);
-
       // Simulate recovery modifier update
       mockCharacter.recoveryRolls.modifier = 5;
 

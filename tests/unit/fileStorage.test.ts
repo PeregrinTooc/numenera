@@ -67,14 +67,14 @@ describe("fileStorage", () => {
         getFile: vi.fn().mockResolvedValue(mockFile),
       };
 
-      global.showOpenFilePicker = vi.fn().mockResolvedValue([mockFileHandle]);
+      window.showOpenFilePicker = vi.fn().mockResolvedValue([mockFileHandle]);
 
       const result = await importCharacterFromFile();
 
       expect(result).not.toBeNull();
       expect(result!.character).toEqual(character);
       expect(result!.warnings).toEqual([]);
-      expect(global.showOpenFilePicker).toHaveBeenCalledWith({
+      expect(window.showOpenFilePicker).toHaveBeenCalledWith({
         types: [
           {
             description: "Numenera Character Files",
@@ -89,7 +89,7 @@ describe("fileStorage", () => {
 
     it("should return null when user cancels file picker", async () => {
       // Mock user canceling the picker
-      global.showOpenFilePicker = vi.fn().mockRejectedValue(new DOMException("", "AbortError"));
+      window.showOpenFilePicker = vi.fn().mockRejectedValue(new DOMException("", "AbortError"));
 
       const result = await importCharacterFromFile();
 
@@ -105,7 +105,7 @@ describe("fileStorage", () => {
         getFile: vi.fn().mockResolvedValue(mockFile),
       };
 
-      global.showOpenFilePicker = vi.fn().mockResolvedValue([mockFileHandle]);
+      window.showOpenFilePicker = vi.fn().mockResolvedValue([mockFileHandle]);
 
       await expect(importCharacterFromFile()).rejects.toThrow("Invalid JSON in file");
     });
@@ -159,7 +159,7 @@ describe("fileStorage", () => {
         getFile: vi.fn().mockResolvedValue(mockFile),
       };
 
-      global.showOpenFilePicker = vi.fn().mockResolvedValue([mockFileHandle]);
+      window.showOpenFilePicker = vi.fn().mockResolvedValue([mockFileHandle]);
 
       const result = await importCharacterFromFile();
 
@@ -186,7 +186,7 @@ describe("fileStorage", () => {
         getFile: vi.fn().mockResolvedValue(mockFile),
       };
 
-      global.showOpenFilePicker = vi.fn().mockResolvedValue([mockFileHandle]);
+      window.showOpenFilePicker = vi.fn().mockResolvedValue([mockFileHandle]);
 
       await expect(importCharacterFromFile()).rejects.toThrow(
         "File does not contain character data"
@@ -212,7 +212,7 @@ describe("fileStorage", () => {
         getFile: vi.fn().mockResolvedValue(mockFile),
       };
 
-      global.showOpenFilePicker = vi.fn().mockResolvedValue([mockFileHandle]);
+      window.showOpenFilePicker = vi.fn().mockResolvedValue([mockFileHandle]);
 
       const result = await importCharacterFromFile();
 
@@ -228,7 +228,7 @@ describe("fileStorage", () => {
     });
 
     it("should handle other picker errors", async () => {
-      global.showOpenFilePicker = vi.fn().mockRejectedValue(new Error("File system error"));
+      window.showOpenFilePicker = vi.fn().mockRejectedValue(new Error("File system error"));
 
       await expect(importCharacterFromFile()).rejects.toThrow("File system error");
     });

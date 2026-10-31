@@ -1,31 +1,5 @@
 import { Page } from "@playwright/test";
 
-// Type for import result from file importer
-interface ImportResult {
-  character: any;
-  warnings: string[];
-}
-
-// Type declaration for test storage API exposed by main.ts
-declare global {
-  interface Window {
-    __testStorage?: {
-      saveCharacterState: (character: any) => Promise<void>;
-      loadCharacterState: () => Promise<any>;
-      clearCharacterState: () => Promise<void>;
-    };
-    __testVersionHistory?: {
-      createVersion: (character: any, description: string) => Promise<void>;
-      getAllVersions: () => Promise<any[]>;
-      clearVersions: () => Promise<void>;
-    };
-    __testFileImporter?: {
-      setFileImporter: (importer: { importCharacter: () => Promise<ImportResult | null> }) => void;
-      resetFileImporter: () => void;
-    };
-  }
-}
-
 /**
  * Test helper for character storage operations
  *

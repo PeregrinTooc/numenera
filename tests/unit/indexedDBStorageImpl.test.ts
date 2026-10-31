@@ -1,9 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { IndexedDBStorageImpl } from "@/storage/indexedDBStorageImpl";
 import { STORAGE_KEY } from "@/storage/storageConstants";
+import type { Character } from "@/types/character";
+import { createTestCharacter } from "../factories/character";
 
 // Mock character data
-const mockCharacter = {
+const mockCharacter = createTestCharacter({
   name: "Test Character",
   descriptor: "Clever",
   type: "Jack",
@@ -12,12 +14,7 @@ const mockCharacter = {
   effort: 3,
   currentXp: 5,
   totalXp: 5,
-  statPools: {
-    might: { current: 10, max: 12, edge: 1 },
-    speed: { current: 8, max: 10, edge: 2 },
-    intellect: { current: 15, max: 15, edge: 0 },
-  },
-};
+});
 
 const oldVersionedFormat = {
   version: 1,
@@ -89,7 +86,7 @@ describe("IndexedDBStorageImpl", () => {
   describe("save and load", () => {
     it("should save and load character data", async () => {
       await storage.save(mockCharacter);
-      const loaded = await storage.load();
+      const loaded = (await storage.load()) as Character;
       expect(loaded).toEqual(mockCharacter);
     });
 
@@ -103,7 +100,7 @@ describe("IndexedDBStorageImpl", () => {
     });
 
     it("should return null when no data is stored", async () => {
-      const loaded = await storage.load();
+      const loaded = (await storage.load()) as Character;
       expect(loaded).toBeNull();
     });
 
@@ -111,7 +108,7 @@ describe("IndexedDBStorageImpl", () => {
       await storage.save(mockCharacter);
       const updatedCharacter = { ...mockCharacter, name: "Updated Character" };
       await storage.save(updatedCharacter);
-      const loaded = await storage.load();
+      const loaded = (await storage.load()) as Character;
       expect(loaded).toEqual(updatedCharacter);
       expect(loaded.name).toBe("Updated Character");
     });
@@ -133,7 +130,7 @@ describe("IndexedDBStorageImpl", () => {
     it("should clear stored character data", async () => {
       await storage.save(mockCharacter);
       await storage.clear();
-      const loaded = await storage.load();
+      const loaded = (await storage.load()) as Character;
       expect(loaded).toBeNull();
     });
 
@@ -158,7 +155,7 @@ describe("IndexedDBStorageImpl", () => {
       await storage.migrateFromLocalStorage();
 
       // Verify: the newer IndexedDB record wins
-      const loaded = await storage.load();
+      const loaded = (await storage.load()) as Character;
       expect(loaded.currentXp).toBe(50);
 
       // Verify: the stale copy is cleared so it cannot resurface
@@ -173,7 +170,7 @@ describe("IndexedDBStorageImpl", () => {
       await storage.migrateFromLocalStorage();
 
       // Verify: Data should be in IndexedDB
-      const loaded = await storage.load();
+      const loaded = (await storage.load()) as Character;
       expect(loaded).toEqual(mockCharacter);
 
       // Verify: Data should be removed from localStorage
@@ -191,7 +188,7 @@ describe("IndexedDBStorageImpl", () => {
       await storage.migrateFromLocalStorage();
 
       // Verify: Data should be in IndexedDB (unwrapped from versioned format)
-      const loaded = await storage.load();
+      const loaded = (await storage.load()) as Character;
       expect(loaded).toEqual(mockCharacter);
 
       // Verify: Migration message was logged
@@ -215,7 +212,7 @@ describe("IndexedDBStorageImpl", () => {
       await expect(storage.migrateFromLocalStorage()).resolves.toBeUndefined();
 
       // Verify: No data in IndexedDB
-      const loaded = await storage.load();
+      const loaded = (await storage.load()) as Character;
       expect(loaded).toBeNull();
     });
 
@@ -235,7 +232,7 @@ describe("IndexedDBStorageImpl", () => {
       );
 
       // Verify: No data in IndexedDB (migration skipped)
-      const loaded = await storage.load();
+      const loaded = (await storage.load()) as Character;
       expect(loaded).toBeNull();
 
       // Verify: Corrupted data remains in localStorage (not removed since migration failed)
@@ -283,7 +280,7 @@ describe("IndexedDBStorageImpl", () => {
       // previously inverted — it expected localStorage to win, which is the
       // data-loss path: migration runs on every page load, so a stale
       // localStorage entry would silently revert newer IndexedDB data.
-      const loaded = await storage.load();
+      const loaded = (await storage.load()) as Character;
       expect(loaded.name).toBe("Existing in IndexedDB");
 
       // Verify: localStorage data should be removed
@@ -296,17 +293,17 @@ describe("IndexedDBStorageImpl", () => {
       const complexCharacter = {
         ...mockCharacter,
         attacks: [
-          { name: "Sword", modifier: 2 },
-          { name: "Crossbow", modifier: 1 },
+          { name: "Sword", damage: 5, modifier: 2, range: "Immediate" },
+          { name: "Crossbow", damage: 4, modifier: 1, range: "Long" },
         ],
         cyphers: [
-          { name: "Cypher 1", level: 3 },
-          { name: "Cypher 2", level: 5 },
+          { name: "Cypher 1", level: "3", effect: "Effect 1" },
+          { name: "Cypher 2", level: "5", effect: "Effect 2" },
         ],
       };
 
       await storage.save(complexCharacter);
-      const loaded = await storage.load();
+      const loaded = (await storage.load()) as Character;
       expect(loaded).toEqual(complexCharacter);
     });
 
@@ -317,7 +314,7 @@ describe("IndexedDBStorageImpl", () => {
       };
 
       await storage.save(characterWithNulls);
-      const loaded = await storage.load();
+      const loaded = (await storage.load()) as Character;
       expect(loaded).toEqual(characterWithNulls);
     });
 
@@ -331,7 +328,7 @@ describe("IndexedDBStorageImpl", () => {
       await Promise.all(promises);
 
       // Last save should win
-      const loaded = await storage.load();
+      const loaded = (await storage.load()) as Character;
       expect(loaded.name).toMatch(/Character \d/);
     });
   });

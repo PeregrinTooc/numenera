@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { ConflictWarningModal } from "@/components/ConflictWarningModal";
 import type { ConflictDetail } from "@/services/conflictDetectionService";
+import { createTestCharacter } from "../factories/character";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("ConflictWarningModal", () => {
@@ -54,7 +55,8 @@ describe("ConflictWarningModal", () => {
         detail: {
           localEtag: "local-etag",
           remoteEtag: "remote-etag",
-          timestamp: Date.now(),
+          remoteTimestamp: Date.now(),
+          localCharacter: createTestCharacter(),
           resolve: resolveHandler,
         },
       });
@@ -74,7 +76,8 @@ describe("ConflictWarningModal", () => {
           detail: {
             localEtag: "local-etag",
             remoteEtag: "remote-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             resolve: resolveHandler,
           },
         })
@@ -95,7 +98,8 @@ describe("ConflictWarningModal", () => {
           detail: {
             localEtag: "local-etag",
             remoteEtag: "remote-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             resolve: vi.fn(),
           },
         })
@@ -113,7 +117,8 @@ describe("ConflictWarningModal", () => {
           detail: {
             localEtag: "local-etag",
             remoteEtag: "remote-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             resolve: vi.fn(),
           },
         })
@@ -132,7 +137,8 @@ describe("ConflictWarningModal", () => {
           detail: {
             localEtag: "local-etag",
             remoteEtag: "remote-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             resolve: resolveHandler,
           },
         })
@@ -155,7 +161,8 @@ describe("ConflictWarningModal", () => {
           detail: {
             localEtag: "local-etag",
             remoteEtag: "remote-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             resolve: resolveHandler,
           },
         })
@@ -177,7 +184,8 @@ describe("ConflictWarningModal", () => {
           detail: {
             localEtag: "local-etag",
             remoteEtag: "remote-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             resolve: vi.fn(),
           },
         })
@@ -202,7 +210,8 @@ describe("ConflictWarningModal", () => {
           detail: {
             localEtag: "local-etag",
             remoteEtag: "remote-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             resolve: resolveHandler,
           },
         })
@@ -223,7 +232,8 @@ describe("ConflictWarningModal", () => {
           detail: {
             localEtag: "local-etag",
             remoteEtag: "remote-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             resolve: vi.fn(),
           },
         })
@@ -242,7 +252,8 @@ describe("ConflictWarningModal", () => {
           detail: {
             localEtag: "local-1",
             remoteEtag: "remote-1",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             resolve: vi.fn(),
           },
         })
@@ -256,7 +267,8 @@ describe("ConflictWarningModal", () => {
           detail: {
             localEtag: "local-2",
             remoteEtag: "remote-2",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             resolve: vi.fn(),
           },
         })
@@ -275,7 +287,8 @@ describe("ConflictWarningModal", () => {
         new CustomEvent("newer-version-available", {
           detail: {
             etag: "new-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             characterName: "Test Character",
           },
         })
@@ -292,7 +305,8 @@ describe("ConflictWarningModal", () => {
         new CustomEvent("newer-version-available", {
           detail: {
             etag: "new-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             characterName: "Test Character",
           },
         })
@@ -309,7 +323,8 @@ describe("ConflictWarningModal", () => {
         new CustomEvent("newer-version-available", {
           detail: {
             etag: "new-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
           },
         })
       );
@@ -325,7 +340,8 @@ describe("ConflictWarningModal", () => {
         new CustomEvent("newer-version-available", {
           detail: {
             etag: "new-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
           },
         })
       );
@@ -341,7 +357,8 @@ describe("ConflictWarningModal", () => {
         new CustomEvent("newer-version-available", {
           detail: {
             etag: "new-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
           },
         })
       );
@@ -368,7 +385,8 @@ describe("ConflictWarningModal", () => {
         new CustomEvent("newer-version-available", {
           detail: {
             etag: "new-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
           },
         })
       );
@@ -389,7 +407,8 @@ describe("ConflictWarningModal", () => {
         new CustomEvent("newer-version-available", {
           detail: {
             etag: "etag-1",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
           },
         })
       );
@@ -401,7 +420,8 @@ describe("ConflictWarningModal", () => {
         new CustomEvent("newer-version-available", {
           detail: {
             etag: "etag-2",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
           },
         })
       );
@@ -418,7 +438,8 @@ describe("ConflictWarningModal", () => {
         new CustomEvent("newer-version-available", {
           detail: {
             etag: "new-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
           },
         })
       );
@@ -442,7 +463,8 @@ describe("ConflictWarningModal", () => {
         new CustomEvent("newer-version-available", {
           detail: {
             etag: "new-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
           },
         })
       );
@@ -463,7 +485,8 @@ describe("ConflictWarningModal", () => {
           detail: {
             localEtag: "local-etag",
             remoteEtag: "remote-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             resolve: vi.fn(),
           },
         })
@@ -484,7 +507,8 @@ describe("ConflictWarningModal", () => {
           detail: {
             localEtag: "local-etag",
             remoteEtag: "remote-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             resolve: vi.fn(),
           },
         })
@@ -505,7 +529,8 @@ describe("ConflictWarningModal", () => {
           detail: {
             localEtag: "local-etag",
             remoteEtag: "remote-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             resolve: vi.fn(),
           },
         })
@@ -535,7 +560,8 @@ describe("ConflictWarningModal", () => {
           detail: {
             localEtag: "local-etag",
             remoteEtag: "remote-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             resolve: vi.fn(),
           },
         })
@@ -552,7 +578,8 @@ describe("ConflictWarningModal", () => {
           detail: {
             localEtag: "local-etag",
             remoteEtag: "remote-etag",
-            timestamp: Date.now(),
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
             resolve: vi.fn(),
           },
         })

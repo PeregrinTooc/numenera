@@ -1,5 +1,6 @@
 // Unit tests for CyphersBox component
 
+import type { Mock } from "vitest";
 import { render } from "lit-html";
 import { CyphersBox } from "@/components/CyphersBox";
 import { Character, Cypher } from "@/types/character";
@@ -13,7 +14,7 @@ describe("CyphersBox", () => {
   const getContainer = setupTestContainer();
   let container: HTMLElement;
   let mockCharacter: Character;
-  let mockOnFieldUpdate: ReturnType<typeof vi.fn>;
+  let mockOnFieldUpdate: Mock<ConstructorParameters<typeof CyphersBox>[1]>;
 
   beforeEach(() => {
     // CyphersBox dispatches character-updated on document.getElementById("app").

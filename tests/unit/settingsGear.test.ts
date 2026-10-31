@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { SettingsGear } from "@/components/SettingsGear";
 import { render } from "lit-html";
 import { setupTestContainer } from "./helpers/testSetup.js";
@@ -26,7 +26,7 @@ describe("SettingsGear", () => {
   const getContainer = setupTestContainer();
   let container: HTMLElement;
   let settingsGear: SettingsGear;
-  let onLanguageChange: ReturnType<typeof vi.fn>;
+  let onLanguageChange: Mock<ConstructorParameters<typeof SettingsGear>[0]>;
 
   beforeEach(() => {
     container = getContainer();

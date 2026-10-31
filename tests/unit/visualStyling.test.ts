@@ -67,7 +67,7 @@ describe("Visual Styling Tests", () => {
       const artifact: Artifact = {
         name: "Test Artifact",
         level: "6",
-        depletion: "1 in 1d20",
+
         effect: "Test effect",
       };
       const artifactItem = new ArtifactItem(artifact, 0);
@@ -82,7 +82,7 @@ describe("Visual Styling Tests", () => {
       const artifact: Artifact = {
         name: "Test Artifact",
         level: "6",
-        depletion: "1 in 1d20",
+
         effect: "Test effect",
       };
       const artifactItem = new ArtifactItem(artifact, 0);
@@ -96,7 +96,7 @@ describe("Visual Styling Tests", () => {
       const artifact: Artifact = {
         name: "Test Artifact",
         level: "6",
-        depletion: "1 in 1d20",
+
         effect: "Test effect",
       };
       const artifactItem = new ArtifactItem(artifact, 0);

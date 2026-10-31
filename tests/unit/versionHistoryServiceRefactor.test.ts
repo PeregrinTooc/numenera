@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 import { VersionHistoryService } from "@/services/versionHistoryService";
 import type { Character } from "@/types/character";
+import { createTestCharacter } from "../factories/character";
 
 describe("VersionHistoryService - Smart Squashing Refactor", () => {
   let service: VersionHistoryService;
@@ -11,47 +12,16 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
 
     // Create mock character
-    mockCharacter = {
-      name: "Test Character",
-      tier: 1,
+    mockCharacter = createTestCharacter({
       descriptor: "Swift",
-      type: "Glaive",
       focus: "Masters Defense",
-      currentXp: 0,
-      totalXp: 0,
-      shins: 10,
-      armor: 1,
-      maxCyphers: 2,
-      effort: 1,
+      portrait: undefined,
       stats: {
         might: { pool: 10, edge: 1, current: 10 },
         speed: { pool: 10, edge: 0, current: 10 },
         intellect: { pool: 10, edge: 0, current: 10 },
       },
-      abilities: [],
-      cyphers: [],
-      artifacts: [],
-      equipment: [],
-      attacks: [],
-      specialAbilities: [],
-      oddities: [],
-      recoveryRolls: {
-        action: false,
-        tenMinutes: false,
-        oneHour: false,
-        tenHours: false,
-      },
-      damageTrack: {
-        hale: true,
-        impaired: false,
-        debilitated: false,
-      },
-      textFields: {
-        background: "",
-        notes: "",
-        advancement: "",
-      },
-    } as Character;
+    });
 
     // Create mock VersionHistoryManager
     mockManager = {

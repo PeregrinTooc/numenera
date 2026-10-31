@@ -7,7 +7,7 @@
  * - Common test utilities
  */
 
-import { beforeEach, afterEach, vi } from "vitest";
+import { beforeEach, afterEach, vi, type Mock } from "vitest";
 
 /**
  * Sets up and tears down a test container attached to document.body
@@ -48,11 +48,11 @@ export function setupTestContainer(): () => HTMLElement {
  * Creates a mock update function and returns both the mock and a helper to get calls
  */
 export function createMockUpdateFn<T = unknown>(): {
-  fn: ReturnType<typeof vi.fn<[T], void>>;
+  fn: Mock<(arg: T) => void>;
   getCalls: () => T[];
   getLastCall: () => T | undefined;
 } {
-  const fn = vi.fn<[T], void>();
+  const fn = vi.fn<(arg: T) => void>();
 
   return {
     fn,

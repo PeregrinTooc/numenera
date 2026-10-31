@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi, type Mock } from "vitest";
 import { BasicInfo } from "@/components/BasicInfo";
 import type { Character } from "@/types/character";
 import { render } from "lit-html";
@@ -8,7 +8,7 @@ describe("BasicInfo", () => {
   const getContainer = setupTestContainer();
   let container: HTMLElement;
   let mockCharacter: Character;
-  let onFieldUpdate: ReturnType<typeof vi.fn>;
+  let onFieldUpdate: Mock<ConstructorParameters<typeof BasicInfo>[1]>;
 
   beforeEach(() => {
     container = getContainer();

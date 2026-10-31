@@ -45,6 +45,7 @@ npm run test:e2e:current # only scenarios tagged @current
 
 npm run lint             # ESLint
 npm run format           # Prettier write
+npm run typecheck:tests  # type-check src/ and tests/ (tsconfig.test.json)
 npm run check:i18n       # verify every t() key exists in en.json AND de.json
 ```
 

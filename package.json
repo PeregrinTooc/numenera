@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "typecheck:tests": "tsc --noEmit -p tsconfig.test.json",
     "preview": "vite preview",
     "kill": "pkill -9 -f vite || true",
     "test": "npm run test:unit && npm run test:e2e:all",

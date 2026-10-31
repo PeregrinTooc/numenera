@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach, type MockInstance } from "vitest";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import { createTestCharacter } from "../factories/character.js";
 
@@ -247,8 +247,8 @@ describe("CharacterSheet touch long-press drag", () => {
 
 describe("CharacterSheet touch listener passivity outside edit mode", () => {
   let sheet: CharacterSheet;
-  let addSpy: ReturnType<typeof vi.spyOn>;
-  let removeSpy: ReturnType<typeof vi.spyOn>;
+  let addSpy: MockInstance<EventTarget["addEventListener"]>;
+  let removeSpy: MockInstance<EventTarget["addEventListener"]>;
 
   beforeEach(() => {
     localStorage.clear();
@@ -265,7 +265,7 @@ describe("CharacterSheet touch listener passivity outside edit mode", () => {
     vi.restoreAllMocks();
   });
 
-  function touchmoveCalls(spy: ReturnType<typeof vi.spyOn>): unknown[][] {
+  function touchmoveCalls(spy: MockInstance<EventTarget["addEventListener"]>): unknown[][] {
     return spy.mock.calls.filter(([type]) => type === "touchmove");
   }
 

@@ -9,6 +9,10 @@ npx lint-staged || exit 1
 echo "🧪 Running unit tests..."
 npm run test:unit || exit 1
 
+# Type-check test code (tsconfig.test.json)
+echo "🔎 Type-checking tests..."
+npm run typecheck:tests || exit 1
+
 # Check translation coverage (all t() keys exist in both locales)
 echo "🌍 Checking translation coverage..."
 npm run check:i18n || exit 1

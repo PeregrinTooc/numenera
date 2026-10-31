@@ -10,13 +10,14 @@ describe("storageFactory", () => {
     });
 
     it("migrates a legacy xp-only character to currentXp/totalXp on load", async () => {
-      const legacyCharacter = { xp: 12 } as any;
+      const legacyCharacter: unknown = { xp: 12 };
       vi.spyOn(IndexedDBStorageImpl.prototype, "load").mockResolvedValue(legacyCharacter);
 
       const result = await loadCharacterState();
 
-      expect(result.currentXp).toBe(12);
-      expect(result.totalXp).toBe(12);
+      expect(result).not.toBeNull();
+      expect(result?.currentXp).toBe(12);
+      expect(result?.totalXp).toBe(12);
     });
 
     it("returns null without sanitizing when nothing is stored", async () => {

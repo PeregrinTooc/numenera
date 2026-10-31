@@ -49,7 +49,7 @@ See "Multiple `-m` Flags" below for why this shape is required.
 ```
 
 Husky's pre-commit hook verifies the automatable parts of this (tests, lint,
-i18n keys) and blocks the commit if any fail.
+type errors in tests, i18n keys) and blocks the commit if any fail.
 
 ---
 
@@ -175,6 +175,7 @@ break automation. Use one `-m` flag per paragraph instead.
 
 - Lint-staged (format and lint changed files)
 - Run unit tests
+- Type-check tests (`npm run typecheck:tests`)
 - Check i18n translation keys
 - Block commit if any fail
 
