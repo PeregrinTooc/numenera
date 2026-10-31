@@ -800,10 +800,10 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I scroll to the bottom of the page` | 1 | 33 |
-| Then | `the Edit Layout button should be in view` | 1 | 58 |
-| Then | `the Edit Layout button should not overlap the character sheet` | 1 | 47 |
-| Then | `the version navigator should be in view` | 1 | 54 |
-| Then | `the version navigator should not overlap the character sheet` | 1 | 40 |
+| Then | `the Edit Layout button should be in view` | 1 | 62 |
+| Then | `the Edit Layout button should not overlap the character sheet` | 1 | 51 |
+| Then | `the version navigator should be in view` | 1 | 58 |
+| Then | `the version navigator should not overlap the character sheet` | 1 | 44 |
 
 ## stat-pool-editing.steps.ts
 

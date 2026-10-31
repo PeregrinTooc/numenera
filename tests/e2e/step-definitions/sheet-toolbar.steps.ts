@@ -32,10 +32,14 @@ async function expectInView(world: CustomWorld, selector: string): Promise<void>
 }
 
 When("I scroll to the bottom of the page", async function (this: CustomWorld) {
-  await this.page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
-  await this.page.waitForFunction(
-    () => Math.ceil(window.scrollY + window.innerHeight) >= document.documentElement.scrollHeight
-  );
+  // Scroll again on every poll: the page can still grow after the first scroll
+  // (late-rendered sections, web fonts), which would otherwise move the bottom
+  // away and time out. The 1px slack absorbs WebKit's sub-pixel scroll offsets.
+  await this.page.waitForFunction(() => {
+    const bottom = document.documentElement.scrollHeight;
+    window.scrollTo(0, bottom);
+    return Math.ceil(window.scrollY + window.innerHeight) >= bottom - 1;
+  });
 });
 
 Then(
