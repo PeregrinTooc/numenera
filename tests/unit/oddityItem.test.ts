@@ -23,5 +23,5 @@ testItemEditAndDelete<string>({
     oddity: "A glowing stone that whispers",
   },
   // Oddity is a string, so the update returns the string directly
-  expectedUpdateTransform: (values) => values.oddity as any,
+  expectedUpdateTransform: (values) => values.oddity as string,
 });

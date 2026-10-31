@@ -1,11 +1,14 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 import { VersionHistoryService } from "@/services/versionHistoryService";
 import type { Character } from "@/types/character";
+import type { CharacterVersion } from "@/types/versionHistory";
+import type { VersionHistoryManager } from "@/storage/versionHistory";
+import { createMockVersionHistoryManager } from "../factories/versionHistoryManager";
 import { createTestCharacter } from "../factories/character";
 
 describe("VersionHistoryService - Smart Squashing Refactor", () => {
   let service: VersionHistoryService;
-  let mockManager: any;
+  let mockManager: VersionHistoryManager;
   let mockCharacter: Character;
 
   beforeEach(() => {
@@ -24,17 +27,14 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
     });
 
     // Create mock VersionHistoryManager
-    mockManager = {
-      saveVersion: vi.fn().mockResolvedValue({
-        id: "version-123",
-        character: mockCharacter,
-        description: "Test",
-        timestamp: Date.now(),
-      }),
-      getVersionById: vi.fn().mockResolvedValue(null),
-      getAllVersions: vi.fn().mockResolvedValue([]),
-      updateVersionMetadata: vi.fn().mockResolvedValue(undefined),
-    };
+    mockManager = createMockVersionHistoryManager();
+    vi.mocked(mockManager.saveVersion).mockResolvedValue({
+      id: "version-123",
+      character: mockCharacter,
+      description: "Test",
+      timestamp: Date.now(),
+      etag: "etag-123",
+    });
 
     service = new VersionHistoryService(mockManager, 1000);
   });
@@ -190,7 +190,7 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
       vi.advanceTimersByTime(1000);
       await vi.runAllTimersAsync();
 
-      const call = mockManager.saveVersion.mock.calls[0];
+      const call = vi.mocked(mockManager.saveVersion).mock.calls[0];
       const description = call[1];
 
       // squashDescriptions should have combined them
@@ -281,11 +281,11 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
     it("should not double-save when the timer fires again during an in-flight squash", async () => {
       // Make saveVersion controllable so we can catch the window between the
       // first squash starting and it actually finishing.
-      let resolveSave: (value: unknown) => void = () => {};
-      const pendingSave = new Promise((resolve) => {
+      let resolveSave: (value: CharacterVersion) => void = () => {};
+      const pendingSave = new Promise<CharacterVersion>((resolve) => {
         resolveSave = resolve;
       });
-      mockManager.saveVersion.mockReturnValue(pendingSave);
+      vi.mocked(mockManager.saveVersion).mockReturnValue(pendingSave);
 
       service.bufferChange(mockCharacter, "Change 1");
 
@@ -305,14 +305,15 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
         character: mockCharacter,
         description: "Change 1",
         timestamp: Date.now(),
+        etag: "etag-123",
       });
       await vi.runAllTimersAsync();
 
       // Change 1 saved once by the in-flight squash, then Change 2 on its own
       // once that finished - never Change 1 again as a duplicate.
-      const descriptions = mockManager.saveVersion.mock.calls.map(
-        (call: [Character, string]) => call[1]
-      );
+      const descriptions = vi
+        .mocked(mockManager.saveVersion)
+        .mock.calls.map((call: [Character, string]) => call[1]);
       expect(descriptions).toEqual(["Change 1", "Change 2"]);
     });
   });

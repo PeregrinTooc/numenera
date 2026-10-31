@@ -1,19 +1,25 @@
 // Parameterized test suite for item components (AbilityItem, AttackItem, etc.)
 // Eliminates duplication across all item test files
 
-import { render } from "lit-html";
+import { render, type TemplateResult } from "lit-html";
+import type { Mock } from "vitest";
 import { screen, fireEvent } from "@testing-library/dom";
 
 export interface ItemTestConfig<T> {
   componentName: string;
-  createComponent: (item: T, index: number, onUpdate?: any, onDelete?: any) => any;
+  createComponent: (
+    item: T,
+    index: number,
+    onUpdate?: (updated: T) => void,
+    onDelete?: () => void
+  ) => { render: () => TemplateResult };
   sampleItem: T;
   editButtonTestId: string;
   deleteButtonTestId: string;
   fieldTestIds: Record<string, string>;
   fieldValues: Record<string, string | number>;
   updatedFieldValues: Record<string, string | number>;
-  expectedUpdateTransform?: (values: Record<string, any>) => Partial<T>;
+  expectedUpdateTransform?: (values: Record<string, string | number>) => Partial<T>;
 }
 
 /**
@@ -23,12 +29,12 @@ export interface ItemTestConfig<T> {
 export function testItemEditAndDelete<T>(config: ItemTestConfig<T>): void {
   describe(`${config.componentName} - Edit Functionality`, () => {
     let container: HTMLElement;
-    let updateSpy: ReturnType<typeof vi.fn>;
+    let updateSpy: Mock<(updated: T) => void>;
 
     beforeEach(() => {
       container = document.createElement("div");
       document.body.appendChild(container);
-      updateSpy = vi.fn();
+      updateSpy = vi.fn<(updated: T) => void>();
     });
 
     afterEach(() => {
@@ -87,7 +93,8 @@ export function testItemEditAndDelete<T>(config: ItemTestConfig<T>): void {
       fireEvent.click(confirmButton);
 
       expect(updateSpy).toHaveBeenCalledTimes(1);
-      const updatedItem = (updateSpy as any).mock.calls[0][0];
+      // Items are objects, or a string for oddities (whose character entries line up with expectedValues).
+      const updatedItem = updateSpy.mock.calls[0][0] as Record<string, unknown>;
 
       // Verify updated values
       const expectedValues = config.expectedUpdateTransform

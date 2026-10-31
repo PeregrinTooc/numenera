@@ -33,12 +33,7 @@ export class SetupDsl {
    * step that no-ops here passes for the wrong reason.
    */
   async updateCharacter(mutate: (character: Character) => void): Promise<void> {
-    const character = (await this.world.storageHelper.getCharacter()) as Character | null;
-    if (!character) {
-      throw new Error(
-        "setup.updateCharacter: no character in storage yet — navigate with waitForCharacterSheetReady first"
-      );
-    }
+    const character = await this.world.storageHelper.getCharacter();
     mutate(character);
     await this.replaceCharacter(character);
   }

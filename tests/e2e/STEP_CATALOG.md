@@ -84,42 +84,42 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I clear the {textarea} textarea` | 4 | 150 |
-| When | `I click outside the {textarea} textarea` | 11 | 161 |
-| When | `I click the {textarea} textarea` | 20 | 146 |
-| When | `I select {string} from the mobile picker` | 1 | 315 |
-| When | `I select {string} from the type dropdown` | 4 | 38 |
-| When | `I tap outside the {textarea} textarea` | 2 | 342 |
-| When | `I tap the {textarea} textarea` | 2 | 320 |
-| When | `I tap the type dropdown` | 1 | 303 |
-| When | `I type {string} in the {textarea} textarea` | 12 | 154 |
-| When | `I type a {int} character string in the background textarea` | 1 | 239 |
-| When | `I type a {int} character string in the notes textarea` | 1 | 248 |
-| Then | `the {textarea} placeholder should be {string}` | 2 | 213 |
-| When | `the {textarea} textarea is empty` | 2 | 209 |
-| Then | `the {textarea} textarea should be empty` | 2 | 199 |
-| Then | `the {textarea} textarea should be focused` | 4 | 181 |
-| Then | `the {textarea} textarea should be readonly` | 8 | 119 |
-| Then | `the {textarea} textarea should become editable` | 2 | 324 |
-| Then | `the {textarea} textarea should have a pointer cursor` | 2 | 136 |
-| Then | `the {textarea} textarea should have an edit state visual indicator` | 2 | 188 |
-| Then | `the {textarea} textarea should not be readonly` | 4 | 171 |
-| Then | `the {textarea} textarea should show {string}` | 14 | 126 |
-| Then | `the background textarea should contain the full {int} character text` | 1 | 257 |
-| Then | `the background textarea should still be editable` | 1 | 203 |
-| Then | `the character data should have {textarea} {string}` | 5 | 221 |
-| Then | `the character data should have the full background text` | 1 | 277 |
-| Then | `the character data should have the full notes text` | 1 | 290 |
-| Then | `the character data should have type {string}` | 1 | 72 |
-| Given | `the character has the following data:` | 1 | 9 |
-| Then | `the mobile OS picker should open` | 1 | 308 |
-| Then | `the notes textarea should contain the full {int} character text` | 1 | 267 |
-| Then | `the type dropdown label should be {string}` | 1 | 86 |
-| Then | `the type dropdown option for {string} should display as {string}` | 3 | 95 |
-| Then | `the type dropdown options should be {string}, {string}, {string}` | 1 | 60 |
-| Then | `the type dropdown should have {int} options` | 1 | 51 |
-| Then | `the type dropdown should show {string} as selected` | 6 | 43 |
-| Then | `the virtual keyboard should appear` | 2 | 333 |
+| When | `I clear the {textarea} textarea` | 4 | 151 |
+| When | `I click outside the {textarea} textarea` | 11 | 162 |
+| When | `I click the {textarea} textarea` | 20 | 147 |
+| When | `I select {string} from the mobile picker` | 1 | 316 |
+| When | `I select {string} from the type dropdown` | 4 | 39 |
+| When | `I tap outside the {textarea} textarea` | 2 | 343 |
+| When | `I tap the {textarea} textarea` | 2 | 321 |
+| When | `I tap the type dropdown` | 1 | 304 |
+| When | `I type {string} in the {textarea} textarea` | 12 | 155 |
+| When | `I type a {int} character string in the background textarea` | 1 | 240 |
+| When | `I type a {int} character string in the notes textarea` | 1 | 249 |
+| Then | `the {textarea} placeholder should be {string}` | 2 | 214 |
+| When | `the {textarea} textarea is empty` | 2 | 210 |
+| Then | `the {textarea} textarea should be empty` | 2 | 200 |
+| Then | `the {textarea} textarea should be focused` | 4 | 182 |
+| Then | `the {textarea} textarea should be readonly` | 8 | 120 |
+| Then | `the {textarea} textarea should become editable` | 2 | 325 |
+| Then | `the {textarea} textarea should have a pointer cursor` | 2 | 137 |
+| Then | `the {textarea} textarea should have an edit state visual indicator` | 2 | 189 |
+| Then | `the {textarea} textarea should not be readonly` | 4 | 172 |
+| Then | `the {textarea} textarea should show {string}` | 14 | 127 |
+| Then | `the background textarea should contain the full {int} character text` | 1 | 258 |
+| Then | `the background textarea should still be editable` | 1 | 204 |
+| Then | `the character data should have {textarea} {string}` | 5 | 222 |
+| Then | `the character data should have the full background text` | 1 | 278 |
+| Then | `the character data should have the full notes text` | 1 | 291 |
+| Then | `the character data should have type {string}` | 1 | 73 |
+| Given | `the character has the following data:` | 1 | 10 |
+| Then | `the mobile OS picker should open` | 1 | 309 |
+| Then | `the notes textarea should contain the full {int} character text` | 1 | 268 |
+| Then | `the type dropdown label should be {string}` | 1 | 87 |
+| Then | `the type dropdown option for {string} should display as {string}` | 3 | 96 |
+| Then | `the type dropdown options should be {string}, {string}, {string}` | 1 | 61 |
+| Then | `the type dropdown should have {int} options` | 1 | 52 |
+| Then | `the type dropdown should show {string} as selected` | 6 | 44 |
+| Then | `the virtual keyboard should appear` | 2 | 334 |
 
 ## auto-save-indicator.steps.ts
 
@@ -129,15 +129,15 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I rapidly edit the character name multiple times` | 1 | 26 |
 | When | `I wait for {int} second(s)` | 1 | 19 |
 | Given | `the character sheet is displayed` | 6 | 4 |
-| Then | `the character should be saved only once after changes stop` | 1 | 119 |
-| Then | `the save indicator should be in the lower-right corner` | 1 | 146 |
-| Then | `the save indicator should be visible` | 2 | 88 |
-| Then | `the save indicator should contain {string}` | 1 | 102 |
-| Then | `the save indicator should have subtle styling` | 1 | 167 |
-| Then | `the save indicator should show a single timestamp` | 1 | 132 |
-| Then | `the save indicator should show a timestamp` | 1 | 93 |
-| Then | `the save indicator should still be visible` | 1 | 141 |
-| Then | `the save timestamp should be updated` | 2 | 110 |
+| Then | `the character should be saved only once after changes stop` | 1 | 113 |
+| Then | `the save indicator should be in the lower-right corner` | 1 | 140 |
+| Then | `the save indicator should be visible` | 2 | 82 |
+| Then | `the save indicator should contain {string}` | 1 | 96 |
+| Then | `the save indicator should have subtle styling` | 1 | 161 |
+| Then | `the save indicator should show a single timestamp` | 1 | 126 |
+| Then | `the save indicator should show a timestamp` | 1 | 87 |
+| Then | `the save indicator should still be visible` | 1 | 135 |
+| Then | `the save timestamp should be updated` | 2 | 104 |
 
 ## basic-info-editing.steps.ts
 
@@ -530,27 +530,27 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a file download should be triggered` | 1 | 195 |
-| When | `I cancel the file save dialog` | 1 | 131 |
-| When | `I click the Export button` | 7 | 124 |
-| When | `I click the Quick Export button` | 1 | 138 |
-| When | `I click the Save As button` | 1 | 144 |
-| Then | `I should not see an {string} button` | 1 | 164 |
-| Then | `I should see a {string} button` | 2 | 159 |
-| Then | `I should see an {string} button` | 2 | 154 |
-| When | `I view the export buttons` | 1 | 119 |
-| Given | `my browser does not support File System Access API` | 1 | 56 |
-| Given | `my browser supports File System Access API` | 7 | 19 |
-| Then | `no file should be saved` | 1 | 237 |
-| Given | `the character name is {string}` | 1 | 86 |
-| Then | `the download filename should contain {string}` | 1 | 205 |
-| Then | `the download should have correct file structure` | 1 | 213 |
-| Then | `the Export button should still be visible` | 1 | 244 |
-| Then | `the export dialog should be triggered` | 1 | 264 |
-| Then | `the export dialog should be triggered with filename containing {string}` | 1 | 170 |
-| Then | `the exported data should have correct structure` | 1 | 182 |
-| Then | `the file should be saved without prompting` | 1 | 249 |
-| Then | `the suggested filename should be {string}` | 1 | 230 |
+| Then | `a file download should be triggered` | 1 | 186 |
+| When | `I cancel the file save dialog` | 1 | 122 |
+| When | `I click the Export button` | 7 | 115 |
+| When | `I click the Quick Export button` | 1 | 129 |
+| When | `I click the Save As button` | 1 | 135 |
+| Then | `I should not see an {string} button` | 1 | 155 |
+| Then | `I should see a {string} button` | 2 | 150 |
+| Then | `I should see an {string} button` | 2 | 145 |
+| When | `I view the export buttons` | 1 | 110 |
+| Given | `my browser does not support File System Access API` | 1 | 47 |
+| Given | `my browser supports File System Access API` | 7 | 9 |
+| Then | `no file should be saved` | 1 | 228 |
+| Given | `the character name is {string}` | 1 | 77 |
+| Then | `the download filename should contain {string}` | 1 | 196 |
+| Then | `the download should have correct file structure` | 1 | 204 |
+| Then | `the Export button should still be visible` | 1 | 235 |
+| Then | `the export dialog should be triggered` | 1 | 255 |
+| Then | `the export dialog should be triggered with filename containing {string}` | 1 | 161 |
+| Then | `the exported data should have correct structure` | 1 | 173 |
+| Then | `the file should be saved without prompting` | 1 | 240 |
+| Then | `the suggested filename should be {string}` | 1 | 221 |
 
 ## i18n.steps.ts
 
@@ -662,8 +662,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Given | `I have reordered sections` | 1 | 98 |
 | Given | `I have the default layout` | 2 | 215 |
 | When | `I import the character file` | 4 | 522 |
-| When | `I long-press the {string} section` | 1 | 666 |
-| When | `I long-press the {string} section and drag it above the {string} section` | 1 | 681 |
+| When | `I long-press the {string} section` | 1 | 662 |
+| When | `I long-press the {string} section and drag it above the {string} section` | 1 | 677 |
 | Given | `I open the settings panel` | 2 | 187 |
 | Then | `I should not see a layout choice prompt` | 1 | 563 |
 | Then | `I should see a layout choice prompt` | 1 | 555 |
@@ -671,24 +671,24 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `I should see options to {string} or {string}` | 1 | 573 |
 | Then | `I should see the {string} button` | 1 | 145 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 50 |
-| When | `I swipe from the {string} section towards the {string} section` | 1 | 704 |
+| When | `I swipe from the {string} section towards the {string} section` | 1 | 700 |
 | Then | `it should be touch-friendly` | 1 | 156 |
 | Given | `layout edit mode is active` | 10 | 62 |
 | Then | `layout edit mode should be inactive` | 1 | 73 |
 | Then | `my current layout should be preserved` | 1 | 598 |
 | Then | `no grid should be created` | 1 | 402 |
-| Then | `only the character data should be imported` | 1 | 620 |
+| Then | `only the character data should be imported` | 1 | 618 |
 | Then | `the {string} option should be enabled` | 1 | 203 |
 | Then | `the {string} section should appear before the {string} section` | 3 | 230 |
-| Then | `the {string} section should be in drag mode` | 1 | 674 |
+| Then | `the {string} section should be in drag mode` | 1 | 670 |
 | Then | `the {string} section should still be at the top` | 1 | 301 |
-| Then | `the character data should be imported` | 1 | 648 |
-| Then | `the character should be imported normally` | 1 | 655 |
+| Then | `the character data should be imported` | 1 | 644 |
+| Then | `the character should be imported normally` | 1 | 651 |
 | Then | `the exported file should contain the layout configuration` | 1 | 490 |
-| Then | `the layout from the imported file should be applied` | 1 | 628 |
+| Then | `the layout from the imported file should be applied` | 1 | 626 |
 | Then | `the layout should be saved` | 1 | 120 |
 | Then | `the layout should return to the default arrangement` | 1 | 191 |
-| Then | `the page should have scrolled` | 1 | 728 |
+| Then | `the page should have scrolled` | 1 | 724 |
 | Then | `the sections should remain in single-column layout` | 1 | 422 |
 | Then | `the sections should remain in the new order` | 1 | 131 |
 | Then | `the visual indicators should be removed` | 1 | 85 |

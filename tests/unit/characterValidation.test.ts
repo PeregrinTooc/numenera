@@ -59,7 +59,7 @@ describe("characterValidation", () => {
       const invalidChar = {
         tier: 1,
         type: "Glaive",
-      } as any;
+      };
 
       const result = validateCharacter(invalidChar);
       expect(result.valid).toBe(false);
@@ -70,7 +70,7 @@ describe("characterValidation", () => {
       const invalidChar = {
         name: 123,
         tier: 1,
-      } as any;
+      };
 
       const result = validateCharacter(invalidChar);
       expect(result.valid).toBe(false);
@@ -81,7 +81,7 @@ describe("characterValidation", () => {
       const invalidChar = {
         name: "Test",
         tier: "three",
-      } as any;
+      };
 
       const result = validateCharacter(invalidChar);
       expect(result.valid).toBe(false);
@@ -92,7 +92,7 @@ describe("characterValidation", () => {
       const invalidChar = {
         name: "Test",
         tier: 1,
-      } as any;
+      };
 
       const result = validateCharacter(invalidChar);
       expect(result.valid).toBe(false);
@@ -106,7 +106,7 @@ describe("characterValidation", () => {
         stats: {
           might: { pool: 10 }, // missing edge and current
         },
-      } as any;
+      };
 
       const result = validateCharacter(invalidChar);
       expect(result.valid).toBe(false);
@@ -123,7 +123,7 @@ describe("characterValidation", () => {
           intellect: { pool: 10, edge: 0, current: 10 },
         },
         cyphers: "not an array",
-      } as any;
+      };
 
       const result = validateCharacter(invalidChar);
       expect(result.valid).toBe(false);
@@ -135,7 +135,7 @@ describe("characterValidation", () => {
         name: 123,
         tier: "two",
         stats: "invalid",
-      } as any;
+      };
 
       const result = validateCharacter(invalidChar);
       expect(result.valid).toBe(false);
@@ -632,7 +632,7 @@ describe("characterValidation", () => {
 
         const result = sanitizeCharacter(input);
 
-        expect((result.character as any).portrait).toBe("data:image/png;base64,abc123");
+        expect(result.character.portrait).toBe("data:image/png;base64,abc123");
       });
 
       it("should not include portrait if not a string", () => {
@@ -642,7 +642,7 @@ describe("characterValidation", () => {
 
         const result = sanitizeCharacter(input);
 
-        expect((result.character as any).portrait).toBeUndefined();
+        expect(result.character.portrait).toBeUndefined();
       });
     });
 
@@ -708,8 +708,8 @@ describe("characterValidation", () => {
         const result = sanitizeCharacter(input);
 
         expect(result.character.name).toBe("Test Hero");
-        expect((result.character as any).unknownField).toBeUndefined();
-        expect((result.character as any).anotherUnknown).toBeUndefined();
+        expect(result.character).not.toHaveProperty("unknownField");
+        expect(result.character).not.toHaveProperty("anotherUnknown");
       });
     });
   });

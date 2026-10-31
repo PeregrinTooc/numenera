@@ -139,10 +139,12 @@ Before(async function (this: CustomWorld) {
     }
 
     // Create and expose test timer
-    (window as any).__testTimer = new TestTimer();
+    // Structurally the same API as the app's TestTimer; this class has to be
+    // self-contained because evaluate() serialises it into the page.
+    window.__testTimer = new TestTimer() as unknown as typeof window.__testTimer;
 
     // Set squash delay for tests (1000ms instead of production 5000ms)
-    (window as any).__SQUASH_DELAY_MS__ = 1000;
+    window.__SQUASH_DELAY_MS__ = 1000;
   });
 
   // Navigate to the server and clear both localStorage and IndexedDB for clean state.

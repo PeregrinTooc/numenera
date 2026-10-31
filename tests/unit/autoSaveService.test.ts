@@ -1,14 +1,14 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from "vitest";
 import { AutoSaveService } from "@/services/autoSaveService";
 
 describe("AutoSaveService", () => {
   let service: AutoSaveService;
-  let mockSaveCallback: ReturnType<typeof vi.fn>;
+  let mockSaveCallback: Mock<() => Promise<void>>;
 
   beforeEach(() => {
     vi.useFakeTimers();
-    mockSaveCallback = vi.fn().mockResolvedValue(undefined);
-    service = new AutoSaveService(mockSaveCallback as any, 300);
+    mockSaveCallback = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
+    service = new AutoSaveService(mockSaveCallback, 300);
   });
 
   afterEach(() => {
@@ -74,8 +74,8 @@ describe("AutoSaveService", () => {
 
   describe("custom debounce time", () => {
     it("should use custom debounce time", () => {
-      const customCallback = vi.fn().mockResolvedValue(undefined);
-      const customService = new AutoSaveService(customCallback as any, 500);
+      const customCallback = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
+      const customService = new AutoSaveService(customCallback, 500);
 
       customService.requestSave();
       vi.advanceTimersByTime(300);

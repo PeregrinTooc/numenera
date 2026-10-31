@@ -1,5 +1,6 @@
 import { When, Then, Given } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
+import type { Character } from "@/types/character";
 import { CustomWorld } from "../support/world.js";
 import { waitForSaveComplete } from "../support/save.js";
 
@@ -229,7 +230,7 @@ Then(
     const storedData = await this.storageHelper.getCharacter();
 
     expect(storedData).toBeTruthy();
-    expect(storedData.textFields[field]).toBe(text);
+    expect(storedData.textFields[field as keyof Character["textFields"]]).toBe(text);
   }
 );
 

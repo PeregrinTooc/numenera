@@ -605,14 +605,12 @@ Then("my current layout should be preserved", async function (this: CustomWorld)
   });
 
   if (layoutData === null) throw new Error("numenera-layout was not saved");
-  const layout = JSON.parse(layoutData);
+  const layout: Array<{ type: string; id: string }> = JSON.parse(layoutData);
 
   // Should still have cyphers before abilities (our custom order)
-  const cypherIndex = layout.findIndex(
-    (item: any) => item.type === "single" && item.id === "cyphers"
-  );
+  const cypherIndex = layout.findIndex((item) => item.type === "single" && item.id === "cyphers");
   const abilitiesIndex = layout.findIndex(
-    (item: any) => item.type === "single" && item.id === "abilities"
+    (item) => item.type === "single" && item.id === "abilities"
   );
 
   expect(cypherIndex).toBeLessThan(abilitiesIndex);
@@ -635,13 +633,11 @@ Then("the layout from the imported file should be applied", async function (this
   });
 
   if (layoutData === null) throw new Error("numenera-layout was not saved");
-  const layout = JSON.parse(layoutData);
+  const layout: Array<{ type: string; id: string }> = JSON.parse(layoutData);
 
   // Should have items before cyphers (from imported layout)
-  const itemsIndex = layout.findIndex((item: any) => item.type === "single" && item.id === "items");
-  const cyphersIndex = layout.findIndex(
-    (item: any) => item.type === "single" && item.id === "cyphers"
-  );
+  const itemsIndex = layout.findIndex((item) => item.type === "single" && item.id === "items");
+  const cyphersIndex = layout.findIndex((item) => item.type === "single" && item.id === "cyphers");
 
   expect(itemsIndex).toBeLessThan(cyphersIndex);
 });

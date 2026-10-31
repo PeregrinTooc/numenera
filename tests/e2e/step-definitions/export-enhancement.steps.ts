@@ -7,23 +7,13 @@ import { waitForCharacterSheetReady } from "../support/app-ready.js";
 // Given Steps - Setup
 // ========================================
 
-/** Window globals the File System Access mock records for later assertions. */
-interface FsaMockWindow {
-  _lastWrittenData?: string;
-  _exportedData?: string;
-  _cancelFilePicker?: boolean;
-  _saveDialogShown?: boolean;
-  _suggestedFilename?: string;
-  showSaveFilePicker?: (options?: { suggestedName?: string }) => Promise<unknown>;
-}
-
 Given("my browser supports File System Access API", async function (this: CustomWorld) {
   // Install the mock before the app boots, then reload: the header decides
   // once, at construction, whether to offer Quick Export / Save As
   // ("showSaveFilePicker" in window). WebKit has no native API, so a mock
   // added after load would never reach that check.
   await this.page.addInitScript(() => {
-    const mockWindow = window as unknown as FsaMockWindow;
+    const mockWindow = window;
 
     // Create mock file handle
     const createMockHandle = (name: string) => ({
@@ -47,7 +37,8 @@ Given("my browser supports File System Access API", async function (this: Custom
       mockWindow._saveDialogShown = true;
       mockWindow._suggestedFilename = options?.suggestedName || "character.json";
       const filename = options?.suggestedName || "character.json";
-      return createMockHandle(filename);
+      // The mock implements only the handle members the app uses.
+      return createMockHandle(filename) as unknown as FileSystemFileHandle;
     };
   });
   await this.page.reload();
@@ -56,7 +47,7 @@ Given("my browser supports File System Access API", async function (this: Custom
 
 Given("my browser does not support File System Access API", async function () {
   await this.page.evaluate(() => {
-    delete (window as any).showSaveFilePicker;
+    delete window.showSaveFilePicker;
 
     // Mock createElement for download link capture
     const originalCreateElement = document.createElement.bind(document);
@@ -64,16 +55,16 @@ Given("my browser does not support File System Access API", async function () {
       const element = originalCreateElement(tagName);
       if (tagName === "a") {
         element.click = function () {
-          const anchor = element as any;
-          (window as any)._downloadFilename = anchor.download;
+          const anchor = element as HTMLAnchorElement;
+          window._downloadFilename = anchor.download;
 
           // Extract data from blob URL
           if (anchor.href && anchor.href.startsWith("blob:")) {
             window
               .fetch(anchor.href)
-              .then((res: any) => res.text())
-              .then((data: any) => {
-                (window as any)._downloadData = data;
+              .then((res) => res.text())
+              .then((data) => {
+                window._downloadData = data;
               });
           }
           // Don't actually trigger download
@@ -132,7 +123,7 @@ When("I click the Export button", async function () {
 When("I cancel the file save dialog", async function () {
   // Set cancel flag BEFORE clicking
   await this.page.evaluate(() => {
-    (window as any)._cancelFilePicker = true;
+    window._cancelFilePicker = true;
   });
 });
 
@@ -172,7 +163,7 @@ Then(
   "the export dialog should be triggered with filename containing {string}",
   async function (expectedName: string) {
     const filename = await this.page.evaluate(() => {
-      return (window as any)._suggestedFilename;
+      return window._suggestedFilename;
     });
     expect(filename).toBeTruthy();
     expect(filename).toContain(expectedName);
@@ -182,7 +173,7 @@ Then(
 
 Then("the exported data should have correct structure", async function () {
   const data = await this.page.evaluate(() => {
-    return (window as any)._lastWrittenData;
+    return window._lastWrittenData;
   });
   expect(data).toBeTruthy();
 
@@ -198,14 +189,14 @@ Then("a file download should be triggered", async function () {
   await this.page.waitForTimeout(500);
 
   const downloadFilename = await this.page.evaluate(() => {
-    return (window as any)._downloadFilename;
+    return window._downloadFilename;
   });
   expect(downloadFilename).toBeTruthy();
 });
 
 Then("the download filename should contain {string}", async function (expectedName: string) {
   const filename = await this.page.evaluate(() => {
-    return (window as any)._downloadFilename;
+    return window._downloadFilename;
   });
   expect(filename).toContain(expectedName);
   expect(filename).toMatch(/\.numenera$/);
@@ -216,7 +207,7 @@ Then("the download should have correct file structure", async function () {
   await this.page.waitForTimeout(500);
 
   const data = await this.page.evaluate(() => {
-    return (window as any)._downloadData;
+    return window._downloadData;
   });
 
   if (data) {
@@ -230,14 +221,14 @@ Then("the download should have correct file structure", async function () {
 
 Then("the suggested filename should be {string}", async function (expectedFilename: string) {
   const filename = await this.page.evaluate(() => {
-    return (window as any)._suggestedFilename;
+    return window._suggestedFilename;
   });
   expect(filename).toBe(expectedFilename);
 });
 
 Then("no file should be saved", async function () {
   const dataSaved = await this.page.evaluate(() => {
-    return (window as any)._lastWrittenData !== undefined;
+    return window._lastWrittenData !== undefined;
   });
   expect(dataSaved).toBe(false);
 });
@@ -250,21 +241,21 @@ Then("the Export button should still be visible", async function () {
 Then("the file should be saved without prompting", async function () {
   // Verify that showSaveFilePicker was NOT called again (no prompting)
   const dialogShownAgain = await this.page.evaluate(() => {
-    const count = (window as any)._saveDialogCallCount || 0;
+    const count = window._saveDialogCallCount || 0;
     return count > 1; // Should be exactly 1 from first export
   });
   expect(dialogShownAgain).toBe(false);
 
   // Verify data was written
   const data = await this.page.evaluate(() => {
-    return (window as any)._lastWrittenData;
+    return window._lastWrittenData;
   });
   expect(data).toBeTruthy();
 });
 
 Then("the export dialog should be triggered", async function () {
   const dialogShown = await this.page.evaluate(() => {
-    return (window as any)._saveDialogShown;
+    return window._saveDialogShown;
   });
   expect(dialogShown).toBe(true);
 });

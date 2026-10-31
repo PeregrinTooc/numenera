@@ -1,7 +1,7 @@
 // Shared test suite for container components (Abilities, Attacks, SpecialAbilities, etc.)
 // Promotes DRY principles and consistent testing across all container types
 
-import { render } from "lit-html";
+import { render, type TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { createTestCharacter as createMockCharacter } from "../../factories/character.js";
 
@@ -10,7 +10,7 @@ export { createMockCharacter };
 export interface ContainerTestConfig<T> {
   componentName: string;
   /** Function to create component - now takes Character */
-  createComponent: (character: Character) => { render: () => any };
+  createComponent: (character: Character) => { render: () => TemplateResult };
   addButtonTestId: string;
   mockItems: T[];
   /** Key on Character that holds the items array */

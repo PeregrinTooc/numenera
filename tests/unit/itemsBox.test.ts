@@ -4,6 +4,21 @@ import type { Character } from "@/types/character";
 import { render } from "lit-html";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
+/**
+ * Private drag-and-drop members the tests drive directly with fake events
+ * (jsdom has no real drag and drop). A structural view, not `any`.
+ */
+interface ItemsBoxInternals {
+  dragState: Record<string, { draggedIndex: number | null; currentTargetIndex: number | null }>;
+  handleDragStart(e: unknown, section: string, testIdSelector: string): void;
+  handleDragOver(e: unknown, section: string, testIdSelector: string): void;
+  handleDrop(e: unknown, section: string, testIdSelector: string): void;
+}
+
+function internalsOf(itemsBox: ItemsBox): ItemsBoxInternals {
+  return itemsBox as unknown as ItemsBoxInternals;
+}
+
 describe("ItemsBox", () => {
   const getContainer = setupTestContainer();
   let container: HTMLElement;
@@ -86,8 +101,7 @@ describe("ItemsBox", () => {
       const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
       render(itemsBox.render(), container);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const internal = itemsBox as any;
+      const internal = internalsOf(itemsBox);
       internal.dragState.equipment.draggedIndex = 0;
       internal.dragState.equipment.currentTargetIndex = 2;
 
@@ -120,8 +134,7 @@ describe("ItemsBox", () => {
       const items = Array.from(
         container.querySelectorAll<HTMLElement>('[data-testid="equipment-item"]')
       );
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const internal = itemsBox as any;
+      const internal = internalsOf(itemsBox);
       const dataTransfer = {
         setData: vi.fn(),
       };

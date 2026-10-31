@@ -4,6 +4,7 @@ import { VersionState } from "@/services/versionState";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import type { CharacterVersion } from "@/types/versionHistory";
 import { createTestCharacter } from "../factories/character.js";
+import { createMockVersionHistoryManager } from "../factories/versionHistoryManager";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("CompareView", () => {
@@ -15,7 +16,7 @@ describe("CompareView", () => {
 
   const createMockVersion = (name: string, description: string, id: string): CharacterVersion => {
     const character = createMockCharacter(name);
-    const { portrait: _portrait, ...characterWithoutPortrait } = character as any;
+    const { portrait: _portrait, ...characterWithoutPortrait } = character;
     return {
       id,
       character: characterWithoutPortrait,
@@ -34,10 +35,7 @@ describe("CompareView", () => {
   }
 
   beforeEach(async () => {
-    mockVersionHistory = {
-      getAllVersions: vi.fn(),
-      saveVersion: vi.fn().mockResolvedValue(undefined),
-    } as any;
+    mockVersionHistory = createMockVersionHistoryManager();
     const latestCharacter = createMockCharacter("Latest");
     versionState = new VersionState(latestCharacter, mockVersionHistory);
   });
@@ -156,7 +154,7 @@ describe("CompareView", () => {
         return createMockVersion(`Version ${i + 2}`, `Edit ${i + 2}`, `id-${i + 2}`);
       }
       const character = createMockCharacter("Restored");
-      const { portrait: _portrait, ...rest } = character as any;
+      const { portrait: _portrait, ...rest } = character;
       return {
         id: "id-restored",
         character: rest,
@@ -214,7 +212,7 @@ describe("CompareView", () => {
         },
       },
     ];
-    vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(versions as any);
+    vi.mocked(mockVersionHistory.getAllVersions).mockResolvedValue(versions);
     await versionState.reload();
 
     const compareView = new CompareView({

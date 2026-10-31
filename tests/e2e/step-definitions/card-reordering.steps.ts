@@ -90,7 +90,7 @@ When("I start dragging cypher {string}", async function (this: CustomWorld, cyph
   }
 
   // Store the dragged card name for subsequent steps
-  (this as any).draggedCypherName = cypherName;
+  this.draggedCypherName = cypherName;
 
   // Dispatch dragstart event from within the browser context
   // This is needed because mouse.down() doesn't trigger HTML5 drag events

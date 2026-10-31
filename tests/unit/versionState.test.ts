@@ -4,6 +4,7 @@ import { VersionHistoryManager } from "@/storage/versionHistory";
 import { Character } from "@/types/character";
 import { CharacterVersion } from "@/types/versionHistory";
 import { createTestCharacter } from "../factories/character.js";
+import { createMockVersionHistoryManager } from "../factories/versionHistoryManager";
 
 describe("VersionState", () => {
   let mockVersionHistory: VersionHistoryManager;
@@ -18,7 +19,7 @@ describe("VersionState", () => {
     timestamp: number
   ): CharacterVersion => {
     const character = createMockCharacter(name);
-    const { portrait: _portrait, ...characterWithoutPortrait } = character as any;
+    const { portrait: _portrait, ...characterWithoutPortrait } = character;
     return {
       id: `version-${name}`,
       character: characterWithoutPortrait,
@@ -30,10 +31,7 @@ describe("VersionState", () => {
 
   beforeEach(() => {
     mockCharacter = createMockCharacter("Test Character");
-    mockVersionHistory = {
-      getAllVersions: vi.fn(),
-      saveVersion: vi.fn().mockResolvedValue(undefined),
-    } as any;
+    mockVersionHistory = createMockVersionHistoryManager();
 
     versionState = new VersionState(mockCharacter, mockVersionHistory);
   });
@@ -154,9 +152,16 @@ describe("VersionState", () => {
 
     describe("legacy version migration", () => {
       it("should migrate a version snapshot saved before the currentXp/totalXp split", async () => {
-        const legacyCharacter = { ...createMockCharacter("Legacy Character"), xp: 12 } as any;
-        delete legacyCharacter.currentXp;
-        delete legacyCharacter.totalXp;
+        const {
+          currentXp: _currentXp,
+          totalXp: _totalXp,
+          ...modernFields
+        } = createMockCharacter("Legacy Character");
+        // Deliberately not a valid Character: the pre-split shape had only `xp`.
+        const legacyCharacter = {
+          ...modernFields,
+          xp: 12,
+        } as unknown as CharacterVersion["character"];
 
         const legacyVersion = {
           id: "version-legacy",

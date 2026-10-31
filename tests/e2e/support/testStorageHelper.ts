@@ -1,4 +1,6 @@
 import { Page } from "@playwright/test";
+import type { Character } from "@/types/character";
+import type { CharacterVersion } from "@/types/versionHistory";
 
 /**
  * Test helper for character storage operations
@@ -22,28 +24,37 @@ export class TestStorageHelper {
    *
    * @param character Character object to store
    */
-  async setCharacter(character: any): Promise<void> {
+  async setCharacter(character: unknown): Promise<void> {
     await this.page.evaluate(async (char) => {
       // Use storage API exposed on window by main.ts (works in dev and production)
       if (!window.__testStorage) {
         throw new Error("Test storage API not available. Make sure the app has loaded.");
       }
-      await window.__testStorage.saveCharacterState(char);
+      await window.__testStorage.saveCharacterState(char as Character);
     }, character);
   }
 
   /**
    * Get character data from storage
    *
-   * @returns Stored character object or null
+   * Throws when storage is still empty: a step reading the character before
+   * the app has persisted one would otherwise pass for the wrong reason.
+   *
+   * @returns Stored character object
    */
-  async getCharacter(): Promise<any> {
-    return await this.page.evaluate(async () => {
+  async getCharacter(): Promise<Character> {
+    const character = await this.page.evaluate(async () => {
       if (!window.__testStorage) {
         throw new Error("Test storage API not available. Make sure the app has loaded.");
       }
       return await window.__testStorage.loadCharacterState();
     });
+    if (!character) {
+      throw new Error(
+        "getCharacter: no character in storage yet - navigate with waitForCharacterSheetReady first"
+      );
+    }
+    return character;
   }
 
   /**
@@ -90,7 +101,7 @@ export class TestStorageHelper {
    * @param character Character data to save as a version
    * @param description Description of the changes
    */
-  async createVersion(character: any, description: string): Promise<void> {
+  async createVersion(character: Character, description: string): Promise<void> {
     await this.page.evaluate(
       async ({ char, desc }) => {
         if (!window.__testVersionHistory) {
@@ -108,7 +119,7 @@ export class TestStorageHelper {
    *
    * @returns Array of version objects
    */
-  async getAllVersions(): Promise<any[]> {
+  async getAllVersions(): Promise<CharacterVersion[]> {
     return await this.page.evaluate(async () => {
       if (!window.__testVersionHistory) {
         throw new Error("Test version history API not available. Make sure the app has loaded.");
@@ -136,7 +147,7 @@ export class TestStorageHelper {
    * @param character Character to return from import, or null to simulate cancel
    * @param warnings Optional array of warning messages
    */
-  async setMockFileImporter(character: any | null, warnings: string[] = []): Promise<void> {
+  async setMockFileImporter(character: Character | null, warnings: string[] = []): Promise<void> {
     await this.page.evaluate(
       ({ char, warns }) => {
         if (!window.__testFileImporter) {

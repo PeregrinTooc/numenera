@@ -23,6 +23,31 @@ const oldVersionedFormat = {
 
 const TEST_AVAILABILITY_TIMEOUT_MS = 50;
 
+/**
+ * Private members the failure-path tests swap out to simulate a broken
+ * database. A structural view of the class, not `any`.
+ */
+interface StorageInternals {
+  db: IDBDatabase | null;
+  saveInternal: (character: Character) => Promise<void>;
+}
+
+function internalsOf(storage: IndexedDBStorageImpl): StorageInternals {
+  return storage as unknown as StorageInternals;
+}
+
+/** Swaps in a database without the object store; returns a function that restores the real one. */
+function replaceDbWithoutObjectStore(storage: IndexedDBStorageImpl): () => void {
+  const internals = internalsOf(storage);
+  const originalDb = internals.db;
+  internals.db = {
+    objectStoreNames: { contains: () => false },
+  } as unknown as IDBDatabase;
+  return () => {
+    internals.db = originalDb;
+  };
+}
+
 describe("IndexedDBStorageImpl", () => {
   let storage: IndexedDBStorageImpl;
 
@@ -246,8 +271,9 @@ describe("IndexedDBStorageImpl", () => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(mockCharacter));
 
       // Mock IndexedDB saveInternal to fail
-      const originalSaveInternal = (storage as any).saveInternal.bind(storage);
-      (storage as any).saveInternal = vi.fn().mockRejectedValue(new Error("Save failed"));
+      const internals = internalsOf(storage);
+      const originalSaveInternal = internals.saveInternal.bind(storage);
+      internals.saveInternal = vi.fn().mockRejectedValue(new Error("Save failed"));
 
       const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
@@ -261,7 +287,7 @@ describe("IndexedDBStorageImpl", () => {
       );
 
       // Restore
-      (storage as any).saveInternal = originalSaveInternal;
+      internals.saveInternal = originalSaveInternal;
       consoleErrorSpy.mockRestore();
     });
 
@@ -342,12 +368,7 @@ describe("IndexedDBStorageImpl", () => {
       const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
       // Mock objectStoreNames to not contain the store
-      const originalDb = (storage as any).db;
-      (storage as any).db = {
-        objectStoreNames: {
-          contains: () => false,
-        },
-      };
+      const restoreDb = replaceDbWithoutObjectStore(storage);
 
       // Execute migration - should skip gracefully, not throw
       await expect(storage.migrateFromLocalStorage()).resolves.toBeUndefined();
@@ -361,18 +382,13 @@ describe("IndexedDBStorageImpl", () => {
       expect(localStorage.getItem(STORAGE_KEY)).not.toBeNull();
 
       // Restore
-      (storage as any).db = originalDb;
+      restoreDb();
       consoleWarnSpy.mockRestore();
     });
 
     it("should throw when save is called and object store does not exist", async () => {
       // Mock objectStoreNames to not contain the store
-      const originalDb = (storage as any).db;
-      (storage as any).db = {
-        objectStoreNames: {
-          contains: () => false,
-        },
-      };
+      const restoreDb = replaceDbWithoutObjectStore(storage);
 
       // Execute - should throw error for save
       await expect(storage.save(mockCharacter)).rejects.toThrow(
@@ -380,17 +396,12 @@ describe("IndexedDBStorageImpl", () => {
       );
 
       // Restore
-      (storage as any).db = originalDb;
+      restoreDb();
     });
 
     it("should throw when load is called and object store does not exist", async () => {
       // Mock objectStoreNames to not contain the store
-      const originalDb = (storage as any).db;
-      (storage as any).db = {
-        objectStoreNames: {
-          contains: () => false,
-        },
-      };
+      const restoreDb = replaceDbWithoutObjectStore(storage);
 
       // Execute - should throw error for load
       await expect(storage.load()).rejects.toThrow(
@@ -398,17 +409,12 @@ describe("IndexedDBStorageImpl", () => {
       );
 
       // Restore
-      (storage as any).db = originalDb;
+      restoreDb();
     });
 
     it("should throw when clear is called and object store does not exist", async () => {
       // Mock objectStoreNames to not contain the store
-      const originalDb = (storage as any).db;
-      (storage as any).db = {
-        objectStoreNames: {
-          contains: () => false,
-        },
-      };
+      const restoreDb = replaceDbWithoutObjectStore(storage);
 
       // Execute - should throw error for clear
       await expect(storage.clear()).rejects.toThrow(
@@ -416,7 +422,7 @@ describe("IndexedDBStorageImpl", () => {
       );
 
       // Restore
-      (storage as any).db = originalDb;
+      restoreDb();
     });
   });
 });

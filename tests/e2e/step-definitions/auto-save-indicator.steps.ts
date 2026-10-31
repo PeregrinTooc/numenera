@@ -29,16 +29,13 @@ When("I rapidly edit the character name multiple times", async function (this: C
   this.saveCount = 0;
 
   await this.page.evaluate(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).__saveCount = 0;
+    window.__saveCount = 0;
 
     // Monitor save indicator for content changes
     const indicator = document.querySelector('[data-testid="save-indicator"]');
     if (indicator) {
-      // eslint-disable-next-line no-undef
       const observer = new MutationObserver(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).__saveCount++;
+        window.__saveCount = (window.__saveCount ?? 0) + 1;
       });
 
       observer.observe(indicator, {
@@ -47,8 +44,7 @@ When("I rapidly edit the character name multiple times", async function (this: C
         characterData: true,
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).__saveObserver = observer;
+      window.__saveObserver = observer;
     }
   });
 
@@ -72,10 +68,8 @@ When("I rapidly edit the character name multiple times", async function (this: C
   // Get save count and cleanup observer
 
   this.saveCount = await this.page.evaluate(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const count = (window as any).__saveCount || 0;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const observer = (window as any).__saveObserver;
+    const count = window.__saveCount || 0;
+    const observer = window.__saveObserver;
     if (observer) {
       observer.disconnect();
     }

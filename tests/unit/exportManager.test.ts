@@ -42,7 +42,7 @@ const mockCharacter: Character = {
 };
 
 // Helper to create mock FileSystemFileHandle
-function createMockHandle(name = "character.json") {
+function createMockHandle(name = "character.json"): FileSystemFileHandle {
   return {
     name,
     kind: "file" as const,
@@ -54,29 +54,36 @@ function createMockHandle(name = "character.json") {
   } as unknown as FileSystemFileHandle;
 }
 
+// Wraps a write stub in a FileSystemWritableFileStream (the mock implements only write/close).
+function createMockWritable(
+  write = vi.fn().mockResolvedValue(undefined)
+): FileSystemWritableFileStream {
+  return {
+    write,
+    close: vi.fn().mockResolvedValue(undefined),
+  } as unknown as FileSystemWritableFileStream;
+}
+
 // Helper to setup export test with File System Access API
 function setupExportTest() {
   const mockHandle = createMockHandle();
-  (window as any).showSaveFilePicker = vi.fn().mockResolvedValue(mockHandle);
-  return { mockHandle };
+  const picker = vi.fn().mockResolvedValue(mockHandle);
+  window.showSaveFilePicker = picker;
+  return { mockHandle, picker };
 }
 
 // Helper to setup download test (non-Chromium)
 function setupDownloadTest() {
-  delete (window as any).showSaveFilePicker;
+  delete window.showSaveFilePicker;
   const createElementSpy = vi.spyOn(document, "createElement");
   const mockLink = {
     click: vi.fn(),
     download: "",
     href: "",
   };
-  createElementSpy.mockReturnValue(mockLink as any);
-  const appendChildSpy = vi
-    .spyOn(document.body, "appendChild")
-    .mockImplementation((node) => node as any);
-  const removeChildSpy = vi
-    .spyOn(document.body, "removeChild")
-    .mockImplementation((node) => node as any);
+  createElementSpy.mockReturnValue(mockLink as unknown as HTMLElement);
+  const appendChildSpy = vi.spyOn(document.body, "appendChild").mockImplementation((node) => node);
+  const removeChildSpy = vi.spyOn(document.body, "removeChild").mockImplementation((node) => node);
   return { mockLink, createElementSpy, appendChildSpy, removeChildSpy };
 }
 
@@ -91,102 +98,72 @@ function expectValidFileStructure(data: string) {
   return parsed;
 }
 
+// Minimal IndexedDB request: settles "successfully" on the next microtask,
+// calling whatever onsuccess the code under test has assigned by then.
+interface FakeRequest<T> {
+  result: T;
+  error: null;
+  onsuccess: (() => void) | null;
+  onerror: (() => void) | null;
+}
+
+function fakeRequest<T>(result: T, beforeSuccess?: () => void): FakeRequest<T> {
+  const request: FakeRequest<T> = { result, error: null, onsuccess: null, onerror: null };
+  void Promise.resolve().then(() => {
+    beforeSuccess?.();
+    request.onsuccess?.();
+  });
+  return request;
+}
+
 // Helper to setup IndexedDB mock
-function setupIndexedDBMock() {
-  const store = new Map();
+function setupIndexedDBMock(): Map<string, unknown> {
+  const store = new Map<string, unknown>();
 
-  global.indexedDB = {
-    open: vi.fn().mockImplementation((_name: string, _version: number) => {
-      const db = {
-        objectStoreNames: { contains: () => false },
-        transaction: (_storeName: string, _mode: string) => {
-          const tx = {
-            objectStore: (_name: string) => ({
-              get: vi.fn().mockImplementation((key: string) => {
-                const result = store.get(key);
-                const request = {
-                  result,
-                  onsuccess: null as any,
-                  onerror: null as any,
-                };
-                // Resolve immediately in next tick
-                Promise.resolve().then(() => {
-                  if (request.onsuccess) {
-                    request.onsuccess();
-                  }
-                });
-                return request;
-              }),
-              put: vi.fn().mockImplementation((value: any, key: string) => {
-                store.set(key, value);
-                const request = {
-                  onsuccess: null as any,
-                  onerror: null as any,
-                };
-                Promise.resolve().then(() => {
-                  if (request.onsuccess) {
-                    request.onsuccess();
-                  }
-                });
-                return request;
-              }),
-              delete: vi.fn().mockImplementation((key: string) => {
-                store.delete(key);
-                const request = {
-                  onsuccess: null as any,
-                  onerror: null as any,
-                };
-                Promise.resolve().then(() => {
-                  if (request.onsuccess) {
-                    request.onsuccess();
-                  }
-                });
-                return request;
-              }),
-            }),
-            oncomplete: null as any,
-            onerror: null as any,
-          };
-          // Trigger oncomplete in next tick
-          Promise.resolve().then(() => {
-            if (tx.oncomplete) {
-              tx.oncomplete();
-            }
-          });
-          return tx;
-        },
-        createObjectStore: vi.fn(),
+  const objectStore = () => ({
+    get: vi.fn((key: string) => fakeRequest(store.get(key))),
+    put: vi.fn((value: unknown, key: string) => {
+      store.set(key, value);
+      return fakeRequest(undefined);
+    }),
+    delete: vi.fn((key: string) => {
+      store.delete(key);
+      return fakeRequest(undefined);
+    }),
+  });
+
+  const db = {
+    objectStoreNames: { contains: () => false },
+    transaction: () => {
+      const tx = { objectStore, oncomplete: null as (() => void) | null, onerror: null };
+      // Complete on the next tick
+      void Promise.resolve().then(() => tx.oncomplete?.());
+      return tx;
+    },
+    createObjectStore: vi.fn(),
+  };
+
+  // Only the slice of IDBFactory that the file-handle store calls.
+  const fakeFactory = {
+    open: vi.fn(() => {
+      const request = fakeRequest(db) as FakeRequest<typeof db> & {
+        onupgradeneeded: ((event: unknown) => void) | null;
       };
-
-      const request = {
-        result: db,
-        error: null,
-        onsuccess: null as any,
-        onerror: null as any,
-        onupgradeneeded: null as any,
-      };
-
-      // Resolve immediately in next tick
-      Promise.resolve().then(() => {
-        if (request.onupgradeneeded) {
-          request.onupgradeneeded({ target: { result: db } } as any);
-        }
-        if (request.onsuccess) {
-          request.onsuccess();
-        }
-      });
-
+      request.onupgradeneeded = null;
+      // fakeRequest settles on a microtask, so upgrade runs first, as in a real open
+      void Promise.resolve().then(() => request.onupgradeneeded?.({ target: { result: db } }));
       return request;
     }),
     deleteDatabase: vi.fn(),
-  } as any;
+  };
+  global.indexedDB = fakeFactory as unknown as IDBFactory;
 
   return store;
 }
 
 describe("ExportManager", () => {
   let exportManager: ExportManager;
-  let idbStore: Map<string, any>;
+  let idbStore: Map<string, unknown>;
 
   beforeEach(() => {
     // Setup mocks
@@ -194,7 +171,7 @@ describe("ExportManager", () => {
     vi.clearAllMocks();
 
     // Clear window mocks
-    delete (window as any).showSaveFilePicker;
+    delete window.showSaveFilePicker;
 
     exportManager = new ExportManager();
   });
@@ -205,13 +182,13 @@ describe("ExportManager", () => {
 
   describe("Feature Detection", () => {
     it("should detect File System Access API support", () => {
-      (window as any).showSaveFilePicker = vi.fn();
+      window.showSaveFilePicker = vi.fn();
 
       expect(exportManager.supportsFileSystemAccess()).toBe(true);
     });
 
     it("should return false when API not available", () => {
-      delete (window as any).showSaveFilePicker;
+      delete window.showSaveFilePicker;
 
       expect(exportManager.supportsFileSystemAccess()).toBe(false);
     });
@@ -261,7 +238,7 @@ describe("ExportManager", () => {
       expect(mockHandle.createWritable).toHaveBeenCalled();
 
       // Verify the written data has valid structure
-      const writtenData = (writableMock.write as any).mock.calls[0][0];
+      const writtenData = vi.mocked(writableMock.write).mock.calls[0][0] as string;
       const parsed = expectValidFileStructure(writtenData);
       expect(parsed.character.name).toBe("Glaive Warrior");
 
@@ -288,9 +265,9 @@ describe("ExportManager", () => {
     });
 
     it("should handle user cancellation gracefully", async () => {
-      (window as any).showSaveFilePicker = vi
+      window.showSaveFilePicker = vi
         .fn()
-        .mockRejectedValue(new (global as any).DOMException("User cancelled", "AbortError"));
+        .mockRejectedValue(new DOMException("User cancelled", "AbortError"));
 
       // Should not throw
       await exportManager.export(mockCharacter);
@@ -359,7 +336,7 @@ describe("ExportManager", () => {
       expect(exportManager.hasRememberedLocation()).toBe(true);
 
       // Clear showSaveFilePicker mock to verify it's not called again
-      (window as any).showSaveFilePicker.mockClear();
+      vi.mocked(window.showSaveFilePicker!).mockClear();
 
       // Quick export should not prompt and should use the remembered handle
       await exportManager.quickExport(mockCharacter);
@@ -371,7 +348,7 @@ describe("ExportManager", () => {
 
     it("should dispatch success event after quick export", async () => {
       const _mockHandle = createMockHandle("test.json");
-      (window as any).showSaveFilePicker = vi.fn().mockResolvedValue(_mockHandle);
+      window.showSaveFilePicker = vi.fn().mockResolvedValue(_mockHandle);
 
       await exportManager.export(mockCharacter);
       await new Promise((resolve) => setTimeout(resolve, 10));
@@ -392,17 +369,14 @@ describe("ExportManager", () => {
     it("should handle write permission denied", async () => {
       const mockHandle = createMockHandle();
       // Set up the write mock to fail on the second call
-      const writableMock = {
-        write: vi
+      const writableMock = createMockWritable(
+        vi
           .fn()
           .mockResolvedValueOnce(undefined) // First call succeeds (export)
-          .mockRejectedValueOnce(
-            new (global as any).DOMException("Permission denied", "NotAllowedError")
-          ), // Second call fails (quickExport)
-        close: vi.fn().mockResolvedValue(undefined),
-      };
-      (mockHandle.createWritable as any).mockResolvedValue(writableMock);
-      (window as any).showSaveFilePicker = vi.fn().mockResolvedValue(mockHandle);
+          .mockRejectedValueOnce(new DOMException("Permission denied", "NotAllowedError")) // Second call fails (quickExport)
+      );
+      vi.mocked(mockHandle.createWritable).mockResolvedValue(writableMock);
+      window.showSaveFilePicker = vi.fn().mockResolvedValue(mockHandle);
 
       await exportManager.export(mockCharacter);
       await new Promise((resolve) => setTimeout(resolve, 10));
@@ -415,17 +389,14 @@ describe("ExportManager", () => {
     it("should handle disk full error", async () => {
       const mockHandle = createMockHandle();
       // Set up the write mock to fail on the second call
-      const writableMock = {
-        write: vi
+      const writableMock = createMockWritable(
+        vi
           .fn()
           .mockResolvedValueOnce(undefined) // First call succeeds (export)
-          .mockRejectedValueOnce(
-            new (global as any).DOMException("Disk full", "QuotaExceededError")
-          ), // Second call fails (quickExport)
-        close: vi.fn().mockResolvedValue(undefined),
-      };
-      (mockHandle.createWritable as any).mockResolvedValue(writableMock);
-      (window as any).showSaveFilePicker = vi.fn().mockResolvedValue(mockHandle);
+          .mockRejectedValueOnce(new DOMException("Disk full", "QuotaExceededError")) // Second call fails (quickExport)
+      );
+      vi.mocked(mockHandle.createWritable).mockResolvedValue(writableMock);
+      window.showSaveFilePicker = vi.fn().mockResolvedValue(mockHandle);
 
       await exportManager.export(mockCharacter);
       await new Promise((resolve) => setTimeout(resolve, 10));
@@ -441,7 +412,7 @@ describe("ExportManager", () => {
       const mockHandle1 = createMockHandle("file1.json");
       const mockHandle2 = createMockHandle("file2.json");
 
-      (window as any).showSaveFilePicker = vi
+      window.showSaveFilePicker = vi
         .fn()
         .mockResolvedValueOnce(mockHandle1)
         .mockResolvedValueOnce(mockHandle2);
@@ -459,7 +430,7 @@ describe("ExportManager", () => {
       const mockHandle2 = createMockHandle("file2.json");
       const writable2 = await mockHandle2.createWritable();
 
-      (window as any).showSaveFilePicker = vi
+      window.showSaveFilePicker = vi
         .fn()
         .mockResolvedValueOnce(mockHandle1)
         .mockResolvedValueOnce(mockHandle2);
@@ -468,8 +439,8 @@ describe("ExportManager", () => {
       await exportManager.saveAs(mockCharacter);
 
       // Clear mocks
-      (window as any).showSaveFilePicker.mockClear();
-      (writable2.write as any).mockClear();
+      vi.mocked(window.showSaveFilePicker!).mockClear();
+      vi.mocked(writable2.write).mockClear();
 
       // Quick export should now use handle2
       await exportManager.quickExport(mockCharacter);
@@ -480,7 +451,7 @@ describe("ExportManager", () => {
 
     it("should dispatch handle-updated event", async () => {
       const mockHandle = createMockHandle();
-      (window as any).showSaveFilePicker = vi.fn().mockResolvedValue(mockHandle);
+      window.showSaveFilePicker = vi.fn().mockResolvedValue(mockHandle);
 
       const eventSpy = vi.fn();
       window.addEventListener("export-handle-updated", eventSpy);

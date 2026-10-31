@@ -33,6 +33,8 @@ export interface CustomWorld extends World {
   cards: CardsDsl;
   setup: SetupDsl;
   previousCardCount?: number;
+  // card-reordering.steps.ts
+  draggedCypherName?: string;
   // section-rearrangement.steps.ts
   importedLayout?: Array<{ type: string; id: string }> | null;
   scrollYBeforeSwipe?: number;
@@ -59,6 +61,8 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   cards!: CardsDsl;
   setup!: SetupDsl;
   previousCardCount?: number;
+  // card-reordering.steps.ts
+  draggedCypherName?: string;
   importedLayout?: Array<{ type: string; id: string }> | null;
   scrollYBeforeSwipe?: number;
   originalCharacterName?: string;

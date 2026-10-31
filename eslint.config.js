@@ -29,6 +29,7 @@ export default [
         localStorage: "readonly",
         HTMLElement: "readonly",
         HTMLInputElement: "readonly",
+        HTMLAnchorElement: "readonly",
         HTMLButtonElement: "readonly",
         HTMLImageElement: "readonly",
         HTMLSelectElement: "readonly",
@@ -58,12 +59,14 @@ export default [
         // IndexedDB
         IDBDatabase: "readonly",
         IDBOpenDBRequest: "readonly",
+        IDBFactory: "readonly",
         indexedDB: "readonly",
         Storage: "readonly",
         // Standard browser APIs
         DOMException: "readonly",
         PermissionState: "readonly",
         MediaQueryList: "readonly",
+        MutationObserver: "readonly",
         // Crypto and encoding
         crypto: "readonly",
         TextEncoder: "readonly",
@@ -92,7 +95,14 @@ export default [
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
       "@typescript-eslint/explicit-function-return-type": "off",
-      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-explicit-any": "error",
+      // Rule 5 has no exceptions, so the rule above must not be switched off.
+      // No eslint plugin that restricts directives is installed; instead,
+      // no-warning-comments rejects any comment that names the rule, which
+      // includes `// eslint-disable-next-line @typescript-eslint/no-explicit-any`
+      // (the report lands on the comment's own line, which the directive does
+      // not cover). A prose comment that merely mentions the rule is rejected too.
+      "no-warning-comments": ["error", { terms: ["no-explicit-any"], location: "anywhere" }],
       "no-console": ["warn", { allow: ["warn", "error"] }],
     },
   },

@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { ConflictDetectionService } from "@/services/conflictDetectionService";
+import type { Character } from "@/types/character";
+import { createTestCharacter } from "../factories/character";
 
 // Mock MessageEvent interface for tests
 interface MockMessageEvent<T = unknown> {
@@ -18,12 +20,25 @@ class MockBroadcastChannel {
   }
 }
 
+/**
+ * Private members the tests read to reach the mock channel and the pending
+ * state. A structural view of the class, not `any`.
+ */
+interface ServiceInternals {
+  channel: MockBroadcastChannel;
+  tabId: string;
+  pendingCharacter: Character | null;
+}
+
+function internalsOf(service: ConflictDetectionService): ServiceInternals {
+  return service as unknown as ServiceInternals;
+}
+
 // Store references to created channels for cross-channel testing
 const _channels: MockBroadcastChannel[] = [];
 
 describe("ConflictDetectionService", () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let originalBroadcastChannel: any;
+  let originalBroadcastChannel: unknown;
 
   beforeEach(() => {
     // Mock BroadcastChannel
@@ -46,8 +61,7 @@ describe("ConflictDetectionService", () => {
 
     it("should broadcast tab-opened message on creation", () => {
       const service = new ConflictDetectionService();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockChannel = (service as any).channel as MockBroadcastChannel;
+      const mockChannel = internalsOf(service).channel;
 
       expect(mockChannel.postMessage).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -62,10 +76,8 @@ describe("ConflictDetectionService", () => {
       const service1 = new ConflictDetectionService();
       const service2 = new ConflictDetectionService();
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const tabId1 = (service1 as any).tabId;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const tabId2 = (service2 as any).tabId;
+      const tabId1 = internalsOf(service1).tabId;
+      const tabId2 = internalsOf(service2).tabId;
 
       expect(tabId1).not.toBe(tabId2);
 
@@ -107,28 +119,24 @@ describe("ConflictDetectionService", () => {
 
     it("should store pending character when markDirty is called with character", () => {
       const service = new ConflictDetectionService();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCharacter = { name: "Test Character" } as any;
+      const mockCharacter = createTestCharacter({ name: "Test Character" });
 
       service.markDirty(mockCharacter);
 
       expect(service.isDirty()).toBe(true);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((service as any).pendingCharacter).toBe(mockCharacter);
+      expect(internalsOf(service).pendingCharacter).toBe(mockCharacter);
 
       service.close();
     });
 
     it("should clear pending character when clearDirty is called", () => {
       const service = new ConflictDetectionService();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCharacter = { name: "Test Character" } as any;
+      const mockCharacter = createTestCharacter({ name: "Test Character" });
 
       service.markDirty(mockCharacter);
       service.clearDirty();
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((service as any).pendingCharacter).toBeNull();
+      expect(internalsOf(service).pendingCharacter).toBeNull();
 
       service.close();
     });
@@ -145,8 +153,7 @@ describe("ConflictDetectionService", () => {
 
     it("should set ETag when setCurrentEtag is called", async () => {
       const service = new ConflictDetectionService();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCharacter = { name: "Test Character" } as any;
+      const mockCharacter = createTestCharacter({ name: "Test Character" });
 
       await service.setCurrentEtag(mockCharacter);
 
@@ -158,10 +165,8 @@ describe("ConflictDetectionService", () => {
 
     it("should generate different ETags for different characters", async () => {
       const service = new ConflictDetectionService();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const char1 = { name: "Character 1" } as any;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const char2 = { name: "Character 2" } as any;
+      const char1 = createTestCharacter({ name: "Character 1" });
+      const char2 = createTestCharacter({ name: "Character 2" });
 
       await service.setCurrentEtag(char1);
       const etag1 = service.getCurrentEtag();
@@ -178,10 +183,8 @@ describe("ConflictDetectionService", () => {
   describe("notifyVersionSaved", () => {
     it("should broadcast version-saved message", async () => {
       const service = new ConflictDetectionService();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockChannel = (service as any).channel as MockBroadcastChannel;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCharacter = { name: "Test Character" } as any;
+      const mockChannel = internalsOf(service).channel;
+      const mockCharacter = createTestCharacter({ name: "Test Character" });
 
       // Clear initial tab-opened call
       mockChannel.postMessage.mockClear();
@@ -203,8 +206,7 @@ describe("ConflictDetectionService", () => {
 
     it("should update current ETag after saving", async () => {
       const service = new ConflictDetectionService();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCharacter = { name: "Test Character" } as any;
+      const mockCharacter = createTestCharacter({ name: "Test Character" });
 
       expect(service.getCurrentEtag()).toBeNull();
 
@@ -217,17 +219,14 @@ describe("ConflictDetectionService", () => {
 
     it("should clear pending character after saving", async () => {
       const service = new ConflictDetectionService();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCharacter = { name: "Test Character" } as any;
+      const mockCharacter = createTestCharacter({ name: "Test Character" });
 
       service.markDirty(mockCharacter);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((service as any).pendingCharacter).toBe(mockCharacter);
+      expect(internalsOf(service).pendingCharacter).toBe(mockCharacter);
 
       await service.notifyVersionSaved(mockCharacter);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((service as any).pendingCharacter).toBeNull();
+      expect(internalsOf(service).pendingCharacter).toBeNull();
 
       service.close();
     });
@@ -236,17 +235,14 @@ describe("ConflictDetectionService", () => {
   describe("conflict detection", () => {
     it("should emit version-conflict when receiving version-saved with dirty state", async () => {
       const service = new ConflictDetectionService();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockChannel = (service as any).channel as MockBroadcastChannel;
+      const mockChannel = internalsOf(service).channel;
       const conflictHandler = vi.fn();
 
       window.addEventListener("version-conflict", conflictHandler);
 
       // Set up initial state
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await service.setCurrentEtag({ name: "Original" } as any);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      service.markDirty({ name: "Local Changes" } as any);
+      await service.setCurrentEtag(createTestCharacter({ name: "Original" }));
+      service.markDirty(createTestCharacter({ name: "Local Changes" }));
 
       // Simulate receiving a version-saved message from another tab
       const message = {
@@ -269,15 +265,13 @@ describe("ConflictDetectionService", () => {
 
     it("should emit newer-version-available when receiving version-saved without dirty state", async () => {
       const service = new ConflictDetectionService();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockChannel = (service as any).channel as MockBroadcastChannel;
+      const mockChannel = internalsOf(service).channel;
       const newerVersionHandler = vi.fn();
 
       window.addEventListener("newer-version-available", newerVersionHandler);
 
       // Set up initial state (not dirty)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await service.setCurrentEtag({ name: "Original" } as any);
+      await service.setCurrentEtag(createTestCharacter({ name: "Original" }));
 
       // Simulate receiving a version-saved message from another tab
       const message = {
@@ -300,10 +294,8 @@ describe("ConflictDetectionService", () => {
 
     it("should ignore messages from same tab", async () => {
       const service = new ConflictDetectionService();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockChannel = (service as any).channel as MockBroadcastChannel;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const tabId = (service as any).tabId;
+      const mockChannel = internalsOf(service).channel;
+      const tabId = internalsOf(service).tabId;
       const conflictHandler = vi.fn();
       const newerVersionHandler = vi.fn();
 
@@ -311,10 +303,8 @@ describe("ConflictDetectionService", () => {
       window.addEventListener("newer-version-available", newerVersionHandler);
 
       // Set up initial state
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await service.setCurrentEtag({ name: "Original" } as any);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      service.markDirty({ name: "Local Changes" } as any);
+      await service.setCurrentEtag(createTestCharacter({ name: "Original" }));
+      service.markDirty(createTestCharacter({ name: "Local Changes" }));
 
       // Simulate receiving a message from the same tab
       const message = {
@@ -339,15 +329,13 @@ describe("ConflictDetectionService", () => {
 
     it("should emit conflict when marking dirty with stale remote ETag", async () => {
       const service = new ConflictDetectionService();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockChannel = (service as any).channel as MockBroadcastChannel;
+      const mockChannel = internalsOf(service).channel;
       const conflictHandler = vi.fn();
 
       window.addEventListener("version-conflict", conflictHandler);
 
       // Set up initial state
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await service.setCurrentEtag({ name: "Original" } as any);
+      await service.setCurrentEtag(createTestCharacter({ name: "Original" }));
 
       // Simulate receiving a version-saved message (sets remoteEtagReceived)
       const message = {
@@ -366,8 +354,7 @@ describe("ConflictDetectionService", () => {
       conflictHandler.mockClear();
 
       // Now when we mark dirty, it should detect stale state
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      service.markDirty({ name: "Local Changes" } as any);
+      service.markDirty(createTestCharacter({ name: "Local Changes" }));
 
       expect(conflictHandler).toHaveBeenCalled();
 
@@ -387,16 +374,14 @@ describe("ConflictDetectionService", () => {
 
     it("should not broadcast when disabled", async () => {
       const service = new ConflictDetectionService();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockChannel = (service as any).channel as MockBroadcastChannel;
+      const mockChannel = internalsOf(service).channel;
 
       // Clear initial tab-opened call
       mockChannel.postMessage.mockClear();
 
       service.setEnabled(false);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await service.notifyVersionSaved({ name: "Test" } as any);
+      await service.notifyVersionSaved(createTestCharacter({ name: "Test" }));
 
       // The postMessage should still be called internally but broadcast returns early
       // Actually, looking at the code, broadcast checks isEnabled before posting
@@ -424,8 +409,7 @@ describe("ConflictDetectionService", () => {
   describe("close", () => {
     it("should broadcast tab-closed message on close", () => {
       const service = new ConflictDetectionService();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockChannel = (service as any).channel as MockBroadcastChannel;
+      const mockChannel = internalsOf(service).channel;
 
       mockChannel.postMessage.mockClear();
 
@@ -441,8 +425,7 @@ describe("ConflictDetectionService", () => {
 
     it("should close the BroadcastChannel", () => {
       const service = new ConflictDetectionService();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockChannel = (service as any).channel as MockBroadcastChannel;
+      const mockChannel = internalsOf(service).channel;
 
       service.close();
 
