@@ -4,11 +4,8 @@ import { html, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { SpecialAbilityItem } from "./SpecialAbilityItem.js";
 import { t } from "@/i18n/index";
-import {
-  createAddHandler,
-  createItemInstances,
-  renderAddButton,
-} from "./helpers/CollectionBehavior.js";
+import { createAddHandler, createItemInstances } from "./helpers/CollectionBehavior.js";
+import { renderAddButton } from "./helpers/collectionRendering.js";
 import { reorderArray, previewOrderEquals } from "./helpers/DragDropBehavior.js";
 
 export class SpecialAbilities {

@@ -9,7 +9,7 @@
 // the real build actually generates matching CSS for these classes.
 
 import { render } from "lit-html";
-import { renderAddButton, AddButtonColorTheme } from "@/components/helpers/CollectionBehavior";
+import { renderAddButton, AddButtonColorTheme } from "@/components/helpers/collectionRendering";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("renderAddButton theme classes", () => {

@@ -8,35 +8,19 @@
 // markup instead, reusing the same CSS classes (section-box, *-item-card,
 // etc.) so it looks like the real sheet, with no inputs/buttons at all.
 
-import { html, TemplateResult, nothing } from "lit-html";
-import type {
-  Character,
-  Cypher,
-  Artifact,
-  Ability,
-  EquipmentItem,
-  Attack,
-  SpecialAbility,
-} from "@/types/character";
-import type {
-  CharacterDiff,
-  CollectionDiffEntry,
-  CollectionItemStatus,
-} from "@/utils/characterDiff";
+import { html, TemplateResult } from "lit-html";
+import type { Character } from "@/types/character";
+import type { CharacterDiff, CollectionDiffEntry } from "@/utils/characterDiff";
+import {
+  renderCyphersDiff,
+  renderArtifactsDiff,
+  renderEquipmentDiff,
+  renderOdditiesDiff,
+  renderAttacksDiff,
+  renderAbilitiesDiff,
+  renderSpecialAbilitiesDiff,
+} from "./diffCollectionSections.js";
 import { t } from "@/i18n/index";
-
-function diffClass(status: CollectionItemStatus): string {
-  switch (status) {
-    case "added":
-      return "diff-added";
-    case "removed":
-      return "diff-removed";
-    case "modified":
-      return "diff-modified";
-    default:
-      return "";
-  }
-}
 
 function scalarClass(changed: boolean): string {
   return changed ? "diff-modified" : "";
@@ -170,167 +154,6 @@ export class DiffCharacterSheet {
     `;
   }
 
-  private renderCyphers(): TemplateResult | typeof nothing {
-    const entries = this.paneEntries(this.diff.collections.cyphers);
-    if (entries.length === 0) return nothing;
-    return html`
-      <div data-testid="cyphers-section" class="section-box">
-        <h2 class="section-box-heading">${t("cyphers.heading")}</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          ${entries.map(
-            (entry: CollectionDiffEntry<Cypher>) => html`
-              <div data-testid="cypher-item" class="cypher-item-card ${diffClass(entry.status)}">
-                <div class="font-semibold text-lg">⚡ ${entry.item.name}</div>
-                <div class="text-sm text-gray-700 mt-1">${entry.item.effect}</div>
-                <div class="cypher-level-badge">${t("cyphers.level")}: ${entry.item.level}</div>
-              </div>
-            `
-          )}
-        </div>
-      </div>
-    `;
-  }
-
-  private renderArtifacts(): TemplateResult | typeof nothing {
-    const entries = this.paneEntries(this.diff.collections.artifacts);
-    if (entries.length === 0) return nothing;
-    return html`
-      <div data-testid="artifacts-section" class="section-box">
-        <h2 class="section-box-heading">${t("artifacts.heading")}</h2>
-        <div class="space-y-4">
-          ${entries.map(
-            (entry: CollectionDiffEntry<Artifact>) => html`
-              <div
-                data-testid="artifact-item"
-                class="artifact-item-card ${diffClass(entry.status)}"
-              >
-                <div class="artifact-name">${entry.item.name}</div>
-                <div class="artifact-effect">${entry.item.effect}</div>
-                <div class="artifact-level-badge">${t("artifacts.level")}: ${entry.item.level}</div>
-              </div>
-            `
-          )}
-        </div>
-      </div>
-    `;
-  }
-
-  private renderEquipment(): TemplateResult | typeof nothing {
-    const entries = this.paneEntries(this.diff.collections.equipment);
-    if (entries.length === 0) return nothing;
-    return html`
-      <div data-testid="equipment-section" class="section-box">
-        <h2 class="section-box-heading">${t("equipment.heading")}</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          ${entries.map(
-            (entry: CollectionDiffEntry<EquipmentItem>) => html`
-              <div
-                data-testid="equipment-item"
-                class="equipment-item-card ${diffClass(entry.status)}"
-              >
-                <div class="equipment-name">${entry.item.name}</div>
-                ${entry.item.description
-                  ? html`<div class="equipment-description">${entry.item.description}</div>`
-                  : nothing}
-              </div>
-            `
-          )}
-        </div>
-      </div>
-    `;
-  }
-
-  private renderOddities(): TemplateResult | typeof nothing {
-    const entries = this.paneEntries(this.diff.collections.oddities);
-    if (entries.length === 0) return nothing;
-    return html`
-      <div data-testid="oddities-section" class="section-box">
-        <h2 class="section-box-heading">${t("oddities.heading")}</h2>
-        <div class="space-y-2">
-          ${entries.map(
-            (entry: CollectionDiffEntry<string>) => html`
-              <div data-testid="oddity-item" class="oddity-item-card ${diffClass(entry.status)}">
-                ${entry.item}
-              </div>
-            `
-          )}
-        </div>
-      </div>
-    `;
-  }
-
-  private renderAttacks(): TemplateResult | typeof nothing {
-    const entries = this.paneEntries(this.diff.collections.attacks);
-    if (entries.length === 0) return nothing;
-    return html`
-      <div data-testid="attacks-section" class="section-box">
-        <h2 class="section-box-heading">${t("attacks.title")}</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          ${entries.map(
-            (entry: CollectionDiffEntry<Attack>) => html`
-              <div data-testid="attack-item" class="attack-item-card ${diffClass(entry.status)}">
-                <div class="attack-name font-bold text-lg">${entry.item.name}</div>
-                <div class="attack-badges flex gap-2">
-                  <span>${t("attacks.damage")}: ${entry.item.damage}</span>
-                  <span>${t("attacks.modifier")}: ${entry.item.modifier}</span>
-                </div>
-                <div>${t("attacks.range")}: ${entry.item.range}</div>
-              </div>
-            `
-          )}
-        </div>
-      </div>
-    `;
-  }
-
-  private renderAbilities(): TemplateResult | typeof nothing {
-    const entries = this.paneEntries(this.diff.collections.abilities);
-    if (entries.length === 0) return nothing;
-    return html`
-      <div data-testid="abilities-section" class="section-box">
-        <h2 class="section-box-heading">${t("abilities.heading")}</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          ${entries.map(
-            (entry: CollectionDiffEntry<Ability>) => html`
-              <div data-testid="ability-item" class="ability-item-card ${diffClass(entry.status)}">
-                <h4 class="ability-name font-bold text-lg">${entry.item.name}</h4>
-                <div class="text-sm text-gray-700">${entry.item.description}</div>
-                ${entry.item.cost !== undefined
-                  ? html`<span>${t("abilities.cost")}: ${entry.item.cost}</span>`
-                  : nothing}
-                ${entry.item.pool ? html`<span>${t(`stats.${entry.item.pool}`)}</span>` : nothing}
-              </div>
-            `
-          )}
-        </div>
-      </div>
-    `;
-  }
-
-  private renderSpecialAbilities(): TemplateResult | typeof nothing {
-    const entries = this.paneEntries(this.diff.collections.specialAbilities);
-    if (entries.length === 0) return nothing;
-    return html`
-      <div data-testid="special-abilities-section" class="section-box">
-        <h2 class="section-box-heading">${t("specialAbilities.title")}</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          ${entries.map(
-            (entry: CollectionDiffEntry<SpecialAbility>) => html`
-              <div
-                data-testid="special-ability-item"
-                class="special-ability-item-card ${diffClass(entry.status)}"
-              >
-                <h4 class="special-ability-name font-bold text-lg">${entry.item.name}</h4>
-                <span>${entry.item.source}</span>
-                <p class="text-sm text-gray-700">${entry.item.description}</p>
-              </div>
-            `
-          )}
-        </div>
-      </div>
-    `;
-  }
-
   /**
    * Which side of a CollectionDiff this sheet is rendering. Set by the
    * caller via `forSide` before render() is invoked - defaults to "right"
@@ -351,12 +174,18 @@ export class DiffCharacterSheet {
   }
 
   render(): TemplateResult {
+    const collections = this.diff.collections;
     return html`
       <div data-testid="diff-character-sheet" class="diff-character-sheet">
         ${this.renderBasicInfo()} ${this.renderStats()} ${this.renderResources()}
-        ${this.renderCyphers()} ${this.renderArtifacts()} ${this.renderEquipment()}
-        ${this.renderOddities()} ${this.renderAttacks()} ${this.renderAbilities()}
-        ${this.renderSpecialAbilities()} ${this.renderTextFields()}
+        ${renderCyphersDiff(this.paneEntries(collections.cyphers))}
+        ${renderArtifactsDiff(this.paneEntries(collections.artifacts))}
+        ${renderEquipmentDiff(this.paneEntries(collections.equipment))}
+        ${renderOdditiesDiff(this.paneEntries(collections.oddities))}
+        ${renderAttacksDiff(this.paneEntries(collections.attacks))}
+        ${renderAbilitiesDiff(this.paneEntries(collections.abilities))}
+        ${renderSpecialAbilitiesDiff(this.paneEntries(collections.specialAbilities))}
+        ${this.renderTextFields()}
       </div>
     `;
   }

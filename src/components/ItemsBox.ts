@@ -7,12 +7,9 @@ import { ArtifactItem } from "./ArtifactItem.js";
 import { OddityItem } from "./OddityItem.js";
 import { ModalService } from "@/services/modalService";
 import { t } from "@/i18n/index";
-import {
-  createAddHandler,
-  createItemInstances,
-  renderAddButton,
-} from "./helpers/CollectionBehavior.js";
-import { reorderArray, previewOrderEquals } from "./helpers/DragDropBehavior.js";
+import { createAddHandler, createItemInstances } from "./helpers/CollectionBehavior.js";
+import { renderAddButton } from "./helpers/collectionRendering.js";
+import { CollectionDragReorder } from "./helpers/CollectionDragReorder.js";
 import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
 
 type FieldType = "shins";
@@ -23,27 +20,26 @@ export class ItemsBox {
   private handleAddArtifact: () => void;
   private handleAddOddity: () => void;
 
-  // Drag state for each section
-  private dragState: {
-    equipment: {
-      draggedIndex: number | null;
-      previewOrder: number[] | null;
-      currentTargetIndex: number | null;
-    };
-    artifacts: {
-      draggedIndex: number | null;
-      previewOrder: number[] | null;
-      currentTargetIndex: number | null;
-    };
-    oddities: {
-      draggedIndex: number | null;
-      previewOrder: number[] | null;
-      currentTargetIndex: number | null;
-    };
-  } = {
-    equipment: { draggedIndex: null, previewOrder: null, currentTargetIndex: null },
-    artifacts: { draggedIndex: null, previewOrder: null, currentTargetIndex: null },
-    oddities: { draggedIndex: null, previewOrder: null, currentTargetIndex: null },
+  // Drag-reorder behaviour for each section
+  private drag: Record<ItemSection, CollectionDragReorder> = {
+    equipment: new CollectionDragReorder({
+      section: "equipment",
+      itemTestId: "equipment-item",
+      getCollection: () => this.character.equipment,
+      setCollection: (items) => (this.character.equipment = items as Character["equipment"]),
+    }),
+    artifacts: new CollectionDragReorder({
+      section: "artifacts",
+      itemTestId: "artifact-item",
+      getCollection: () => this.character.artifacts,
+      setCollection: (items) => (this.character.artifacts = items as Character["artifacts"]),
+    }),
+    oddities: new CollectionDragReorder({
+      section: "oddities",
+      itemTestId: "oddity-item",
+      getCollection: () => this.character.oddities,
+      setCollection: (items) => (this.character.oddities = items as Character["oddities"]),
+    }),
   };
 
   constructor(
@@ -86,153 +82,6 @@ export class ItemsBox {
         this.onFieldUpdate(fieldType, newValue as number);
       },
       versionHistoryService: getVersionHistoryService(),
-    });
-  }
-
-  // ============================================================================
-  // DRAG AND DROP HANDLERS (generic for all 3 sections)
-  // ============================================================================
-
-  private handleDragStart(e: Event, section: ItemSection, testIdSelector: string): void {
-    const dragEvent = e as globalThis.DragEvent;
-    const target = dragEvent.target as HTMLElement;
-    const item = target.closest(`[data-testid='${testIdSelector}']`) as HTMLElement;
-    if (item) {
-      const index = parseInt(item.dataset.index || "0", 10);
-      this.dragState[section].draggedIndex = index;
-      this.dragState[section].previewOrder = null;
-      dragEvent.dataTransfer?.setData("text/plain", index.toString());
-      item.setAttribute("data-dragging", "true");
-    }
-  }
-
-  private handleDragOver(e: Event, section: ItemSection, testIdSelector: string): void {
-    e.preventDefault();
-    const state = this.dragState[section];
-    if (state.draggedIndex === null) return;
-
-    const target = e.target as HTMLElement;
-    const item = target.closest(`[data-testid='${testIdSelector}']`) as HTMLElement;
-    if (!item) return;
-
-    const targetIndex = parseInt(item.dataset.index || "0", 10);
-    if (state.draggedIndex === targetIndex) return;
-
-    state.currentTargetIndex = targetIndex;
-
-    const collection = this.getCollection(section);
-    const newOrder = this.calculatePreviewOrder(state.draggedIndex, targetIndex, collection.length);
-    if (!previewOrderEquals(state.previewOrder, newOrder)) {
-      state.previewOrder = newOrder;
-      this.applyPreviewOrder(section, testIdSelector);
-    }
-  }
-
-  private handleDrop(e: Event, section: ItemSection, testIdSelector: string): void {
-    e.preventDefault();
-    const state = this.dragState[section];
-
-    // A drag that started in another section leaves this section's state
-    // untouched, so a null index means the drag is not ours. Decided from
-    // component state because WebKit drops custom dataTransfer types.
-    const draggedIndex = state.draggedIndex;
-    if (draggedIndex === null) {
-      this.handleDragEnd(e, section, testIdSelector);
-      return;
-    }
-
-    let targetIndex = state.currentTargetIndex;
-    if (targetIndex === null) {
-      const target = e.target as HTMLElement;
-      const item = target.closest(`[data-testid='${testIdSelector}']`) as HTMLElement;
-      if (!item) {
-        this.handleDragEnd(e, section, testIdSelector);
-        return;
-      }
-      targetIndex = parseInt(item.dataset.index || "0", 10);
-    }
-
-    if (draggedIndex === targetIndex) {
-      this.handleDragEnd(e, section, testIdSelector);
-      return;
-    }
-
-    // Reorder the array immutably, matching the other collections
-    const collection = this.getCollection(section);
-    const newItems = reorderArray(collection, draggedIndex, targetIndex);
-    this.setCollection(section, newItems);
-
-    this.handleDragEnd(e, section, testIdSelector);
-
-    // Dispatch collection-updated to re-render the sheet
-    // Dispatch character-updated for save
-    const appElement = document.getElementById("app");
-    if (appElement) {
-      appElement.dispatchEvent(new CustomEvent("collection-updated", { detail: { section } }));
-      appElement.dispatchEvent(new CustomEvent("character-updated"));
-    }
-  }
-
-  private handleDragEnd(_e: Event, section: ItemSection, testIdSelector: string): void {
-    const items = document.querySelectorAll(`[data-testid='${testIdSelector}']`);
-    items.forEach((item) => {
-      item.removeAttribute("data-dragging");
-      // Always drop the preview `order`: the sheet re-renders into these same
-      // nodes in the new array order, so a leftover override would keep
-      // showing the pre-drop arrangement.
-      (item as HTMLElement).style.order = "";
-    });
-    this.dragState[section] = { draggedIndex: null, previewOrder: null, currentTargetIndex: null };
-  }
-
-  private getCollection(section: ItemSection): unknown[] {
-    switch (section) {
-      case "equipment":
-        return this.character.equipment;
-      case "artifacts":
-        return this.character.artifacts;
-      case "oddities":
-        return this.character.oddities;
-    }
-  }
-
-  private setCollection(section: ItemSection, items: unknown[]): void {
-    switch (section) {
-      case "equipment":
-        this.character.equipment = items as Character["equipment"];
-        break;
-      case "artifacts":
-        this.character.artifacts = items as Character["artifacts"];
-        break;
-      case "oddities":
-        this.character.oddities = items as Character["oddities"];
-        break;
-    }
-  }
-
-  private calculatePreviewOrder(fromIndex: number, toIndex: number, length: number): number[] {
-    const indices = Array.from({ length }, (_, i) => i);
-    const [removed] = indices.splice(fromIndex, 1);
-    indices.splice(toIndex, 0, removed);
-    return indices;
-  }
-
-  private applyPreviewOrder(section: ItemSection, testIdSelector: string): void {
-    const state = this.dragState[section];
-    if (!state.previewOrder) return;
-
-    const listSelector = `[data-testid='${section}-list']`;
-    const container = document.querySelector(listSelector);
-    if (!container) return;
-
-    const items = Array.from(container.querySelectorAll(`[data-testid='${testIdSelector}']`));
-    state.previewOrder.forEach((originalIndex, visualPosition) => {
-      const item = items.find(
-        (el) => parseInt((el as HTMLElement).dataset.index || "0", 10) === originalIndex
-      );
-      if (item) {
-        (item as HTMLElement).style.order = visualPosition.toString();
-      }
     });
   }
 
@@ -300,10 +149,10 @@ export class ItemsBox {
                 <div
                   data-testid="equipment-list"
                   class="grid grid-cols-1 md:grid-cols-2 gap-4"
-                  @dragstart=${(e: Event) => this.handleDragStart(e, "equipment", "equipment-item")}
-                  @dragover=${(e: Event) => this.handleDragOver(e, "equipment", "equipment-item")}
-                  @drop=${(e: Event) => this.handleDrop(e, "equipment", "equipment-item")}
-                  @dragend=${(e: Event) => this.handleDragEnd(e, "equipment", "equipment-item")}
+                  @dragstart=${(e: Event) => this.drag.equipment.handleDragStart(e)}
+                  @dragover=${(e: Event) => this.drag.equipment.handleDragOver(e)}
+                  @drop=${(e: Event) => this.drag.equipment.handleDrop(e)}
+                  @dragend=${() => this.drag.equipment.handleDragEnd()}
                 >
                   ${equipmentItems.map((item) => item.render())}
                 </div>
@@ -338,11 +187,10 @@ export class ItemsBox {
                   <div
                     data-testid="artifacts-list"
                     class="space-y-4"
-                    @dragstart=${(e: Event) =>
-                      this.handleDragStart(e, "artifacts", "artifact-item")}
-                    @dragover=${(e: Event) => this.handleDragOver(e, "artifacts", "artifact-item")}
-                    @drop=${(e: Event) => this.handleDrop(e, "artifacts", "artifact-item")}
-                    @dragend=${(e: Event) => this.handleDragEnd(e, "artifacts", "artifact-item")}
+                    @dragstart=${(e: Event) => this.drag.artifacts.handleDragStart(e)}
+                    @dragover=${(e: Event) => this.drag.artifacts.handleDragOver(e)}
+                    @drop=${(e: Event) => this.drag.artifacts.handleDrop(e)}
+                    @dragend=${() => this.drag.artifacts.handleDragEnd()}
                   >
                     ${artifactItems.map((item) => item.render())}
                   </div>
@@ -372,10 +220,10 @@ export class ItemsBox {
                   <div
                     data-testid="oddities-list"
                     class="space-y-3"
-                    @dragstart=${(e: Event) => this.handleDragStart(e, "oddities", "oddity-item")}
-                    @dragover=${(e: Event) => this.handleDragOver(e, "oddities", "oddity-item")}
-                    @drop=${(e: Event) => this.handleDrop(e, "oddities", "oddity-item")}
-                    @dragend=${(e: Event) => this.handleDragEnd(e, "oddities", "oddity-item")}
+                    @dragstart=${(e: Event) => this.drag.oddities.handleDragStart(e)}
+                    @dragover=${(e: Event) => this.drag.oddities.handleDragOver(e)}
+                    @drop=${(e: Event) => this.drag.oddities.handleDrop(e)}
+                    @dragend=${() => this.drag.oddities.handleDragEnd()}
                   >
                     ${oddityItems.map((item) => item.render())}
                   </div>

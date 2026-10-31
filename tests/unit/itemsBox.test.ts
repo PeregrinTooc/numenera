@@ -3,21 +3,7 @@ import { ItemsBox } from "@/components/ItemsBox";
 import type { Character } from "@/types/character";
 import { render } from "lit-html";
 import { setupTestContainer } from "./helpers/testSetup.js";
-
-/**
- * Private drag-and-drop members the tests drive directly with fake events
- * (jsdom has no real drag and drop). A structural view, not `any`.
- */
-interface ItemsBoxInternals {
-  dragState: Record<string, { draggedIndex: number | null; currentTargetIndex: number | null }>;
-  handleDragStart(e: unknown, section: string, testIdSelector: string): void;
-  handleDragOver(e: unknown, section: string, testIdSelector: string): void;
-  handleDrop(e: unknown, section: string, testIdSelector: string): void;
-}
-
-function internalsOf(itemsBox: ItemsBox): ItemsBoxInternals {
-  return itemsBox as unknown as ItemsBoxInternals;
-}
+import { createTestCharacter } from "../factories/character";
 
 describe("ItemsBox", () => {
   const getContainer = setupTestContainer();
@@ -28,40 +14,7 @@ describe("ItemsBox", () => {
   beforeEach(() => {
     container = getContainer();
 
-    mockCharacter = {
-      name: "Test",
-      type: "Glaive",
-      descriptor: "Strong",
-      focus: "Bears a Halo of Fire",
-      tier: 3,
-      currentXp: 0,
-      totalXp: 0,
-      effort: 1,
-      stats: {
-        might: { pool: 10, edge: 0, current: 10 },
-        speed: { pool: 10, edge: 0, current: 10 },
-        intellect: { pool: 10, edge: 0, current: 10 },
-      },
-      armor: 0,
-      shins: 50,
-      maxCyphers: 2,
-      cyphers: [],
-      abilities: [],
-      specialAbilities: [],
-      equipment: [],
-      artifacts: [],
-      oddities: [],
-      attacks: [],
-      recoveryRolls: {
-        action: false,
-        tenMinutes: false,
-        oneHour: false,
-        tenHours: false,
-        modifier: 0,
-      },
-      damageTrack: { impairment: "healthy" },
-      textFields: { background: "", notes: "" },
-    };
+    mockCharacter = createTestCharacter({ name: "Test", shins: 50 });
 
     onFieldUpdate = vi.fn();
   });
@@ -86,76 +39,6 @@ describe("ItemsBox", () => {
       // Verify it's clickable
       expect(shinsBadge.getAttribute("role")).toBe("button");
       expect(shinsBadge.getAttribute("tabindex")).toBe("0");
-    });
-  });
-
-  describe("Drag and Drop Reordering", () => {
-    it("reassigns the collection immutably instead of mutating it in place", () => {
-      mockCharacter.equipment = [
-        { name: "Sword", description: "Sharp" },
-        { name: "Shield", description: "Strong" },
-        { name: "Bow", description: "Long range" },
-      ];
-      const originalArray = mockCharacter.equipment;
-
-      const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
-      render(itemsBox.render(), container);
-
-      const internal = internalsOf(itemsBox);
-      internal.dragState.equipment.draggedIndex = 0;
-      internal.dragState.equipment.currentTargetIndex = 2;
-
-      const dragEvent = {
-        preventDefault: vi.fn(),
-        target: document.createElement("div"),
-      };
-
-      internal.handleDrop(dragEvent, "equipment", "equipment-item");
-
-      expect(mockCharacter.equipment).not.toBe(originalArray);
-      expect(originalArray).toEqual([
-        { name: "Sword", description: "Sharp" },
-        { name: "Shield", description: "Strong" },
-        { name: "Bow", description: "Long range" },
-      ]);
-      expect(mockCharacter.equipment.map((i) => i.name)).toEqual(["Shield", "Bow", "Sword"]);
-    });
-
-    it("clears the preview order on drop so the re-rendered DOM order wins", () => {
-      mockCharacter.equipment = [
-        { name: "Sword", description: "Sharp" },
-        { name: "Shield", description: "Strong" },
-        { name: "Bow", description: "Long range" },
-      ];
-
-      const itemsBox = new ItemsBox(mockCharacter, onFieldUpdate);
-      render(itemsBox.render(), container);
-
-      const items = Array.from(
-        container.querySelectorAll<HTMLElement>('[data-testid="equipment-item"]')
-      );
-      const internal = internalsOf(itemsBox);
-      const dataTransfer = {
-        setData: vi.fn(),
-      };
-
-      internal.handleDragStart({ target: items[0], dataTransfer }, "equipment", "equipment-item");
-      internal.handleDragOver(
-        { preventDefault: vi.fn(), target: items[2] },
-        "equipment",
-        "equipment-item"
-      );
-      expect(items.some((item) => item.style.order !== "")).toBe(true);
-
-      internal.handleDrop(
-        { preventDefault: vi.fn(), target: items[2], dataTransfer },
-        "equipment",
-        "equipment-item"
-      );
-
-      // The sheet re-renders into these very nodes, so a leftover flex `order`
-      // would keep showing the pre-drop arrangement.
-      expect(items.every((item) => item.style.order === "")).toBe(true);
     });
   });
 

@@ -5,11 +5,8 @@ import { repeat } from "lit-html/directives/repeat.js";
 import { Character } from "@/types/character";
 import { AbilityItem } from "./AbilityItem.js";
 import { t } from "@/i18n/index";
-import {
-  createAddHandler,
-  createItemInstances,
-  renderAddButton,
-} from "./helpers/CollectionBehavior.js";
+import { createAddHandler, createItemInstances } from "./helpers/CollectionBehavior.js";
+import { renderAddButton } from "./helpers/collectionRendering.js";
 import { reorderArray, previewOrderEquals } from "./helpers/DragDropBehavior.js";
 
 export class Abilities {

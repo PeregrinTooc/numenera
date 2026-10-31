@@ -41,26 +41,23 @@ editing the rule to match the code.
 
 ## Open
 
-Re-measured on `main` at `b9b81c1` (2026-10-30).
+Re-measured on `main` after step 11 (2026-10-31).
 
 ### 3. Code quality — files over 300 lines
 
 **Rule:** "Keep files small and focused (< 300 lines)." Tests count; pure data
 does not (see `code-quality.md`).
 
-**`src/` — 7 files**
+**`src/` — 4 files**
 
-| File                                           | Lines | Natural seam                                                                   |
-| ---------------------------------------------- | ----- | ------------------------------------------------------------------------------ |
-| `src/main.ts`                                  | 914   | test hooks, compare-view controller, version navigation, import/export, events |
-| `src/components/CharacterSheet.ts`             | 789   | drag/touch controller; reorder/merge/split as pure layout operations           |
-| `src/components/helpers/CollectionBehavior.ts` | 415   | render helpers                                                                 |
-| `src/components/ItemsBox.ts`                   | 388   | drag-reorder handlers into a reusable helper                                   |
-| `src/services/versionHistoryService.ts`        | 339   | undo/redo stack                                                                |
-| `src/components/DiffCharacterSheet.ts`         | 363   | 7 near-identical collection renderers → one generic                            |
-| `src/services/conflictDetectionService.ts`     | 348   | BroadcastChannel transport vs dirty tracking                                   |
+| File                                       | Lines | Natural seam                                                                   |
+| ------------------------------------------ | ----- | ------------------------------------------------------------------------------ |
+| `src/main.ts`                              | 914   | test hooks, compare-view controller, version navigation, import/export, events |
+| `src/components/CharacterSheet.ts`         | 789   | drag/touch controller; reorder/merge/split as pure layout operations           |
+| `src/services/versionHistoryService.ts`    | 339   | undo/redo stack                                                                |
+| `src/services/conflictDetectionService.ts` | 348   | BroadcastChannel transport vs dirty tracking                                   |
 
-**`tests/` — 21 files**
+**`tests/` — 20 files**
 
 | File                                                            | Lines |
 | --------------------------------------------------------------- | ----- |
@@ -81,7 +78,6 @@ does not (see `code-quality.md`).
 | `tests/unit/basicInfo.test.ts`                                  | 386   |
 | `tests/e2e/step-definitions/basic-info-editing.steps.ts`        | 376   |
 | `tests/e2e/step-definitions/additional-fields-editing.steps.ts` | 349   |
-| `tests/unit/itemsBox.test.ts`                                   | 341   |
 | `tests/e2e/step-definitions/card-reordering.steps.ts`           | 334   |
 | `tests/unit/layoutTypes.test.ts`                                | 324   |
 | `tests/unit/domStructure.test.ts`                               | 313   |
@@ -106,7 +102,7 @@ need no feature file; steps 8 and 9 change behaviour and start with a scenario.
 | 8                                   | ~~Surface storage write failures (#4)~~ done                                                                                        | feature                                                                                                                                                                                                                        |
 | 9                                   | ~~Translate the `alert()` text and English errors; native `alert()` kept, errors carry an i18n key (#6)~~ done                      | feature                                                                                                                                                                                                                        |
 | 10                                  | ~~Split `unified-validation.ts` and its oversized test files (#3)~~ done                                                            | refactor                                                                                                                                                                                                                       |
-| 11                                  | Split `CollectionBehavior`, `ItemsBox`, `DiffCharacterSheet` and their tests (#3)                                                   | refactor                                                                                                                                                                                                                       |
+| 11                                  | ~~Split `CollectionBehavior`, `ItemsBox`, `DiffCharacterSheet` and their tests (#3)~~ done                                          | refactor                                                                                                                                                                                                                       |
 | 12                                  | Split `versionHistoryService`, `conflictDetectionService`, `CharacterSheet` and their tests (#3)                                    | refactor                                                                                                                                                                                                                       |
 | 13                                  | Split `main.ts`; split the remaining oversized step definitions and feature files (#3)                                              | refactor                                                                                                                                                                                                                       |
 | Test architecture � E2E import path | No E2E scenario ran the sanitizer: `setMockFileImporter` replaced the importer, and the other import step wrote straight to storage | import steps feed the raw file through the real `<input type="file">` chooser (`tests/e2e/support/fileImport.ts`); the `__testFileImporter` seam and `IFileImporter` are gone; "Imported oddities are kept" guards review �2.3 |
