@@ -69,7 +69,7 @@ export class CyphersBox {
           @click=${() => this.openEditModal("maxCyphers")}
           role="button"
           tabindex="0"
-          aria-label="Edit Max Cyphers"
+          aria-label=${t("cyphers.editMax")}
         >
           <span class="stat-badge-value"
             >${this.character.cyphers.length}/<span data-testid="max-cyphers-value"
@@ -85,7 +85,7 @@ export class CyphersBox {
             onClick: this.handleAddCypher,
             testId: "add-cypher-button",
             colorTheme: "purple",
-            ariaLabel: "Add Cypher",
+            ariaLabel: t("cyphers.add"),
           })}
         </h2>
 

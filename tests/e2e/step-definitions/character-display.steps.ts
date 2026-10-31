@@ -4,7 +4,7 @@ import { waitForCharacterSheetReady, startNewCharacter } from "../support/app-re
 import type { CustomWorld } from "../support/world.js";
 import type { Character } from "@/types/character";
 import { sectionId } from "../support/sections.js";
-import { assertNoRawI18nKeys } from "../support/i18nKeys.js";
+import { assertNoRawI18nKeys, englishText } from "../support/i18nKeys.js";
 import { intCell, lowerCaseHashes, propertyTable } from "../support/tableRows.js";
 
 Given(
@@ -55,6 +55,16 @@ Then("I should see focus {string} displayed", async function (focus: string) {
 Then("no untranslated text keys should be visible", async function (this: CustomWorld) {
   await assertNoRawI18nKeys(this.page.locator("body"));
 });
+
+Then(
+  "these controls should have their translated accessible label:",
+  async function (this: CustomWorld, table: DataTable) {
+    for (const row of lowerCaseHashes(table)) {
+      const expected = englishText(row.key, row["name key"] || undefined);
+      await expect(this.dom.getByTestId(row.control)).toHaveAttribute("aria-label", expected);
+    }
+  }
+);
 
 // Scenario 2: View character stat pools
 Given(

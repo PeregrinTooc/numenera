@@ -85,12 +85,18 @@
     "xpTotal": "Gesamt",
     "editCurrentXp": "Aktuelle EP bearbeiten",
     "editTotalXp": "Gesamt-EP bearbeiten",
-    "shins": "Shins"
+    "shins": "Shins",
+    "editName": "Charakternamen bearbeiten",
+    "editTier": "Stufe bearbeiten",
+    "editDescriptor": "Deskriptor bearbeiten",
+    "editFocus": "Fokus bearbeiten"
   },
   "resourceTracker": {
     "xp": "EP",
     "shins": "Shins",
-    "armor": "Rüstung"
+    "armor": "Rüstung",
+    "editArmor": "Rüstung bearbeiten",
+    "editShins": "Shins bearbeiten"
   },
   "effort": {
     "title": "Anstrengung",
@@ -105,7 +111,11 @@
     "pool": "Pool",
     "edge": "Edge",
     "current": "Aktuell",
-    "effort": "Anstrengung"
+    "effort": "Anstrengung",
+    "editEffort": "Anstrengung bearbeiten",
+    "editPool": "{{name}}-Pool bearbeiten",
+    "editEdge": "{{name}}-Edge bearbeiten",
+    "editCurrent": "Aktuellen Wert von {{name}} bearbeiten"
   },
   "cyphers": {
     "heading": "Cypher",
@@ -113,7 +123,10 @@
     "level": "Stufe",
     "effect": "Effekt",
     "empty": "Keine Cypher",
-    "max": "Max"
+    "max": "Max",
+    "editMax": "Maximale Cypher bearbeiten",
+    "add": "Cypher hinzufügen",
+    "oneUse": "EINMALIG"
   },
   "artifacts": {
     "heading": "Artefakte",
@@ -121,12 +134,14 @@
     "level": "Stufe",
     "depletion": "Erschöpfung",
     "effect": "Effekt",
-    "empty": "Keine Artefakte"
+    "empty": "Keine Artefakte",
+    "add": "Artefakt hinzufügen"
   },
   "oddities": {
     "heading": "Kuriositäten",
     "empty": "Keine Kuriositäten",
-    "oddity": "Kuriosität"
+    "oddity": "Kuriosität",
+    "add": "Kuriosität hinzufügen"
   },
   "items": {
     "heading": "Besitztümer"
@@ -135,7 +150,8 @@
     "heading": "Ausrüstung",
     "empty": "Keine Ausrüstung",
     "name": "Name",
-    "description": "Beschreibung"
+    "description": "Beschreibung",
+    "add": "Ausrüstung hinzufügen"
   },
   "abilities": {
     "heading": "Fähigkeiten",
@@ -145,7 +161,8 @@
     "description": "Beschreibung",
     "pool": {
       "none": "Keine"
-    }
+    },
+    "add": "Fähigkeit hinzufügen"
   },
   "attacks": {
     "title": "Angriffe",
@@ -153,12 +170,14 @@
     "damage": "Schaden",
     "modifier": "Modifikator",
     "range": "Reichweite",
-    "notes": "Notizen"
+    "notes": "Notizen",
+    "add": "Angriff hinzufügen"
   },
   "specialAbilities": {
     "title": "Spezialfähigkeiten",
     "empty": "Keine Spezialfähigkeiten",
-    "source": "Quelle"
+    "source": "Quelle",
+    "add": "Spezialfähigkeit hinzufügen"
   },
   "recovery": {
     "title": "Erholungswürfe",
@@ -170,7 +189,8 @@
     "timeAction": "1 Aktion",
     "time10min": "10 Min",
     "time1hour": "1 Stunde",
-    "time10hours": "10 Stunden"
+    "time10hours": "10 Stunden",
+    "editModifier": "Erholungsmodifikator bearbeiten"
   },
   "damage": {
     "title": "Schadensleiste",

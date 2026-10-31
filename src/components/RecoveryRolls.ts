@@ -64,7 +64,7 @@ export class RecoveryRolls {
             @click=${this.onFieldUpdate ? () => this.openEditModal() : null}
             role="${this.onFieldUpdate ? "button" : ""}"
             tabindex="${this.onFieldUpdate ? "0" : ""}"
-            aria-label="${this.onFieldUpdate ? "Edit recovery modifier" : ""}"
+            aria-label="${this.onFieldUpdate ? t("recovery.editModifier") : ""}"
           >
             1d6 + ${modifier}
           </span>

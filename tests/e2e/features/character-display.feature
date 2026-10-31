@@ -33,6 +33,30 @@ Feature: Single Character Display
         And I should see the "Intellect" stat with pool "11", edge "1", and current "11"
         And no untranslated text keys should be visible
 
+    Scenario: Editable and add controls carry translated accessible labels
+        Given I am on the character sheet page
+        Then these controls should have their translated accessible label:
+            | Control                  | Key                    | Name key      |
+            | character-name           | character.editName     |               |
+            | character-tier           | character.editTier     |               |
+            | character-descriptor     | character.editDescriptor |             |
+            | character-focus          | character.editFocus    |               |
+            | effort-badge             | stats.editEffort       |               |
+            | stat-might-pool          | stats.editPool         | stats.might   |
+            | stat-speed-edge          | stats.editEdge         | stats.speed   |
+            | stat-intellect-current   | stats.editCurrent      | stats.intellect |
+            | armor-badge              | resourceTracker.editArmor |            |
+            | shins-badge              | resourceTracker.editShins |            |
+            | max-cyphers-badge        | cyphers.editMax        |               |
+            | recovery-modifier-display | recovery.editModifier |               |
+            | add-ability-button       | abilities.add          |               |
+            | add-special-ability-button | specialAbilities.add |               |
+            | add-attack-button        | attacks.add            |               |
+            | add-cypher-button        | cyphers.add            |               |
+            | add-equipment-button     | equipment.add          |               |
+            | add-artifact-button      | artifacts.add          |               |
+            | add-oddity-button        | oddities.add           |               |
+
     Scenario: View character items - Cyphers
         Given I am on the character sheet page
         And the character has the following cyphers:

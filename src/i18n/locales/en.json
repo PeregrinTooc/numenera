@@ -85,12 +85,18 @@
     "xpTotal": "Total",
     "editCurrentXp": "Edit Current XP",
     "editTotalXp": "Edit Total XP",
-    "shins": "Shins"
+    "shins": "Shins",
+    "editName": "Edit character name",
+    "editTier": "Edit tier",
+    "editDescriptor": "Edit descriptor",
+    "editFocus": "Edit focus"
   },
   "resourceTracker": {
     "xp": "XP",
     "shins": "Shins",
-    "armor": "Armor"
+    "armor": "Armor",
+    "editArmor": "Edit Armor",
+    "editShins": "Edit Shins"
   },
   "effort": {
     "title": "Effort",
@@ -105,7 +111,11 @@
     "pool": "Pool",
     "edge": "Edge",
     "current": "Current",
-    "effort": "Effort"
+    "effort": "Effort",
+    "editEffort": "Edit Effort",
+    "editPool": "Edit {{name}} Pool",
+    "editEdge": "Edit {{name}} Edge",
+    "editCurrent": "Edit Current {{name}}"
   },
   "cyphers": {
     "heading": "Cyphers",
@@ -113,7 +123,10 @@
     "level": "Level",
     "effect": "Effect",
     "empty": "No cyphers",
-    "max": "Max"
+    "max": "Max",
+    "editMax": "Edit Max Cyphers",
+    "add": "Add Cypher",
+    "oneUse": "ONE-USE"
   },
   "artifacts": {
     "heading": "Artifacts",
@@ -121,12 +134,14 @@
     "level": "Level",
     "depletion": "Depletion",
     "effect": "Effect",
-    "empty": "No artifacts"
+    "empty": "No artifacts",
+    "add": "Add artifact"
   },
   "oddities": {
     "heading": "Oddities",
     "empty": "No oddities",
-    "oddity": "Oddity"
+    "oddity": "Oddity",
+    "add": "Add oddity"
   },
   "items": {
     "heading": "Items"
@@ -135,7 +150,8 @@
     "heading": "Equipment",
     "empty": "No equipment",
     "name": "Name",
-    "description": "Description"
+    "description": "Description",
+    "add": "Add equipment"
   },
   "abilities": {
     "heading": "Abilities",
@@ -145,7 +161,8 @@
     "description": "Description",
     "pool": {
       "none": "None"
-    }
+    },
+    "add": "Add Ability"
   },
   "attacks": {
     "title": "Attacks",
@@ -153,12 +170,14 @@
     "damage": "Damage",
     "modifier": "Modifier",
     "range": "Range",
-    "notes": "Notes"
+    "notes": "Notes",
+    "add": "Add Attack"
   },
   "specialAbilities": {
     "title": "Special Abilities",
     "empty": "No special abilities",
-    "source": "Source"
+    "source": "Source",
+    "add": "Add Special Ability"
   },
   "recovery": {
     "title": "Recovery Rolls",
@@ -170,7 +189,8 @@
     "timeAction": "1 action",
     "time10min": "10 min",
     "time1hour": "1 hour",
-    "time10hours": "10 hours"
+    "time10hours": "10 hours",
+    "editModifier": "Edit recovery modifier"
   },
   "damage": {
     "title": "Damage Track",

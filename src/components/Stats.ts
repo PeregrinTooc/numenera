@@ -51,7 +51,7 @@ export class Stats {
           @click=${() => this.openEditModal("effort")}
           role="button"
           tabindex="0"
-          aria-label="Edit Effort"
+          aria-label=${t("stats.editEffort")}
         >
           <span data-testid="effort-value" class="stat-badge-value">${this.character.effort}</span>
           <span class="stat-badge-label">${t("stats.effort")}</span>

@@ -118,7 +118,7 @@ export class ItemsBox {
           @click=${() => this.openEditModal("shins")}
           role="button"
           tabindex="0"
-          aria-label="Edit Shins"
+          aria-label=${t("resourceTracker.editShins")}
         >
           <span class="stat-badge-value">${this.character.shins}</span>
           <span class="stat-badge-label">${t("character.shins")}</span>
@@ -136,7 +136,7 @@ export class ItemsBox {
               onClick: this.handleAddEquipment,
               testId: "add-equipment-button",
               colorTheme: "green",
-              ariaLabel: "Add equipment",
+              ariaLabel: t("equipment.add"),
             })}
           </div>
           ${this.character.equipment.length === 0
@@ -174,7 +174,7 @@ export class ItemsBox {
                 onClick: this.handleAddArtifact,
                 testId: "add-artifact-button",
                 colorTheme: "purple",
-                ariaLabel: "Add artifact",
+                ariaLabel: t("artifacts.add"),
               })}
             </div>
             ${this.character.artifacts.length === 0
@@ -207,7 +207,7 @@ export class ItemsBox {
                 onClick: this.handleAddOddity,
                 testId: "add-oddity-button",
                 colorTheme: "indigo",
-                ariaLabel: "Add oddity",
+                ariaLabel: t("oddities.add"),
               })}
             </div>
             ${this.character.oddities.length === 0

@@ -60,7 +60,7 @@ export class StatPool {
             @click=${() => this.openEditModal("pool")}
             role="button"
             tabindex="0"
-            aria-label="Edit ${name} Pool"
+            aria-label=${t("stats.editPool", { name })}
           >
             ${this.stats.pool}
           </div>
@@ -79,7 +79,7 @@ export class StatPool {
               @click=${() => this.openEditModal("edge")}
               role="button"
               tabindex="0"
-              aria-label="Edit ${name} Edge"
+              aria-label=${t("stats.editEdge", { name })}
             >
               ${this.stats.edge}
             </div>
@@ -94,7 +94,7 @@ export class StatPool {
               @click=${() => this.openEditModal("current")}
               role="button"
               tabindex="0"
-              aria-label="Edit Current ${name}"
+              aria-label=${t("stats.editCurrent", { name })}
             >
               ${this.stats.current}
             </div>

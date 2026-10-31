@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **702** in 51 files
-- Feature step lines: **2170**
+- Step definitions: **703** in 51 files
+- Feature step lines: **2172**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
@@ -47,7 +47,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
 | [card-reordering-abilities.steps.ts](#cardreorderingabilitiesstepsts) | 5 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 8 | 0 |
-| [character-display.steps.ts](#characterdisplaystepsts) | 32 | 0 |
+| [character-display.steps.ts](#characterdisplaystepsts) | 33 | 0 |
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
@@ -414,37 +414,38 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 57 | 27 |
-| Then | `I should see {int} artifact displayed` | 1 | 141 |
-| Then | `I should see {int} cyphers displayed` | 1 | 103 |
-| Then | `I should see {int} oddities displayed` | 1 | 154 |
-| Then | `I should see an empty {cardTypes} section` | 6 | 167 |
-| Then | `I should see artifact {string} with level {string}` | 1 | 146 |
-| Then | `I should see cypher {string} with level {string}` | 2 | 108 |
+| Given | `I am on the character sheet page` | 58 | 27 |
+| Then | `I should see {int} artifact displayed` | 1 | 151 |
+| Then | `I should see {int} cyphers displayed` | 1 | 113 |
+| Then | `I should see {int} oddities displayed` | 1 | 164 |
+| Then | `I should see an empty {cardTypes} section` | 6 | 177 |
+| Then | `I should see artifact {string} with level {string}` | 1 | 156 |
+| Then | `I should see cypher {string} with level {string}` | 2 | 118 |
 | Then | `I should see descriptor {string} displayed` | 1 | 46 |
-| Then | `I should see empty state for abilities` | 1 | 200 |
-| Then | `I should see empty state for background` | 1 | 180 |
-| Then | `I should see empty state for equipment` | 1 | 196 |
-| Then | `I should see empty state for notes` | 1 | 188 |
+| Then | `I should see empty state for abilities` | 1 | 210 |
+| Then | `I should see empty state for background` | 1 | 190 |
+| Then | `I should see empty state for equipment` | 1 | 206 |
+| Then | `I should see empty state for notes` | 1 | 198 |
 | Then | `I should see focus {string} displayed` | 1 | 50 |
-| Then | `I should see oddity {string}` | 2 | 159 |
-| Then | `I should see sections in this order:` | 1 | 276 |
-| Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 77 |
+| Then | `I should see oddity {string}` | 2 | 169 |
+| Then | `I should see sections in this order:` | 1 | 286 |
+| Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 87 |
 | Then | `I should see the character name {string}` | 3 | 32 |
 | Then | `I should see tier {string} displayed` | 1 | 36 |
 | Then | `I should see type {string} displayed` | 1 | 40 |
-| Then | `no markup from the text should be rendered as HTML` | 1 | 251 |
+| Then | `no markup from the text should be rendered as HTML` | 1 | 261 |
 | Then | `no untranslated text keys should be visible` | 6 | 54 |
-| Given | `the character has a {int}-character name without spaces` | 1 | 258 |
-| Given | `the character has empty text fields` | 1 | 176 |
-| Given | `the character has no {cardTypes}` | 6 | 163 |
-| Given | `the character has the following artifacts:` | 1 | 118 |
-| Given | `the character has the following cyphers:` | 1 | 90 |
-| Given | `the character has the following oddities:` | 1 | 131 |
-| Given | `the character has the following stats:` | 1 | 60 |
-| Given | `the character has the following text:` | 2 | 219 |
-| Then | `the character text should read exactly:` | 2 | 233 |
-| Then | `the page should not scroll horizontally` | 2 | 266 |
+| Given | `the character has a {int}-character name without spaces` | 1 | 268 |
+| Given | `the character has empty text fields` | 1 | 186 |
+| Given | `the character has no {cardTypes}` | 6 | 173 |
+| Given | `the character has the following artifacts:` | 1 | 128 |
+| Given | `the character has the following cyphers:` | 1 | 100 |
+| Given | `the character has the following oddities:` | 1 | 141 |
+| Given | `the character has the following stats:` | 1 | 70 |
+| Given | `the character has the following text:` | 2 | 229 |
+| Then | `the character text should read exactly:` | 2 | 243 |
+| Then | `the page should not scroll horizontally` | 2 | 276 |
+| Then | `these controls should have their translated accessible label:` | 1 | 58 |
 
 ## character-file-export.steps.ts
 

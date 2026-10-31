@@ -160,7 +160,7 @@ export class BasicInfo {
             @click=${() => this.openEditModal("name")}
             role="button"
             tabindex="0"
-            aria-label="Edit character name"
+            aria-label=${t("character.editName")}
           >
             ${this.character.name}
           </div>
@@ -174,7 +174,7 @@ export class BasicInfo {
               @click=${() => this.openEditModal("tier")}
               role="button"
               tabindex="0"
-              aria-label="Edit tier"
+              aria-label=${t("character.editTier")}
               >${this.character.tier}</span
             >
             <span
@@ -183,7 +183,7 @@ export class BasicInfo {
               @click=${() => this.openEditModal("descriptor")}
               role="button"
               tabindex="0"
-              aria-label="Edit descriptor"
+              aria-label=${t("character.editDescriptor")}
               >${this.character.descriptor || t("character.descriptor")}</span
             >
             <select
@@ -204,7 +204,7 @@ export class BasicInfo {
               @click=${() => this.openEditModal("focus")}
               role="button"
               tabindex="0"
-              aria-label="Edit focus"
+              aria-label=${t("character.editFocus")}
               >${this.character.focus || t("character.focus")}</span
             >
           </div>

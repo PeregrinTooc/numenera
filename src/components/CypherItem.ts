@@ -113,7 +113,7 @@ export class CypherItem {
             ${t("cyphers.level")}: ${this.cypher.level}
           </div>
         </div>
-        <div data-testid="cypher-warning" class="cypher-warning">⚠️ ONE-USE</div>
+        <div data-testid="cypher-warning" class="cypher-warning">⚠️ ${t("cyphers.oneUse")}</div>
       </div>
     `;
   }

@@ -71,7 +71,7 @@ export class Attacks {
               onClick: this.handleAddAttack,
               testId: "add-attack-button",
               colorTheme: "red",
-              ariaLabel: "Add Attack",
+              ariaLabel: t("attacks.add"),
             })}
           </div>
           <div
@@ -80,7 +80,7 @@ export class Attacks {
             @click=${() => this.openEditModal("armor")}
             role="button"
             tabindex="0"
-            aria-label="Edit Armor"
+            aria-label=${t("resourceTracker.editArmor")}
           >
             <span class="stat-badge-label text-sm font-semibold text-gray-700"
               >${t("resourceTracker.armor")}:</span

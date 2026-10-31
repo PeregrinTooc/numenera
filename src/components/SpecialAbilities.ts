@@ -54,7 +54,7 @@ export class SpecialAbilities {
             onClick: this.handleAddSpecialAbility,
             testId: "add-special-ability-button",
             colorTheme: "teal",
-            ariaLabel: "Add Special Ability",
+            ariaLabel: t("specialAbilities.add"),
           })}
         </div>
         ${isEmpty

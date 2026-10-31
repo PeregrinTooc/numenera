@@ -52,7 +52,7 @@ export class Abilities {
             onClick: this.handleAddAbility,
             testId: "add-ability-button",
             colorTheme: "indigo",
-            ariaLabel: "Add Ability",
+            ariaLabel: t("abilities.add"),
           })}
         </div>
         ${isEmpty

@@ -65,3 +65,22 @@ export async function assertNoRawI18nKeys(root: Locator): Promise<void> {
     }
   }
 }
+
+function lookupEnglish(path: string): string {
+  const value = path.split(".").reduce<unknown>((node, part) => {
+    return typeof node === "object" && node !== null
+      ? (node as Record<string, unknown>)[part]
+      : undefined;
+  }, en);
+  if (typeof value !== "string") throw new Error(`No English text for i18n key "${path}"`);
+  return value;
+}
+
+/**
+ * The English text for `key`, with `{{name}}` filled from the English text of
+ * `nameKey`. Throws on a key missing from en.json, so a typo cannot pass.
+ */
+export function englishText(key: string, nameKey?: string): string {
+  const text = lookupEnglish(key);
+  return nameKey ? text.replace("{{name}}", lookupEnglish(nameKey)) : text;
+}
