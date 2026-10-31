@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **678** in 28 files
-- Feature step lines: **2081**
+- Step definitions: **686** in 29 files
+- Feature step lines: **2112**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
@@ -57,6 +57,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
+| [storage-failure.steps.ts](#storagefailurestepsts) | 8 | 0 |
 | [version-comparison.steps.ts](#versioncomparisonstepsts) | 41 | 0 |
 | [version-history-squash-race.steps.ts](#versionhistorysquashracestepsts) | 3 | 0 |
 | [version-history.steps.ts](#versionhistorystepsts) | 82 | 0 |
@@ -132,7 +133,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the character should be saved only once after changes stop` | 1 | 113 |
 | Then | `the save indicator should be in the lower-right corner` | 1 | 140 |
 | Then | `the save indicator should be visible` | 2 | 82 |
-| Then | `the save indicator should contain {string}` | 1 | 96 |
+| Then | `the save indicator should contain {string}` | 3 | 96 |
 | Then | `the save indicator should have subtle styling` | 1 | 161 |
 | Then | `the save indicator should show a single timestamp` | 1 | 126 |
 | Then | `the save indicator should show a timestamp` | 1 | 87 |
@@ -193,7 +194,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I click the add ability button` | 15 | 130 |
 | When | `I click the add artifact button` | 7 | 118 |
 | When | `I click the add attack button` | 7 | 126 |
-| When | `I click the add cypher button` | 12 | 110 |
+| When | `I click the add cypher button` | 13 | 110 |
 | When | `I click the add equipment button` | 9 | 114 |
 | When | `I click the add oddity button` | 7 | 122 |
 | When | `I click the add special ability button` | 7 | 134 |
@@ -204,7 +205,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I click the edit button on equipment {string}` | 1 | 604 |
 | When | `I click the edit button on oddity {string}` | 1 | 618 |
 | When | `I click the edit button on special ability {string}` | 1 | 639 |
-| When | `I confirm the card edit modal` | 50 | 555 |
+| When | `I confirm the card edit modal` | 51 | 555 |
 | When | `I fill in the ability cost with {string}` | 6 | 324 |
 | When | `I fill in the ability description with {string}` | 9 | 332 |
 | When | `I fill in the ability name with {string}` | 9 | 321 |
@@ -215,9 +216,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I fill in the attack damage with {string}` | 7 | 305 |
 | When | `I fill in the attack modifier with {string}` | 7 | 312 |
 | When | `I fill in the attack name with {string}` | 7 | 302 |
-| When | `I fill in the cypher effect with {string}` | 11 | 251 |
-| When | `I fill in the cypher level with {string}` | 11 | 247 |
-| When | `I fill in the cypher name with {string}` | 11 | 244 |
+| When | `I fill in the cypher effect with {string}` | 12 | 251 |
+| When | `I fill in the cypher level with {string}` | 12 | 247 |
+| When | `I fill in the cypher name with {string}` | 12 | 244 |
 | When | `I fill in the equipment description with {string}` | 7 | 266 |
 | When | `I fill in the equipment name with {string}` | 8 | 260 |
 | When | `I fill in the oddity text with {string}` | 7 | 297 |
@@ -361,7 +362,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 49 | 27 |
+| Given | `I am on the character sheet page` | 50 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 142 |
 | Then | `I should see {int} cyphers displayed` | 1 | 104 |
 | Then | `I should see {int} oddities displayed` | 1 | 155 |
@@ -474,7 +475,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I click the "Confirm" button` | 27 | 46 |
 | When | `I click the "New" button` | 7 | 52 |
 | When | `I click the {badge} badge` | 23 | 62 |
-| When | `I edit the {string} field to {string}` | 27 | 153 |
+| When | `I edit the {string} field to {string}` | 34 | 153 |
 | When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 163 |
 | When | `I hover over the character name {string}` | 1 | 102 |
 | When | `I hover over the tier {string}` | 1 | 106 |
@@ -732,6 +733,19 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `the character data is loaded` | 2 | 7 |
+
+## storage-failure.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| Given | `the browser storage is full` | 5 | 5 |
+| When | `the browser storage works again` | 1 | 13 |
+| Then | `the save indicator should be inside the viewport` | 1 | 43 |
+| Then | `the save indicator should not contain {string}` | 1 | 36 |
+| Then | `the save indicator should not report a storage problem` | 1 | 32 |
+| Then | `the save indicator should report that changes could not be saved` | 1 | 23 |
+| Then | `the save indicator should report that storage is full` | 5 | 17 |
+| Given | `writing to the browser storage fails` | 1 | 9 |
 
 ## version-comparison.steps.ts
 

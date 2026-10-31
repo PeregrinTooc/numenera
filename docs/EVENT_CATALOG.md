@@ -98,6 +98,13 @@ All events follow this pattern:
 - Detail: `{ field?: string }`
 - Use case: React to character changes
 
+**storage-write-failed**
+
+- Emitted when: A character write fails, either an auto-save (forwarded from `save-error`) or a fire-and-forget `persistCharacterState` call (portrait upload, card add/remove/reorder, recovery checkboxes)
+- Target: `window` (`CustomEvent`)
+- Detail: `{ reason: 'quota' | 'unknown' }` (`quota` for a `QuotaExceededError`, including one wrapped as `cause`)
+- Use case: `SaveIndicator` shows an error alert until the next successful save; tests simulate a full storage and wait for it
+
 ### Version History Storage
 
 **version-created**

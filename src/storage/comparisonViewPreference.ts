@@ -18,6 +18,7 @@ export function saveComparisonViewEnabled(enabled: boolean): void {
   try {
     localStorage.setItem(COMPARISON_VIEW_STORAGE_KEY, String(enabled));
   } catch (error) {
+    // Continuing is fine: a lost preference is trivial - the toggle visibly reverts.
     console.error("Failed to save comparison view preference:", error);
   }
 }

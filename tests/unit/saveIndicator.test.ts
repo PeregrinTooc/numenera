@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
+import { render } from "lit-html";
 import { SaveIndicator } from "@/components/SaveIndicator";
 
 describe("SaveIndicator", () => {
@@ -89,6 +90,55 @@ describe("SaveIndicator", () => {
     it("should return true after update", () => {
       indicator.updateTimestamp("2:45:33 PM");
       expect(indicator.hasTimestamp()).toBe(true);
+    });
+  });
+
+  describe("error state", () => {
+    function renderToElement(): HTMLElement {
+      const container = document.createElement("div");
+      render(indicator.render(), container);
+      return container.querySelector('[data-testid="save-indicator"]') as HTMLElement;
+    }
+
+    it("is visible as an alert with the storage-full text when the storage is full", () => {
+      indicator.showError("quota");
+
+      const element = renderToElement();
+
+      expect(element.getAttribute("role")).toBe("alert");
+      expect(element.style.display).not.toBe("none");
+      expect(element.textContent).toContain("Storage is full");
+    });
+
+    it("shows the generic text for any other failure", () => {
+      indicator.showError("unknown");
+
+      expect(renderToElement().textContent).toContain("Changes could not be saved");
+    });
+
+    it("is visible even if nothing was ever saved", () => {
+      indicator.showError("unknown");
+
+      expect(indicator.hasError()).toBe(true);
+      expect(renderToElement().style.display).not.toBe("none");
+    });
+
+    it("replaces the last-saved timestamp while in error", () => {
+      indicator.updateTimestamp("2:45:33 PM");
+      indicator.showError("unknown");
+
+      expect(renderToElement().textContent).not.toContain("2:45:33 PM");
+    });
+
+    it("is cleared by the next successful save", () => {
+      indicator.showError("quota");
+
+      indicator.updateTimestamp("2:45:33 PM");
+
+      const element = renderToElement();
+      expect(indicator.hasError()).toBe(false);
+      expect(element.getAttribute("role")).toBeNull();
+      expect(element.textContent).toContain("2:45:33 PM");
     });
   });
 });

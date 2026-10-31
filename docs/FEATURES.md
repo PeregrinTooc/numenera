@@ -230,6 +230,11 @@ All features listed below have full BDD test coverage and are verified working.
   - Save indicator component (lower-right corner)
   - Timestamp display on save
   - Subtle, non-intrusive styling
+- **Save Failure Indication** ([storage-failure.feature](../tests/e2e/features/storage-failure.feature))
+  - The indicator turns into a red alert when a change cannot be saved ("Changes could not be saved")
+  - A full storage is called out separately ("Storage is full — changes are not being saved")
+  - Covers auto-save and direct writes (portrait upload, card add/remove/reorder, recovery checkboxes)
+  - Replaces the last-saved time and clears on the next successful save
 
 - **IndexedDB Storage** ([indexedDBStorageImpl.test.ts](../tests/unit/indexedDBStorageImpl.test.ts), [storageFactory.test.ts](../tests/unit/storageFactory.test.ts))
   - IndexedDB primary storage

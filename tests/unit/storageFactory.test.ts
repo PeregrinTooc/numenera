@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { getVersionHistory, loadCharacterState } from "@/storage/storageFactory";
+import {
+  getVersionHistory,
+  loadCharacterState,
+  persistCharacterState,
+} from "@/storage/storageFactory";
+import { STORAGE_WRITE_FAILED_EVENT } from "@/storage/storageWriteFailure";
+import { NEW_CHARACTER } from "@/data/mockCharacters";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import { IndexedDBStorageImpl } from "@/storage/indexedDBStorageImpl";
 
@@ -26,6 +32,28 @@ describe("storageFactory", () => {
       const result = await loadCharacterState();
 
       expect(result).toBeNull();
+    });
+  });
+
+  describe("persistCharacterState", () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it("dispatches storage-write-failed when the write is rejected", async () => {
+      vi.spyOn(IndexedDBStorageImpl.prototype, "save").mockRejectedValue(
+        new DOMException("full", "QuotaExceededError")
+      );
+      vi.spyOn(console, "error").mockImplementation(() => {});
+      const received = new Promise<CustomEvent>((resolve) => {
+        window.addEventListener(STORAGE_WRITE_FAILED_EVENT, (e) => resolve(e as CustomEvent), {
+          once: true,
+        });
+      });
+
+      persistCharacterState(NEW_CHARACTER);
+
+      expect((await received).detail).toEqual({ reason: "quota" });
     });
   });
 

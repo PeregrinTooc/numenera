@@ -279,7 +279,9 @@
     }
   },
   "autoSave": {
-    "lastSaved": "Zuletzt gespeichert"
+    "lastSaved": "Zuletzt gespeichert",
+    "saveFailed": "Änderungen konnten nicht gespeichert werden",
+    "storageFull": "Speicher voll — Änderungen werden nicht gespeichert"
   },
   "versionHistory": {
     "navigateBackward": "Zur vorherigen Version navigieren",

@@ -279,7 +279,9 @@
     }
   },
   "autoSave": {
-    "lastSaved": "Last saved"
+    "lastSaved": "Last saved",
+    "saveFailed": "Changes could not be saved",
+    "storageFull": "Storage is full — changes are not being saved"
   },
   "versionHistory": {
     "navigateBackward": "Navigate to previous version",

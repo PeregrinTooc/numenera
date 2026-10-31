@@ -85,6 +85,7 @@ export class LocalStorageImpl implements ICharacterStorage {
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch (error) {
+      // Continuing is fine: the stored character stays intact, and the next load falls back to the same data or the default.
       console.error("Failed to clear character state:", error);
     }
   }

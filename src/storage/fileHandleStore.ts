@@ -36,6 +36,7 @@ export async function persistFileHandle(handle: FileSystemFileHandle): Promise<v
       tx.onerror = () => reject(tx.error);
     });
   } catch (error) {
+    // Continuing is fine: the handle is only a cache - Quick Export asks for the location again.
     console.warn("Failed to persist file handle:", error);
   }
 }

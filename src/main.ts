@@ -12,6 +12,12 @@ import { importCharacterFromFile } from "@/storage/fileStorage";
 import { ExportManager } from "./storage/exportManager.js";
 import { AutoSaveService } from "./services/autoSaveService.js";
 import { SaveIndicator } from "./components/SaveIndicator.js";
+import { forwardAutoSaveFailures } from "@/services/autoSaveFailureBridge";
+import {
+  STORAGE_WRITE_FAILED_EVENT,
+  reportStorageWriteFailure,
+  type StorageWriteFailedDetail,
+} from "@/storage/storageWriteFailure";
 import { VersionNavigator } from "./components/VersionNavigator.js";
 import { VersionWarningBanner } from "./components/VersionWarningBanner.js";
 import { Character } from "./types/character.js";
@@ -140,6 +146,17 @@ function closeCompareView(): void {
     compareView = null;
   }
 }
+
+// A failed auto-save and a failed fire-and-forget persist both end up as one
+// storage-write-failed event; show it until the next successful save clears it.
+forwardAutoSaveFailures(autoSaveService);
+window.addEventListener(STORAGE_WRITE_FAILED_EVENT, (event: Event) => {
+  saveIndicator.showError((event as CustomEvent<StorageWriteFailedDetail>).detail.reason);
+  const indicatorContainer = document.getElementById("save-indicator-container");
+  if (indicatorContainer) {
+    render(saveIndicator.render(), indicatorContainer);
+  }
+});
 
 // Listen for save-completed events to update indicator
 autoSaveService.on("save-completed", async (event) => {
@@ -464,7 +481,8 @@ async function renderCharacterSheet(
   // Save character state to localStorage after rendering
   // Skip immediate save only when explicitly requested (e.g., during field updates that use debounced auto-save)
   if (!skipImmediateSave) {
-    await saveCharacterState(character);
+    // A failed write is reported to the user; the sheet still renders.
+    await saveCharacterState(character).catch(reportStorageWriteFailure);
   }
 
   // Render save indicator in separate container

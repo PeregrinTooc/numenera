@@ -18,6 +18,7 @@ export function saveLayout(layout: Layout): void {
     const serialized = JSON.stringify(layout);
     localStorage.setItem(LAYOUT_STORAGE_KEY, serialized);
   } catch (error) {
+    // Continuing is fine: a lost layout is cosmetic - the sections visibly revert to the previous order.
     console.error("Failed to save layout:", error);
   }
 }
@@ -57,6 +58,7 @@ export function resetLayout(): Layout {
   try {
     localStorage.removeItem(LAYOUT_STORAGE_KEY);
   } catch (error) {
+    // Continuing is fine: the caller gets the default layout, and a stale stored one only reverts visibly.
     console.error("Failed to clear layout:", error);
   }
   return cloneLayout(DEFAULT_LAYOUT);

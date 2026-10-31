@@ -10,6 +10,7 @@ import { VersionHistoryManager } from "./versionHistory.js";
 import { CHARACTER_DB_NAME } from "./storageConstants.js";
 import { sanitizeCharacter } from "@/utils/unified-validation";
 import { logger } from "@/utils/logger";
+import { reportStorageWriteFailure } from "./storageWriteFailure";
 
 let storageInstance: ICharacterStorage | null = null;
 let versionHistoryPromise: Promise<VersionHistoryManager> | null = null;
@@ -112,15 +113,14 @@ export async function saveCharacterState(character: Character): Promise<void> {
  * creates a second copy of the character that diverges from the real backend
  * (Rule #11).
  *
- * Failures are logged rather than thrown — the caller has no way to react — but
- * they are never silently discarded.
+ * Failures cannot be thrown to the caller, so they are reported through the
+ * app-level `storage-write-failed` event (see storageWriteFailure.ts), which
+ * tells the user the change was not saved.
  *
  * @param character The character object to save
  */
 export function persistCharacterState(character: Character): void {
-  void saveCharacterState(character).catch((error) => {
-    console.error("Failed to persist character state:", { character, error });
-  });
+  void saveCharacterState(character).catch(reportStorageWriteFailure);
 }
 
 /**

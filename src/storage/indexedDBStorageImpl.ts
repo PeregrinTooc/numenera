@@ -73,8 +73,13 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
       const store = transaction.objectStore(STORE_NAME);
       const request = store.put(character, CHARACTER_KEY);
 
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(new Error("Failed to save character"));
+      // Settle on the transaction, not the request: a write that exceeds the storage
+      // quota succeeds as a request and only aborts the transaction at commit. The
+      // transaction's error carries the real cause (e.g. QuotaExceededError), which
+      // callers use to tell a full storage from other failures.
+      transaction.oncomplete = () => resolve();
+      transaction.onabort = () =>
+        reject(transaction.error ?? request.error ?? new Error("Failed to save character"));
 
       // Commit as soon as the request is queued instead of waiting for the implicit
       // auto-commit. A save issued from an unload handler otherwise commits too late:

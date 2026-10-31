@@ -9,6 +9,7 @@ export {};
 declare global {
   interface Window {
     __saveCount?: number;
+    __restoreStorageWrites?: () => void;
     __saveObserver?: MutationObserver;
     _lastWrittenData?: string;
     _exportedData?: string;
