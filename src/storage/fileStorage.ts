@@ -6,6 +6,8 @@ import { Layout, isValidLayout } from "@/types/layout";
 import { SCHEMA_VERSION } from "./storageConstants.js";
 import { sanitizeCharacter } from "@/utils/unified-validation";
 import { loadLayout } from "./layoutStorage.js";
+import { t } from "@/i18n/index";
+import { UserFacingError } from "@/utils/UserFacingError";
 
 /**
  * File format structure for exported characters
@@ -43,26 +45,29 @@ function parseAndSanitizeCharacter(text: string): ImportResult {
   let data: unknown;
   try {
     data = JSON.parse(text);
-  } catch {
-    throw new Error("Invalid JSON in file");
+  } catch (error) {
+    throw new UserFacingError("errors.invalidJson", { cause: error });
   }
 
   // Check if data is an object
   if (data === null || typeof data !== "object") {
-    throw new Error("File does not contain valid data");
+    throw new UserFacingError("errors.invalidData");
   }
 
   const fileData = data as Record<string, unknown>;
 
   // Validate file structure - must have character field
   if (!fileData.character) {
-    throw new Error("File does not contain character data");
+    throw new UserFacingError("errors.noCharacterData");
   }
 
   // Check schema version - warn but don't reject
   if (fileData.schemaVersion !== undefined && fileData.schemaVersion !== SCHEMA_VERSION) {
     warnings.push(
-      `File has different schema version (${fileData.schemaVersion}), current version is ${SCHEMA_VERSION}. Data may have been adjusted.`
+      t("fileOperations.schemaMismatch", {
+        fileVersion: String(fileData.schemaVersion),
+        currentVersion: SCHEMA_VERSION,
+      })
     );
   }
 
@@ -83,9 +88,7 @@ function parseAndSanitizeCharacter(text: string): ImportResult {
       const currentLayout = loadLayout();
       hasLayoutDifference = JSON.stringify(importedLayout) !== JSON.stringify(currentLayout);
     } else {
-      allWarnings.push(
-        "Imported file contains invalid layout configuration. Using current layout."
-      );
+      allWarnings.push(t("fileOperations.invalidLayout"));
     }
   }
 
@@ -106,7 +109,7 @@ async function importWithFileSystemAPI(): Promise<ImportResult | null> {
   try {
     // Open file picker
     if (!window.showOpenFilePicker) {
-      throw new Error("File System Access API is not available");
+      throw new UserFacingError("errors.fileSystemUnavailable");
     }
     const [fileHandle] = await window.showOpenFilePicker({
       types: [

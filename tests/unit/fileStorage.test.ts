@@ -107,7 +107,9 @@ describe("fileStorage", () => {
 
       window.showOpenFilePicker = vi.fn().mockResolvedValue([mockFileHandle]);
 
-      await expect(importCharacterFromFile()).rejects.toThrow("Invalid JSON in file");
+      await expect(importCharacterFromFile()).rejects.toMatchObject({
+        messageKey: "errors.invalidJson",
+      });
     });
 
     it("should import with warning for different schema version", async () => {
@@ -188,9 +190,9 @@ describe("fileStorage", () => {
 
       window.showOpenFilePicker = vi.fn().mockResolvedValue([mockFileHandle]);
 
-      await expect(importCharacterFromFile()).rejects.toThrow(
-        "File does not contain character data"
-      );
+      await expect(importCharacterFromFile()).rejects.toMatchObject({
+        messageKey: "errors.noCharacterData",
+      });
     });
 
     it("should sanitize incomplete character structure with warnings", async () => {

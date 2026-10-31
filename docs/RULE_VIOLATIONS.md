@@ -37,6 +37,8 @@ editing the rule to match the code.
 
 ---
 
+| Rule #4 — hardcoded user-facing text | 7 English `alert()` calls (`BasicInfo.ts`, `main.ts`), the import-warning "Note: …" strings, the schema/layout import warnings, and 7 English `Error` messages from `exportManager.ts` and `fileStorage.ts` reaching German users | the native `alert()` stays, its text is translated: storage errors are `UserFacingError`s carrying an i18n key (`src/utils/UserFacingError.ts`), translated at the display site by `describeError()`; keys under `errors.*`, `fileOperations.*`, `portrait.*` in both locales; scenarios in `import-error-messages.feature` |
+
 ## Open
 
 Re-measured on `main` at `b9b81c1` (2026-10-30).
@@ -50,7 +52,7 @@ does not (see `code-quality.md`).
 
 | File                                           | Lines | Natural seam                                                                   |
 | ---------------------------------------------- | ----- | ------------------------------------------------------------------------------ |
-| `src/main.ts`                                  | 909   | test hooks, compare-view controller, version navigation, import/export, events |
+| `src/main.ts`                                  | 914   | test hooks, compare-view controller, version navigation, import/export, events |
 | `src/utils/unified-validation.ts`              | 897   | field validation / character validation / sanitizer (already banner-separated) |
 | `src/components/CharacterSheet.ts`             | 786   | drag/touch controller; reorder/merge/split as pure layout operations           |
 | `src/components/helpers/CollectionBehavior.ts` | 415   | render helpers                                                                 |
@@ -90,18 +92,6 @@ does not (see `code-quality.md`).
 Feature files split along their `# ===` section banners into several
 `.feature` files; step definitions follow the feature split.
 
-### 6. Rule #4 — hardcoded user-facing text
-
-**Rule:** "i18n everything — no hardcoded user-facing text."
-
-7 `alert()` calls in English (`BasicInfo.ts:27,33`, `main.ts` ~362–425), the
-import-warning "Note: …" strings in `main.ts`, and English `Error` messages
-that reach users through those alerts (3 in `exportManager.ts`, 3 in
-`fileStorage.ts`). `check:i18n` only verifies that `t()` keys exist, so it
-cannot catch these. Fix together with the notification mechanism from #4 (`storage-write-failed`, now in place).
-
----
-
 ## Plan — a sequence of commits on `main`
 
 Each step is one green commit, reviewed before committing (Rule 1). Refactors
@@ -117,7 +107,7 @@ need no feature file; steps 8 and 9 change behaviour and start with a scenario.
 | 6                                   | ~~Remove `any` from `tests/`; `no-explicit-any` as error, disabling it banned (#2)~~ done                                           | refactor                                                                                                                                                                                                                       |
 | 7                                   | ~~Real-path E2E import, drop the importer seam, oddity scenario (#10)~~ done                                                        | test                                                                                                                                                                                                                           |
 | 8                                   | ~~Surface storage write failures (#4)~~ done                                                                                        | feature                                                                                                                                                                                                                        |
-| 9                                   | Replace the `alert()`s and English errors with step 8's mechanism (#6)                                                              | feature                                                                                                                                                                                                                        |
+| 9                                   | ~~Translate the `alert()` text and English errors; native `alert()` kept, errors carry an i18n key (#6)~~ done                      | feature                                                                                                                                                                                                                        |
 | 10                                  | Split `unified-validation.ts` and its oversized test files (#3)                                                                     | refactor                                                                                                                                                                                                                       |
 | 11                                  | Split `CollectionBehavior`, `ItemsBox`, `DiffCharacterSheet` and their tests (#3)                                                   | refactor                                                                                                                                                                                                                       |
 | 12                                  | Split `versionHistoryService`, `conflictDetectionService`, `CharacterSheet` and their tests (#3)                                    | refactor                                                                                                                                                                                                                       |

@@ -389,5 +389,28 @@
       "label": "Dismiss",
       "aria": "Dismiss this notification"
     }
+  },
+  "errors": {
+    "noRememberedLocation": "No remembered location for Quick Export",
+    "permissionDenied": "Unable to save file. Permission denied.",
+    "diskFull": "Unable to save file. Disk full.",
+    "invalidJson": "Invalid JSON in file",
+    "invalidData": "File does not contain valid data",
+    "noCharacterData": "File does not contain character data",
+    "fileSystemUnavailable": "File System Access API is not available",
+    "unexpected": "An unexpected error occurred."
+  },
+  "fileOperations": {
+    "importFailed": "Failed to import character: {{reason}}",
+    "exportFailed": "Failed to export character: {{reason}}",
+    "saveFailed": "Failed to save file: {{reason}}",
+    "importNote": "Note: {{warning}}",
+    "importAdjustments": "Note: {{count}} adjustments were made during import. Check console for details.",
+    "schemaMismatch": "File has different schema version ({{fileVersion}}), current version is {{currentVersion}}. Data may have been adjusted.",
+    "invalidLayout": "Imported file contains invalid layout configuration. Using current layout."
+  },
+  "portrait": {
+    "notAnImage": "Please select an image file",
+    "tooLarge": "Image file is too large. Maximum size is {{maxSize}}MB."
   }
 }

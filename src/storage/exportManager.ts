@@ -8,6 +8,7 @@ import {
   loadPersistedFileHandle,
 } from "./fileHandleStore";
 import { loadLayout } from "./layoutStorage";
+import { UserFacingError } from "@/utils/UserFacingError";
 
 /**
  * ExportManager handles file exports with File System Access API support
@@ -77,7 +78,7 @@ export class ExportManager {
    */
   async quickExport(character: Character): Promise<void> {
     if (!this.fileHandle) {
-      throw new Error("No remembered location for Quick Export");
+      throw new UserFacingError("errors.noRememberedLocation");
     }
 
     try {
@@ -93,10 +94,10 @@ export class ExportManager {
       if (error instanceof DOMException) {
         // Handle specific errors
         if (error.name === "NotAllowedError") {
-          throw new Error("Unable to save file. Permission denied.");
+          throw new UserFacingError("errors.permissionDenied", { cause: error });
         }
         if (error.name === "QuotaExceededError") {
-          throw new Error("Unable to save file. Disk full.");
+          throw new UserFacingError("errors.diskFull", { cause: error });
         }
       }
       throw error;

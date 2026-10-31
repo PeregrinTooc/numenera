@@ -318,9 +318,9 @@ describe("ExportManager", () => {
 
   describe("quickExport()", () => {
     it("should throw error if no remembered location", async () => {
-      await expect(exportManager.quickExport(mockCharacter)).rejects.toThrow(
-        "No remembered location for Quick Export"
-      );
+      await expect(exportManager.quickExport(mockCharacter)).rejects.toMatchObject({
+        messageKey: "errors.noRememberedLocation",
+      });
     });
 
     it("should save to remembered location without prompting", async () => {
@@ -381,9 +381,9 @@ describe("ExportManager", () => {
       await exportManager.export(mockCharacter);
       await new Promise((resolve) => setTimeout(resolve, 10));
 
-      await expect(exportManager.quickExport(mockCharacter)).rejects.toThrow(
-        "Unable to save file. Permission denied."
-      );
+      await expect(exportManager.quickExport(mockCharacter)).rejects.toMatchObject({
+        messageKey: "errors.permissionDenied",
+      });
     });
 
     it("should handle disk full error", async () => {
@@ -401,9 +401,9 @@ describe("ExportManager", () => {
       await exportManager.export(mockCharacter);
       await new Promise((resolve) => setTimeout(resolve, 10));
 
-      await expect(exportManager.quickExport(mockCharacter)).rejects.toThrow(
-        "Unable to save file. Disk full."
-      );
+      await expect(exportManager.quickExport(mockCharacter)).rejects.toMatchObject({
+        messageKey: "errors.diskFull",
+      });
     });
   });
 

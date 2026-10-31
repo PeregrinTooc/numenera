@@ -389,5 +389,28 @@
       "label": "Schließen",
       "aria": "Diese Benachrichtigung schließen"
     }
+  },
+  "errors": {
+    "noRememberedLocation": "Kein gespeicherter Speicherort für den Schnellexport",
+    "permissionDenied": "Datei konnte nicht gespeichert werden. Zugriff verweigert.",
+    "diskFull": "Datei konnte nicht gespeichert werden. Speicher voll.",
+    "invalidJson": "Ungültiges JSON in der Datei",
+    "invalidData": "Die Datei enthält keine gültigen Daten",
+    "noCharacterData": "Die Datei enthält keine Charakterdaten",
+    "fileSystemUnavailable": "Die File System Access API ist nicht verfügbar",
+    "unexpected": "Ein unerwarteter Fehler ist aufgetreten."
+  },
+  "fileOperations": {
+    "importFailed": "Charakter konnte nicht importiert werden: {{reason}}",
+    "exportFailed": "Charakter konnte nicht exportiert werden: {{reason}}",
+    "saveFailed": "Datei konnte nicht gespeichert werden: {{reason}}",
+    "importNote": "Hinweis: {{warning}}",
+    "importAdjustments": "Hinweis: Beim Import wurden {{count}} Anpassungen vorgenommen. Details stehen in der Konsole.",
+    "schemaMismatch": "Die Datei hat eine andere Schemaversion ({{fileVersion}}), die aktuelle Version ist {{currentVersion}}. Daten wurden eventuell angepasst.",
+    "invalidLayout": "Die importierte Datei enthält eine ungültige Layout-Konfiguration. Das aktuelle Layout wird beibehalten."
+  },
+  "portrait": {
+    "notAnImage": "Bitte wähle eine Bilddatei aus",
+    "tooLarge": "Die Bilddatei ist zu groß. Die maximale Größe beträgt {{maxSize}} MB."
   }
 }

@@ -24,13 +24,13 @@ export class BasicInfo {
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      alert("Please select an image file");
+      alert(t("portrait.notAnImage"));
       return;
     }
 
     // Validate file size (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
-      alert("Image file is too large. Maximum size is 2MB.");
+      alert(t("portrait.tooLarge", { maxSize: 2 }));
       return;
     }
 

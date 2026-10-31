@@ -41,6 +41,8 @@ import { reconcileVersionHistory } from "@/services/versionHistoryReconciliation
 import { CompareView } from "./components/CompareView.js";
 import { loadComparisonViewEnabled } from "./storage/comparisonViewPreference.js";
 import { isPhoneViewport } from "./utils/viewport.js";
+import { t } from "@/i18n/index";
+import { describeError } from "@/utils/describeError";
 
 // Expose storage functions on window for E2E tests
 // This allows tests to work in both dev and production builds
@@ -374,8 +376,8 @@ async function renderCharacterSheet(
           if (warnings.length > 0) {
             const warningMessage =
               warnings.length === 1
-                ? `Note: ${warnings[0]}`
-                : `Note: ${warnings.length} adjustments were made during import. Check console for details.`;
+                ? t("fileOperations.importNote", { warning: warnings[0] })
+                : t("fileOperations.importAdjustments", { count: warnings.length });
             // Use setTimeout to avoid blocking the import
             setTimeout(() => alert(warningMessage), 100);
           }
@@ -392,9 +394,7 @@ async function renderCharacterSheet(
       // If null, user cancelled - do nothing
     } catch (error) {
       console.error("Error importing character:", error);
-      alert(
-        `Failed to import character: ${error instanceof Error ? error.message : String(error)}`
-      );
+      alert(t("fileOperations.importFailed", { reason: describeError(error) }));
     }
   };
 
@@ -416,9 +416,7 @@ async function renderCharacterSheet(
       updateHeaderButtonState();
     } catch (error) {
       console.error("Error exporting character:", error);
-      alert(
-        `Failed to export character: ${error instanceof Error ? error.message : String(error)}`
-      );
+      alert(t("fileOperations.exportFailed", { reason: describeError(error) }));
     }
   };
 
@@ -429,7 +427,7 @@ async function renderCharacterSheet(
       // Success feedback is handled by export-success event
     } catch (error) {
       console.error("Error in quick export:", error);
-      alert(`Failed to save file: ${error instanceof Error ? error.message : String(error)}`);
+      alert(t("fileOperations.saveFailed", { reason: describeError(error) }));
     }
   };
 
@@ -440,7 +438,7 @@ async function renderCharacterSheet(
       updateHeaderButtonState();
     } catch (error) {
       console.error("Error in save as:", error);
-      alert(`Failed to save file: ${error instanceof Error ? error.message : String(error)}`);
+      alert(t("fileOperations.saveFailed", { reason: describeError(error) }));
     }
   };
 

@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **686** in 29 files
-- Feature step lines: **2112**
+- Step definitions: **688** in 30 files
+- Feature step lines: **2118**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
@@ -51,6 +51,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 12 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
+| [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
 | [section-rearrangement.steps.ts](#sectionrearrangementstepsts) | 49 | 0 |
@@ -561,7 +562,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | --- | --- | ---: | ---: |
 | Then | `artifact level labels should display {string}` | 1 | 105 |
 | Then | `cypher level labels should display {string}` | 1 | 94 |
-| Given | `I am on the character sheet page with {string}` | 9 | 10 |
+| Given | `I am on the character sheet page with {string}` | 11 | 10 |
 | When | `I navigate to the page with {string}` | 1 | 16 |
 | Then | `the artifacts heading should be {string}` | 1 | 100 |
 | Then | `the background field label should be {string}` | 2 | 119 |
@@ -588,6 +589,13 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the stat edge label should be {string}` | 1 | 73 |
 | Then | `the stat pool label should be {string}` | 1 | 65 |
 | Then | `the stats heading should be {string}` | 1 | 42 |
+
+## import-error-messages.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I import a file without character data` | 2 | 6 |
+| Then | `the alert should read {string}` | 2 | 14 |
 
 ## recovery-damage-track.steps.ts
 
