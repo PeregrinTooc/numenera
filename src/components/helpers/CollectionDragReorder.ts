@@ -4,10 +4,16 @@
 import { reorderArray, previewOrderEquals } from "./DragDropBehavior.js";
 
 export interface CollectionDragReorderConfig {
-  /** Section name; also the collection-updated detail and the `<section>-list` test id prefix */
+  /** Section name; the collection-updated detail and, by default, the `<section>-list` test id prefix */
   section: string;
   /** data-testid of each draggable item element */
   itemTestId: string;
+  /** Match item test ids that merely start with `itemTestId` (e.g. `ability-item-<id>`) */
+  matchItemTestIdPrefix?: boolean;
+  /** data-testid of the list container; defaults to `<section>-list` */
+  listTestId?: string;
+  /** Event dispatched on #app after a reorder instead of `collection-updated` (e.g. `cyphers-updated`) */
+  updatedEvent?: string;
   /** Reads the current collection */
   getCollection: () => unknown[];
   /** Replaces the collection with the reordered one */
@@ -28,7 +34,8 @@ export class CollectionDragReorder {
   constructor(private config: CollectionDragReorderConfig) {}
 
   private itemSelector(): string {
-    return `[data-testid='${this.config.itemTestId}']`;
+    const operator = this.config.matchItemTestIdPrefix ? "^=" : "=";
+    return `[data-testid${operator}'${this.config.itemTestId}']`;
   }
 
   private findItem(e: Event): HTMLElement | null {
@@ -109,7 +116,9 @@ export class CollectionDragReorder {
     const appElement = document.getElementById("app");
     if (appElement) {
       appElement.dispatchEvent(
-        new CustomEvent("collection-updated", { detail: { section: this.config.section } })
+        this.config.updatedEvent
+          ? new CustomEvent(this.config.updatedEvent)
+          : new CustomEvent("collection-updated", { detail: { section: this.config.section } })
       );
       appElement.dispatchEvent(new CustomEvent("character-updated"));
     }
@@ -136,7 +145,9 @@ export class CollectionDragReorder {
   private applyPreviewOrder(): void {
     if (!this.state.previewOrder) return;
 
-    const container = document.querySelector(`[data-testid='${this.config.section}-list']`);
+    const container = document.querySelector(
+      `[data-testid='${this.config.listTestId ?? `${this.config.section}-list`}']`
+    );
     if (!container) return;
 
     const items = Array.from(container.querySelectorAll(this.itemSelector()));

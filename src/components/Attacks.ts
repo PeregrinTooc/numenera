@@ -7,16 +7,19 @@ import { ModalService } from "@/services/modalService";
 import { t } from "@/i18n/index";
 import { createAddHandler, createItemInstances } from "./helpers/CollectionBehavior.js";
 import { renderAddButton } from "./helpers/collectionRendering.js";
-import { reorderArray, previewOrderEquals } from "./helpers/DragDropBehavior.js";
+import { CollectionDragReorder } from "./helpers/CollectionDragReorder.js";
 import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
 
 type FieldType = "armor";
 
 export class Attacks {
   private handleAddAttack: () => void;
-  private draggedIndex: number | null = null;
-  private previewOrder: number[] | null = null;
-  private currentTargetIndex: number | null = null;
+  private drag = new CollectionDragReorder({
+    section: "attacks",
+    itemTestId: "attack-item",
+    getCollection: () => this.character.attacks,
+    setCollection: (items) => (this.character.attacks = items as Character["attacks"]),
+  });
 
   constructor(
     private character: Character,
@@ -29,125 +32,6 @@ export class Attacks {
       collection: this.character.attacks,
       character: this.character,
       collectionKey: "attacks",
-    });
-  }
-
-  // ============================================================================
-  // DRAG AND DROP HANDLERS
-  // ============================================================================
-
-  private handleDragStart(e: Event): void {
-    const dragEvent = e as globalThis.DragEvent;
-    const target = dragEvent.target as HTMLElement;
-    const item = target.closest("[data-testid='attack-item']") as HTMLElement;
-    if (item) {
-      const index = parseInt(item.dataset.index || "0", 10);
-      this.draggedIndex = index;
-      this.previewOrder = null;
-      dragEvent.dataTransfer?.setData("text/plain", index.toString());
-      item.setAttribute("data-dragging", "true");
-    }
-  }
-
-  private handleDragOver(e: Event): void {
-    e.preventDefault();
-    if (this.draggedIndex === null) return;
-
-    const target = e.target as HTMLElement;
-    const item = target.closest("[data-testid='attack-item']") as HTMLElement;
-    if (!item) return;
-
-    const targetIndex = parseInt(item.dataset.index || "0", 10);
-    if (this.draggedIndex === targetIndex) return;
-
-    this.currentTargetIndex = targetIndex;
-
-    const newOrder = this.calculatePreviewOrder(this.draggedIndex, targetIndex);
-    if (!previewOrderEquals(this.previewOrder, newOrder)) {
-      this.previewOrder = newOrder;
-      this.applyPreviewOrder();
-    }
-  }
-
-  private handleDrop(e: Event): void {
-    e.preventDefault();
-
-    // A drag that started in another section leaves this section's state
-    // untouched, so a null index means the drag is not ours. Decided from
-    // component state because WebKit drops custom dataTransfer types.
-    const draggedIndex = this.draggedIndex;
-    if (draggedIndex === null) {
-      this.handleDragEnd(e);
-      return;
-    }
-
-    let targetIndex = this.currentTargetIndex;
-    if (targetIndex === null) {
-      const target = e.target as HTMLElement;
-      const item = target.closest("[data-testid='attack-item']") as HTMLElement;
-      if (!item) {
-        this.handleDragEnd(e);
-        return;
-      }
-      targetIndex = parseInt(item.dataset.index || "0", 10);
-    }
-
-    if (draggedIndex === targetIndex) {
-      this.handleDragEnd(e);
-      return;
-    }
-
-    // Reorder the attacks array (immutable update for version history)
-    const newItems = reorderArray(this.character.attacks, draggedIndex, targetIndex);
-    this.character.attacks = newItems;
-
-    this.handleDragEnd(e);
-
-    // Dispatch collection-updated to re-render the sheet
-    // Dispatch character-updated for save
-    const appElement = document.getElementById("app");
-    if (appElement) {
-      appElement.dispatchEvent(
-        new CustomEvent("collection-updated", { detail: { section: "attacks" } })
-      );
-      appElement.dispatchEvent(new CustomEvent("character-updated"));
-    }
-  }
-
-  private handleDragEnd(_e: Event): void {
-    const items = document.querySelectorAll("[data-testid='attack-item']");
-    items.forEach((item) => {
-      item.removeAttribute("data-dragging");
-      // Always drop the preview `order`: the sheet re-renders into these same
-      // nodes in the new array order, so a leftover override would keep
-      // showing the pre-drop arrangement.
-      (item as HTMLElement).style.order = "";
-    });
-    this.previewOrder = null;
-    this.draggedIndex = null;
-    this.currentTargetIndex = null;
-  }
-
-  private calculatePreviewOrder(fromIndex: number, toIndex: number): number[] {
-    const indices = this.character.attacks.map((_, i) => i);
-    const [removed] = indices.splice(fromIndex, 1);
-    indices.splice(toIndex, 0, removed);
-    return indices;
-  }
-
-  private applyPreviewOrder(): void {
-    if (!this.previewOrder) return;
-    const container = document.querySelector("[data-testid='attacks-list']");
-    if (!container) return;
-
-    const items = Array.from(container.querySelectorAll("[data-testid='attack-item']"));
-    this.previewOrder.forEach((originalIndex, visualPosition) => {
-      const item = items.find(
-        (el) => parseInt((el as HTMLElement).dataset.index || "0", 10) === originalIndex
-      );
-      if (item) {
-        (item as HTMLElement).style.order = visualPosition.toString();
-      }
     });
   }
 
@@ -216,10 +100,10 @@ export class Attacks {
               <div
                 data-testid="attacks-list"
                 class="grid grid-cols-1 gap-4"
-                @dragstart=${(e: Event) => this.handleDragStart(e)}
-                @dragover=${(e: Event) => this.handleDragOver(e)}
-                @drop=${(e: Event) => this.handleDrop(e)}
-                @dragend=${(e: Event) => this.handleDragEnd(e)}
+                @dragstart=${(e: Event) => this.drag.handleDragStart(e)}
+                @dragover=${(e: Event) => this.drag.handleDragOver(e)}
+                @drop=${(e: Event) => this.drag.handleDrop(e)}
+                @dragend=${() => this.drag.handleDragEnd()}
               >
                 ${attackItems.map((item) => item.render())}
               </div>

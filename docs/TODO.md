@@ -56,10 +56,6 @@ detail lives in the linked file.
 
 ### Test and Component Debt
 
-- **Reorder coverage gaps.** No reorder scenario exists for attacks, special
-  abilities or items; add them. Cross-section drops are covered only for
-  cypher → abilities and ability → cypher. Add a unit test per component that a
-  drop with a null `draggedIndex` leaves the array unchanged.
 - **Untranslated-key check (low priority).** It reads body `innerText` only, so
   it misses `aria-label` and `title`. The three "...empty state should use
   translation keys" Thens (`combat.steps.ts` around lines 123 and 205,

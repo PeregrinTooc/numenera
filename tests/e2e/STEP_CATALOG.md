@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **688** in 49 files
-- Feature step lines: **2125**
+- Step definitions: **692** in 50 files
+- Feature step lines: **2133**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
@@ -51,6 +51,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
+| [collection-reordering.steps.ts](#collectionreorderingstepsts) | 4 | 0 |
 | [combat.steps.ts](#combatstepsts) | 24 | 0 |
 | [common-steps.ts](#commonstepsts) | 36 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
@@ -412,7 +413,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 55 | 27 |
+| Given | `I am on the character sheet page` | 56 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 142 |
 | Then | `I should see {int} cyphers displayed` | 1 | 104 |
 | Then | `I should see {int} oddities displayed` | 1 | 155 |
@@ -480,6 +481,15 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the character should be displayed` | 1 | 70 |
 | Then | `the same character should still be displayed` | 1 | 76 |
 
+## collection-reordering.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I drag {string} after {string} in the {string} collection` | 1 | 79 |
+| When | `I drag {string} before {string} in the {string} collection` | 1 | 66 |
+| Given | `the {string} collection holds {string}` | 2 | 54 |
+| Then | `the {string} collection should be in order {string}` | 2 | 96 |
+
 ## combat.steps.ts
 
 | Keyword | Phrase | Uses | Line |
@@ -531,7 +541,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I hover over the tier {string}` | 1 | 106 |
 | When | `I press the Enter key` | 2 | 192 |
 | When | `I press the Escape key` | 4 | 188 |
-| When | `I reload the page` | 48 | 196 |
+| When | `I reload the page` | 49 | 196 |
 | When | `I reload the page immediately` | 1 | 210 |
 | Then | `I should see the {string} value displayed` | 1 | 221 |
 | When | `I tap on the {string} value` | 1 | 34 |

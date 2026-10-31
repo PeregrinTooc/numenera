@@ -7,13 +7,17 @@ import { AbilityItem } from "./AbilityItem.js";
 import { t } from "@/i18n/index";
 import { createAddHandler, createItemInstances } from "./helpers/CollectionBehavior.js";
 import { renderAddButton } from "./helpers/collectionRendering.js";
-import { reorderArray, previewOrderEquals } from "./helpers/DragDropBehavior.js";
+import { CollectionDragReorder } from "./helpers/CollectionDragReorder.js";
 
 export class Abilities {
   private handleAddAbility: () => void;
-  private draggedIndex: number | null = null;
-  private previewOrder: number[] | null = null;
-  private currentTargetIndex: number | null = null;
+  private drag = new CollectionDragReorder({
+    section: "abilities",
+    itemTestId: "ability-item",
+    matchItemTestIdPrefix: true,
+    getCollection: () => this.character.abilities,
+    setCollection: (items) => (this.character.abilities = items as Character["abilities"]),
+  });
 
   constructor(private character: Character) {
     // Create add handler using CollectionBehavior helper (event-based pattern)
@@ -23,125 +27,6 @@ export class Abilities {
       collection: this.character.abilities,
       character: this.character,
       collectionKey: "abilities",
-    });
-  }
-
-  // ============================================================================
-  // DRAG AND DROP HANDLERS
-  // ============================================================================
-
-  private handleDragStart(e: Event): void {
-    const dragEvent = e as globalThis.DragEvent;
-    const target = dragEvent.target as HTMLElement;
-    const abilityItem = target.closest("[data-testid^='ability-item']") as HTMLElement;
-    if (abilityItem) {
-      const index = parseInt(abilityItem.dataset.index || "0", 10);
-      this.draggedIndex = index;
-      this.previewOrder = null;
-      dragEvent.dataTransfer?.setData("text/plain", index.toString());
-      abilityItem.setAttribute("data-dragging", "true");
-    }
-  }
-
-  private handleDragOver(e: Event): void {
-    e.preventDefault();
-    if (this.draggedIndex === null) return;
-
-    const target = e.target as HTMLElement;
-    const abilityItem = target.closest("[data-testid^='ability-item']") as HTMLElement;
-    if (!abilityItem) return;
-
-    const targetIndex = parseInt(abilityItem.dataset.index || "0", 10);
-    if (this.draggedIndex === targetIndex) return;
-
-    this.currentTargetIndex = targetIndex;
-
-    const newOrder = this.calculatePreviewOrder(this.draggedIndex, targetIndex);
-    if (!previewOrderEquals(this.previewOrder, newOrder)) {
-      this.previewOrder = newOrder;
-      this.applyPreviewOrder();
-    }
-  }
-
-  private handleDrop(e: Event): void {
-    e.preventDefault();
-
-    // A drag that started in another section leaves this section's state
-    // untouched, so a null index means the drag is not ours. Decided from
-    // component state because WebKit drops custom dataTransfer types.
-    const draggedIndex = this.draggedIndex;
-    if (draggedIndex === null) {
-      this.handleDragEnd(e);
-      return;
-    }
-
-    let targetIndex = this.currentTargetIndex;
-    if (targetIndex === null) {
-      const target = e.target as HTMLElement;
-      const abilityItem = target.closest("[data-testid^='ability-item']") as HTMLElement;
-      if (!abilityItem) {
-        this.handleDragEnd(e);
-        return;
-      }
-      targetIndex = parseInt(abilityItem.dataset.index || "0", 10);
-    }
-
-    if (draggedIndex === targetIndex) {
-      this.handleDragEnd(e);
-      return;
-    }
-
-    // Reorder the abilities array
-    const newAbilities = reorderArray(this.character.abilities, draggedIndex, targetIndex);
-    this.character.abilities = newAbilities;
-
-    this.handleDragEnd(e);
-
-    // Dispatch collection-updated to re-render the sheet
-    // Dispatch character-updated for save
-    const appElement = document.getElementById("app");
-    if (appElement) {
-      appElement.dispatchEvent(
-        new CustomEvent("collection-updated", { detail: { section: "abilities" } })
-      );
-      appElement.dispatchEvent(new CustomEvent("character-updated"));
-    }
-  }
-
-  private handleDragEnd(_e: Event): void {
-    const items = document.querySelectorAll("[data-testid^='ability-item']");
-    items.forEach((item) => {
-      item.removeAttribute("data-dragging");
-      // Always drop the preview `order`: the sheet re-renders into these same
-      // nodes in the new array order, so a leftover override would keep
-      // showing the pre-drop arrangement.
-      (item as HTMLElement).style.order = "";
-    });
-    this.previewOrder = null;
-    this.draggedIndex = null;
-    this.currentTargetIndex = null;
-  }
-
-  private calculatePreviewOrder(fromIndex: number, toIndex: number): number[] {
-    const indices = this.character.abilities.map((_, i) => i);
-    const [removed] = indices.splice(fromIndex, 1);
-    indices.splice(toIndex, 0, removed);
-    return indices;
-  }
-
-  private applyPreviewOrder(): void {
-    if (!this.previewOrder) return;
-    const container = document.querySelector("[data-testid='abilities-list']");
-    if (!container) return;
-
-    const items = Array.from(container.querySelectorAll("[data-testid^='ability-item']"));
-    this.previewOrder.forEach((originalIndex, visualPosition) => {
-      const item = items.find(
-        (el) => parseInt((el as HTMLElement).dataset.index || "0", 10) === originalIndex
-      );
-      if (item) {
-        (item as HTMLElement).style.order = visualPosition.toString();
-      }
     });
   }
 
@@ -180,10 +65,10 @@ export class Abilities {
               <div
                 data-testid="abilities-list"
                 class="grid grid-cols-1 md:grid-cols-2 gap-4"
-                @dragstart=${(e: Event) => this.handleDragStart(e)}
-                @dragover=${(e: Event) => this.handleDragOver(e)}
-                @drop=${(e: Event) => this.handleDrop(e)}
-                @dragend=${(e: Event) => this.handleDragEnd(e)}
+                @dragstart=${(e: Event) => this.drag.handleDragStart(e)}
+                @dragover=${(e: Event) => this.drag.handleDragOver(e)}
+                @drop=${(e: Event) => this.drag.handleDrop(e)}
+                @dragend=${() => this.drag.handleDragEnd()}
               >
                 ${repeat(
                   abilityItems,

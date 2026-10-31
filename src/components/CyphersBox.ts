@@ -8,15 +8,19 @@ import { t } from "@/i18n/index";
 import { createAddHandler, createItemInstances } from "./helpers/CollectionBehavior.js";
 import { renderAddButton } from "./helpers/collectionRendering.js";
 import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
-import { reorderArray, previewOrderEquals } from "./helpers/DragDropBehavior.js";
+import { CollectionDragReorder } from "./helpers/CollectionDragReorder.js";
 
 type FieldType = "maxCyphers";
 
 export class CyphersBox {
   private handleAddCypher: () => void;
-  private draggedIndex: number | null = null;
-  private previewOrder: number[] | null = null; // For live preview during drag
-  private currentTargetIndex: number | null = null; // Track target during drag
+  private drag = new CollectionDragReorder({
+    section: "cyphers",
+    itemTestId: "cypher-item",
+    updatedEvent: "cyphers-updated",
+    getCollection: () => this.character.cyphers,
+    setCollection: (items) => (this.character.cyphers = items as Character["cyphers"]),
+  });
 
   constructor(
     private character: Character,
@@ -31,139 +35,6 @@ export class CyphersBox {
       character: this.character,
       collectionKey: "cyphers",
     });
-  }
-
-  private handleDragStart(e: Event): void {
-    const dragEvent = e as globalThis.DragEvent;
-    const target = dragEvent.target as HTMLElement;
-    const cypherItem = target.closest("[data-testid='cypher-item']") as HTMLElement;
-    if (cypherItem) {
-      const index = parseInt(cypherItem.dataset.index || "0", 10);
-      this.draggedIndex = index;
-      this.previewOrder = null; // Reset preview order
-      dragEvent.dataTransfer?.setData("text/plain", index.toString());
-
-      // Add dragging visual state
-      cypherItem.setAttribute("data-dragging", "true");
-    }
-  }
-
-  private handleDragOver(e: Event): void {
-    e.preventDefault(); // Allow drop
-
-    if (this.draggedIndex === null) return;
-
-    const target = e.target as HTMLElement;
-    const cypherItem = target.closest("[data-testid='cypher-item']") as HTMLElement;
-    if (!cypherItem) return;
-
-    const targetIndex = parseInt(cypherItem.dataset.index || "0", 10);
-    if (this.draggedIndex === targetIndex) return;
-
-    // Store the target index for drop operation
-    this.currentTargetIndex = targetIndex;
-
-    // Calculate preview order for live reorder
-    const newOrder = this.calculatePreviewOrder(this.draggedIndex, targetIndex);
-
-    // Only re-render if order changed
-    if (!previewOrderEquals(this.previewOrder, newOrder)) {
-      this.previewOrder = newOrder;
-      this.applyPreviewOrder();
-    }
-  }
-
-  private handleDragEnd(_e: Event): void {
-    // Remove dragging visual state from all items
-    const items = document.querySelectorAll("[data-testid='cypher-item']");
-    items.forEach((item) => {
-      item.removeAttribute("data-dragging");
-      // Always drop the preview `order`: the sheet re-renders into these same
-      // nodes in the new array order, so a leftover override would keep
-      // showing the pre-drop arrangement.
-      (item as HTMLElement).style.order = "";
-    });
-
-    // Reset preview state
-    this.previewOrder = null;
-    this.draggedIndex = null;
-    this.currentTargetIndex = null;
-  }
-
-  private calculatePreviewOrder(fromIndex: number, toIndex: number): number[] {
-    const indices = this.character.cyphers.map((_, i) => i);
-    const [removed] = indices.splice(fromIndex, 1);
-    indices.splice(toIndex, 0, removed);
-    return indices;
-  }
-
-  private applyPreviewOrder(): void {
-    if (!this.previewOrder) return;
-
-    const container = document.querySelector("[data-testid='cyphers-list']");
-    if (!container) return;
-
-    const items = Array.from(container.querySelectorAll("[data-testid='cypher-item']"));
-
-    // Use CSS order property for visual reordering (don't move DOM elements)
-    // This preserves data-index for correct drop handling
-    this.previewOrder.forEach((originalIndex, visualPosition) => {
-      const item = items.find(
-        (el) => parseInt((el as HTMLElement).dataset.index || "0", 10) === originalIndex
-      );
-      if (item) {
-        (item as HTMLElement).style.order = visualPosition.toString();
-      }
-    });
-  }
-
-  private handleDrop(e: Event): void {
-    e.preventDefault();
-
-    // A drag that started in another section leaves this section's state
-    // untouched, so a null index means the drag is not ours. Every section
-    // writes its own index to text/plain, so that can't identify the source.
-    const draggedIndex = this.draggedIndex;
-    if (draggedIndex === null) {
-      this.handleDragEnd(e);
-      return;
-    }
-
-    // Use currentTargetIndex from dragover (tracks actual target position)
-    // If no dragover occurred, fall back to finding target from drop position
-    let targetIndex = this.currentTargetIndex;
-
-    if (targetIndex === null) {
-      // Fallback: find target from drop position (for direct drops without dragover)
-      const target = e.target as HTMLElement;
-      const cypherItem = target.closest("[data-testid='cypher-item']") as HTMLElement;
-      if (!cypherItem) {
-        this.handleDragEnd(e);
-        return;
-      }
-      targetIndex = parseInt(cypherItem.dataset.index || "0", 10);
-    }
-
-    if (draggedIndex === targetIndex) {
-      this.handleDragEnd(e);
-      return;
-    }
-
-    // Reorder the cyphers array
-    const newCyphers = reorderArray(this.character.cyphers, draggedIndex, targetIndex);
-
-    // Update character data immediately
-    this.character.cyphers = newCyphers;
-
-    this.handleDragEnd(e);
-
-    // Dispatch cyphers-updated to re-render the sheet
-    // Dispatch character-updated for save (re-rendering is handled above)
-    const appElement = document.getElementById("app");
-    if (appElement) {
-      appElement.dispatchEvent(new CustomEvent("cyphers-updated"));
-      appElement.dispatchEvent(new CustomEvent("character-updated"));
-    }
   }
 
   private openEditModal(fieldType: FieldType): void {
@@ -228,10 +99,10 @@ export class CyphersBox {
               <div
                 data-testid="cyphers-list"
                 class="grid grid-cols-1 md:grid-cols-2 gap-4"
-                @dragstart=${(e: Event) => this.handleDragStart(e)}
-                @dragover=${(e: Event) => this.handleDragOver(e)}
-                @drop=${(e: Event) => this.handleDrop(e)}
-                @dragend=${(e: Event) => this.handleDragEnd(e)}
+                @dragstart=${(e: Event) => this.drag.handleDragStart(e)}
+                @dragover=${(e: Event) => this.drag.handleDragOver(e)}
+                @drop=${(e: Event) => this.drag.handleDrop(e)}
+                @dragend=${() => this.drag.handleDragEnd()}
               >
                 ${cypherItems.map((item) => item.render())}
               </div>
