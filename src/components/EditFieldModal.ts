@@ -11,7 +11,7 @@ import {
   getMaxValue,
   getMaxLength,
   isNumericField,
-} from "@/utils/unified-validation";
+} from "@/utils/fieldValidation";
 import { ModalBehavior, renderModalButtons } from "@/services/modalBehavior";
 import { FocusTrappingBehavior } from "@/services/focusTrappingBehavior";
 import type { VersionHistoryService } from "@/services/versionHistoryService";

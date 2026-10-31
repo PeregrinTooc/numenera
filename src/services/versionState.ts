@@ -6,7 +6,7 @@
 import { Character } from "@/types/character";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import { CharacterVersion } from "@/types/versionHistory";
-import { sanitizeCharacter } from "@/utils/unified-validation";
+import { sanitizeCharacter } from "@/utils/characterSanitizer";
 
 export class VersionState {
   private latestCharacter: Character;

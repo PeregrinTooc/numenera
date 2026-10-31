@@ -8,7 +8,7 @@ import { IndexedDBStorageImpl } from "./indexedDBStorageImpl.js";
 import { LocalStorageImpl } from "./localStorageImpl.js";
 import { VersionHistoryManager } from "./versionHistory.js";
 import { CHARACTER_DB_NAME } from "./storageConstants.js";
-import { sanitizeCharacter } from "@/utils/unified-validation";
+import { sanitizeCharacter } from "@/utils/characterSanitizer";
 import { logger } from "@/utils/logger";
 import { reportStorageWriteFailure } from "./storageWriteFailure";
 

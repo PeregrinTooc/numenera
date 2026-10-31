@@ -4,7 +4,7 @@
 import { Character } from "@/types/character";
 import { Layout, isValidLayout } from "@/types/layout";
 import { SCHEMA_VERSION } from "./storageConstants.js";
-import { sanitizeCharacter } from "@/utils/unified-validation";
+import { sanitizeCharacter } from "@/utils/characterSanitizer";
 import { loadLayout } from "./layoutStorage.js";
 import { t } from "@/i18n/index";
 import { UserFacingError } from "@/utils/UserFacingError";

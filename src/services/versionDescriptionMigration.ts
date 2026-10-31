@@ -1,6 +1,6 @@
 import type { CharacterVersion } from "@/types/versionHistory";
 import type { VersionHistoryManager } from "@/storage/versionHistory";
-import { sanitizeCharacter } from "@/utils/unified-validation";
+import { sanitizeCharacter } from "@/utils/characterSanitizer";
 import { describeCharacterChange } from "./versionDescriptions.js";
 
 // Pre-fix raw literal used by the old hardcoded "Updated character" fallback

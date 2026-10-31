@@ -2,7 +2,7 @@
 
 import { html, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
-import { FieldType as ValidationFieldType } from "@/utils/unified-validation";
+import { FieldType as ValidationFieldType } from "@/utils/fieldValidation";
 import { ModalService } from "@/services/modalService";
 import { persistCharacterState } from "@/storage/storageFactory";
 import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";

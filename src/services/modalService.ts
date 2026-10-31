@@ -4,7 +4,7 @@
 import { render } from "lit-html";
 import { EditFieldModal } from "@/components/EditFieldModal";
 import { PortraitDisplayModal } from "@/components/PortraitDisplayModal";
-import { FieldType } from "@/utils/unified-validation";
+import { FieldType } from "@/utils/fieldValidation";
 import { ModalContainer } from "@/services/modalContainer";
 import type { VersionHistoryService } from "./versionHistoryService.js";
 

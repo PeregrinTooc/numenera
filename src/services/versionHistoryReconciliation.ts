@@ -1,7 +1,7 @@
 import type { Character } from "@/types/character";
 import type { VersionHistoryManager } from "@/storage/versionHistory";
 import { generateETag } from "@/utils/etag";
-import { sanitizeCharacter } from "@/utils/unified-validation";
+import { sanitizeCharacter } from "@/utils/characterSanitizer";
 import { describeCharacterChange } from "@/services/versionDescriptions";
 
 /**

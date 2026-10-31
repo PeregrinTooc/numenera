@@ -5,7 +5,7 @@ import {
   validateName,
   validateDescriptor,
   validateFocus,
-} from "@/utils/unified-validation";
+} from "@/utils/fieldValidation";
 
 // Tests
 describe("Tier Validation", () => {
