@@ -2,6 +2,7 @@ import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world.js";
 import { FULL_CHARACTER } from "../support/cardTestFixtures.js";
+import { importFile, numeneraFile } from "../support/fileImport.js";
 
 // Test fixture for the "import a valid character" scenarios — an override
 // of the shared demo character so only what makes this import distinctive
@@ -44,25 +45,26 @@ const VALID_CHARACTER = {
 When(
   "I import a valid character file with matching schema version",
   async function (this: CustomWorld) {
-    // Set up mock file importer to return the valid character
-    await this.storageHelper.setMockFileImporter(VALID_CHARACTER);
-
-    // Click the import button - this will use the mock importer
-    const importButton = this.page.locator('[data-testid="import-button"]');
-    await importButton.click();
-
-    // Wait for the character name to update to the imported character
-    const nameElement = this.page.locator('[data-testid="character-name"]');
-    await nameElement.waitFor({ state: "visible" });
-
-    // Reset the file importer to the real implementation for other tests
-    await this.storageHelper.resetFileImporter();
+    await importFile(this.page, "imported-hero.numenera", numeneraFile(VALID_CHARACTER));
+    await expect(this.page.getByTestId("character-name")).toHaveText("Imported Hero");
   }
 );
+
+When("I import a character file with tier {int}", async function (this: CustomWorld, tier: number) {
+  await importFile(this.page, "imported-hero.numenera", numeneraFile({ ...VALID_CHARACTER, tier }));
+  await expect(this.page.getByTestId("character-name")).toHaveText("Imported Hero");
+});
 
 // ============================================================================
 // THEN STEPS
 // ============================================================================
+
+Then(
+  "the tier should have been adjusted to {string}",
+  async function (this: CustomWorld, tier: string) {
+    await expect(this.page.getByTestId("character-tier")).toHaveText(tier);
+  }
+);
 
 Then("the character should be imported successfully", async function (this: CustomWorld) {
   // Verify the character name changed to the imported character

@@ -2,7 +2,7 @@ import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { Character } from "@/types/character";
 import { FULL_CHARACTER } from "../support/cardTestFixtures.js";
-import { waitForCharacterSheetReady } from "../support/app-ready.js";
+import { importFile, numeneraFile } from "../support/fileImport.js";
 
 // Test character data fixtures — overrides of the shared demo character so
 // only what makes each imported file distinctive needs to be spelled out.
@@ -86,33 +86,10 @@ const TEST_CHARACTERS: Record<string, Character> = {
 // Scenario: Import valid character from file
 When("I import a valid character file {string}", async function (filename: string) {
   const character = TEST_CHARACTERS[filename];
-  const fileContent = {
-    version: "1.0",
-    schemaVersion: 4,
-    exportDate: new Date().toISOString(),
-    character,
-  };
+  await importFile(this.page, filename, numeneraFile(character));
 
-  // Directly inject the character data into storage (simulating successful import)
-  // This is more reliable than trying to mock file system APIs in Playwright
-  await this.page.waitForTimeout(500);
-  await this.storageHelper.setCharacter(fileContent.character);
-
-  // Use explicit page navigation to reload (this properly waits for the navigation)
-  // Remove any query parameters to ensure clean reload
-  const currentUrl = this.page.url().split("?")[0];
-  await this.page.goto(currentUrl, { waitUntil: "domcontentloaded" });
-  await waitForCharacterSheetReady(this.page);
-
-  // Wait for the character name element to appear with the expected value
-  const expectedName = character.name;
   const nameElement = this.page.getByTestId("character-name");
-
-  // Wait for element to be visible and contain the expected text
-  await expect(nameElement).toBeVisible({ timeout: 15000 });
-  await expect(nameElement).toHaveText(expectedName, { timeout: 15000 });
-  // No version is buffered here: the reload above already records the stored
-  // import as a version (reconcileVersionHistory on boot).
+  await expect(nameElement).toHaveText(character.name, { timeout: 15000 });
 });
 
 // Scenario: Imported character persists in localStorage

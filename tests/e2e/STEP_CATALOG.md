@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **676** in 28 files
-- Feature step lines: **2077**
+- Step definitions: **678** in 28 files
+- Feature step lines: **2081**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
@@ -47,7 +47,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [combat.steps.ts](#combatstepsts) | 24 | 0 |
 | [common-steps.ts](#commonstepsts) | 36 | 0 |
-| [data-validation.steps.ts](#datavalidationstepsts) | 5 | 0 |
+| [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 12 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
@@ -244,7 +244,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `I should see an artifact card with name {string}` | 5 | 446 |
 | Then | `I should see an attack card with name {string}` | 5 | 480 |
 | Then | `I should see an equipment card with name {string}` | 5 | 429 |
-| Then | `I should see an oddity card with text {string}` | 5 | 471 |
+| Then | `I should see an oddity card with text {string}` | 6 | 471 |
 | Then | `the ability {string} should have cost {string}` | 1 | 514 |
 | Then | `the ability {string} should have pool {string}` | 1 | 522 |
 | Then | `the add attack button should have a non-transparent background` | 1 | 81 |
@@ -411,8 +411,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I import a valid character file {string}` | 4 | 87 |
-| Then | `the character {string} should still be displayed` | 1 | 119 |
-| Then | `the previous character should be replaced` | 1 | 126 |
+| Then | `the character {string} should still be displayed` | 1 | 96 |
+| Then | `the previous character should be replaced` | 1 | 103 |
 
 ## character-storage.steps.ts
 
@@ -503,11 +503,13 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all character data should be correctly displayed` | 1 | 74 |
-| When | `I import a valid character file with matching schema version` | 2 | 43 |
-| Then | `the character name should still be {string}` | 1 | 86 |
-| Then | `the character should be imported successfully` | 1 | 66 |
-| Then | `the tier should still be {string}` | 1 | 94 |
+| Then | `all character data should be correctly displayed` | 1 | 76 |
+| When | `I import a character file with tier {int}` | 1 | 52 |
+| When | `I import a valid character file with matching schema version` | 3 | 44 |
+| Then | `the character name should still be {string}` | 1 | 88 |
+| Then | `the character should be imported successfully` | 1 | 68 |
+| Then | `the tier should have been adjusted to {string}` | 1 | 61 |
+| Then | `the tier should still be {string}` | 1 | 96 |
 
 ## empty-fields-visibility.steps.ts
 

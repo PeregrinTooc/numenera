@@ -139,44 +139,4 @@ export class TestStorageHelper {
       await window.__testVersionHistory.clearVersions();
     });
   }
-
-  /**
-   * Set a mock file importer that returns the specified character
-   * Use this to simulate file import without actual file picker dialog
-   *
-   * @param character Character to return from import, or null to simulate cancel
-   * @param warnings Optional array of warning messages
-   */
-  async setMockFileImporter(character: Character | null, warnings: string[] = []): Promise<void> {
-    await this.page.evaluate(
-      ({ char, warns }) => {
-        if (!window.__testFileImporter) {
-          throw new Error("Test file importer API not available. Make sure the app has loaded.");
-        }
-        // Create a mock importer that returns the specified character
-        const mockImporter = {
-          importCharacter: async () => {
-            if (char === null) {
-              return null; // Simulate user cancelled
-            }
-            return { character: char, warnings: warns };
-          },
-        };
-        window.__testFileImporter.setFileImporter(mockImporter);
-      },
-      { char: character, warns: warnings }
-    );
-  }
-
-  /**
-   * Reset the file importer to the real implementation
-   */
-  async resetFileImporter(): Promise<void> {
-    await this.page.evaluate(() => {
-      if (!window.__testFileImporter) {
-        throw new Error("Test file importer API not available. Make sure the app has loaded.");
-      }
-      window.__testFileImporter.resetFileImporter();
-    });
-  }
 }

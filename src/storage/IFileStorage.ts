@@ -17,19 +17,6 @@ export interface ImportResult {
 }
 
 /**
- * Interface for file import operations
- * Implementations can use File System Access API, input elements, or mocks
- */
-export interface IFileImporter {
-  /**
-   * Import a character from a file
-   * @returns Import result with character and warnings, or null if user cancels
-   * @throws Error for invalid JSON or missing character data
-   */
-  importCharacter(): Promise<ImportResult | null>;
-}
-
-/**
  * Interface for file export operations
  * Implementations can use File System Access API, blob downloads, or mocks
  */

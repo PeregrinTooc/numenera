@@ -32,6 +32,7 @@ editing the rule to match the code.
 | Rule #5 — `any` in `src/` / test sniffing       | 34 `any` usages in 12 files of `src/` (storage interfaces, validation inputs, File System Access calls, auto-save events, `(manager as any).db`, collection access), and `indexedDBStorageImpl.ts` checked `(globalThis as any).vi` to detect Vitest                                       | typed storage (`load()` returns `unknown`), `unknown` + guards in `typeGuards.ts`, `src/types/fileSystemAccess.d.ts`, an `AutoSaveEvents` map, `VersionHistoryManager.updateVersionMetadata`, `characterCollections.ts` accessors; the availability timeout is now a constructor argument           |
 | Rule #5 — tests never type-checked              | `tsconfig.json` excluded `tests/` and `build` checked only `src/`; a probe found ~100 real type errors (stale `Artifact.depletion`, string oddities, `ConflictDetail.timestamp`, a pre-refactor `damageTrack` shape, `CharacterSheet` built with 2 of 6 required arguments, untyped mocks) | `tsconfig.test.json` plus `npm run typecheck:tests` in the pre-commit hook and CI; every error fixed with typed mocks (`Mock<ConstructorParameters<…>>`), the `createTestCharacter` factory and narrowing                                                                                           |
 | Rule #5 — `any` in `tests/`, linter only warned | 151 `any` in `tests/` (111 lint-reported, 40 behind `eslint-disable`): `window as any`, bad-input casts, private-member access, untyped mocks; `no-explicit-any` was a warning                                                                                                             | typed `Window` globals in `tests/e2e/support/windowGlobals.d.ts`, `createMockVersionHistoryManager` factory, narrow documented structural views for private members, typed `Mock`s; `no-explicit-any` is an error and `no-warning-comments` rejects any comment naming it, so it cannot be disabled |
+| Test architecture � E2E import path             | No E2E scenario ran the sanitizer: `setMockFileImporter` replaced the importer, and the other import step wrote straight to storage                                                                                                                                                        | import steps feed the raw file through the real `<input type="file">` chooser (`tests/e2e/support/fileImport.ts`); the `__testFileImporter` seam and `IFileImporter` are gone; "Imported oddities are kept" guards review �2.3                                                                      |
 
 ---
 
@@ -126,43 +127,27 @@ cannot catch these. Fix together with #4's notification mechanism.
 
 ---
 
-## 10. Test architecture — the E2E import path cannot cover validation
-
-Not a rule violation, but it hid one of the bugs above and is worth fixing.
-
-`TestStorageHelper.setMockFileImporter` replaces `IFileImporter.importCharacter()`
-wholesale, so **no E2E scenario ever executes the sanitizer**. The other import
-step (`character-file-import.steps.ts`) writes straight to storage and reloads,
-so the real import flow's versioning is untested too.
-
-**Fix:** drive the real importer with no app hook. Delete
-`window.showOpenFilePicker` in the step to force the `<input type=file>` path
-(WebKit has no picker anyway), click Import, and feed the raw file through
-Playwright's `filechooser` event. Then remove the `__testFileImporter` seam and
-add the oddity-import regression scenario (review §2.3).
-
----
-
 ## Plan — a sequence of commits on `main`
 
 Each step is one green commit, reviewed before committing (Rule 1). Refactors
 need no feature file; steps 8 and 9 change behaviour and start with a scenario.
 
-| #   | Commit                                                                                                  | Kind     |
-| --- | ------------------------------------------------------------------------------------------------------- | -------- |
-| 1   | ~~Logger and `no-console` as error for `src/` (#5); split `modalBehavior.ts` and `timer.ts` (#8)~~ done | refactor |
-| 2   | ~~`@/` codemod across `src/` and `tests/`, plus the `no-restricted-imports` guard (#1)~~ done           | refactor |
-| 3   | ~~Delete the dead `fileStorage` export code; move the `exportManager` handle store out (#3)~~ done      | refactor |
-| 4   | ~~Remove `any` from `src/`, including the `vi` sniff (#2, #9)~~ done                                    | refactor |
-| 5   | ~~`tsconfig.test.json` and `typecheck:tests` in hook and CI; fix the test type errors (#7)~~ done       | tooling  |
-| 6   | ~~Remove `any` from `tests/`; `no-explicit-any` as error, disabling it banned (#2)~~ done               | refactor |
-| 7   | Real-path E2E import, drop the importer seam, oddity scenario (#10)                                     | test     |
-| 8   | Surface storage write failures (#4)                                                                     | feature  |
-| 9   | Replace the `alert()`s and English errors with step 8's mechanism (#6)                                  | feature  |
-| 10  | Split `unified-validation.ts` and its oversized test files (#3)                                         | refactor |
-| 11  | Split `CollectionBehavior`, `ItemsBox`, `DiffCharacterSheet` and their tests (#3)                       | refactor |
-| 12  | Split `versionHistoryService`, `conflictDetectionService`, `CharacterSheet` and their tests (#3)        | refactor |
-| 13  | Split `main.ts`; split the remaining oversized step definitions and feature files (#3)                  | refactor |
+| #                                   | Commit                                                                                                                              | Kind                                                                                                                                                                                                                           |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1                                   | ~~Logger and `no-console` as error for `src/` (#5); split `modalBehavior.ts` and `timer.ts` (#8)~~ done                             | refactor                                                                                                                                                                                                                       |
+| 2                                   | ~~`@/` codemod across `src/` and `tests/`, plus the `no-restricted-imports` guard (#1)~~ done                                       | refactor                                                                                                                                                                                                                       |
+| 3                                   | ~~Delete the dead `fileStorage` export code; move the `exportManager` handle store out (#3)~~ done                                  | refactor                                                                                                                                                                                                                       |
+| 4                                   | ~~Remove `any` from `src/`, including the `vi` sniff (#2, #9)~~ done                                                                | refactor                                                                                                                                                                                                                       |
+| 5                                   | ~~`tsconfig.test.json` and `typecheck:tests` in hook and CI; fix the test type errors (#7)~~ done                                   | tooling                                                                                                                                                                                                                        |
+| 6                                   | ~~Remove `any` from `tests/`; `no-explicit-any` as error, disabling it banned (#2)~~ done                                           | refactor                                                                                                                                                                                                                       |
+| 7                                   | ~~Real-path E2E import, drop the importer seam, oddity scenario (#10)~~ done                                                        | test                                                                                                                                                                                                                           |
+| 8                                   | Surface storage write failures (#4)                                                                                                 | feature                                                                                                                                                                                                                        |
+| 9                                   | Replace the `alert()`s and English errors with step 8's mechanism (#6)                                                              | feature                                                                                                                                                                                                                        |
+| 10                                  | Split `unified-validation.ts` and its oversized test files (#3)                                                                     | refactor                                                                                                                                                                                                                       |
+| 11                                  | Split `CollectionBehavior`, `ItemsBox`, `DiffCharacterSheet` and their tests (#3)                                                   | refactor                                                                                                                                                                                                                       |
+| 12                                  | Split `versionHistoryService`, `conflictDetectionService`, `CharacterSheet` and their tests (#3)                                    | refactor                                                                                                                                                                                                                       |
+| 13                                  | Split `main.ts`; split the remaining oversized step definitions and feature files (#3)                                              | refactor                                                                                                                                                                                                                       |
+| Test architecture � E2E import path | No E2E scenario ran the sanitizer: `setMockFileImporter` replaced the importer, and the other import step wrote straight to storage | import steps feed the raw file through the real `<input type="file">` chooser (`tests/e2e/support/fileImport.ts`); the `__testFileImporter` seam and `IFileImporter` are gone; "Imported oddities are kept" guards review �2.3 |
 
 Dependencies: aliases (2) before any split, so new files are born with `@/`;
 `src/` types (4) before the test typecheck (5) before the test `any`s (6); the

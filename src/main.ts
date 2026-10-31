@@ -8,7 +8,7 @@ import {
   loadCharacterState,
   clearCharacterState,
 } from "./storage/storageFactory.js";
-import { getFileImporter, setFileImporter, resetFileImporter } from "./storage/fileImporter.js";
+import { importCharacterFromFile } from "@/storage/fileStorage";
 import { ExportManager } from "./storage/exportManager.js";
 import { AutoSaveService } from "./services/autoSaveService.js";
 import { SaveIndicator } from "./components/SaveIndicator.js";
@@ -49,10 +49,6 @@ declare global {
       createVersion: (character: Character, description: string) => Promise<void>;
       getAllVersions: () => Promise<CharacterVersion[]>;
       clearVersions: () => Promise<void>;
-    };
-    __testFileImporter?: {
-      setFileImporter: typeof setFileImporter;
-      resetFileImporter: typeof resetFileImporter;
     };
     __versionHistoryService?: VersionHistoryService | null;
     __conflictDetectionService?: ConflictDetectionService | null;
@@ -350,8 +346,7 @@ async function renderCharacterSheet(
   // Handler for importing character from file
   const handleLoadFromFile = async (): Promise<void> => {
     try {
-      const fileImporter = getFileImporter();
-      const importResult = await fileImporter.importCharacter();
+      const importResult = await importCharacterFromFile();
       if (importResult) {
         const { character: importedCharacter, warnings } = importResult;
 
@@ -690,12 +685,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
   window.addEventListener("beforeunload", flushAutoSaveOnUnload);
   window.addEventListener("pagehide", flushAutoSaveOnUnload);
-
-  // Expose file importer API for E2E tests
-  window.__testFileImporter = {
-    setFileImporter,
-    resetFileImporter,
-  };
 
   // Initialize i18n first
   await initI18n();

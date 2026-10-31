@@ -6,10 +6,7 @@ Feature: Data Validation Enhancement
     Background:
         Given I am on the character sheet page
 
-    # The core validation logic (sanitizeCharacter) is extensively tested
-    # by 43 unit tests in characterValidation.test.ts.
-    # 
-    # These E2E tests verify the end-to-end import flow works correctly.
+    # Files go through the real import flow (file chooser, parser, sanitizer).
 
     Scenario: Import valid character file displays correctly
         When I import a valid character file with matching schema version
@@ -21,3 +18,11 @@ Feature: Data Validation Enhancement
         And I reload the page
         Then the character name should still be "Imported Hero"
         And the tier should still be "2"
+
+    Scenario: Imported oddities are kept
+        When I import a valid character file with matching schema version
+        Then I should see an oddity card with text "Glowing orb"
+
+    Scenario: Out-of-range values in an imported file are adjusted
+        When I import a character file with tier 9
+        Then the tier should have been adjusted to "6"
