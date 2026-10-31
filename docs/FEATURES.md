@@ -88,7 +88,7 @@ All features listed below have full BDD test coverage and are verified working.
 
 ### Card-Based Items
 
-- **Card Creation** ([card-creation.feature](../tests/e2e/features/card-creation.feature))
+- **Card Creation** ([cyphers and equipment](../tests/e2e/features/card-creation-cyphers-equipment.feature), [artifacts and oddities](../tests/e2e/features/card-creation-artifacts-oddities.feature), [attacks](../tests/e2e/features/card-creation-attacks.feature), [abilities](../tests/e2e/features/card-creation-abilities.feature))
   - Create Cyphers, Equipment, Artifacts, Oddities
   - Create Special Abilities
   - Modal-based card editor
@@ -289,7 +289,7 @@ All features listed below have full BDD test coverage and are verified working.
 
 ### Version History
 
-- **Version History (Character Time Travel)** ([version-history.feature](../tests/e2e/features/version-history.feature))
+- **Version History (Character Time Travel)** ([navigation](../tests/e2e/features/version-history-navigation.feature), [undo and redo](../tests/e2e/features/version-history-undo-redo.feature), [descriptions](../tests/e2e/features/version-history-descriptions.feature))
   - Store up to 99 character versions in IndexedDB
   - Navigate through version history with arrow buttons
   - Restore any previous version

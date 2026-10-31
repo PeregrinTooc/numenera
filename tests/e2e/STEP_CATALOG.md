@@ -26,21 +26,27 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **688** in 34 files
-- Feature step lines: **2118**
+- Step definitions: **688** in 49 files
+- Feature step lines: **2125**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
 | [ability-enhancements.steps.ts](#abilityenhancementsstepsts) | 13 | 0 |
-| [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 36 | 0 |
+| [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 8 | 0 |
+| [additional-fields-textarea.steps.ts](#additionalfieldstextareastepsts) | 28 | 0 |
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
-| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 34 | 0 |
-| [card-creation.steps.ts](#cardcreationstepsts) | 89 | 0 |
+| [basic-info-editing-accessibility.steps.ts](#basicinfoeditingaccessibilitystepsts) | 18 | 0 |
+| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 16 | 0 |
+| [card-creation-modal-actions.steps.ts](#cardcreationmodalactionsstepsts) | 10 | 0 |
+| [card-creation-modal-fields.steps.ts](#cardcreationmodalfieldsstepsts) | 33 | 0 |
+| [card-creation-setup.steps.ts](#cardcreationsetupstepsts) | 22 | 0 |
+| [card-creation-verification.steps.ts](#cardcreationverificationstepsts) | 24 | 0 |
 | [card-deletion.steps.ts](#carddeletionstepsts) | 40 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
-| [card-reordering.steps.ts](#cardreorderingstepsts) | 13 | 0 |
+| [card-reordering-abilities.steps.ts](#cardreorderingabilitiesstepsts) | 5 | 0 |
+| [card-reordering.steps.ts](#cardreorderingstepsts) | 8 | 0 |
 | [character-display.steps.ts](#characterdisplaystepsts) | 32 | 0 |
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
@@ -63,9 +69,18 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
 | [storage-failure.steps.ts](#storagefailurestepsts) | 8 | 0 |
-| [version-comparison.steps.ts](#versioncomparisonstepsts) | 41 | 0 |
+| [version-comparison-highlighting.steps.ts](#versioncomparisonhighlightingstepsts) | 17 | 0 |
+| [version-comparison-navigation.steps.ts](#versioncomparisonnavigationstepsts) | 12 | 0 |
+| [version-comparison-setup.steps.ts](#versioncomparisonsetupstepsts) | 12 | 0 |
+| [version-history-assertions.steps.ts](#versionhistoryassertionsstepsts) | 22 | 0 |
+| [version-history-buffer-undo-redo.steps.ts](#versionhistorybufferundoredostepsts) | 8 | 0 |
+| [version-history-given-basic.steps.ts](#versionhistorygivenbasicstepsts) | 9 | 0 |
+| [version-history-given-data.steps.ts](#versionhistorygivendatastepsts) | 5 | 0 |
+| [version-history-mixed-undo-redo.steps.ts](#versionhistorymixedundoredostepsts) | 5 | 0 |
+| [version-history-navigation.steps.ts](#versionhistorynavigationstepsts) | 13 | 0 |
+| [version-history-navigator-state.steps.ts](#versionhistorynavigatorstatestepsts) | 16 | 0 |
+| [version-history-shortcuts.steps.ts](#versionhistoryshortcutsstepsts) | 4 | 0 |
 | [version-history-squash-race.steps.ts](#versionhistorysquashracestepsts) | 3 | 0 |
-| [version-history.steps.ts](#versionhistorystepsts) | 82 | 0 |
 | [viewport.steps.ts](#viewportstepsts) | 1 | 0 |
 
 ## ability-enhancements.steps.ts
@@ -90,42 +105,47 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I clear the {textarea} textarea` | 4 | 151 |
-| When | `I click outside the {textarea} textarea` | 11 | 162 |
-| When | `I click the {textarea} textarea` | 20 | 147 |
-| When | `I select {string} from the mobile picker` | 1 | 316 |
-| When | `I select {string} from the type dropdown` | 4 | 39 |
-| When | `I tap outside the {textarea} textarea` | 2 | 343 |
-| When | `I tap the {textarea} textarea` | 2 | 321 |
-| When | `I tap the type dropdown` | 1 | 304 |
-| When | `I type {string} in the {textarea} textarea` | 12 | 155 |
-| When | `I type a {int} character string in the background textarea` | 1 | 240 |
-| When | `I type a {int} character string in the notes textarea` | 1 | 249 |
-| Then | `the {textarea} placeholder should be {string}` | 2 | 214 |
-| When | `the {textarea} textarea is empty` | 2 | 210 |
-| Then | `the {textarea} textarea should be empty` | 2 | 200 |
-| Then | `the {textarea} textarea should be focused` | 4 | 182 |
-| Then | `the {textarea} textarea should be readonly` | 8 | 120 |
-| Then | `the {textarea} textarea should become editable` | 2 | 325 |
-| Then | `the {textarea} textarea should have a pointer cursor` | 2 | 137 |
-| Then | `the {textarea} textarea should have an edit state visual indicator` | 2 | 189 |
-| Then | `the {textarea} textarea should not be readonly` | 4 | 172 |
-| Then | `the {textarea} textarea should show {string}` | 14 | 127 |
-| Then | `the background textarea should contain the full {int} character text` | 1 | 258 |
-| Then | `the background textarea should still be editable` | 1 | 204 |
-| Then | `the character data should have {textarea} {string}` | 5 | 222 |
-| Then | `the character data should have the full background text` | 1 | 278 |
-| Then | `the character data should have the full notes text` | 1 | 291 |
-| Then | `the character data should have type {string}` | 1 | 73 |
-| Given | `the character has the following data:` | 1 | 10 |
-| Then | `the mobile OS picker should open` | 1 | 309 |
-| Then | `the notes textarea should contain the full {int} character text` | 1 | 268 |
-| Then | `the type dropdown label should be {string}` | 1 | 87 |
-| Then | `the type dropdown option for {string} should display as {string}` | 3 | 96 |
-| Then | `the type dropdown options should be {string}, {string}, {string}` | 1 | 61 |
-| Then | `the type dropdown should have {int} options` | 1 | 52 |
-| Then | `the type dropdown should show {string} as selected` | 6 | 44 |
-| Then | `the virtual keyboard should appear` | 2 | 334 |
+| When | `I select {string} from the type dropdown` | 4 | 38 |
+| Then | `the character data should have type {string}` | 1 | 72 |
+| Given | `the character has the following data:` | 1 | 9 |
+| Then | `the type dropdown label should be {string}` | 1 | 86 |
+| Then | `the type dropdown option for {string} should display as {string}` | 3 | 95 |
+| Then | `the type dropdown options should be {string}, {string}, {string}` | 1 | 60 |
+| Then | `the type dropdown should have {int} options` | 1 | 51 |
+| Then | `the type dropdown should show {string} as selected` | 6 | 43 |
+
+## additional-fields-textarea.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I clear the {textarea} textarea` | 4 | 51 |
+| When | `I click outside the {textarea} textarea` | 11 | 62 |
+| When | `I click the {textarea} textarea` | 20 | 47 |
+| When | `I select {string} from the mobile picker` | 1 | 216 |
+| When | `I tap outside the {textarea} textarea` | 2 | 243 |
+| When | `I tap the {textarea} textarea` | 2 | 221 |
+| When | `I tap the type dropdown` | 1 | 204 |
+| When | `I type {string} in the {textarea} textarea` | 12 | 55 |
+| When | `I type a {int} character string in the background textarea` | 1 | 140 |
+| When | `I type a {int} character string in the notes textarea` | 1 | 149 |
+| Then | `the {textarea} placeholder should be {string}` | 2 | 114 |
+| When | `the {textarea} textarea is empty` | 2 | 110 |
+| Then | `the {textarea} textarea should be empty` | 2 | 100 |
+| Then | `the {textarea} textarea should be focused` | 4 | 82 |
+| Then | `the {textarea} textarea should be readonly` | 8 | 20 |
+| Then | `the {textarea} textarea should become editable` | 2 | 225 |
+| Then | `the {textarea} textarea should have a pointer cursor` | 2 | 37 |
+| Then | `the {textarea} textarea should have an edit state visual indicator` | 2 | 89 |
+| Then | `the {textarea} textarea should not be readonly` | 4 | 72 |
+| Then | `the {textarea} textarea should show {string}` | 14 | 27 |
+| Then | `the background textarea should contain the full {int} character text` | 1 | 158 |
+| Then | `the background textarea should still be editable` | 1 | 104 |
+| Then | `the character data should have {textarea} {string}` | 5 | 122 |
+| Then | `the character data should have the full background text` | 1 | 178 |
+| Then | `the character data should have the full notes text` | 1 | 191 |
+| Then | `the mobile OS picker should open` | 1 | 209 |
+| Then | `the notes textarea should contain the full {int} character text` | 1 | 168 |
+| Then | `the virtual keyboard should appear` | 2 | 234 |
 
 ## auto-save-indicator.steps.ts
 
@@ -145,57 +165,107 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the save indicator should still be visible` | 1 | 135 |
 | Then | `the save timestamp should be updated` | 2 | 104 |
 
+## basic-info-editing-accessibility.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 9 |
+| Then | `focus should not leave the modal` | 1 | 24 |
+| Then | `I can cancel with Escape key` | 1 | 49 |
+| Then | `I can confirm with Enter key` | 1 | 42 |
+| Then | `I can navigate with Tab key` | 1 | 34 |
+| Then | `the backdrop should have aria-hidden={string}` | 1 | 66 |
+| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 123 |
+| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 151 |
+| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 171 |
+| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 181 |
+| Then | `the input field should be large enough for touch input` | 1 | 143 |
+| Then | `the input field should have inputmode={string} for mobile` | 1 | 94 |
+| Then | `the mobile keyboard should appear` | 1 | 88 |
+| Then | `the modal should be sized appropriately for mobile` | 1 | 79 |
+| Then | `the modal should fill most of the screen width` | 1 | 103 |
+| Then | `the modal should have role={string}` | 1 | 60 |
+| Then | `the modal should not overflow the viewport` | 1 | 113 |
+| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 161 |
+
 ## basic-info-editing.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 195 |
-| Then | `focus should not leave the modal` | 1 | 210 |
-| Then | `I can cancel with Escape key` | 1 | 235 |
-| Then | `I can confirm with Enter key` | 1 | 228 |
-| Then | `I can navigate with Tab key` | 1 | 220 |
-| When | `I press Tab repeatedly` | 1 | 30 |
-| Then | `the backdrop should have aria-hidden={string}` | 1 | 252 |
-| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 309 |
-| Then | `the cancel button should have an X icon` | 1 | 145 |
-| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 337 |
-| Then | `the character name should display {string}` | 7 | 82 |
-| Then | `the character name should still display {string}` | 6 | 90 |
-| Then | `the confirm button should have a checkmark icon` | 1 | 139 |
-| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 357 |
-| Then | `the descriptor should display {string}` | 4 | 104 |
-| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 367 |
-| Then | `the focus should display {string}` | 4 | 112 |
-| Then | `the input field should be large enough for touch input` | 1 | 329 |
-| Then | `the input field should be of type {string}` | 1 | 69 |
-| Then | `the input field should have inputmode={string} for mobile` | 1 | 280 |
-| Then | `the mobile keyboard should appear` | 1 | 274 |
-| Then | `the modal backdrop should be semi-transparent` | 1 | 151 |
-| Then | `the modal should be sized appropriately for mobile` | 1 | 265 |
-| Then | `the modal should fill most of the screen width` | 1 | 289 |
-| Then | `the modal should have a cancel button with icon` | 1 | 62 |
-| Then | `the modal should have a confirm button with icon` | 1 | 55 |
-| Then | `the modal should have Numenera-themed styling` | 1 | 130 |
-| Then | `the modal should have role={string}` | 1 | 246 |
-| Then | `the modal should not close` | 1 | 121 |
-| Then | `the modal should not overflow the viewport` | 1 | 299 |
-| Then | `the name should show a hover state indicating it's editable` | 1 | 169 |
-| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 347 |
-| Then | `the tier should display {string}` | 6 | 98 |
-| Then | `the tier should show a hover state indicating it's editable` | 1 | 180 |
+| When | `I press Tab repeatedly` | 1 | 20 |
+| Then | `the cancel button should have an X icon` | 1 | 135 |
+| Then | `the character name should display {string}` | 7 | 72 |
+| Then | `the character name should still display {string}` | 6 | 80 |
+| Then | `the confirm button should have a checkmark icon` | 1 | 129 |
+| Then | `the descriptor should display {string}` | 4 | 94 |
+| Then | `the focus should display {string}` | 4 | 102 |
+| Then | `the input field should be of type {string}` | 1 | 59 |
+| Then | `the modal backdrop should be semi-transparent` | 1 | 141 |
+| Then | `the modal should have a cancel button with icon` | 1 | 52 |
+| Then | `the modal should have a confirm button with icon` | 1 | 45 |
+| Then | `the modal should have Numenera-themed styling` | 1 | 120 |
+| Then | `the modal should not close` | 1 | 111 |
+| Then | `the name should show a hover state indicating it's editable` | 1 | 159 |
+| Then | `the tier should display {string}` | 6 | 88 |
+| Then | `the tier should show a hover state indicating it's editable` | 1 | 170 |
 
-## card-creation.steps.ts
+## card-creation-modal-actions.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all ability fields should be empty` | 1 | 216 |
-| Then | `all artifact fields should be empty` | 1 | 175 |
-| Then | `all attack fields should be empty` | 1 | 200 |
-| Then | `all cypher fields should be empty` | 1 | 149 |
-| Then | `all equipment fields should be empty` | 1 | 162 |
-| Then | `all oddity fields should be empty` | 1 | 187 |
-| Then | `all special ability fields should be empty` | 1 | 231 |
-| When | `I cancel the card edit modal` | 7 | 566 |
+| When | `I cancel the card edit modal` | 7 | 19 |
+| When | `I click the edit button on ability {string}` | 1 | 85 |
+| When | `I click the edit button on artifact {string}` | 1 | 64 |
+| When | `I click the edit button on attack {string}` | 1 | 78 |
+| When | `I click the edit button on cypher {string}` | 2 | 50 |
+| When | `I click the edit button on equipment {string}` | 1 | 57 |
+| When | `I click the edit button on oddity {string}` | 1 | 71 |
+| When | `I click the edit button on special ability {string}` | 1 | 92 |
+| When | `I confirm the card edit modal` | 51 | 8 |
+| Then | `the card edit modal should be open` | 15 | 29 |
+
+## card-creation-modal-fields.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| Then | `all ability fields should be empty` | 1 | 83 |
+| Then | `all artifact fields should be empty` | 1 | 42 |
+| Then | `all attack fields should be empty` | 1 | 67 |
+| Then | `all cypher fields should be empty` | 1 | 16 |
+| Then | `all equipment fields should be empty` | 1 | 29 |
+| Then | `all oddity fields should be empty` | 1 | 54 |
+| Then | `all special ability fields should be empty` | 1 | 98 |
+| When | `I fill in the ability cost with {string}` | 6 | 191 |
+| When | `I fill in the ability description with {string}` | 9 | 199 |
+| When | `I fill in the ability name with {string}` | 9 | 188 |
+| When | `I fill in the ability pool with {string}` | 6 | 195 |
+| When | `I fill in the artifact effect with {string}` | 7 | 155 |
+| When | `I fill in the artifact level with {string}` | 7 | 148 |
+| When | `I fill in the artifact name with {string}` | 7 | 142 |
+| When | `I fill in the attack damage with {string}` | 7 | 172 |
+| When | `I fill in the attack modifier with {string}` | 7 | 179 |
+| When | `I fill in the attack name with {string}` | 7 | 169 |
+| When | `I fill in the cypher effect with {string}` | 12 | 118 |
+| When | `I fill in the cypher level with {string}` | 12 | 114 |
+| When | `I fill in the cypher name with {string}` | 12 | 111 |
+| When | `I fill in the equipment description with {string}` | 7 | 133 |
+| When | `I fill in the equipment name with {string}` | 8 | 127 |
+| When | `I fill in the oddity text with {string}` | 7 | 164 |
+| When | `I fill in the special ability description with {string}` | 7 | 221 |
+| When | `I fill in the special ability name with {string}` | 7 | 208 |
+| When | `I fill in the special ability source with {string}` | 7 | 214 |
+| Then | `the modal should show ability fields` | 1 | 75 |
+| Then | `the modal should show artifact fields` | 1 | 35 |
+| Then | `the modal should show attack fields` | 1 | 59 |
+| Then | `the modal should show cypher fields` | 1 | 9 |
+| Then | `the modal should show equipment fields` | 1 | 23 |
+| Then | `the modal should show oddity fields` | 1 | 49 |
+| Then | `the modal should show special ability fields` | 1 | 91 |
+
+## card-creation-setup.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
 | When | `I click the add ability button` | 15 | 130 |
 | When | `I click the add artifact button` | 7 | 118 |
 | When | `I click the add attack button` | 7 | 126 |
@@ -203,43 +273,6 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I click the add equipment button` | 9 | 114 |
 | When | `I click the add oddity button` | 7 | 122 |
 | When | `I click the add special ability button` | 7 | 134 |
-| When | `I click the edit button on ability {string}` | 1 | 632 |
-| When | `I click the edit button on artifact {string}` | 1 | 611 |
-| When | `I click the edit button on attack {string}` | 1 | 625 |
-| When | `I click the edit button on cypher {string}` | 2 | 597 |
-| When | `I click the edit button on equipment {string}` | 1 | 604 |
-| When | `I click the edit button on oddity {string}` | 1 | 618 |
-| When | `I click the edit button on special ability {string}` | 1 | 639 |
-| When | `I confirm the card edit modal` | 51 | 555 |
-| When | `I fill in the ability cost with {string}` | 6 | 324 |
-| When | `I fill in the ability description with {string}` | 9 | 332 |
-| When | `I fill in the ability name with {string}` | 9 | 321 |
-| When | `I fill in the ability pool with {string}` | 6 | 328 |
-| When | `I fill in the artifact effect with {string}` | 7 | 288 |
-| When | `I fill in the artifact level with {string}` | 7 | 281 |
-| When | `I fill in the artifact name with {string}` | 7 | 275 |
-| When | `I fill in the attack damage with {string}` | 7 | 305 |
-| When | `I fill in the attack modifier with {string}` | 7 | 312 |
-| When | `I fill in the attack name with {string}` | 7 | 302 |
-| When | `I fill in the cypher effect with {string}` | 12 | 251 |
-| When | `I fill in the cypher level with {string}` | 12 | 247 |
-| When | `I fill in the cypher name with {string}` | 12 | 244 |
-| When | `I fill in the equipment description with {string}` | 7 | 266 |
-| When | `I fill in the equipment name with {string}` | 8 | 260 |
-| When | `I fill in the oddity text with {string}` | 7 | 297 |
-| When | `I fill in the special ability description with {string}` | 7 | 354 |
-| When | `I fill in the special ability name with {string}` | 7 | 341 |
-| When | `I fill in the special ability source with {string}` | 7 | 347 |
-| Then | `I should see {int} ability cards` | 14 | 392 |
-| Then | `I should see {int} artifact cards` | 8 | 377 |
-| Then | `I should see {int} attack cards` | 8 | 387 |
-| Then | `I should see {int} cypher card(s)` | 15 | 367 |
-| Then | `I should see {int} equipment cards` | 8 | 372 |
-| Then | `I should see {int} oddity cards` | 8 | 382 |
-| Then | `I should see {int} special ability cards` | 8 | 397 |
-| Then | `I should see a cypher card with name {string}` | 5 | 404 |
-| Then | `I should see a special ability card with name {string}` | 5 | 530 |
-| Then | `I should see an ability card with name {string}` | 7 | 505 |
 | Then | `I should see an add ability button` | 1 | 98 |
 | Then | `I should see an add artifact button` | 1 | 69 |
 | Then | `I should see an add attack button` | 1 | 77 |
@@ -247,18 +280,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `I should see an add equipment button` | 1 | 65 |
 | Then | `I should see an add oddity button` | 1 | 73 |
 | Then | `I should see an add special ability button` | 1 | 102 |
-| Then | `I should see an artifact card with name {string}` | 5 | 446 |
-| Then | `I should see an attack card with name {string}` | 5 | 480 |
-| Then | `I should see an equipment card with name {string}` | 5 | 429 |
-| Then | `I should see an oddity card with text {string}` | 6 | 471 |
-| Then | `the ability {string} should have cost {string}` | 1 | 514 |
-| Then | `the ability {string} should have pool {string}` | 1 | 522 |
 | Then | `the add attack button should have a non-transparent background` | 1 | 81 |
-| Then | `the artifact {string} should have effect {string}` | 1 | 463 |
-| Then | `the artifact {string} should have level {string}` | 1 | 455 |
-| Then | `the attack {string} should have damage {string}` | 1 | 497 |
-| Then | `the attack {string} should have modifier {string}` | 1 | 489 |
-| Then | `the card edit modal should be open` | 15 | 576 |
 | Given | `the character has {int} ability cards` | 5 | 46 |
 | Given | `the character has {int} artifact cards` | 5 | 31 |
 | Given | `the character has {int} attack cards` | 5 | 41 |
@@ -266,17 +288,35 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Given | `the character has {int} equipment cards` | 5 | 26 |
 | Given | `the character has {int} oddity cards` | 5 | 36 |
 | Given | `the character has {int} special ability cards` | 5 | 51 |
-| Then | `the cypher {string} should have effect {string}` | 1 | 421 |
-| Then | `the cypher {string} should have level {string}` | 1 | 413 |
-| Then | `the equipment {string} should have description {string}` | 1 | 438 |
-| Then | `the modal should show ability fields` | 1 | 208 |
-| Then | `the modal should show artifact fields` | 1 | 168 |
-| Then | `the modal should show attack fields` | 1 | 192 |
-| Then | `the modal should show cypher fields` | 1 | 142 |
-| Then | `the modal should show equipment fields` | 1 | 156 |
-| Then | `the modal should show oddity fields` | 1 | 182 |
-| Then | `the modal should show special ability fields` | 1 | 224 |
-| Then | `the special ability {string} should have source {string}` | 1 | 541 |
+
+## card-creation-verification.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| Then | `I should see {int} ability cards` | 14 | 36 |
+| Then | `I should see {int} artifact cards` | 8 | 21 |
+| Then | `I should see {int} attack cards` | 8 | 31 |
+| Then | `I should see {int} cypher card(s)` | 15 | 11 |
+| Then | `I should see {int} equipment cards` | 8 | 16 |
+| Then | `I should see {int} oddity cards` | 8 | 26 |
+| Then | `I should see {int} special ability cards` | 8 | 41 |
+| Then | `I should see a cypher card with name {string}` | 5 | 48 |
+| Then | `I should see a special ability card with name {string}` | 5 | 174 |
+| Then | `I should see an ability card with name {string}` | 7 | 149 |
+| Then | `I should see an artifact card with name {string}` | 5 | 90 |
+| Then | `I should see an attack card with name {string}` | 5 | 124 |
+| Then | `I should see an equipment card with name {string}` | 5 | 73 |
+| Then | `I should see an oddity card with text {string}` | 6 | 115 |
+| Then | `the ability {string} should have cost {string}` | 1 | 158 |
+| Then | `the ability {string} should have pool {string}` | 1 | 166 |
+| Then | `the artifact {string} should have effect {string}` | 1 | 107 |
+| Then | `the artifact {string} should have level {string}` | 1 | 99 |
+| Then | `the attack {string} should have damage {string}` | 1 | 141 |
+| Then | `the attack {string} should have modifier {string}` | 1 | 133 |
+| Then | `the cypher {string} should have effect {string}` | 1 | 65 |
+| Then | `the cypher {string} should have level {string}` | 1 | 57 |
+| Then | `the equipment {string} should have description {string}` | 1 | 82 |
+| Then | `the special ability {string} should have source {string}` | 1 | 185 |
 
 ## card-deletion.steps.ts
 
@@ -344,19 +384,24 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the card edit modal should be closed` | 1 | 5 |
 | Then | `the first input field in the modal should be automatically focused` | 1 | 23 |
 
+## card-reordering-abilities.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I drag ability {string} before ability {string}` | 2 | 32 |
+| When | `I drag ability {string} onto cypher {string}` | 1 | 95 |
+| When | `I drag cypher {string} into the abilities section` | 1 | 78 |
+| Then | `the abilities should be in order {string}` | 5 | 53 |
+| Given | `the character has {int} abilities named {string}` | 5 | 9 |
+
 ## card-reordering.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag ability {string} before ability {string}` | 2 | 251 |
-| When | `I drag ability {string} onto cypher {string}` | 1 | 314 |
 | When | `I drag cypher {string} after cypher {string}` | 1 | 52 |
 | When | `I drag cypher {string} before cypher {string}` | 3 | 29 |
-| When | `I drag cypher {string} into the abilities section` | 1 | 297 |
 | When | `I hover over cypher {string}` | 1 | 110 |
 | When | `I start dragging cypher {string}` | 2 | 81 |
-| Then | `the abilities should be in order {string}` | 5 | 272 |
-| Given | `the character has {int} abilities named {string}` | 5 | 228 |
 | Given | `the character has {int} cyphers named {string}` | 9 | 9 |
 | Then | `the cypher {string} should have a dragging visual state` | 1 | 164 |
 | Then | `the cyphers should be in order {string}` | 7 | 137 |
@@ -367,7 +412,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 50 | 27 |
+| Given | `I am on the character sheet page` | 55 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 142 |
 | Then | `I should see {int} cyphers displayed` | 1 | 104 |
 | Then | `I should see {int} oddities displayed` | 1 | 155 |
@@ -779,51 +824,183 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `the save indicator should report that storage is full` | 5 | 17 |
 | Given | `writing to the browser storage fails` | 1 | 9 |
 
-## version-comparison.steps.ts
+## version-comparison-highlighting.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `comparison view is enabled in settings` | 23 | 42 |
-| Then | `comparison view should show as enabled in settings` | 1 | 58 |
-| Given | `I am viewing the comparison view` | 19 | 66 |
-| When | `I click the left pane's backward arrow` | 3 | 163 |
-| When | `I click the left pane's backward arrow {int} time(s)` | 2 | 175 |
-| When | `I click the left pane's forward arrow` | 1 | 167 |
-| When | `I click the left pane's restore button` | 2 | 345 |
-| When | `I click the return to editing button` | 2 | 389 |
-| When | `I click the right pane's backward arrow` | 1 | 171 |
-| When | `I click the right pane's backward arrow {int} time(s)` | 1 | 186 |
-| When | `I click the right pane's restore button` | 1 | 350 |
-| When | `I close the settings panel` | 2 | 53 |
-| When | `I enable comparison view in settings` | 2 | 46 |
-| Then | `no add or delete button should be present in the comparison view` | 1 | 404 |
-| Then | `no field in the comparison view should be editable` | 1 | 397 |
-| Then | `the {string} field should be highlighted as changed in the {word} pane` | 2 | 269 |
-| Then | `the {string} field should not be highlighted in the {word} pane` | 2 | 278 |
-| Then | `the {word} pane should show the newly restored version` | 1 | 360 |
-| Then | `the added cypher card should be highlighted as added in the right pane` | 1 | 287 |
-| Given | `the character has a version where a cypher was renamed` | 1 | 143 |
-| Given | `the character has a version with a modified cypher effect` | 1 | 124 |
-| Given | `the character has a version with a name change` | 3 | 89 |
-| Given | `the character has a version with a removed cypher` | 1 | 113 |
-| Given | `the character has a version with an added cypher` | 1 | 99 |
-| Then | `the comparison header should indicate there are no differences` | 1 | 258 |
-| Then | `the comparison header should list every changed field, not just the top 3` | 1 | 233 |
-| Then | `the comparison header should reflect the new left pane version` | 1 | 248 |
-| Then | `the comparison view should be visible` | 3 | 71 |
-| Then | `the comparison view should not be visible` | 3 | 75 |
-| Then | `the left pane should not show the added cypher card` | 1 | 295 |
-| Then | `the left pane should show version {int}` | 5 | 218 |
-| Given | `the left pane shows version {int}` | 2 | 210 |
-| Then | `the modified cypher card should be highlighted as changed in the {word} pane` | 2 | 315 |
-| Then | `the new cypher name should be highlighted as added in the right pane` | 1 | 333 |
-| Then | `the old cypher name should be highlighted as removed in the left pane` | 1 | 323 |
-| Then | `the removed cypher card should be highlighted as removed in the left pane` | 1 | 300 |
-| Then | `the right pane should not show the removed cypher card` | 1 | 310 |
-| Then | `the right pane should show version {int}` | 4 | 222 |
-| Then | `the right pane should still show the same character name as before the restore` | 1 | 370 |
-| Given | `the right pane shows version {int}` | 1 | 214 |
-| Then | `the right pane's restore button should be disabled` | 1 | 355 |
+| When | `I click the left pane's restore button` | 2 | 89 |
+| When | `I click the return to editing button` | 2 | 133 |
+| When | `I click the right pane's restore button` | 1 | 94 |
+| Then | `no add or delete button should be present in the comparison view` | 1 | 148 |
+| Then | `no field in the comparison view should be editable` | 1 | 141 |
+| Then | `the {string} field should be highlighted as changed in the {word} pane` | 2 | 13 |
+| Then | `the {string} field should not be highlighted in the {word} pane` | 2 | 22 |
+| Then | `the {word} pane should show the newly restored version` | 1 | 104 |
+| Then | `the added cypher card should be highlighted as added in the right pane` | 1 | 31 |
+| Then | `the left pane should not show the added cypher card` | 1 | 39 |
+| Then | `the modified cypher card should be highlighted as changed in the {word} pane` | 2 | 59 |
+| Then | `the new cypher name should be highlighted as added in the right pane` | 1 | 77 |
+| Then | `the old cypher name should be highlighted as removed in the left pane` | 1 | 67 |
+| Then | `the removed cypher card should be highlighted as removed in the left pane` | 1 | 44 |
+| Then | `the right pane should not show the removed cypher card` | 1 | 54 |
+| Then | `the right pane should still show the same character name as before the restore` | 1 | 114 |
+| Then | `the right pane's restore button should be disabled` | 1 | 99 |
+
+## version-comparison-navigation.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I click the left pane's backward arrow` | 3 | 9 |
+| When | `I click the left pane's backward arrow {int} time(s)` | 2 | 21 |
+| When | `I click the left pane's forward arrow` | 1 | 13 |
+| When | `I click the right pane's backward arrow` | 1 | 17 |
+| When | `I click the right pane's backward arrow {int} time(s)` | 1 | 32 |
+| Then | `the comparison header should indicate there are no differences` | 1 | 104 |
+| Then | `the comparison header should list every changed field, not just the top 3` | 1 | 79 |
+| Then | `the comparison header should reflect the new left pane version` | 1 | 94 |
+| Then | `the left pane should show version {int}` | 5 | 64 |
+| Given | `the left pane shows version {int}` | 2 | 56 |
+| Then | `the right pane should show version {int}` | 4 | 68 |
+| Given | `the right pane shows version {int}` | 1 | 60 |
+
+## version-comparison-setup.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| Given | `comparison view is enabled in settings` | 23 | 27 |
+| Then | `comparison view should show as enabled in settings` | 1 | 43 |
+| Given | `I am viewing the comparison view` | 19 | 51 |
+| When | `I close the settings panel` | 2 | 38 |
+| When | `I enable comparison view in settings` | 2 | 31 |
+| Given | `the character has a version where a cypher was renamed` | 1 | 128 |
+| Given | `the character has a version with a modified cypher effect` | 1 | 109 |
+| Given | `the character has a version with a name change` | 3 | 74 |
+| Given | `the character has a version with a removed cypher` | 1 | 98 |
+| Given | `the character has a version with an added cypher` | 1 | 84 |
+| Then | `the comparison view should be visible` | 3 | 56 |
+| Then | `the comparison view should not be visible` | 3 | 60 |
+
+## version-history-assertions.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| Then | `a new version should be created` | 1 | 116 |
+| Then | `a new version should be created with description {string}` | 3 | 169 |
+| Then | `I click the backward navigation arrow {int} times` | 1 | 200 |
+| Then | `I should be viewing the latest version` | 3 | 122 |
+| Then | `I should navigate to version {int}` | 2 | 135 |
+| Then | `the character data should be correct for version {int}` | 1 | 145 |
+| Then | `the character equipment should match version {int} equipment` | 2 | 57 |
+| Then | `the character name should match version {int} name` | 4 | 32 |
+| Then | `the character stats should match version {int} stats` | 2 | 44 |
+| Then | `the exported file should contain version {int} data` | 1 | 93 |
+| Then | `the exported file should not contain version history` | 1 | 103 |
+| Then | `the exported file should use the current portrait` | 1 | 109 |
+| Then | `the import button should be disabled` | 1 | 220 |
+| Then | `the import button should be enabled` | 2 | 215 |
+| Then | `the oldest version should have been removed` | 2 | 194 |
+| Then | `the portrait should remain unchanged` | 3 | 81 |
+| Then | `the timestamp should be in human-readable format` | 1 | 12 |
+| Then | `the timestamp should show a relative time like {string}` | 1 | 21 |
+| Then | `the UI should remain responsive` | 2 | 159 |
+| Then | `the version description should contain {string}` | 12 | 4 |
+| Then | `the version description should contain the tier change` | 1 | 184 |
+| Then | `the warning banner should not be visible` | 2 | 179 |
+
+## version-history-buffer-undo-redo.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I press {string} again` | 2 | 45 |
+| When | `I press {string} again before the squash timer expires` | 2 | 80 |
+| When | `I press {string} before the squash timer expires` | 11 | 6 |
+| Then | `I should see {int} versions in history` | 4 | 147 |
+| Then | `no new version should be created yet` | 2 | 128 |
+| Then | `the changes should be reapplied` | 2 | 155 |
+| Then | `the character name should be {string}` | 10 | 119 |
+| Then | `the character name should revert to the original value` | 2 | 137 |
+
+## version-history-given-basic.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| Given | `I am viewing that version` | 3 | 155 |
+| Given | `I am viewing the latest version` | 6 | 55 |
+| Given | `I am viewing version {int}` | 8 | 59 |
+| Given | `the character has {int} versions in history` | 45 | 18 |
+| Given | `the character has a later version` | 1 | 73 |
+| Given | `the character has a portrait image` | 2 | 119 |
+| Given | `the character has a version from {int} minutes ago` | 1 | 129 |
+| Given | `the character has a version with multiple basic info changes` | 2 | 84 |
+| Given | `the character has no version history yet` | 7 | 6 |
+
+## version-history-given-data.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| Given | `I have made buffered edits that were undone` | 2 | 130 |
+| Given | `the character has {int} versions with different data` | 3 | 66 |
+| Given | `the character has {int} versions with different names` | 2 | 101 |
+| Given | `the character has a legacy version with a {string} description for a name change and an added ability` | 1 | 36 |
+| Given | `the character has a legacy version with an {string} description for an added cypher` | 1 | 4 |
+
+## version-history-mixed-undo-redo.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I make {int} rapid edits that are buffered` | 1 | 7 |
+| When | `I press {string} to navigate to previous version` | 1 | 74 |
+| When | `I press {string} to undo buffered changes` | 1 | 28 |
+| Then | `I should be viewing version {int}` | 1 | 114 |
+| When | `I wait for squash timer to complete` | 17 | 69 |
+
+## version-history-navigation.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I click the backward navigation arrow` | 18 | 15 |
+| When | `I click the backward navigation arrow again` | 1 | 22 |
+| When | `I click the forward navigation arrow` | 3 | 34 |
+| When | `I click the forward navigation arrow again` | 1 | 40 |
+| When | `I click the restore button in the warning banner` | 3 | 46 |
+| When | `I click the return to latest button` | 1 | 28 |
+| When | `I create a new version by editing the name` | 1 | 128 |
+| When | `I navigate backward` | 1 | 92 |
+| When | `I navigate forward twice` | 1 | 98 |
+| When | `I navigate to version {int}` | 8 | 52 |
+| When | `I rapidly click the backward arrow {int} times` | 1 | 106 |
+| When | `I refresh the browser` | 7 | 120 |
+| When | `I view the character sheet` | 4 | 7 |
+
+## version-history-navigator-state.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| Then | `all edit controls should be enabled` | 2 | 12 |
+| Then | `both navigation arrows should be enabled` | 2 | 82 |
+| Then | `no warning banner should be visible` | 6 | 31 |
+| Then | `the backward arrow should be disabled` | 1 | 94 |
+| Then | `the backward arrow should be enabled` | 3 | 36 |
+| Then | `the change description should be displayed` | 1 | 64 |
+| Then | `the character data should match version {int}` | 5 | 46 |
+| Then | `the forward arrow should be disabled` | 4 | 41 |
+| Then | `the forward arrow should be enabled` | 1 | 99 |
+| Then | `the timestamp should be displayed` | 1 | 73 |
+| Then | `the version counter should show {string}` | 25 | 23 |
+| Then | `the version navigator should be visible` | 5 | 18 |
+| Then | `the version navigator should not be visible` | 2 | 6 |
+| Then | `the warning banner should be visible` | 7 | 89 |
+| Then | `the warning banner should contain text {string}` | 1 | 104 |
+| Then | `the warning banner should have a restore button` | 1 | 112 |
+
+## version-history-shortcuts.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I press {string}` | 5 | 33 |
+| When | `I wait for {int} milliseconds` | 4 | 18 |
+| When | `the squash timer has completed` | 2 | 28 |
+| Then | `the undo buffer should contain exactly {int} changes` | 1 | 7 |
 
 ## version-history-squash-race.steps.ts
 
@@ -832,93 +1009,6 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `the held version save is released` | 1 | 42 |
 | When | `the squash starts while version saves are held` | 1 | 31 |
 | Given | `version saves are held` | 1 | 16 |
-
-## version-history.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Then | `a new version should be created` | 1 | 827 |
-| Then | `a new version should be created with description {string}` | 3 | 880 |
-| Then | `all edit controls should be enabled` | 2 | 505 |
-| Then | `both navigation arrows should be enabled` | 2 | 575 |
-| Given | `I am viewing that version` | 3 | 283 |
-| Given | `I am viewing the latest version` | 6 | 57 |
-| Given | `I am viewing version {int}` | 8 | 61 |
-| When | `I click the backward navigation arrow` | 18 | 361 |
-| Then | `I click the backward navigation arrow {int} times` | 1 | 911 |
-| When | `I click the backward navigation arrow again` | 1 | 368 |
-| When | `I click the forward navigation arrow` | 3 | 380 |
-| When | `I click the forward navigation arrow again` | 1 | 386 |
-| When | `I click the restore button in the warning banner` | 3 | 392 |
-| When | `I click the return to latest button` | 1 | 374 |
-| When | `I create a new version by editing the name` | 1 | 474 |
-| Given | `I have made buffered edits that were undone` | 2 | 292 |
-| When | `I make {int} rapid edits that are buffered` | 1 | 1087 |
-| When | `I navigate backward` | 1 | 438 |
-| When | `I navigate forward twice` | 1 | 444 |
-| When | `I navigate to version {int}` | 8 | 398 |
-| When | `I press {string}` | 5 | 654 |
-| When | `I press {string} again` | 2 | 965 |
-| When | `I press {string} again before the squash timer expires` | 2 | 1000 |
-| When | `I press {string} before the squash timer expires` | 11 | 926 |
-| When | `I press {string} to navigate to previous version` | 1 | 1154 |
-| When | `I press {string} to undo buffered changes` | 1 | 1108 |
-| When | `I rapidly click the backward arrow {int} times` | 1 | 452 |
-| When | `I refresh the browser` | 7 | 466 |
-| Then | `I should be viewing the latest version` | 3 | 833 |
-| Then | `I should be viewing version {int}` | 1 | 1194 |
-| Then | `I should navigate to version {int}` | 2 | 846 |
-| Then | `I should see {int} versions in history` | 4 | 1067 |
-| When | `I view the character sheet` | 4 | 353 |
-| When | `I wait for {int} milliseconds` | 4 | 639 |
-| When | `I wait for squash timer to complete` | 17 | 1149 |
-| Then | `no new version should be created yet` | 2 | 1048 |
-| Then | `no warning banner should be visible` | 6 | 524 |
-| Then | `the backward arrow should be disabled` | 1 | 587 |
-| Then | `the backward arrow should be enabled` | 3 | 529 |
-| Then | `the change description should be displayed` | 1 | 557 |
-| Then | `the changes should be reapplied` | 2 | 1075 |
-| Then | `the character data should be correct for version {int}` | 1 | 856 |
-| Then | `the character data should match version {int}` | 5 | 539 |
-| Then | `the character equipment should match version {int} equipment` | 2 | 768 |
-| Given | `the character has {int} versions in history` | 45 | 20 |
-| Given | `the character has {int} versions with different data` | 3 | 183 |
-| Given | `the character has {int} versions with different names` | 2 | 218 |
-| Given | `the character has a later version` | 1 | 75 |
-| Given | `the character has a legacy version with a {string} description for a name change and an added ability` | 1 | 153 |
-| Given | `the character has a legacy version with an {string} description for an added cypher` | 1 | 121 |
-| Given | `the character has a portrait image` | 2 | 247 |
-| Given | `the character has a version from {int} minutes ago` | 1 | 257 |
-| Given | `the character has a version with multiple basic info changes` | 2 | 86 |
-| Given | `the character has no version history yet` | 5 | 8 |
-| Then | `the character name should be {string}` | 10 | 1039 |
-| Then | `the character name should match version {int} name` | 4 | 743 |
-| Then | `the character name should revert to the original value` | 2 | 1057 |
-| Then | `the character stats should match version {int} stats` | 2 | 755 |
-| Then | `the exported file should contain version {int} data` | 1 | 804 |
-| Then | `the exported file should not contain version history` | 1 | 814 |
-| Then | `the exported file should use the current portrait` | 1 | 820 |
-| Then | `the forward arrow should be disabled` | 4 | 534 |
-| Then | `the forward arrow should be enabled` | 1 | 592 |
-| Then | `the import button should be disabled` | 1 | 1217 |
-| Then | `the import button should be enabled` | 2 | 1212 |
-| Then | `the oldest version should have been removed` | 2 | 905 |
-| Then | `the portrait should remain unchanged` | 3 | 792 |
-| When | `the squash timer has completed` | 2 | 649 |
-| Then | `the timestamp should be displayed` | 1 | 566 |
-| Then | `the timestamp should be in human-readable format` | 1 | 723 |
-| Then | `the timestamp should show a relative time like {string}` | 1 | 732 |
-| Then | `the UI should remain responsive` | 2 | 870 |
-| Then | `the undo buffer should contain exactly {int} changes` | 1 | 628 |
-| Then | `the version counter should show {string}` | 25 | 516 |
-| Then | `the version description should contain {string}` | 12 | 715 |
-| Then | `the version description should contain the tier change` | 1 | 895 |
-| Then | `the version navigator should be visible` | 5 | 511 |
-| Then | `the version navigator should not be visible` | 2 | 499 |
-| Then | `the warning banner should be visible` | 7 | 582 |
-| Then | `the warning banner should contain text {string}` | 1 | 597 |
-| Then | `the warning banner should have a restore button` | 1 | 605 |
-| Then | `the warning banner should not be visible` | 2 | 890 |
 
 ## viewport.steps.ts
 

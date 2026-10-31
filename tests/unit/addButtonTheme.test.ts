@@ -5,7 +5,7 @@
 // generated CSS no matter what colorTheme is at runtime. These tests lock in
 // that the rendered class attribute contains the complete, literal utility
 // classes for every color actually used in the app - see
-// tests/e2e/features/card-creation.feature for the companion E2E check that
+// tests/e2e/features/card-creation-attacks.feature for the companion E2E check that
 // the real build actually generates matching CSS for these classes.
 
 import { render } from "lit-html";
