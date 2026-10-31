@@ -78,6 +78,7 @@ npm run test:e2e:prod -- --name "some scenario"
 
 ```
 src/
+├── app/          # bootstrap, rendering, version navigation (main.ts stays thin)
 ├── types/        # TypeScript interfaces & types
 ├── storage/      # persistence layer (adapters, factory, import/export)
 ├── services/     # cross-cutting services (auto-save, version history, modals)

@@ -48,11 +48,7 @@ Re-measured on `main` after step 12 (2026-10-31).
 **Rule:** "Keep files small and focused (< 300 lines)." Tests count; pure data
 does not (see `code-quality.md`).
 
-**`src/` — 1 file**
-
-| File          | Lines | Natural seam                                                                   |
-| ------------- | ----- | ------------------------------------------------------------------------------ |
-| `src/main.ts` | 914   | test hooks, compare-view controller, version navigation, import/export, events |
+**`src/` — 0 files**
 
 **`tests/` — 13 files**
 
@@ -94,7 +90,9 @@ need no feature file; steps 8 and 9 change behaviour and start with a scenario.
 | 10                                  | ~~Split `unified-validation.ts` and its oversized test files (#3)~~ done                                                            | refactor                                                                                                                                                                                                                       |
 | 11                                  | ~~Split `CollectionBehavior`, `ItemsBox`, `DiffCharacterSheet` and their tests (#3)~~ done                                          | refactor                                                                                                                                                                                                                       |
 | 12                                  | ~~Split `versionHistoryService`, `conflictDetectionService`, `CharacterSheet` and their tests (#3)~~ done                           | refactor                                                                                                                                                                                                                       |
-| 13                                  | Split `main.ts`; split the remaining oversized step definitions and feature files (#3)                                              | refactor                                                                                                                                                                                                                       |
+| 13                                  | ~~Split `main.ts` (#3)~~ done; the remaining oversized test files continue in steps 14 and 15                                       | refactor                                                                                                                                                                                                                       |
+| 14                                  | Split the remaining oversized unit test files (#3)                                                                                  | refactor                                                                                                                                                                                                                       |
+| 15                                  | Split the remaining oversized step definitions and feature files (#3)                                                               | refactor                                                                                                                                                                                                                       |
 | Test architecture � E2E import path | No E2E scenario ran the sanitizer: `setMockFileImporter` replaced the importer, and the other import step wrote straight to storage | import steps feed the raw file through the real `<input type="file">` chooser (`tests/e2e/support/fileImport.ts`); the `__testFileImporter` seam and `IFileImporter` are gone; "Imported oddities are kept" guards review �2.3 |
 
 Dependencies: aliases (2) before any split, so new files are born with `@/`;

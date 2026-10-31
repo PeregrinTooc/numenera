@@ -234,8 +234,30 @@ src/
 │   ├── BasicInfo.ts
 │   ├── Header.ts              # Top-level components
 │   └── CharacterSheet.ts
-└── main.ts                     # Entry point (48 lines)
+├── app/                        # Bootstrap, rendering, version navigation (see below)
+└── main.ts                     # Thin entry point: creates AppContext, wires modules
 ```
+
+### Application Bootstrap (`src/app/`)
+
+`main.ts` only creates one `AppContext` (all mutable app state: current sheet,
+current character, `VersionState`, services, navigator, banner, compare view) and
+wires the modules together. The modules take the context as a parameter and never
+import `main.ts`; rendering and version navigation call each other through
+`ctx.actions`, so there is no import cycle.
+
+| Module                     | Responsibility                                                   |
+| -------------------------- | ---------------------------------------------------------------- |
+| `appContext.ts`            | `AppContext` / `AppActions` types and `createAppContext()`       |
+| `bootstrap.ts`             | Boot sequence on `DOMContentLoaded`, conflict detection setup    |
+| `renderCharacterSheet.ts`  | Renders the sheet, field-update handler                          |
+| `versionBanner.ts`         | Old-version warning banner and read-only button state            |
+| `versionNavigation.ts`     | Version navigator, squash listener, undo/redo keyboard shortcuts |
+| `compareViewController.ts` | Opens and closes the Comparison View                             |
+| `fileActions.ts`           | Import, export, quick export and save-as handlers                |
+| `appEvents.ts`             | App-level `character-updated` / section re-render listeners      |
+| `saveFeedback.ts`          | Save indicator updates and storage-write-failure display         |
+| `testHooks.ts`             | `window.__test*` E2E hooks and the `Window` type declarations    |
 
 ### Component Hierarchy
 
