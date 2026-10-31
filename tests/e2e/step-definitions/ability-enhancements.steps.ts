@@ -1,5 +1,6 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
+import { assertNoRawI18nKeys } from "../support/i18nKeys.js";
 
 // Helper function to sanitize ability names for testid
 function sanitizeForTestId(name: string): string {
@@ -116,4 +117,5 @@ Then("the empty state should use translation keys", async function () {
   // We can check for the presence of translated text
   const emptyState = this.dom.getByTestId("empty-abilities");
   await expect(emptyState).not.toBeEmpty();
+  await assertNoRawI18nKeys(emptyState);
 });

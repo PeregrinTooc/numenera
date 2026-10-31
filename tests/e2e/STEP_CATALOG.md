@@ -89,19 +89,19 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `I should see the ability {string}` | 4 | 33 |
-| Then | `the ability {string} should have intellect pool styling` | 1 | 102 |
-| Then | `the ability {string} should have might pool styling` | 1 | 86 |
-| Then | `the ability {string} should have speed pool styling` | 1 | 94 |
-| Then | `the ability {string} should not show action indicator` | 1 | 80 |
-| Then | `the ability {string} should not show cost badge` | 1 | 68 |
-| Then | `the ability {string} should not show pool indicator` | 1 | 74 |
-| Then | `the ability {string} should show action {string}` | 2 | 58 |
-| Then | `the ability {string} should show cost {string}` | 2 | 38 |
-| Then | `the ability {string} should show pool {string}` | 2 | 48 |
-| Given | `the character has abilities with different pools:` | 1 | 24 |
-| Given | `the character has an ability {string} with:` | 4 | 8 |
-| Then | `the empty state should use translation keys` | 1 | 113 |
+| Then | `I should see the ability {string}` | 4 | 34 |
+| Then | `the ability {string} should have intellect pool styling` | 1 | 103 |
+| Then | `the ability {string} should have might pool styling` | 1 | 87 |
+| Then | `the ability {string} should have speed pool styling` | 1 | 95 |
+| Then | `the ability {string} should not show action indicator` | 1 | 81 |
+| Then | `the ability {string} should not show cost badge` | 1 | 69 |
+| Then | `the ability {string} should not show pool indicator` | 1 | 75 |
+| Then | `the ability {string} should show action {string}` | 2 | 59 |
+| Then | `the ability {string} should show cost {string}` | 2 | 39 |
+| Then | `the ability {string} should show pool {string}` | 2 | 49 |
+| Given | `the character has abilities with different pools:` | 1 | 25 |
+| Given | `the character has an ability {string} with:` | 4 | 9 |
+| Then | `the empty state should use translation keys` | 1 | 114 |
 
 ## additional-fields-editing.steps.ts
 
@@ -415,36 +415,36 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
 | Given | `I am on the character sheet page` | 57 | 27 |
-| Then | `I should see {int} artifact displayed` | 1 | 142 |
-| Then | `I should see {int} cyphers displayed` | 1 | 104 |
-| Then | `I should see {int} oddities displayed` | 1 | 155 |
-| Then | `I should see an empty {cardTypes} section` | 6 | 168 |
-| Then | `I should see artifact {string} with level {string}` | 1 | 147 |
-| Then | `I should see cypher {string} with level {string}` | 2 | 109 |
+| Then | `I should see {int} artifact displayed` | 1 | 141 |
+| Then | `I should see {int} cyphers displayed` | 1 | 103 |
+| Then | `I should see {int} oddities displayed` | 1 | 154 |
+| Then | `I should see an empty {cardTypes} section` | 6 | 167 |
+| Then | `I should see artifact {string} with level {string}` | 1 | 146 |
+| Then | `I should see cypher {string} with level {string}` | 2 | 108 |
 | Then | `I should see descriptor {string} displayed` | 1 | 46 |
-| Then | `I should see empty state for abilities` | 1 | 201 |
-| Then | `I should see empty state for background` | 1 | 181 |
-| Then | `I should see empty state for equipment` | 1 | 197 |
-| Then | `I should see empty state for notes` | 1 | 189 |
+| Then | `I should see empty state for abilities` | 1 | 200 |
+| Then | `I should see empty state for background` | 1 | 180 |
+| Then | `I should see empty state for equipment` | 1 | 196 |
+| Then | `I should see empty state for notes` | 1 | 188 |
 | Then | `I should see focus {string} displayed` | 1 | 50 |
-| Then | `I should see oddity {string}` | 2 | 160 |
-| Then | `I should see sections in this order:` | 1 | 277 |
-| Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 78 |
+| Then | `I should see oddity {string}` | 2 | 159 |
+| Then | `I should see sections in this order:` | 1 | 276 |
+| Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 77 |
 | Then | `I should see the character name {string}` | 3 | 32 |
 | Then | `I should see tier {string} displayed` | 1 | 36 |
 | Then | `I should see type {string} displayed` | 1 | 40 |
-| Then | `no markup from the text should be rendered as HTML` | 1 | 252 |
+| Then | `no markup from the text should be rendered as HTML` | 1 | 251 |
 | Then | `no untranslated text keys should be visible` | 6 | 54 |
-| Given | `the character has a {int}-character name without spaces` | 1 | 259 |
-| Given | `the character has empty text fields` | 1 | 177 |
-| Given | `the character has no {cardTypes}` | 6 | 164 |
-| Given | `the character has the following artifacts:` | 1 | 119 |
-| Given | `the character has the following cyphers:` | 1 | 91 |
-| Given | `the character has the following oddities:` | 1 | 132 |
-| Given | `the character has the following stats:` | 1 | 61 |
-| Given | `the character has the following text:` | 2 | 220 |
-| Then | `the character text should read exactly:` | 2 | 234 |
-| Then | `the page should not scroll horizontally` | 2 | 267 |
+| Given | `the character has a {int}-character name without spaces` | 1 | 258 |
+| Given | `the character has empty text fields` | 1 | 176 |
+| Given | `the character has no {cardTypes}` | 6 | 163 |
+| Given | `the character has the following artifacts:` | 1 | 118 |
+| Given | `the character has the following cyphers:` | 1 | 90 |
+| Given | `the character has the following oddities:` | 1 | 131 |
+| Given | `the character has the following stats:` | 1 | 60 |
+| Given | `the character has the following text:` | 2 | 219 |
+| Then | `the character text should read exactly:` | 2 | 233 |
+| Then | `the page should not scroll horizontally` | 2 | 266 |
 
 ## character-file-export.steps.ts
 
@@ -495,30 +495,30 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `I should see the armor badge in the attacks section` | 1 | 211 |
-| Then | `I should see the attack {string}` | 2 | 34 |
-| Then | `I should see the special ability {string}` | 1 | 154 |
-| Then | `the attack {string} should have red combat theme styling` | 1 | 109 |
-| Then | `the attack {string} should not show notes` | 1 | 99 |
-| Then | `the attack {string} should show damage {string}` | 2 | 43 |
-| Then | `the attack {string} should show modifier {string}` | 2 | 57 |
-| Then | `the attack {string} should show notes {string}` | 1 | 85 |
-| Then | `the attack {string} should show range {string}` | 2 | 71 |
-| Then | `the attack badges should sit at the right edge of their card` | 1 | 251 |
-| Then | `the attacks section should be in the right column` | 1 | 229 |
-| Given | `the character has a special ability {string}` | 1 | 143 |
-| Given | `the character has a special ability {string} with:` | 1 | 129 |
-| Given | `the character has an attack {string}` | 1 | 26 |
-| Given | `the character has an attack {string} with:` | 1 | 9 |
-| Given | `the character has an attack with a {int}-character name without spaces` | 1 | 242 |
-| Given | `the character has special abilities and attacks` | 1 | 217 |
-| Then | `the empty attacks state should use translation keys` | 1 | 122 |
-| Then | `the empty special abilities state should use translation keys` | 1 | 204 |
-| Then | `the sections should stack vertically on mobile` | 1 | 234 |
-| Then | `the special abilities section should be in the left column` | 1 | 224 |
-| Then | `the special ability {string} should have teal theme styling` | 1 | 191 |
-| Then | `the special ability {string} should show description {string}` | 1 | 163 |
-| Then | `the special ability {string} should show source {string}` | 1 | 177 |
+| Then | `I should see the armor badge in the attacks section` | 1 | 214 |
+| Then | `I should see the attack {string}` | 2 | 35 |
+| Then | `I should see the special ability {string}` | 1 | 156 |
+| Then | `the attack {string} should have red combat theme styling` | 1 | 110 |
+| Then | `the attack {string} should not show notes` | 1 | 100 |
+| Then | `the attack {string} should show damage {string}` | 2 | 44 |
+| Then | `the attack {string} should show modifier {string}` | 2 | 58 |
+| Then | `the attack {string} should show notes {string}` | 1 | 86 |
+| Then | `the attack {string} should show range {string}` | 2 | 72 |
+| Then | `the attack badges should sit at the right edge of their card` | 1 | 254 |
+| Then | `the attacks section should be in the right column` | 1 | 232 |
+| Given | `the character has a special ability {string}` | 1 | 145 |
+| Given | `the character has a special ability {string} with:` | 1 | 131 |
+| Given | `the character has an attack {string}` | 1 | 27 |
+| Given | `the character has an attack {string} with:` | 1 | 10 |
+| Given | `the character has an attack with a {int}-character name without spaces` | 1 | 245 |
+| Given | `the character has special abilities and attacks` | 1 | 220 |
+| Then | `the empty attacks state should use translation keys` | 1 | 123 |
+| Then | `the empty special abilities state should use translation keys` | 1 | 206 |
+| Then | `the sections should stack vertically on mobile` | 1 | 237 |
+| Then | `the special abilities section should be in the left column` | 1 | 227 |
+| Then | `the special ability {string} should have teal theme styling` | 1 | 193 |
+| Then | `the special ability {string} should show description {string}` | 1 | 165 |
+| Then | `the special ability {string} should show source {string}` | 1 | 179 |
 
 ## common-steps.ts
 

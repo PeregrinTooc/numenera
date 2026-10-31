@@ -3,6 +3,7 @@ import { expect } from "@playwright/test";
 import type { Attack, SpecialAbility } from "@/types/character";
 import { FULL_CHARACTER } from "@/data/mockCharacters";
 import type { CustomWorld } from "../support/world.js";
+import { assertNoRawI18nKeys } from "../support/i18nKeys.js";
 import { intCell, propertyTable } from "../support/tableRows.js";
 
 // Attack step definitions
@@ -123,6 +124,7 @@ Then(
 Then("the empty attacks state should use translation keys", async function () {
   const emptyState = this.dom.getByTestId("empty-attacks");
   await expect(emptyState).not.toBeEmpty();
+  await assertNoRawI18nKeys(emptyState);
 });
 
 // Special Ability step definitions
@@ -205,6 +207,7 @@ Then(
 Then("the empty special abilities state should use translation keys", async function () {
   const emptyState = this.dom.getByTestId("empty-special-abilities");
   await expect(emptyState).not.toBeEmpty();
+  await assertNoRawI18nKeys(emptyState);
 });
 
 // Armor badge step definitions

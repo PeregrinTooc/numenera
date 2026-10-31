@@ -44,23 +44,7 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ## 🚨 Must-Have (Technical Debt)
 
-### Tracked elsewhere
-
-Open debt that has its own home, listed here so the backlog is complete. The
-detail lives in the linked file.
-
-- [RULE_VIOLATIONS.md](./RULE_VIOLATIONS.md) "Open": `@/` path aliases barely
-  used, `any` usages with `no-explicit-any` only warning, files over 300 lines,
-  swallowed storage write errors, `console.log` in `src/`, and the E2E import
-  path bypassing the real sanitizer
-
-### Test and Component Debt
-
-- **Untranslated-key check (low priority).** It reads body `innerText` only, so
-  it misses `aria-label` and `title`. The three "...empty state should use
-  translation keys" Thens (`combat.steps.ts` around lines 123 and 205,
-  `ability-enhancements.steps.ts` around line 114) only assert non-empty and
-  could use `RAW_I18N_KEY` (`tests/e2e/support/i18nKeys.ts`).
+None.
 
 ---
 

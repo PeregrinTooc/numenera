@@ -4,7 +4,7 @@ import { waitForCharacterSheetReady, startNewCharacter } from "../support/app-re
 import type { CustomWorld } from "../support/world.js";
 import type { Character } from "@/types/character";
 import { sectionId } from "../support/sections.js";
-import { RAW_I18N_KEY } from "../support/i18nKeys.js";
+import { assertNoRawI18nKeys } from "../support/i18nKeys.js";
 import { intCell, lowerCaseHashes, propertyTable } from "../support/tableRows.js";
 
 Given(
@@ -53,8 +53,7 @@ Then("I should see focus {string} displayed", async function (focus: string) {
 });
 
 Then("no untranslated text keys should be visible", async function (this: CustomWorld) {
-  const text = await this.page.locator("body").innerText();
-  expect(text).not.toMatch(RAW_I18N_KEY);
+  await assertNoRawI18nKeys(this.page.locator("body"));
 });
 
 // Scenario 2: View character stat pools
