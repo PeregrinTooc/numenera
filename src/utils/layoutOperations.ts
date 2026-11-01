@@ -80,11 +80,22 @@ function pairWith(
   const { rest } = withoutSource(layout, sourceId, sourceRow);
   const targetRow = rowIndexOf(rest, targetId);
   const target = rest[targetRow];
-  if (target?.type !== "single") return null;
-  rest[targetRow] = {
-    type: "grid",
-    items: side === "left" ? [sourceId, targetId] : [targetId, sourceId],
-  };
+  if (!target) return null;
+
+  if (target.type === "single") {
+    rest[targetRow] = {
+      type: "grid",
+      items: side === "left" ? [sourceId, targetId] : [targetId, sourceId],
+    };
+    return rest;
+  }
+
+  // A paired target: the source takes its slot, and the target is pushed out
+  // to its own row in the direction the source was travelling.
+  const items = target.items.map((id) => (id === targetId ? sourceId : id));
+  rest[targetRow] = { type: "grid", items: [items[0], items[1]] };
+  const fromAbove = sourceRow < rowIndexOf(layout, targetId);
+  rest.splice(fromAbove ? targetRow + 1 : targetRow, 0, { type: "single", id: targetId });
   return rest;
 }
 

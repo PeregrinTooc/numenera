@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **702** in 51 files
-- Feature step lines: **2179**
+- Step definitions: **701** in 51 files
+- Feature step lines: **2191**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -57,7 +57,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 12 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
-| [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 7 | 0 |
+| [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 6 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
@@ -629,11 +629,10 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `{string} and {string} are in a grid` | 1 | 47 |
-| Then | `{string} should be in its own row` | 2 | 91 |
-| When | `I drag {string} out of the grid` | 1 | 72 |
-| When | `I drag the {string} section onto the {zone} of the {string} section` | 3 | 11 |
-| Then | `the {string} section should be the last section` | 1 | 37 |
-| Then | `the grid should show {string} on the left and {string} on the right` | 1 | 18 |
+| Then | `{string} should be in its own row` | 4 | 72 |
+| When | `I drag the {string} section onto the {zone} of the {string} section` | 6 | 11 |
+| Then | `the {string} section should be the last section` | 2 | 37 |
+| Then | `the grid should show {string} on the left and {string} on the right` | 3 | 18 |
 | Then | `the layout should still be the default layout` | 1 | 31 |
 
 ## i18n.steps.ts
@@ -691,7 +690,7 @@ pattern this script does not understand):
 | Then | `I should see the {string} button` | 1 | 80 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 36 |
 | Then | `it should be touch-friendly` | 1 | 91 |
-| Given | `layout edit mode is active` | 12 | 48 |
+| Given | `layout edit mode is active` | 14 | 48 |
 | Then | `layout edit mode should be inactive` | 1 | 59 |
 | Then | `the {string} option should be enabled` | 1 | 134 |
 | Then | `the layout should return to the default arrangement` | 1 | 122 |
@@ -776,7 +775,7 @@ pattern this script does not understand):
 | When | `I exit layout edit mode` | 1 | 120 |
 | Given | `I have moved the {string} section to the top` | 1 | 91 |
 | Given | `I have reordered sections` | 1 | 10 |
-| Then | `the {string} section should appear before the {string} section` | 4 | 60 |
+| Then | `the {string} section should appear before the {string} section` | 5 | 60 |
 | Then | `the {string} section should still be at the top` | 1 | 131 |
 | Then | `the layout should be saved` | 1 | 32 |
 | Then | `the sections should remain in the new order` | 1 | 43 |
@@ -1047,5 +1046,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 21 | 9 |
+| Given | `the viewport is {int} pixels wide` | 23 | 9 |
 

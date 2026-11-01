@@ -117,6 +117,48 @@ describe("layoutOperations", () => {
     });
   });
 
+  describe("applyDrop — pair with a paired section", () => {
+    it("takes the target's slot and pushes the target out below when coming from above", () => {
+      expect(applyDrop(D, "cyphers", { kind: "pair", targetId: "notes", side: "left" })).toEqual([
+        s("basicInfo"),
+        s("stats"),
+        s("recoveryDamage"),
+        s("abilities"),
+        g("specialAbilities", "attacks"),
+        s("items"),
+        g("background", "cyphers"),
+        s("notes"),
+      ]);
+    });
+
+    it("pushes the target out above when coming from below", () => {
+      expect(applyDrop(D, "items", { kind: "pair", targetId: "attacks", side: "right" })).toEqual([
+        s("basicInfo"),
+        s("stats"),
+        s("recoveryDamage"),
+        s("abilities"),
+        s("attacks"),
+        g("specialAbilities", "items"),
+        s("cyphers"),
+        g("background", "notes"),
+      ]);
+    });
+
+    it("leaves the partner of a source taken out of another pair as a single in place", () => {
+      expect(applyDrop(D, "attacks", { kind: "pair", targetId: "notes", side: "right" })).toEqual([
+        s("basicInfo"),
+        s("stats"),
+        s("recoveryDamage"),
+        s("abilities"),
+        s("specialAbilities"),
+        s("cyphers"),
+        s("items"),
+        g("background", "attacks"),
+        s("notes"),
+      ]);
+    });
+  });
+
   describe("rowIndexOf", () => {
     it("finds a single section's row and a paired section's row", () => {
       expect(rowIndexOf(D, "abilities")).toBe(3);

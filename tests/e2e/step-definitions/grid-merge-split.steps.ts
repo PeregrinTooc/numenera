@@ -70,25 +70,6 @@ Given(
   }
 );
 
-When("I drag {string} out of the grid", async function (this: CustomWorld, sectionName: string) {
-  const page = this.page;
-
-  const sourceElement = sectionLocator(page, sectionName);
-  const sourceBox = await sourceElement.boundingBox();
-
-  if (!sourceBox) {
-    throw new Error("Could not get bounding box for section");
-  }
-
-  // Drag far away from grid
-  await page.mouse.move(sourceBox.x + sourceBox.width / 2, sourceBox.y + sourceBox.height / 2);
-  await page.mouse.down();
-  await page.mouse.move(sourceBox.x + sourceBox.width / 2, sourceBox.y - 100); // Move up
-  await page.mouse.up();
-
-  await page.waitForTimeout(100);
-});
-
 Then("{string} should be in its own row", async function (this: CustomWorld, sectionName: string) {
   const page = this.page;
 

@@ -71,12 +71,27 @@ Feature: Section Re-arrangement
       | Stats  | Items  |
       | Items  | Stats  |
 
-  # Grid Splitting - Drag/Drop tests skipped for now (manual testing required)
-  @skip
+  Scenario: Pairing with a paired section pushes it out below when coming from above
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I drag the "Cyphers" section onto the middle left of the "Notes" section
+    Then the grid should show "Background" on the left and "Cyphers" on the right
+    And "Notes" should be in its own row
+    And the "Notes" section should be the last section
+
+  Scenario: Pairing with a paired section pushes it out above when coming from below
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I drag the "Items" section onto the middle right of the "Attacks" section
+    Then the grid should show "Special Abilities" on the left and "Items" on the right
+    And "Attacks" should be in its own row
+    And the "Attacks" section should appear before the "Special Abilities" section
+
+  # Leaving a pair
   Scenario: Split sections from grid by dragging out
     Given layout edit mode is active
     And "Background" and "Notes" are in a grid
-    When I drag "Background" out of the grid
+    When I drag the "Background" section onto the top edge of the "Cyphers" section
     Then "Background" should be in its own row
     And "Notes" should be in its own row
 
