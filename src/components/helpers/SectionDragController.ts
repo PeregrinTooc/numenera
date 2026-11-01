@@ -2,7 +2,9 @@
 // long-press (via LongPressDrag) for touch.
 
 import { html, nothing, TemplateResult } from "lit-html";
-import { SectionId, isSectionId } from "@/types/layout";
+import { Layout, SectionId, isSectionId } from "@/types/layout";
+import { DropIntent } from "@/types/layoutDrop";
+import { rowIndexOf } from "@/utils/layoutOperations";
 import { LongPressDrag } from "@/components/helpers/LongPressDrag";
 
 /** What the controller needs from the sheet that hosts it. */
@@ -10,13 +12,18 @@ export interface SectionDragHost {
   isEditMode(): boolean;
   /** Drag state changed: re-render the sheet. */
   requestRender(): void;
-  /** A section was dropped on another: move source before target. */
-  onReorder(sourceId: SectionId, targetId: SectionId): void;
+  /** The layout the drop intents refer to. */
+  getLayout(): Layout;
+  /** A section was dropped: apply `intent` to the layout. */
+  onDrop(sourceId: SectionId, intent: DropIntent): void;
 }
 
 export class SectionDragController {
   private draggedSectionId: SectionId | null = null;
+  /** The section under the pointer, styled as the drop target. */
   private dropTargetId: SectionId | null = null;
+  /** What dropping now would do; null when a drop would do nothing. */
+  private intent: DropIntent | null = null;
 
   /** Touch long-press → section drag; mouse drags use native HTML5 DnD. */
   private readonly longPress = new LongPressDrag<SectionId>({
@@ -154,10 +161,7 @@ export class SectionDragController {
       e.dataTransfer.dropEffect = "move";
     }
 
-    if (this.dropTargetId !== targetId) {
-      this.dropTargetId = targetId;
-      this.host.requestRender();
-    }
+    this.hover(targetId);
   }
 
   private handleDragLeave(): void {
@@ -170,10 +174,26 @@ export class SectionDragController {
     if (!this.host.isEditMode() || !this.draggedSectionId) return;
     if (targetId === this.draggedSectionId) return;
 
-    this.host.onReorder(this.draggedSectionId, targetId);
-
+    const sourceId = this.draggedSectionId;
+    const intent = this.intent;
     this.draggedSectionId = null;
     this.dropTargetId = null;
+    this.intent = null;
+    if (intent) this.host.onDrop(sourceId, intent);
+  }
+
+  /**
+   * The pointer is over `targetId` (null: over no other section): update the
+   * drop intent, re-rendering only when the drop target changes
+   */
+  private hover(targetId: SectionId | null): void {
+    if (targetId === this.dropTargetId) return;
+    this.dropTargetId = targetId;
+    this.intent =
+      targetId === null
+        ? null
+        : { kind: "gap", index: rowIndexOf(this.host.getLayout(), targetId) };
+    this.host.requestRender();
   }
 
   /**
@@ -217,6 +237,7 @@ export class SectionDragController {
   private handleTouchDragActivate(sectionId: SectionId): void {
     this.draggedSectionId = sectionId;
     this.dropTargetId = null;
+    this.intent = null;
     this.host.requestRender();
   }
 
@@ -229,22 +250,20 @@ export class SectionDragController {
     const targetId =
       hoveredId && isSectionId(hoveredId) && hoveredId !== this.draggedSectionId ? hoveredId : null;
 
-    if (targetId !== this.dropTargetId) {
-      this.dropTargetId = targetId;
-      this.host.requestRender();
-    }
+    this.hover(targetId);
   }
 
   /**
-   * Touch drag released: move the dragged section before the drop target, if any
+   * Touch drag released: apply the drop intent, if any
    */
   private handleTouchDrop(): void {
     const sourceId = this.draggedSectionId;
-    const targetId = this.dropTargetId;
-    if (sourceId && targetId) {
+    const intent = this.intent;
+    if (sourceId && intent) {
       this.draggedSectionId = null;
       this.dropTargetId = null;
-      this.host.onReorder(sourceId, targetId); // persists and re-renders
+      this.intent = null;
+      this.host.onDrop(sourceId, intent); // persists and re-renders
     } else {
       this.clearDragState();
     }
@@ -256,6 +275,7 @@ export class SectionDragController {
   private clearDragState(): void {
     this.draggedSectionId = null;
     this.dropTargetId = null;
+    this.intent = null;
     this.host.requestRender();
   }
 }

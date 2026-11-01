@@ -4,50 +4,49 @@
  * skip persisting and re-rendering.
  */
 
-import { Layout, LayoutItem, SectionId, cloneLayout, isGridEligible } from "@/types/layout";
+import {
+  Layout,
+  LayoutItem,
+  SectionId,
+  cloneLayout,
+  isGridEligible,
+  layoutsAreEqual,
+} from "@/types/layout";
+import { DropIntent } from "@/types/layoutDrop";
 
 /**
- * Move `sourceId` to just before `targetId`. A source taken out of a grid
- * leaves its partner behind as a single section.
+ * Index of the row holding `sectionId` (a single or either half of a pair),
+ * or -1 if the section is not in the layout.
  */
-export function reorderLayout(
-  layout: Layout,
-  sourceId: SectionId,
-  targetId: SectionId
-): Layout | null {
-  const newLayout = cloneLayout(layout);
-
-  // Find source position and remove it
-  let sourceItem: LayoutItem | null = null;
-
-  for (let i = 0; i < newLayout.length; i++) {
-    const item = newLayout[i];
-    if (item.type === "single" && item.id === sourceId) {
-      sourceItem = item;
-      newLayout.splice(i, 1);
-      break;
-    } else if (item.type === "grid") {
-      const gridIndex = item.items.indexOf(sourceId);
-      if (gridIndex !== -1) {
-        // Extract from grid - other item becomes single
-        const otherId = item.items[1 - gridIndex];
-        sourceItem = { type: "single", id: sourceId };
-        newLayout[i] = { type: "single", id: otherId };
-        break;
-      }
-    }
-  }
-
-  if (!sourceItem) return null;
-
-  const targetIndex = newLayout.findIndex((item) =>
-    item.type === "single" ? item.id === targetId : item.items.includes(targetId)
+export function rowIndexOf(layout: Layout, sectionId: SectionId): number {
+  return layout.findIndex((item) =>
+    item.type === "single" ? item.id === sectionId : item.items.includes(sectionId)
   );
+}
 
-  if (targetIndex === -1) return null;
+/**
+ * Apply a drop of `sourceId`. Returns null when the drop is invalid or would
+ * leave the layout unchanged.
+ */
+export function applyDrop(layout: Layout, sourceId: SectionId, intent: DropIntent): Layout | null {
+  if (intent.kind !== "gap") return null;
 
-  newLayout.splice(targetIndex, 0, sourceItem);
-  return newLayout;
+  const sourceRow = rowIndexOf(layout, sourceId);
+  if (sourceRow === -1) return null;
+
+  const newLayout = cloneLayout(layout);
+  const item = newLayout[sourceRow];
+  let index = intent.index;
+  if (item.type === "single") {
+    newLayout.splice(sourceRow, 1);
+    if (index > sourceRow) index--;
+  } else {
+    // Taken out of a pair: the partner stays behind as a single
+    newLayout[sourceRow] = { type: "single", id: item.items[1 - item.items.indexOf(sourceId)] };
+  }
+  newLayout.splice(index, 0, { type: "single", id: sourceId });
+
+  return layoutsAreEqual(newLayout, layout) ? null : newLayout;
 }
 
 /**

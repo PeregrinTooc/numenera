@@ -7,7 +7,7 @@ import { SheetSections } from "@/components/helpers/SheetSections";
 import { changeLanguage } from "@/i18n/index";
 import { Layout, LayoutItem, SectionId } from "@/types/layout";
 import { loadLayout, saveLayout, resetLayout } from "@/storage/layoutStorage";
-import { reorderLayout, mergeSectionsInLayout, splitGridInLayout } from "@/utils/layoutOperations";
+import { applyDrop, mergeSectionsInLayout, splitGridInLayout } from "@/utils/layoutOperations";
 import { SectionDragController } from "@/components/helpers/SectionDragController";
 import { SheetVersionUi } from "@/components/helpers/SheetVersionUi";
 import { renderEditLayoutButton } from "@/components/helpers/layoutEditButton";
@@ -23,7 +23,8 @@ export class CharacterSheet {
   private readonly drag = new SectionDragController({
     isEditMode: () => this.isLayoutEditMode,
     requestRender: () => this.rerender(),
-    onReorder: (sourceId, targetId) => this.reorderSections(sourceId, targetId),
+    getLayout: () => this.layout,
+    onDrop: (sourceId, intent) => this.applyLayout(applyDrop(this.layout, sourceId, intent)),
   });
 
   constructor(
@@ -87,13 +88,6 @@ export class CharacterSheet {
   }
 
   /**
-   * Reorder sections by moving source to before target
-   */
-  private reorderSections(sourceId: SectionId, targetId: SectionId): void {
-    this.applyLayout(reorderLayout(this.layout, sourceId, targetId));
-  }
-
-  /**
    * Merge two sections into a grid
    */
   mergeSections(sectionId1: SectionId, sectionId2: SectionId): void {
@@ -129,7 +123,7 @@ export class CharacterSheet {
       // session from the real persisted state rather than a stale snapshot.
       this.layout = loadLayout();
     }
-    // No save on exit: reorderSections/mergeSections/splitGrid already persist
+    // No save on exit: drops and mergeSections/splitGrid already persist
     // immediately when they mutate this.layout. Re-saving here used to
     // overwrite storage with this instance's (possibly stale) in-memory copy
     // whenever the persisted layout had changed since edit mode was entered.
