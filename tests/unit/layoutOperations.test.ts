@@ -176,6 +176,26 @@ describe("layoutOperations", () => {
     });
   });
 
+  describe("applyDrop — breakPair", () => {
+    it("splits the pair and puts the source between its former halves", () => {
+      expect(applyDrop(D, "cyphers", { kind: "breakPair", rowIndex: 7 })).toEqual([
+        ...D.slice(0, 5),
+        s("items"),
+        s("background"),
+        s("cyphers"),
+        s("notes"),
+      ]);
+    });
+
+    it("returns null when the source is in that pair", () => {
+      expect(applyDrop(D, "background", { kind: "breakPair", rowIndex: 7 })).toBeNull();
+    });
+
+    it("returns null when the row is not a pair", () => {
+      expect(applyDrop(D, "cyphers", { kind: "breakPair", rowIndex: 3 })).toBeNull();
+    });
+  });
+
   describe("rowIndexOf", () => {
     it("finds a single section's row and a paired section's row", () => {
       expect(rowIndexOf(D, "abilities")).toBe(3);

@@ -60,8 +60,10 @@ export type SectionZone = "top edge" | "bottom edge" | "middle left" | "middle r
 /**
  * A point inside `zone` of a section's bounding box: the edges at 10 % / 90 %
  * of its height (centred horizontally), the middles at 25 % / 75 % of its
- * width (centred vertically). Clear of the zone boundaries at 25 %, 50 % and
- * 75 % of the height.
+ * width and 60 % of its height. Every point stays clear of the zone
+ * boundaries at 25 %, 50 % and 75 % of the height: browsers report whole-pixel
+ * pointer positions, so a point aimed at exactly 50 % can land just above the
+ * narrow layout's top/bottom split.
  */
 export function zonePoint(
   box: { x: number; y: number; width: number; height: number },
@@ -70,8 +72,8 @@ export function zonePoint(
   const fractions: Record<SectionZone, [number, number]> = {
     "top edge": [0.5, 0.1],
     "bottom edge": [0.5, 0.9],
-    "middle left": [0.25, 0.5],
-    "middle right": [0.75, 0.5],
+    "middle left": [0.25, 0.6],
+    "middle right": [0.75, 0.6],
   };
   const [fx, fy] = fractions[zone];
   return { x: box.x + box.width * fx, y: box.y + box.height * fy };

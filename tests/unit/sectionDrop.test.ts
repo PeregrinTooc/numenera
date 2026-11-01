@@ -82,3 +82,34 @@ describe("resolveDropIntent — pairing on a wide layout", () => {
     expect(resolveDropIntent(D, "items", "stats", "left", true)).toBeNull();
   });
 });
+
+describe("resolveDropIntent — narrow layout", () => {
+  it("the top of a pair's lower half is the seam: it breaks the pair", () => {
+    expect(resolveDropIntent(D, "cyphers", "notes", "top", false)).toEqual({
+      kind: "breakPair",
+      rowIndex: 7,
+    });
+  });
+
+  it("the bottom of a pair's upper half is the seam too", () => {
+    expect(resolveDropIntent(D, "cyphers", "background", "bottom", false)).toEqual({
+      kind: "breakPair",
+      rowIndex: 7,
+    });
+  });
+
+  it("the outer edges of a stacked pair are the gaps above and below it", () => {
+    expect(resolveDropIntent(D, "cyphers", "background", "top", false)).toEqual({
+      kind: "gap",
+      index: 7,
+    });
+    expect(resolveDropIntent(D, "cyphers", "notes", "bottom", false)).toEqual({
+      kind: "gap",
+      index: 8,
+    });
+  });
+
+  it("middle zones never pair", () => {
+    expect(resolveDropIntent(D, "cyphers", "items", "left", false)).toBeNull();
+  });
+});

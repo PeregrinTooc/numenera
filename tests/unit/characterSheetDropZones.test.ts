@@ -79,6 +79,26 @@ describe("CharacterSheet section drop zones", () => {
     expect(order.indexOf("items")).toBeLessThan(order.indexOf("abilities"));
   });
 
+  it("re-evaluates the layout width on every hover, not once per drag (Review Focus 4)", () => {
+    const original = window.matchMedia;
+    let wide = true;
+    window.matchMedia = (query: string): MediaQueryList =>
+      ({ matches: wide, media: query }) as MediaQueryList;
+    try {
+      placeSection("items", 0, 1000, 800, 200);
+      touchDragOver("cyphers", "items", 600, 1120); // middle right: would pair
+      wide = false; // e.g. the window was narrowed mid-drag
+      touch(section("cyphers"), "touchmove", [{ x: 600, y: 1121 }]);
+      touch(section("cyphers"), "touchend");
+    } finally {
+      window.matchMedia = original;
+    }
+
+    expect(document.querySelector('[data-testid="layout-grid-items-cyphers"]')).toBeNull();
+    const order = sectionOrder();
+    expect(order.indexOf("cyphers")).toBe(order.indexOf("items") + 1);
+  });
+
   it("a mouse dragover on a card nested in a section uses the whole section's zones", () => {
     mountSheet(createCharacterWithItems());
     placeSection("abilities", 0, 1000, 800, 200);

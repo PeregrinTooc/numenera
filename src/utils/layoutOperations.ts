@@ -32,11 +32,13 @@ export function applyDrop(layout: Layout, sourceId: SectionId, intent: DropInten
   const sourceRow = rowIndexOf(layout, sourceId);
   if (sourceRow === -1) return null;
 
-  let result: Layout | null = null;
+  let result: Layout | null;
   if (intent.kind === "gap") {
     result = dropInGap(layout, sourceId, sourceRow, intent.index);
   } else if (intent.kind === "pair") {
     result = pairWith(layout, sourceId, sourceRow, intent.targetId, intent.side);
+  } else {
+    result = breakPair(layout, sourceId, sourceRow, intent.rowIndex);
   }
   return result && !layoutsAreEqual(result, layout) ? result : null;
 }
@@ -96,6 +98,31 @@ function pairWith(
   rest[targetRow] = { type: "grid", items: [items[0], items[1]] };
   const fromAbove = sourceRow < rowIndexOf(layout, targetId);
   rest.splice(fromAbove ? targetRow + 1 : targetRow, 0, { type: "single", id: targetId });
+  return rest;
+}
+
+/**
+ * Split the pair at `rowIndex` (of the input layout) into singles and put the
+ * source between its former halves. Null if that row is not a pair or the
+ * source is in it.
+ */
+function breakPair(
+  layout: Layout,
+  sourceId: SectionId,
+  sourceRow: number,
+  rowIndex: number
+): Layout | null {
+  const pair = layout[rowIndex];
+  if (pair?.type !== "grid" || pair.items.includes(sourceId)) return null;
+  const { rest, rowClosed } = withoutSource(layout, sourceId, sourceRow);
+  const index = rowClosed && sourceRow < rowIndex ? rowIndex - 1 : rowIndex;
+  rest.splice(
+    index,
+    1,
+    { type: "single", id: pair.items[0] },
+    { type: "single", id: sourceId },
+    { type: "single", id: pair.items[1] }
+  );
   return rest;
 }
 

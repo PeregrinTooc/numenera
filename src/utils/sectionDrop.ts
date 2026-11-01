@@ -31,21 +31,36 @@ export function dropZoneAt(rect: ZoneRect, x: number, y: number, wide: boolean):
 
 /**
  * What dropping `sourceId` on `zone` of `targetId` would do, or null when the
- * drop would do nothing. `_wide`: pairs render side by side.
+ * drop would do nothing. `wide`: pairs render side by side; otherwise a pair
+ * stacks, each half is its own row, and the seam between the halves breaks
+ * the pair.
  */
 export function resolveDropIntent(
   layout: Layout,
   sourceId: SectionId,
   targetId: SectionId,
   zone: DropZone,
-  _wide: boolean
+  wide: boolean
 ): DropIntent | null {
-  let intent: DropIntent;
+  const intent = intentFor(layout, targetId, zone, wide);
+  return intent && applyDrop(layout, sourceId, intent) ? intent : null;
+}
+
+function intentFor(
+  layout: Layout,
+  targetId: SectionId,
+  zone: DropZone,
+  wide: boolean
+): DropIntent | null {
   if (zone === "left" || zone === "right") {
-    intent = { kind: "pair", targetId, side: zone };
-  } else {
-    const row = rowIndexOf(layout, targetId);
-    intent = { kind: "gap", index: zone === "top" ? row : row + 1 };
+    return wide ? { kind: "pair", targetId, side: zone } : null;
   }
-  return applyDrop(layout, sourceId, intent) ? intent : null;
+  const row = rowIndexOf(layout, targetId);
+  const item = layout[row];
+  if (!wide && item?.type === "grid") {
+    const isUpperHalf = item.items[0] === targetId;
+    // The bottom of the upper half and the top of the lower half are the seam
+    if (isUpperHalf === (zone === "bottom")) return { kind: "breakPair", rowIndex: row };
+  }
+  return { kind: "gap", index: zone === "top" ? row : row + 1 };
 }

@@ -101,6 +101,24 @@ Feature: Section Re-arrangement
     Then "Background" should be in its own row
     And "Notes" should be in its own row
 
+  # Narrow screens: pairs stack, so dropping only reorders
+  Scenario: On a narrow screen dropping on the middle of a section reorders
+    Given the viewport is 768 pixels wide
+    And layout edit mode is active
+    When I drag the "Cyphers" section onto the middle left of the "Abilities" section
+    Then "Cyphers" should be in its own row
+    And the "Abilities" section should appear before the "Cyphers" section
+
+  Scenario: On a narrow screen dropping between the halves of a pair breaks the pair
+    Given the viewport is 768 pixels wide
+    And layout edit mode is active
+    When I drag the "Cyphers" section onto the top edge of the "Notes" section
+    Then "Background" should be in its own row
+    And "Cyphers" should be in its own row
+    And "Notes" should be in its own row
+    And the "Background" section should appear before the "Cyphers" section
+    And the "Cyphers" section should appear before the "Notes" section
+
   # Settings Integration
   Scenario: Reset layout to default
     Given I have customized the layout
