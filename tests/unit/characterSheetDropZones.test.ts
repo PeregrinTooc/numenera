@@ -113,6 +113,30 @@ describe("CharacterSheet section drop zones", () => {
     expect(order.indexOf("cyphers")).toBe(order.indexOf("abilities") + 1);
   });
 
+  it("a mouse drop over the gutter between sections keeps the last intent (Review Focus 1)", () => {
+    placeSection("items", 0, 1000, 800, 200);
+    const gutter = document.querySelector('[data-testid="layout-grid-background-notes"]');
+    if (!gutter) throw new Error("No pair grid");
+
+    mouseDrag(section("cyphers"), "dragstart");
+    mouseDrag(section("items"), "dragover", 600, 1120); // middle right of Items
+    mouseDrag(gutter, "dragover", 400, 1250); // between the pair's columns: no section
+    mouseDrag(gutter, "drop", 400, 1250);
+
+    expect(document.querySelector('[data-testid="layout-grid-items-cyphers"]')).not.toBeNull();
+  });
+
+  it("previews with overlays only: the target gets no extra elements (Review Focus 5)", () => {
+    placeSection("items", 0, 1000, 800, 200);
+    const childrenBefore = section("items").querySelectorAll("*").length;
+
+    mouseDrag(section("cyphers"), "dragstart");
+    mouseDrag(section("items"), "dragover", 600, 1120);
+
+    expect(section("items").classList.contains("drop-ghost-right")).toBe(true);
+    expect(section("items").querySelectorAll("*").length).toBe(childrenBefore);
+  });
+
   it("dragging a card inside a paired section reorders cards, not the section", () => {
     mountSheet(createCharacterWithItems());
     placeSection("attacks", 400, 1000, 400, 200);

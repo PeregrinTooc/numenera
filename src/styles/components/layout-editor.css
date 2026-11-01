@@ -139,64 +139,101 @@
   cursor: grabbing;
 }
 
-/* Drop target indicator: the dragged section will be inserted above this one */
-.layout-edit-mode .layout-draggable.drop-target {
-  outline: 2px solid var(--color-numenera-primary, #1a5490);
-  outline-offset: 4px;
+/* Drop previews. Overlays drawn with ::after (the wrapper's ::before is the
+   drag handle) and positioned absolutely, so they never move the layout:
+   a preview that shifted the section under the pointer would flip the drop
+   zone every frame. pointer-events: none keeps them out of hit-testing. */
+.layout-edit-mode
+  :is(
+    .drop-line-before,
+    .drop-line-after,
+    .drop-ghost-left,
+    .drop-ghost-right,
+    .drop-ghost-replace,
+    .drop-bump-above,
+    .drop-bump-below
+  )::after {
+  position: absolute;
+  z-index: 20;
+  box-sizing: border-box;
+  pointer-events: none;
 }
 
-.layout-edit-mode .layout-draggable.drop-target::after {
+/* Insertion line in the gap above or below a row (or between the halves of a
+   stacked pair) */
+.layout-edit-mode .drop-line-before::after,
+.layout-edit-mode .drop-line-after::after {
   content: "";
-  position: absolute;
-  top: -4px;
   left: 0;
   right: 0;
   height: 4px;
-  background-color: var(--color-numenera-primary, #1a5490);
   border-radius: 2px;
-  pointer-events: none;
+  background-color: var(--color-numenera-primary);
 }
 
-/* Drop zone indicators */
-.layout-edit-mode .layout-drop-zone {
-  position: relative;
+.layout-edit-mode .drop-line-before::after {
+  top: calc(-0.75rem - 2px);
 }
 
-.layout-edit-mode .layout-drop-zone::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-color: rgba(26, 84, 144, 0.1);
-  border: 2px dashed var(--color-numenera-primary, #1a5490);
-  border-radius: 0.5rem;
-  pointer-events: none;
+.layout-edit-mode .drop-line-after::after {
+  bottom: calc(-0.75rem - 2px);
 }
 
-.layout-edit-mode .layout-drop-zone--active::after {
-  background-color: rgba(212, 175, 55, 0.2);
-  border-color: var(--color-numenera-accent, #d4af37);
-}
-
-/* Grid merge indicator */
-.layout-edit-mode .layout-merge-indicator {
-  position: absolute;
-  inset: 0;
-  background-color: rgba(212, 175, 55, 0.3);
-  border: 3px solid var(--color-numenera-accent, #d4af37);
-  border-radius: 0.5rem;
+/* Ghost of the dragged section: beside the target, or in its slot */
+.layout-edit-mode .drop-ghost-left::after,
+.layout-edit-mode .drop-ghost-right::after,
+.layout-edit-mode .drop-ghost-replace::after {
+  content: attr(data-drop-ghost-label);
+  top: 0;
+  bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  border: 3px dashed var(--color-numenera-accent);
+  border-radius: 0.5rem;
+  background-color: color-mix(in srgb, var(--color-numenera-accent) 30%, transparent);
+  color: var(--color-brown-900);
+  font-weight: 600;
 }
 
-.layout-edit-mode .layout-merge-indicator::after {
-  content: "Merge into grid";
-  padding: 0.5rem 1rem;
-  background-color: var(--color-numenera-accent, #d4af37);
-  color: #1a1a1a;
+.layout-edit-mode .drop-ghost-left::after {
+  left: 0;
+  width: 50%;
+}
+
+.layout-edit-mode .drop-ghost-right::after {
+  right: 0;
+  width: 50%;
+}
+
+.layout-edit-mode .drop-ghost-replace::after {
+  left: 0;
+  right: 0;
+}
+
+/* The section pushed out of a pair, on its own row above or below it */
+.layout-edit-mode .drop-bump-above::after,
+.layout-edit-mode .drop-bump-below::after {
+  content: attr(data-drop-bump-label);
+  left: 0;
+  right: 0;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px dashed var(--color-numenera-drop-bump);
+  border-radius: 0.5rem;
+  background-color: color-mix(in srgb, var(--color-numenera-drop-bump) 20%, transparent);
+  color: var(--color-numenera-drop-bump);
   font-weight: 600;
-  border-radius: 0.25rem;
+}
+
+.layout-edit-mode .drop-bump-above::after {
+  bottom: calc(100% + 0.25rem);
+}
+
+.layout-edit-mode .drop-bump-below::after {
+  top: calc(100% + 0.25rem);
 }
 
 /* Mobile Styles */

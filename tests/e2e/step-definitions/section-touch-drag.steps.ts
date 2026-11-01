@@ -43,9 +43,9 @@ When(
       // gesture; confirm the drag actually activated before moving.
       await expect(sectionLocator(page, sourceName)).toHaveClass(/\bdragging\b/);
       await gesture.moveTo(await nearTopOf(sectionLocator(page, targetName)));
-      // The target section is marked as the drop target while the drag is
-      // held over it, before the finger lifts.
-      await expect(sectionLocator(page, targetName)).toHaveClass(/\bdrop-target\b/);
+      // The insertion line shows above the target while the drag is held
+      // over it, before the finger lifts.
+      await expect(sectionLocator(page, targetName)).toHaveClass(/\bdrop-line-before\b/);
       await gesture.end();
     });
   }

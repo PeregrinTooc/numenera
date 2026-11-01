@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **701** in 51 files
-- Feature step lines: **2208**
+- Step definitions: **706** in 52 files
+- Feature step lines: **2221**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -64,6 +64,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 13 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
+| [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 5 | 0 |
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
 | [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 5 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
@@ -690,7 +691,7 @@ pattern this script does not understand):
 | Then | `I should see the {string} button` | 1 | 80 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 36 |
 | Then | `it should be touch-friendly` | 1 | 91 |
-| Given | `layout edit mode is active` | 17 | 48 |
+| Given | `layout edit mode is active` | 20 | 48 |
 | Then | `layout edit mode should be inactive` | 1 | 59 |
 | Then | `the {string} option should be enabled` | 1 | 134 |
 | Then | `the layout should return to the default arrangement` | 1 | 122 |
@@ -766,6 +767,16 @@ pattern this script does not understand):
 | Then | `the modal should show a real validation error, not a raw translation key` | 1 | 228 |
 | Then | `the Shins badge should show {string}` | 5 | 127 |
 | Then | `the Total XP badge should show {string}` | 5 | 119 |
+
+## section-drop-preview.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I hold the {string} section over the {zone} of the {string} section` | 3 | 31 |
+| Then | `no drop preview should be shown` | 1 | 87 |
+| Then | `the {string} section should preview {string} in its place` | 1 | 66 |
+| Then | `the {string} section should preview {string} on its right` | 1 | 56 |
+| Then | `the row of {string} should preview {string} below it` | 1 | 76 |
 
 ## section-reordering.steps.ts
 
@@ -1046,5 +1057,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 26 | 9 |
+| Given | `the viewport is {int} pixels wide` | 29 | 9 |
 

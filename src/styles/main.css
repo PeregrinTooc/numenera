@@ -66,6 +66,9 @@
   --color-numenera-primary: #1a5490;
   --color-numenera-secondary: #8b4513;
   --color-numenera-accent: #d4af37;
+  /* Drop previews: a section pushed out of a pair (distinct from the
+     accent-coloured ghost of the dragged section) */
+  --color-numenera-drop-bump: #2e7d32;
 
   --color-parchment-light: #f5e6d3;
   --color-parchment: #ede1cf;

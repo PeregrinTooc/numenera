@@ -29,9 +29,26 @@ export function sectionLocator(page: Page, name: string): Locator {
  * everything on screen, nothing scrolls. Restores the viewport afterwards.
  */
 export async function withFullHeightViewport<T>(page: Page, action: () => Promise<T>): Promise<T> {
+  const original = await growViewportToFullHeight(page);
+  try {
+    return await action();
+  } finally {
+    await page.setViewportSize(original);
+  }
+}
+
+/**
+ * Grow the viewport to the page's full height (width unchanged), scrolled to
+ * the top, and return the original size. Use directly, without restoring,
+ * when a drag stays held across steps: restoring would reflow the page under
+ * the pointer mid-drag.
+ */
+export async function growViewportToFullHeight(
+  page: Page
+): Promise<{ width: number; height: number }> {
   const original = page.viewportSize();
   if (!original) {
-    throw new Error("withFullHeightViewport needs a page with a fixed viewport");
+    throw new Error("growViewportToFullHeight needs a page with a fixed viewport");
   }
   const fullHeight = await page.evaluate(() => document.documentElement.scrollHeight);
   await page.setViewportSize({
@@ -39,11 +56,7 @@ export async function withFullHeightViewport<T>(page: Page, action: () => Promis
     height: Math.max(original.height, fullHeight),
   });
   await page.evaluate(() => window.scrollTo(0, 0));
-  try {
-    return await action();
-  } finally {
-    await page.setViewportSize(original);
-  }
+  return original;
 }
 
 /** How long E2E long-presses hold — safely above the app's 250ms threshold. */

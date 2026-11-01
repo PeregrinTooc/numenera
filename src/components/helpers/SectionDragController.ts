@@ -4,6 +4,13 @@
 import { html, nothing, TemplateResult } from "lit-html";
 import { Layout, SectionId, isSectionId } from "@/types/layout";
 import { DropIntent } from "@/types/layoutDrop";
+import {
+  DropPreview,
+  describeDropPreview,
+  rowPreviewClasses,
+  sectionPreviewClasses,
+} from "@/utils/dropPreview";
+import { t } from "@/i18n/index";
 import { dropZoneAt, resolveDropIntent } from "@/utils/sectionDrop";
 import { isWideLayout } from "@/utils/viewport";
 import { LongPressDrag } from "@/components/helpers/LongPressDrag";
@@ -21,10 +28,10 @@ export interface SectionDragHost {
 
 export class SectionDragController {
   private draggedSectionId: SectionId | null = null;
-  /** The section under the pointer while a drop there would do something. */
-  private dropTargetId: SectionId | null = null;
   /** What dropping now would do; null when a drop would do nothing. */
   private intent: DropIntent | null = null;
+  /** What to draw for `intent`. */
+  private preview: DropPreview = {};
 
   /** Touch long-press → section drag; mouse drags use native HTML5 DnD. */
   private readonly longPress = new LongPressDrag<SectionId>({
@@ -83,28 +90,32 @@ export class SectionDragController {
   constructor(private readonly host: SectionDragHost) {}
 
   /**
-   * Render a section wrapped for layout editing (drag handle, drop target)
+   * Render a section wrapped for layout editing (drag handle, drop preview).
+   * `rowIndex`: the section is a single row at that index, so it also carries
+   * the row's preview; a pair's grid carries it instead (see `rowPreview`).
    */
-  renderSection(sectionId: SectionId, content: TemplateResult): TemplateResult {
+  renderSection(sectionId: SectionId, content: TemplateResult, rowIndex?: number): TemplateResult {
     const editMode = this.host.isEditMode();
-    const isDragging = this.draggedSectionId === sectionId;
-    const isDropTarget = this.dropTargetId === sectionId;
-    const wrapperClass = editMode
-      ? `layout-section layout-draggable${isDragging ? " dragging" : ""}${isDropTarget ? " drop-target" : ""}`
-      : "";
+    const classes = editMode ? ["layout-section", "layout-draggable"] : [];
+    if (editMode && this.draggedSectionId === sectionId) classes.push("dragging");
+    const row = rowIndex === undefined ? undefined : this.rowPreview(rowIndex);
+    classes.push(sectionPreviewClasses(this.preview, sectionId), row?.classes ?? "");
     const draggable = editMode ? "true" : "false";
+    const ghostLabel =
+      this.preview.ghost?.sectionId === sectionId && this.draggedSectionId
+        ? sectionName(this.draggedSectionId)
+        : nothing;
 
     return html`
       <div
-        class=${wrapperClass}
+        class=${classes.filter(Boolean).join(" ")}
+        data-drop-ghost-label=${ghostLabel}
+        data-drop-bump-label=${row?.bumpLabel ?? nothing}
         data-section-id=${sectionId}
         data-testid="layout-section-${sectionId}"
         draggable=${draggable}
         @dragstart=${this.dragStartListener}
         @dragend=${() => this.clearDragState()}
-        @dragover=${(e: DragEvent) => this.handleDragOver(e)}
-        @dragleave=${() => this.handleDragLeave()}
-        @drop=${(e: DragEvent) => this.handleDrop(e)}
         @touchstart=${editMode ? this.touchStartListener : nothing}
         @touchmove=${editMode ? this.touchMoveListener : nothing}
         @touchend=${editMode ? () => this.longPress.end() : nothing}
@@ -114,6 +125,18 @@ export class SectionDragController {
         ${content}
       </div>
     `;
+  }
+
+  /**
+   * The drop preview on row `rowIndex`: its classes, and the name of the
+   * section bumped out of it (if any)
+   */
+  rowPreview(rowIndex: number): { classes: string; bumpLabel: string | typeof nothing } {
+    const { bump } = this.preview;
+    return {
+      classes: rowPreviewClasses(this.preview, rowIndex),
+      bumpLabel: bump?.rowIndex === rowIndex ? sectionName(bump.sectionId) : nothing,
+    };
   }
 
   /**
@@ -156,12 +179,19 @@ export class SectionDragController {
     this.host.requestRender();
   }
 
-  private handleDragOver(e: DragEvent): void {
+  /**
+   * Mouse dragover anywhere on the sheet. Bound on the sheet container rather
+   * than on each section, so the gutters between sections reach it too.
+   */
+  handleDragOver(e: DragEvent): void {
     if (!this.host.isEditMode() || !this.draggedSectionId) return;
 
-    // currentTarget is the section wrapper even when the pointer is over a
-    // card nested inside it, so the zones span the whole section.
-    this.hover(e.currentTarget as HTMLElement, e.clientX, e.clientY);
+    // closest() finds the section wrapper even from a card nested inside it,
+    // so the zones span the whole section. Over a gutter (no section) the
+    // last intent stands: crossing a gap neither cancels nor jumps.
+    const section =
+      e.target instanceof Element ? e.target.closest<HTMLElement>("[data-section-id]") : null;
+    if (section) this.hover(section, e.clientX, e.clientY);
     if (!this.intent) return; // not a drop target: the browser shows "no drop"
 
     e.preventDefault();
@@ -170,20 +200,18 @@ export class SectionDragController {
     }
   }
 
-  private handleDragLeave(): void {
-    // Note: We don't clear dropTargetId here because dragleave fires
-    // when entering child elements. We let dragover set the target.
-  }
-
-  private handleDrop(e: DragEvent): void {
-    e.preventDefault();
+  /**
+   * Mouse drop anywhere on the sheet (bound with handleDragOver): apply the
+   * intent from the last dragover
+   */
+  handleDrop(e: DragEvent): void {
     if (!this.host.isEditMode() || !this.draggedSectionId) return;
+    e.preventDefault();
 
     const sourceId = this.draggedSectionId;
     const intent = this.intent;
     this.draggedSectionId = null;
-    this.dropTargetId = null;
-    this.intent = null;
+    this.setIntent(null);
     if (intent) this.host.onDrop(sourceId, intent);
   }
 
@@ -205,8 +233,7 @@ export class SectionDragController {
     // Intents are small plain objects built in one place, so equal intents
     // serialise identically.
     if (JSON.stringify(intent) === JSON.stringify(this.intent)) return;
-    this.intent = intent;
-    this.dropTargetId = intent && targetId && isSectionId(targetId) ? targetId : null;
+    this.setIntent(intent);
     this.host.requestRender();
   }
 
@@ -250,8 +277,7 @@ export class SectionDragController {
    */
   private handleTouchDragActivate(sectionId: SectionId): void {
     this.draggedSectionId = sectionId;
-    this.dropTargetId = null;
-    this.intent = null;
+    this.setIntent(null);
     this.host.requestRender();
   }
 
@@ -271,21 +297,32 @@ export class SectionDragController {
     const intent = this.intent;
     if (sourceId && intent) {
       this.draggedSectionId = null;
-      this.dropTargetId = null;
-      this.intent = null;
+      this.setIntent(null);
       this.host.onDrop(sourceId, intent); // persists and re-renders
     } else {
       this.clearDragState();
     }
   }
 
+  private setIntent(intent: DropIntent | null): void {
+    this.intent = intent;
+    this.preview =
+      intent && this.draggedSectionId
+        ? describeDropPreview(this.host.getLayout(), this.draggedSectionId, intent)
+        : {};
+  }
+
   /**
-   * Clear drag/drop-target styling and re-render
+   * Clear drag and preview styling and re-render
    */
   private clearDragState(): void {
     this.draggedSectionId = null;
-    this.dropTargetId = null;
-    this.intent = null;
+    this.setIntent(null);
     this.host.requestRender();
   }
+}
+
+/** A section's translated name, as shown in drop previews. */
+function sectionName(sectionId: SectionId): string {
+  return t(`layout.sections.${sectionId}`);
 }

@@ -101,6 +101,26 @@ Feature: Section Re-arrangement
     Then "Background" should be in its own row
     And "Notes" should be in its own row
 
+  # Previews while a section is held over another
+  Scenario: Hovering the middle of a single section previews the pair
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I hold the "Cyphers" section over the middle right of the "Items" section
+    Then the "Items" section should preview "Cyphers" on its right
+
+  Scenario: Hovering the middle of a paired section previews the push
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I hold the "Cyphers" section over the middle left of the "Notes" section
+    Then the "Notes" section should preview "Cyphers" in its place
+    And the row of "Notes" should preview "Notes" below it
+
+  Scenario: Hovering the middle of a section that cannot be paired previews nothing
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I hold the "Cyphers" section over the middle left of the "Stats" section
+    Then no drop preview should be shown
+
   # Narrow screens: pairs stack, so dropping only reorders
   Scenario: On a narrow screen dropping on the middle of a section reorders
     Given the viewport is 768 pixels wide

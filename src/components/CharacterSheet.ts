@@ -65,17 +65,19 @@ export class CharacterSheet {
   /**
    * Render a layout item (single or grid)
    */
-  private renderLayoutItem(item: LayoutItem): TemplateResult {
+  private renderLayoutItem(item: LayoutItem, rowIndex: number): TemplateResult {
     if (item.type === "single") {
-      return this.renderDraggableSection(item.id);
+      return this.renderDraggableSection(item.id, rowIndex);
     }
 
     // Grid layout - two sections side by side
     const wrapperClass = this.isLayoutEditMode ? "layout-grid" : "";
+    const preview = this.drag.rowPreview(rowIndex);
 
     return html`
       <div
-        class="grid grid-cols-1 lg:grid-cols-2 gap-6 ${wrapperClass}"
+        class="grid grid-cols-1 lg:grid-cols-2 gap-6 ${wrapperClass} ${preview.classes}"
+        data-drop-bump-label=${preview.bumpLabel}
         data-testid="layout-grid-${item.items[0]}-${item.items[1]}"
       >
         ${this.renderDraggableSection(item.items[0])} ${this.renderDraggableSection(item.items[1])}
@@ -83,8 +85,12 @@ export class CharacterSheet {
     `;
   }
 
-  private renderDraggableSection(sectionId: SectionId): TemplateResult {
-    return this.drag.renderSection(sectionId, this.sections.getSectionTemplate(sectionId));
+  private renderDraggableSection(sectionId: SectionId, rowIndex?: number): TemplateResult {
+    return this.drag.renderSection(
+      sectionId,
+      this.sections.getSectionTemplate(sectionId),
+      rowIndex
+    );
   }
 
   /**
@@ -262,7 +268,9 @@ export class CharacterSheet {
 
   render(): TemplateResult {
     // Render sections based on layout order
-    const layoutSections = this.layout.map((item) => this.renderLayoutItem(item));
+    const layoutSections = this.layout.map((item, rowIndex) =>
+      this.renderLayoutItem(item, rowIndex)
+    );
 
     return html`
       <div class="min-h-screen p-4">
@@ -274,6 +282,8 @@ export class CharacterSheet {
           class="max-w-6xl mx-auto shadow rounded-lg p-6 parchment-container ${this.isLayoutEditMode
             ? "layout-edit-mode"
             : ""}"
+          @dragover=${(e: DragEvent) => this.drag.handleDragOver(e)}
+          @drop=${(e: DragEvent) => this.drag.handleDrop(e)}
         >
           ${this.header.render()} ${layoutSections}
         </div>

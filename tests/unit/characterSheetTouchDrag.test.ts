@@ -99,7 +99,7 @@ describe("CharacterSheet touch long-press drag", () => {
     touch(cyphers, "touchstart", [{ x: 20, y: 500 }]);
     vi.advanceTimersByTime(250);
     touch(cyphers, "touchmove", [{ x: 20, y: 120 }]);
-    expect(section("abilities").classList.contains("drop-target")).toBe(true);
+    expect(section("abilities").classList.contains("drop-line-before")).toBe(true);
     touch(cyphers, "touchend");
 
     const order = sectionOrder();

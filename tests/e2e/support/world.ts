@@ -38,6 +38,7 @@ export interface CustomWorld extends World {
   // section-rearrangement.steps.ts
   importedLayout?: Array<{ type: string; id: string }> | null;
   scrollYBeforeSwipe?: number;
+  heldDropTarget?: { name: string; box: { x: number; y: number; width: number; height: number } };
   // version-history.steps.ts
   originalCharacterName?: string;
   uploadedPortrait?: string;
@@ -65,6 +66,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   draggedCypherName?: string;
   importedLayout?: Array<{ type: string; id: string }> | null;
   scrollYBeforeSwipe?: number;
+  heldDropTarget?: { name: string; box: { x: number; y: number; width: number; height: number } };
   originalCharacterName?: string;
   uploadedPortrait?: string;
   savedTimestamp?: string | null;
