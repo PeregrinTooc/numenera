@@ -159,6 +159,23 @@ describe("layoutOperations", () => {
     });
   });
 
+  describe("applyDrop — pair with your own partner", () => {
+    it("swaps the pair's sides", () => {
+      const result = applyDrop(D, "attacks", {
+        kind: "pair",
+        targetId: "specialAbilities",
+        side: "left",
+      });
+      expect(result).toEqual([...D.slice(0, 4), g("attacks", "specialAbilities"), ...D.slice(5)]);
+    });
+
+    it("returns null for the side the source already has", () => {
+      expect(
+        applyDrop(D, "attacks", { kind: "pair", targetId: "specialAbilities", side: "right" })
+      ).toBeNull();
+    });
+  });
+
   describe("rowIndexOf", () => {
     it("finds a single section's row and a paired section's row", () => {
       expect(rowIndexOf(D, "abilities")).toBe(3);

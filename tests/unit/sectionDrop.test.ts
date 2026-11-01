@@ -74,6 +74,10 @@ describe("resolveDropIntent — pairing on a wide layout", () => {
     });
   });
 
+  it("is null on the own partner's half that keeps the source's side", () => {
+    expect(resolveDropIntent(D, "attacks", "specialAbilities", "right", true)).toBeNull();
+  });
+
   it("is null when the hovered section cannot be paired", () => {
     expect(resolveDropIntent(D, "items", "stats", "left", true)).toBeNull();
   });

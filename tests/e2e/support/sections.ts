@@ -77,7 +77,7 @@ export function zonePoint(
   return { x: box.x + box.width * fx, y: box.y + box.height * fy };
 }
 
-/** Drag a section with the real mouse and drop it on a zone of another. */
+/** Drag a section by its heading with the real mouse and drop it on a zone of another. */
 export async function dragSectionTo(
   page: Page,
   sourceName: string,
@@ -91,7 +91,10 @@ export async function dragSectionTo(
       throw new Error(`Section ${targetName} has no bounding box (not visible?)`);
     }
     const point = zonePoint(box, zone);
+    // Grab the source by its heading: a card inside it would start the
+    // card's own drag instead (as for a user).
     await sectionLocator(page, sourceName).dragTo(target, {
+      sourcePosition: { x: 20, y: 10 },
       targetPosition: { x: point.x - box.x, y: point.y - box.y },
     });
   });

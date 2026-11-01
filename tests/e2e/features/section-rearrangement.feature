@@ -87,6 +87,12 @@ Feature: Section Re-arrangement
     And "Attacks" should be in its own row
     And the "Attacks" section should appear before the "Special Abilities" section
 
+  Scenario: Swap the two sections of a pair
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I drag the "Attacks" section onto the middle left of the "Special Abilities" section
+    Then the grid should show "Attacks" on the left and "Special Abilities" on the right
+
   # Leaving a pair
   Scenario: Split sections from grid by dragging out
     Given layout edit mode is active

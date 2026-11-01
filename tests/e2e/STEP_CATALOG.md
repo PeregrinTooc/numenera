@@ -27,7 +27,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 ## Summary
 
 - Step definitions: **701** in 51 files
-- Feature step lines: **2191**
+- Feature step lines: **2195**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -630,9 +630,9 @@ pattern this script does not understand):
 | --- | --- | ---: | ---: |
 | Given | `{string} and {string} are in a grid` | 1 | 47 |
 | Then | `{string} should be in its own row` | 4 | 72 |
-| When | `I drag the {string} section onto the {zone} of the {string} section` | 6 | 11 |
+| When | `I drag the {string} section onto the {zone} of the {string} section` | 7 | 11 |
 | Then | `the {string} section should be the last section` | 2 | 37 |
-| Then | `the grid should show {string} on the left and {string} on the right` | 3 | 18 |
+| Then | `the grid should show {string} on the left and {string} on the right` | 4 | 18 |
 | Then | `the layout should still be the default layout` | 1 | 31 |
 
 ## i18n.steps.ts
@@ -690,7 +690,7 @@ pattern this script does not understand):
 | Then | `I should see the {string} button` | 1 | 80 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 36 |
 | Then | `it should be touch-friendly` | 1 | 91 |
-| Given | `layout edit mode is active` | 14 | 48 |
+| Given | `layout edit mode is active` | 15 | 48 |
 | Then | `layout edit mode should be inactive` | 1 | 59 |
 | Then | `the {string} option should be enabled` | 1 | 134 |
 | Then | `the layout should return to the default arrangement` | 1 | 122 |
@@ -1046,5 +1046,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 23 | 9 |
+| Given | `the viewport is {int} pixels wide` | 24 | 9 |
 
