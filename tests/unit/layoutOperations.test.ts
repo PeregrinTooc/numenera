@@ -72,6 +72,51 @@ describe("layoutOperations", () => {
     });
   });
 
+  describe("applyDrop — pair with a single section", () => {
+    it("pairs the source beside the target at the target's row, the source's old row closing up", () => {
+      expect(applyDrop(D, "cyphers", { kind: "pair", targetId: "items", side: "right" })).toEqual([
+        s("basicInfo"),
+        s("stats"),
+        s("recoveryDamage"),
+        s("abilities"),
+        g("specialAbilities", "attacks"),
+        g("items", "cyphers"),
+        g("background", "notes"),
+      ]);
+    });
+
+    it("puts the source on the left for the left side", () => {
+      expect(
+        applyDrop(D, "cyphers", { kind: "pair", targetId: "items", side: "left" })?.[5]
+      ).toEqual(g("cyphers", "items"));
+    });
+
+    it("leaves the partner of a source taken out of a pair as a single in place", () => {
+      expect(applyDrop(D, "attacks", { kind: "pair", targetId: "cyphers", side: "left" })).toEqual([
+        s("basicInfo"),
+        s("stats"),
+        s("recoveryDamage"),
+        s("abilities"),
+        s("specialAbilities"),
+        g("attacks", "cyphers"),
+        s("items"),
+        g("background", "notes"),
+      ]);
+    });
+
+    it("returns null when the source cannot be paired", () => {
+      expect(applyDrop(D, "stats", { kind: "pair", targetId: "items", side: "left" })).toBeNull();
+    });
+
+    it("returns null when the target cannot be paired", () => {
+      expect(applyDrop(D, "items", { kind: "pair", targetId: "stats", side: "left" })).toBeNull();
+    });
+
+    it("returns null when the target is the source itself", () => {
+      expect(applyDrop(D, "items", { kind: "pair", targetId: "items", side: "left" })).toBeNull();
+    });
+  });
+
   describe("rowIndexOf", () => {
     it("finds a single section's row and a paired section's row", () => {
       expect(rowIndexOf(D, "abilities")).toBe(3);

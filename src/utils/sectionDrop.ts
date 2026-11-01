@@ -40,9 +40,12 @@ export function resolveDropIntent(
   zone: DropZone,
   _wide: boolean
 ): DropIntent | null {
-  // Pairing comes later; until then the middle zones drop nowhere
-  if (zone === "left" || zone === "right") return null;
-  const row = rowIndexOf(layout, targetId);
-  const intent: DropIntent = { kind: "gap", index: zone === "top" ? row : row + 1 };
+  let intent: DropIntent;
+  if (zone === "left" || zone === "right") {
+    intent = { kind: "pair", targetId, side: zone };
+  } else {
+    const row = rowIndexOf(layout, targetId);
+    intent = { kind: "gap", index: zone === "top" ? row : row + 1 };
+  }
   return applyDrop(layout, sourceId, intent) ? intent : null;
 }

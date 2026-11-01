@@ -26,10 +26,10 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **705** in 51 files
-- Feature step lines: **2178**
+- Step definitions: **702** in 51 files
+- Feature step lines: **2179**
 - Definitions with no feature usage: **0**
-- Feature lines matching no definition: **0**
+- Feature lines matching no definition: **1**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
@@ -57,7 +57,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 12 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
-| [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 10 | 0 |
+| [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 7 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
@@ -84,6 +84,13 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [version-history-shortcuts.steps.ts](#versionhistoryshortcutsstepsts) | 4 | 0 |
 | [version-history-squash-race.steps.ts](#versionhistorysquashracestepsts) | 3 | 0 |
 | [viewport.steps.ts](#viewportstepsts) | 1 | 0 |
+
+## ⚠️ Feature lines with no matching step definition
+
+These would be reported as *undefined* by Cucumber (or are matched by a
+pattern this script does not understand):
+
+- `section-rearrangement.feature:55` — I drag the "Cyphers" section onto the middle <side> of the "Items" section
 
 ## ability-enhancements.steps.ts
 
@@ -621,16 +628,13 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `{string} and {string} are in a grid` | 1 | 126 |
-| Then | `{string} and {string} should be displayed side by side in a grid` | 1 | 51 |
-| Then | `{string} should be in its own row` | 2 | 170 |
-| When | `I attempt to drag {string} onto {string}` | 1 | 80 |
-| When | `I drag {string} out of the grid` | 1 | 151 |
-| When | `I drag the {string} section onto the {string} section` | 1 | 26 |
-| When | `I drag the {string} section onto the {zone} of the {string} section` | 2 | 9 |
-| Then | `no grid should be created` | 1 | 101 |
-| Then | `the {string} section should be the last section` | 1 | 16 |
-| Then | `the sections should remain in single-column layout` | 1 | 121 |
+| Given | `{string} and {string} are in a grid` | 1 | 47 |
+| Then | `{string} should be in its own row` | 2 | 91 |
+| When | `I drag {string} out of the grid` | 1 | 72 |
+| When | `I drag the {string} section onto the {zone} of the {string} section` | 3 | 11 |
+| Then | `the {string} section should be the last section` | 1 | 37 |
+| Then | `the grid should show {string} on the left and {string} on the right` | 1 | 18 |
+| Then | `the layout should still be the default layout` | 1 | 31 |
 
 ## i18n.steps.ts
 
@@ -1043,5 +1047,5 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 19 | 9 |
+| Given | `the viewport is {int} pixels wide` | 21 | 9 |
 

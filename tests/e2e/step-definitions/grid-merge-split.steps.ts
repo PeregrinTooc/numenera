@@ -5,6 +5,8 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
+import { DEFAULT_LAYOUT } from "@/types/layout";
+import { LAYOUT_STORAGE_KEY } from "@/storage/storageConstants";
 import { dragSectionTo, sectionId, sectionLocator, type SectionZone } from "../support/sections.js";
 
 When(
@@ -15,6 +17,25 @@ When(
 );
 
 Then(
+  "the grid should show {string} on the left and {string} on the right",
+  async function (this: CustomWorld, leftName: string, rightName: string) {
+    const page = this.page;
+    const grid = page.getByTestId(`layout-grid-${sectionId(leftName)}-${sectionId(rightName)}`);
+    await expect(grid).toBeVisible();
+    const left = await sectionLocator(page, leftName).boundingBox();
+    const right = await sectionLocator(page, rightName).boundingBox();
+    if (!left || !right) throw new Error("A paired section has no bounding box");
+    expect(left.x).toBeLessThan(right.x);
+  }
+);
+
+Then("the layout should still be the default layout", async function (this: CustomWorld) {
+  const stored = await this.page.evaluate((key) => localStorage.getItem(key), LAYOUT_STORAGE_KEY);
+  // Nothing saved means the app still uses DEFAULT_LAYOUT.
+  expect(stored === null ? DEFAULT_LAYOUT : JSON.parse(stored)).toEqual(DEFAULT_LAYOUT);
+});
+
+Then(
   "the {string} section should be the last section",
   async function (this: CustomWorld, sectionName: string) {
     const ids = await this.page
@@ -23,106 +44,6 @@ Then(
     expect(ids[ids.length - 1]).toBe(sectionId(sectionName));
   }
 );
-
-When(
-  "I drag the {string} section onto the {string} section",
-  async function (this: CustomWorld, sourceSection: string, targetSection: string) {
-    const page = this.page;
-
-    const sourceElement = sectionLocator(page, sourceSection);
-    const targetElement = sectionLocator(page, targetSection);
-
-    const sourceBox = await sourceElement.boundingBox();
-    const targetBox = await targetElement.boundingBox();
-
-    if (!sourceBox || !targetBox) {
-      throw new Error("Could not get bounding boxes for sections");
-    }
-
-    // Drag onto target (center of target)
-    await page.mouse.move(sourceBox.x + sourceBox.width / 2, sourceBox.y + sourceBox.height / 2);
-    await page.mouse.down();
-    await page.mouse.move(targetBox.x + targetBox.width / 2, targetBox.y + targetBox.height / 2);
-    await page.mouse.up();
-
-    await page.waitForTimeout(100);
-  }
-);
-
-Then(
-  "{string} and {string} should be displayed side by side in a grid",
-  async function (this: CustomWorld, section1: string, section2: string) {
-    const page = this.page;
-
-    const id1 = sectionId(section1);
-    const id2 = sectionId(section2);
-
-    // Check that both sections are within a grid container
-    const inGrid = await page.evaluate(
-      ({ id1, id2 }) => {
-        const section1 = document.querySelector(`[data-section-id="${id1}"]`);
-        const section2 = document.querySelector(`[data-section-id="${id2}"]`);
-
-        if (!section1 || !section2) return false;
-
-        // Check if they share a common grid parent
-        const parent1 = section1.closest(".layout-grid");
-        const parent2 = section2.closest(".layout-grid");
-
-        return parent1 !== null && parent1 === parent2;
-      },
-      { id1, id2 }
-    );
-
-    expect(inGrid).toBe(true);
-  }
-);
-
-When(
-  "I attempt to drag {string} onto {string}",
-  async function (this: CustomWorld, sourceSection: string, targetSection: string) {
-    const page = this.page;
-
-    // Try to drag - this may not work for non-eligible sections
-    const sourceElement = sectionLocator(page, sourceSection);
-    const targetElement = sectionLocator(page, targetSection);
-
-    const sourceBox = await sourceElement.boundingBox();
-    const targetBox = await targetElement.boundingBox();
-
-    if (sourceBox && targetBox) {
-      await page.mouse.move(sourceBox.x + sourceBox.width / 2, sourceBox.y + sourceBox.height / 2);
-      await page.mouse.down();
-      await page.mouse.move(targetBox.x + targetBox.width / 2, targetBox.y + targetBox.height / 2);
-      await page.mouse.up();
-    }
-  }
-);
-
-Then("no grid should be created", async function (this: CustomWorld) {
-  const page = this.page;
-
-  // Check that stats and basicInfo are not in a grid together
-  const inGrid = await page.evaluate(() => {
-    const stats = document.querySelector('[data-section-id="stats"]');
-    const basicInfo = document.querySelector('[data-section-id="basicInfo"]');
-
-    if (!stats || !basicInfo) return false;
-
-    const statsGrid = stats.closest(".layout-grid");
-    const basicInfoGrid = basicInfo.closest(".layout-grid");
-
-    // Neither should be in a grid, or they shouldn't share one
-    return statsGrid !== null && basicInfoGrid !== null && statsGrid === basicInfoGrid;
-  });
-
-  expect(inGrid).toBe(false);
-});
-
-Then("the sections should remain in single-column layout", async function (this: CustomWorld) {
-  // This is essentially the same as "no grid should be created"
-  // Both sections should be in single-column mode
-});
 
 Given(
   "{string} and {string} are in a grid",

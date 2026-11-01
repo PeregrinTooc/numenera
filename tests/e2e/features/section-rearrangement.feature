@@ -48,19 +48,28 @@ Feature: Section Re-arrangement
     When I reload the page
     Then the "Cyphers" section should still be at the top
 
-  # Grid Merging - Drag/Drop tests skipped for now (manual testing required)
-  @skip
-  Scenario: Merge sections into grid by dragging onto another section
-    Given layout edit mode is active
-    When I drag the "Background" section onto the "Notes" section
-    Then "Background" and "Notes" should be displayed side by side in a grid
+  # Pairing sections side by side
+  Scenario Outline: Pair two sections by dropping on the middle of one
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I drag the "Cyphers" section onto the middle <side> of the "Items" section
+    Then the grid should show "<left>" on the left and "<right>" on the right
 
-  @skip
-  Scenario: Cannot merge non-eligible sections into grid
-    Given layout edit mode is active
-    When I attempt to drag "Stats" onto "Basic Info"
-    Then no grid should be created
-    And the sections should remain in single-column layout
+    Examples:
+      | side  | left    | right   |
+      | right | Items   | Cyphers |
+      | left  | Cyphers | Items   |
+
+  Scenario Outline: Sections that cannot be paired are not paired
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I drag the "<source>" section onto the middle left of the "<target>" section
+    Then the layout should still be the default layout
+
+    Examples:
+      | source | target |
+      | Stats  | Items  |
+      | Items  | Stats  |
 
   # Grid Splitting - Drag/Drop tests skipped for now (manual testing required)
   @skip

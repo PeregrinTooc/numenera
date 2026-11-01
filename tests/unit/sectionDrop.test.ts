@@ -64,3 +64,17 @@ describe("resolveDropIntent — gaps", () => {
     expect(resolveDropIntent(D, "cyphers", "items", "top", true)).toBeNull();
   });
 });
+
+describe("resolveDropIntent — pairing on a wide layout", () => {
+  it("the middle zone of a pairable section pairs, on the side of the half", () => {
+    expect(resolveDropIntent(D, "cyphers", "items", "right", true)).toEqual({
+      kind: "pair",
+      targetId: "items",
+      side: "right",
+    });
+  });
+
+  it("is null when the hovered section cannot be paired", () => {
+    expect(resolveDropIntent(D, "items", "stats", "left", true)).toBeNull();
+  });
+});

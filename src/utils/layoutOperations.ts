@@ -12,7 +12,7 @@ import {
   isGridEligible,
   layoutsAreEqual,
 } from "@/types/layout";
-import { DropIntent } from "@/types/layoutDrop";
+import { DropIntent, PairSide } from "@/types/layoutDrop";
 
 /**
  * Index of the row holding `sectionId` (a single or either half of a pair),
@@ -29,24 +29,63 @@ export function rowIndexOf(layout: Layout, sectionId: SectionId): number {
  * leave the layout unchanged.
  */
 export function applyDrop(layout: Layout, sourceId: SectionId, intent: DropIntent): Layout | null {
-  if (intent.kind !== "gap") return null;
-
   const sourceRow = rowIndexOf(layout, sourceId);
   if (sourceRow === -1) return null;
 
-  const newLayout = cloneLayout(layout);
-  const item = newLayout[sourceRow];
-  let index = intent.index;
-  if (item.type === "single") {
-    newLayout.splice(sourceRow, 1);
-    if (index > sourceRow) index--;
-  } else {
-    // Taken out of a pair: the partner stays behind as a single
-    newLayout[sourceRow] = { type: "single", id: item.items[1 - item.items.indexOf(sourceId)] };
+  let result: Layout | null = null;
+  if (intent.kind === "gap") {
+    result = dropInGap(layout, sourceId, sourceRow, intent.index);
+  } else if (intent.kind === "pair") {
+    result = pairWith(layout, sourceId, sourceRow, intent.targetId, intent.side);
   }
-  newLayout.splice(index, 0, { type: "single", id: sourceId });
+  return result && !layoutsAreEqual(result, layout) ? result : null;
+}
 
-  return layoutsAreEqual(newLayout, layout) ? null : newLayout;
+/**
+ * A copy of `layout` with `sourceId` taken out of row `sourceRow`: a single
+ * row closes up, a pair leaves the partner behind as a single in place.
+ */
+function withoutSource(
+  layout: Layout,
+  sourceId: SectionId,
+  sourceRow: number
+): { rest: Layout; rowClosed: boolean } {
+  const rest = cloneLayout(layout);
+  const item = rest[sourceRow];
+  if (item.type === "single") {
+    rest.splice(sourceRow, 1);
+    return { rest, rowClosed: true };
+  }
+  rest[sourceRow] = { type: "single", id: item.items[1 - item.items.indexOf(sourceId)] };
+  return { rest, rowClosed: false };
+}
+
+function dropInGap(layout: Layout, sourceId: SectionId, sourceRow: number, index: number): Layout {
+  const { rest, rowClosed } = withoutSource(layout, sourceId, sourceRow);
+  rest.splice(rowClosed && index > sourceRow ? index - 1 : index, 0, {
+    type: "single",
+    id: sourceId,
+  });
+  return rest;
+}
+
+function pairWith(
+  layout: Layout,
+  sourceId: SectionId,
+  sourceRow: number,
+  targetId: SectionId,
+  side: PairSide
+): Layout | null {
+  if (!isGridEligible(sourceId) || !isGridEligible(targetId)) return null;
+  const { rest } = withoutSource(layout, sourceId, sourceRow);
+  const targetRow = rowIndexOf(rest, targetId);
+  const target = rest[targetRow];
+  if (target?.type !== "single") return null;
+  rest[targetRow] = {
+    type: "grid",
+    items: side === "left" ? [sourceId, targetId] : [targetId, sourceId],
+  };
+  return rest;
 }
 
 /**
