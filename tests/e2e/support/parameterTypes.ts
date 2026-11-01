@@ -1,6 +1,7 @@
 import { defineParameterType } from "@cucumber/cucumber";
 import { CARD_CONFIGS } from "./cardTestFixtures.js";
 import { FIELD_TEST_IDS } from "./fields.js";
+import type { SectionZone } from "./sections.js";
 
 // Maps the Gherkin word for a character resource to its field name on
 // Character. Consumed by Phase 3.7's this.setup.character(overrides).
@@ -50,4 +51,11 @@ defineParameterType({
   name: "cardTypes",
   regexp: /special abilities|abilities|cyphers|artifacts|oddities|attacks/,
   transformer: (s: string) => EMPTY_STATE_TEST_IDS[s],
+});
+
+// A drop zone on a section, e.g. "the bottom edge of the "Items" section".
+defineParameterType({
+  name: "zone",
+  regexp: /top edge|bottom edge|middle left|middle right/,
+  transformer: (s: string) => s as SectionZone,
 });

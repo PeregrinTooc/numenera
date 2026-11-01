@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **703** in 51 files
-- Feature step lines: **2172**
+- Step definitions: **705** in 51 files
+- Feature step lines: **2178**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **0**
 
@@ -57,7 +57,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 12 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
-| [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 8 | 0 |
+| [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 10 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
@@ -621,14 +621,16 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `{string} and {string} are in a grid` | 1 | 109 |
-| Then | `{string} and {string} should be displayed side by side in a grid` | 1 | 34 |
-| Then | `{string} should be in its own row` | 2 | 153 |
-| When | `I attempt to drag {string} onto {string}` | 1 | 63 |
-| When | `I drag {string} out of the grid` | 1 | 134 |
-| When | `I drag the {string} section onto the {string} section` | 1 | 9 |
-| Then | `no grid should be created` | 1 | 84 |
-| Then | `the sections should remain in single-column layout` | 1 | 104 |
+| Given | `{string} and {string} are in a grid` | 1 | 126 |
+| Then | `{string} and {string} should be displayed side by side in a grid` | 1 | 51 |
+| Then | `{string} should be in its own row` | 2 | 170 |
+| When | `I attempt to drag {string} onto {string}` | 1 | 80 |
+| When | `I drag {string} out of the grid` | 1 | 151 |
+| When | `I drag the {string} section onto the {string} section` | 1 | 26 |
+| When | `I drag the {string} section onto the {zone} of the {string} section` | 2 | 9 |
+| Then | `no grid should be created` | 1 | 101 |
+| Then | `the {string} section should be the last section` | 1 | 16 |
+| Then | `the sections should remain in single-column layout` | 1 | 121 |
 
 ## i18n.steps.ts
 
@@ -685,7 +687,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | Then | `I should see the {string} button` | 1 | 80 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 36 |
 | Then | `it should be touch-friendly` | 1 | 91 |
-| Given | `layout edit mode is active` | 10 | 48 |
+| Given | `layout edit mode is active` | 12 | 48 |
 | Then | `layout edit mode should be inactive` | 1 | 59 |
 | Then | `the {string} option should be enabled` | 1 | 134 |
 | Then | `the layout should return to the default arrangement` | 1 | 122 |
@@ -770,7 +772,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | When | `I exit layout edit mode` | 1 | 120 |
 | Given | `I have moved the {string} section to the top` | 1 | 91 |
 | Given | `I have reordered sections` | 1 | 10 |
-| Then | `the {string} section should appear before the {string} section` | 3 | 60 |
+| Then | `the {string} section should appear before the {string} section` | 4 | 60 |
 | Then | `the {string} section should still be at the top` | 1 | 131 |
 | Then | `the layout should be saved` | 1 | 32 |
 | Then | `the sections should remain in the new order` | 1 | 43 |

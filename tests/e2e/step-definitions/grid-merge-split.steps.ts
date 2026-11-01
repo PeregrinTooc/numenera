@@ -5,7 +5,24 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
-import { sectionId, sectionLocator } from "../support/sections.js";
+import { dragSectionTo, sectionId, sectionLocator, type SectionZone } from "../support/sections.js";
+
+When(
+  "I drag the {string} section onto the {zone} of the {string} section",
+  async function (this: CustomWorld, source: string, zone: SectionZone, target: string) {
+    await dragSectionTo(this.page, source, target, zone);
+  }
+);
+
+Then(
+  "the {string} section should be the last section",
+  async function (this: CustomWorld, sectionName: string) {
+    const ids = await this.page
+      .locator("[data-section-id]")
+      .evaluateAll((els) => els.map((el) => el.getAttribute("data-section-id")));
+    expect(ids[ids.length - 1]).toBe(sectionId(sectionName));
+  }
+);
 
 When(
   "I drag the {string} section onto the {string} section",

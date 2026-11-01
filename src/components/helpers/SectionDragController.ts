@@ -4,7 +4,8 @@
 import { html, nothing, TemplateResult } from "lit-html";
 import { Layout, SectionId, isSectionId } from "@/types/layout";
 import { DropIntent } from "@/types/layoutDrop";
-import { rowIndexOf } from "@/utils/layoutOperations";
+import { dropZoneAt, resolveDropIntent } from "@/utils/sectionDrop";
+import { isWideLayout } from "@/utils/viewport";
 import { LongPressDrag } from "@/components/helpers/LongPressDrag";
 
 /** What the controller needs from the sheet that hosts it. */
@@ -20,7 +21,7 @@ export interface SectionDragHost {
 
 export class SectionDragController {
   private draggedSectionId: SectionId | null = null;
-  /** The section under the pointer, styled as the drop target. */
+  /** The section under the pointer while a drop there would do something. */
   private dropTargetId: SectionId | null = null;
   /** What dropping now would do; null when a drop would do nothing. */
   private intent: DropIntent | null = null;
@@ -101,9 +102,9 @@ export class SectionDragController {
         draggable=${draggable}
         @dragstart=${this.dragStartListener}
         @dragend=${() => this.clearDragState()}
-        @dragover=${(e: DragEvent) => this.handleDragOver(e, sectionId)}
+        @dragover=${(e: DragEvent) => this.handleDragOver(e)}
         @dragleave=${() => this.handleDragLeave()}
-        @drop=${(e: DragEvent) => this.handleDrop(e, sectionId)}
+        @drop=${(e: DragEvent) => this.handleDrop(e)}
         @touchstart=${editMode ? this.touchStartListener : nothing}
         @touchmove=${editMode ? this.touchMoveListener : nothing}
         @touchend=${editMode ? () => this.longPress.end() : nothing}
@@ -152,16 +153,18 @@ export class SectionDragController {
     this.host.requestRender();
   }
 
-  private handleDragOver(e: DragEvent, targetId: SectionId): void {
+  private handleDragOver(e: DragEvent): void {
     if (!this.host.isEditMode() || !this.draggedSectionId) return;
-    if (targetId === this.draggedSectionId) return;
+
+    // currentTarget is the section wrapper even when the pointer is over a
+    // card nested inside it, so the zones span the whole section.
+    this.hover(e.currentTarget as HTMLElement, e.clientX, e.clientY);
+    if (!this.intent) return; // not a drop target: the browser shows "no drop"
 
     e.preventDefault();
     if (e.dataTransfer) {
       e.dataTransfer.dropEffect = "move";
     }
-
-    this.hover(targetId);
   }
 
   private handleDragLeave(): void {
@@ -169,10 +172,9 @@ export class SectionDragController {
     // when entering child elements. We let dragover set the target.
   }
 
-  private handleDrop(e: DragEvent, targetId: SectionId): void {
+  private handleDrop(e: DragEvent): void {
     e.preventDefault();
     if (!this.host.isEditMode() || !this.draggedSectionId) return;
-    if (targetId === this.draggedSectionId) return;
 
     const sourceId = this.draggedSectionId;
     const intent = this.intent;
@@ -183,16 +185,25 @@ export class SectionDragController {
   }
 
   /**
-   * The pointer is over `targetId` (null: over no other section): update the
-   * drop intent, re-rendering only when the drop target changes
+   * The pointer is at (`x`, `y`) over section wrapper `target` (null: over no
+   * section): update the drop intent from the zone under the pointer,
+   * re-rendering only when the intent changes
    */
-  private hover(targetId: SectionId | null): void {
-    if (targetId === this.dropTargetId) return;
-    this.dropTargetId = targetId;
-    this.intent =
-      targetId === null
-        ? null
-        : { kind: "gap", index: rowIndexOf(this.host.getLayout(), targetId) };
+  private hover(target: HTMLElement | null, x: number, y: number): void {
+    const sourceId = this.draggedSectionId;
+    const targetId = target?.dataset.sectionId;
+    let intent: DropIntent | null = null;
+    if (sourceId && target && targetId && isSectionId(targetId)) {
+      const wide = isWideLayout();
+      const zone = dropZoneAt(target.getBoundingClientRect(), x, y, wide);
+      intent = resolveDropIntent(this.host.getLayout(), sourceId, targetId, zone, wide);
+    }
+
+    // Intents are small plain objects built in one place, so equal intents
+    // serialise identically.
+    if (JSON.stringify(intent) === JSON.stringify(this.intent)) return;
+    this.intent = intent;
+    this.dropTargetId = intent && targetId && isSectionId(targetId) ? targetId : null;
     this.host.requestRender();
   }
 
@@ -242,15 +253,11 @@ export class SectionDragController {
   }
 
   /**
-   * During a touch drag, mark the section under the finger as the drop target
+   * During a touch drag, update the drop intent from the section under the finger
    */
   private handleTouchDragHover(x: number, y: number): void {
     const hovered = document.elementFromPoint(x, y)?.closest<HTMLElement>("[data-section-id]");
-    const hoveredId = hovered?.dataset.sectionId;
-    const targetId =
-      hoveredId && isSectionId(hoveredId) && hoveredId !== this.draggedSectionId ? hoveredId : null;
-
-    this.hover(targetId);
+    this.hover(hovered ?? null, x, y);
   }
 
   /**

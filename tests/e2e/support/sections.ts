@@ -46,25 +46,55 @@ export async function withFullHeightViewport<T>(page: Page, action: () => Promis
   }
 }
 
-/** Drag a section with the real mouse and drop it near the top of another. */
-export async function dragSectionTo(
-  page: Page,
-  sourceName: string,
-  targetName: string
-): Promise<void> {
-  await withFullHeightViewport(page, async () => {
-    await sectionLocator(page, sourceName).dragTo(sectionLocator(page, targetName), {
-      targetPosition: { x: 10, y: 10 },
-    });
-  });
-}
-
 /** How long E2E long-presses hold — safely above the app's 250ms threshold. */
 export const LONG_PRESS_HOLD_MS = 300;
 
 export interface Point {
   x: number;
   y: number;
+}
+
+/** A drop zone on a section, as written in Gherkin. */
+export type SectionZone = "top edge" | "bottom edge" | "middle left" | "middle right";
+
+/**
+ * A point inside `zone` of a section's bounding box: the edges at 10 % / 90 %
+ * of its height (centred horizontally), the middles at 25 % / 75 % of its
+ * width (centred vertically). Clear of the zone boundaries at 25 %, 50 % and
+ * 75 % of the height.
+ */
+export function zonePoint(
+  box: { x: number; y: number; width: number; height: number },
+  zone: SectionZone
+): Point {
+  const fractions: Record<SectionZone, [number, number]> = {
+    "top edge": [0.5, 0.1],
+    "bottom edge": [0.5, 0.9],
+    "middle left": [0.25, 0.5],
+    "middle right": [0.75, 0.5],
+  };
+  const [fx, fy] = fractions[zone];
+  return { x: box.x + box.width * fx, y: box.y + box.height * fy };
+}
+
+/** Drag a section with the real mouse and drop it on a zone of another. */
+export async function dragSectionTo(
+  page: Page,
+  sourceName: string,
+  targetName: string,
+  zone: SectionZone = "top edge"
+): Promise<void> {
+  await withFullHeightViewport(page, async () => {
+    const target = sectionLocator(page, targetName);
+    const box = await target.boundingBox();
+    if (!box) {
+      throw new Error(`Section ${targetName} has no bounding box (not visible?)`);
+    }
+    const point = zonePoint(box, zone);
+    await sectionLocator(page, sourceName).dragTo(target, {
+      targetPosition: { x: point.x - box.x, y: point.y - box.y },
+    });
+  });
 }
 
 /**

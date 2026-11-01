@@ -91,6 +91,10 @@ describe("CharacterSheet touch long-press drag", () => {
   it("moves a long-pressed section before the section it is released over", () => {
     const cyphers = section("cyphers");
     vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("abilities"));
+    // jsdom lays nothing out; y = 120 must fall in the top zone of Abilities.
+    vi.spyOn(section("abilities"), "getBoundingClientRect").mockReturnValue(
+      new globalThis.DOMRect(0, 100, 800, 400)
+    );
 
     touch(cyphers, "touchstart", [{ x: 20, y: 500 }]);
     vi.advanceTimersByTime(250);

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from "vitest";
-import { isPhoneViewport } from "@/utils/viewport";
+import { isPhoneViewport, isWideLayout } from "@/utils/viewport";
 
 describe("isPhoneViewport", () => {
   afterEach(() => {
@@ -34,5 +34,33 @@ describe("isPhoneViewport", () => {
     mockMatchMedia(true);
 
     expect(isPhoneViewport()).toBe(false);
+  });
+});
+
+describe("isWideLayout", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  function mockMatchMedia(matchesLgAndUp: boolean): void {
+    window.matchMedia = vi.fn(
+      (query: string) =>
+        ({
+          matches: query === "(min-width: 64rem)" ? matchesLgAndUp : false,
+          media: query,
+        }) as unknown as MediaQueryList
+    );
+  }
+
+  it("is true at or above Tailwind's lg breakpoint, where pairs render side by side", () => {
+    mockMatchMedia(true);
+
+    expect(isWideLayout()).toBe(true);
+  });
+
+  it("is false below the lg breakpoint, where pairs stack", () => {
+    mockMatchMedia(false);
+
+    expect(isWideLayout()).toBe(false);
   });
 });

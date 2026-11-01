@@ -10,3 +10,12 @@
 export function isPhoneViewport(): boolean {
   return !window.matchMedia("(min-width: 768px)").matches;
 }
+
+/**
+ * Pairs of sections render side by side only from Tailwind's `lg` breakpoint
+ * (64rem, `lg:grid-cols-2` in CharacterSheet); below it they stack. Section
+ * drag-and-drop offers pairing only where pairs are visible side by side.
+ */
+export function isWideLayout(): boolean {
+  return window.matchMedia("(min-width: 64rem)").matches;
+}

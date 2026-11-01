@@ -31,6 +31,16 @@ Feature: Section Re-arrangement
     When I drag the "Cyphers" section above the "Abilities" section
     Then the "Cyphers" section should appear before the "Abilities" section
 
+  Scenario: Drop a section below another by its bottom edge
+    Given layout edit mode is active
+    When I drag the "Abilities" section onto the bottom edge of the "Items" section
+    Then the "Items" section should appear before the "Abilities" section
+
+  Scenario: Move a section to the end of the sheet
+    Given layout edit mode is active
+    When I drag the "Abilities" section onto the bottom edge of the "Notes" section
+    Then the "Abilities" section should be the last section
+
   Scenario: Layout persists after page reload
     Given layout edit mode is active
     And I have moved the "Cyphers" section to the top
