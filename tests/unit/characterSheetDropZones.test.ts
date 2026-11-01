@@ -92,4 +92,20 @@ describe("CharacterSheet section drop zones", () => {
     const order = sectionOrder();
     expect(order.indexOf("cyphers")).toBe(order.indexOf("abilities") + 1);
   });
+
+  it("dragging a card inside a paired section reorders cards, not the section", () => {
+    mountSheet(createCharacterWithItems());
+    placeSection("attacks", 400, 1000, 400, 200);
+    const cards = section("attacks").querySelectorAll('[draggable="true"]');
+    if (cards.length < 2) throw new Error("Attacks needs two cards");
+
+    // The card is the drag source: dragstart starts on it and bubbles out.
+    mouseDrag(cards[0], "dragstart");
+    mouseDrag(cards[1], "dragover", 600, 1180);
+    mouseDrag(cards[1], "drop", 600, 1180);
+
+    expect(
+      document.querySelector('[data-testid="layout-grid-specialAbilities-attacks"]')
+    ).not.toBeNull();
+  });
 });

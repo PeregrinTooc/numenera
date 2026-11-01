@@ -144,6 +144,9 @@ export class SectionDragController {
       return;
     }
     if (!this.host.isEditMode()) return;
+    // A card inside the section is the drag source: that is the card's own
+    // reorder drag, not a section drag.
+    if (e.target !== e.currentTarget) return;
 
     this.draggedSectionId = sectionId;
     if (e.dataTransfer) {
