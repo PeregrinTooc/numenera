@@ -12,8 +12,12 @@ import {
 } from "@/utils/dropPreview";
 import { t } from "@/i18n/index";
 import { dropZoneAt, resolveDropIntent } from "@/utils/sectionDrop";
+import { applyDrop } from "@/utils/layoutOperations";
 import { isWideLayout } from "@/utils/viewport";
 import { LongPressDrag } from "@/components/helpers/LongPressDrag";
+
+/** How long a drop intent must hold before the sheet shows its result. */
+export const LIVE_PREVIEW_DELAY_MS = 300;
 
 /** What the controller needs from the sheet that hosts it. */
 export interface SectionDragHost {
@@ -22,8 +26,8 @@ export interface SectionDragHost {
   requestRender(): void;
   /** The layout the drop intents refer to. */
   getLayout(): Layout;
-  /** A section was dropped: apply `intent` to the layout. */
-  onDrop(sourceId: SectionId, intent: DropIntent): void;
+  /** A section was dropped: adopt, persist and render `layout`. */
+  commitLayout(layout: Layout): void;
 }
 
 export class SectionDragController {
@@ -32,6 +36,10 @@ export class SectionDragController {
   private intent: DropIntent | null = null;
   /** What to draw for `intent`. */
   private preview: DropPreview = {};
+  /** The layout shown after the intent held still: not saved until the drop. */
+  private previewedLayout: Layout | null = null;
+  /** Pending switch to the live preview of `intent`. */
+  private dwellTimer: ReturnType<typeof setTimeout> | null = null;
 
   /** Touch long-press → section drag; mouse drags use native HTML5 DnD. */
   private readonly longPress = new LongPressDrag<SectionId>({
@@ -192,7 +200,8 @@ export class SectionDragController {
     const section =
       e.target instanceof Element ? e.target.closest<HTMLElement>("[data-section-id]") : null;
     if (section) this.hover(section, e.clientX, e.clientY);
-    if (!this.intent) return; // not a drop target: the browser shows "no drop"
+    // Not a drop target: the browser shows "no drop"
+    if (!this.intent && !this.previewedLayout) return;
 
     e.preventDefault();
     if (e.dataTransfer) {
@@ -207,12 +216,15 @@ export class SectionDragController {
   handleDrop(e: DragEvent): void {
     if (!this.host.isEditMode() || !this.draggedSectionId) return;
     e.preventDefault();
+    this.drop();
+  }
 
-    const sourceId = this.draggedSectionId;
-    const intent = this.intent;
-    this.draggedSectionId = null;
-    this.setIntent(null);
-    if (intent) this.host.onDrop(sourceId, intent);
+  /**
+   * The layout to render while a live preview is shown (null: none, render
+   * the sheet's own layout)
+   */
+  liveLayout(): Layout | null {
+    return this.previewedLayout;
   }
 
   /**
@@ -227,14 +239,43 @@ export class SectionDragController {
     if (sourceId && target && targetId && isSectionId(targetId)) {
       const wide = isWideLayout();
       const zone = dropZoneAt(target.getBoundingClientRect(), x, y, wide);
-      intent = resolveDropIntent(this.host.getLayout(), sourceId, targetId, zone, wide);
+      intent = resolveDropIntent(this.workingLayout(), sourceId, targetId, zone, wide);
     }
 
     // Intents are small plain objects built in one place, so equal intents
     // serialise identically.
     if (JSON.stringify(intent) === JSON.stringify(this.intent)) return;
     this.setIntent(intent);
+    this.restartDwell();
     this.host.requestRender();
+  }
+
+  /**
+   * Start waiting for the current intent to hold still; any pending wait for
+   * an earlier intent is dropped
+   */
+  private restartDwell(): void {
+    if (this.dwellTimer !== null) clearTimeout(this.dwellTimer);
+    this.dwellTimer = null;
+    if (!this.intent) return; // a no-op zone keeps the current live preview
+    this.dwellTimer = setTimeout(() => this.showLivePreview(), LIVE_PREVIEW_DELAY_MS);
+  }
+
+  /**
+   * The intent held still: show its result. Later hovers build on it.
+   */
+  private showLivePreview(): void {
+    this.dwellTimer = null;
+    const sourceId = this.draggedSectionId;
+    if (!sourceId || !this.intent) return;
+    this.previewedLayout = applyDrop(this.workingLayout(), sourceId, this.intent);
+    this.setIntent(null);
+    this.host.requestRender();
+  }
+
+  /** The layout hovers are resolved against: the live preview, else the sheet's */
+  private workingLayout(): Layout {
+    return this.previewedLayout ?? this.host.getLayout();
   }
 
   /**
@@ -290,25 +331,35 @@ export class SectionDragController {
   }
 
   /**
-   * Touch drag released: apply the drop intent, if any
+   * Touch drag released: drop
    */
   private handleTouchDrop(): void {
+    this.drop();
+  }
+
+  /**
+   * The drag ended in a drop: commit the intent's result, else the live
+   * preview on show. With neither, the drag just ends.
+   */
+  private drop(): void {
     const sourceId = this.draggedSectionId;
-    const intent = this.intent;
-    if (sourceId && intent) {
-      this.draggedSectionId = null;
-      this.setIntent(null);
-      this.host.onDrop(sourceId, intent); // persists and re-renders
-    } else {
+    const layout =
+      sourceId && this.intent
+        ? applyDrop(this.workingLayout(), sourceId, this.intent)
+        : this.previewedLayout;
+    if (!layout) {
       this.clearDragState();
+      return;
     }
+    this.resetDragState();
+    this.host.commitLayout(layout); // persists and re-renders
   }
 
   private setIntent(intent: DropIntent | null): void {
     this.intent = intent;
     this.preview =
       intent && this.draggedSectionId
-        ? describeDropPreview(this.host.getLayout(), this.draggedSectionId, intent)
+        ? describeDropPreview(this.workingLayout(), this.draggedSectionId, intent)
         : {};
   }
 
@@ -316,9 +367,17 @@ export class SectionDragController {
    * Clear drag and preview styling and re-render
    */
   private clearDragState(): void {
+    this.resetDragState();
+    this.host.requestRender();
+  }
+
+  /** Forget the drag, its intent and any live preview (which is not saved) */
+  private resetDragState(): void {
+    if (this.dwellTimer !== null) clearTimeout(this.dwellTimer);
+    this.dwellTimer = null;
+    this.previewedLayout = null;
     this.draggedSectionId = null;
     this.setIntent(null);
-    this.host.requestRender();
   }
 }
 

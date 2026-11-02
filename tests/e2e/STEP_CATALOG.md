@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **706** in 52 files
-- Feature step lines: **2221**
+- Step definitions: **708** in 52 files
+- Feature step lines: **2234**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -64,7 +64,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 13 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
-| [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 5 | 0 |
+| [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 7 | 0 |
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
 | [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 5 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
@@ -633,8 +633,8 @@ pattern this script does not understand):
 | Then | `{string} should be in its own row` | 8 | 72 |
 | When | `I drag the {string} section onto the {zone} of the {string} section` | 9 | 11 |
 | Then | `the {string} section should be the last section` | 2 | 37 |
-| Then | `the grid should show {string} on the left and {string} on the right` | 4 | 18 |
-| Then | `the layout should still be the default layout` | 1 | 31 |
+| Then | `the grid should show {string} on the left and {string} on the right` | 5 | 18 |
+| Then | `the layout should still be the default layout` | 3 | 31 |
 
 ## i18n.steps.ts
 
@@ -691,7 +691,7 @@ pattern this script does not understand):
 | Then | `I should see the {string} button` | 1 | 80 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 36 |
 | Then | `it should be touch-friendly` | 1 | 91 |
-| Given | `layout edit mode is active` | 20 | 48 |
+| Given | `layout edit mode is active` | 22 | 48 |
 | Then | `layout edit mode should be inactive` | 1 | 59 |
 | Then | `the {string} option should be enabled` | 1 | 134 |
 | Then | `the layout should return to the default arrangement` | 1 | 122 |
@@ -772,11 +772,13 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I hold the {string} section over the {zone} of the {string} section` | 3 | 31 |
-| Then | `no drop preview should be shown` | 1 | 87 |
-| Then | `the {string} section should preview {string} in its place` | 1 | 66 |
-| Then | `the {string} section should preview {string} on its right` | 1 | 56 |
-| Then | `the row of {string} should preview {string} below it` | 1 | 76 |
+| When | `I hold the {string} section over the {zone} of the {string} section` | 5 | 31 |
+| When | `I keep still for a moment` | 2 | 60 |
+| When | `I release the section outside the sheet` | 1 | 65 |
+| Then | `no drop preview should be shown` | 1 | 106 |
+| Then | `the {string} section should preview {string} in its place` | 1 | 85 |
+| Then | `the {string} section should preview {string} on its right` | 1 | 75 |
+| Then | `the row of {string} should preview {string} below it` | 1 | 95 |
 
 ## section-reordering.steps.ts
 
@@ -786,7 +788,7 @@ pattern this script does not understand):
 | When | `I exit layout edit mode` | 1 | 120 |
 | Given | `I have moved the {string} section to the top` | 1 | 91 |
 | Given | `I have reordered sections` | 1 | 10 |
-| Then | `the {string} section should appear before the {string} section` | 8 | 60 |
+| Then | `the {string} section should appear before the {string} section` | 9 | 60 |
 | Then | `the {string} section should still be at the top` | 1 | 131 |
 | Then | `the layout should be saved` | 1 | 32 |
 | Then | `the sections should remain in the new order` | 1 | 43 |
@@ -1057,5 +1059,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 29 | 9 |
+| Given | `the viewport is {int} pixels wide` | 31 | 9 |
 

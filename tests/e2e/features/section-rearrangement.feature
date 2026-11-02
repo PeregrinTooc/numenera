@@ -121,6 +121,23 @@ Feature: Section Re-arrangement
     When I hold the "Cyphers" section over the middle left of the "Stats" section
     Then no drop preview should be shown
 
+  Scenario: Holding still over a section shows the resulting layout before the drop
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I hold the "Cyphers" section over the middle right of the "Items" section
+    And I keep still for a moment
+    Then the grid should show "Items" on the left and "Cyphers" on the right
+    And the layout should still be the default layout
+
+  Scenario: Releasing outside the sheet after a live preview restores the layout
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I hold the "Cyphers" section over the middle right of the "Items" section
+    And I keep still for a moment
+    And I release the section outside the sheet
+    Then the "Cyphers" section should appear before the "Items" section
+    And the layout should still be the default layout
+
   # Narrow screens: pairs stack, so dropping only reorders
   Scenario: On a narrow screen dropping on the middle of a section reorders
     Given the viewport is 768 pixels wide

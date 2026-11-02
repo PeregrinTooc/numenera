@@ -33,6 +33,10 @@ When(
   "I hold the {string} section over the {zone} of the {string} section",
   async function (this: CustomWorld, source: string, zone: SectionZone, target: string) {
     const page = this.page;
+    // The live preview appears after the pointer has been still for a while;
+    // a paused clock keeps it from appearing until a step advances time.
+    await page.clock.install();
+    await page.clock.pauseAt(Date.now() + 1000);
     // Not restored: the drag stays held into the Then steps.
     await growViewportToFullHeight(page);
     const box = await sectionLocator(page, target).boundingBox();
@@ -53,6 +57,21 @@ When(
     this.heldDropTarget = { name: target, box };
   }
 );
+
+When("I keep still for a moment", async function (this: CustomWorld) {
+  // Past the app's 300 ms live-preview delay
+  await this.page.clock.runFor(350);
+});
+
+When("I release the section outside the sheet", async function (this: CustomWorld) {
+  const page = this.page;
+  const sheet = await page.locator(".parchment-container").boundingBox();
+  if (!sheet) throw new Error("The sheet has no bounding box");
+  // Left of the sheet, at the same height as before: no drop target there
+  await page.mouse.move(sheet.x / 2, sheet.y + 100, { steps: 3 });
+  await page.mouse.move(sheet.x / 2, sheet.y + 101);
+  await page.mouse.up();
+});
 
 Then(
   "the {string} section should preview {string} on its right",

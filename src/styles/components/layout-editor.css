@@ -236,6 +236,52 @@
   top: calc(100% + 0.25rem);
 }
 
+/* "Charging" cue: each overlay fills in over the live-preview delay
+   (LIVE_PREVIEW_DELAY_MS in SectionDragController), so the layout change that
+   follows a still pointer is expected. */
+.layout-edit-mode .drop-line-before::after,
+.layout-edit-mode .drop-line-after::after {
+  animation: drop-line-charge 300ms linear;
+}
+
+.layout-edit-mode .drop-ghost-left::after,
+.layout-edit-mode .drop-ghost-right::after,
+.layout-edit-mode .drop-ghost-replace::after,
+.layout-edit-mode .drop-bump-above::after,
+.layout-edit-mode .drop-bump-below::after {
+  animation: drop-ghost-charge 300ms linear;
+}
+
+@keyframes drop-line-charge {
+  from {
+    transform: scaleX(0.15);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes drop-ghost-charge {
+  from {
+    background-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layout-edit-mode
+    :is(
+      .drop-line-before,
+      .drop-line-after,
+      .drop-ghost-left,
+      .drop-ghost-right,
+      .drop-ghost-replace,
+      .drop-bump-above,
+      .drop-bump-below
+    )::after {
+    animation: none;
+  }
+}
+
 /* Mobile Styles */
 @media (max-width: 768px) {
   .edit-layout-button {

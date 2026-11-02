@@ -7,7 +7,7 @@ import { SheetSections } from "@/components/helpers/SheetSections";
 import { changeLanguage } from "@/i18n/index";
 import { Layout, LayoutItem, SectionId } from "@/types/layout";
 import { loadLayout, saveLayout, resetLayout } from "@/storage/layoutStorage";
-import { applyDrop, mergeSectionsInLayout, splitGridInLayout } from "@/utils/layoutOperations";
+import { mergeSectionsInLayout, splitGridInLayout } from "@/utils/layoutOperations";
 import { SectionDragController } from "@/components/helpers/SectionDragController";
 import { SheetVersionUi } from "@/components/helpers/SheetVersionUi";
 import { renderEditLayoutButton } from "@/components/helpers/layoutEditButton";
@@ -24,7 +24,7 @@ export class CharacterSheet {
     isEditMode: () => this.isLayoutEditMode,
     requestRender: () => this.rerender(),
     getLayout: () => this.layout,
-    onDrop: (sourceId, intent) => this.applyLayout(applyDrop(this.layout, sourceId, intent)),
+    commitLayout: (layout) => this.applyLayout(layout),
   });
 
   constructor(
@@ -268,7 +268,9 @@ export class CharacterSheet {
 
   render(): TemplateResult {
     // Render sections based on layout order
-    const layoutSections = this.layout.map((item, rowIndex) =>
+    // While a dragged section is held still, show the layout its drop produces
+    const shownLayout = this.drag.liveLayout() ?? this.layout;
+    const layoutSections = shownLayout.map((item, rowIndex) =>
       this.renderLayoutItem(item, rowIndex)
     );
 
