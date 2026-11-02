@@ -162,6 +162,12 @@ Feature: Additional Character Fields Editing
         And I tap outside the notes textarea
         Then the notes textarea should show "Mobile notes"
 
+    # Regression: on iPad the notes were made editable only after the tap had
+    # focused them, so iPadOS never raised the on-screen keyboard.
+    Scenario: Tapping the notes field opens the on-screen keyboard
+        When I tap the notes textarea
+        Then the virtual keyboard should appear
+
     Scenario: Notes respects i18n (German)
         Given the language is set to "de"
         Then the notes field label should be "Notizen"

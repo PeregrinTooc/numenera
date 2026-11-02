@@ -219,8 +219,27 @@ When("I select {string} from the mobile picker", async function (this: CustomWor
   await select.selectOption(type);
 });
 
+// iOS and iPadOS decide whether to raise the on-screen keyboard at the moment
+// a field takes focus: a field that is readonly then gets no keyboard, even if
+// it turns editable straight after. Headless browsers have no on-screen
+// keyboard, so the tap records that precondition for the keyboard step.
+interface KeyboardProbeWindow {
+  editableWhenFocused?: boolean;
+}
+
 When("I tap the {textarea} textarea", async function (this: CustomWorld, field: string) {
-  await textareaLocator(this, field).tap();
+  const textarea = textareaLocator(this, field);
+  await textarea.evaluate((el: HTMLTextAreaElement) => {
+    el.addEventListener(
+      "focus",
+      () => {
+        (window as KeyboardProbeWindow).editableWhenFocused = !el.readOnly;
+      },
+      { once: true }
+    );
+  });
+  this.tappedTextarea = field;
+  await textarea.tap();
 });
 
 Then(
@@ -233,12 +252,15 @@ Then(
 );
 
 Then("the virtual keyboard should appear", async function (this: CustomWorld) {
-  // On real mobile devices, the virtual keyboard appears when a textarea is focused
-  // In our test environment, we verify the textarea is focused (check whichever textarea was just tapped)
-  // This step is shared by both background and notes, so we just verify one is focused
-  await this.page.waitForTimeout(100);
-  // Virtual keyboard appearance is implicit when textarea is editable on mobile
-  // We've already verified the textarea became editable in the previous step
+  if (!this.tappedTextarea) throw new Error("No textarea was tapped before this step");
+  await expect(textareaLocator(this, this.tappedTextarea)).toBeFocused();
+  const editableWhenFocused = await this.page.evaluate(
+    () => (window as KeyboardProbeWindow).editableWhenFocused
+  );
+  expect(
+    editableWhenFocused,
+    `the ${this.tappedTextarea} textarea was readonly when the tap focused it, so iOS shows no keyboard`
+  ).toBe(true);
 });
 
 When("I tap outside the {textarea} textarea", async function (this: CustomWorld, field: string) {

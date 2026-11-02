@@ -47,6 +47,8 @@ export interface CustomWorld extends World {
   // character-file-export.steps.ts
   exportedFileData?: ExportedCharacterFile | null;
   exportedFilename?: string;
+  // additional-fields-textarea.steps.ts
+  tappedTextarea?: string;
   getBaseUrl(): string;
 }
 
@@ -71,6 +73,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   saveCount?: number;
   exportedFileData?: ExportedCharacterFile | null;
   exportedFilename?: string;
+  tappedTextarea?: string;
 
   constructor(options: IWorldOptions) {
     super(options);
