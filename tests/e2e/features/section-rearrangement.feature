@@ -229,6 +229,14 @@ Feature: Section Re-arrangement
     When I long-press the "Cyphers" section and drag it above the "Abilities" section
     Then the "Cyphers" section should appear before the "Abilities" section
 
+  # The gesture helper uses CDP touch input, which Playwright offers only on Chromium.
+  @chromium-only
+  Scenario: Pair two sections by long-press dragging on a wide touch screen
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I long-press the "Cyphers" section and drag it onto the middle right of the "Items" section
+    Then the grid should show "Items" on the left and "Cyphers" on the right
+
   # The gesture helper uses CDP touch input, which Playwright offers only on Chromium; covered on Pixel 5.
   @chromium-only
   Scenario: A quick swipe does not start a section drag

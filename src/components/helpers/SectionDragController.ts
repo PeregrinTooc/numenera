@@ -262,11 +262,11 @@ export class SectionDragController {
   }
 
   /**
-   * The pointer is at (`x`, `y`) over section wrapper `target` (null: over no
-   * section): update the drop intent from the zone under the pointer,
-   * re-rendering only when the intent changes
+   * The pointer is at (`x`, `y`) over section wrapper `target`: update the
+   * drop intent from the zone under the pointer, re-rendering only when the
+   * intent changes
    */
-  private hover(target: HTMLElement | null, x: number, y: number): void {
+  private hover(target: HTMLElement, x: number, y: number): void {
     this.lastPointer = { x, y };
     if (this.previewAnchor) {
       const { x: ax, y: ay } = this.previewAnchor;
@@ -274,9 +274,9 @@ export class SectionDragController {
       this.previewAnchor = null;
     }
     const sourceId = this.draggedSectionId;
-    const targetId = target?.dataset.sectionId;
+    const targetId = target.dataset.sectionId;
     let intent: DropIntent | null = null;
-    if (sourceId && target && targetId && isSectionId(targetId)) {
+    if (sourceId && targetId && isSectionId(targetId)) {
       const wide = isWideLayout();
       const zone = dropZoneAt(target.getBoundingClientRect(), x, y, wide);
       intent = resolveDropIntent(this.workingLayout(), sourceId, targetId, zone, wide);
@@ -368,7 +368,8 @@ export class SectionDragController {
    */
   private handleTouchDragHover(x: number, y: number): void {
     const hovered = document.elementFromPoint(x, y)?.closest<HTMLElement>("[data-section-id]");
-    this.hover(hovered ?? null, x, y);
+    // Over a gutter (no section) the last intent stands, as for the mouse
+    if (hovered) this.hover(hovered, x, y);
   }
 
   /**

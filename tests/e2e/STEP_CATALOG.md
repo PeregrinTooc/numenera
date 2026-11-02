@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **708** in 52 files
-- Feature step lines: **2234**
+- Step definitions: **709** in 52 files
+- Feature step lines: **2238**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -66,7 +66,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 7 | 0 |
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
-| [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 5 | 0 |
+| [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 6 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
@@ -633,7 +633,7 @@ pattern this script does not understand):
 | Then | `{string} should be in its own row` | 8 | 72 |
 | When | `I drag the {string} section onto the {zone} of the {string} section` | 9 | 11 |
 | Then | `the {string} section should be the last section` | 2 | 37 |
-| Then | `the grid should show {string} on the left and {string} on the right` | 5 | 18 |
+| Then | `the grid should show {string} on the left and {string} on the right` | 6 | 18 |
 | Then | `the layout should still be the default layout` | 3 | 31 |
 
 ## i18n.steps.ts
@@ -691,7 +691,7 @@ pattern this script does not understand):
 | Then | `I should see the {string} button` | 1 | 80 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 36 |
 | Then | `it should be touch-friendly` | 1 | 91 |
-| Given | `layout edit mode is active` | 22 | 48 |
+| Given | `layout edit mode is active` | 23 | 48 |
 | Then | `layout edit mode should be inactive` | 1 | 59 |
 | Then | `the {string} option should be enabled` | 1 | 134 |
 | Then | `the layout should return to the default arrangement` | 1 | 122 |
@@ -797,11 +797,12 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I long-press the {string} section` | 1 | 15 |
-| When | `I long-press the {string} section and drag it above the {string} section` | 1 | 30 |
-| When | `I swipe from the {string} section towards the {string} section` | 1 | 53 |
-| Then | `the {string} section should be in drag mode` | 1 | 23 |
-| Then | `the page should have scrolled` | 1 | 77 |
+| When | `I long-press the {string} section` | 1 | 17 |
+| When | `I long-press the {string} section and drag it above the {string} section` | 1 | 32 |
+| When | `I long-press the {string} section and drag it onto the {zone} of the {string} section` | 1 | 55 |
+| When | `I swipe from the {string} section towards the {string} section` | 1 | 74 |
+| Then | `the {string} section should be in drag mode` | 1 | 25 |
+| Then | `the page should have scrolled` | 1 | 98 |
 
 ## settings-gear.steps.ts
 
@@ -1059,5 +1060,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 31 | 9 |
+| Given | `the viewport is {int} pixels wide` | 32 | 9 |
 

@@ -127,6 +127,16 @@ describe("CharacterSheet section drop zones", () => {
     expect(document.querySelector('[data-testid="layout-grid-items-cyphers"]')).not.toBeNull();
   });
 
+  it("a touch release over the gutter between sections keeps the last intent (Review Focus 1)", () => {
+    placeSection("items", 0, 1000, 800, 200);
+    touchDragOver("cyphers", "items", 600, 1120); // middle right of Items
+    vi.spyOn(document, "elementFromPoint").mockReturnValue(null); // a gutter: no section
+    touch(section("cyphers"), "touchmove", [{ x: 600, y: 1210 }]);
+    touch(section("cyphers"), "touchend");
+
+    expect(document.querySelector('[data-testid="layout-grid-items-cyphers"]')).not.toBeNull();
+  });
+
   it("previews with overlays only: the target gets no extra elements (Review Focus 5)", () => {
     placeSection("items", 0, 1000, 800, 200);
     const childrenBefore = section("items").querySelectorAll("*").length;

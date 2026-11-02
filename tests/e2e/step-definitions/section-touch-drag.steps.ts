@@ -11,6 +11,8 @@ import {
   sectionLocator,
   TouchGesture,
   withFullHeightViewport,
+  zonePoint,
+  type SectionZone,
 } from "../support/sections.js";
 
 When("I long-press the {string} section", async function (this: CustomWorld, name: string) {
@@ -46,6 +48,25 @@ When(
       // The insertion line shows above the target while the drag is held
       // over it, before the finger lifts.
       await expect(sectionLocator(page, targetName)).toHaveClass(/\bdrop-line-before\b/);
+      await gesture.end();
+    });
+  }
+);
+
+When(
+  "I long-press the {string} section and drag it onto the {zone} of the {string} section",
+  async function (this: CustomWorld, sourceName: string, zone: SectionZone, targetName: string) {
+    const page = this.page;
+    await withFullHeightViewport(page, async () => {
+      const gesture = await TouchGesture.start(
+        page,
+        await nearTopOf(sectionLocator(page, sourceName))
+      );
+      await page.waitForTimeout(LONG_PRESS_HOLD_MS);
+      await expect(sectionLocator(page, sourceName)).toHaveClass(/\bdragging\b/);
+      const box = await sectionLocator(page, targetName).boundingBox();
+      if (!box) throw new Error(`Section ${targetName} has no bounding box (not visible?)`);
+      await gesture.moveTo(zonePoint(box, zone));
       await gesture.end();
     });
   }
