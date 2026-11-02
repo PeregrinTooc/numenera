@@ -253,6 +253,24 @@ describe("CharacterSheet live layout preview", () => {
     expect(localStorage.getItem("numenera-layout")).toBeNull();
   });
 
+  it("a live preview holds until the pointer moves more than a few pixels", () => {
+    placeSection("items", 0, 1000, 800, 200);
+    touchDragOver("cyphers", "items", 600, 1120);
+    vi.advanceTimersByTime(300); // Cyphers paired with Items
+    // Cyphers is taller in its narrower new place, so the still pointer now
+    // lies in its bottom quarter, which would take it out of the pair again.
+    placeSection("cyphers", 400, 900, 400, 240);
+    vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("cyphers"));
+
+    touch(section("cyphers"), "touchmove", [{ x: 602, y: 1121 }]); // a wobble
+    vi.advanceTimersByTime(600);
+    expect(pairGrid()).not.toBeNull();
+
+    touch(section("cyphers"), "touchmove", [{ x: 602, y: 1140 }]); // a real move
+    vi.advanceTimersByTime(300);
+    expect(pairGrid()).toBeNull();
+  });
+
   it("releasing on a live preview that is back at the saved layout writes nothing", () => {
     const before = sectionOrder();
     placeSection("items", 0, 1000, 800, 200);

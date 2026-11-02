@@ -153,10 +153,19 @@ sheet also shows the real result.
 - The layout changes in one step (no animation). Animating sections to their
   new places is a possible follow-up.
 
+- **After a live preview, hovers are ignored until the pointer has moved more
+  than 8 px** from where the preview appeared (corrected 2026-11-02, after
+  review). The jump moves sections under a still pointer, and browsers keep
+  firing `dragover` while it rests. Measured: after pairing Cyphers with
+  Items, Cyphers is taller in its half-width slot and the unmoved pointer lies
+  in its bottom quarter, a real (not no-op) intent, so without this rule the
+  layout would jump again after another 300 ms.
+
 This replaces the earlier blanket "no layout jumps while hovering": the jump
-happens only after the pointer has been still, and the dragged section then
-lies under the pointer, which is a no-op zone, so the layout settles instead
-of flipping.
+happens only after the pointer has been still, and the layout then stays put
+until the pointer moves on. (The first version of this amendment assumed the
+dragged section would always end up under the pointer as a no-op zone; that
+was wrong.)
 
 A spike (not committed) confirmed that re-rendering mid-drag re-creates the
 dragged section's element without breaking the gesture: native mouse drags on

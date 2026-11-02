@@ -19,6 +19,13 @@ import { LongPressDrag } from "@/components/helpers/LongPressDrag";
 /** How long a drop intent must hold before the sheet shows its result. */
 export const LIVE_PREVIEW_DELAY_MS = 300;
 
+/**
+ * How far the pointer must move after a live preview before hovers count
+ * again. The jump moves the sections under a still pointer, and browsers keep
+ * firing dragover while it rests: without this the layout could jump again.
+ */
+export const LIVE_PREVIEW_SETTLE_PX = 8;
+
 /** What the controller needs from the sheet that hosts it. */
 export interface SectionDragHost {
   isEditMode(): boolean;
@@ -40,6 +47,10 @@ export class SectionDragController {
   private previewedLayout: Layout | null = null;
   /** Pending switch to the live preview of `intent`. */
   private dwellTimer: ReturnType<typeof setTimeout> | null = null;
+  /** Where the pointer was at the last hover. */
+  private lastPointer: { x: number; y: number } | null = null;
+  /** Where the pointer was when the live preview appeared, until it moves on. */
+  private previewAnchor: { x: number; y: number } | null = null;
 
   /**
    * Watches the document during a mouse section drag for a drag whose end
@@ -256,6 +267,12 @@ export class SectionDragController {
    * re-rendering only when the intent changes
    */
   private hover(target: HTMLElement | null, x: number, y: number): void {
+    this.lastPointer = { x, y };
+    if (this.previewAnchor) {
+      const { x: ax, y: ay } = this.previewAnchor;
+      if (Math.hypot(x - ax, y - ay) <= LIVE_PREVIEW_SETTLE_PX) return;
+      this.previewAnchor = null;
+    }
     const sourceId = this.draggedSectionId;
     const targetId = target?.dataset.sectionId;
     let intent: DropIntent | null = null;
@@ -292,6 +309,7 @@ export class SectionDragController {
     const sourceId = this.draggedSectionId;
     if (!sourceId || !this.intent) return;
     this.previewedLayout = applyDrop(this.workingLayout(), sourceId, this.intent);
+    this.previewAnchor = this.lastPointer;
     this.setIntent(null);
     this.host.requestRender();
   }
@@ -401,6 +419,8 @@ export class SectionDragController {
     if (this.dwellTimer !== null) clearTimeout(this.dwellTimer);
     this.dwellTimer = null;
     this.previewedLayout = null;
+    this.previewAnchor = null;
+    this.lastPointer = null;
     this.draggedSectionId = null;
     this.setIntent(null);
   }
