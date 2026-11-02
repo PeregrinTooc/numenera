@@ -55,7 +55,8 @@ Cucumber + Playwright.
 4. **Resizing across `lg` mid-session.** Zones must be re-evaluated per hover
    rather than cached at drag start. Pinned in Task 6 by a unit test that
    flips `matchMedia` between two hovers.
-5. **The preview must not move the layout.** If an in-flow element shifted the
+5. **The overlay preview must not move the layout.** (The live preview of Task
+   7b moves it deliberately, after 300 ms still.) If an in-flow element shifted the
    target, the zone under the pointer would flip every frame. Pinned in Task 7:
    previews are pseudo-element overlays only, and a test asserts the
    target's bounding box is unchanged while previewing.
@@ -451,6 +452,65 @@ the gap before the target's row.
   - The target wrapper renders no extra child elements while previewing (pseudo-elements only).
 - [ ] **Step 4: Run** unit tests and the feature. Expected: PASS.
 - [ ] **Step 5: Commit** `feat(layout): preview where a dragged section will land`.
+
+### Task 7b: Live layout preview after holding still (spec amendment 2026-11-01)
+
+**Files:**
+
+- Modify: `src/components/helpers/SectionDragController.ts`, `src/components/CharacterSheet.ts`, `layout-editor.css`
+- Modify: the feature file, `section-drop-preview.steps.ts`
+- Test: `tests/unit/characterSheetDropZones.test.ts`
+
+**Interfaces:**
+
+- Refactor first (Rule 6): `SectionDragHost.onDrop(sourceId, intent)` becomes
+  `commitLayout(layout: Layout): void`. The controller computes the final
+  layout itself, because a drop during a live preview with no new intent must
+  commit the previewed layout.
+- The controller keeps `liveLayout: Layout | null` (the previewed layout) and
+  resolves intents and overlay previews against `liveLayout ?? host.getLayout()`.
+  `CharacterSheet` renders `this.drag.liveLayout() ?? this.layout`.
+- `LIVE_PREVIEW_DELAY_MS = 300`. An intent change clears the timer and, for a
+  non-null intent, starts it. When it fires: `liveLayout = applyDrop(working,
+source, intent)`, the intent becomes null, re-render.
+- A drop is possible (mouse `dragover` calls `preventDefault`) when there is an
+  intent or a live preview. Drop commits `applyDrop(working, source, intent)`
+  if there is an intent, else `liveLayout`. Cancel paths clear `liveLayout`
+  without committing.
+- Charging cue: a 300 ms CSS animation on the overlay `::after` rules.
+
+- [ ] **Step 1: Refactor** `onDrop` → `commitLayout`, tests green.
+- [ ] **Step 2: Scenarios** (mouse; Playwright's `page.clock` controls the timer, so
+      the overlay scenarios install a paused clock and stay deterministic):
+
+  ```gherkin
+  Scenario: Holding still over a section shows the resulting layout before the drop
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I hold the "Cyphers" section over the middle right of the "Items" section
+    And I keep still for a moment
+    Then the grid should show "Items" on the left and "Cyphers" on the right
+    And the layout should still be the default layout
+
+  Scenario: Releasing outside the sheet after a live preview restores the layout
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I hold the "Cyphers" section over the middle right of the "Items" section
+    And I keep still for a moment
+    And I release the section outside the sheet
+    Then the "Cyphers" section should appear before the "Items" section
+    And the layout should still be the default layout
+  ```
+
+- [ ] **Step 3: Failing unit tests**, one at a time (fake timers):
+  - 299 ms still: order unchanged; 300 ms: the sheet shows `g("items","cyphers")`; storage untouched.
+  - An intent change at 200 ms restarts the wait.
+  - After the live preview, a drop over the dragged section's new place commits the preview.
+  - After the live preview, the next hover resolves against it (e.g. dragging on to the top edge of Abilities moves Cyphers out of the new pair).
+  - Touch cancel and `dragend` without a drop restore the pre-drag layout and save nothing.
+  - A drop before 300 ms still applies the intent (existing tests).
+- [ ] **Step 4: Implement**, add the charging cue CSS, run unit tests and the feature. Expected: PASS.
+- [ ] **Step 5: Commit** `feat(layout): show the resulting layout after holding a dragged section still`.
 
 ### Task 8: Touch pairing on wide screens
 

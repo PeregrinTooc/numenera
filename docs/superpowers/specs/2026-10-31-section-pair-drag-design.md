@@ -129,6 +129,41 @@ Mockups: `.superpowers/brainstorm/16904-1793457743/content/` (`drop-zones.html`,
 `pair-hover.html`, `into-pair-hover.html`). These are throwaway mockups, kept
 locally and not committed.
 
+### Live preview after holding still (amended 2026-11-01)
+
+**Decided with the maintainer after Task 7**, once the overlay previews were
+visible: overlays alone are hard to read over a section's content, so the
+sheet also shows the real result.
+
+- When the drop intent has stayed the same for **300 ms**, the sheet renders
+  the layout the drop would produce. Nothing is saved yet. The dragged section
+  sits in its new place, faded.
+- Only a change of intent restarts the wait. Pointer jitter inside one zone
+  does not, and moving over a zone whose drop would do nothing (for example
+  the dragged section's own new place) keeps the current live preview.
+- After the live preview, further hovering is resolved against the previewed
+  layout, so the next 300 ms preview builds on it.
+- During the wait, the overlays above are shown, with a "charging" cue: the
+  ghost or line fills in over the 300 ms, so the jump that follows is
+  expected.
+- Dropping never waits: releasing before 300 ms applies the intent, as
+  before. Releasing during a live preview commits what is shown.
+- Cancelling (releasing outside the sheet, Esc, a touch cancel, leaving edit
+  mode) restores the layout from before the drag and saves nothing.
+- The layout changes in one step (no animation). Animating sections to their
+  new places is a possible follow-up.
+
+This replaces the earlier blanket "no layout jumps while hovering": the jump
+happens only after the pointer has been still, and the dragged section then
+lies under the pointer, which is a no-op zone, so the layout settles instead
+of flipping.
+
+A spike (not committed) confirmed that re-rendering mid-drag re-creates the
+dragged section's element without breaking the gesture: native mouse drags on
+Chromium and WebKit and CDP touch drags on Chromium kept delivering
+`dragover`/`touchmove`, and drop/`touchend` committed. WebKit touch (iOS)
+cannot be automated; check it by hand on a device.
+
 ### Narrow screens (below `lg`)
 
 Pairs only render side by side at Tailwind's `lg` breakpoint (`lg:grid-cols-2`
