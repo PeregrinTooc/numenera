@@ -7,7 +7,6 @@ import { SheetSections } from "@/components/helpers/SheetSections";
 import { changeLanguage } from "@/i18n/index";
 import { Layout, LayoutItem, SectionId } from "@/types/layout";
 import { loadLayout, saveLayout, resetLayout } from "@/storage/layoutStorage";
-import { mergeSectionsInLayout, splitGridInLayout } from "@/utils/layoutOperations";
 import { SectionDragController } from "@/components/helpers/SectionDragController";
 import { SheetVersionUi } from "@/components/helpers/SheetVersionUi";
 import { renderEditLayoutButton } from "@/components/helpers/layoutEditButton";
@@ -94,20 +93,6 @@ export class CharacterSheet {
   }
 
   /**
-   * Merge two sections into a grid
-   */
-  mergeSections(sectionId1: SectionId, sectionId2: SectionId): void {
-    this.applyLayout(mergeSectionsInLayout(this.layout, sectionId1, sectionId2));
-  }
-
-  /**
-   * Split a grid into two single sections
-   */
-  splitGrid(sectionId: SectionId): void {
-    this.applyLayout(splitGridInLayout(this.layout, sectionId));
-  }
-
-  /**
    * Adopt, persist and render the result of a layout operation (null: no-op)
    */
   private applyLayout(newLayout: Layout | null): void {
@@ -129,7 +114,7 @@ export class CharacterSheet {
       // session from the real persisted state rather than a stale snapshot.
       this.layout = loadLayout();
     }
-    // No save on exit: drops and mergeSections/splitGrid already persist
+    // No save on exit: drops already persist
     // immediately when they mutate this.layout. Re-saving here used to
     // overwrite storage with this instance's (possibly stale) in-memory copy
     // whenever the persisted layout had changed since edit mode was entered.

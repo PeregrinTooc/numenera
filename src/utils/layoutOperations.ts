@@ -4,14 +4,7 @@
  * skip persisting and re-rendering.
  */
 
-import {
-  Layout,
-  LayoutItem,
-  SectionId,
-  cloneLayout,
-  isGridEligible,
-  layoutsAreEqual,
-} from "@/types/layout";
+import { Layout, SectionId, cloneLayout, isGridEligible, layoutsAreEqual } from "@/types/layout";
 import { DropIntent, PairSide } from "@/types/layoutDrop";
 
 /**
@@ -124,68 +117,4 @@ function breakPair(
     { type: "single", id: pair.items[1] }
   );
   return rest;
-}
-
-/**
- * Merge two single, grid-eligible sections into a grid at the earlier position.
- */
-export function mergeSectionsInLayout(
-  layout: Layout,
-  sectionId1: SectionId,
-  sectionId2: SectionId
-): Layout | null {
-  if (!isGridEligible(sectionId1) || !isGridEligible(sectionId2)) {
-    return null; // Cannot merge non-eligible sections
-  }
-
-  const newLayout = cloneLayout(layout);
-
-  // Find both sections
-  let index1 = -1;
-  let index2 = -1;
-
-  for (let i = 0; i < newLayout.length; i++) {
-    const item = newLayout[i];
-    if (item.type === "single") {
-      if (item.id === sectionId1) index1 = i;
-      if (item.id === sectionId2) index2 = i;
-    }
-  }
-
-  if (index1 === -1 || index2 === -1) return null;
-
-  // Remove both (higher index first to preserve indices)
-  const minIndex = Math.min(index1, index2);
-  const maxIndex = Math.max(index1, index2);
-  newLayout.splice(maxIndex, 1);
-  newLayout.splice(minIndex, 1);
-
-  // Insert grid at the first position
-  const gridItem: LayoutItem = { type: "grid", items: [sectionId1, sectionId2] };
-  newLayout.splice(minIndex, 0, gridItem);
-
-  return newLayout;
-}
-
-/**
- * Replace the grid containing `sectionId` with its two sections as singles.
- * A layout without such a grid comes back unchanged (as a copy).
- */
-export function splitGridInLayout(layout: Layout, sectionId: SectionId): Layout {
-  const newLayout = cloneLayout(layout);
-
-  for (let i = 0; i < newLayout.length; i++) {
-    const item = newLayout[i];
-    if (item.type === "grid" && item.items.includes(sectionId)) {
-      newLayout.splice(
-        i,
-        1,
-        { type: "single", id: item.items[0] },
-        { type: "single", id: item.items[1] }
-      );
-      break;
-    }
-  }
-
-  return newLayout;
 }

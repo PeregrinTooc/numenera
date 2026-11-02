@@ -1,10 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  applyDrop,
-  rowIndexOf,
-  mergeSectionsInLayout,
-  splitGridInLayout,
-} from "@/utils/layoutOperations";
+import { applyDrop, rowIndexOf } from "@/utils/layoutOperations";
 import { DEFAULT_LAYOUT, type Layout, type LayoutItem, type SectionId } from "@/types/layout";
 
 const D = DEFAULT_LAYOUT;
@@ -204,44 +199,6 @@ describe("layoutOperations", () => {
 
     it("returns -1 for a section not in the layout", () => {
       expect(rowIndexOf(layout, "notes")).toBe(-1);
-    });
-  });
-
-  describe("mergeSectionsInLayout", () => {
-    it("merges two single grid-eligible sections at the earlier position", () => {
-      expect(mergeSectionsInLayout(layout, "items", "cyphers")).toEqual([
-        { type: "single", id: "basicInfo" },
-        { type: "single", id: "stats" },
-        { type: "grid", items: ["abilities", "attacks"] },
-        { type: "grid", items: ["items", "cyphers"] },
-      ]);
-    });
-
-    it("returns null when a section is not grid-eligible", () => {
-      expect(mergeSectionsInLayout(layout, "stats", "cyphers")).toBeNull();
-    });
-
-    it("returns null when a section is not a single in the layout", () => {
-      expect(mergeSectionsInLayout(layout, "abilities", "cyphers")).toBeNull();
-    });
-  });
-
-  describe("splitGridInLayout", () => {
-    it("replaces the grid with its two sections as singles", () => {
-      expect(splitGridInLayout(layout, "attacks")).toEqual([
-        { type: "single", id: "basicInfo" },
-        { type: "single", id: "stats" },
-        { type: "single", id: "abilities" },
-        { type: "single", id: "attacks" },
-        { type: "single", id: "cyphers" },
-        { type: "single", id: "items" },
-      ]);
-    });
-
-    it("returns an equal copy when the section is in no grid", () => {
-      const result = splitGridInLayout(layout, "stats");
-      expect(result).toEqual(layout);
-      expect(result).not.toBe(layout);
     });
   });
 });
