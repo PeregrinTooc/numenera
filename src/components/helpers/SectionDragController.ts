@@ -2,7 +2,7 @@
 // long-press (via LongPressDrag) for touch.
 
 import { html, nothing, TemplateResult } from "lit-html";
-import { Layout, SectionId, isSectionId } from "@/types/layout";
+import { Layout, SectionId, isSectionId, layoutsAreEqual } from "@/types/layout";
 import { DropIntent } from "@/types/layoutDrop";
 import {
   DropPreview,
@@ -40,6 +40,13 @@ export class SectionDragController {
   private previewedLayout: Layout | null = null;
   /** Pending switch to the live preview of `intent`. */
   private dwellTimer: ReturnType<typeof setTimeout> | null = null;
+
+  /**
+   * Watches the document during a mouse section drag for a drag whose end
+   * was never reported (see endLostDrag). One stable function, so it can be
+   * removed again.
+   */
+  private readonly lostDragListener = (e: MouseEvent): void => this.endLostDrag(e);
 
   /** Touch long-press → section drag; mouse drags use native HTML5 DnD. */
   private readonly longPress = new LongPressDrag<SectionId>({
@@ -148,10 +155,12 @@ export class SectionDragController {
   }
 
   /**
-   * Abandon any touch drag in progress (e.g. when leaving layout edit mode)
+   * Abandon any drag in progress, touch or mouse, and its live preview (e.g.
+   * when leaving layout edit mode). The caller re-renders.
    */
-  cancelTouchDrag(): void {
+  cancelDrag(): void {
     this.longPress.cancel();
+    this.resetDragState();
   }
 
   /**
@@ -179,12 +188,26 @@ export class SectionDragController {
     // reorder drag, not a section drag.
     if (e.target !== e.currentTarget) return;
 
+    // A previous drag may never have reported its end (see endLostDrag)
+    this.resetDragState();
     this.draggedSectionId = sectionId;
+    document.addEventListener("pointermove", this.lostDragListener);
     if (e.dataTransfer) {
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.setData("text/plain", sectionId);
     }
     this.host.requestRender();
+  }
+
+  /**
+   * Browsers send no pointer events during a native drag, so a pointer move
+   * with no button pressed means the drag ended without a dragend. Firefox
+   * (and sometimes WebKit) skips dragend when the drag source left the page,
+   * which a live preview can cause. End the drag; nothing is saved.
+   */
+  private endLostDrag(e: MouseEvent): void {
+    if (e.buttons !== 0) return;
+    this.clearDragState();
   }
 
   /**
@@ -339,7 +362,7 @@ export class SectionDragController {
 
   /**
    * The drag ended in a drop: commit the intent's result, else the live
-   * preview on show. With neither, the drag just ends.
+   * preview on show. With neither, or no change, the drag just ends.
    */
   private drop(): void {
     const sourceId = this.draggedSectionId;
@@ -347,7 +370,8 @@ export class SectionDragController {
       sourceId && this.intent
         ? applyDrop(this.workingLayout(), sourceId, this.intent)
         : this.previewedLayout;
-    if (!layout) {
+    // A chain of live previews can end where it began: nothing to save
+    if (!layout || layoutsAreEqual(layout, this.host.getLayout())) {
       this.clearDragState();
       return;
     }
@@ -373,6 +397,7 @@ export class SectionDragController {
 
   /** Forget the drag, its intent and any live preview (which is not saved) */
   private resetDragState(): void {
+    document.removeEventListener("pointermove", this.lostDragListener);
     if (this.dwellTimer !== null) clearTimeout(this.dwellTimer);
     this.dwellTimer = null;
     this.previewedLayout = null;

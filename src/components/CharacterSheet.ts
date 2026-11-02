@@ -121,7 +121,7 @@ export class CharacterSheet {
    * Toggle layout edit mode
    */
   toggleLayoutEditMode(): void {
-    this.drag.cancelTouchDrag();
+    this.drag.cancelDrag();
     this.isLayoutEditMode = !this.isLayoutEditMode;
     if (this.isLayoutEditMode) {
       // Re-sync with storage on entry so a long-lived instance (or one whose

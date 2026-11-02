@@ -40,11 +40,12 @@ function mouseDrag(target: Element, type: "dragstart" | "dragover" | "drop", x =
   );
 }
 
-function mountSheet(character: Character): void {
+function mountSheet(character: Character): CharacterSheet {
   document.body.innerHTML = '<div id="app"></div>';
   const sheet = new CharacterSheet(character, vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
   sheet.mount(document.getElementById("app") as HTMLElement);
   sheet.toggleLayoutEditMode();
+  return sheet;
 }
 
 /** Long-press `sourceId`, then move the finger to (x, y) over `targetId`. */
@@ -155,11 +156,13 @@ describe("CharacterSheet section drop zones", () => {
 });
 
 describe("CharacterSheet live layout preview", () => {
+  let sheet: CharacterSheet;
+
   beforeEach(() => {
     vi.useFakeTimers();
     localStorage.clear();
     document.elementFromPoint = (): Element | null => null;
-    mountSheet(createTestCharacter());
+    sheet = mountSheet(createTestCharacter());
   });
 
   afterEach(() => {
@@ -248,5 +251,66 @@ describe("CharacterSheet live layout preview", () => {
 
     expect(sectionOrder()).toEqual(before);
     expect(localStorage.getItem("numenera-layout")).toBeNull();
+  });
+
+  it("releasing on a live preview that is back at the saved layout writes nothing", () => {
+    const before = sectionOrder();
+    placeSection("items", 0, 1000, 800, 200);
+    touchDragOver("cyphers", "items", 600, 1120);
+    vi.advanceTimersByTime(300); // Cyphers paired with Items
+    // The top edge of Items, now in the pair: Cyphers back to its own row above
+    placeSection("items", 0, 1000, 400, 200);
+    vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("items"));
+    touch(section("cyphers"), "touchmove", [{ x: 200, y: 1010 }]);
+    vi.advanceTimersByTime(300);
+    touch(section("cyphers"), "touchend");
+
+    expect(sectionOrder()).toEqual(before);
+    expect(localStorage.getItem("numenera-layout")).toBeNull();
+  });
+
+  /** A mouse drag of Cyphers whose live preview pairs it with Items. */
+  function mouseLivePreview(): void {
+    placeSection("items", 0, 1000, 800, 200);
+    mouseDrag(section("cyphers"), "dragstart");
+    mouseDrag(section("items"), "dragover", 600, 1120);
+    vi.advanceTimersByTime(300);
+    expect(pairGrid()).not.toBeNull();
+  }
+
+  // Firefox (and WebKit in some cases) sends no dragend when the drag source
+  // was removed from the page, which a live preview can do.
+  describe("when a mouse drag ends without a dragend", () => {
+    it("the next drag starts from the saved layout", () => {
+      mouseLivePreview();
+      mouseDrag(section("abilities"), "dragstart");
+
+      expect(pairGrid()).toBeNull();
+      mouseDrag(section("abilities"), "drop");
+      expect(localStorage.getItem("numenera-layout")).toBeNull();
+    });
+
+    it("the first pointer move with no button pressed ends it, saving nothing", () => {
+      mouseLivePreview();
+      document.dispatchEvent(new MouseEvent("pointermove", { bubbles: true, buttons: 0 }));
+
+      expect(pairGrid()).toBeNull();
+      expect(localStorage.getItem("numenera-layout")).toBeNull();
+    });
+
+    it("a pointer move with the button still held does not end the drag", () => {
+      mouseLivePreview();
+      document.dispatchEvent(new MouseEvent("pointermove", { bubbles: true, buttons: 1 }));
+
+      expect(pairGrid()).not.toBeNull();
+    });
+
+    it("leaving layout edit mode drops the live preview", () => {
+      mouseLivePreview();
+      sheet.toggleLayoutEditMode();
+
+      expect(pairGrid()).toBeNull();
+      expect(localStorage.getItem("numenera-layout")).toBeNull();
+    });
   });
 });
