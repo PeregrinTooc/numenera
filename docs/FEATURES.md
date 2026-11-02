@@ -152,24 +152,38 @@ All features listed below have full BDD test coverage and are verified working.
   - Drag reordering is covered by automated E2E — desktop via `dragSectionTo`,
     touch long-press via `TouchGesture` (see "Automated Section Drag/Drop
     Tests & Touch Long-Press Drag" below)
-  - **Not implemented**: creating or splitting a two-column grid pairing by
-    drag, and a conflict prompt on importing a character with a different
-    layout — the underlying `CharacterSheet` methods exist and are unit
-    tested, but nothing calls them yet. Tracked as a backlog feature in
-    `docs/TODO.md` ("Grid Merge/Split & Import-Layout Conflict Prompt").
+  - **Not implemented**: a conflict prompt on importing a character with a
+    different layout. Tracked in `docs/TODO.md` ("Import-Layout Conflict
+    Prompt"); its scenarios are `@skip`ped.
 
-> **Drag-and-drop E2E coverage.** The not-yet-implemented grid-merge/split
-> and import-layout-prompt scenarios noted above are `@skip`ped — the
-> underlying gestures aren't wired up yet, not a Playwright limitation — see
-> `docs/TODO.md`'s "Grid Merge/Split & Import-Layout Conflict Prompt" for the
-> plan.
+- **Pairing Sections by Drag** ([section-rearrangement.feature](../tests/e2e/features/section-rearrangement.feature),
+  spec: `docs/superpowers/specs/2026-10-31-section-pair-drag-design.md`)
+  - Where you drop decides what happens: the top or bottom quarter of a
+    section moves the dragged one into the gap above or below its row; the
+    middle half pairs the two side by side, the dragged section on the left or
+    right half you chose
+  - Dropping on a section that is already paired takes its slot and pushes it
+    out to its own row, below the pair when coming from above, above it when
+    coming from below; dropping on your own partner swaps the pair's sides
+  - Dragging one half of a pair into a gap takes it out of the pair
+  - Basic Info, Stats and Recovery/Damage never pair
+  - Below Tailwind's `lg` breakpoint (pairs stack) dropping only reorders; the
+    seam between a stacked pair's halves breaks the pair and puts the dragged
+    section between them
+  - Preview while hovering: an insertion line, an orange ghost of the dragged
+    section, a green ghost of a section about to be pushed out, filling in
+    over 300 ms
+  - After 300 ms with the pointer still, the sheet shows the resulting layout
+    (not saved until the drop; cancelling restores the layout); it holds until
+    the pointer moves on
+  - Mouse and touch (long-press), including touch pairing on wide screens
 
 ### Automated Section Drag/Drop Tests & Touch Long-Press Drag
 
 - **Touch Long-Press Section Dragging**
   - Sections can be reordered on touch devices: in layout edit mode,
-    long-press a section (250 ms) and drag it onto another section to move
-    it above that section
+    long-press a section (250 ms) and drag it onto another section; the drop
+    zones work as for the mouse (see "Pairing Sections by Drag" above)
   - A quick swipe still scrolls the page
 
 - **Automated Section Drag E2E Coverage** ([section-rearrangement.feature](../tests/e2e/features/section-rearrangement.feature))

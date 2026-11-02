@@ -60,10 +60,17 @@ decision first:
   `src/storage/exportManager.ts` and `src/storage/fileStorage.ts` shows in the
   OS open/save dialog. It's user-visible, so it probably belongs in `t()`.
 - **English text nobody renders.** `SECTION_DISPLAY_NAMES` in
-  `src/types/layout.ts` is only used as the key set behind `isSectionId` (the UI
-  uses `layout.sections.*`), and the `errors.push(...)` strings in
-  `characterValidation.ts` are never shown. Replace them with a plain id list
-  and drop or key the strings rather than translating dead text.
+  `src/types/layout.ts` is never shown in the UI (which uses
+  `layout.sections.*`). It is the key set behind `isSectionId`, and the E2E
+  suite uses it to turn Gherkin section names into ids (`sectionId()` in
+  `tests/e2e/support/sections.ts`), so replacing it needs a test-side lookup
+  too, e.g. from `en.json`. The `errors.push(...)` strings in
+  `characterValidation.ts` are never shown either. Drop or key them rather
+  than translating dead text.
+- **Unused layout edit-mode keys.** `layout.editMode.instructions` and
+  `layout.editMode.cannotMerge` exist in both locales but nothing renders
+  them, and the instructions describe the old "drop onto another section to
+  merge" idea. Delete them, or show updated instructions in edit mode.
 - **German game terms to confirm.** `de.json` keeps "Cypher", "Edge", "Pool"
   and "Shins". The new keys use "EINMALIG" (ONE-USE) and "Deskriptor". Decide
   whether to use the German rulebook's terms (e.g. "Chiffre", "Vorteil")
@@ -79,8 +86,9 @@ decision first:
 `fileStorage.ts` already computes `layout` and a `hasLayoutDifference` flag on
 import, but `handleLoadFromFile` in `src/app/fileActions.ts` reads only
 `character` and `warnings`, so the imported layout is dropped. Split out of
-"Grid Merge/Split & Import-Layout Conflict Prompt"; the drag half is in
-`CURRENT_FEATURE.md`. Needs its own design before building.
+"Grid Merge/Split & Import-Layout Conflict Prompt"; the drag half is done (see
+"Pairing Sections by Drag" in `FEATURES.md`). Needs its own design before
+building. `CharacterSheet.updateLayout`/`getLayout` were kept for it.
 
 **Goals**
 
@@ -96,6 +104,17 @@ import, but `handleLoadFromFile` in `src/app/fileActions.ts` reads only
   - Keep existing layout on import
   - Use imported layout on import
   - Import with same layout does not show prompt
+
+### Section Drag Follow-ups
+
+- **Animate the live preview.** The layout snaps into place after 300 ms
+  still; sliding sections to their new places (FLIP) would make it easier to
+  follow. Left out on purpose (see the pairing spec).
+- **Check touch dragging on a real iPhone/iPad.** The live preview re-creates
+  the dragged section's element mid-gesture. Chromium (mouse and CDP touch) and
+  WebKit (mouse) were verified; WebKit touch cannot be automated.
+- **Split `SectionDragController.ts`** (now ~430 lines): move the touch
+  long-press wiring or the live-preview state into its own helper.
 
 ### Edge Auto-Scroll for Touch Section Drags
 
