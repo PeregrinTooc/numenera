@@ -64,3 +64,8 @@ Feature: Card columns follow the section's width
   Scenario: On a narrow phone the armor badge leaves the add attack button free
     Given the viewport is 360 pixels wide
     Then the armor badge should not cover the add attack button
+
+  Scenario: On a narrow phone the German Items heading row stays inside its frame
+    Given the language is set to "de"
+    And the viewport is 360 pixels wide
+    Then the "Items" heading row should stay inside its frame

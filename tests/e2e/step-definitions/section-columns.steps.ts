@@ -95,3 +95,26 @@ Then("the armor badge should not cover the add attack button", async function (t
     button.y >= badge.y + badge.height;
   expect(apart).toBe(true);
 });
+
+// Every item of the heading row ends within the frame's content box
+Then(
+  "the {string} heading row should stay inside its frame",
+  async function (this: CustomWorld, section: string) {
+    const overflow = await sectionLocator(this.page, section)
+      .locator(".section-box-heading-row")
+      .evaluate((row) => {
+        const frame = row.closest(".section-box");
+        if (!frame) throw new Error("heading row outside a frame");
+        const style = window.getComputedStyle(frame);
+        const contentRight =
+          frame.getBoundingClientRect().right -
+          parseFloat(style.borderRightWidth) -
+          parseFloat(style.paddingRight);
+        return Math.max(
+          0,
+          ...Array.from(row.children, (item) => item.getBoundingClientRect().right - contentRight)
+        );
+      });
+    expect(overflow).toBeLessThanOrEqual(0.5);
+  }
+);

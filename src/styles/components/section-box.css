@@ -22,9 +22,11 @@
 }
 
 /* Heading row with a badge at its start (Cyphers, Items): badge, heading,
-   add button. The row carries the heading's bottom margin. */
+   add button. The row carries the heading's bottom margin; on a narrow
+   phone a long heading wraps below the badge instead of leaving the frame. */
 .section-box-heading-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
   margin-bottom: 1.5rem;

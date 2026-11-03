@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **723** in 54 files
-- Feature step lines: **2311**
+- Step definitions: **724** in 54 files
+- Feature step lines: **2314**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -64,7 +64,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 13 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
-| [section-columns.steps.ts](#sectioncolumnsstepsts) | 7 | 0 |
+| [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 7 | 0 |
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
@@ -657,7 +657,7 @@ pattern this script does not understand):
 | Then | `the empty notes message should be {string}` | 1 | 157 |
 | Then | `the empty oddities message should be {string}` | 1 | 141 |
 | Then | `the intellect stat should display {string}` | 1 | 59 |
-| Given | `the language is set to {string}` | 3 | 3 |
+| Given | `the language is set to {string}` | 4 | 3 |
 | Then | `the language should remain German` | 1 | 178 |
 | Then | `the load button should display {string}` | 3 | 32 |
 | Then | `the might stat should display {string}` | 1 | 47 |
@@ -775,6 +775,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I switch the {string} section to {int} column\(s)` | 1 | 28 |
+| Then | `the {string} heading row should stay inside its frame` | 1 | 100 |
 | Then | `the {string} section should offer a column switch` | 1 | 41 |
 | Then | `the {string} section should offer no column switch` | 3 | 49 |
 | Then | `the {string} section should show its cards in {int} column\(s)` | 7 | 13 |
@@ -1086,5 +1087,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 46 | 9 |
+| Given | `the viewport is {int} pixels wide` | 47 | 9 |
 
