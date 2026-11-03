@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **716** in 53 files
-- Feature step lines: **2277**
+- Step definitions: **717** in 54 files
+- Feature step lines: **2291**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -64,6 +64,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 13 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
+| [section-columns.steps.ts](#sectioncolumnsstepsts) | 1 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 7 | 0 |
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
@@ -423,7 +424,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 58 | 27 |
+| Given | `I am on the character sheet page` | 59 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 151 |
 | Then | `I should see {int} cyphers displayed` | 1 | 113 |
 | Then | `I should see {int} oddities displayed` | 1 | 164 |
@@ -630,8 +631,8 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `{string} and {string} are in a grid` | 1 | 52 |
-| Then | `{string} should be in its own row` | 9 | 77 |
+| Given | `{string} and {string} are in a grid` | 3 | 52 |
+| Then | `{string} should be in its own row` | 9 | 72 |
 | When | `I drag the {string} section onto the {zone} of the {string} section` | 9 | 11 |
 | Then | `the {string} section should be the last section` | 2 | 42 |
 | Then | `the grid should show {string} on the left and {string} on the right` | 8 | 18 |
@@ -692,7 +693,7 @@ pattern this script does not understand):
 | Then | `I should see the {string} button` | 1 | 80 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 36 |
 | Then | `it should be touch-friendly` | 1 | 91 |
-| Given | `layout edit mode is active` | 28 | 48 |
+| Given | `layout edit mode is active` | 30 | 48 |
 | Then | `layout edit mode should be inactive` | 1 | 59 |
 | Then | `the {string} option should be enabled` | 1 | 134 |
 | Then | `the layout should return to the default arrangement` | 1 | 122 |
@@ -768,6 +769,12 @@ pattern this script does not understand):
 | Then | `the modal should show a real validation error, not a raw translation key` | 1 | 228 |
 | Then | `the Shins badge should show {string}` | 5 | 127 |
 | Then | `the Total XP badge should show {string}` | 5 | 119 |
+
+## section-columns.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| Then | `the {string} section should show its cards in {int} column\(s)` | 5 | 13 |
 
 ## section-drop-preview.steps.ts
 
@@ -1073,5 +1080,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 37 | 9 |
+| Given | `the viewport is {int} pixels wide` | 41 | 9 |
 

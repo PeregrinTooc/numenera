@@ -66,7 +66,7 @@ export class SpecialAbilities {
           : html`
               <div
                 data-testid="special-abilities-list"
-                class="grid grid-cols-1 gap-4"
+                class="section-card-grid"
                 @dragstart=${(e: Event) => this.drag.handleDragStart(e)}
                 @dragover=${(e: Event) => this.drag.handleDragOver(e)}
                 @drop=${(e: Event) => this.drag.handleDrop(e)}

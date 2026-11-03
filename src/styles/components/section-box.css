@@ -39,18 +39,7 @@
   letter-spacing: 0.05em;
 }
 
-/* Two-column layout for Artifacts | Oddities */
-.two-column-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-}
-
 @media (max-width: 768px) {
-  .two-column-grid {
-    grid-template-columns: 1fr;
-  }
-
   .section-box {
     padding: 1.5rem;
   }

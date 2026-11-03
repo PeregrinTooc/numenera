@@ -5,7 +5,7 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
-import { DEFAULT_LAYOUT } from "@/types/layout";
+import { DEFAULT_LAYOUT, getAllSectionIds, type LayoutItem } from "@/types/layout";
 import { LAYOUT_STORAGE_KEY } from "@/storage/storageConstants";
 import { dragSectionTo, sectionId, sectionLocator, type SectionZone } from "../support/sections.js";
 
@@ -58,15 +58,10 @@ Given(
     const id1 = sectionId(section1);
     const id2 = sectionId(section2);
 
+    // Every other section on its own row, in default order; the pair last
+    const others = getAllSectionIds(DEFAULT_LAYOUT).filter((id) => id !== id1 && id !== id2);
     await this.setup.layout([
-      { type: "single", id: "basicInfo" },
-      { type: "single", id: "stats" },
-      { type: "single", id: "recoveryDamage" },
-      { type: "single", id: "abilities" },
-      { type: "single", id: "specialAbilities" },
-      { type: "single", id: "attacks" },
-      { type: "single", id: "cyphers" },
-      { type: "single", id: "items" },
+      ...others.map((id): LayoutItem => ({ type: "single", id })),
       { type: "grid", items: [id1, id2] },
     ]);
 

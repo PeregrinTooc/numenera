@@ -1,0 +1,20 @@
+/* Card columns that follow the section's own width */
+/* A card section's template sits in .section-columns (see CharacterSheet). */
+
+.section-columns {
+  container-type: inline-size;
+  position: relative;
+}
+
+/* One column unless the section is set to two and has room for them */
+.section-card-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+@container (min-width: 40rem) {
+  .section-columns-2 .section-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

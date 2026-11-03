@@ -6,7 +6,8 @@ import { Header } from "./Header.js";
 import { SheetSections } from "@/components/helpers/SheetSections";
 import { changeLanguage } from "@/i18n/index";
 import { Layout, LayoutItem, SectionId } from "@/types/layout";
-import { loadLayout, saveLayout, resetLayout } from "@/storage/layoutStorage";
+import { loadLayout, saveLayout, resetLayout, loadSectionColumns } from "@/storage/layoutStorage";
+import { SectionColumns, columnsFor, isCardSection } from "@/types/sectionColumns";
 import { SectionDragController } from "@/components/helpers/SectionDragController";
 import { SheetVersionUi } from "@/components/helpers/SheetVersionUi";
 import { renderEditLayoutButton } from "@/components/helpers/layoutEditButton";
@@ -21,6 +22,7 @@ export class CharacterSheet {
   private sections: SheetSections;
   private readonly versionUi = new SheetVersionUi();
   private layout: Layout;
+  private sectionColumns: SectionColumns;
   private isLayoutEditMode: boolean = false;
   private container: HTMLElement | null = null;
 
@@ -55,8 +57,9 @@ export class CharacterSheet {
     );
     this.sections = new SheetSections(this.character, this.onFieldUpdate);
 
-    // Load layout from storage
+    // Load layout and column choices from storage
     this.layout = loadLayout();
+    this.sectionColumns = loadSectionColumns();
   }
 
   /**
@@ -91,11 +94,27 @@ export class CharacterSheet {
   }
 
   private renderDraggableSection(sectionId: SectionId, rowIndex?: number): TemplateResult {
-    return this.drag.renderSection(
-      sectionId,
-      this.sections.getSectionTemplate(sectionId),
-      rowIndex
-    );
+    return this.drag.renderSection(sectionId, this.renderSectionContent(sectionId), rowIndex);
+  }
+
+  /**
+   * A section's template; a card section's sits in a column container whose
+   * own width decides whether its cards may use two columns.
+   */
+  private renderSectionContent(sectionId: SectionId): TemplateResult {
+    const template = this.sections.getSectionTemplate(sectionId);
+    if (!isCardSection(sectionId)) return template;
+
+    const columns = columnsFor(this.sectionColumns, sectionId);
+    return html`
+      <div
+        class="section-columns ${columns === 2 ? "section-columns-2" : ""}"
+        data-columns=${columns}
+        data-testid="section-columns-${sectionId}"
+      >
+        ${template}
+      </div>
+    `;
   }
 
   /**

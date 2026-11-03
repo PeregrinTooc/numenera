@@ -148,7 +148,7 @@ export class ItemsBox {
             : html`
                 <div
                   data-testid="equipment-list"
-                  class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                  class="section-card-grid"
                   @dragstart=${(e: Event) => this.drag.equipment.handleDragStart(e)}
                   @dragover=${(e: Event) => this.drag.equipment.handleDragOver(e)}
                   @drop=${(e: Event) => this.drag.equipment.handleDrop(e)}
@@ -162,8 +162,8 @@ export class ItemsBox {
         <!-- Divider -->
         <div class="section-divider"></div>
 
-        <!-- Artifacts and Oddities (two columns) -->
-        <div class="two-column-grid">
+        <!-- Artifacts and Oddities (two columns where the section is wide) -->
+        <div class="section-card-grid">
           <!-- Artifacts Column -->
           <div data-testid="artifacts-section">
             <div class="flex justify-between items-center mb-2">
