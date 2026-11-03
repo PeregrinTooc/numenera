@@ -95,6 +95,46 @@ Then(
   }
 );
 
+Then(
+  "the {string} section should be drawn above the {string} section while they slide",
+  async function (this: CustomWorld, upper: string, lower: string) {
+    // Halfway through the slide the two overlap: hit-testing follows paint
+    // order, so the section found where they overlap is the one drawn on top
+    const onTop = await this.page.evaluate(
+      ({ upperId, lowerId }) => {
+        const slides = document
+          .getAnimations()
+          .filter((animation) => animation.id === "section-slide");
+        slides.forEach((animation) => {
+          animation.pause();
+          animation.currentTime = 100;
+        });
+        const box = (id: string): ReturnType<Element["getBoundingClientRect"]> => {
+          const el = document.querySelector(`[data-section-id="${id}"]`);
+          if (!el) throw new Error(`No section ${id}`);
+          return el.getBoundingClientRect();
+        };
+        const [a, b] = [box(upperId), box(lowerId)];
+        const left = Math.max(a.left, b.left);
+        const right = Math.min(a.right, b.right);
+        const top = Math.max(a.top, b.top);
+        const bottom = Math.min(a.bottom, b.bottom);
+        const found =
+          left < right && top < bottom
+            ? document
+                .elementFromPoint((left + right) / 2, (top + bottom) / 2)
+                ?.closest<HTMLElement>("[data-section-id]")?.dataset.sectionId
+            : "no overlap";
+        slides.forEach((animation) => animation.finish());
+        return { slides: slides.length, found };
+      },
+      { upperId: sectionId(upper), lowerId: sectionId(lower) }
+    );
+    expect(onTop.slides).toBeGreaterThan(0);
+    expect(onTop.found).toBe(sectionId(upper));
+  }
+);
+
 Then("no section should have slid", async function (this: CustomWorld) {
   expect(await this.page.evaluate(() => window.__sectionSlides)).toEqual([]);
 });

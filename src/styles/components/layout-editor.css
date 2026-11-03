@@ -137,6 +137,9 @@
 .layout-edit-mode .layout-draggable.dragging {
   opacity: 0.5;
   cursor: grabbing;
+  /* Sections paint in DOM order: when the sections slide into a live
+     preview, the dragged one must pass over its neighbours, not under them */
+  z-index: 2;
 }
 
 /* Drop previews. Overlays drawn with ::after (the wrapper's ::before is the

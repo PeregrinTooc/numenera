@@ -171,6 +171,13 @@ Feature: Section Re-arrangement
     Then "Cyphers" should be in its own row
     And the "Cyphers" section should appear before the "Abilities" section
 
+  Scenario: The dragged section slides above the sections it passes
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I hold the "Items" section over the middle left of the "Cyphers" section
+    And I keep still for a moment
+    Then the "Items" section should be drawn above the "Cyphers" section while they slide
+
   Scenario: Nothing slides when reduced motion is preferred
     Given the viewport is 1280 pixels wide
     And I prefer reduced motion
