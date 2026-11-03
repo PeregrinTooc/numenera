@@ -34,3 +34,24 @@ Feature: Card columns follow the section's width
     Given the viewport is 390 pixels wide
     Then the "Abilities" section should show its cards in 1 column(s)
     And the "Cyphers" section should show its cards in 1 column(s)
+
+  Scenario: Switching a section to one column in layout edit mode
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I switch the "Cyphers" section to 1 column(s)
+    Then the "Cyphers" section should show its cards in 1 column(s)
+    When I exit layout edit mode
+    And I reload the page
+    Then the "Cyphers" section should show its cards in 1 column(s)
+
+  Scenario: The switch is only offered where it can do something
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    And "Cyphers" and "Items" are in a grid
+    Then the "Cyphers" section should offer no column switch
+    And the "Stats" section should offer no column switch
+    And the "Abilities" section should offer a column switch
+
+  Scenario: No column switch outside layout edit mode
+    Given the viewport is 1280 pixels wide
+    Then the "Abilities" section should offer no column switch

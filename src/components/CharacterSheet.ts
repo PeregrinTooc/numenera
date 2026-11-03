@@ -1,16 +1,29 @@
 // CharacterSheet component - Main container that composes all sections
 
-import { html, render, TemplateResult } from "lit-html";
+import { html, nothing, render, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { Header } from "./Header.js";
 import { SheetSections } from "@/components/helpers/SheetSections";
 import { changeLanguage } from "@/i18n/index";
 import { Layout, LayoutItem, SectionId } from "@/types/layout";
-import { loadLayout, saveLayout, resetLayout, loadSectionColumns } from "@/storage/layoutStorage";
-import { SectionColumns, columnsFor, isCardSection } from "@/types/sectionColumns";
+import {
+  loadLayout,
+  saveLayout,
+  resetLayout,
+  loadSectionColumns,
+  saveSectionColumns,
+} from "@/storage/layoutStorage";
+import {
+  CardSectionId,
+  SectionColumns,
+  columnsFor,
+  isCardSection,
+  withColumns,
+} from "@/types/sectionColumns";
 import { SectionDragController } from "@/components/helpers/SectionDragController";
 import { SheetVersionUi } from "@/components/helpers/SheetVersionUi";
 import { renderEditLayoutButton } from "@/components/helpers/layoutEditButton";
+import { renderSectionColumnsButton } from "@/components/helpers/sectionColumnsButton";
 import {
   cancelSectionSlides,
   measureSections,
@@ -112,9 +125,22 @@ export class CharacterSheet {
         data-columns=${columns}
         data-testid="section-columns-${sectionId}"
       >
+        ${this.isLayoutEditMode
+          ? renderSectionColumnsButton(columns, () => this.toggleSectionColumns(sectionId))
+          : nothing}
         ${template}
       </div>
     `;
+  }
+
+  /**
+   * Switch a card section between one and two columns, persist, and render
+   */
+  private toggleSectionColumns(sectionId: CardSectionId): void {
+    const next = columnsFor(this.sectionColumns, sectionId) === 2 ? 1 : 2;
+    this.sectionColumns = withColumns(this.sectionColumns, sectionId, next);
+    saveSectionColumns(this.sectionColumns);
+    this.rerender();
   }
 
   /**
@@ -154,6 +180,7 @@ export class CharacterSheet {
    */
   resetLayoutToDefault(): void {
     this.layout = resetLayout();
+    this.sectionColumns = {};
     this.rerender();
   }
 
