@@ -8,7 +8,7 @@ import {
   deleteFileHandle,
   loadPersistedFileHandle,
 } from "./fileHandleStore";
-import { loadLayout } from "./layoutStorage";
+import { loadLayout, loadSectionColumns } from "./layoutStorage";
 import { UserFacingError } from "@/utils/UserFacingError";
 
 /**
@@ -180,6 +180,7 @@ export class ExportManager {
       exportDate: new Date().toISOString(),
       character: character,
       layout: loadLayout(),
+      sectionColumns: loadSectionColumns(),
     };
   }
 

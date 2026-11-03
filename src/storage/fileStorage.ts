@@ -3,6 +3,7 @@
 
 import { Character } from "@/types/character";
 import { Layout, isValidLayout } from "@/types/layout";
+import { SectionColumns, isValidSectionColumns } from "@/types/sectionColumns";
 import { SCHEMA_VERSION } from "./storageConstants.js";
 import { sanitizeCharacter } from "@/utils/characterSanitizer";
 import { loadLayout } from "./layoutStorage.js";
@@ -18,6 +19,7 @@ export interface CharacterFileData {
   exportDate: string;
   character: Character;
   layout?: Layout;
+  sectionColumns?: SectionColumns;
 }
 
 /**
@@ -28,6 +30,7 @@ export interface ImportResult {
   warnings: string[];
   layout?: Layout;
   hasLayoutDifference?: boolean;
+  sectionColumns?: SectionColumns;
 }
 
 /**
@@ -92,11 +95,23 @@ function parseAndSanitizeCharacter(text: string): ImportResult {
     }
   }
 
+  // Process column choices if present
+  let sectionColumns: SectionColumns | undefined;
+
+  if (fileData.sectionColumns !== undefined) {
+    if (isValidSectionColumns(fileData.sectionColumns)) {
+      sectionColumns = fileData.sectionColumns;
+    } else {
+      allWarnings.push(t("fileOperations.invalidLayout"));
+    }
+  }
+
   return {
     character: sanitizeResult.character,
     warnings: allWarnings,
     layout: importedLayout,
     hasLayoutDifference,
+    sectionColumns,
   };
 }
 

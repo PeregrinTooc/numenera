@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { ExportManager } from "@/storage/exportManager";
+import { saveSectionColumns } from "@/storage/layoutStorage";
 import {
   mockCharacter,
   createMockHandle,
@@ -75,6 +76,19 @@ describe("ExportManager", () => {
       expect(parsed.character.name).toBe("Glaive Warrior");
 
       expect(writableMock.close).toHaveBeenCalled();
+    });
+
+    it("writes the stored column choices into the file", async () => {
+      saveSectionColumns({ cyphers: 1 });
+      const { mockHandle } = setupExportTest();
+      const writableMock = await mockHandle.createWritable();
+
+      await ctx.exportManager.export(mockCharacter);
+
+      const writtenData = vi.mocked(writableMock.write).mock.calls[0][0] as string;
+      const parsed = expectValidFileStructure(writtenData);
+      expect(parsed.sectionColumns).toEqual({ cyphers: 1 });
+      localStorage.clear();
     });
 
     it("should remember file handle after first export", async () => {

@@ -41,6 +41,12 @@ export const UNREADABLE_BACKUP_STORAGE_KEY = "numenera-character-unreadable-back
 export const LAYOUT_STORAGE_KEY = "numenera-layout";
 
 /**
+ * localStorage key for the card sections' column choices.
+ * Kept apart from the layout array so old layouts and old exports stay valid.
+ */
+export const SECTION_COLUMNS_STORAGE_KEY = "numenera-section-columns";
+
+/**
  * localStorage key for the Comparison View on/off preference.
  * Stored separately from character data as it's a user preference.
  */

@@ -2,6 +2,25 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { importCharacterFromFile } from "@/storage/fileStorage";
 import { Character } from "@/types/character";
 import { SCHEMA_VERSION } from "@/storage/storageConstants";
+import { t } from "@/i18n/index";
+import { mockCharacter } from "./helpers/exportManagerFixture";
+
+async function importFileWith(extra: Record<string, unknown>) {
+  const fileContent = {
+    version: "1.0",
+    schemaVersion: SCHEMA_VERSION,
+    exportDate: "2026-11-03T12:00:00Z",
+    character: mockCharacter,
+    ...extra,
+  };
+  const mockFile = { text: vi.fn().mockResolvedValue(JSON.stringify(fileContent)) };
+  window.showOpenFilePicker = vi
+    .fn()
+    .mockResolvedValue([{ getFile: vi.fn().mockResolvedValue(mockFile) }]);
+  const result = await importCharacterFromFile();
+  if (!result) throw new Error("import returned null");
+  return result;
+}
 
 describe("fileStorage", () => {
   beforeEach(() => {
@@ -233,6 +252,29 @@ describe("fileStorage", () => {
       window.showOpenFilePicker = vi.fn().mockRejectedValue(new Error("File system error"));
 
       await expect(importCharacterFromFile()).rejects.toThrow("File system error");
+    });
+  });
+
+  describe("section columns in an imported file", () => {
+    it("returns valid column choices", async () => {
+      const result = await importFileWith({ sectionColumns: { cyphers: 1 } });
+
+      expect(result.sectionColumns).toEqual({ cyphers: 1 });
+      expect(result.warnings).toEqual([]);
+    });
+
+    it("warns about invalid column choices and returns none", async () => {
+      const result = await importFileWith({ sectionColumns: { stats: 3 } });
+
+      expect(result.sectionColumns).toBeUndefined();
+      expect(result.warnings).toEqual([t("fileOperations.invalidLayout")]);
+    });
+
+    it("an old file without column choices returns none and no warning", async () => {
+      const result = await importFileWith({});
+
+      expect(result.sectionColumns).toBeUndefined();
+      expect(result.warnings).toEqual([]);
     });
   });
 });
