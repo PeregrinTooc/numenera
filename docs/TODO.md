@@ -107,13 +107,10 @@ building. `CharacterSheet.updateLayout`/`getLayout` were kept for it.
 
 ### Section Drag Follow-ups
 
-- **Animate the live preview.** The layout snaps into place after 300 ms
-  still; sliding sections to their new places (FLIP) would make it easier to
-  follow. Left out on purpose (see the pairing spec).
 - **Check touch dragging on a real iPhone/iPad.** The live preview re-creates
   the dragged section's element mid-gesture. Chromium (mouse and CDP touch) and
   WebKit (mouse) were verified; WebKit touch cannot be automated.
-- **Split `SectionDragController.ts`** (now ~430 lines): move the touch
+- **Split `SectionDragController.ts`** (now ~455 lines): move the touch
   long-press wiring or the live-preview state into its own helper.
 
 ### Edge Auto-Scroll for Touch Section Drags

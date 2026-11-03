@@ -150,8 +150,26 @@ sheet also shows the real result.
   before. Releasing during a live preview commits what is shown.
 - Cancelling (releasing outside the sheet, Esc, a touch cancel, leaving edit
   mode) restores the layout from before the drag and saves nothing.
-- The layout changes in one step (no animation). Animating sections to their
-  new places is a possible follow-up.
+- **Sections slide to their new places (amended 2026-11-02).** When the live
+  preview appears, and when a drag that showed one ends without committing
+  (release outside the sheet, Esc, a touch cancel, a lost dragend), every
+  section whose box moved slides from its old to its new place over 200 ms
+  (ease-in-out), the dragged section included. Sections are matched by id,
+  since a row that changes between single and pair re-creates its elements.
+  All of the following are the implementer's calls; the maintainer skipped
+  the design questions:
+  - Translate only: a section that changes width takes its new width at once
+    and slides from its old top-left corner (scaling would stretch its text).
+  - A drop does not slide (during a live preview nothing visible changes; a
+    drop before 300 ms snaps as before), and neither does leaving edit mode.
+  - Hovers are ignored while the sections slide into a live preview: their
+    boxes, which the drop zones are computed from, are in motion. Afterwards
+    the 8 px rule below applies as before. The wait ends when the slides have
+    finished, not on a timer.
+  - A slide that starts while another runs measures each section where it is
+    on screen, so it continues from there.
+  - Nothing slides, and no hover is ignored, under
+    `prefers-reduced-motion: reduce`.
 
 - **After a live preview, hovers are ignored until the pointer has moved more
   than 8 px** from where the preview appeared (corrected 2026-11-02, after

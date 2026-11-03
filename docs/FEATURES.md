@@ -176,6 +176,8 @@ All features listed below have full BDD test coverage and are verified working.
   - After 300 ms with the pointer still, the sheet shows the resulting layout
     (not saved until the drop; cancelling restores the layout); it holds until
     the pointer moves on
+  - The sections slide into the live preview, and back when it is cancelled
+    (not under reduced motion)
   - Mouse and touch (long-press), including touch pairing on wide screens
 
 ### Automated Section Drag/Drop Tests & Touch Long-Press Drag
