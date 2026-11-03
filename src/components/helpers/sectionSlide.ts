@@ -24,6 +24,19 @@ export function measureSections(root: Element): Map<string, BoxCorner> {
 }
 
 /**
+ * Stop every section slide in `root`: an element kept from the last render may
+ * still be sliding, which would put it where the slide has got to rather than
+ * where it now belongs
+ */
+export function cancelSectionSlides(root: Element): void {
+  for (const el of sectionElements(root)) {
+    for (const running of el.getAnimations?.() ?? []) {
+      if (running.id === SECTION_SLIDE_ID) running.cancel();
+    }
+  }
+}
+
+/**
  * Slide every section in `root` that moved from its box in `first` (taken
  * before the re-render) to where it is now. Sections are matched by id, not
  * element: a row that changes between single and pair re-creates them.
@@ -33,13 +46,9 @@ export function measureSections(root: Element): Map<string, BoxCorner> {
  */
 export function slideSections(root: Element, first: Map<string, BoxCorner>): Promise<void> | null {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
+  cancelSectionSlides(root);
   const slides: Promise<unknown>[] = [];
   for (const el of sectionElements(root)) {
-    // An element kept from the last render may still be sliding: measure it
-    // where it now belongs, not where that slide has got to
-    for (const running of el.getAnimations?.() ?? []) {
-      if (running.id === SECTION_SLIDE_ID) running.cancel();
-    }
     const from = first.get(el.dataset.sectionId ?? "");
     const keyframes = from && slideKeyframes(from, el.getBoundingClientRect());
     // jsdom has no Web Animations

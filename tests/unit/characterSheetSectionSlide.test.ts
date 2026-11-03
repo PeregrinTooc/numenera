@@ -253,4 +253,21 @@ describe("CharacterSheet sections slide into a live preview", () => {
 
     expect(pairGrid()).not.toBeNull();
   });
+
+  it("leaving layout edit mode stops the slide into the live preview", () => {
+    // Cyphers above Abilities: single rows reorder, so lit keeps the row
+    // elements, still sliding, for the sheet outside edit mode
+    vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("abilities"));
+    touch(section("cyphers"), "touchstart", [{ x: 20, y: 1020 }]);
+    vi.advanceTimersByTime(250);
+    const abilities = section("abilities").getBoundingClientRect();
+    touch(section("cyphers"), "touchmove", [{ x: 400, y: abilities.top + ROW_HEIGHT * 0.1 }]);
+    vi.advanceTimersByTime(300);
+    const sliding = [...animations];
+    sheet.toggleLayoutEditMode();
+
+    const stillShown = sliding.filter((a) => a.target.isConnected);
+    expect(stillShown.length).toBeGreaterThan(0);
+    stillShown.forEach((a) => expect(a.cancel).toHaveBeenCalled());
+  });
 });

@@ -10,7 +10,11 @@ import { loadLayout, saveLayout, resetLayout } from "@/storage/layoutStorage";
 import { SectionDragController } from "@/components/helpers/SectionDragController";
 import { SheetVersionUi } from "@/components/helpers/SheetVersionUi";
 import { renderEditLayoutButton } from "@/components/helpers/layoutEditButton";
-import { measureSections, slideSections } from "@/components/helpers/sectionSlide";
+import {
+  cancelSectionSlides,
+  measureSections,
+  slideSections,
+} from "@/components/helpers/sectionSlide";
 
 export class CharacterSheet {
   private header: Header;
@@ -121,6 +125,9 @@ export class CharacterSheet {
     // overwrite storage with this instance's (possibly stale) in-memory copy
     // whenever the persisted layout had changed since edit mode was entered.
     this.rerender();
+    // The sheet snaps to its layout: no section may go on sliding to a place
+    // from the live preview
+    if (this.container) cancelSectionSlides(this.container);
   }
 
   /**
