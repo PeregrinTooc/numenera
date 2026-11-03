@@ -33,10 +33,10 @@ export interface SectionDragHost {
   requestRender(): void;
   /**
    * The shown layout changed: re-render the sheet; sections that moved slide
-   * from their old places. Resolves when the slide has finished (at once when
-   * nothing slides).
+   * from their old places. Resolves when the slide has finished; null when
+   * nothing slides.
    */
-  renderWithSlide(): Promise<void>;
+  renderWithSlide(): Promise<void> | null;
   /** The layout the drop intents refer to. */
   getLayout(): Layout;
   /** A section was dropped: adopt, persist and render `layout`. */
@@ -57,6 +57,11 @@ export class SectionDragController {
   private lastPointer: { x: number; y: number } | null = null;
   /** Where the pointer was when the live preview appeared, until it moves on. */
   private previewAnchor: { x: number; y: number } | null = null;
+  /**
+   * The sections sliding into the live preview, until they have arrived.
+   * Their boxes are in motion, so hovers are ignored meanwhile.
+   */
+  private slide: Promise<void> | null = null;
 
   /**
    * Watches the document during a mouse section drag for a drag whose end
@@ -276,6 +281,7 @@ export class SectionDragController {
    */
   private hover(target: HTMLElement, x: number, y: number): void {
     this.lastPointer = { x, y };
+    if (this.slide) return;
     if (this.previewAnchor) {
       const { x: ax, y: ay } = this.previewAnchor;
       if (Math.hypot(x - ax, y - ay) <= LIVE_PREVIEW_SETTLE_PX) return;
@@ -319,7 +325,11 @@ export class SectionDragController {
     this.previewedLayout = applyDrop(this.workingLayout(), sourceId, this.intent);
     this.previewAnchor = this.lastPointer;
     this.setIntent(null);
-    void this.host.renderWithSlide();
+    const slide = this.host.renderWithSlide();
+    this.slide = slide;
+    void slide?.then(() => {
+      if (this.slide === slide) this.slide = null;
+    });
   }
 
   /** The layout hovers are resolved against: the live preview, else the sheet's */
@@ -421,7 +431,7 @@ export class SectionDragController {
   private clearDragState(): void {
     const restoring = this.previewedLayout !== null;
     this.resetDragState();
-    if (restoring) void this.host.renderWithSlide();
+    if (restoring) this.host.renderWithSlide();
     else this.host.requestRender();
   }
 
@@ -432,6 +442,7 @@ export class SectionDragController {
     this.dwellTimer = null;
     this.previewedLayout = null;
     this.previewAnchor = null;
+    this.slide = null;
     this.lastPointer = null;
     this.draggedSectionId = null;
     this.setIntent(null);

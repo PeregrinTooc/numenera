@@ -190,11 +190,11 @@ export class CharacterSheet {
 
   /**
    * Re-render the whole sheet in place; sections that moved slide from their
-   * old places. Resolves when the slide has finished.
+   * old places. Resolves when the slide has finished; null when nothing slides.
    */
-  private rerenderWithSlide(): Promise<void> {
+  private rerenderWithSlide(): Promise<void> | null {
     const container = this.container ?? document.getElementById("app");
-    if (!container) return Promise.resolve();
+    if (!container) return null;
     const first = measureSections(container);
     this.mount(container);
     return slideSections(container, first);

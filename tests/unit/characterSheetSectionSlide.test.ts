@@ -65,6 +65,11 @@ function fakeAnimation(id: string, target: Element): FakeAnimation {
   return { id, target, finished, finish, cancel: vi.fn(abort) };
 }
 
+/** Let promise callbacks (a slide's `finished` and what waits on it) run. */
+async function flushPromises(): Promise<void> {
+  for (let i = 0; i < 10; i++) await Promise.resolve();
+}
+
 /** Stub `matchMedia`: wide viewport, motion allowed unless `reducedMotion`. */
 function stubMedia(reducedMotion: boolean): void {
   vi.spyOn(window, "matchMedia").mockImplementation(
@@ -199,5 +204,53 @@ describe("CharacterSheet sections slide into a live preview", () => {
 
     expect(pairGrid()).toBeNull();
     expect(animate).toHaveBeenCalledTimes(slides);
+  });
+
+  /** Move the held finger over the top edge of Items, at `x`. */
+  function moveOverTopEdgeOfItems(x: number): void {
+    const items = section("items").getBoundingClientRect();
+    touch(section("cyphers"), "touchmove", [{ x, y: items.top + ROW_HEIGHT * 0.1 }]);
+  }
+
+  it("ignores hovers until the slide into the live preview has finished", async () => {
+    holdCyphersOverItems();
+    vi.advanceTimersByTime(300); // Cyphers paired with Items, still sliding
+    // The top edge of Items takes Cyphers out of the pair again
+    moveOverTopEdgeOfItems(200);
+    vi.advanceTimersByTime(300);
+    expect(pairGrid()).not.toBeNull();
+
+    animations.forEach((a) => a.finish());
+    await flushPromises();
+    moveOverTopEdgeOfItems(201);
+    vi.advanceTimersByTime(300);
+    expect(pairGrid()).toBeNull();
+  });
+
+  it("does not ignore hovers when nothing slides", () => {
+    stubMedia(true);
+    holdCyphersOverItems();
+    vi.advanceTimersByTime(300);
+    moveOverTopEdgeOfItems(200);
+    vi.advanceTimersByTime(300);
+
+    expect(pairGrid()).toBeNull();
+  });
+
+  it("a slide from an ended drag does not lift the gate of the next one", async () => {
+    holdCyphersOverItems();
+    vi.advanceTimersByTime(300);
+    const firstSlide = [...animations];
+    touch(section("cyphers"), "touchcancel"); // its slide still running
+
+    holdCyphersOverItems();
+    vi.advanceTimersByTime(300);
+    expect(pairGrid()).not.toBeNull();
+    firstSlide.forEach((a) => a.finish());
+    await flushPromises();
+    moveOverTopEdgeOfItems(200);
+    vi.advanceTimersByTime(300);
+
+    expect(pairGrid()).not.toBeNull();
   });
 });

@@ -2,10 +2,10 @@
  * Step definitions for sections sliding into a live preview and back
  */
 
-import { Given, Then } from "@cucumber/cucumber";
+import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
-import { sectionId } from "../support/sections.js";
+import { sectionId, sectionLocator, zonePoint, type SectionZone } from "../support/sections.js";
 import type { SectionSlideRecord } from "../support/windowGlobals";
 
 /** The slides recorded for one section, oldest first. */
@@ -53,6 +53,21 @@ Given("section slides are recorded", async function (this: CustomWorld) {
 Given("I prefer reduced motion", async function (this: CustomWorld) {
   await this.page.emulateMedia({ reducedMotion: "reduce" });
 });
+
+When(
+  "I drop the held section onto the {zone} of the {string} section",
+  async function (this: CustomWorld, zone: SectionZone, target: string) {
+    const page = this.page;
+    const box = await sectionLocator(page, target).boundingBox();
+    if (!box) throw new Error(`Section ${target} has no bounding box (not visible?)`);
+    const point = zonePoint(box, zone);
+    // Two separate moves, as when the drag was picked up: Playwright sends
+    // dragover for a move only once the previous one has been delivered
+    await page.mouse.move(point.x, point.y - 1, { steps: 5 });
+    await page.mouse.move(point.x, point.y);
+    await page.mouse.up();
+  }
+);
 
 Then(
   "the {string} section should slide into its new place",

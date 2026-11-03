@@ -28,10 +28,11 @@ export function measureSections(root: Element): Map<string, BoxCorner> {
  * before the re-render) to where it is now. Sections are matched by id, not
  * element: a row that changes between single and pair re-creates them.
  * Web Animations rather than an inline transform, which would start the CSS
- * transition on `.layout-section`. Resolves when every slide has finished.
+ * transition on `.layout-section`. Resolves when every slide has finished;
+ * null when nothing slides (no section moved, or reduced motion).
  */
-export function slideSections(root: Element, first: Map<string, BoxCorner>): Promise<void> {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return Promise.resolve();
+export function slideSections(root: Element, first: Map<string, BoxCorner>): Promise<void> | null {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
   const slides: Promise<unknown>[] = [];
   for (const el of sectionElements(root)) {
     // An element kept from the last render may still be sliding: measure it
@@ -50,6 +51,7 @@ export function slideSections(root: Element, first: Map<string, BoxCorner>): Pro
     });
     slides.push(animation.finished);
   }
+  if (slides.length === 0) return null;
   // A cancelled slide rejects `finished`; it is over all the same
   return Promise.allSettled(slides).then(() => undefined);
 }

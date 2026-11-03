@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **714** in 53 files
-- Feature step lines: **2263**
+- Step definitions: **715** in 53 files
+- Feature step lines: **2272**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -66,7 +66,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 7 | 0 |
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
-| [section-slide.steps.ts](#sectionslidestepsts) | 5 | 0 |
+| [section-slide.steps.ts](#sectionslidestepsts) | 6 | 0 |
 | [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 6 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
@@ -631,7 +631,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `{string} and {string} are in a grid` | 1 | 52 |
-| Then | `{string} should be in its own row` | 8 | 77 |
+| Then | `{string} should be in its own row` | 9 | 77 |
 | When | `I drag the {string} section onto the {zone} of the {string} section` | 9 | 11 |
 | Then | `the {string} section should be the last section` | 2 | 42 |
 | Then | `the grid should show {string} on the left and {string} on the right` | 8 | 18 |
@@ -692,7 +692,7 @@ pattern this script does not understand):
 | Then | `I should see the {string} button` | 1 | 80 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 36 |
 | Then | `it should be touch-friendly` | 1 | 91 |
-| Given | `layout edit mode is active` | 26 | 48 |
+| Given | `layout edit mode is active` | 27 | 48 |
 | Then | `layout edit mode should be inactive` | 1 | 59 |
 | Then | `the {string} option should be enabled` | 1 | 134 |
 | Then | `the layout should return to the default arrangement` | 1 | 122 |
@@ -773,8 +773,8 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I hold the {string} section over the {zone} of the {string} section` | 8 | 31 |
-| When | `I keep still for a moment` | 5 | 60 |
+| When | `I hold the {string} section over the {zone} of the {string} section` | 9 | 31 |
+| When | `I keep still for a moment` | 6 | 60 |
 | When | `I release the section outside the sheet` | 2 | 65 |
 | Then | `no drop preview should be shown` | 1 | 106 |
 | Then | `the {string} section should preview {string} in its place` | 1 | 85 |
@@ -789,7 +789,7 @@ pattern this script does not understand):
 | When | `I exit layout edit mode` | 1 | 120 |
 | Given | `I have moved the {string} section to the top` | 1 | 91 |
 | Given | `I have reordered sections` | 1 | 10 |
-| Then | `the {string} section should appear before the {string} section` | 10 | 60 |
+| Then | `the {string} section should appear before the {string} section` | 11 | 60 |
 | Then | `the {string} section should still be at the top` | 1 | 131 |
 | Then | `the layout should be saved` | 1 | 32 |
 | Then | `the sections should remain in the new order` | 1 | 43 |
@@ -798,11 +798,12 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
+| When | `I drop the held section onto the {zone} of the {string} section` | 1 | 56 |
 | Given | `I prefer reduced motion` | 1 | 52 |
-| Then | `no section should have slid` | 1 | 82 |
-| Given | `section slides are recorded` | 3 | 26 |
-| Then | `the {string} section should slide back to where it was` | 1 | 67 |
-| Then | `the {string} section should slide into its new place` | 3 | 56 |
+| Then | `no section should have slid` | 1 | 97 |
+| Given | `section slides are recorded` | 4 | 26 |
+| Then | `the {string} section should slide back to where it was` | 1 | 82 |
+| Then | `the {string} section should slide into its new place` | 4 | 71 |
 
 ## section-touch-drag.steps.ts
 
@@ -1071,5 +1072,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 35 | 9 |
+| Given | `the viewport is {int} pixels wide` | 36 | 9 |
 

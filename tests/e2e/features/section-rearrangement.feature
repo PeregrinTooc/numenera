@@ -160,6 +160,17 @@ Feature: Section Re-arrangement
     Then the "Items" section should slide back to where it was
     And the "Cyphers" section should appear before the "Items" section
 
+  Scenario: The drag carries on after the sections have slid
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    And section slides are recorded
+    When I hold the "Cyphers" section over the middle right of the "Items" section
+    And I keep still for a moment
+    And the "Cyphers" section should slide into its new place
+    And I drop the held section onto the top edge of the "Abilities" section
+    Then "Cyphers" should be in its own row
+    And the "Cyphers" section should appear before the "Abilities" section
+
   Scenario: Nothing slides when reduced motion is preferred
     Given the viewport is 1280 pixels wide
     And I prefer reduced motion
