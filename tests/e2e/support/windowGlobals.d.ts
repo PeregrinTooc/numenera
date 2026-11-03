@@ -4,10 +4,17 @@
  * App-owned test hooks (`__testStorage`, `__testTimer`, ...) are declared in
  * src/main.ts.
  */
-export {};
+/** A section slide the app started (see section-slide.steps.ts). */
+export interface SectionSlideRecord {
+  sectionId: string;
+  /** The transform the slide starts from. */
+  from: string;
+  finished: boolean;
+}
 
 declare global {
   interface Window {
+    __sectionSlides?: SectionSlideRecord[];
     __saveCount?: number;
     __restoreStorageWrites?: () => void;
     __saveObserver?: MutationObserver;
