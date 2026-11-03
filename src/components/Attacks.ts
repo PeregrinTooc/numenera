@@ -63,8 +63,8 @@ export class Attacks {
         });
 
     return html`
-      <div data-testid="attacks-section" class="mt-8">
-        <div class="flex justify-between items-center mb-4">
+      <div data-testid="attacks-section" class="section-box">
+        <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
           <div class="flex items-center gap-3">
             <h2 class="text-2xl font-serif font-bold text-gray-700">${t("attacks.title")} ⚔️</h2>
             ${renderAddButton({

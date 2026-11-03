@@ -111,20 +111,22 @@ export class ItemsBox {
 
     return html`
       <div data-testid="items-section" class="section-box">
-        <!-- Shins Badge - top-right corner -->
-        <div
-          class="stat-badge badge-top-right editable-field"
-          data-testid="shins-badge"
-          @click=${() => this.openEditModal("shins")}
-          role="button"
-          tabindex="0"
-          aria-label=${t("resourceTracker.editShins")}
-        >
-          <span class="stat-badge-value">${this.character.shins}</span>
-          <span class="stat-badge-label">${t("character.shins")}</span>
-        </div>
+        <!-- Heading row: Shins Badge (top-left), heading -->
+        <div class="section-box-heading-row">
+          <div
+            class="stat-badge editable-field"
+            data-testid="shins-badge"
+            @click=${() => this.openEditModal("shins")}
+            role="button"
+            tabindex="0"
+            aria-label=${t("resourceTracker.editShins")}
+          >
+            <span class="stat-badge-value">${this.character.shins}</span>
+            <span class="stat-badge-label">${t("character.shins")}</span>
+          </div>
 
-        <h2 class="section-box-heading">${t("items.heading")}</h2>
+          <h2 class="section-box-heading">${t("items.heading")}</h2>
+        </div>
 
         <!-- Equipment Section (full width) -->
         <div>

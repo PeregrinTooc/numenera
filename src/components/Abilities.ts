@@ -45,7 +45,7 @@ export class Abilities {
         });
 
     return html`
-      <div data-testid="abilities-section" class="mt-8">
+      <div data-testid="abilities-section" class="section-box">
         <div class="flex items-center gap-3 mb-4">
           <h2 class="text-2xl font-serif font-bold text-gray-700">${t("abilities.heading")} ⚡</h2>
           ${renderAddButton({

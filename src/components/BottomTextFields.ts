@@ -40,7 +40,7 @@ export class BottomTextFields {
     }
 
     // Dispatch character-updated event to trigger auto-save
-    // Dispatch from the textarea's parent (parchment-field) or the textarea itself
+    // Dispatch from the textarea's frame (section-box) or the textarea itself
     const event = new CustomEvent("character-updated", {
       detail: this.character,
       bubbles: true,
@@ -48,7 +48,7 @@ export class BottomTextFields {
     });
 
     // Dispatch from the textarea or its closest parent that can bubble up
-    const dispatchTarget = textarea?.closest(".parchment-field") || textarea || document;
+    const dispatchTarget = textarea?.closest(".section-box") || textarea || document;
     dispatchTarget.dispatchEvent(event);
   }
 
@@ -65,7 +65,7 @@ export class BottomTextFields {
    */
   renderBackground(): TemplateResult {
     return html`
-      <div class="parchment-field">
+      <div data-testid="background-section" class="section-box">
         <h3 class="text-lg font-bold mb-2 text-amber-900">${t("textFields.background.label")}</h3>
         <textarea
           data-testid="character-background"
@@ -93,7 +93,7 @@ export class BottomTextFields {
    */
   renderNotes(): TemplateResult {
     return html`
-      <div class="parchment-field">
+      <div data-testid="notes-section" class="section-box">
         <h3 class="text-lg font-bold mb-2 text-amber-900">${t("textFields.notes.label")}</h3>
         <textarea
           data-testid="character-notes"

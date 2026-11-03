@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **720** in 54 files
-- Feature step lines: **2306**
+- Step definitions: **723** in 54 files
+- Feature step lines: **2311**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -64,7 +64,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 13 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
-| [section-columns.steps.ts](#sectioncolumnsstepsts) | 4 | 0 |
+| [section-columns.steps.ts](#sectioncolumnsstepsts) | 7 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 7 | 0 |
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
@@ -778,6 +778,9 @@ pattern this script does not understand):
 | Then | `the {string} section should offer a column switch` | 1 | 41 |
 | Then | `the {string} section should offer no column switch` | 3 | 49 |
 | Then | `the {string} section should show its cards in {int} column\(s)` | 7 | 13 |
+| Then | `the armor badge should not cover the add attack button` | 1 | 86 |
+| Then | `the max cyphers badge should be left of the {string} heading` | 1 | 72 |
+| Then | `the shins badge should be left of the {string} heading` | 1 | 79 |
 
 ## section-drop-preview.steps.ts
 
@@ -1083,5 +1086,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 44 | 9 |
+| Given | `the viewport is {int} pixels wide` | 46 | 9 |
 

@@ -43,7 +43,10 @@ export class RecoveryDamageSection {
 
   render(): TemplateResult {
     return html`
-      <div data-testid="recovery-damage-section" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div
+        data-testid="recovery-damage-section"
+        class="section-box grid grid-cols-1 md:grid-cols-2 gap-4"
+      >
         ${this.recoveryRolls.render()} ${this.damageTrack.render()}
       </div>
     `;

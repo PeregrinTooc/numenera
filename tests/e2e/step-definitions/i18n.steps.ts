@@ -118,14 +118,14 @@ Then("the oddities heading should be {string}", async function (expectedText: st
 });
 
 Then("the background field label should be {string}", async function (expectedText: string) {
-  // Background label is an h3 inside the parchment-field div, find it by looking near the textarea
-  const label = this.page.locator(".parchment-field h3").first();
+  // Background label is the h3 of the Background section
+  const label = this.page.locator('[data-testid="background-section"] h3');
   await expect(label).toHaveText(expectedText);
 });
 
 Then("the notes field label should be {string}", async function (expectedText: string) {
-  // Notes label is an h3 inside the parchment-field div, find the second one
-  const label = this.page.locator(".parchment-field h3").nth(1);
+  // Notes label is the h3 of the Notes section
+  const label = this.page.locator('[data-testid="notes-section"] h3');
   await expect(label).toHaveText(expectedText);
 });
 
@@ -151,7 +151,7 @@ Then("the empty background message should be {string}", async function (_expecte
   await expect(textarea).toHaveValue("");
 
   // Verify the label is translated correctly
-  const label = this.page.locator(".parchment-field h3").first();
+  const label = this.page.locator('[data-testid="background-section"] h3');
   await expect(label).toBeVisible();
 });
 
@@ -162,7 +162,7 @@ Then("the empty notes message should be {string}", async function (_expectedText
   await expect(textarea).toHaveValue("");
 
   // Verify the label is translated correctly
-  const label = this.page.locator(".parchment-field h3").nth(1);
+  const label = this.page.locator('[data-testid="notes-section"] h3');
   await expect(label).toBeVisible();
 });
 

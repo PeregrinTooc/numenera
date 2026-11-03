@@ -62,32 +62,34 @@ export class CyphersBox {
 
     return html`
       <div data-testid="cyphers-section" class="section-box">
-        <!-- Max Cyphers Badge - top-right corner -->
-        <div
-          data-testid="max-cyphers-badge"
-          class="stat-badge badge-top-right editable-field"
-          @click=${() => this.openEditModal("maxCyphers")}
-          role="button"
-          tabindex="0"
-          aria-label=${t("cyphers.editMax")}
-        >
-          <span class="stat-badge-value"
-            >${this.character.cyphers.length}/<span data-testid="max-cyphers-value"
-              >${this.character.maxCyphers}</span
-            ></span
+        <!-- Heading row: Max Cyphers Badge (top-left), heading, add button -->
+        <div class="section-box-heading-row">
+          <div
+            data-testid="max-cyphers-badge"
+            class="stat-badge editable-field"
+            @click=${() => this.openEditModal("maxCyphers")}
+            role="button"
+            tabindex="0"
+            aria-label=${t("cyphers.editMax")}
           >
-          <span class="stat-badge-label">${t("cyphers.max")}</span>
-        </div>
+            <span class="stat-badge-value"
+              >${this.character.cyphers.length}/<span data-testid="max-cyphers-value"
+                >${this.character.maxCyphers}</span
+              ></span
+            >
+            <span class="stat-badge-label">${t("cyphers.max")}</span>
+          </div>
 
-        <h2 data-testid="cyphers-heading" class="section-box-heading">
-          ${t("cyphers.heading")}
-          ${renderAddButton({
-            onClick: this.handleAddCypher,
-            testId: "add-cypher-button",
-            colorTheme: "purple",
-            ariaLabel: t("cyphers.add"),
-          })}
-        </h2>
+          <h2 data-testid="cyphers-heading" class="section-box-heading">
+            ${t("cyphers.heading")}
+            ${renderAddButton({
+              onClick: this.handleAddCypher,
+              testId: "add-cypher-button",
+              colorTheme: "purple",
+              ariaLabel: t("cyphers.add"),
+            })}
+          </h2>
+        </div>
 
         ${this.character.cyphers.length === 0
           ? html`

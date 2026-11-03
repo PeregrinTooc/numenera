@@ -55,3 +55,12 @@ Feature: Card columns follow the section's width
   Scenario: No column switch outside layout edit mode
     Given the viewport is 1280 pixels wide
     Then the "Abilities" section should offer no column switch
+
+  Scenario: Cypher and Items show their badge at the top left
+    Given the viewport is 1280 pixels wide
+    Then the max cyphers badge should be left of the "Cyphers" heading
+    And the shins badge should be left of the "Items" heading
+
+  Scenario: On a narrow phone the armor badge leaves the add attack button free
+    Given the viewport is 360 pixels wide
+    Then the armor badge should not cover the add attack button
