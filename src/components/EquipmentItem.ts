@@ -4,6 +4,7 @@ import { html, TemplateResult } from "lit-html";
 import { EquipmentItem as EquipmentItemType } from "@/types/character";
 import { t } from "@/i18n/index";
 import { createEditHandler, renderCardButtons } from "./helpers/CardEditorBehavior.js";
+import { renderTextArea, renderTextField } from "./helpers/cardFormFields.js";
 
 export class EquipmentItem {
   private editedItem: EquipmentItemType;
@@ -28,39 +29,30 @@ export class EquipmentItem {
   }
 
   private renderEditableVersion(): TemplateResult {
+    const theme = "green";
     return html`
       <div class="card-edit-wrapper">
         <div
           class="equipment-item-card bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg p-4"
         >
-          <div class="mb-3">
-            <label class="block text-sm font-medium text-green-900 mb-1">
-              ${t("equipment.name")}
-            </label>
-            <input
-              type="text"
-              data-testid="edit-field-name"
-              class="w-full bg-transparent border-b-2 border-green-300 focus:border-green-500 px-2 py-1 text-green-900 font-semibold"
-              .value=${this.editedItem.name}
-              @input=${(e: Event) => {
-                this.editedItem.name = (e.target as HTMLInputElement).value;
-              }}
-            />
-          </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium text-green-900 mb-1">
-              ${t("equipment.description")}
-            </label>
-            <textarea
-              data-testid="edit-field-description"
-              class="w-full bg-transparent border-b-2 border-green-300 focus:border-green-500 px-2 py-1 text-gray-700"
-              rows="3"
-              .value=${this.editedItem.description || ""}
-              @input=${(e: Event) => {
-                this.editedItem.description = (e.target as HTMLTextAreaElement).value;
-              }}
-            ></textarea>
-          </div>
+          ${renderTextField({
+            theme,
+            label: t("equipment.name"),
+            testId: "edit-field-name",
+            value: this.editedItem.name,
+            onInput: (value) => {
+              this.editedItem.name = value;
+            },
+          })}
+          ${renderTextArea({
+            theme,
+            label: t("equipment.description"),
+            testId: "edit-field-description",
+            value: this.editedItem.description || "",
+            onInput: (value) => {
+              this.editedItem.description = value;
+            },
+          })}
         </div>
       </div>
     `;

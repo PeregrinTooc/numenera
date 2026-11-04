@@ -4,6 +4,7 @@ import { html, TemplateResult } from "lit-html";
 import { SpecialAbility } from "@/types/character";
 import { t } from "@/i18n/index";
 import { createEditHandler, renderCardButtons } from "./helpers/CardEditorBehavior.js";
+import { renderTextArea, renderTextField } from "./helpers/cardFormFields.js";
 
 export class SpecialAbilityItem {
   private editedAbility: SpecialAbility;
@@ -28,53 +29,39 @@ export class SpecialAbilityItem {
   }
 
   private renderEditableVersion(): TemplateResult {
+    const theme = "teal";
     return html`
       <div class="card-edit-wrapper">
         <div
           class="special-ability-item-card bg-gradient-to-br from-cyan-50 to-teal-50 border-2 border-teal-200 rounded-lg p-4"
         >
-          <div class="mb-3">
-            <label class="block text-sm font-medium text-teal-900 mb-1">
-              ${t("character.name")}
-            </label>
-            <input
-              type="text"
-              .value=${this.editedAbility.name}
-              @input=${(e: Event) => {
-                this.editedAbility.name = (e.target as HTMLInputElement).value;
-              }}
-              class="w-full bg-transparent border-b-2 border-teal-300 focus:border-teal-500 px-2 py-1 text-teal-900 font-semibold"
-              data-testid="edit-special-ability-name"
-            />
-          </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium text-teal-900 mb-1">
-              ${t("specialAbilities.source")}
-            </label>
-            <input
-              type="text"
-              .value=${this.editedAbility.source}
-              @input=${(e: Event) => {
-                this.editedAbility.source = (e.target as HTMLInputElement).value;
-              }}
-              class="w-full bg-transparent border-b-2 border-teal-300 focus:border-teal-500 px-2 py-1 text-teal-900 font-semibold"
-              data-testid="edit-special-ability-source"
-            />
-          </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium text-teal-900 mb-1">
-              ${t("abilities.description")}
-            </label>
-            <textarea
-              .value=${this.editedAbility.description}
-              @input=${(e: Event) => {
-                this.editedAbility.description = (e.target as HTMLTextAreaElement).value;
-              }}
-              class="w-full bg-transparent border-b-2 border-teal-300 focus:border-teal-500 px-2 py-1 text-gray-700"
-              rows="3"
-              data-testid="edit-special-ability-description"
-            ></textarea>
-          </div>
+          ${renderTextField({
+            theme,
+            label: t("character.name"),
+            testId: "edit-special-ability-name",
+            value: this.editedAbility.name,
+            onInput: (value) => {
+              this.editedAbility.name = value;
+            },
+          })}
+          ${renderTextField({
+            theme,
+            label: t("specialAbilities.source"),
+            testId: "edit-special-ability-source",
+            value: this.editedAbility.source,
+            onInput: (value) => {
+              this.editedAbility.source = value;
+            },
+          })}
+          ${renderTextArea({
+            theme,
+            label: t("abilities.description"),
+            testId: "edit-special-ability-description",
+            value: this.editedAbility.description,
+            onInput: (value) => {
+              this.editedAbility.description = value;
+            },
+          })}
         </div>
       </div>
     `;

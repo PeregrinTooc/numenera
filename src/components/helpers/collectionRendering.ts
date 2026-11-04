@@ -2,6 +2,7 @@
 // for container components managing collections
 
 import { html, TemplateResult } from "lit-html";
+import type { CollectionDragReorder } from "./CollectionDragReorder.js";
 
 /**
  * Color themes available for the add button.
@@ -71,48 +72,65 @@ export function renderAddButton(config: AddButtonConfig): TemplateResult {
 export interface EmptyStateConfig {
   /** Test ID for the empty state container */
   testId: string;
+  /** CSS class name of the empty state container */
+  className: string;
   /** Message to display (typically from i18n) */
   message: string;
-  /** Optional custom CSS class name */
-  className?: string;
+  /** Wrap the message in a paragraph */
+  paragraph?: boolean;
 }
 
 /**
  * Renders a standardized empty state message
- * Provides consistent styling across all containers
  */
 export function renderEmptyState(config: EmptyStateConfig): TemplateResult {
-  const { testId, message, className } = config;
+  const { testId, className, message, paragraph } = config;
 
   return html`
-    <div data-testid="${testId}" class="${className || "empty-state"}">${message}</div>
+    <div data-testid="${testId}" class="${className}">
+      ${paragraph ? html`<p>${message}</p>` : message}
+    </div>
   `;
 }
 
 /**
- * Helper for rendering a collection with conditional empty state
- * Simplifies the isEmpty ? empty : items pattern used in all containers
+ * Configuration for rendering a collection that is either empty or a draggable list
  */
-export interface CollectionRenderConfig<ItemComponent extends { render: () => TemplateResult }> {
-  /** Collection items */
-  items: ItemComponent[];
-  /** Empty state configuration (shown when items.length === 0) */
+export interface CollectionConfig {
+  /** Whether the collection has no items */
+  isEmpty: boolean;
+  /** Shown instead of the list when the collection is empty */
   emptyState: EmptyStateConfig;
-  /** Optional container CSS classes for the items grid/list */
-  containerClass?: string;
+  /** Test ID of the list container */
+  listTestId: string;
+  /** CSS class name of the list container */
+  listClassName: string;
+  /** Drag-reorder behaviour wired to the list container */
+  drag: CollectionDragReorder;
+  /** The rendered items: a template array or a keyed `repeat` result (typed unknown by lit) */
+  items: unknown;
 }
 
 /**
- * Renders a collection with automatic empty state handling
+ * Renders the empty state, or the item list wired for drag-reorder.
  */
-export function renderCollection<ItemComponent extends { render: () => TemplateResult }>(
-  config: CollectionRenderConfig<ItemComponent>
-): TemplateResult {
-  const { items, emptyState, containerClass = "grid grid-cols-1 gap-4" } = config;
+export function renderCollection(config: CollectionConfig): TemplateResult {
+  const { isEmpty, emptyState, listTestId, listClassName, drag, items } = config;
 
-  if (items.length === 0) {
+  if (isEmpty) {
     return renderEmptyState(emptyState);
   }
 
-  return html` <div class="${containerClass}">${items.map((item) => item.render())}</div> `;
+  return html`
+    <div
+      data-testid="${listTestId}"
+      class="${listClassName}"
+      @dragstart=${(e: Event) => drag.handleDragStart(e)}
+      @dragover=${(e: Event) => drag.handleDragOver(e)}
+      @drop=${(e: Event) => drag.handleDrop(e)}
+      @dragend=${() => drag.handleDragEnd()}
+    >
+      ${items}
+    </div>
+  `;
 }

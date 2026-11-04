@@ -2,15 +2,15 @@
 
 import { html, TemplateResult } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
-import { Character } from "@/types/character";
+import { Ability, Character } from "@/types/character";
 import { AbilityItem } from "./AbilityItem.js";
 import { t } from "@/i18n/index";
-import { createAddHandler, createItemInstances } from "./helpers/CollectionBehavior.js";
-import { renderAddButton } from "./helpers/collectionRendering.js";
+import { CollectionSection } from "./helpers/CollectionBehavior.js";
+import { renderAddButton, renderCollection } from "./helpers/collectionRendering.js";
 import { CollectionDragReorder } from "./helpers/CollectionDragReorder.js";
 
 export class Abilities {
-  private handleAddAbility: () => void;
+  private abilities: CollectionSection<Ability, AbilityItem>;
   private drag = new CollectionDragReorder({
     section: "abilities",
     itemTestId: "ability-item",
@@ -20,63 +20,43 @@ export class Abilities {
   });
 
   constructor(private character: Character) {
-    // Create add handler using CollectionBehavior helper
-    this.handleAddAbility = createAddHandler({
-      emptyItem: { name: "", description: "" },
-      ItemComponentClass: AbilityItem,
-      character: this.character,
+    this.abilities = new CollectionSection(character, {
       collectionKey: "abilities",
+      ItemComponentClass: AbilityItem,
+      emptyItem: { name: "", description: "" },
     });
   }
 
   render(): TemplateResult {
     const isEmpty = this.character.abilities.length === 0;
 
-    // Create ability item instances using CollectionBehavior helper
-    // collectionKey enables immutable updates for proper version history undo support
-    const abilityItems = isEmpty
-      ? []
-      : createItemInstances({
-          collection: this.character.abilities,
-          ItemComponentClass: AbilityItem,
-          character: this.character,
-          collectionKey: "abilities",
-        });
-
     return html`
       <div data-testid="abilities-section" class="section-box">
         <div class="flex items-center gap-3 mb-4">
           <h2 class="text-2xl font-serif font-bold text-gray-700">${t("abilities.heading")} ⚡</h2>
           ${renderAddButton({
-            onClick: this.handleAddAbility,
+            onClick: this.abilities.handleAdd,
             testId: "add-ability-button",
             colorTheme: "indigo",
             ariaLabel: t("abilities.add"),
           })}
         </div>
-        ${isEmpty
-          ? html`
-              <div data-testid="empty-abilities" class="empty-abilities-styled">
-                ${t("abilities.empty")}
-              </div>
-            `
-          : html`
-              <div
-                data-testid="abilities-list"
-                class="section-card-grid"
-                @dragstart=${(e: Event) => this.drag.handleDragStart(e)}
-                @dragover=${(e: Event) => this.drag.handleDragOver(e)}
-                @drop=${(e: Event) => this.drag.handleDrop(e)}
-                @dragend=${() => this.drag.handleDragEnd()}
-              >
-                ${repeat(
-                  abilityItems,
-                  (_item, index) =>
-                    `ability-${index}-${this.character.abilities[index]?.name || index}`,
-                  (item) => item.render()
-                )}
-              </div>
-            `}
+        ${renderCollection({
+          isEmpty,
+          emptyState: {
+            testId: "empty-abilities",
+            className: "empty-abilities-styled",
+            message: t("abilities.empty"),
+          },
+          listTestId: "abilities-list",
+          listClassName: "section-card-grid",
+          drag: this.drag,
+          items: repeat(
+            this.abilities.items(),
+            (_item, index) => `ability-${index}-${this.character.abilities[index]?.name || index}`,
+            (item) => item.render()
+          ),
+        })}
       </div>
     `;
   }

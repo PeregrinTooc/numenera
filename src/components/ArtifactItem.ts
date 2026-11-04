@@ -4,6 +4,7 @@ import { html, TemplateResult } from "lit-html";
 import { Artifact } from "@/types/character";
 import { t } from "@/i18n/index";
 import { createEditHandler, renderCardButtons } from "./helpers/CardEditorBehavior.js";
+import { renderTextArea, renderTextField } from "./helpers/cardFormFields.js";
 
 export class ArtifactItem {
   private editedArtifact: Artifact;
@@ -28,53 +29,39 @@ export class ArtifactItem {
   }
 
   private renderEditableVersion(): TemplateResult {
+    const theme = "purple";
     return html`
       <div class="card-edit-wrapper">
         <div
           class="artifact-item-card bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-lg p-4"
         >
-          <div class="mb-3">
-            <label class="block text-sm font-medium text-purple-900 mb-1">
-              ${t("artifacts.name")}
-            </label>
-            <input
-              type="text"
-              data-testid="edit-artifact-name"
-              class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-purple-900 font-semibold"
-              .value=${this.editedArtifact.name}
-              @input=${(e: Event) => {
-                this.editedArtifact.name = (e.target as HTMLInputElement).value;
-              }}
-            />
-          </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium text-purple-900 mb-1">
-              ${t("artifacts.level")}
-            </label>
-            <input
-              type="text"
-              data-testid="edit-artifact-level"
-              class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-purple-900 font-semibold"
-              .value=${this.editedArtifact.level}
-              @input=${(e: Event) => {
-                this.editedArtifact.level = (e.target as HTMLInputElement).value;
-              }}
-            />
-          </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium text-purple-900 mb-1">
-              ${t("artifacts.effect")}
-            </label>
-            <textarea
-              data-testid="edit-artifact-effect"
-              class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-gray-700"
-              rows="3"
-              .value=${this.editedArtifact.effect}
-              @input=${(e: Event) => {
-                this.editedArtifact.effect = (e.target as HTMLTextAreaElement).value;
-              }}
-            ></textarea>
-          </div>
+          ${renderTextField({
+            theme,
+            label: t("artifacts.name"),
+            testId: "edit-artifact-name",
+            value: this.editedArtifact.name,
+            onInput: (value) => {
+              this.editedArtifact.name = value;
+            },
+          })}
+          ${renderTextField({
+            theme,
+            label: t("artifacts.level"),
+            testId: "edit-artifact-level",
+            value: this.editedArtifact.level,
+            onInput: (value) => {
+              this.editedArtifact.level = value;
+            },
+          })}
+          ${renderTextArea({
+            theme,
+            label: t("artifacts.effect"),
+            testId: "edit-artifact-effect",
+            value: this.editedArtifact.effect,
+            onInput: (value) => {
+              this.editedArtifact.effect = value;
+            },
+          })}
         </div>
       </div>
     `;

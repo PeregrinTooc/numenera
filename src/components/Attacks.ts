@@ -1,18 +1,18 @@
 // Attacks component - Displays character attacks in grid
 
 import { html, TemplateResult } from "lit-html";
-import { Character } from "@/types/character";
+import { Attack, Character } from "@/types/character";
 import { AttackItem } from "./AttackItem.js";
 import { openFieldEditor } from "@/services/modalService";
 import { t } from "@/i18n/index";
-import { createAddHandler, createItemInstances } from "./helpers/CollectionBehavior.js";
-import { renderAddButton } from "./helpers/collectionRendering.js";
+import { CollectionSection } from "./helpers/CollectionBehavior.js";
+import { renderAddButton, renderCollection } from "./helpers/collectionRendering.js";
 import { CollectionDragReorder } from "./helpers/CollectionDragReorder.js";
 
 type FieldType = "armor";
 
 export class Attacks {
-  private handleAddAttack: () => void;
+  private attacks: CollectionSection<Attack, AttackItem>;
   private drag = new CollectionDragReorder({
     section: "attacks",
     itemTestId: "attack-item",
@@ -24,12 +24,10 @@ export class Attacks {
     private character: Character,
     private onFieldUpdate: (field: FieldType, value: number) => void
   ) {
-    // Create add handler using CollectionBehavior helper
-    this.handleAddAttack = createAddHandler({
-      emptyItem: { name: "", damage: 0, modifier: 0, range: "" },
-      ItemComponentClass: AttackItem,
-      character: this.character,
+    this.attacks = new CollectionSection(character, {
       collectionKey: "attacks",
+      ItemComponentClass: AttackItem,
+      emptyItem: { name: "", damage: 0, modifier: 0, range: "" },
     });
   }
 
@@ -40,26 +38,13 @@ export class Attacks {
   }
 
   render(): TemplateResult {
-    const isEmpty = this.character.attacks.length === 0;
-
-    // Create attack item instances using CollectionBehavior helper
-    // collectionKey enables immutable updates for proper version history undo support
-    const attackItems = isEmpty
-      ? []
-      : createItemInstances({
-          collection: this.character.attacks,
-          ItemComponentClass: AttackItem,
-          character: this.character,
-          collectionKey: "attacks",
-        });
-
     return html`
       <div data-testid="attacks-section" class="section-box">
         <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
           <div class="flex items-center gap-3">
             <h2 class="text-2xl font-serif font-bold text-gray-700">${t("attacks.title")} ⚔️</h2>
             ${renderAddButton({
-              onClick: this.handleAddAttack,
+              onClick: this.attacks.handleAdd,
               testId: "add-attack-button",
               colorTheme: "red",
               ariaLabel: t("attacks.add"),
@@ -81,24 +66,18 @@ export class Attacks {
             >
           </div>
         </div>
-        ${isEmpty
-          ? html`
-              <div data-testid="empty-attacks" class="empty-attacks-styled">
-                ${t("attacks.empty")}
-              </div>
-            `
-          : html`
-              <div
-                data-testid="attacks-list"
-                class="section-card-grid"
-                @dragstart=${(e: Event) => this.drag.handleDragStart(e)}
-                @dragover=${(e: Event) => this.drag.handleDragOver(e)}
-                @drop=${(e: Event) => this.drag.handleDrop(e)}
-                @dragend=${() => this.drag.handleDragEnd()}
-              >
-                ${attackItems.map((item) => item.render())}
-              </div>
-            `}
+        ${renderCollection({
+          isEmpty: this.character.attacks.length === 0,
+          emptyState: {
+            testId: "empty-attacks",
+            className: "empty-attacks-styled",
+            message: t("attacks.empty"),
+          },
+          listTestId: "attacks-list",
+          listClassName: "section-card-grid",
+          drag: this.drag,
+          items: this.attacks.items().map((item) => item.render()),
+        })}
       </div>
     `;
   }

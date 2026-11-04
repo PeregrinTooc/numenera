@@ -113,3 +113,41 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
     return new ItemComponentClass(item, index, onUpdate, onDelete);
   });
 }
+
+/**
+ * Configuration naming a collection once: its key, item component and the empty item
+ * a new card starts from.
+ */
+export interface CollectionSectionConfig<T, ItemComponent> {
+  collectionKey: CharacterCollectionKey;
+  ItemComponentClass: ItemComponentConstructor<T, ItemComponent>;
+  emptyItem: T;
+}
+
+/**
+ * One collection of a container component: yields both the add handler and the item
+ * instances from the same key, item class and empty item.
+ */
+export class CollectionSection<
+  T,
+  ItemComponent extends { handleEdit: () => void; render: () => TemplateResult },
+> {
+  readonly handleAdd: () => void;
+
+  constructor(
+    private character: Character,
+    private config: CollectionSectionConfig<T, ItemComponent>
+  ) {
+    this.handleAdd = createAddHandler({ ...config, character });
+  }
+
+  items(): ItemComponent[] {
+    const { collectionKey, ItemComponentClass } = this.config;
+    return createItemInstances({
+      collection: readCollection<T>(this.character, collectionKey),
+      ItemComponentClass,
+      character: this.character,
+      collectionKey,
+    });
+  }
+}
