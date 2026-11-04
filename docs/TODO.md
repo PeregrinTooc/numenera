@@ -88,7 +88,9 @@ import, but `handleLoadFromFile` in `src/app/fileActions.ts` reads only
 `character` and `warnings`, so the imported layout is dropped. Split out of
 "Grid Merge/Split & Import-Layout Conflict Prompt"; the drag half is done (see
 "Pairing Sections by Drag" in `FEATURES.md`). Needs its own design before
-building. `CharacterSheet.updateLayout`/`getLayout` were kept for it.
+building. Applying an imported layout needs a way to set the sheet's layout;
+`CharacterSheet.updateLayout` was removed as unused (Rule 12), so add what the
+design calls for (see commit `624cd01` for the old shape).
 
 **Goals**
 
@@ -110,8 +112,35 @@ building. `CharacterSheet.updateLayout`/`getLayout` were kept for it.
 - **Check touch dragging on a real iPhone/iPad.** The live preview re-creates
   the dragged section's element mid-gesture. Chromium (mouse and CDP touch) and
   WebKit (mouse) were verified; WebKit touch cannot be automated.
-- **Split `SectionDragController.ts`** (now ~455 lines): move the touch
-  long-press wiring or the live-preview state into its own helper.
+
+### Visual Regression Tests for Component Styling
+
+**Overview**  
+The per-type card themes (cyphers blue, artifacts gold, …) are not guarded by
+any test: the class-only `visualStyling` unit tests were removed because they
+checked template class names, not the look. Needs its own design (Rule 2).
+
+**Findings so far**
+
+- Byte-equal screenshots are too brittle: font rasterising, compositing and
+  browser versions differ between Windows dev machines and Linux CI. Use a pixel
+  diff (`pixelmatch`) with a small tolerance instead.
+- Generate and compare baselines in one pinned environment (the official
+  Playwright Docker image, locally and in CI), one baseline per device profile.
+- Screenshot single components (`locator.screenshot()`), not whole pages.
+- Playwright's `toHaveScreenshot` needs its own test runner; our E2E runs
+  Cucumber on the Playwright library, so the comparison and baseline store are
+  ours to write.
+
+### E2E: Vite Re-optimises Dependencies Mid-Run
+
+The first dev-mode E2E run after a commit that adds a new bare import (e.g.
+`lit-html/directives/if-defined.js`) can fail a few scenarios in the Before hook
+with "Execution context was destroyed": Vite discovers the dependency on first
+request, re-optimises and reloads the page. Starting the server in
+`scripts/e2e.js` with `optimizeDeps: { force: true }` scans imports up front at
+the cost of a few seconds per run. CI runs the production build and is not
+affected.
 
 ### Edge Auto-Scroll for Touch Section Drags
 
