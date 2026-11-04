@@ -49,9 +49,11 @@ npm run typecheck:tests  # type-check src/ and tests/ (tsconfig.test.json)
 npm run check:i18n       # verify every t() key exists in en.json AND de.json
 ```
 
-**Never invoke `cucumber-js` directly.** The npm scripts start the dev server via
-`concurrently`, wait for it with `wait-on`, and tear it down afterwards. Calling
-`cucumber-js` yourself runs the suite against nothing and every scenario fails.
+**Never invoke `cucumber-js` directly.** The npm scripts go through
+`scripts/e2e.js`, which starts Vite on a free port with `--strictPort`, hands
+that port to Cucumber as `E2E_PORT`, and tears the server down afterwards.
+Without `E2E_PORT` the support code refuses to start. Set `E2E_PORT` yourself to
+pin a port.
 
 ### Filtering test runs
 

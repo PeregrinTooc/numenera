@@ -8,20 +8,14 @@ import { ModalDsl } from "./modal.js";
 import { FieldsDsl } from "./fields.js";
 import { CardsDsl } from "./cards.js";
 import { SetupDsl } from "./setup.js";
+import { BASE_URL } from "./serverUrl.js";
 
 let browser: Browser;
 
 const DEVICE = resolveDevice(process.env.DEVICE);
 const ENGINES = { chromium, webkit } as const;
 
-// Server is managed by concurrently + wait-on in package.json scripts
-// We just need to know which port to connect to
-const SERVER_PORT = process.env.TEST_PROD === "true" ? 4173 : 3000;
-const BASE_URL = `http://localhost:${SERVER_PORT}`;
-
 BeforeAll({ timeout: 60000 }, async function () {
-  // Server is already running (started by concurrently, verified by wait-on)
-  // Just launch the browser
   browser = await ENGINES[DEVICE.engine].launch({
     headless: !process.env.HEADED,
     // Optional escape hatch for environments where Playwright's pinned

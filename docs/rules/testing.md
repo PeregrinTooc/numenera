@@ -251,11 +251,12 @@ The canonical checklist — `code-quality.md` points here instead of repeating i
 
 ## Using NPM Scripts for E2E Tests
 
-**Never call `cucumber-js` directly** (see `CLAUDE.md`'s gotchas). The npm
-scripts start the dev server via `concurrently`, wait for it with `wait-on`,
-run cucumber-js with the correct configuration, and tear the server down
-afterward. Calling `cucumber-js` directly bypasses server management and every
-scenario fails.
+**Never call `cucumber-js` directly** (see `CLAUDE.md`). The npm scripts run
+`scripts/e2e.js`, which owns the server: it picks a free port (or `E2E_PORT`),
+starts Vite — `vite preview` for `test:e2e:prod` — with `--strictPort`, waits
+for it, runs cucumber-js with `E2E_PORT` set, and stops the server afterwards.
+Because the port is chosen rather than assumed, a run can never test a stale
+server left on a well-known port, and parallel worktrees do not collide.
 
 ```bash
 # ✅ CORRECT
@@ -263,7 +264,7 @@ npm run test:e2e -- tests/e2e/features/basic-info-editing.feature
 npm run test:e2e:current
 npm run test:e2e:prod
 
-# ❌ INCORRECT — no server running
+# ❌ INCORRECT — no server, no E2E_PORT: the support code refuses to start
 cucumber-js tests/e2e/features/**/*.feature
 npx cucumber-js --tags "@current"
 ```
