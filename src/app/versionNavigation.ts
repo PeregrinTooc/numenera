@@ -1,3 +1,4 @@
+import { ensureBodyContainer } from "./bodyContainer";
 import { VersionNavigator } from "@/components/VersionNavigator";
 import { loadComparisonViewEnabled } from "@/storage/comparisonViewPreference";
 import { isPhoneViewport } from "@/utils/viewport";
@@ -76,12 +77,7 @@ export async function updateVersionNavigator(ctx: AppContext, shouldReload = fal
     ctx.versionNavigator = new VersionNavigator(options);
 
     // Mount in dedicated container (similar to SaveIndicator pattern)
-    let navigatorContainer = document.getElementById("version-navigator-container");
-    if (!navigatorContainer) {
-      navigatorContainer = document.createElement("div");
-      navigatorContainer.id = "version-navigator-container";
-      document.body.appendChild(navigatorContainer);
-    }
+    const navigatorContainer = ensureBodyContainer("version-navigator-container");
     ctx.versionNavigator.mount(navigatorContainer);
   } else {
     // Update existing navigator

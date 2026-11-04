@@ -1,3 +1,4 @@
+import { ensureBodyContainer } from "./bodyContainer";
 import { VersionWarningBanner } from "@/components/VersionWarningBanner";
 import type { AppContext } from "./appContext";
 
@@ -14,12 +15,7 @@ export function syncVersionWarning(ctx: AppContext): void {
   }
 
   // Show/hide warning banner
-  let bannerContainer = document.getElementById("version-warning-banner-container");
-  if (!bannerContainer) {
-    bannerContainer = document.createElement("div");
-    bannerContainer.id = "version-warning-banner-container";
-    document.body.appendChild(bannerContainer);
-  }
+  const bannerContainer = ensureBodyContainer("version-warning-banner-container");
 
   if (isViewingOldVersion) {
     const metadata = versionState.getCurrentVersionMetadata();

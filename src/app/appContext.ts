@@ -79,3 +79,8 @@ export function createAppContext(): AppContext {
   };
   return ctx;
 }
+
+/** The version-history service tests/e2e install on window, else the one this app created. */
+export function activeHistoryService(ctx: AppContext): VersionHistoryService | null | undefined {
+  return window.__versionHistoryService || ctx.versionHistoryService;
+}

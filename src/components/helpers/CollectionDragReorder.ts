@@ -1,6 +1,7 @@
 // CollectionDragReorder - drag-and-drop reordering of one card collection rendered in a list.
 // Owns the drag state and the dragstart/dragover/drop/dragend semantics for a single section.
 
+import { notifyCollectionUpdated } from "./characterEvents.js";
 import { reorderArray, previewOrderEquals } from "./DragDropBehavior.js";
 
 export interface CollectionDragReorderConfig {
@@ -111,17 +112,7 @@ export class CollectionDragReorder {
 
     this.handleDragEnd();
 
-    // Dispatch collection-updated to re-render the sheet
-    // Dispatch character-updated for save
-    const appElement = document.getElementById("app");
-    if (appElement) {
-      appElement.dispatchEvent(
-        this.config.updatedEvent
-          ? new CustomEvent(this.config.updatedEvent)
-          : new CustomEvent("collection-updated", { detail: { section: this.config.section } })
-      );
-      appElement.dispatchEvent(new CustomEvent("character-updated"));
-    }
+    notifyCollectionUpdated(this.config.section, this.config.updatedEvent);
   }
 
   handleDragEnd(): void {

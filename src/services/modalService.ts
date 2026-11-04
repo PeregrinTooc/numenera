@@ -8,6 +8,7 @@ import { PortraitDisplayModal } from "@/components/PortraitDisplayModal";
 import { FieldType } from "@/utils/fieldValidation";
 import { ModalContainer } from "@/services/modalContainer";
 import type { VersionHistoryService } from "./versionHistoryService.js";
+import { getVersionHistoryService } from "./versionHistoryServiceAccess.js";
 
 export interface ModalConfig {
   fieldType: FieldType;
@@ -95,4 +96,18 @@ export class ModalService {
     render(modal.render(), container.getElement());
     container.focusElement('[data-testid="unreadable-download-button"]');
   }
+}
+
+/** Open the edit modal for one field and hand the confirmed value to `onConfirm`. */
+export function openFieldEditor(
+  fieldType: FieldType,
+  currentValue: string | number,
+  onConfirm: (newValue: string | number) => void
+): void {
+  ModalService.openEditModal({
+    fieldType,
+    currentValue,
+    onConfirm,
+    versionHistoryService: getVersionHistoryService(),
+  });
 }

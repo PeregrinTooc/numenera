@@ -1,6 +1,6 @@
 import type { ICharacterStorage } from "./ICharacterStorage.js";
 import { STORAGE_KEY, CHARACTER_DB_NAME } from "./storageConstants.js";
-import { openDatabase, requireStore, runRequest, transactionDone } from "./idb.js";
+import { openDatabase, requireDatabase, runRequest, transactionDone } from "./idb.js";
 import type { Character } from "@/types/character";
 import { logger } from "@/utils/logger";
 
@@ -102,7 +102,11 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
   }
 
   private requireStore(): IDBDatabase {
-    return requireStore(this.db, STORE_NAME, "IndexedDB not initialized");
+    const db = requireDatabase(this.db, "IndexedDB not initialized");
+    if (!db.objectStoreNames.contains(STORE_NAME)) {
+      throw new Error(`Object store '${STORE_NAME}' not found in database`);
+    }
+    return db;
   }
 
   /**

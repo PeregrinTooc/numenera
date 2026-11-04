@@ -3,6 +3,7 @@
 import { html, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { t } from "@/i18n/index";
+import { notifyCharacterUpdated } from "./helpers/characterEvents.js";
 
 type TextField = keyof Character["textFields"];
 
@@ -33,13 +34,7 @@ export class BottomTextFields {
 
     const textarea = e.currentTarget as HTMLTextAreaElement;
     textarea.readOnly = true;
-    textarea.dispatchEvent(
-      new CustomEvent("character-updated", {
-        detail: this.character,
-        bubbles: true,
-        composed: true,
-      })
-    );
+    notifyCharacterUpdated(textarea, this.character);
   }
 
   private renderField(field: TextField, label: string, placeholder: string): TemplateResult {

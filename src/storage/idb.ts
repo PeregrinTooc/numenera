@@ -50,19 +50,6 @@ export function requireDatabase(db: IDBDatabase | null, notInitialized: string):
   return db;
 }
 
-/** Like requireDatabase, and also throw when the database lacks the object store. */
-export function requireStore(
-  db: IDBDatabase | null,
-  storeName: string,
-  notInitialized: string
-): IDBDatabase {
-  const opened = requireDatabase(db, notInitialized);
-  if (!opened.objectStoreNames.contains(storeName)) {
-    throw new Error(`Object store '${storeName}' not found in database`);
-  }
-  return opened;
-}
-
 /** Run one request in its own transaction and resolve with its result. */
 export function runRequest<T>(
   db: IDBDatabase,

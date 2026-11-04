@@ -3,11 +3,10 @@
 import { html, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { CypherItem } from "./CypherItem.js";
-import { ModalService } from "@/services/modalService";
+import { openFieldEditor } from "@/services/modalService";
 import { t } from "@/i18n/index";
 import { createAddHandler, createItemInstances } from "./helpers/CollectionBehavior.js";
 import { renderAddButton } from "./helpers/collectionRendering.js";
-import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
 import { CollectionDragReorder } from "./helpers/CollectionDragReorder.js";
 
 type FieldType = "maxCyphers";
@@ -37,16 +36,9 @@ export class CyphersBox {
   }
 
   private openEditModal(fieldType: FieldType): void {
-    const currentValue = this.character.maxCyphers;
-
-    ModalService.openEditModal({
-      fieldType,
-      currentValue,
-      onConfirm: (newValue) => {
-        this.onFieldUpdate(fieldType, newValue as number);
-      },
-      versionHistoryService: getVersionHistoryService(),
-    });
+    openFieldEditor(fieldType, this.character.maxCyphers, (newValue) =>
+      this.onFieldUpdate(fieldType, newValue as number)
+    );
   }
 
   render(): TemplateResult {

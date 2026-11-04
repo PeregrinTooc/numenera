@@ -4,6 +4,7 @@
 import type { TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { persistCharacterState } from "@/storage/storageFactory";
+import { notifyCollectionUpdated } from "./characterEvents.js";
 import { readCollection, writeCollection } from "./characterCollections";
 
 /** Keys on Character that hold collection arrays */
@@ -27,16 +28,10 @@ type ItemComponentConstructor<T, ItemComponent> = new (
  * Dispatch the targeted re-render event for a collection, then character-updated for save.
  */
 function dispatchCollectionUpdate(collectionKey: CharacterCollectionKey): void {
-  const appElement = document.getElementById("app");
-  if (!appElement) return;
-  if (collectionKey === "cyphers") {
-    appElement.dispatchEvent(new CustomEvent("cyphers-updated"));
-  } else {
-    appElement.dispatchEvent(
-      new CustomEvent("collection-updated", { detail: { section: collectionKey } })
-    );
-  }
-  appElement.dispatchEvent(new CustomEvent("character-updated"));
+  notifyCollectionUpdated(
+    collectionKey,
+    collectionKey === "cyphers" ? "cyphers-updated" : undefined
+  );
 }
 
 /**

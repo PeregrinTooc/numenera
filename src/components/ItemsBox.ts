@@ -5,12 +5,11 @@ import { Character } from "@/types/character";
 import { EquipmentItem } from "./EquipmentItem.js";
 import { ArtifactItem } from "./ArtifactItem.js";
 import { OddityItem } from "./OddityItem.js";
-import { ModalService } from "@/services/modalService";
+import { openFieldEditor } from "@/services/modalService";
 import { t } from "@/i18n/index";
 import { createAddHandler, createItemInstances } from "./helpers/CollectionBehavior.js";
 import { renderAddButton } from "./helpers/collectionRendering.js";
 import { CollectionDragReorder } from "./helpers/CollectionDragReorder.js";
-import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
 
 type FieldType = "shins";
 type ItemSection = "equipment" | "artifacts" | "oddities";
@@ -70,16 +69,9 @@ export class ItemsBox {
   }
 
   private openEditModal(fieldType: FieldType): void {
-    const currentValue = this.character.shins;
-
-    ModalService.openEditModal({
-      fieldType,
-      currentValue,
-      onConfirm: (newValue) => {
-        this.onFieldUpdate(fieldType, newValue as number);
-      },
-      versionHistoryService: getVersionHistoryService(),
-    });
+    openFieldEditor(fieldType, this.character.shins, (newValue) =>
+      this.onFieldUpdate(fieldType, newValue as number)
+    );
   }
 
   render(): TemplateResult {

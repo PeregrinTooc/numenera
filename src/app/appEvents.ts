@@ -1,6 +1,6 @@
 import { describeCharacterChange } from "@/services/versionDescriptions";
 import type { SectionId } from "@/types/layout";
-import type { AppContext } from "./appContext";
+import { activeHistoryService, type AppContext } from "./appContext";
 
 const COLLECTION_UPDATED_SECTION_IDS: Record<string, SectionId> = {
   abilities: "abilities",
@@ -18,7 +18,7 @@ const COLLECTION_UPDATED_SECTION_IDS: Record<string, SectionId> = {
 // - recovery-updated for recovery modifier
 function handleCharacterUpdated(ctx: AppContext): void {
   // Buffer the change for version history (for card operations, etc.)
-  const service = window.__versionHistoryService || ctx.versionHistoryService;
+  const service = activeHistoryService(ctx);
   if (service && ctx.currentCharacter && ctx.characterBeforeUpdate) {
     // Set initial state before first edit if buffer is empty
     if (service.getBufferLength() === 0) {

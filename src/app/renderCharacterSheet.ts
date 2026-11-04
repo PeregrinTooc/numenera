@@ -1,3 +1,4 @@
+import { ensureBodyContainer } from "./bodyContainer";
 import { render } from "lit-html";
 import { saveCharacterState } from "@/storage/storageFactory";
 import { reportStorageWriteFailure } from "@/storage/storageWriteFailure";
@@ -6,7 +7,7 @@ import { FULL_CHARACTER, NEW_CHARACTER } from "@/data/mockCharacters";
 import { applyFieldUpdate } from "@/utils/characterFieldUpdate";
 import { createFileActions } from "./fileActions";
 import { syncVersionWarning } from "./versionBanner";
-import type { AppContext } from "./appContext";
+import { activeHistoryService, type AppContext } from "./appContext";
 import type { Character } from "@/types/character";
 
 // Handler for field updates
@@ -17,7 +18,7 @@ async function handleFieldUpdate(
   value: string | number
 ): Promise<void> {
   // Set initial state before first edit (if buffer is empty and no initial state set)
-  const service = window.__versionHistoryService || ctx.versionHistoryService;
+  const service = activeHistoryService(ctx);
   if (service && service.getBufferLength() === 0) {
     service.setInitialState(character);
   }
@@ -111,12 +112,7 @@ export async function renderCharacterSheet(
   }
 
   // Render save indicator in separate container
-  let indicatorContainer = document.getElementById("save-indicator-container");
-  if (!indicatorContainer) {
-    indicatorContainer = document.createElement("div");
-    indicatorContainer.id = "save-indicator-container";
-    document.body.appendChild(indicatorContainer);
-  }
+  const indicatorContainer = ensureBodyContainer("save-indicator-container");
   render(ctx.saveIndicator.render(), indicatorContainer);
 
   // Request auto-save (debounced) - initial render doesn't trigger save

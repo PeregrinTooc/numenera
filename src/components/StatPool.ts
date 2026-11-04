@@ -4,8 +4,7 @@
 import { html, TemplateResult } from "lit-html";
 import { t } from "@/i18n/index";
 import { StatPool as StatPoolType } from "@/types/character";
-import { ModalService } from "@/services/modalService";
-import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
+import { openFieldEditor } from "@/services/modalService";
 
 export type StatPoolFieldType =
   | "mightPool"
@@ -30,17 +29,9 @@ export class StatPool {
     const fieldType =
       `${this.statType}${fieldName.charAt(0).toUpperCase()}${fieldName.slice(1)}` as StatPoolFieldType;
 
-    // Get the current value for this field
-    const currentValue = this.stats[fieldName];
-
-    ModalService.openEditModal({
-      fieldType,
-      currentValue,
-      onConfirm: (newValue) => {
-        this.onFieldUpdate(fieldType, newValue as number);
-      },
-      versionHistoryService: getVersionHistoryService(),
-    });
+    openFieldEditor(fieldType, this.stats[fieldName], (newValue) =>
+      this.onFieldUpdate(fieldType, newValue as number)
+    );
   }
 
   render(): TemplateResult {

@@ -1,8 +1,7 @@
 import { html, TemplateResult } from "lit-html";
 import { RecoveryRolls as RecoveryRollsType } from "@/types/character";
 import { t } from "@/i18n/index";
-import { ModalService } from "@/services/modalService";
-import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
+import { openFieldEditor } from "@/services/modalService";
 
 type RecoveryRollField = "action" | "tenMinutes" | "oneHour" | "tenHours";
 
@@ -22,15 +21,10 @@ export class RecoveryRolls {
   private openEditModal(): void {
     if (!this.onFieldUpdate) return;
 
-    ModalService.openEditModal({
-      fieldType: "recoveryModifier",
-      currentValue: this.data.modifier || 0,
-      onConfirm: (newValue) => {
-        if (this.onFieldUpdate) {
-          this.onFieldUpdate("recoveryModifier", newValue as number);
-        }
-      },
-      versionHistoryService: getVersionHistoryService(),
+    openFieldEditor("recoveryModifier", this.data.modifier || 0, (newValue) => {
+      if (this.onFieldUpdate) {
+        this.onFieldUpdate("recoveryModifier", newValue as number);
+      }
     });
   }
 

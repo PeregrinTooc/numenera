@@ -59,15 +59,7 @@ export class ExportManager {
 
     if (this.supportsFileSystemAccess()) {
       // First-time export in Chromium - prompt and remember
-      const handle = await this.promptForLocation(character);
-      if (!handle) return; // User cancelled
-
-      await this.writeToHandle(handle, character);
-      this.fileHandle = handle;
-      await persistFileHandle(handle);
-
-      // Trigger button update event
-      window.dispatchEvent(new CustomEvent("export-handle-updated"));
+      await this.chooseAndRememberLocation(character);
     } else {
       // Fallback for non-Chromium browsers
       await this.downloadFile(character);
@@ -109,15 +101,7 @@ export class ExportManager {
    * Save As - only available after first export in Chromium
    */
   async saveAs(character: Character): Promise<void> {
-    const handle = await this.promptForLocation(character);
-    if (!handle) return; // User cancelled
-
-    await this.writeToHandle(handle, character);
-    this.fileHandle = handle;
-    await persistFileHandle(handle);
-
-    // Trigger button update event
-    window.dispatchEvent(new CustomEvent("export-handle-updated"));
+    await this.chooseAndRememberLocation(character);
   }
 
   /**
@@ -135,6 +119,18 @@ export class ExportManager {
   // ========================================
   // Private Methods
   // ========================================
+
+  private async chooseAndRememberLocation(character: Character): Promise<void> {
+    const handle = await this.promptForLocation(character);
+    if (!handle) return; // User cancelled
+
+    await this.writeToHandle(handle, character);
+    this.fileHandle = handle;
+    await persistFileHandle(handle);
+
+    // Trigger button update event
+    window.dispatchEvent(new CustomEvent("export-handle-updated"));
+  }
 
   private async promptForLocation(character: Character): Promise<FileSystemFileHandle | null> {
     const filename = this.generateFilename(character);
@@ -159,22 +155,18 @@ export class ExportManager {
   }
 
   private async writeToHandle(handle: FileSystemFileHandle, character: Character): Promise<void> {
-    const fileData = this.createFileData(character);
     const writable = await handle.createWritable();
-    const json = JSON.stringify(fileData, null, 2);
-    await writable.write(json);
+    await writable.write(this.serialize(character));
     await writable.close();
   }
 
   private async downloadFile(character: Character): Promise<void> {
     const filename = this.generateFilename(character);
-    const fileData = this.createFileData(character);
-    const json = JSON.stringify(fileData, null, 2);
-    downloadTextFile(filename, json, "application/json");
+    downloadTextFile(filename, this.serialize(character), "application/json");
   }
 
-  private createFileData(character: Character): CharacterFileData {
-    return {
+  private serialize(character: Character): string {
+    const fileData: CharacterFileData = {
       version: "1.0",
       schemaVersion: SCHEMA_VERSION,
       exportDate: new Date().toISOString(),
@@ -182,6 +174,7 @@ export class ExportManager {
       layout: loadLayout(),
       sectionColumns: loadSectionColumns(),
     };
+    return JSON.stringify(fileData, null, 2);
   }
 
   private generateFilename(character: Character): string {
