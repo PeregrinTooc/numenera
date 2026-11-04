@@ -27,7 +27,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 ## Summary
 
 - Step definitions: **709** in 52 files
-- Feature step lines: **2238**
+- Feature step lines: **2240**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -132,8 +132,8 @@ pattern this script does not understand):
 | When | `I click outside the {textarea} textarea` | 11 | 62 |
 | When | `I click the {textarea} textarea` | 20 | 47 |
 | When | `I select {string} from the mobile picker` | 1 | 216 |
-| When | `I tap outside the {textarea} textarea` | 2 | 243 |
-| When | `I tap the {textarea} textarea` | 2 | 221 |
+| When | `I tap outside the {textarea} textarea` | 2 | 265 |
+| When | `I tap the {textarea} textarea` | 3 | 229 |
 | When | `I tap the type dropdown` | 1 | 204 |
 | When | `I type {string} in the {textarea} textarea` | 12 | 55 |
 | When | `I type a {int} character string in the background textarea` | 1 | 140 |
@@ -143,7 +143,7 @@ pattern this script does not understand):
 | Then | `the {textarea} textarea should be empty` | 2 | 100 |
 | Then | `the {textarea} textarea should be focused` | 4 | 82 |
 | Then | `the {textarea} textarea should be readonly` | 8 | 20 |
-| Then | `the {textarea} textarea should become editable` | 2 | 225 |
+| Then | `the {textarea} textarea should become editable` | 2 | 244 |
 | Then | `the {textarea} textarea should have a pointer cursor` | 2 | 37 |
 | Then | `the {textarea} textarea should have an edit state visual indicator` | 2 | 89 |
 | Then | `the {textarea} textarea should not be readonly` | 4 | 72 |
@@ -155,7 +155,7 @@ pattern this script does not understand):
 | Then | `the character data should have the full notes text` | 1 | 191 |
 | Then | `the mobile OS picker should open` | 1 | 209 |
 | Then | `the notes textarea should contain the full {int} character text` | 1 | 168 |
-| Then | `the virtual keyboard should appear` | 2 | 234 |
+| Then | `the virtual keyboard should appear` | 3 | 253 |
 
 ## auto-save-indicator.steps.ts
 

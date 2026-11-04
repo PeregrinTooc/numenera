@@ -4,116 +4,85 @@ import { html, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { t } from "@/i18n/index";
 
+type TextField = keyof Character["textFields"];
+
 export class BottomTextFields {
-  private editingField: "background" | "notes" | null = null;
+  private editingField: TextField | null = null;
 
-  constructor(private character: Character) {
-    // Bind methods to preserve 'this' context
-    this.startEditing = this.startEditing.bind(this);
-    this.saveField = this.saveField.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+  constructor(private character: Character) {}
+
+  /**
+   * Make the field editable before the press focuses it. iOS and iPadOS decide
+   * whether to raise the on-screen keyboard at the moment a field takes focus,
+   * so a field still readonly then gets no keyboard, even once it turns
+   * editable. mousedown precedes that focus for a click and a tap alike, and
+   * unlike touchstart it does not fire when a touch scrolls the page.
+   */
+  private makeEditable(e: MouseEvent): void {
+    (e.currentTarget as HTMLTextAreaElement).readOnly = false;
   }
 
-  private startEditing(field: "background" | "notes"): void {
+  private startEditing(e: Event, field: TextField): void {
     this.editingField = field;
-
-    // Directly manipulate the DOM to remove readonly
-    const textarea = document.querySelector<HTMLTextAreaElement>(
-      `[data-testid="character-${field}"]`
-    );
-    if (textarea) {
-      textarea.removeAttribute("readonly");
-      textarea.focus();
-    }
+    (e.currentTarget as HTMLTextAreaElement).readOnly = false;
   }
 
-  private saveField(field: "background" | "notes"): void {
-    // Exit edit mode
+  private saveField(e: Event, field: TextField): void {
+    if (this.editingField !== field) return;
     this.editingField = null;
 
-    // Directly manipulate the DOM to add readonly back
-    const textarea = document.querySelector<HTMLTextAreaElement>(
-      `[data-testid="character-${field}"]`
+    const textarea = e.currentTarget as HTMLTextAreaElement;
+    textarea.readOnly = true;
+    textarea.dispatchEvent(
+      new CustomEvent("character-updated", {
+        detail: this.character,
+        bubbles: true,
+        composed: true,
+      })
     );
-    if (textarea) {
-      textarea.setAttribute("readonly", "");
-    }
-
-    // Dispatch character-updated event to trigger auto-save
-    // Dispatch from the textarea's parent (parchment-field) or the textarea itself
-    const event = new CustomEvent("character-updated", {
-      detail: this.character,
-      bubbles: true,
-      composed: true,
-    });
-
-    // Dispatch from the textarea or its closest parent that can bubble up
-    const dispatchTarget = textarea?.closest(".parchment-field") || textarea || document;
-    dispatchTarget.dispatchEvent(event);
   }
 
-  private handleClick(e: MouseEvent, field: "background" | "notes"): void {
-    const textarea = e.target as HTMLTextAreaElement;
-    const hasReadonly = textarea.hasAttribute("readonly");
-    if (hasReadonly) {
-      this.startEditing(field);
-    }
+  private renderField(field: TextField, label: string, placeholder: string): TemplateResult {
+    return html`
+      <div class="parchment-field">
+        <h3 class="text-lg font-bold mb-2 text-amber-900">${label}</h3>
+        <textarea
+          data-testid="character-${field}"
+          class="inline-edit-textarea"
+          .value=${this.character.textFields[field]}
+          ?readonly=${this.editingField !== field}
+          placeholder=${placeholder}
+          @input=${(e: Event) => {
+            this.character.textFields[field] = (e.target as HTMLTextAreaElement).value;
+          }}
+          @mousedown=${(e: MouseEvent) => this.makeEditable(e)}
+          @focus=${(e: Event) => this.startEditing(e, field)}
+          @blur=${(e: Event) => this.saveField(e, field)}
+        ></textarea>
+      </div>
+    `;
   }
 
   /**
    * Render the background field only (for layout system)
    */
   renderBackground(): TemplateResult {
-    return html`
-      <div class="parchment-field">
-        <h3 class="text-lg font-bold mb-2 text-amber-900">${t("textFields.background.label")}</h3>
-        <textarea
-          data-testid="character-background"
-          class="inline-edit-textarea"
-          .value=${this.character.textFields.background}
-          ?readonly=${this.editingField !== "background"}
-          placeholder=${t("textFields.background.placeholder")}
-          @input=${(e: Event) => {
-            const target = e.target as HTMLTextAreaElement;
-            this.character.textFields.background = target.value;
-          }}
-          @blur=${() => {
-            if (this.editingField === "background") {
-              this.saveField("background");
-            }
-          }}
-          @click=${(e: MouseEvent) => this.handleClick(e, "background")}
-        ></textarea>
-      </div>
-    `;
+    return this.renderField(
+      "background",
+      t("textFields.background.label"),
+      t("textFields.background.placeholder")
+    );
   }
 
   /**
    * Render the notes field only (for layout system)
    */
   renderNotes(): TemplateResult {
-    return html`
-      <div class="parchment-field">
-        <h3 class="text-lg font-bold mb-2 text-amber-900">${t("textFields.notes.label")}</h3>
-        <textarea
-          data-testid="character-notes"
-          class="inline-edit-textarea"
-          .value=${this.character.textFields.notes}
-          ?readonly=${this.editingField !== "notes"}
-          placeholder=${t("textFields.notes.placeholder")}
-          @input=${(e: Event) => {
-            const target = e.target as HTMLTextAreaElement;
-            this.character.textFields.notes = target.value;
-          }}
-          @blur=${() => {
-            if (this.editingField === "notes") {
-              this.saveField("notes");
-            }
-          }}
-          @click=${(e: MouseEvent) => this.handleClick(e, "notes")}
-        ></textarea>
-      </div>
-    `;
+    return this.renderField(
+      "notes",
+      t("textFields.notes.label"),
+      t("textFields.notes.placeholder")
+    );
   }
 
   render(): TemplateResult {
