@@ -43,7 +43,7 @@ See "Multiple `-m` Flags" below for why this shape is required.
 □ All text using i18n (t() function), no hardcoded user-facing strings
 □ Proper error handling — no silently swallowed errors
 □ No console.log statements (use proper logging)
-□ Code is readable and maintainable
+□ No design smell introduced — Rule #12 review checklist in design.md
 □ Code reviewed and approved by user (Rule #1)
 □ Commit message follows conventional-commits format
 ```

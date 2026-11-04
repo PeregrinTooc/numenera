@@ -14,9 +14,10 @@ example, and process detail.
 ```
 After implementing a feature:
 1. Run all tests
-2. Present a summary of changes to the user
-3. Wait for "approved" or similar confirmation
-4. Only then execute git commands
+2. Run the Rule #12 review checklist (design.md) against the change
+3. Present a summary of changes, the test state and the checklist result
+4. Wait for "approved" or similar confirmation
+5. Only then execute git commands
 ```
 
 ---
