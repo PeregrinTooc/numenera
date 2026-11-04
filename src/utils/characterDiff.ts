@@ -7,6 +7,15 @@ import type {
   Attack,
   SpecialAbility,
 } from "@/types/character";
+import {
+  BASIC_INFO_FIELDS,
+  RESOURCE_FIELDS,
+  STAT_NAMES,
+  TEXT_FIELDS,
+  resourceDiffers,
+  statPoolDiffers,
+  textFieldDiffers,
+} from "@/utils/characterFieldGroups";
 
 /**
  * Fine-grained, field-by-field diff between two character snapshots, for the
@@ -121,42 +130,20 @@ function collectionHasChanges(diff: CollectionDiff<unknown>): boolean {
   );
 }
 
+function flagsFor<K extends string>(
+  keys: readonly K[],
+  differs: (key: K) => boolean
+): Record<K, boolean> {
+  return Object.fromEntries(keys.map((key) => [key, differs(key)])) as Record<K, boolean>;
+}
+
 export function diffCharacters(left: Character, right: Character): CharacterDiff {
-  const basicInfo = {
-    name: left.name !== right.name,
-    tier: left.tier !== right.tier,
-    type: left.type !== right.type,
-    descriptor: left.descriptor !== right.descriptor,
-    focus: left.focus !== right.focus,
-  };
-
-  const stats = {
-    might:
-      left.stats.might.pool !== right.stats.might.pool ||
-      left.stats.might.edge !== right.stats.might.edge ||
-      left.stats.might.current !== right.stats.might.current,
-    speed:
-      left.stats.speed.pool !== right.stats.speed.pool ||
-      left.stats.speed.edge !== right.stats.speed.edge ||
-      left.stats.speed.current !== right.stats.speed.current,
-    intellect:
-      left.stats.intellect.pool !== right.stats.intellect.pool ||
-      left.stats.intellect.edge !== right.stats.intellect.edge ||
-      left.stats.intellect.current !== right.stats.intellect.current,
-  };
-
-  const resources = {
-    xp: left.currentXp !== right.currentXp || left.totalXp !== right.totalXp,
-    shins: left.shins !== right.shins,
-    armor: left.armor !== right.armor,
-    effort: left.effort !== right.effort,
-    maxCyphers: left.maxCyphers !== right.maxCyphers,
-  };
-
-  const textFields = {
-    background: left.textFields.background !== right.textFields.background,
-    notes: left.textFields.notes !== right.textFields.notes,
-  };
+  const basicInfo = flagsFor(BASIC_INFO_FIELDS, (field) => left[field] !== right[field]);
+  const stats = flagsFor(STAT_NAMES, (stat) => statPoolDiffers(left, right, stat));
+  const resources = Object.fromEntries(
+    RESOURCE_FIELDS.map((group) => [group.key, resourceDiffers(left, right, group)])
+  ) as CharacterDiff["resources"];
+  const textFields = flagsFor(TEXT_FIELDS, (field) => textFieldDiffers(left, right, field));
 
   const collections = {
     cyphers: diffCollection(left.cyphers, right.cyphers, (item) => item.name),
