@@ -52,7 +52,7 @@ function notWired(): Promise<void> {
 
 export function createAppContext(): AppContext {
   // Tests can set window.__testTimer before DOMContentLoaded
-  const testTimer = typeof window !== "undefined" ? window.__testTimer : undefined;
+  const testTimer = window.__testTimer;
 
   const ctx: AppContext = {
     currentSheet: null,

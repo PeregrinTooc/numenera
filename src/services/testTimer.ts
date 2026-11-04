@@ -13,13 +13,11 @@ export class TestTimer implements ITimer {
     this.timers.set(handle, callback);
 
     // Emit event for test observability
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(
-        new CustomEvent("test-timer-scheduled", {
-          detail: { handle },
-        })
-      );
-    }
+    window.dispatchEvent(
+      new CustomEvent("test-timer-scheduled", {
+        detail: { handle },
+      })
+    );
 
     return handle;
   }

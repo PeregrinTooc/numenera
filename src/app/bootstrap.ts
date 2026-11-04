@@ -155,7 +155,7 @@ export async function bootstrap(ctx: AppContext): Promise<void> {
 
   // Initialize VersionHistoryService
   // Use configured delay if available (for tests), otherwise default 5000ms
-  const squashDelay = (typeof window !== "undefined" && window.__SQUASH_DELAY_MS__) || 5000;
+  const squashDelay = window.__SQUASH_DELAY_MS__ || 5000;
 
   // Use test timer if available (for E2E tests)
   ctx.versionHistoryService = new VersionHistoryService(

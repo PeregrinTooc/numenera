@@ -13,16 +13,7 @@ export class RecoveryRolls {
       field: "recoveryModifier" | RecoveryRollField,
       value: number | boolean
     ) => void
-  ) {
-    // Defensive: provide defaults if data is undefined (shouldn't happen with schema v4)
-    this.data = data ?? {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    };
-  }
+  ) {}
 
   private handleRollToggle(field: RecoveryRollField, e: Event): void {
     this.onFieldUpdate?.(field, (e.target as HTMLInputElement).checked);

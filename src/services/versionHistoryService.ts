@@ -14,9 +14,7 @@ import type { ITimer, TimerHandle } from "./timer.js";
 import { RealTimer } from "./timer.js";
 
 function emit(name: string): void {
-  if (typeof window !== "undefined") {
-    window.dispatchEvent(new CustomEvent(name));
-  }
+  window.dispatchEvent(new CustomEvent(name));
 }
 
 export class VersionHistoryService {

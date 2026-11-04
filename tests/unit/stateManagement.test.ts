@@ -173,18 +173,6 @@ describe("State Management Components", () => {
       ) as HTMLElement;
       expect(modifierDisplay.classList.contains("editable-field")).toBe(false);
     });
-
-    it("should provide default values when data is undefined", () => {
-      // @ts-expect-error - Testing defensive behavior
-      const component = new RecoveryRolls(undefined);
-      render(component.render(), container);
-
-      const actionCheckbox = container.querySelector(
-        '[data-testid="recovery-action"]'
-      ) as HTMLInputElement;
-      expect(actionCheckbox).toBeTruthy();
-      expect(actionCheckbox.checked).toBe(false);
-    });
   });
 
   describe("DamageTrack Component", () => {
@@ -240,18 +228,6 @@ describe("State Management Components", () => {
         '[data-testid="damage-debilitated"]'
       ) as HTMLInputElement;
       expect(debilitatedRadio.checked).toBe(true);
-    });
-
-    it("should provide default values when data is undefined", () => {
-      // @ts-expect-error - Testing defensive behavior
-      const component = new DamageTrack(undefined);
-      render(component.render(), container);
-
-      const healthyRadio = container.querySelector(
-        '[data-testid="damage-healthy"]'
-      ) as HTMLInputElement;
-      expect(healthyRadio).toBeTruthy();
-      expect(healthyRadio.checked).toBe(true); // Should default to healthy
     });
   });
 

@@ -6,12 +6,7 @@ export class DamageTrack {
   constructor(
     private data: DamageTrackType,
     private onFieldUpdate?: (impairment: DamageTrackType["impairment"]) => void
-  ) {
-    // Defensive: provide defaults if data is undefined (shouldn't happen with schema v4)
-    this.data = data ?? {
-      impairment: "healthy",
-    };
-  }
+  ) {}
 
   render(): TemplateResult {
     const { impairment } = this.data;

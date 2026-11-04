@@ -6,5 +6,5 @@
 import type { VersionHistoryService } from "./versionHistoryService.js";
 
 export function getVersionHistoryService(): VersionHistoryService | undefined {
-  return typeof window !== "undefined" ? (window.__versionHistoryService ?? undefined) : undefined;
+  return window.__versionHistoryService ?? undefined;
 }

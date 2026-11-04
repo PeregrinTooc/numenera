@@ -42,9 +42,7 @@ export class CrossTabChannel {
     this.broadcast({ type: "tab-opened" });
 
     // Clean up on page unload
-    if (typeof window !== "undefined") {
-      window.addEventListener("beforeunload", () => this.close());
-    }
+    window.addEventListener("beforeunload", () => this.close());
   }
 
   /**
