@@ -5,7 +5,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import { Character } from "@/types/character";
-import * as RecoveryDamageSectionModule from "@/components/RecoveryDamageSection";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("CharacterSheet - Version History Integration", () => {
@@ -149,16 +148,7 @@ describe("CharacterSheet - Version History Integration", () => {
   });
 
   describe("getSectionTemplate", () => {
-    it("constructs RecoveryDamageSection once per sheet, not once per render", () => {
-      const OriginalRecoveryDamageSection = RecoveryDamageSectionModule.RecoveryDamageSection;
-      const constructorSpy = vi
-        .spyOn(RecoveryDamageSectionModule, "RecoveryDamageSection")
-        .mockImplementation(function (
-          ...args: ConstructorParameters<typeof OriginalRecoveryDamageSection>
-        ) {
-          return new OriginalRecoveryDamageSection(...args);
-        });
-
+    it("keeps the recovery section's DOM and ticked state across re-mounts", () => {
       const sheet = new CharacterSheet(
         mockCharacter,
         vi.fn(),
@@ -169,13 +159,21 @@ describe("CharacterSheet - Version History Integration", () => {
         vi.fn(),
         vi.fn()
       );
-      const callsAfterConstruction = constructorSpy.mock.calls.length;
-      expect(callsAfterConstruction).toBeGreaterThan(0);
+      sheet.mount(container);
+      const section = container.querySelector('[data-testid="recovery-damage-section"]');
+      const checkbox = container.querySelector(
+        '[data-testid="recovery-ten-minutes"]'
+      ) as HTMLInputElement;
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event("change", { bubbles: true }));
 
       sheet.mount(container);
-      sheet.mount(container);
 
-      expect(constructorSpy.mock.calls.length).toBe(callsAfterConstruction);
+      expect(container.querySelector('[data-testid="recovery-damage-section"]')).toBe(section);
+      const after = container.querySelector(
+        '[data-testid="recovery-ten-minutes"]'
+      ) as HTMLInputElement;
+      expect(after.checked).toBe(true);
     });
   });
 });

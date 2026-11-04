@@ -3,12 +3,10 @@
 import type { Mock } from "vitest";
 import { render } from "lit-html";
 import { CyphersBox } from "@/components/CyphersBox";
-import { Character, Cypher } from "@/types/character";
-import { CypherItem } from "@/components/CypherItem";
-import { createItemInstances } from "@/components/helpers/CollectionBehavior";
+import { Character } from "@/types/character";
+import { loadCharacterState, clearCharacterState } from "@/storage/storageFactory";
+import { screen, fireEvent } from "@testing-library/dom";
 import { setupTestContainer } from "./helpers/testSetup.js";
-
-vi.mock("@/storage/storageFactory");
 
 describe("CyphersBox", () => {
   const getContainer = setupTestContainer();
@@ -16,7 +14,8 @@ describe("CyphersBox", () => {
   let mockCharacter: Character;
   let mockOnFieldUpdate: Mock<ConstructorParameters<typeof CyphersBox>[1]>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await clearCharacterState();
     // CyphersBox dispatches character-updated on document.getElementById("app").
     container = getContainer();
     container.id = "app";
@@ -203,26 +202,20 @@ describe("CyphersBox", () => {
   });
 
   it("should persist through the storage adapter when a cypher is edited", async () => {
-    const { persistCharacterState } = await import("@/storage/storageFactory");
-    vi.mocked(persistCharacterState).mockClear();
-
     const component = new CyphersBox(mockCharacter, mockOnFieldUpdate);
     render(component.render(), container);
 
-    // Drive the real update path: createItemInstances wires an onUpdate handler
-    // onto each rendered cypher, and that handler is what persists.
-    const items = createItemInstances<Cypher, CypherItem>({
-      collection: mockCharacter.cyphers,
-      ItemComponentClass: CypherItem,
-      character: mockCharacter,
-      collectionKey: "cyphers",
+    fireEvent.click(screen.getByTestId("cypher-edit-button-0"));
+    fireEvent.input(screen.getByTestId("edit-cypher-name"), {
+      target: { value: "Renamed Cypher" },
     });
-    const updated = { ...mockCharacter.cyphers[0], name: "Renamed Cypher" };
-    (items[0] as unknown as { onUpdate?: (c: Cypher) => void }).onUpdate?.(updated);
+    fireEvent.click(screen.getByTestId("card-modal-confirm"));
 
-    // Rule #11: persistence goes through the factory, never localStorage directly
-    expect(persistCharacterState).toHaveBeenCalledWith(mockCharacter);
     expect(mockCharacter.cyphers[0].name).toBe("Renamed Cypher");
+    // Persistence is fire-and-forget, so wait for it to land in the real adapter.
+    await vi.waitFor(async () => {
+      expect((await loadCharacterState())?.cyphers[0].name).toBe("Renamed Cypher");
+    });
   });
 
   it("should dispatch character-updated event after adding cypher", () => {

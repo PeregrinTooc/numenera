@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach, type MockInstance } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import { createTestCharacter } from "../factories/character.js";
 
@@ -249,52 +249,51 @@ describe("CharacterSheet touch long-press drag", () => {
   });
 });
 
-describe("CharacterSheet touch listener passivity outside edit mode", () => {
+describe("CharacterSheet touch scrolling outside and inside edit mode", () => {
   let sheet: CharacterSheet;
-  let addSpy: MockInstance<EventTarget["addEventListener"]>;
-  let removeSpy: MockInstance<EventTarget["addEventListener"]>;
 
   beforeEach(() => {
+    vi.useFakeTimers();
     localStorage.clear();
     document.elementFromPoint = (): Element | null => null;
     document.body.innerHTML = '<div id="app"></div>';
-    addSpy = vi.spyOn(EventTarget.prototype, "addEventListener");
-    removeSpy = vi.spyOn(EventTarget.prototype, "removeEventListener");
     const container = document.getElementById("app") as HTMLElement;
     sheet = new CharacterSheet(createTestCharacter(), vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
     sheet.mount(container);
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
-  function touchmoveCalls(spy: MockInstance<EventTarget["addEventListener"]>): unknown[][] {
-    return spy.mock.calls.filter(([type]) => type === "touchmove");
+  function longPressThenMove(): TouchEvent {
+    touch(section("cyphers"), "touchstart", [{ x: 20, y: 500 }]);
+    vi.advanceTimersByTime(250);
+    return touch(section("cyphers"), "touchmove", [{ x: 20, y: 450 }]);
   }
 
-  it("does not register a touchmove listener on section wrappers outside edit mode", () => {
-    expect(touchmoveCalls(addSpy)).toHaveLength(0);
+  it("leaves touchmove scrolling alone outside edit mode", () => {
+    const move = longPressThenMove();
+
+    expect(move.defaultPrevented).toBe(false);
+    expect(section("cyphers").classList.contains("dragging")).toBe(false);
   });
 
-  it("registers a non-passive touchmove listener once edit mode is entered", () => {
-    addSpy.mockClear();
-
+  it("can prevent touchmove scrolling once edit mode is entered", () => {
     sheet.toggleLayoutEditMode();
 
-    const calls = touchmoveCalls(addSpy);
-    expect(calls.length).toBeGreaterThan(0);
-    for (const [, , options] of calls) {
-      expect((options as AddEventListenerOptions).passive).toBe(false);
-    }
+    const move = longPressThenMove();
+
+    expect(move.defaultPrevented).toBe(true);
   });
 
-  it("removes the touchmove listener when edit mode is exited", () => {
+  it("leaves touchmove scrolling alone again when edit mode is exited", () => {
     sheet.toggleLayoutEditMode();
-    removeSpy.mockClear();
-
     sheet.toggleLayoutEditMode();
 
-    expect(touchmoveCalls(removeSpy).length).toBeGreaterThan(0);
+    const move = longPressThenMove();
+
+    expect(move.defaultPrevented).toBe(false);
   });
 });
