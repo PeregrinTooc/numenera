@@ -80,11 +80,18 @@ export class LivePreview {
     this.anchor = this.lastPointer;
   }
 
-  /** Ignore hovers until `slide` (the sections moving into place) is done. */
-  followSlide(slide: Promise<void> | null): void {
+  /**
+   * Ignore hovers until `slide` (the sections moving into place) is done, then
+   * hand `onArrived` the pointer where it rests: it may have stopped over a new
+   * zone meanwhile and not move again.
+   */
+  followSlide(slide: Promise<void> | null, onArrived: (x: number, y: number) => void): void {
     this.slide = slide;
     void slide?.then(() => {
-      if (this.slide === slide) this.slide = null;
+      if (this.slide !== slide) return;
+      this.slide = null;
+      if (!this.lastPointer) throw new Error("A live preview slide follows a hover");
+      onArrived(this.lastPointer.x, this.lastPointer.y);
     });
   }
 

@@ -225,6 +225,19 @@ describe("CharacterSheet sections slide into a live preview", () => {
     expect(pairGrid()).toBeNull();
   });
 
+  it("a finger that stopped over a new zone while sections slid gets it once they arrive", async () => {
+    holdCyphersOverItems();
+    vi.advanceTimersByTime(300); // Cyphers paired with Items, still sliding
+    // The finger reaches the top edge of Items and stays there
+    moveOverTopEdgeOfItems(200);
+
+    animations.forEach((a) => a.finish());
+    await flushPromises();
+    vi.advanceTimersByTime(300);
+
+    expect(pairGrid()).toBeNull();
+  });
+
   it("does not ignore hovers when nothing slides", () => {
     stubMedia(true);
     holdCyphersOverItems();

@@ -55,7 +55,7 @@ export class SectionDragController {
   private readonly touch = new SectionTouchInput({
     isEditMode: () => this.host.isEditMode(),
     onActivate: (id) => this.handleTouchDragActivate(id),
-    onHover: (x, y) => this.handleTouchDragHover(x, y),
+    onHover: (x, y) => this.hoverAt(x, y),
     onDrop: () => this.drop(),
     onAbort: () => this.clearDragState(),
   });
@@ -227,7 +227,7 @@ export class SectionDragController {
     if (!sourceId || !this.intent) return;
     this.livePreview.show(applyDrop(this.workingLayout(), sourceId, this.intent));
     this.setIntent(null);
-    this.livePreview.followSlide(this.host.renderWithSlide());
+    this.livePreview.followSlide(this.host.renderWithSlide(), (x, y) => this.hoverAt(x, y));
   }
 
   /** The layout hovers are resolved against: the live preview, else the sheet's */
@@ -241,7 +241,7 @@ export class SectionDragController {
     this.host.requestRender();
   }
 
-  private handleTouchDragHover(x: number, y: number): void {
+  private hoverAt(x: number, y: number): void {
     const hovered = document.elementFromPoint(x, y)?.closest<HTMLElement>("[data-section-id]");
     // Over a gutter (no section) the last intent stands, as for the mouse
     if (hovered) this.hover(hovered, x, y);
