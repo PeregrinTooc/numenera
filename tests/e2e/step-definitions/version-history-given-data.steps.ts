@@ -24,8 +24,6 @@ Given(
     const versionCounter = this.page.locator('[data-testid="version-counter"]');
     await expect(versionCounter).toContainText("Version 2 of 2", { timeout: 10000 });
 
-    // Create one more version so we can navigate back to see this legacy
-    // version's (now migrated, after reload) description.
     await this.storageHelper.createVersion(
       { ...versionCharacter, name: "Latest Version" },
       "Another change"
@@ -74,7 +72,6 @@ Given(
     await this.page.waitForLoadState("networkidle");
     await this.page.waitForTimeout(500);
 
-    // Create versions with different character data
     const baseCharacter = await this.storageHelper.getCharacter();
 
     for (let i = 1; i < versionCount; i++) {
@@ -91,7 +88,6 @@ Given(
       await this.storageHelper.createVersion(versionCharacter, `Modified data`);
     }
 
-    // Wait for version navigator to show final count
     const versionCounter = this.page.locator('[data-testid="version-counter"]');
     await expect(versionCounter).toContainText(`Version ${versionCount} of ${versionCount}`, {
       timeout: 10000,
@@ -102,11 +98,9 @@ Given(
 Given(
   "the character has {int} versions with different names",
   async function (this: CustomWorld, versionCount: number) {
-    // Wait for page to be fully loaded before creating versions
     await this.page.waitForLoadState("networkidle");
     await this.page.waitForTimeout(500);
 
-    // Create versions with different names
     const baseCharacter = await this.storageHelper.getCharacter();
 
     for (let i = 1; i < versionCount; i++) {
@@ -117,10 +111,8 @@ Given(
       await this.storageHelper.createVersion(versionCharacter, `Changed name`);
     }
 
-    // Wait a bit for the navigator to update after last version
     await this.page.waitForTimeout(200);
 
-    // Wait for version navigator to show final count
     const versionCounter = this.page.locator('[data-testid="version-counter"]');
     await expect(versionCounter).toContainText(`Version ${versionCount} of ${versionCount}`, {
       timeout: 10000,
@@ -129,11 +121,9 @@ Given(
 );
 
 Given("I have made buffered edits that were undone", async function (this: CustomWorld) {
-  // Make two edits to the character name
   const testId = "character-name";
   const field = this.page.locator(`[data-testid="${testId}"]`);
 
-  // First edit
   await field.click();
   const modal = this.page.locator('[data-testid="edit-modal"]');
   await expect(modal).toBeVisible({ timeout: 5000 });
@@ -144,7 +134,6 @@ Given("I have made buffered edits that were undone", async function (this: Custo
   await expect(modal).toHaveCount(0, { timeout: 2000 });
   await this.page.waitForTimeout(100);
 
-  // Second edit
   await field.click();
   await expect(modal).toBeVisible({ timeout: 5000 });
   await input.fill("Second Edit");
@@ -152,7 +141,6 @@ Given("I have made buffered edits that were undone", async function (this: Custo
   await expect(modal).toHaveCount(0, { timeout: 2000 });
   await this.page.waitForTimeout(100);
 
-  // Undo both edits using Control+Z (before squash timer expires)
   await this.page.evaluate(() => {
     const event1 = new KeyboardEvent("keydown", {
       key: "z",
@@ -168,7 +156,6 @@ Given("I have made buffered edits that were undone", async function (this: Custo
   });
   await this.page.waitForTimeout(200);
 
-  // Undo again to go back to original
   await this.page.evaluate(() => {
     const event2 = new KeyboardEvent("keydown", {
       key: "z",
@@ -183,6 +170,4 @@ Given("I have made buffered edits that were undone", async function (this: Custo
     document.body.dispatchEvent(event2);
   });
   await this.page.waitForTimeout(200);
-
-  // Now we're at the original state, and redo stack has the two undone changes
 });

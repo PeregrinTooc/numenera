@@ -1,7 +1,3 @@
-/**
- * Step definitions for exporting and importing the layout with a character file
- */
-
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
@@ -24,7 +20,7 @@ Given("I have a character file with a different layout", async function (this: C
     { type: "single", id: "basicInfo" },
     { type: "single", id: "stats" },
     { type: "single", id: "recoveryDamage" },
-    { type: "single", id: "items" }, // Different order
+    { type: "single", id: "items" },
     { type: "single", id: "cyphers" },
     { type: "single", id: "abilities" },
     { type: "single", id: "specialAbilities" },
@@ -35,7 +31,7 @@ Given("I have a character file with a different layout", async function (this: C
 });
 
 Given("I have a character file with the default layout", async function (this: CustomWorld) {
-  this.importedLayout = null; // No custom layout
+  this.importedLayout = null;
 });
 
 When("I import the character file", async function (this: CustomWorld) {
@@ -54,13 +50,11 @@ When("I import the character file", async function (this: CustomWorld) {
   };
 
   // The import button is in the header, not in settings panel
-  // Use file chooser to import
   const [fileChooser] = await Promise.all([
     page.waitForEvent("filechooser"),
     page.click('[data-testid="import-button"]'),
   ]);
 
-  // Create a temporary file with the character data
   const fileContent = JSON.stringify(characterData);
   const buffer = Buffer.from(fileContent, "utf-8");
 
@@ -74,7 +68,6 @@ When("I import the character file", async function (this: CustomWorld) {
 Then("I should see a layout choice prompt", async function (this: CustomWorld) {
   const page = this.page;
 
-  // Check for layout choice modal
   const prompt = page.locator('[data-testid="layout-choice-modal"]');
   await expect(prompt).toBeVisible({ timeout: 5000 });
 });
@@ -117,7 +110,6 @@ When("I choose to {string}", async function (this: CustomWorld, choice: string) 
 Then("my current layout should be preserved", async function (this: CustomWorld) {
   const page = this.page;
 
-  // Check that the layout in localStorage is still the custom one we set earlier
   const layoutData = await page.evaluate(() => {
     return localStorage.getItem("numenera-layout");
   });
@@ -125,7 +117,6 @@ Then("my current layout should be preserved", async function (this: CustomWorld)
   if (layoutData === null) throw new Error("numenera-layout was not saved");
   const layout: Array<{ type: string; id: string }> = JSON.parse(layoutData);
 
-  // Should still have cyphers before abilities (our custom order)
   const cypherIndex = layout.findIndex((item) => item.type === "single" && item.id === "cyphers");
   const abilitiesIndex = layout.findIndex(
     (item) => item.type === "single" && item.id === "abilities"
@@ -137,7 +128,6 @@ Then("my current layout should be preserved", async function (this: CustomWorld)
 Then("only the character data should be imported", async function (this: CustomWorld) {
   const page = this.page;
 
-  // Check that the character name was updated
   const name = await page.locator('[data-testid="character-name"]').textContent();
   expect(name).toContain("Imported Character");
 });
@@ -145,7 +135,6 @@ Then("only the character data should be imported", async function (this: CustomW
 Then("the layout from the imported file should be applied", async function (this: CustomWorld) {
   const page = this.page;
 
-  // Check that layout was updated from import
   const layoutData = await page.evaluate(() => {
     return localStorage.getItem("numenera-layout");
   });
@@ -153,7 +142,6 @@ Then("the layout from the imported file should be applied", async function (this
   if (layoutData === null) throw new Error("numenera-layout was not saved");
   const layout: Array<{ type: string; id: string }> = JSON.parse(layoutData);
 
-  // Should have items before cyphers (from imported layout)
   const itemsIndex = layout.findIndex((item) => item.type === "single" && item.id === "items");
   const cyphersIndex = layout.findIndex((item) => item.type === "single" && item.id === "cyphers");
 

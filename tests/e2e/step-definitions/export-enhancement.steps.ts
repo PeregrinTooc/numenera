@@ -3,10 +3,6 @@ import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 import { waitForCharacterSheetReady } from "../support/app-ready.js";
 
-// ========================================
-// Given Steps - Setup
-// ========================================
-
 Given("my browser supports File System Access API", async function (this: CustomWorld) {
   // Install the mock before the app boots, then reload: the header decides
   // once, at construction, whether to offer Quick Export / Save As
@@ -15,7 +11,6 @@ Given("my browser supports File System Access API", async function (this: Custom
   await this.page.addInitScript(() => {
     const mockWindow = window;
 
-    // Create mock file handle
     const createMockHandle = (name: string) => ({
       name,
       kind: "file" as const,
@@ -29,7 +24,6 @@ Given("my browser supports File System Access API", async function (this: Custom
       queryPermission: async () => "granted",
     });
 
-    // Mock showSaveFilePicker
     mockWindow.showSaveFilePicker = async (options?: { suggestedName?: string }) => {
       if (mockWindow._cancelFilePicker) {
         throw new window.DOMException("User cancelled", "AbortError");
@@ -49,7 +43,6 @@ Given("my browser does not support File System Access API", async function () {
   await this.page.evaluate(() => {
     delete window.showSaveFilePicker;
 
-    // Mock createElement for download link capture
     const originalCreateElement = document.createElement.bind(document);
     document.createElement = function (tagName: string) {
       const element = originalCreateElement(tagName);
@@ -58,7 +51,6 @@ Given("my browser does not support File System Access API", async function () {
           const anchor = element as HTMLAnchorElement;
           window._downloadFilename = anchor.download;
 
-          // Extract data from blob URL
           if (anchor.href && anchor.href.startsWith("blob:")) {
             window
               .fetch(anchor.href)
@@ -76,18 +68,14 @@ Given("my browser does not support File System Access API", async function () {
 });
 
 Given("the character name is {string}", async function (name: string) {
-  // Click on the name field to open the modal
   const nameElement = this.page.getByTestId("character-name");
   await nameElement.click();
 
-  // Fill in the new name
   const input = this.page.locator('[data-testid="edit-modal-input"]');
   await input.fill(name);
 
-  // Click confirm
   await this.page.click('[data-testid="modal-confirm-button"]');
 
-  // Wait for modal to close
   await this.page
     .waitForSelector('[data-testid="edit-modal"]', {
       state: "hidden",
@@ -97,31 +85,22 @@ Given("the character name is {string}", async function (name: string) {
       // Modal might already be hidden
     });
 
-  // Wait for auto-save to complete (debounce is 300ms, wait a bit longer)
   await this.page.waitForTimeout(500);
 
-  // Verify the name was updated
   await expect(nameElement).toHaveText(name, { timeout: 5000 });
 });
 
-// ========================================
-// When Steps - Actions
-// ========================================
-
 When("I view the export buttons", async function () {
-  // Wait for header to be visible
   await this.page.waitForSelector(".character-header", { state: "visible" });
 });
 
 When("I click the Export button", async function () {
   const button = this.page.locator('button[data-testid="export-button"]');
   await button.click();
-  // Wait longer for UI to update after export
   await this.page.waitForTimeout(500);
 });
 
 When("I cancel the file save dialog", async function () {
-  // Set cancel flag BEFORE clicking
   await this.page.evaluate(() => {
     window._cancelFilePicker = true;
   });
@@ -138,10 +117,6 @@ When("I click the Save As button", async function () {
   await button.click();
   await this.page.waitForTimeout(100);
 });
-
-// ========================================
-// Then Steps - Assertions
-// ========================================
 
 Then("I should see an {string} button", async function (buttonText: string) {
   const button = this.page.locator(`button:has-text("${buttonText}")`);
@@ -185,7 +160,6 @@ Then("the exported data should have correct structure", async function () {
 });
 
 Then("a file download should be triggered", async function () {
-  // Wait for download to be set up
   await this.page.waitForTimeout(500);
 
   const downloadFilename = await this.page.evaluate(() => {
@@ -203,7 +177,6 @@ Then("the download filename should contain {string}", async function (expectedNa
 });
 
 Then("the download should have correct file structure", async function () {
-  // Wait for data to be captured
   await this.page.waitForTimeout(500);
 
   const data = await this.page.evaluate(() => {
@@ -239,14 +212,12 @@ Then("the Export button should still be visible", async function () {
 });
 
 Then("the file should be saved without prompting", async function () {
-  // Verify that showSaveFilePicker was NOT called again (no prompting)
   const dialogShownAgain = await this.page.evaluate(() => {
     const count = window._saveDialogCallCount || 0;
     return count > 1; // Should be exactly 1 from first export
   });
   expect(dialogShownAgain).toBe(false);
 
-  // Verify data was written
   const data = await this.page.evaluate(() => {
     return window._lastWrittenData;
   });

@@ -25,7 +25,6 @@ export async function failStorageWrites(page: Page, errorName: string): Promise<
   }, errorName);
 }
 
-/** Undo failStorageWrites. */
 export async function restoreStorageWrites(page: Page): Promise<void> {
   await page.evaluate(() => window.__restoreStorageWrites?.());
 }

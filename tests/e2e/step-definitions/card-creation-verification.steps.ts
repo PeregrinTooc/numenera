@@ -3,48 +3,33 @@ import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { CARD_CONFIGS } from "../support/cardTestFixtures.js";
 
-// ============================================================================
-// CARD COUNT VERIFICATION STEPS
-// ============================================================================
-
-// Cypher cards (singular and plural)
 Then("I should see {int} cypher card(s)", async function (this: CustomWorld, count: number) {
   await this.cards.expectVisibleCount("cypher", count);
 });
 
-// Equipment cards
 Then("I should see {int} equipment cards", async function (this: CustomWorld, count: number) {
   await this.cards.expectVisibleCount("equipment", count);
 });
 
-// Artifact cards
 Then("I should see {int} artifact cards", async function (this: CustomWorld, count: number) {
   await this.cards.expectVisibleCount("artifact", count);
 });
 
-// Oddity cards
 Then("I should see {int} oddity cards", async function (this: CustomWorld, count: number) {
   await this.cards.expectVisibleCount("oddity", count);
 });
 
-// Attack cards
 Then("I should see {int} attack cards", async function (this: CustomWorld, count: number) {
   await this.cards.expectVisibleCount("attack", count);
 });
 
-// Ability cards
 Then("I should see {int} ability cards", async function (this: CustomWorld, count: number) {
   await this.cards.expectVisibleCount("ability", count);
 });
 
-// Special ability cards
 Then("I should see {int} special ability cards", async function (this: CustomWorld, count: number) {
   await this.cards.expectVisibleCount("special-ability", count);
 });
-
-// ============================================================================
-// CARD CONTENT VERIFICATION STEPS
-// ============================================================================
 
 Then(
   "I should see a cypher card with name {string}",

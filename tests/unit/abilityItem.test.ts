@@ -1,4 +1,3 @@
-// Unit tests for AbilityItem edit functionality
 import { AbilityItem } from "@/components/AbilityItem";
 import { Ability } from "@/types/character";
 import { testItemEditAndDelete } from "./helpers/itemTestSuite.js";
@@ -11,7 +10,6 @@ const sampleAbility: Ability = {
   action: "1 action",
 };
 
-// Use shared parameterized test suite
 testItemEditAndDelete<Ability>({
   componentName: "AbilityItem",
   createComponent: (item, index, onUpdate, onDelete) =>

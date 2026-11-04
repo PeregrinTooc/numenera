@@ -1,4 +1,3 @@
-// Unit tests for edit field validation
 import { describe, it, expect } from "vitest";
 import {
   validateTier,
@@ -7,7 +6,6 @@ import {
   validateFocus,
 } from "@/utils/fieldValidation";
 
-// Tests
 describe("Tier Validation", () => {
   it("should accept valid tier values (1-6)", () => {
     expect(validateTier(1)).toBe(1);

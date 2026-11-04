@@ -15,9 +15,6 @@ Feature: Internationalization (i18n)
         And the load button should display "Beispiel laden"
         And the new button should display "Neu"
 
-    # Note: Basic info now uses sentence format without individual labels
-    # Character data (name, tier, type, descriptor, focus) is displayed inline
-
     Scenario: German translations for stats section
         Given I am on the character sheet page with "?lang=de"
         Then the stats heading should be "Attribute"

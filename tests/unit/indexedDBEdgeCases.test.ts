@@ -49,7 +49,6 @@ describe("IndexedDBStorageImpl", () => {
 
       await Promise.all(promises);
 
-      // Last save should win
       const loaded = (await ctx.storage.load()) as Character;
       expect(loaded.name).toMatch(/Character \d/);
     });
@@ -57,19 +56,16 @@ describe("IndexedDBStorageImpl", () => {
 
   describe("object store validation", () => {
     it("should skip migration gracefully when object store does not exist", async () => {
-      // Setup: Store data in localStorage
       localStorage.setItem(STORAGE_KEY, JSON.stringify(mockCharacter));
       const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
       await withDatabaseLackingObjectStore(ctx, async (storage) => {
-        // Execute migration - should skip gracefully, not throw
         await expect(storage.migrateFromLocalStorage()).resolves.toBeUndefined();
       });
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
         "IndexedDB not ready for migration, skipping localStorage migration"
       );
-      // localStorage data was NOT removed (migration was skipped)
       expect(localStorage.getItem(STORAGE_KEY)).not.toBeNull();
 
       consoleWarnSpy.mockRestore();

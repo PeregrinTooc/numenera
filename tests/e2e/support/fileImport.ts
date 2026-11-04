@@ -25,7 +25,6 @@ export async function importFile(page: Page, filename: string, content: unknown)
   });
 }
 
-/** Wraps a character in the .numenera file envelope the exporter writes. */
 export function numeneraFile(
   character: unknown,
   schemaVersion: string = SCHEMA_VERSION

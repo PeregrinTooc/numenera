@@ -7,8 +7,6 @@ Feature: Version History Undo and Redo
         Given I am on the character sheet page
         And the character has no version history yet
 
-    # Keyboard Shortcuts (Ctrl+Z/Y with Buffer Support)
-
     Scenario: Undo unsquashed changes in buffer
         Given the character has 3 versions in history
         When I edit the "character name" field to "First Edit"

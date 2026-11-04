@@ -3,10 +3,6 @@ import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 import { withFullHeightViewport } from "../support/sections.js";
 
-// ============================================================================
-// SETUP STEPS - Create cyphers for testing
-// ============================================================================
-
 Given(
   "the character has {int} cyphers named {string}",
   async function (this: CustomWorld, count: number, namesList: string) {
@@ -23,10 +19,6 @@ async function setupCyphersWithNames(world: CustomWorld, names: string[]): Promi
   await world.page.waitForSelector('[data-testid="cyphers-section"]');
 }
 
-// ============================================================================
-// DRAG ACTION STEPS
-// ============================================================================
-
 When(
   "I drag cypher {string} before cypher {string}",
   async function (this: CustomWorld, sourceName: string, targetName: string) {
@@ -37,7 +29,6 @@ When(
       .locator(`[data-testid="cypher-name-${targetName}"]`)
       .locator("xpath=ancestor::div[@data-testid='cypher-item']");
 
-    // Use Playwright's dragTo method which properly triggers HTML5 drag events.
     // Full-height viewport: on phones the stacked cards don't all fit on screen.
     await withFullHeightViewport(this.page, () =>
       sourceCard.dragTo(targetCard, {
@@ -45,7 +36,6 @@ When(
       })
     );
 
-    // Wait for DOM update after reorder
     await this.page.waitForTimeout(200);
   }
 );
@@ -62,19 +52,16 @@ When(
 
     // Full-height viewport: on phones the stacked cards don't all fit on screen.
     await withFullHeightViewport(this.page, async () => {
-      // Get target bounding box to calculate bottom position
       const targetBBox = await targetCard.boundingBox();
       if (!targetBBox) {
         throw new Error(`Could not find cypher card: ${targetName}`);
       }
 
-      // Use Playwright's dragTo method - drop at bottom of target
       await sourceCard.dragTo(targetCard, {
         targetPosition: { x: targetBBox.width / 2, y: targetBBox.height - 5 },
       });
     });
 
-    // Wait for DOM update after reorder
     await this.page.waitForTimeout(200);
   }
 );
@@ -89,7 +76,6 @@ When("I start dragging cypher {string}", async function (this: CustomWorld, cyph
     throw new Error(`Could not find cypher card: ${cypherName}`);
   }
 
-  // Store the dragged card name for subsequent steps
   this.draggedCypherName = cypherName;
 
   // Dispatch dragstart event from within the browser context
@@ -104,7 +90,6 @@ When("I start dragging cypher {string}", async function (this: CustomWorld, cyph
     el.dispatchEvent(event);
   });
 
-  // Wait for drag state to be applied
   await this.page.waitForTimeout(100);
 });
 
@@ -118,7 +103,6 @@ When("I hover over cypher {string}", async function (this: CustomWorld, cypherNa
     throw new Error(`Could not find cypher card: ${cypherName}`);
   }
 
-  // Dispatch dragover event from within the browser context
   await cypherCard.evaluate((el) => {
     const event = new DragEvent("dragover", {
       bubbles: true,
@@ -127,13 +111,8 @@ When("I hover over cypher {string}", async function (this: CustomWorld, cypherNa
     el.dispatchEvent(event);
   });
 
-  // Wait for visual reorder
   await this.page.waitForTimeout(200);
 });
-
-// ============================================================================
-// ASSERTION STEPS
-// ============================================================================
 
 Then(
   "the cyphers should be in order {string}",
@@ -152,15 +131,10 @@ async function verifyCypherOrder(world: CustomWorld, expectedOrder: string[]): P
   for (let i = 0; i < expectedOrder.length; i++) {
     const cypherName = cypherItems.nth(i).locator('[data-testid^="cypher-name-"]');
     const nameText = await cypherName.textContent();
-    // Remove the emoji prefix (⚡)
     const cleanName = nameText?.replace("⚡", "").trim();
     expect(cleanName).toBe(expectedOrder[i]);
   }
 }
-
-// ============================================================================
-// VISUAL FEEDBACK STEPS
-// ============================================================================
 
 Then(
   "the cypher {string} should have a dragging visual state",
@@ -169,7 +143,6 @@ Then(
       .locator(`[data-testid="cypher-name-${cypherName}"]`)
       .locator("xpath=ancestor::div[@data-testid='cypher-item']");
 
-    // Check for dragging class or visual state
     const hasDraggingClass = await cypherCard.evaluate((el) => {
       return (
         el.classList.contains("dragging") ||
@@ -196,7 +169,6 @@ async function verifyVisualCypherOrder(world: CustomWorld, expectedOrder: string
 
   expect(count).toBe(expectedOrder.length);
 
-  // Get all items with their names and CSS order values
   const itemsWithOrder: { name: string; order: number }[] = [];
   for (let i = 0; i < count; i++) {
     const item = cypherItems.nth(i);
@@ -204,7 +176,6 @@ async function verifyVisualCypherOrder(world: CustomWorld, expectedOrder: string
     const nameText = await cypherName.textContent();
     const cleanName = nameText?.replace("⚡", "").trim() || "";
 
-    // Get CSS order value (empty string means 0)
     const orderValue = await item.evaluate((el) => {
       const order = (el as HTMLElement).style.order;
       return order === "" ? 0 : parseInt(order, 10);
@@ -213,10 +184,8 @@ async function verifyVisualCypherOrder(world: CustomWorld, expectedOrder: string
     itemsWithOrder.push({ name: cleanName, order: orderValue });
   }
 
-  // Sort by CSS order to get visual order
   itemsWithOrder.sort((a, b) => a.order - b.order);
 
-  // Verify visual order matches expected
   for (let i = 0; i < expectedOrder.length; i++) {
     expect(itemsWithOrder[i].name).toBe(expectedOrder[i]);
   }

@@ -1,10 +1,6 @@
 import type { CDPSession, Locator, Page } from "@playwright/test";
 import { SECTION_DISPLAY_NAMES, type SectionId } from "@/types/layout";
 
-/**
- * Resolve a section's display name as written in Gherkin ("Special Abilities")
- * to its layout id ("specialAbilities").
- */
 export function sectionId(name: string): SectionId {
   const entry = (Object.entries(SECTION_DISPLAY_NAMES) as [SectionId, string][]).find(
     ([, displayName]) => displayName === name
@@ -67,7 +63,6 @@ export interface Point {
   y: number;
 }
 
-/** A drop zone on a section, as written in Gherkin. */
 export type SectionZone = "top edge" | "bottom edge" | "middle left" | "middle right";
 
 /**
@@ -92,7 +87,6 @@ export function zonePoint(
   return { x: box.x + box.width * fx, y: box.y + box.height * fy };
 }
 
-/** Drag a section by its heading with the real mouse and drop it on a zone of another. */
 export async function dragSectionTo(
   page: Page,
   sourceName: string,

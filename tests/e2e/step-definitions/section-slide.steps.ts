@@ -1,7 +1,3 @@
-/**
- * Step definitions for sections sliding into a live preview and back
- */
-
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";

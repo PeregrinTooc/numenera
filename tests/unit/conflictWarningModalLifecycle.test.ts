@@ -78,7 +78,6 @@ describe("ConflictWarningModal lifecycle", () => {
         })
       );
 
-      // Multiple close calls should not throw
       expect(() => {
         modal.close();
         modal.close();

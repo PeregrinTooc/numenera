@@ -129,7 +129,6 @@ describe("CharacterSheet section columns", () => {
       sheet.toggleLayoutEditMode();
       const button = switchIn("cyphers") as HTMLButtonElement;
 
-      // A finger held on the switch past the long-press delay, then lifted
       const press = new TouchEvent("touchstart", { bubbles: true, cancelable: true });
       Object.defineProperty(press, "touches", { value: [{ clientX: 10, clientY: 10 }] });
       button.dispatchEvent(press);

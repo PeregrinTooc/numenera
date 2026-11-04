@@ -8,7 +8,6 @@ import { CardsDsl } from "./cards.js";
 import { SetupDsl } from "./setup.js";
 import { BASE_URL } from "./serverUrl.js";
 
-// Set default timeout for all steps to 30 seconds
 setDefaultTimeout(30000);
 
 export interface ExportedCharacterFile {

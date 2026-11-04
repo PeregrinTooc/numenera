@@ -7,7 +7,6 @@ import {
 } from "@/storage/fileHandleStore";
 import type { Character } from "@/types/character";
 
-// Mock character data
 export const mockCharacter: Character = {
   name: "Glaive Warrior",
   tier: 1,
@@ -72,7 +71,6 @@ export function createMockWritable(
   } as unknown as FileSystemWritableFileStream;
 }
 
-// Helper to setup export test with File System Access API
 export function setupExportTest() {
   const mockHandle = createMockHandle();
   const picker = vi.fn().mockResolvedValue(mockHandle);
@@ -83,7 +81,6 @@ export function setupExportTest() {
 export interface RecordedDownload {
   filename: string;
   href: string;
-  /** Whether the anchor was attached to the document when it was clicked. */
   connected: boolean;
 }
 
@@ -110,7 +107,6 @@ export function setupDownloadTest() {
   return {
     downloads,
     revokeSpy,
-    /** Text of the Blob that the given download's link pointed at. */
     contentOf: (download: RecordedDownload): Promise<string> => {
       const blob = blobs.get(download.href);
       if (!blob) throw new Error(`No Blob was created for ${download.href}`);
@@ -123,7 +119,6 @@ export function setupDownloadTest() {
   };
 }
 
-// Helper to verify valid file structure
 export function expectValidFileStructure(data: string) {
   expect(data).toBeTruthy();
   const parsed = JSON.parse(data);
@@ -136,9 +131,7 @@ export function expectValidFileStructure(data: string) {
 
 export interface ExportManagerFixture {
   exportManager: ExportManager;
-  /** Whether a file handle is persisted in the (fake) IndexedDB handle store. */
   hasPersistedHandle(): Promise<boolean>;
-  /** Writes a handle into the (fake) IndexedDB handle store. */
   seedPersistedHandle(handle: FileSystemFileHandle): Promise<void>;
 }
 
@@ -156,7 +149,6 @@ export function setupExportManager(): ExportManagerFixture {
     await deleteFileHandle();
     vi.clearAllMocks();
 
-    // Clear window mocks
     delete window.showSaveFilePicker;
 
     fixture.exportManager = new ExportManager();

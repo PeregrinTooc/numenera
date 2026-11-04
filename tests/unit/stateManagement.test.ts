@@ -244,7 +244,6 @@ describe("State Management Components", () => {
       );
       sheet.mount(container);
 
-      // Check for major sections
       const basicInfo = container.querySelector('[data-testid="basic-info"]');
       const statsSection = container.querySelector('[data-testid="stats-section"]');
       const recoverySection = container.querySelector('[data-testid="recovery-rolls-section"]');

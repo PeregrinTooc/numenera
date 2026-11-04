@@ -48,7 +48,6 @@ describe("SettingsGear", () => {
       ) as HTMLButtonElement;
       gearButton.click();
 
-      // Re-render after state change
       render(settingsGear.render(), container);
 
       const panel = container.querySelector('[data-testid="settings-panel"]');
@@ -59,7 +58,6 @@ describe("SettingsGear", () => {
       settingsGear.open();
       render(settingsGear.render(), container);
 
-      // Simulate click outside
       settingsGear.close();
       render(settingsGear.render(), container);
 
@@ -96,7 +94,6 @@ describe("SettingsGear", () => {
         expect(onRerender).not.toHaveBeenCalled();
         expect(settingsGear.isOpen).toBe(false);
 
-        // A later open still works, and one outside click closes it exactly once.
         settingsGear.open();
         vi.runAllTimers();
         onRerender.mockClear();
@@ -165,7 +162,6 @@ describe("SettingsGear", () => {
       ) as HTMLButtonElement;
       englishFlag.click();
 
-      // Re-render after state change
       render(settingsGear.render(), container);
 
       expect(settingsGear.isOpen).toBe(false);

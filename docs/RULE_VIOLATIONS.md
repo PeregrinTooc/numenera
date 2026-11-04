@@ -42,17 +42,13 @@ editing the rule to match the code.
 | Rule #12 — DRY                                    | The same knowledge in several places: IndexedDB request/open boilerplate, event, modal, container and file-operation code, and which Character fields form which group (`changeDetection`, `characterDiff`, `diffDescriptions`)                                                            | shared IndexedDB request and open helpers; extracted event, modal, container, file-operation, export and layout helpers; one field-group table in `src/utils/characterFieldGroups.ts` that all three diff files iterate                                                                                                                                                                                                                                                          |
 | Code quality — files over 300 lines (second pass) | `SectionDragController.ts` (455), `CharacterSheet.ts` (347) and `characterSheetDropZones.test.ts` (344) grew past the limit with the section-drag and column work                                                                                                                          | `LivePreview`, `SectionTouchInput` and `sectionDragRender` extracted from the controller (now under 300 lines); the drop-zone tests split into `characterSheetDropZones` and `characterSheetLivePreview` over `helpers/sectionDragFixture`; `CharacterSheet` split earlier; no file in `src/` or `tests/` is over 300 lines                                                                                                                                                      |
 | Rule #12 — overlong units                         | Functions of 50–150 lines mixing several steps: bootstrap, validation, import and storage functions, and the section-drag live-preview state                                                                                                                                               | long functions split into named steps; the live-preview dwell, anchor, slide guard and working layout moved into `LivePreview`                                                                                                                                                                                                                                                                                                                                                   |
+| Rule #12 — over-commenting                        | Comments that restate the next line, JSDoc repeating names and signatures, history ("previously", "now", "used to"), absent-feature notes, section banners and a commented-out scenario: 2553 comment lines in `src/` and 1858 in `tests/` (plus 155 `#` lines in feature files)           | `src/` cut to 1215 lines, `tests/` to 632 (`#` lines in features to 34); what stays is the reason for a setup, a stub or a browser quirk. Arrange/Act/Assert labels dropped; stale hooks.ts notes corrected                                                                                                                                                                                                                                                                      |
 
 ---
 
 ## Open
 
-Found by the 2026-11-04 design-smell review of `main` (`0dbde69`); see
-`docs/rules/design.md` for the rule each row breaks.
-
-| Rule                       | Violation                     | Where                                                          |
-| -------------------------- | ----------------------------- | -------------------------------------------------------------- |
-| Rule #12 — over-commenting | `src/` done; `tests/` pending | comment lines in `tests/` that restate code or narrate history |
+None.
 
 ## Plan — a sequence of commits on `main`
 

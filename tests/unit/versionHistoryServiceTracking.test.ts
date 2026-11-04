@@ -6,22 +6,17 @@ describe("VersionHistoryService - tracking, races and edge cases", () => {
 
   describe("Modal Cancel Scenario", () => {
     it("should not add cancelled changes to buffer", () => {
-      // User types (timer resets)
       fx.service.resetTimer();
       fx.service.resetTimer();
       fx.service.resetTimer();
-
-      // User cancels (no bufferChange called)
-      // Timer continues running
 
       expect(fx.service.getBufferLength()).toBe(0);
       expect(fx.service.isTimerActive()).toBe(true);
     });
 
     it("should not create version if timer fires with empty buffer", async () => {
-      fx.service.resetTimer(); // Typing
-      fx.service.resetTimer(); // More typing
-      // User cancels
+      fx.service.resetTimer();
+      fx.service.resetTimer();
 
       vi.advanceTimersByTime(1000);
       await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
@@ -71,26 +66,21 @@ describe("VersionHistoryService - tracking, races and edge cases", () => {
 
   describe("Integration Scenario: Multiple Quick Edits", () => {
     it("should handle realistic editing scenario", async () => {
-      // User edits name
       fx.service.bufferChange({ ...fx.mockCharacter, name: "Aria" }, "Changed name");
       vi.advanceTimersByTime(400);
 
-      // User edits tier
       fx.service.bufferChange({ ...fx.mockCharacter, tier: 2 }, "Changed tier");
       vi.advanceTimersByTime(400);
 
-      // User edits descriptor
       fx.service.bufferChange({ ...fx.mockCharacter, descriptor: "Swift" }, "Changed descriptor");
       vi.advanceTimersByTime(600); // Total 1400ms, but timer reset at 800ms
 
-      // Timer fires at 1400ms (600ms after last edit)
       expect(await fx.manager.getAllVersions()).toHaveLength(0);
 
       vi.advanceTimersByTime(400); // Now 1000ms from last reset
 
       await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
-      // Should have squashed all 3 changes
       expect(await fx.manager.getAllVersions()).toHaveLength(1);
       expect(fx.service.getBufferLength()).toBe(0);
     });
@@ -111,15 +101,12 @@ describe("VersionHistoryService - tracking, races and edge cases", () => {
 
       vi.advanceTimersByTime(999);
 
-      // Add another change just before timer fires
       fx.service.bufferChange(fx.mockCharacter, "Change 2");
 
       vi.advanceTimersByTime(1); // Original timer fires
 
-      // The second change restarted the timer, so nothing is saved yet...
       expect(await fx.manager.getAllVersions()).toHaveLength(0);
 
-      // ...and when it fires, both changes are squashed into one version.
       await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
       const versions = await fx.manager.getAllVersions();

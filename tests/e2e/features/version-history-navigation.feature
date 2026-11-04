@@ -7,8 +7,6 @@ Feature: Version History Navigation
         Given I am on the character sheet page
         And the character has no version history yet
 
-    # Version Navigator UI
-
     Scenario: Version navigator is hidden when no versions exist
         When I view the character sheet
         Then the version navigator should not be visible
@@ -179,8 +177,6 @@ Feature: Version History Navigation
         Then the exported file should contain version 1 data
         And the exported file should not contain version history
         And the exported file should use the current portrait
-
-    # Edge Cases
 
     Scenario: Rapid navigation through many versions
         Given the character has 20 versions in history

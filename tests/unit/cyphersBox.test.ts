@@ -1,5 +1,3 @@
-// Unit tests for CyphersBox component
-
 import type { Mock } from "vitest";
 import { render } from "lit-html";
 import { CyphersBox } from "@/components/CyphersBox";
@@ -73,13 +71,11 @@ describe("CyphersBox", () => {
     const initialCount = mockCharacter.cyphers.length;
     expect(initialCount).toBe(2);
 
-    // Find and click delete button for first cypher
     const deleteButton = container.querySelector('[data-testid="cypher-delete-button-0"]');
     expect(deleteButton).toBeTruthy();
 
     deleteButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-    // Re-render to see the effect
     render(component.render(), container);
 
     expect(mockCharacter.cyphers.length).toBe(1);
@@ -125,26 +121,19 @@ describe("CyphersBox", () => {
     const component = new CyphersBox(mockCharacter, mockOnFieldUpdate);
     render(component.render(), container);
 
-    // Delete first cypher
     let deleteButton = container.querySelector('[data-testid="cypher-delete-button-0"]');
     deleteButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     render(component.render(), container);
 
-    // Delete second cypher (now at index 0)
     deleteButton = container.querySelector('[data-testid="cypher-delete-button-0"]');
     deleteButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     render(component.render(), container);
 
     expect(mockCharacter.cyphers.length).toBe(0);
 
-    // Should show empty state
     const emptyState = container.querySelector('[data-testid="empty-cyphers"]');
     expect(emptyState).toBeTruthy();
   });
-
-  // ========================================================================
-  // ADD BUTTON TESTS
-  // ========================================================================
 
   it("should render add button with correct test ID", () => {
     const component = new CyphersBox(mockCharacter, mockOnFieldUpdate);
@@ -179,11 +168,9 @@ describe("CyphersBox", () => {
     const initialCount = mockCharacter.cyphers.length;
     expect(initialCount).toBe(2);
 
-    // Simulate adding a new cypher through the callback
     const newCypher = { name: "New Cypher", level: "1d6", effect: "Test effect" };
     mockCharacter.cyphers.push(newCypher);
 
-    // Re-render to see the effect
     render(component.render(), container);
 
     expect(mockCharacter.cyphers.length).toBe(3);
@@ -214,7 +201,6 @@ describe("CyphersBox", () => {
     const eventSpy = vi.fn();
     container.addEventListener("character-updated", eventSpy);
 
-    // Simulate adding a cypher and dispatching the event
     const newCypher = { name: "New Cypher", level: "1d6", effect: "Test effect" };
     mockCharacter.cyphers.push(newCypher);
 

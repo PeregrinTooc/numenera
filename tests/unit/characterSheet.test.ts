@@ -1,7 +1,3 @@
-/**
- * CharacterSheet component tests - version history integration
- */
-
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import { Character } from "@/types/character";
@@ -19,7 +15,6 @@ describe("CharacterSheet - Version History Integration", () => {
     container = getContainer();
     container.id = "app";
 
-    // Create mock character
     mockCharacter = {
       name: "Test Character",
       descriptor: "Clever",
@@ -60,7 +55,6 @@ describe("CharacterSheet - Version History Integration", () => {
       },
     };
 
-    // Create CharacterSheet
     characterSheet = new CharacterSheet(
       mockCharacter,
       vi.fn(), // onLoad
@@ -130,7 +124,6 @@ describe("CharacterSheet - Version History Integration", () => {
     });
 
     it("does nothing if the section isn't currently in the DOM", () => {
-      // The mounted container holds no [data-section-host="cyphers"].
       characterSheet.mount(container);
       container.innerHTML = "";
       expect(() => characterSheet.rerenderSection("cyphers")).not.toThrow();

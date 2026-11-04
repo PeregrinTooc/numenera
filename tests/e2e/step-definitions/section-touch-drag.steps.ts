@@ -1,7 +1,3 @@
-/**
- * Step definitions for touch long-press dragging of sections
- */
-
 import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
@@ -34,7 +30,6 @@ When(
   "I long-press the {string} section and drag it above the {string} section",
   async function (this: CustomWorld, sourceName: string, targetName: string) {
     const page = this.page;
-    // No edge auto-scroll yet, so keep both sections on screen for the gesture.
     await withFullHeightViewport(page, async () => {
       const gesture = await TouchGesture.start(
         page,

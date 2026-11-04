@@ -1,18 +1,15 @@
 import { vi } from "vitest";
 
-// Mock MessageEvent interface for tests
 export interface MockMessageEvent<T = unknown> {
   data: T;
 }
 
-// Mock BroadcastChannel
 export class MockBroadcastChannel {
   name: string;
   onmessage: ((event: MockMessageEvent) => void) | null = null;
   postMessage = vi.fn();
   close = vi.fn();
 
-  /** Every channel opened since the mock was installed, oldest first. */
   static instances: MockBroadcastChannel[] = [];
 
   constructor(name: string) {
@@ -20,7 +17,6 @@ export class MockBroadcastChannel {
     MockBroadcastChannel.instances.push(this);
   }
 
-  /** The most recently opened channel. */
   static latest(): MockBroadcastChannel {
     const channel = MockBroadcastChannel.instances[MockBroadcastChannel.instances.length - 1];
     if (!channel) {
@@ -29,7 +25,6 @@ export class MockBroadcastChannel {
     return channel;
   }
 
-  /** Deliver a message as if another tab had posted it. */
   receive(data: unknown): void {
     this.onmessage?.({ data });
   }
@@ -43,7 +38,6 @@ export class MockBroadcastChannel {
     return first.tabId;
   }
 
-  /** Payloads of posted messages of the given type. */
   posted(type: string): Array<Record<string, unknown>> {
     return this.postMessage.mock.calls
       .map(([message]) => message as Record<string, unknown>)
@@ -51,9 +45,6 @@ export class MockBroadcastChannel {
   }
 }
 
-/**
- * Replace the global BroadcastChannel with the mock; returns the restore function.
- */
 export function installMockBroadcastChannel(): () => void {
   const globals = globalThis as Record<string, unknown>;
   const original = globals.BroadcastChannel;

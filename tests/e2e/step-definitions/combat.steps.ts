@@ -6,8 +6,6 @@ import type { CustomWorld } from "../support/world.js";
 import { assertNoRawI18nKeys } from "../support/i18nKeys.js";
 import { intCell, propertyTable } from "../support/tableRows.js";
 
-// Attack step definitions
-
 Given(
   "the character has an attack {string} with:",
   async function (this: CustomWorld, name: string, table: DataTable) {
@@ -34,8 +32,6 @@ Given("the character has an attack {string}", async function (this: CustomWorld,
 });
 
 Then("I should see the attack {string}", async function (attackName: string) {
-  // Attack items use generic data-testid="attack-item" without name suffix
-  // Find the attack by looking for the name element inside
   const attackItem = this.page.locator(
     `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
   );
@@ -45,8 +41,6 @@ Then("I should see the attack {string}", async function (attackName: string) {
 Then(
   "the attack {string} should show damage {string}",
   async function (attackName: string, damage: string) {
-    // Attack items use index-based data-testid for sub-elements
-    // Find the attack by name, then locate the damage element within it
     const attackItem = this.page.locator(
       `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
     );
@@ -59,8 +53,6 @@ Then(
 Then(
   "the attack {string} should show modifier {string}",
   async function (attackName: string, modifier: string) {
-    // Attack items use index-based data-testid for sub-elements
-    // Find the attack by name, then locate the modifier element within it
     const attackItem = this.page.locator(
       `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
     );
@@ -73,8 +65,6 @@ Then(
 Then(
   "the attack {string} should show range {string}",
   async function (attackName: string, range: string) {
-    // Attack items use index-based data-testid for sub-elements
-    // Find the attack by name, then locate the range element within it
     const attackItem = this.page.locator(
       `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
     );
@@ -87,8 +77,6 @@ Then(
 Then(
   "the attack {string} should show notes {string}",
   async function (attackName: string, notes: string) {
-    // Attack items use index-based data-testid for sub-elements
-    // Find the attack by name, then locate the notes element within it
     const attackItem = this.page.locator(
       `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
     );
@@ -99,8 +87,6 @@ Then(
 );
 
 Then("the attack {string} should not show notes", async function (attackName: string) {
-  // Attack items use index-based data-testid for sub-elements
-  // Find the attack by name, then check notes element is not visible
   const attackItem = this.page.locator(
     `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
   );
@@ -111,8 +97,6 @@ Then("the attack {string} should not show notes", async function (attackName: st
 Then(
   "the attack {string} should have red combat theme styling",
   async function (attackName: string) {
-    // Attack items use generic data-testid="attack-item" without name suffix
-    // Find the attack by looking for the name element inside
     const attackItem = this.page.locator(
       `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
     );
@@ -126,8 +110,6 @@ Then("the empty attacks state should use translation keys", async function () {
   await expect(emptyState).not.toBeEmpty();
   await assertNoRawI18nKeys(emptyState);
 });
-
-// Special Ability step definitions
 
 Given(
   "the character has a special ability {string} with:",
@@ -155,8 +137,6 @@ Given(
 );
 
 Then("I should see the special ability {string}", async function (abilityName: string) {
-  // Special ability items use generic data-testid="special-ability-item" without name suffix
-  // Find the special ability by looking for the name element inside
   const specialAbilityItem = this.page.locator(
     `[data-testid="special-ability-item"]:has([data-testid="special-ability-name-${abilityName}"])`
   );
@@ -180,8 +160,6 @@ Then(
 Then(
   "the special ability {string} should show source {string}",
   async function (abilityName: string, source: string) {
-    // Special ability items use index-based data-testid for sub-elements
-    // Find the special ability by name, then locate the source element within it
     const specialAbilityItem = this.page.locator(
       `[data-testid="special-ability-item"]:has([data-testid="special-ability-name-${abilityName}"])`
     );
@@ -194,8 +172,6 @@ Then(
 Then(
   "the special ability {string} should have teal theme styling",
   async function (abilityName: string) {
-    // Special ability items use generic data-testid="special-ability-item" without name suffix
-    // Find the special ability by looking for the name element inside
     const specialAbilityItem = this.page.locator(
       `[data-testid="special-ability-item"]:has([data-testid="special-ability-name-${abilityName}"])`
     );
@@ -210,13 +186,9 @@ Then("the empty special abilities state should use translation keys", async func
   await assertNoRawI18nKeys(emptyState);
 });
 
-// Armor badge step definitions
-
 Then("I should see the armor badge in the attacks section", async function () {
   await expect(this.dom.getByTestId("armor-badge")).toBeVisible();
 });
-
-// Layout step definitions
 
 Given("the character has special abilities and attacks", async function (this: CustomWorld) {
   await this.setup.character({
@@ -236,9 +208,6 @@ Then("the attacks section should be in the right column", async function () {
 });
 
 Then("the sections should stack vertically on mobile", async function () {
-  // This tests the responsive grid layout
-  // For now, we just verify both sections are visible
-  // A full responsive test would require viewport resizing
   await expect(this.dom.getByTestId("special-abilities-section")).toBeVisible();
   await expect(this.dom.getByTestId("attacks-section")).toBeVisible();
 });

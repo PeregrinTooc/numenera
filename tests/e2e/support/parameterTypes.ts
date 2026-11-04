@@ -4,7 +4,7 @@ import { FIELD_TEST_IDS } from "./fields.js";
 import type { SectionZone } from "./sections.js";
 
 // Maps the Gherkin word for a character resource to its field name on
-// Character. Consumed by Phase 3.7's this.setup.character(overrides).
+// Character.
 const RESOURCE_FIELDS: Record<string, string> = {
   shins: "shins",
   armor: "armor",

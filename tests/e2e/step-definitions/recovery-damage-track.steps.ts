@@ -4,8 +4,6 @@ import { waitForSaveComplete } from "../support/save.js";
 import type { CustomWorld } from "../support/world.js";
 import type { DamageTrack } from "@/types/character";
 
-// Recovery Rolls step definitions
-
 Then("I should see a section titled {string}", async function (title: string) {
   const text = await this.page.textContent("body");
   expect(text).toContain(title);
@@ -32,7 +30,6 @@ Then(
 );
 
 Given("the character has {string} recovery used", async function (rollType: string) {
-  // This is already set in FULL_CHARACTER mock data
   this.testRecoveryRoll = rollType;
 });
 
@@ -47,8 +44,6 @@ Then("the {string} recovery checkbox should be unchecked", async function (rollT
   const checkbox = this.dom.getByTestId(`recovery-${sanitized}`);
   await expect(checkbox).not.toBeChecked();
 });
-
-// Damage Track step definitions
 
 Then("I should see {int} damage status options", async function (count: number) {
   const radios = await this.page.locator('input[type="radio"][name="damage-track"]').count();
@@ -74,7 +69,6 @@ Given("the character is {string}", async function (this: CustomWorld, impairment
     character.damageTrack.impairment = impairmentStatus as DamageTrack["impairment"];
   });
 
-  // Wait for damage track section to be visible and correct radio button to be selected
   await this.page.waitForSelector('[data-testid="damage-track-section"]', { state: "visible" });
   const sanitized = impairmentStatus.toLowerCase();
   await this.page.waitForFunction(
@@ -99,13 +93,10 @@ Then("the {string} radio button should not be selected", async function (status:
   await expect(radio).not.toBeChecked();
 });
 
-// Styling step definitions
-
 Then("the recovery rolls section should have green styling", async function () {
   const section = this.dom.getByTestId("recovery-rolls-section");
   await expect(section).toBeVisible();
 
-  // Check for green-themed classes
   const hasGreenTheme = await this.dom.hasClass("recovery-rolls-section", "from-green-50");
   expect(hasGreenTheme).toBe(true);
 });
@@ -114,12 +105,9 @@ Then("the damage track section should have red styling", async function () {
   const section = this.dom.getByTestId("damage-track-section");
   await expect(section).toBeVisible();
 
-  // Check for red-themed classes
   const hasRedTheme = await this.dom.hasClass("damage-track-section", "from-red-50");
   expect(hasRedTheme).toBe(true);
 });
-
-// Recovery modifier step definitions
 
 Given(
   "the character has recovery modifier {int}",
@@ -128,7 +116,6 @@ Given(
       character.recoveryRolls.modifier = modifier;
     });
 
-    // Wait for recovery modifier display to show correct value
     // The display shows "1d6 + X" format
     await this.page.waitForFunction(
       (expectedModifier: number) => {
@@ -148,19 +135,14 @@ Then("I should see {string} in the recovery section", async function (text: stri
   await expect(recoverySection).toContainText(text);
 });
 
-// New character step definitions
-
 Given("the character is new", async function () {
-  // Click the NEW button to load NEW_CHARACTER
   const newButton = this.page.locator('[data-testid="new-button"]');
   await newButton.click();
-  // Wait for the recovery rolls section to be visible
   await this.page.waitForSelector('[data-testid="recovery-rolls-section"]', { state: "visible" });
   await this.page.waitForTimeout(500);
 });
 
 Then("all recovery checkboxes should be unchecked", async function () {
-  // Wait for checkboxes to be present
   await this.page.waitForSelector('input[type="checkbox"][data-recovery-roll]', {
     state: "visible",
   });
@@ -169,8 +151,6 @@ Then("all recovery checkboxes should be unchecked", async function () {
     await expect(checkbox).not.toBeChecked();
   }
 });
-
-// Edit recovery modifier step definitions
 
 When("I click on the recovery modifier display", async function () {
   const modifierDisplay = this.dom.getByTestId("recovery-modifier-display");
@@ -193,8 +173,6 @@ When("I confirm the edit", async function () {
   await confirmButton.click();
   await this.page.waitForTimeout(200);
 });
-
-// Persistence step definitions
 
 When("I click the {string} recovery checkbox", async function (rollType: string) {
   const sanitized = rollType.toLowerCase().replace(/\s+/g, "-");

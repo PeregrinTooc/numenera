@@ -26,11 +26,9 @@ describe("ConflictDetectionService messaging", () => {
 
       window.addEventListener("version-conflict", conflictHandler);
 
-      // Set up initial state
       await service.setCurrentEtag(createTestCharacter({ name: "Original" }));
       service.markDirty(createTestCharacter({ name: "Local Changes" }));
 
-      // Simulate receiving a version-saved message from another tab
       const message = {
         type: "version-saved",
         tabId: "other-tab-123",
@@ -54,10 +52,8 @@ describe("ConflictDetectionService messaging", () => {
 
       window.addEventListener("newer-version-available", newerVersionHandler);
 
-      // Set up initial state (not dirty)
       await service.setCurrentEtag(createTestCharacter({ name: "Original" }));
 
-      // Simulate receiving a version-saved message from another tab
       const message = {
         type: "version-saved",
         tabId: "other-tab-123",
@@ -84,14 +80,12 @@ describe("ConflictDetectionService messaging", () => {
       window.addEventListener("version-conflict", conflictHandler);
       window.addEventListener("newer-version-available", newerVersionHandler);
 
-      // Set up initial state
       await service.setCurrentEtag(createTestCharacter({ name: "Original" }));
       service.markDirty(createTestCharacter({ name: "Local Changes" }));
 
-      // Simulate receiving a message from the same tab
       const message = {
         type: "version-saved",
-        tabId: tabId, // Same tab ID
+        tabId: tabId,
         etag: "different-etag",
         timestamp: Date.now(),
         characterName: "Same Tab Character",
@@ -114,10 +108,8 @@ describe("ConflictDetectionService messaging", () => {
 
       window.addEventListener("version-conflict", conflictHandler);
 
-      // Set up initial state
       await service.setCurrentEtag(createTestCharacter({ name: "Original" }));
 
-      // Simulate receiving a version-saved message (sets remoteEtagReceived)
       const message = {
         type: "version-saved",
         tabId: "other-tab-123",
@@ -128,10 +120,8 @@ describe("ConflictDetectionService messaging", () => {
 
       mockChannel.receive(message);
 
-      // Clear the newer-version-available event
       conflictHandler.mockClear();
 
-      // Now when we mark dirty, it should detect stale state
       service.markDirty(createTestCharacter({ name: "Local Changes" }));
 
       expect(conflictHandler).toHaveBeenCalled();

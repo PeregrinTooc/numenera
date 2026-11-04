@@ -1,11 +1,3 @@
-/**
- * DOM Structure Tests
- *
- * These tests verify that all required data-testid attributes and DOM structure
- * are present in the rendered components. This replaces E2E tests that only
- * check for element existence (character-dom.feature).
- */
-
 import { describe, it, expect, vi } from "vitest";
 import { render } from "lit-html";
 import { CharacterSheet } from "@/components/CharacterSheet";
@@ -73,17 +65,14 @@ describe("DOM Structure Tests - empty states and integration", () => {
 
       const container = getContainer();
 
-      // Verify main container
       expect(container.querySelector(".parchment-container")).toBeTruthy();
 
-      // Verify all major sections are present
       expect(container.querySelector('[data-testid="character-header"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="basic-info"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="stats-section"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="cyphers-section"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="artifacts-section"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="oddities-section"]')).toBeTruthy();
-      // Background and notes are now rendered as separate sections via layout system
       expect(container.querySelector('[data-testid="character-background"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="character-notes"]')).toBeTruthy();
     });
@@ -103,7 +92,6 @@ describe("DOM Structure Tests - empty states and integration", () => {
 
       const container = getContainer();
 
-      // Verify layout section wrappers exist
       expect(container.querySelector('[data-testid="layout-section-basicInfo"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="layout-section-stats"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="layout-section-recoveryDamage"]')).toBeTruthy();

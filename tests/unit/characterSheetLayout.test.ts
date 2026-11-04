@@ -42,7 +42,6 @@ describe("CharacterSheet layout persistence", () => {
 
     characterSheet.mount(document.createElement("div"));
 
-    // Enter edit mode on the sheet's original (default) in-memory layout.
     characterSheet.toggleLayoutEditMode();
 
     // Something outside this instance updates the persisted layout — this is
@@ -50,7 +49,6 @@ describe("CharacterSheet layout persistence", () => {
     // cannot be reliably automated and it writes storage directly instead.
     localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify(REORDERED_LAYOUT));
 
-    // Exit edit mode.
     characterSheet.toggleLayoutEditMode();
 
     expect(loadLayout()).toEqual(REORDERED_LAYOUT);

@@ -6,10 +6,6 @@ Feature: Card Creation: Artifacts and Oddities
     Background:
         Given I am on the character sheet page
 
-    # ============================================================================
-    # ITERATION 3: ARTIFACTS
-    # ============================================================================
-
     Scenario: Add button is visible for Artifacts
         Then I should see an add artifact button
 
@@ -86,21 +82,14 @@ Feature: Card Creation: Artifacts and Oddities
         And the artifact "Power Gauntlet Mk II" should have level "1d6+2"
         And the artifact "Power Gauntlet Mk II" should have effect "Greatly enhances strength and speed"
 
-    # ============================================================================
-    # ITERATION 4: ODDITIES
-    # ============================================================================
-
-
     Scenario: Add button is visible for Oddities
         Then I should see an add oddity button
-
 
     Scenario: Add Oddity button opens modal with empty fields
         When I click the add oddity button
         Then the card edit modal should be open
         And the modal should show oddity fields
         And all oddity fields should be empty
-
 
     Scenario: Canceling oddity creation does not add a card
         Given the character has 2 oddity cards
@@ -109,7 +98,6 @@ Feature: Card Creation: Artifacts and Oddities
         And I cancel the card edit modal
         Then I should see 2 oddity cards
 
-
     Scenario: Confirming oddity creation adds a new card
         Given the character has 2 oddity cards
         When I click the add oddity button
@@ -117,7 +105,6 @@ Feature: Card Creation: Artifacts and Oddities
         And I confirm the card edit modal
         Then I should see 3 oddity cards
         And I should see an oddity card with text "A metal sphere that whispers in the dark"
-
 
     Scenario: New oddity persists after page reload
         Given the character has 2 oddity cards
@@ -129,7 +116,6 @@ Feature: Card Creation: Artifacts and Oddities
         Then I should see 3 oddity cards
         And I should see an oddity card with text "A translucent stone that floats in water"
 
-
     Scenario: Multiple oddities can be added
         Given the character has 2 oddity cards
         When I click the add oddity button
@@ -140,7 +126,6 @@ Feature: Card Creation: Artifacts and Oddities
         And I fill in the oddity text with "Second Oddity Description"
         And I confirm the card edit modal
         Then I should see 4 oddity cards
-
 
     Scenario: Create oddity, then edit it, verify persistence
         Given the character has 2 oddity cards

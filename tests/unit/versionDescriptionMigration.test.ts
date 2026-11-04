@@ -4,7 +4,6 @@ import { migrateLegacyVersionDescriptions } from "@/services/versionDescriptionM
 import type { Character } from "@/types/character";
 import { createTestCharacter as createMockCharacter } from "../factories/character.js";
 
-// Helper for async delays
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe.sequential("migrateLegacyVersionDescriptions", () => {

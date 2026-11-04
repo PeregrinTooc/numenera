@@ -36,7 +36,6 @@ describe("ItemsBox", () => {
       const shinsBadge = container.querySelector('[data-testid="shins-badge"]') as HTMLElement;
       expect(shinsBadge.classList.contains("editable-field")).toBe(true);
 
-      // Verify it's clickable
       expect(shinsBadge.getAttribute("role")).toBe("button");
       expect(shinsBadge.getAttribute("tabindex")).toBe("0");
     });
@@ -88,7 +87,6 @@ describe("ItemsBox", () => {
 
       const initialLength = mockCharacter.equipment.length;
 
-      // Simulate delete by filtering (mimics component behavior)
       const indexToDelete = 1;
       mockCharacter.equipment = mockCharacter.equipment.filter((_, i) => i !== indexToDelete);
 
@@ -104,7 +102,6 @@ describe("ItemsBox", () => {
         { name: "Shield", description: "Strong" },
       ];
 
-      // Simulate update
       const updatedItem = { name: "Magic Shield", description: "Very Strong" };
       mockCharacter.equipment[1] = updatedItem;
 

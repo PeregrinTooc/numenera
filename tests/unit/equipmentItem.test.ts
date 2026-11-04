@@ -1,4 +1,3 @@
-// Unit tests for EquipmentItem component
 import { EquipmentItem } from "@/components/EquipmentItem";
 import { EquipmentItem as EquipmentItemType } from "@/types/character";
 import { testItemEditAndDelete } from "./helpers/itemTestSuite.js";
@@ -8,7 +7,6 @@ const mockEquipment: EquipmentItemType = {
   description: "Strong hemp rope for climbing",
 };
 
-// Use shared parameterized test suite
 testItemEditAndDelete<EquipmentItemType>({
   componentName: "EquipmentItem",
   createComponent: (item, index, onUpdate, onDelete) =>

@@ -3,7 +3,6 @@ import { VersionHistoryManager } from "@/storage/versionHistory";
 import type { Character } from "@/types/character";
 import { createTestCharacter as createMockCharacter } from "../factories/character.js";
 
-// Helper for async delays
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe.sequential("VersionHistoryManager", () => {
@@ -74,11 +73,9 @@ describe.sequential("VersionHistoryManager", () => {
     it("should deep clone character data to prevent reference bugs", async () => {
       const version = await manager.saveVersion(mockCharacter, "Initial");
 
-      // Modify original character
       mockCharacter.name = "Modified Name";
       mockCharacter.stats.might.pool = 20;
 
-      // Version should retain original values
       expect(version.character.name).toBe("Test Character");
       expect(version.character.stats.might.pool).toBe(10);
     });
@@ -190,11 +187,9 @@ describe.sequential("VersionHistoryManager", () => {
 
       const version = await manager.saveVersion(mockCharacter, "Test");
 
-      // Portrait should not exist in the saved character
       // @ts-expect-error - checking portrait is excluded
       expect(version.character.portrait).toBeUndefined();
 
-      // All other fields should be present
       expect(version.character.name).toBe("Test Character");
       expect(version.character.tier).toBe(1);
       expect(version.character.stats).toBeDefined();
@@ -221,7 +216,6 @@ describe.sequential("VersionHistoryManager", () => {
     });
 
     it("should handle IndexedDB errors gracefully", async () => {
-      // This test verifies error handling - implementation will handle specific IndexedDB errors
       const version = await manager.saveVersion(mockCharacter, "Test");
       expect(version).toBeDefined();
     });

@@ -1,15 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 
-/**
- * DragDropBehavior Unit Tests
- *
- * These tests verify the core drag-drop reordering logic
- * independent of DOM manipulation.
- */
-
-// We'll test the reorder logic first, then expand to full drag behavior
 describe("reorderArray", () => {
-  // Import will fail until we create the module - that's TDD!
   let reorderArray: <T>(array: T[], fromIndex: number, toIndex: number) => T[];
 
   beforeEach(async () => {

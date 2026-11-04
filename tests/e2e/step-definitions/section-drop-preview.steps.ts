@@ -1,7 +1,3 @@
-/**
- * Step definitions for the preview shown while a section is held over another
- */
-
 import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";

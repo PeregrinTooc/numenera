@@ -1,4 +1,3 @@
-// Unit tests for ArtifactItem component
 import { ArtifactItem } from "@/components/ArtifactItem";
 import { Artifact } from "@/types/character";
 import { testItemEditAndDelete } from "./helpers/itemTestSuite.js";
@@ -9,7 +8,6 @@ const mockArtifact: Artifact = {
   effect: "Climbing is eased when worn",
 };
 
-// Use shared parameterized test suite
 testItemEditAndDelete<Artifact>({
   componentName: "ArtifactItem",
   createComponent: (item, index, onUpdate, onDelete) =>

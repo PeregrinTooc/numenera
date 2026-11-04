@@ -7,8 +7,6 @@ Feature: Version Comparison View
         Given I am on the character sheet page
         And the character has no version history yet
 
-    # Settings toggle (opt-in, off by default)
-
     Scenario: Comparison view is off by default
         Given the character has 3 versions in history
         When I click the backward navigation arrow
@@ -33,8 +31,6 @@ Feature: Version Comparison View
         And I have opened the settings panel
         Then comparison view should show as enabled in settings
 
-    # Opening and default versions
-
     # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Opening comparison view defaults to the last two versions
@@ -49,8 +45,6 @@ Feature: Version Comparison View
         Given comparison view is enabled in settings
         And the character has no version history yet
         Then the version navigator should not be visible
-
-    # Independent per-pane navigation
 
     # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
@@ -83,8 +77,6 @@ Feature: Version Comparison View
         Then the left pane should show version 1
         And the right pane should show version 9
 
-    # Change header
-
     # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Header lists every changed field between the two panes
@@ -112,8 +104,6 @@ Feature: Version Comparison View
         When I click the left pane's forward arrow
         Then the left pane should show version 5
         And the comparison header should indicate there are no differences
-
-    # Highlighting
 
     # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
@@ -169,8 +159,6 @@ Feature: Version Comparison View
         Then the "tier" field should not be highlighted in the left pane
         And the "tier" field should not be highlighted in the right pane
 
-    # Restore per pane
-
     # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Restoring the left pane saves it as the new latest version
@@ -211,8 +199,6 @@ Feature: Version Comparison View
         Then the oldest version should have been removed
         And the right pane should still show the same character name as before the restore
 
-    # Exiting
-
     # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Return to editing closes comparison view
@@ -234,8 +220,6 @@ Feature: Version Comparison View
         And I click the return to editing button
         Then the version counter should show "Version 5 of 5"
 
-    # Editability
-
     # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Fields in comparison view are read-only
@@ -244,8 +228,6 @@ Feature: Version Comparison View
         And I am viewing the comparison view
         Then no field in the comparison view should be editable
         And no add or delete button should be present in the comparison view
-
-    # Responsive fallback
 
     Scenario: Comparison view is unavailable on phone-width viewports
         Given the viewport is 390 pixels wide

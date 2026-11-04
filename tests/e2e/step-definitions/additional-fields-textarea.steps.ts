@@ -4,11 +4,6 @@ import type { Character } from "@/types/character";
 import { CustomWorld } from "../support/world.js";
 import { waitForSaveComplete } from "../support/save.js";
 
-// ============================================================================
-// TEXTAREA STEPS - Unique inline editing (not modal-based). Parameterised by
-// {textarea} (background/notes); see support/parameterTypes.ts.
-// ============================================================================
-
 const TEXTAREA_TEST_IDS: Record<string, string> = {
   background: "character-background",
   notes: "character-notes",
@@ -29,7 +24,6 @@ Then(
   "the {textarea} textarea should show {string}",
   async function (this: CustomWorld, field: string, text: string) {
     const textarea = textareaLocator(this, field);
-    // Wait for the textarea to be visible and check the value
     await textarea.waitFor({ state: "visible" });
     await expect(textarea).toHaveValue(text);
   }
@@ -61,19 +55,15 @@ When(
 );
 
 When("I click outside the {textarea} textarea", async function (this: CustomWorld, field: string) {
-  // Trigger blur by clicking outside - use body as a safe target
   await textareaLocator(this, field).blur();
 
-  // Give the blur handler time to execute and trigger auto-save
   await this.page.waitForTimeout(100);
-  // Wait for auto-save to complete
   await waitForSaveComplete(this.page);
 });
 
 Then(
   "the {textarea} textarea should not be readonly",
   async function (this: CustomWorld, field: string) {
-    // Wait for the readonly attribute to be removed (with increased timeout)
     await expect(textareaLocator(this, field)).not.toHaveAttribute("readonly", {
       timeout: 10000,
     });
@@ -91,9 +81,7 @@ Then(
   "the {textarea} textarea should have an edit state visual indicator",
   async function (this: CustomWorld, field: string) {
     const textarea = textareaLocator(this, field);
-    // Check that textarea does not have readonly attribute (visual indicator of edit mode)
     await expect(textarea).not.toHaveAttribute("readonly");
-    // Additional check: verify it's actually editable by checking if it's enabled
     await expect(textarea).toBeEnabled();
   }
 );
@@ -123,20 +111,14 @@ Then(
 Then(
   "the character data should have {textarea} {string}",
   async function (this: CustomWorld, field: string, text: string) {
-    // Wait for auto-save to complete by monitoring save indicator
     await waitForSaveComplete(this.page);
 
-    // Verify using TestStorageHelper
     const storedData = await this.storageHelper.getCharacter();
 
     expect(storedData).toBeTruthy();
     expect(storedData.textFields[field as keyof Character["textFields"]]).toBe(text);
   }
 );
-
-// ============================================================================
-// LONG TEXT STEPS - Unique to additional fields
-// ============================================================================
 
 When(
   "I type a {int} character string in the background textarea",
@@ -177,10 +159,8 @@ Then(
 );
 
 Then("the character data should have the full background text", async function (this: CustomWorld) {
-  // Wait for auto-save to complete by monitoring save indicator
   await waitForSaveComplete(this.page);
 
-  // Verify using TestStorageHelper
   const storedData = await this.storageHelper.getCharacter();
 
   expect(storedData).toBeTruthy();
@@ -190,10 +170,8 @@ Then("the character data should have the full background text", async function (
 });
 
 Then("the character data should have the full notes text", async function (this: CustomWorld) {
-  // Wait for auto-save to complete by monitoring save indicator
   await waitForSaveComplete(this.page);
 
-  // Verify using TestStorageHelper
   const storedData = await this.storageHelper.getCharacter();
 
   expect(storedData).toBeTruthy();
@@ -208,8 +186,6 @@ When("I tap the type dropdown", async function (this: CustomWorld) {
 });
 
 Then("the mobile OS picker should open", async function (this: CustomWorld) {
-  // On mobile, the native select picker opens automatically
-  // We verify this by checking that the select is focused
   const select = this.page.locator('[data-testid="character-type-select"]');
   await expect(select).toBeFocused();
 });
@@ -266,6 +242,5 @@ Then("the virtual keyboard should appear", async function (this: CustomWorld) {
 When("I tap outside the {textarea} textarea", async function (this: CustomWorld, field: string) {
   // On mobile, just blur the textarea directly which is more reliable
   await textareaLocator(this, field).blur();
-  // Give the blur handler time to execute
   await this.page.waitForTimeout(100);
 });

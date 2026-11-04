@@ -65,7 +65,6 @@ describe("EditFieldModal", () => {
         '[data-testid="modal-confirm-button"]'
       ) as HTMLButtonElement;
 
-      // Valid value
       input.value = "10";
       input.dispatchEvent(new Event("input", { bubbles: true }));
 
@@ -87,7 +86,6 @@ describe("EditFieldModal", () => {
         '[data-testid="modal-confirm-button"]'
       ) as HTMLButtonElement;
 
-      // Below minimum (XP min is 0)
       input.value = "-1";
       input.dispatchEvent(new Event("input", { bubbles: true }));
 
@@ -109,7 +107,6 @@ describe("EditFieldModal", () => {
         '[data-testid="modal-confirm-button"]'
       ) as HTMLButtonElement;
 
-      // Above maximum (effort max is 20)
       input.value = "25";
       input.dispatchEvent(new Event("input", { bubbles: true }));
 
@@ -131,7 +128,6 @@ describe("EditFieldModal", () => {
         '[data-testid="modal-confirm-button"]'
       ) as HTMLButtonElement;
 
-      // Decimal value
       input.value = "5.5";
       input.dispatchEvent(new Event("input", { bubbles: true }));
 
@@ -174,11 +170,9 @@ describe("EditFieldModal", () => {
         '[data-testid="modal-confirm-button"]'
       ) as HTMLButtonElement;
 
-      // Trigger invalid input (below minimum)
       input.value = "-1";
       input.dispatchEvent(new Event("input", { bubbles: true }));
 
-      // Button should be disabled due to validation error
       expect(confirmButton.disabled).toBe(true);
     });
   });
@@ -200,21 +194,17 @@ describe("EditFieldModal", () => {
         '[data-testid="modal-confirm-button"]'
       ) as HTMLButtonElement;
 
-      // Tier field should always allow input (button never disabled)
       input.value = "4";
       input.dispatchEvent(new Event("input", { bubbles: true }));
       expect(confirmButton.disabled).toBe(false);
 
-      // Even out-of-range values don't disable button (constrained on confirm)
       input.value = "7";
       input.dispatchEvent(new Event("input", { bubbles: true }));
       expect(confirmButton.disabled).toBe(false);
 
-      // Confirm with out-of-range value - should constrain to 6
       confirmButton.click();
       expect(onConfirm).toHaveBeenCalledWith(6);
 
-      // Test below minimum - need to dispatch input event to update internal state
       onConfirm.mockClear();
       input.value = "0";
       input.dispatchEvent(new Event("input", { bubbles: true }));

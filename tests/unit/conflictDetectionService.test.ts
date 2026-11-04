@@ -25,7 +25,6 @@ describe("ConflictDetectionService", () => {
     vi.restoreAllMocks();
   });
 
-  /** Opens a service and returns it with the channel it opened. */
   function openService(): { service: ConflictDetectionService; channel: MockBroadcastChannel } {
     const service = new ConflictDetectionService();
     return { service, channel: MockBroadcastChannel.latest() };

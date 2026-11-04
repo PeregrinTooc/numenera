@@ -30,7 +30,6 @@ describe("ExportManager", () => {
       const mockHandle = createMockHandle();
       await ctx.seedPersistedHandle(mockHandle);
 
-      // Recreate manager to load from IDB
       ctx.exportManager = new ExportManager();
 
       await vi.waitFor(() => expect(ctx.exportManager.hasRememberedLocation()).toBe(true));
@@ -66,7 +65,6 @@ describe("ExportManager", () => {
 
       expect(mockHandle.createWritable).toHaveBeenCalled();
 
-      // Verify the written data has valid structure
       const writtenData = vi.mocked(writableMock.write).mock.calls[0][0] as string;
       const parsed = expectValidFileStructure(writtenData);
       expect(parsed.character.name).toBe("Glaive Warrior");
@@ -111,7 +109,6 @@ describe("ExportManager", () => {
         .fn()
         .mockRejectedValue(new DOMException("User cancelled", "AbortError"));
 
-      // Should not throw
       await ctx.exportManager.export(mockCharacter);
 
       expect(ctx.exportManager.hasRememberedLocation()).toBe(false);

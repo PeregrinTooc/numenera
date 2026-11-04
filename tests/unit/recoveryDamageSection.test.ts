@@ -1,5 +1,3 @@
-// Unit tests for RecoveryDamageSection component
-
 import { render } from "lit-html";
 import { RecoveryDamageSection } from "@/components/RecoveryDamageSection";
 import { Character } from "@/types/character";

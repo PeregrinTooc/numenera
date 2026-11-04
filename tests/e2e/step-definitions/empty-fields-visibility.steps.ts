@@ -6,7 +6,6 @@ Then("the descriptor field should display placeholder text", async function (thi
   const descriptorField = this.dom.getByTestId("character-descriptor");
   const text = await descriptorField.textContent();
 
-  // Should show "Descriptor" as placeholder
   expect(text?.trim()).toBe("Descriptor");
 });
 
@@ -14,7 +13,6 @@ Then("the focus field should display placeholder text", async function (this: Cu
   const focusField = this.dom.getByTestId("character-focus");
   const text = await focusField.textContent();
 
-  // Should show "Focus" as placeholder
   expect(text?.trim()).toBe("Focus");
 });
 
@@ -31,13 +29,11 @@ Then("the focus field should be visible", async function (this: CustomWorld) {
 Then("the descriptor field should be clickable", async function (this: CustomWorld) {
   const descriptorField = this.dom.getByTestId("character-descriptor");
 
-  // Verify it has editable-field class
   const hasClass = await descriptorField.evaluate((el) => {
     return el.classList.contains("editable-field");
   });
   expect(hasClass).toBe(true);
 
-  // Verify cursor is pointer
   const cursor = await descriptorField.evaluate((el) => {
     return window.getComputedStyle(el).cursor;
   });
@@ -47,13 +43,11 @@ Then("the descriptor field should be clickable", async function (this: CustomWor
 Then("the focus field should be clickable", async function (this: CustomWorld) {
   const focusField = this.dom.getByTestId("character-focus");
 
-  // Verify it has editable-field class
   const hasClass = await focusField.evaluate((el) => {
     return el.classList.contains("editable-field");
   });
   expect(hasClass).toBe(true);
 
-  // Verify cursor is pointer
   const cursor = await focusField.evaluate((el) => {
     return window.getComputedStyle(el).cursor;
   });
@@ -81,7 +75,6 @@ Then("the descriptor field should not show placeholder text", async function (th
   const descriptorField = this.dom.getByTestId("character-descriptor");
   const text = await descriptorField.textContent();
 
-  // Should not be "Descriptor" anymore
   expect(text?.trim()).not.toBe("Descriptor");
   expect(text?.trim().length).toBeGreaterThan(0);
 });
@@ -90,7 +83,6 @@ Then("the focus field should not show placeholder text", async function (this: C
   const focusField = this.dom.getByTestId("character-focus");
   const text = await focusField.textContent();
 
-  // Should not be "Focus" anymore
   expect(text?.trim()).not.toBe("Focus");
   expect(text?.trim().length).toBeGreaterThan(0);
 });

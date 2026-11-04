@@ -1,7 +1,3 @@
-/**
- * Step definitions for merging sections into a grid and splitting them again
- */
-
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
@@ -65,7 +61,6 @@ Given(
       { type: "grid", items: [id1, id2] },
     ]);
 
-    // Re-enter edit mode
     await page.click('[data-testid="edit-layout-button"]');
   }
 );
@@ -75,7 +70,6 @@ Then("{string} should be in its own row", async function (this: CustomWorld, sec
 
   const id = sectionId(sectionName);
 
-  // Check that section is not in a grid
   const notInGrid = await page.evaluate((id) => {
     const section = document.querySelector(`[data-section-id="${id}"]`);
     if (!section) return false;

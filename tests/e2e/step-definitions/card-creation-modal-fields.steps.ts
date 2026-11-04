@@ -3,10 +3,6 @@ import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { CARD_CONFIGS } from "../support/cardTestFixtures.js";
 
-// ============================================================================
-// MODAL FIELD VERIFICATION STEPS
-// ============================================================================
-
 Then("the modal should show cypher fields", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.cypher.fieldTestIds;
   await expect(this.page.locator(fields.name)).toBeVisible();
@@ -103,11 +99,6 @@ Then("all special ability fields should be empty", async function (this: CustomW
   await expect(this.page.locator(fields.description)).toHaveValue("");
 });
 
-// ============================================================================
-// FIELD FILLING STEPS
-// ============================================================================
-
-// Cypher fields
 When("I fill in the cypher name with {string}", async function (this: CustomWorld, value: string) {
   await this.page.locator(CARD_CONFIGS.cypher.fieldTestIds.name).fill(value);
 });
@@ -123,7 +114,6 @@ When(
   }
 );
 
-// Equipment fields
 When(
   "I fill in the equipment name with {string}",
   async function (this: CustomWorld, value: string) {
@@ -138,7 +128,6 @@ When(
   }
 );
 
-// Artifact fields
 When(
   "I fill in the artifact name with {string}",
   async function (this: CustomWorld, value: string) {
@@ -160,12 +149,10 @@ When(
   }
 );
 
-// Oddity fields
 When("I fill in the oddity text with {string}", async function (this: CustomWorld, value: string) {
   await this.page.locator(CARD_CONFIGS.oddity.fieldTestIds.oddity).fill(value);
 });
 
-// Attack fields
 When("I fill in the attack name with {string}", async function (this: CustomWorld, value: string) {
   await this.page.locator(CARD_CONFIGS.attack.fieldTestIds.name).fill(value);
 });
@@ -184,7 +171,6 @@ When(
   }
 );
 
-// Ability fields
 When("I fill in the ability name with {string}", async function (this: CustomWorld, value: string) {
   await this.page.locator(CARD_CONFIGS.ability.fieldTestIds.name).fill(value);
 });
@@ -204,7 +190,6 @@ When(
   }
 );
 
-// Special ability fields
 When(
   "I fill in the special ability name with {string}",
   async function (this: CustomWorld, value: string) {

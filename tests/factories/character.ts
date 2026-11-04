@@ -46,9 +46,6 @@ export function createTestCharacter(overrides: Partial<Character> = {}): Charact
   };
 }
 
-/**
- * Preset for empty-state scenarios: blank identity fields, zeroed resources.
- */
 export function createEmptyCharacter(overrides: Partial<Character> = {}): Character {
   return createTestCharacter({
     name: "",
@@ -62,9 +59,6 @@ export function createEmptyCharacter(overrides: Partial<Character> = {}): Charac
   });
 }
 
-/**
- * Preset with one item of every collection populated, for container/list tests.
- */
 export function createCharacterWithItems(overrides: Partial<Character> = {}): Character {
   return createTestCharacter({
     cyphers: [{ name: "Detonation", level: "1d6+2", effect: "Explodes" }],

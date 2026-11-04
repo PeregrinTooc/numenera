@@ -5,7 +5,6 @@ import { TestTimer } from "@/services/testTimer";
 import type { Character } from "@/types/character";
 import { createTestCharacter as createMockCharacter } from "../factories/character";
 
-// Helper for async delays
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe.sequential("VersionHistoryService - edits during an in-flight squash", () => {

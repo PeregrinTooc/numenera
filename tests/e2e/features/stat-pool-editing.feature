@@ -7,10 +7,6 @@ Feature: Stat Pool Value Editing
         Given I am on the character sheet page
         And the character data is loaded
 
-    # ============================================================================
-    # CORE EDITING SCENARIOS - Using Scenario Outlines
-    # ============================================================================
-
     Scenario Outline: Display stat value
         Then I should see the "<stat> <field>" value displayed
 
@@ -104,10 +100,6 @@ Feature: Stat Pool Value Editing
             | Intellect | Edge    |
             | Intellect | Current |
 
-    # ============================================================================
-    # KEYBOARD INTERACTION SCENARIOS
-    # ============================================================================
-
     Scenario Outline: Close modal with Escape key
         When I click on the "<stat> <field>" value
         And I clear the input field
@@ -136,10 +128,6 @@ Feature: Stat Pool Value Editing
             | Speed     | Edge  | 3           |
             | Intellect | Pool  | 18          |
 
-    # ============================================================================
-    # VALIDATION SCENARIOS
-    # ============================================================================
-
     Scenario Outline: Validate stat accepts zero
         When I click on the "<stat> Pool" value
         And I clear the input field
@@ -167,10 +155,6 @@ Feature: Stat Pool Value Editing
             | Might     |
             | Speed     |
             | Intellect |
-
-    # ============================================================================
-    # MOBILE INTERACTION SCENARIOS
-    # ============================================================================
 
     Scenario Outline: Mobile - Tap to edit stat
         When I tap on the "<stat> <field>" value

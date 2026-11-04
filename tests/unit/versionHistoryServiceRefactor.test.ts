@@ -23,10 +23,8 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
 
       vi.advanceTimersByTime(500); // Now at 1500ms
 
-      // Timer callback fires but buffer is empty, so no save
       await vi.runAllTimersAsync();
 
-      // Timer cleared after performSquash runs with empty buffer
       expect(fx.service.isTimerActive()).toBe(false);
     });
 
@@ -48,10 +46,8 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
 
       vi.advanceTimersByTime(800); // Now 1000ms from last reset
 
-      // Timer fires but buffer is empty
       await vi.runAllTimersAsync();
 
-      // Timer cleared after empty performSquash
       expect(fx.service.isTimerActive()).toBe(false);
     });
 
@@ -92,12 +88,9 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
       const char = { ...fx.mockCharacter };
       fx.service.bufferChange(char, "Change 1");
 
-      // Mutate original
       char.name = "Modified";
 
-      // Buffer should have original value
       vi.advanceTimersByTime(1000);
-      // This test verifies the deep clone happened
       expect(fx.service.getBufferLength()).toBe(1);
     });
   });
@@ -150,7 +143,6 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
       const [version] = await fx.manager.getAllVersions();
       const description = version.description;
 
-      // squashDescriptions should have combined them
       expect(description).toContain("name");
       expect(description).toContain("tier");
       expect(description).toContain("descriptor");

@@ -3,13 +3,9 @@ import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 
 Given("the character sheet is displayed", async function (this: CustomWorld) {
-  // Character sheet should already be visible from background
   const name = await this.page.locator('[data-testid="character-name"]').textContent();
   expect(name).toBeTruthy();
 });
-
-// Note: "I edit the character name to {string}" is now handled by the unified
-// "I edit the {string} field to {string}" step in common-steps.ts
 
 When("I note the current save timestamp", async function (this: CustomWorld) {
   const indicator = this.page.locator('[data-testid="save-indicator"]');
@@ -21,17 +17,12 @@ When("I wait for {int} second(s)", async function (this: CustomWorld, seconds: n
   await this.page.waitForTimeout(seconds * 1000);
 });
 
-// Note: "I edit the tier to {string}" is now handled by the unified
-// "I edit the {string} field to {string}" step in common-steps.ts
-
 When("I rapidly edit the character name multiple times", async function (this: CustomWorld) {
-  // Track saves by monitoring save indicator updates (MutationObserver)
   this.saveCount = 0;
 
   await this.page.evaluate(() => {
     window.__saveCount = 0;
 
-    // Monitor save indicator for content changes
     const indicator = document.querySelector('[data-testid="save-indicator"]');
     if (indicator) {
       const observer = new MutationObserver(() => {
@@ -50,7 +41,6 @@ When("I rapidly edit the character name multiple times", async function (this: C
 
   const nameElement = this.page.locator('[data-testid="character-name"]');
 
-  // Make rapid edits (within debounce window)
   for (let i = 1; i <= 5; i++) {
     await nameElement.click();
     const input = this.page.locator('[data-testid="edit-modal-input"]');
@@ -62,10 +52,7 @@ When("I rapidly edit the character name multiple times", async function (this: C
     await this.page.waitForTimeout(50); // Short delay, within debounce window
   }
 
-  // Wait for debounce to settle and save to complete
   await this.page.waitForTimeout(600);
-
-  // Get save count and cleanup observer
 
   this.saveCount = await this.page.evaluate(() => {
     const count = window.__saveCount || 0;
@@ -77,9 +64,6 @@ When("I rapidly edit the character name multiple times", async function (this: C
   });
 });
 
-// Note: "I edit the might pool to {string}" is now handled by the unified
-// "I edit the {string} field to {string}" step in common-steps.ts
-
 Then("the save indicator should be visible", async function (this: CustomWorld) {
   const indicator = this.page.locator('[data-testid="save-indicator"]');
   await expect(indicator).toBeVisible({ timeout: 1000 });
@@ -89,7 +73,6 @@ Then("the save indicator should show a timestamp", async function (this: CustomW
   const indicator = this.page.locator('[data-testid="save-indicator"]');
   const text = await indicator.textContent();
 
-  // Should contain time format like "2:45:33 PM" or "14:45:33"
   const timePattern = /\d{1,2}:\d{2}:\d{2}(\s?[AP]M)?/;
   expect(text).toMatch(timePattern);
 });
@@ -118,9 +101,6 @@ Then(
     // Due to modal interactions and timing, we may get a few saves, but significantly fewer than without debouncing
     expect(this.saveCount).toBeLessThanOrEqual(5);
     expect(this.saveCount).toBeGreaterThanOrEqual(1);
-
-    // The key is that it's less than the number of edits we made (5)
-    // If debouncing wasn't working, we'd see 5 saves
   }
 );
 
@@ -128,7 +108,6 @@ Then("the save indicator should show a single timestamp", async function (this: 
   const indicator = this.page.locator('[data-testid="save-indicator"]');
   await expect(indicator).toBeVisible();
 
-  // Just verify it has a timestamp (validated in other step)
   const text = await indicator.textContent();
   expect(text).toBeTruthy();
 });
@@ -150,10 +129,8 @@ Then("the save indicator should be in the lower-right corner", async function (t
     expect(viewport).toBeTruthy();
 
     if (viewport) {
-      // Should be near the right edge (within 100px)
       expect(box.x + box.width).toBeGreaterThan(viewport.width - 100);
 
-      // Should be near the bottom (within 100px)
       expect(box.y + box.height).toBeGreaterThan(viewport.height - 100);
     }
   }
@@ -163,7 +140,6 @@ Then("the save indicator should have subtle styling", async function (this: Cust
   const indicator = this.page.locator('[data-testid="save-indicator"]');
   await indicator.waitFor({ state: "visible", timeout: 1000 });
 
-  // Check for subtle styling attributes
   const styles = await indicator.evaluate((el: HTMLElement) => {
     const computed = window.getComputedStyle(el);
     return {
@@ -173,14 +149,11 @@ Then("the save indicator should have subtle styling", async function (this: Cust
     };
   });
 
-  // Should be fixed position
   expect(styles.position).toBe("fixed");
 
-  // Should have small font size (less than 16px)
   const fontSize = parseFloat(styles.fontSize);
   expect(fontSize).toBeLessThan(16);
 
-  // Should be somewhat transparent or subtle
   const opacity = parseFloat(styles.opacity);
   expect(opacity).toBeGreaterThan(0);
   expect(opacity).toBeLessThanOrEqual(1);

@@ -3,8 +3,6 @@ import { Attacks } from "@/components/Attacks";
 import { Attack } from "@/types/character";
 import { testContainerAddButton } from "./helpers/containerTestSuite.js";
 
-// Use shared test suite for add button functionality
-// Note: Attacks component takes Character and onFieldUpdate callback
 testContainerAddButton<Attack>({
   componentName: "Attacks",
   createComponent: (character) => new Attacks(character, vi.fn()),

@@ -206,7 +206,6 @@ describe("CharacterSheet sections slide into a live preview", () => {
     expect(animate).toHaveBeenCalledTimes(slides);
   });
 
-  /** Move the held finger over the top edge of Items, at `x`. */
   function moveOverTopEdgeOfItems(x: number): void {
     const items = section("items").getBoundingClientRect();
     touch(section("cyphers"), "touchmove", [{ x, y: items.top + ROW_HEIGHT * 0.1 }]);
@@ -215,7 +214,6 @@ describe("CharacterSheet sections slide into a live preview", () => {
   it("ignores hovers until the slide into the live preview has finished", async () => {
     holdCyphersOverItems();
     vi.advanceTimersByTime(300); // Cyphers paired with Items, still sliding
-    // The top edge of Items takes Cyphers out of the pair again
     moveOverTopEdgeOfItems(200);
     vi.advanceTimersByTime(300);
     expect(pairGrid()).not.toBeNull();

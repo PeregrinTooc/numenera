@@ -3,7 +3,6 @@ import { IndexedDBStorageImpl } from "@/storage/indexedDBStorageImpl";
 import { CHARACTER_DB_NAME } from "@/storage/storageConstants";
 import { createTestCharacter } from "../../factories/character";
 
-// Mock character data
 export const mockCharacter = createTestCharacter({
   name: "Test Character",
   descriptor: "Clever",
@@ -80,7 +79,6 @@ export function setupIndexedDBStorage(): IndexedDBStorageFixture {
     localStorage.clear();
     fixture.storage = new IndexedDBStorageImpl(TEST_AVAILABILITY_TIMEOUT_MS);
     await fixture.storage.init();
-    // Clear any existing data from previous tests
     await fixture.storage.clear();
   });
 

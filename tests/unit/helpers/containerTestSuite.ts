@@ -1,5 +1,4 @@
 // Shared test suite for container components (Abilities, Attacks, SpecialAbilities, etc.)
-// Promotes DRY principles and consistent testing across all container types
 
 import { render, type TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
@@ -9,19 +8,12 @@ export { createMockCharacter };
 
 export interface ContainerTestConfig<T> {
   componentName: string;
-  /** Function to create component - now takes Character */
   createComponent: (character: Character) => { render: () => TemplateResult };
   addButtonTestId: string;
   mockItems: T[];
-  /** Key on Character that holds the items array */
   collectionKey: keyof Character;
 }
 
-/**
- * Generic test suite for container "Add Button" functionality
- * Tests that all containers should implement consistently
- * Updated to use event-based pattern with Character object
- */
 export function testContainerAddButton<T>(config: ContainerTestConfig<T>): void {
   describe(`${config.componentName} - Add Button`, () => {
     let container: HTMLElement;
@@ -83,9 +75,6 @@ export function testContainerAddButton<T>(config: ContainerTestConfig<T>): void 
       expect(addButton).toBeTruthy();
     });
 
-    // Note: Event-based pattern always renders the add button since components
-    // always have access to character object. This test is kept for compatibility
-    // but now simply verifies the button is rendered.
     it("should always render add button in event-based pattern", () => {
       const character = createMockCharacter({
         [config.collectionKey]: config.mockItems,
@@ -107,9 +96,7 @@ export function testContainerAddButton<T>(config: ContainerTestConfig<T>): void 
       const addButton = container.querySelector(`[data-testid="${config.addButtonTestId}"]`);
       expect(addButton).toBeTruthy();
 
-      // Verify it can receive click events
       addButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-      // The actual implementation will call the appropriate handler
     });
   });
 }

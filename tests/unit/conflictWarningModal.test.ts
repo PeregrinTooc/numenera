@@ -261,7 +261,6 @@ describe("ConflictWarningModal", () => {
     it("should remove existing modal before showing new one", () => {
       modal = new ConflictWarningModal(container);
 
-      // Show first modal
       window.dispatchEvent(
         new CustomEvent<ConflictDetail>("version-conflict", {
           detail: {
@@ -276,7 +275,6 @@ describe("ConflictWarningModal", () => {
 
       expect(container.querySelectorAll('[data-testid="conflict-modal"]').length).toBe(1);
 
-      // Show second modal
       window.dispatchEvent(
         new CustomEvent<ConflictDetail>("version-conflict", {
           detail: {
@@ -289,7 +287,6 @@ describe("ConflictWarningModal", () => {
         })
       );
 
-      // Should still only have one modal
       expect(container.querySelectorAll('[data-testid="conflict-modal"]').length).toBe(1);
     });
   });

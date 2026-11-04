@@ -3,28 +3,11 @@ import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 import { getFieldSelector } from "../support/basicInfoHelpers.js";
 
-// ============================================================================
-// UNIQUE STEPS FOR BASIC INFO EDITING
-// ============================================================================
-// NOTE: Most common steps (click, type, modal interactions) are now in common-steps.ts
-// This file contains only unique steps specific to basic info editing:
-// - Modal validation and styling
-// - Accessibility features
-// - Mobile-specific assertions
-// - Character field display assertions
-// ============================================================================
-
-// ============================================================================
-// UNIQUE WHEN STEPS
-// ============================================================================
-
 When("I press Tab repeatedly", async function (this: CustomWorld) {
   const validElements = ["edit-modal-input", "modal-confirm-button", "modal-cancel-button"];
 
-  // Press Tab 3 times with verification that focus settles on valid elements
   for (let i = 0; i < 3; i++) {
     await this.page.keyboard.press("Tab");
-    // Wait for focus to be on a valid modal element
     await this.page.waitForFunction(
       (elements) => {
         const testId = document.activeElement?.getAttribute("data-testid");
@@ -35,13 +18,6 @@ When("I press Tab repeatedly", async function (this: CustomWorld) {
     );
   }
 });
-
-// Note: "I click the confirm button", "I click the cancel button", and "I tap the confirm button"
-// are now handled by steps in common-steps.ts
-
-// ============================================================================
-// UNIQUE THEN STEPS - Modal Assertions
-// ============================================================================
 
 Then("the modal should have a confirm button with icon", async function (this: CustomWorld) {
   const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
@@ -65,10 +41,6 @@ Then(
     expect(type).toBe(inputType);
   }
 );
-
-// ============================================================================
-// UNIQUE THEN STEPS - Character Field Display Assertions
-// ============================================================================
 
 Then(
   "the character name should display {string}",
@@ -105,25 +77,16 @@ Then("the focus should display {string}", async function (this: CustomWorld, foc
   await expect(focusElement).toHaveText(focus);
 });
 
-// ============================================================================
-// UNIQUE THEN STEPS - Validation Assertions
-// ============================================================================
-
 Then("the modal should not close", async function (this: CustomWorld) {
   const modal = this.page.locator('[data-testid="edit-modal"]');
   await expect(modal).toBeVisible();
 });
-
-// ============================================================================
-// UNIQUE THEN STEPS - Visual Styling Assertions
-// ============================================================================
 
 Then("the modal should have Numenera-themed styling", async function (this: CustomWorld) {
   const modal = this.page.locator('[data-testid="edit-modal"]');
   const bgColor = await modal.evaluate(
     (el: HTMLElement) => window.getComputedStyle(el).backgroundColor
   );
-  // Check that modal has a background color set (parchment-like)
   expect(bgColor).toBeTruthy();
 });
 

@@ -2,21 +2,17 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 
 Given("the language is set to {string}", async function (language: string) {
-  // Set language by navigating with query parameter
   await this.page.goto(`${this.getBaseUrl()}?lang=${language}`);
-  // Wait for i18n to initialize
   await this.page.waitForTimeout(200);
 });
 
 Given("I am on the character sheet page with {string}", async function (queryString: string) {
   await this.page.goto(`${this.getBaseUrl()}${queryString}`);
-  // Wait for i18n to initialize
   await this.page.waitForTimeout(200);
 });
 
 When("I navigate to the page with {string}", async function (queryString: string) {
   await this.page.goto(`${this.getBaseUrl()}${queryString}`);
-  // Wait for i18n to initialize
   await this.page.waitForTimeout(200);
 });
 
@@ -52,19 +48,16 @@ Then("the might stat should display {string}", async function (expectedText: str
 });
 
 Then("the speed stat should display {string}", async function (expectedText: string) {
-  // Get the second stat label
   const statLabel = this.page.locator('[data-testid^="stat-"][data-testid$="-label"]').nth(1);
   await expect(statLabel).toHaveText(expectedText);
 });
 
 Then("the intellect stat should display {string}", async function (expectedText: string) {
-  // Get the third stat label
   const statLabel = this.page.locator('[data-testid^="stat-"][data-testid$="-label"]').nth(2);
   await expect(statLabel).toHaveText(expectedText);
 });
 
 Then("the stat pool label should be {string}", async function (expectedText: string) {
-  // Find any element containing the expected text within stats section (div or label)
   const element = this.page
     .locator('[data-testid="stats-section"]', { hasText: expectedText })
     .first();
@@ -72,7 +65,6 @@ Then("the stat pool label should be {string}", async function (expectedText: str
 });
 
 Then("the stat edge label should be {string}", async function (expectedText: string) {
-  // Find label element containing the expected text within stats section
   const label = this.page
     .locator('[data-testid="stats-section"] label', { hasText: expectedText })
     .first();
@@ -80,7 +72,6 @@ Then("the stat edge label should be {string}", async function (expectedText: str
 });
 
 Then("the stat current label should be {string}", async function (expectedText: string) {
-  // Find label element containing the expected text within stats section
   const label = this.page
     .locator('[data-testid="stats-section"] label', { hasText: expectedText })
     .first();
@@ -93,7 +84,6 @@ Then("the cyphers heading should be {string}", async function (expectedText: str
 });
 
 Then("cypher level labels should display {string}", async function (expectedText: string) {
-  // Check first cypher's level label contains the expected text
   const levelText = await this.page.locator('[data-testid^="cypher-level-"]').first().textContent();
   expect(levelText).toContain(expectedText);
 });
@@ -104,7 +94,6 @@ Then("the artifacts heading should be {string}", async function (expectedText: s
 });
 
 Then("artifact level labels should display {string}", async function (expectedText: string) {
-  // Check first artifact's level label contains the expected text
   const levelText = await this.page
     .locator('[data-testid^="artifact-level-"]')
     .first()
@@ -145,23 +134,17 @@ Then("the empty oddities message should be {string}", async function (expectedTe
 });
 
 Then("the empty background message should be {string}", async function (_expectedText: string) {
-  // Background field no longer has an empty state message - it shows as an empty textarea
-  // Just verify the textarea is empty and the label matches
   const textarea = this.page.locator('[data-testid="character-background"]');
   await expect(textarea).toHaveValue("");
 
-  // Verify the label is translated correctly
   const label = this.page.locator('[data-testid="background-section"] h3');
   await expect(label).toBeVisible();
 });
 
 Then("the empty notes message should be {string}", async function (_expectedText: string) {
-  // Notes field no longer has an empty state message - it shows as an empty textarea
-  // Just verify the textarea is empty and the label matches
   const textarea = this.page.locator('[data-testid="character-notes"]');
   await expect(textarea).toHaveValue("");
 
-  // Verify the label is translated correctly
   const label = this.page.locator('[data-testid="notes-section"] h3');
   await expect(label).toBeVisible();
 });

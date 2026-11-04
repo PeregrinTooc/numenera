@@ -17,7 +17,6 @@ describe("BasicInfo", () => {
       expect(typeSelect).toBeTruthy();
       expect(typeSelect.value).toBe("Glaive");
 
-      // Change to Jack
       typeSelect.value = "Jack";
       typeSelect.dispatchEvent(new Event("change", { bubbles: true }));
 
@@ -124,7 +123,6 @@ describe("BasicInfo", () => {
         '[data-testid="character-descriptor"]'
       ) as HTMLElement;
       expect(descriptorField).toBeTruthy();
-      // Should render fallback text (i18n key)
     });
 
     it("should show focus placeholder when focus is empty", () => {
@@ -137,7 +135,6 @@ describe("BasicInfo", () => {
         '[data-testid="character-focus"]'
       ) as HTMLElement;
       expect(focusField).toBeTruthy();
-      // Should render fallback text (i18n key)
     });
 
     it("should render upload button when no portrait", () => {

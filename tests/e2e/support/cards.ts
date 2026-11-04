@@ -19,14 +19,12 @@ export class CardsDsl {
       : `[data-testid="${cardType}-delete-button-${index}"]`;
   }
 
-  /** Sets up a character with the given card count via storage + reload. */
   async setupWithCount(cardType: string, count: number): Promise<void> {
     const config = CARD_CONFIGS[cardType];
     if (!config) {
       throw new Error(`Unknown card type: ${cardType}`);
     }
 
-    // Special case for ability 0 count
     if (cardType === "ability" && count === 0) {
       await this.page.evaluate(() => localStorage.clear());
       await this.world.storageHelper.clearVersions();

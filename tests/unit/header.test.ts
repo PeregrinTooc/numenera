@@ -1,7 +1,3 @@
-/**
- * Header component tests - window events do not change the rendered header
- */
-
 import { describe, it, expect, vi } from "vitest";
 import { render } from "lit-html";
 import { Header } from "@/components/Header";

@@ -166,7 +166,6 @@ describe("CompareView", () => {
 
   it("shows every changed field in the header, uncapped", async () => {
     await seedVersions(history.manager, [{ name: "Version 1", description: "Initial" }]);
-    // Make version 2 differ from version 1 in more than 3 ways.
     await history.manager.saveVersion(
       { ...createMockCharacter("Version 2"), tier: 2, shins: 99, armor: 3 },
       "Edit 1"

@@ -140,7 +140,6 @@ describe("ConflictWarningModal newer version banner", () => {
     it("should remove existing banner before showing new one", () => {
       modal = new ConflictWarningModal(container);
 
-      // Show first banner
       window.dispatchEvent(
         new CustomEvent("newer-version-available", {
           detail: {
@@ -153,7 +152,6 @@ describe("ConflictWarningModal newer version banner", () => {
 
       expect(container.querySelectorAll('[data-testid="newer-version-banner"]').length).toBe(1);
 
-      // Show second banner
       window.dispatchEvent(
         new CustomEvent("newer-version-available", {
           detail: {
@@ -164,7 +162,6 @@ describe("ConflictWarningModal newer version banner", () => {
         })
       );
 
-      // Should still only have one banner
       expect(container.querySelectorAll('[data-testid="newer-version-banner"]').length).toBe(1);
     });
 
