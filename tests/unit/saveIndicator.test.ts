@@ -24,7 +24,7 @@ describe("SaveIndicator", () => {
       indicator.updateTimestamp("2:45:33 PM");
 
       const element = renderToElement();
-      expect(element.style.display).not.toBe("none");
+      expect(element.getAttribute("style")).toContain("display: block");
       expect(element.textContent).toContain("2:45:33 PM");
     });
 
@@ -74,7 +74,7 @@ describe("SaveIndicator", () => {
       const element = renderToElement();
 
       expect(element.getAttribute("role")).toBe("alert");
-      expect(element.style.display).not.toBe("none");
+      expect(element.getAttribute("style")).toContain("display: block");
       expect(element.textContent).toContain("Storage is full");
     });
 
@@ -87,7 +87,7 @@ describe("SaveIndicator", () => {
     it("is visible even if nothing was ever saved", () => {
       indicator.showError("unknown");
 
-      expect(renderToElement().style.display).not.toBe("none");
+      expect(renderToElement().getAttribute("style")).toContain("display: block");
     });
 
     it("replaces the last-saved timestamp while in error", () => {

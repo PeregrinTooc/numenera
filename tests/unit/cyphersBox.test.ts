@@ -164,23 +164,12 @@ describe("CyphersBox", () => {
   });
 
   it("should open modal when add button is clicked", () => {
-    // Mock ModalService
-    const mockOpenCardModal = vi.fn();
-    vi.doMock("../../src/services/modalService.js", () => ({
-      ModalService: {
-        openCardModal: mockOpenCardModal,
-      },
-    }));
-
     const component = new CyphersBox(mockCharacter, mockOnFieldUpdate);
     render(component.render(), container);
 
-    const addButton = container.querySelector('[data-testid="add-cypher-button"]');
-    addButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    fireEvent.click(screen.getByTestId("add-cypher-button"));
 
-    // The actual implementation will call ModalService.openCardModal
-    // For now, we just verify the button exists and is clickable
-    expect(addButton).toBeTruthy();
+    expect(screen.getByTestId("card-modal-backdrop")).toBeTruthy();
   });
 
   it("should add cypher when onConfirm callback is invoked", () => {

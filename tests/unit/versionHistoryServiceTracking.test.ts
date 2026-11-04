@@ -116,11 +116,15 @@ describe("VersionHistoryService - tracking, races and edge cases", () => {
 
       vi.advanceTimersByTime(1); // Original timer fires
 
-      // Timer was reset by bufferChange, so shouldn't fire yet
+      // The second change restarted the timer, so nothing is saved yet...
+      expect(await fx.manager.getAllVersions()).toHaveLength(0);
+
+      // ...and when it fires, both changes are squashed into one version.
       await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
-      // Should still have buffered changes
-      expect(fx.service.getBufferLength()).toBeGreaterThanOrEqual(0); // May have squashed
+      const versions = await fx.manager.getAllVersions();
+      expect(versions).toHaveLength(1);
+      expect(versions[0].description).toBe("Change 1, Change 2");
     });
   });
 });

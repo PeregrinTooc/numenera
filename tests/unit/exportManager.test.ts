@@ -28,16 +28,12 @@ describe("ExportManager", () => {
 
     it("should detect remembered location exists", async () => {
       const mockHandle = createMockHandle();
-      ctx.idbStore.set("lastExportFileHandle", mockHandle);
+      await ctx.seedPersistedHandle(mockHandle);
 
       // Recreate manager to load from IDB
       ctx.exportManager = new ExportManager();
 
-      // Wait for all microtasks to complete
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      await new Promise((resolve) => setTimeout(resolve, 0));
-
-      expect(ctx.exportManager.hasRememberedLocation()).toBe(true);
+      await vi.waitFor(() => expect(ctx.exportManager.hasRememberedLocation()).toBe(true));
     });
 
     it("should detect no remembered location on first use", () => {
@@ -122,40 +118,35 @@ describe("ExportManager", () => {
     });
 
     it("should use fallback download in non-Chromium browsers", async () => {
-      const { mockLink } = setupDownloadTest();
+      const { downloads, contentOf } = setupDownloadTest();
 
       await ctx.exportManager.export(mockCharacter);
 
-      expect(mockLink.click).toHaveBeenCalled();
-      expect(mockLink.download).toBe("glaive-warrior.numenera");
+      expect(downloads).toHaveLength(1);
+      expect(downloads[0].filename).toBe("glaive-warrior.numenera");
+      const parsed = expectValidFileStructure(await contentOf(downloads[0]));
+      expect(parsed.character.name).toBe("Glaive Warrior");
     });
 
-    it("appends the download link to the document before clicking and removes it after, for the Firefox fallback", async () => {
-      const { mockLink, appendChildSpy, removeChildSpy } = setupDownloadTest();
+    it("has the download link in the document when clicking and removes it after, for the Firefox fallback", async () => {
+      const { downloads } = setupDownloadTest();
 
       await ctx.exportManager.export(mockCharacter);
 
-      expect(appendChildSpy).toHaveBeenCalledWith(mockLink);
-      expect(removeChildSpy).toHaveBeenCalledWith(mockLink);
-
-      const appendOrder = appendChildSpy.mock.invocationCallOrder[0];
-      const clickOrder = mockLink.click.mock.invocationCallOrder[0];
-      const removeOrder = removeChildSpy.mock.invocationCallOrder[0];
-      expect(appendOrder).toBeLessThan(clickOrder);
-      expect(clickOrder).toBeLessThan(removeOrder);
+      expect(downloads[0].connected).toBe(true);
+      expect(document.querySelector("a[download]")).toBeNull();
     });
 
     it("revokes the object URL asynchronously, so Firefox has time to start the download", async () => {
-      vi.useFakeTimers();
+      vi.useFakeTimers({ toFake: ["setTimeout"] });
       try {
-        const revokeSpy = vi.spyOn(URL, "revokeObjectURL");
-        setupDownloadTest();
+        const { downloads, revokeSpy } = setupDownloadTest();
 
         await ctx.exportManager.export(mockCharacter);
 
-        expect(revokeSpy).not.toHaveBeenCalled();
+        expect(revokeSpy).not.toHaveBeenCalledWith(downloads[0].href);
         vi.runAllTimers();
-        expect(revokeSpy).toHaveBeenCalled();
+        expect(revokeSpy).toHaveBeenCalledWith(downloads[0].href);
       } finally {
         vi.useRealTimers();
       }
