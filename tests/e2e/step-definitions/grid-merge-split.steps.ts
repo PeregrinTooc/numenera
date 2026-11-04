@@ -22,10 +22,15 @@ Then(
     const page = this.page;
     const grid = page.getByTestId(`layout-grid-${sectionId(leftName)}-${sectionId(rightName)}`);
     await expect(grid).toBeVisible();
-    const left = await sectionLocator(page, leftName).boundingBox();
-    const right = await sectionLocator(page, rightName).boundingBox();
-    if (!left || !right) throw new Error("A paired section has no bounding box");
-    expect(left.x).toBeLessThan(right.x);
+    // Polled: right after a live preview the sections are still sliding there
+    await expect
+      .poll(async () => {
+        const left = await sectionLocator(page, leftName).boundingBox();
+        const right = await sectionLocator(page, rightName).boundingBox();
+        if (!left || !right) throw new Error("A paired section has no bounding box");
+        return left.x < right.x;
+      })
+      .toBe(true);
   }
 );
 

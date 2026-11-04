@@ -31,6 +31,12 @@ export interface SectionDragHost {
   isEditMode(): boolean;
   /** Drag state changed: re-render the sheet. */
   requestRender(): void;
+  /**
+   * The shown layout changed: re-render the sheet; sections that moved slide
+   * from their old places. Resolves when the slide has finished; null when
+   * nothing slides.
+   */
+  renderWithSlide(): Promise<void> | null;
   /** The layout the drop intents refer to. */
   getLayout(): Layout;
   /** A section was dropped: adopt, persist and render `layout`. */
@@ -51,6 +57,11 @@ export class SectionDragController {
   private lastPointer: { x: number; y: number } | null = null;
   /** Where the pointer was when the live preview appeared, until it moves on. */
   private previewAnchor: { x: number; y: number } | null = null;
+  /**
+   * The sections sliding into the live preview, until they have arrived.
+   * Their boxes are in motion, so hovers are ignored meanwhile.
+   */
+  private slide: Promise<void> | null = null;
 
   /**
    * Watches the document during a mouse section drag for a drag whose end
@@ -170,8 +181,10 @@ export class SectionDragController {
    * when leaving layout edit mode). The caller re-renders.
    */
   cancelDrag(): void {
-    this.longPress.cancel();
+    // Forget the live preview first: the long-press abort must not slide the
+    // sections back while the whole sheet re-renders
     this.resetDragState();
+    this.longPress.cancel();
   }
 
   /**
@@ -268,6 +281,7 @@ export class SectionDragController {
    */
   private hover(target: HTMLElement, x: number, y: number): void {
     this.lastPointer = { x, y };
+    if (this.slide) return;
     if (this.previewAnchor) {
       const { x: ax, y: ay } = this.previewAnchor;
       if (Math.hypot(x - ax, y - ay) <= LIVE_PREVIEW_SETTLE_PX) return;
@@ -311,7 +325,11 @@ export class SectionDragController {
     this.previewedLayout = applyDrop(this.workingLayout(), sourceId, this.intent);
     this.previewAnchor = this.lastPointer;
     this.setIntent(null);
-    this.host.requestRender();
+    const slide = this.host.renderWithSlide();
+    this.slide = slide;
+    void slide?.then(() => {
+      if (this.slide === slide) this.slide = null;
+    });
   }
 
   /** The layout hovers are resolved against: the live preview, else the sheet's */
@@ -407,11 +425,14 @@ export class SectionDragController {
   }
 
   /**
-   * Clear drag and preview styling and re-render
+   * Clear drag and preview styling and re-render. A live preview on show is
+   * thrown away: the sections slide back to the saved layout.
    */
   private clearDragState(): void {
+    const restoring = this.previewedLayout !== null;
     this.resetDragState();
-    this.host.requestRender();
+    if (restoring) this.host.renderWithSlide();
+    else this.host.requestRender();
   }
 
   /** Forget the drag, its intent and any live preview (which is not saved) */
@@ -421,6 +442,7 @@ export class SectionDragController {
     this.dwellTimer = null;
     this.previewedLayout = null;
     this.previewAnchor = null;
+    this.slide = null;
     this.lastPointer = null;
     this.draggedSectionId = null;
     this.setIntent(null);

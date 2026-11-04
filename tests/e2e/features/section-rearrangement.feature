@@ -138,6 +138,56 @@ Feature: Section Re-arrangement
     Then the "Cyphers" section should appear before the "Items" section
     And the layout should still be the default layout
 
+  # Sliding into the live preview
+  Scenario: Sections slide into the layout shown after holding still
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    And section slides are recorded
+    When I hold the "Cyphers" section over the middle right of the "Items" section
+    And I keep still for a moment
+    Then the "Items" section should slide into its new place
+    And the "Cyphers" section should slide into its new place
+    And the grid should show "Items" on the left and "Cyphers" on the right
+
+  Scenario: Sections slide back when a live preview is cancelled
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    And section slides are recorded
+    When I hold the "Cyphers" section over the middle right of the "Items" section
+    And I keep still for a moment
+    And the "Items" section should slide into its new place
+    And I release the section outside the sheet
+    Then the "Items" section should slide back to where it was
+    And the "Cyphers" section should appear before the "Items" section
+
+  Scenario: The drag carries on after the sections have slid
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    And section slides are recorded
+    When I hold the "Cyphers" section over the middle right of the "Items" section
+    And I keep still for a moment
+    And the "Cyphers" section should slide into its new place
+    And I drop the held section onto the top edge of the "Abilities" section
+    Then "Cyphers" should be in its own row
+    And the "Cyphers" section should appear before the "Abilities" section
+
+  Scenario: The dragged section slides above the sections it passes
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I hold the "Items" section over the middle left of the "Cyphers" section
+    And I keep still for a moment
+    Then the "Items" section should be drawn above the "Cyphers" section while they slide
+
+  Scenario: Nothing slides when reduced motion is preferred
+    Given the viewport is 1280 pixels wide
+    And I prefer reduced motion
+    And layout edit mode is active
+    And section slides are recorded
+    When I hold the "Cyphers" section over the middle right of the "Items" section
+    And I keep still for a moment
+    Then the grid should show "Items" on the left and "Cyphers" on the right
+    And no section should have slid
+
   # Narrow screens: pairs stack, so dropping only reorders
   Scenario: On a narrow screen dropping on the middle of a section reorders
     Given the viewport is 768 pixels wide

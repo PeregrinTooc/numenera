@@ -10,6 +10,11 @@ import { loadLayout, saveLayout, resetLayout } from "@/storage/layoutStorage";
 import { SectionDragController } from "@/components/helpers/SectionDragController";
 import { SheetVersionUi } from "@/components/helpers/SheetVersionUi";
 import { renderEditLayoutButton } from "@/components/helpers/layoutEditButton";
+import {
+  cancelSectionSlides,
+  measureSections,
+  slideSections,
+} from "@/components/helpers/sectionSlide";
 
 export class CharacterSheet {
   private header: Header;
@@ -22,6 +27,7 @@ export class CharacterSheet {
   private readonly drag = new SectionDragController({
     isEditMode: () => this.isLayoutEditMode,
     requestRender: () => this.rerender(),
+    renderWithSlide: () => this.rerenderWithSlide(),
     getLayout: () => this.layout,
     commitLayout: (layout) => this.applyLayout(layout),
   });
@@ -119,6 +125,9 @@ export class CharacterSheet {
     // overwrite storage with this instance's (possibly stale) in-memory copy
     // whenever the persisted layout had changed since edit mode was entered.
     this.rerender();
+    // The sheet snaps to its layout: no section may go on sliding to a place
+    // from the live preview
+    if (this.container) cancelSectionSlides(this.container);
   }
 
   /**
@@ -184,6 +193,18 @@ export class CharacterSheet {
     if (container) {
       this.mount(container);
     }
+  }
+
+  /**
+   * Re-render the whole sheet in place; sections that moved slide from their
+   * old places. Resolves when the slide has finished; null when nothing slides.
+   */
+  private rerenderWithSlide(): Promise<void> | null {
+    const container = this.container ?? document.getElementById("app");
+    if (!container) return null;
+    const first = measureSections(container);
+    this.mount(container);
+    return slideSections(container, first);
   }
 
   /**
