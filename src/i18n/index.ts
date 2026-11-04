@@ -39,11 +39,6 @@ export const changeLanguage = async (lang: string): Promise<void> => {
   await i18next.changeLanguage(lang);
 };
 
-// Export current language getter
-export const getCurrentLanguage = (): string => {
-  return i18next.language;
-};
-
 // Export language change event subscription
 export const onLanguageChanged = (callback: (lang: string) => void): void => {
   i18next.on("languageChanged", callback);

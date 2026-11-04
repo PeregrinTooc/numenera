@@ -31,7 +31,7 @@ export function openCompareView(ctx: AppContext): void {
   ctx.compareView.mount(compareViewContainer);
 }
 
-export function closeCompareView(ctx: AppContext): void {
+function closeCompareView(ctx: AppContext): void {
   if (ctx.compareView) {
     ctx.compareView.unmount();
     ctx.compareView = null;

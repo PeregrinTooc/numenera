@@ -1,17 +1,15 @@
 /**
  * LongPressDrag - decides when a touch becomes a drag.
  *
- * A touch that stays within `moveTolerancePx` of where it started for
- * `holdMs` activates; a touch that moves further first is a scroll and is
+ * A touch that stays within `MOVE_TOLERANCE_PX` of where it started for
+ * `HOLD_MS` activates; a touch that moves further first is a scroll and is
  * ignored. DOM-free: the caller feeds it coordinates and reacts to callbacks.
  */
 
-export const DEFAULT_HOLD_MS = 250;
-export const DEFAULT_MOVE_TOLERANCE_PX = 10;
+const HOLD_MS = 250;
+const MOVE_TOLERANCE_PX = 10;
 
 export interface LongPressDragOptions<Id extends string> {
-  holdMs?: number;
-  moveTolerancePx?: number;
   onActivate: (id: Id) => void;
   onHover: (x: number, y: number) => void;
   onDrop: () => void;
@@ -31,18 +29,13 @@ type LongPressState<Id extends string> =
 
 export class LongPressDrag<Id extends string> {
   private state: LongPressState<Id> = { kind: "idle" };
-  private readonly holdMs: number;
-  private readonly moveTolerancePx: number;
 
-  constructor(private readonly options: LongPressDragOptions<Id>) {
-    this.holdMs = options.holdMs ?? DEFAULT_HOLD_MS;
-    this.moveTolerancePx = options.moveTolerancePx ?? DEFAULT_MOVE_TOLERANCE_PX;
-  }
+  constructor(private readonly options: LongPressDragOptions<Id>) {}
 
   start(id: Id, x: number, y: number): void {
     const wasActive = this.isActive();
     this.reset();
-    const timer = setTimeout(() => this.activate(id), this.holdMs);
+    const timer = setTimeout(() => this.activate(id), HOLD_MS);
     this.state = { kind: "pending", id, startX: x, startY: y, timer };
     if (wasActive) {
       this.options.onAbort();
@@ -60,7 +53,7 @@ export class LongPressDrag<Id extends string> {
     }
     if (this.state.kind === "pending") {
       const distance = Math.hypot(x - this.state.startX, y - this.state.startY);
-      if (distance > this.moveTolerancePx) {
+      if (distance > MOVE_TOLERANCE_PX) {
         this.reset();
       }
     }

@@ -115,17 +115,5 @@ describe("AutoSaveService", () => {
       expect(handler1).toHaveBeenCalledTimes(1);
       expect(handler2).toHaveBeenCalledTimes(1);
     });
-
-    it("should allow removing event listeners", () => {
-      const handler = vi.fn();
-
-      service.on("save-completed", handler);
-      service.off("save-completed", handler);
-
-      service.requestSave();
-      vi.advanceTimersByTime(300);
-
-      expect(handler).not.toHaveBeenCalled();
-    });
   });
 });

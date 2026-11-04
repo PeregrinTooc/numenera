@@ -44,7 +44,7 @@ async function deleteCorruptedIndexedDB(): Promise<void> {
  *
  * @returns Initialized storage instance
  */
-export async function getStorage(): Promise<ICharacterStorage> {
+async function getStorage(): Promise<ICharacterStorage> {
   if (storageInstance) {
     return storageInstance;
   }

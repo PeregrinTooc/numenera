@@ -1,6 +1,5 @@
 import type { ICharacterStorage } from "./ICharacterStorage.js";
 import { STORAGE_KEY, CHARACTER_DB_NAME } from "./storageConstants.js";
-import { CompletionNotifier } from "@/utils/completionNotifier";
 import type { Character } from "@/types/character";
 import { logger } from "@/utils/logger";
 
@@ -43,22 +42,9 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
   }
 
   async save(character: Character): Promise<void> {
-    const notifier = new CompletionNotifier("character-save", { data: { source: "indexedDB" } });
-    notifier.start();
-
-    try {
-      await this.saveInternal(character);
-      notifier.complete({ source: "indexedDB" });
-    } catch (error) {
-      notifier.error(error);
-      throw error;
-    }
+    await this.saveInternal(character);
   }
 
-  /**
-   * Internal save without event emissions
-   * Used during migration to avoid nested events
-   */
   private async saveInternal(character: unknown): Promise<void> {
     return this.putInternal(CHARACTER_KEY, character);
   }
@@ -94,33 +80,18 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
   }
 
   async load(): Promise<unknown> {
-    const notifier = new CompletionNotifier("character-load", { data: { source: "indexedDB" } });
-    notifier.start();
-
-    try {
-      if (!this.db) {
-        throw new Error("IndexedDB not initialized");
-      }
-
-      // Verify object store exists before creating transaction
-      if (!this.db.objectStoreNames.contains(STORE_NAME)) {
-        throw new Error(`Object store '${STORE_NAME}' not found in database`);
-      }
-
-      const result = await this.loadInternal();
-
-      notifier.complete({ source: "indexedDB", found: result !== null });
-      return result;
-    } catch (error) {
-      notifier.error(error);
-      throw error;
+    if (!this.db) {
+      throw new Error("IndexedDB not initialized");
     }
+
+    // Verify object store exists before creating transaction
+    if (!this.db.objectStoreNames.contains(STORE_NAME)) {
+      throw new Error(`Object store '${STORE_NAME}' not found in database`);
+    }
+
+    return this.loadInternal();
   }
 
-  /**
-   * Internal load without event emissions
-   * Used during migration to avoid nested events
-   */
   private async loadInternal(): Promise<unknown> {
     return this.getInternal(CHARACTER_KEY);
   }

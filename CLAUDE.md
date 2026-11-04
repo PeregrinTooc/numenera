@@ -244,4 +244,4 @@ Starting a task?
 
 Project documentation (not rules): `docs/ARCHITECTURE.md`, `docs/FEATURES.md`,
 `docs/TODO.md`, `docs/CURRENT_FEATURE.md`, `docs/I18N.md`,
-`docs/EVENT_CATALOG.md`, `docs/REFACTORING_LOG.md`.
+`docs/REFACTORING_LOG.md`.

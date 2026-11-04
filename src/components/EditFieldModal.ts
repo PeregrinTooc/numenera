@@ -15,7 +15,6 @@ import {
 import { ModalBehavior, renderModalButtons } from "@/services/modalBehavior";
 import { FocusTrappingBehavior } from "@/services/focusTrappingBehavior";
 import type { VersionHistoryService } from "@/services/versionHistoryService";
-import { CompletionNotifier } from "@/utils/completionNotifier";
 
 interface EditFieldModalConfig {
   fieldType: FieldType;
@@ -32,7 +31,6 @@ export class EditFieldModal extends ModalBehavior {
   private inputValue: string;
   private validationError: string | null = null;
   private versionHistoryService?: VersionHistoryService;
-  private modalNotifier: CompletionNotifier;
 
   constructor(config: EditFieldModalConfig) {
     super({
@@ -46,16 +44,8 @@ export class EditFieldModal extends ModalBehavior {
     this.inputValue = this.currentValue;
     this.versionHistoryService = config.versionHistoryService;
 
-    // Initialize completion notifier for modal events
-    this.modalNotifier = new CompletionNotifier("modal", {
-      data: { modalType: "field", field: this.fieldType },
-    });
-
     // Bind additional methods for event handlers
     this.handleInput = this.handleInput.bind(this);
-
-    // Emit modal-opened event after construction
-    this.modalNotifier.emit("opened", { field: this.fieldType });
   }
 
   private validate(value: string): boolean {
@@ -115,17 +105,13 @@ export class EditFieldModal extends ModalBehavior {
   }
 
   private handleConfirmWithValidation(): void {
-    let newValue: string | number;
-
     if (this.fieldType === "tier") {
       // Apply tier constraints
-      newValue = validateTier(this.inputValue);
-      this.onConfirmWithValue(newValue);
+      this.onConfirmWithValue(validateTier(this.inputValue));
     } else if (isNumericField(this.fieldType)) {
       // Validate and convert to number
       if (this.validate(this.inputValue)) {
-        newValue = parseInt(this.inputValue, 10);
-        this.onConfirmWithValue(newValue);
+        this.onConfirmWithValue(parseInt(this.inputValue, 10));
       } else {
         // Validation failed, don't proceed
         return;
@@ -133,34 +119,12 @@ export class EditFieldModal extends ModalBehavior {
     } else {
       // Validate text fields
       if (this.validate(this.inputValue)) {
-        newValue = this.inputValue.trim();
-        this.onConfirmWithValue(newValue);
+        this.onConfirmWithValue(this.inputValue.trim());
       } else {
         // Validation failed, don't proceed
         return;
       }
     }
-
-    // Emit field-edited event
-    const fieldNotifier = new CompletionNotifier("field", {
-      data: {
-        field: this.fieldType,
-        oldValue: this.currentValue,
-        newValue: newValue,
-      },
-    });
-    fieldNotifier.emit("edited");
-
-    // Emit modal-closed event with confirm action
-    this.modalNotifier.emit("closed", { action: "confirm" });
-  }
-
-  protected handleCancel(): void {
-    // Emit modal-closed event with cancel action
-    this.modalNotifier.emit("closed", { action: "cancel" });
-
-    // Call parent cancel handler
-    super.handleCancel();
   }
 
   protected handleKeyDown(e: KeyboardEvent): void {

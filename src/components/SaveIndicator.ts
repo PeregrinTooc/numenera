@@ -29,29 +29,6 @@ export class SaveIndicator {
   }
 
   /**
-   * Check if the indicator is reporting a failed save
-   */
-  hasError(): boolean {
-    return this.error !== null;
-  }
-
-  /**
-   * Get the current timestamp
-   * @returns Current timestamp or null if never saved
-   */
-  getTimestamp(): string | null {
-    return this.timestamp;
-  }
-
-  /**
-   * Check if indicator has a timestamp
-   * @returns true if timestamp exists
-   */
-  hasTimestamp(): boolean {
-    return this.timestamp !== null;
-  }
-
-  /**
    * Render the save indicator
    * Hidden until first save occurs
    */

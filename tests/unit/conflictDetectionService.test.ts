@@ -53,7 +53,7 @@ describe("ConflictDetectionService", () => {
     it("should start with clean state", () => {
       const service = new ConflictDetectionService();
 
-      expect(service.isDirty()).toBe(false);
+      expect(internalsOf(service).hasDirtyChanges).toBe(false);
 
       service.close();
     });
@@ -63,7 +63,7 @@ describe("ConflictDetectionService", () => {
 
       service.markDirty();
 
-      expect(service.isDirty()).toBe(true);
+      expect(internalsOf(service).hasDirtyChanges).toBe(true);
 
       service.close();
     });
@@ -72,10 +72,10 @@ describe("ConflictDetectionService", () => {
       const service = new ConflictDetectionService();
 
       service.markDirty();
-      expect(service.isDirty()).toBe(true);
+      expect(internalsOf(service).hasDirtyChanges).toBe(true);
 
       service.clearDirty();
-      expect(service.isDirty()).toBe(false);
+      expect(internalsOf(service).hasDirtyChanges).toBe(false);
 
       service.close();
     });
@@ -86,7 +86,7 @@ describe("ConflictDetectionService", () => {
 
       service.markDirty(mockCharacter);
 
-      expect(service.isDirty()).toBe(true);
+      expect(internalsOf(service).hasDirtyChanges).toBe(true);
       expect(internalsOf(service).pendingCharacter).toBe(mockCharacter);
 
       service.close();
@@ -109,7 +109,7 @@ describe("ConflictDetectionService", () => {
     it("should start with null ETag", () => {
       const service = new ConflictDetectionService();
 
-      expect(service.getCurrentEtag()).toBeNull();
+      expect(internalsOf(service).currentEtag).toBeNull();
 
       service.close();
     });
@@ -120,8 +120,8 @@ describe("ConflictDetectionService", () => {
 
       await service.setCurrentEtag(mockCharacter);
 
-      expect(service.getCurrentEtag()).not.toBeNull();
-      expect(typeof service.getCurrentEtag()).toBe("string");
+      expect(internalsOf(service).currentEtag).not.toBeNull();
+      expect(typeof internalsOf(service).currentEtag).toBe("string");
 
       service.close();
     });
@@ -132,10 +132,10 @@ describe("ConflictDetectionService", () => {
       const char2 = createTestCharacter({ name: "Character 2" });
 
       await service.setCurrentEtag(char1);
-      const etag1 = service.getCurrentEtag();
+      const etag1 = internalsOf(service).currentEtag;
 
       await service.setCurrentEtag(char2);
-      const etag2 = service.getCurrentEtag();
+      const etag2 = internalsOf(service).currentEtag;
 
       expect(etag1).not.toBe(etag2);
 
@@ -171,11 +171,11 @@ describe("ConflictDetectionService", () => {
       const service = new ConflictDetectionService();
       const mockCharacter = createTestCharacter({ name: "Test Character" });
 
-      expect(service.getCurrentEtag()).toBeNull();
+      expect(internalsOf(service).currentEtag).toBeNull();
 
       await service.notifyVersionSaved(mockCharacter);
 
-      expect(service.getCurrentEtag()).not.toBeNull();
+      expect(internalsOf(service).currentEtag).not.toBeNull();
 
       service.close();
     });

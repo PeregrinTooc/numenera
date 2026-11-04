@@ -3,7 +3,6 @@
 
 import { ICharacterStorage } from "./ICharacterStorage.js";
 import { STORAGE_KEY, UNREADABLE_BACKUP_STORAGE_KEY } from "./storageConstants.js";
-import { CompletionNotifier } from "@/utils/completionNotifier";
 import { logger } from "@/utils/logger";
 import { isRecord } from "@/utils/typeGuards";
 import type { Character } from "@/types/character";
@@ -24,36 +23,23 @@ export class LocalStorageImpl implements ICharacterStorage {
   }
 
   async save(character: Character): Promise<void> {
-    const notifier = new CompletionNotifier("character-save", { data: { source: "localStorage" } });
-    notifier.start();
-
     try {
       this.saveInternal(character);
-      notifier.complete({ source: "localStorage" });
     } catch (error) {
       console.error("Failed to save character state:", error);
-      notifier.error(error);
       throw error;
     }
   }
 
-  /**
-   * Internal save without event emissions
-   * Used during migration to avoid nested events
-   */
   private saveInternal(character: unknown): void {
     const serialized = JSON.stringify(character);
     localStorage.setItem(STORAGE_KEY, serialized);
   }
 
   async load(): Promise<unknown> {
-    const notifier = new CompletionNotifier("character-load", { data: { source: "localStorage" } });
-    notifier.start();
-
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (!stored) {
-        notifier.complete({ source: "localStorage", found: false });
         return null;
       }
 
@@ -63,7 +49,6 @@ export class LocalStorageImpl implements ICharacterStorage {
       } catch (error) {
         // Hand the text back untouched so the app can keep it as a backup; never delete it.
         console.error("Stored character is not valid JSON:", error);
-        notifier.complete({ source: "localStorage", found: true, unreadable: true });
         return stored;
       }
 
@@ -73,16 +58,13 @@ export class LocalStorageImpl implements ICharacterStorage {
         logger.info("Migrating from old versioned format to new raw format");
         const character = data.character;
         this.saveInternal(character);
-        notifier.complete({ source: "localStorage", found: true, migrated: true });
         return character;
       }
 
       // New format: raw character data
-      notifier.complete({ source: "localStorage", found: true });
       return data;
     } catch (error) {
       console.error("Failed to load character state:", error);
-      notifier.error(error);
       // Leave the stored data alone: it may still be the user's only copy.
       return null;
     }

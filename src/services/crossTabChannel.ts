@@ -25,7 +25,6 @@ export interface ConflictMessage {
 export class CrossTabChannel {
   readonly tabId: string;
   private channel: BroadcastChannel;
-  private enabled: boolean = true;
 
   constructor(onMessage: (message: ConflictMessage) => void) {
     this.tabId = `tab-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -52,17 +51,7 @@ export class CrossTabChannel {
    * Broadcast a message to all other tabs (the tab id is added here)
    */
   broadcast(message: Omit<ConflictMessage, "tabId">): void {
-    if (this.enabled) {
-      this.channel.postMessage({ ...message, tabId: this.tabId });
-    }
-  }
-
-  setEnabled(enabled: boolean): void {
-    this.enabled = enabled;
-  }
-
-  isEnabled(): boolean {
-    return this.enabled;
+    this.channel.postMessage({ ...message, tabId: this.tabId });
   }
 
   /**

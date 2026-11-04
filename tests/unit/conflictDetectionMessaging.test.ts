@@ -150,49 +150,6 @@ describe("ConflictDetectionService messaging", () => {
     });
   });
 
-  describe("enable/disable", () => {
-    it("should be enabled by default", () => {
-      const service = new ConflictDetectionService();
-
-      expect(service.isConflictDetectionEnabled()).toBe(true);
-
-      service.close();
-    });
-
-    it("should not broadcast when disabled", async () => {
-      const service = new ConflictDetectionService();
-      const mockChannel = internalsOf(service).channel;
-
-      // Clear initial tab-opened call
-      mockChannel.postMessage.mockClear();
-
-      service.setEnabled(false);
-
-      await service.notifyVersionSaved(createTestCharacter({ name: "Test" }));
-
-      // The postMessage should still be called internally but broadcast returns early
-      // Actually, looking at the code, broadcast checks isEnabled before posting
-      // So when disabled, postMessage should not be called
-      expect(mockChannel.postMessage).not.toHaveBeenCalled();
-
-      service.close();
-    });
-
-    it("should toggle enabled state", () => {
-      const service = new ConflictDetectionService();
-
-      expect(service.isConflictDetectionEnabled()).toBe(true);
-
-      service.setEnabled(false);
-      expect(service.isConflictDetectionEnabled()).toBe(false);
-
-      service.setEnabled(true);
-      expect(service.isConflictDetectionEnabled()).toBe(true);
-
-      service.close();
-    });
-  });
-
   describe("close", () => {
     it("should broadcast tab-closed message on close", () => {
       const service = new ConflictDetectionService();

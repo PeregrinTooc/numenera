@@ -16,16 +16,8 @@ export class SettingsGear {
   private boundHandleDocumentKeydown: ((e: KeyboardEvent) => void) | null = null;
   private pendingListenerTimeout: ReturnType<typeof setTimeout> | null = null;
   private onResetLayout: (() => void) | null = null;
-  private onComparisonViewChange: ((enabled: boolean) => void) | null = null;
 
   constructor(private onLanguageChange: (lang: string) => void) {}
-
-  /**
-   * Set callback fired when the comparison-view preference toggle changes
-   */
-  setComparisonViewChangeCallback(callback: (enabled: boolean) => void): void {
-    this.onComparisonViewChange = callback;
-  }
 
   /**
    * Set callback for resetting layout
@@ -128,9 +120,6 @@ export class SettingsGear {
   private handleComparisonViewToggle(e: Event): void {
     const enabled = (e.target as HTMLInputElement).checked;
     saveComparisonViewEnabled(enabled);
-    if (this.onComparisonViewChange) {
-      this.onComparisonViewChange(enabled);
-    }
     this.triggerRerender();
   }
 

@@ -1,35 +1,10 @@
 import { describe, it, expect, vi } from "vitest";
-import { VersionHistoryService } from "@/services/versionHistoryService";
 import type { CharacterVersion } from "@/types/versionHistory";
 import type { Character } from "@/types/character";
 import { setupVersionHistoryService } from "./helpers/versionHistoryServiceFixture";
 
 describe("VersionHistoryService - tracking, races and edge cases", () => {
   const fx = setupVersionHistoryService();
-
-  describe("trackChange (Convenience Method)", () => {
-    it("should reset timer and buffer change", () => {
-      fx.service.trackChange(fx.mockCharacter, "Combined change");
-
-      expect(fx.service.isTimerActive()).toBe(true);
-      expect(fx.service.getBufferLength()).toBe(1);
-    });
-
-    it("should work same as calling resetTimer + bufferChange separately", () => {
-      fx.service.trackChange(fx.mockCharacter, "Change 1");
-
-      const buffer1 = fx.service.getBufferLength();
-      const timer1 = fx.service.isTimerActive();
-
-      // Create new fx.service for comparison
-      const service2 = new VersionHistoryService(fx.mockManager, 1000);
-      service2.resetTimer();
-      service2.bufferChange(fx.mockCharacter, "Change 1");
-
-      expect(service2.getBufferLength()).toBe(buffer1);
-      expect(service2.isTimerActive()).toBe(timer1);
-    });
-  });
 
   describe("Modal Cancel Scenario", () => {
     it("should not add cancelled changes to buffer", () => {

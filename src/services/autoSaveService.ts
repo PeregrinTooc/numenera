@@ -1,6 +1,6 @@
 /**
  * AutoSaveService handles debounced auto-saving of character data
- * Emits events for save lifecycle: save-requested, save-completed, save-error
+ * Emits events for save lifecycle: save-completed, save-error
  */
 
 import type { ITimer, TimerHandle } from "./timer.js";
@@ -10,7 +10,6 @@ type SaveCallback = () => Promise<void>;
 
 /** Payload of every event the service emits, keyed by event name. */
 export interface AutoSaveEvents {
-  "save-requested": Record<string, never>;
   "save-completed": { timestamp: number };
   "save-error": { error: unknown };
 }
@@ -24,7 +23,6 @@ export class AutoSaveService {
   private timer: ITimer;
   private timerId: TimerHandle | null = null;
   private listeners: { [E in EventType]: Set<EventListener<E>> } = {
-    "save-requested": new Set(),
     "save-completed": new Set(),
     "save-error": new Set(),
   };
@@ -55,9 +53,6 @@ export class AutoSaveService {
     if (this.timerId !== null) {
       this.timer.clearTimeout(this.timerId);
     }
-
-    // Emit save-requested event
-    this.emit("save-requested", {});
 
     // Set new timer
     this.timerId = this.timer.setTimeout(() => {
@@ -110,30 +105,9 @@ export class AutoSaveService {
   }
 
   /**
-   * Remove event listener
-   */
-  off<E extends EventType>(event: E, listener: EventListener<E>): void {
-    this.listeners[event].delete(listener);
-  }
-
-  /**
    * Emit an event to all listeners
    */
   private emit<E extends EventType>(event: E, data: AutoSaveEvents[E]): void {
     this.listeners[event].forEach((listener) => listener(data));
-  }
-
-  /**
-   * Get the timer handle for testing
-   */
-  getTimerHandle(): TimerHandle | null {
-    return this.timerId;
-  }
-
-  /**
-   * Check if a save is currently in progress
-   */
-  isSaving(): boolean {
-    return this.savePromise !== null;
   }
 }

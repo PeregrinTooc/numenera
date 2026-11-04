@@ -160,37 +160,6 @@ export class ConflictDetectionService {
   }
 
   /**
-   * Called when a version is about to be saved
-   * Checks for conflicts before allowing the save
-   */
-  public async checkBeforeSave(character: Character): Promise<boolean> {
-    // Store pending character for conflict handling
-    this.pendingCharacter = character;
-
-    // Generate ETag for the character we're about to save
-    // Note: ETag is computed but not stored here - actual storage happens in notifyVersionSaved
-    await generateETag(character as unknown as Record<string, unknown>);
-
-    // If we don't have a current ETag, this is the first save - no conflict possible
-    if (!this.currentEtag) {
-      return true;
-    }
-
-    // Request latest version from other tabs
-    this.transport.broadcast({ type: "request-latest" });
-
-    // Give other tabs a moment to respond
-    // In real usage, this would be handled asynchronously via events
-    return new Promise((resolve) => {
-      // Short timeout to check for conflicts
-      setTimeout(() => {
-        // If no conflict was detected, allow the save
-        resolve(true);
-      }, 50);
-    });
-  }
-
-  /**
    * Called after a version is successfully saved
    * Updates the current ETag and notifies other tabs
    */
@@ -212,27 +181,6 @@ export class ConflictDetectionService {
    */
   public async setCurrentEtag(character: Character): Promise<void> {
     this.currentEtag = await generateETag(character as unknown as Record<string, unknown>);
-  }
-
-  /**
-   * Get the current ETag
-   */
-  public getCurrentEtag(): string | null {
-    return this.currentEtag;
-  }
-
-  /**
-   * Enable or disable conflict detection
-   */
-  public setEnabled(enabled: boolean): void {
-    this.transport.setEnabled(enabled);
-  }
-
-  /**
-   * Check if conflict detection is enabled
-   */
-  public isConflictDetectionEnabled(): boolean {
-    return this.transport.isEnabled();
   }
 
   /**
@@ -265,13 +213,6 @@ export class ConflictDetectionService {
   public clearDirty(): void {
     this.hasDirtyChanges = false;
     this.pendingCharacter = null;
-  }
-
-  /**
-   * Check if there are dirty/unsaved changes
-   */
-  public isDirty(): boolean {
-    return this.hasDirtyChanges || this.pendingCharacter !== null;
   }
 
   /**

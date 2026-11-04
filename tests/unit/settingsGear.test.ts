@@ -19,7 +19,6 @@ vi.mock("@/i18n/index", () => ({
     return translations[key] || key;
   },
   changeLanguage: vi.fn(),
-  getCurrentLanguage: vi.fn(() => "en"),
 }));
 
 describe("SettingsGear", () => {
@@ -226,9 +225,7 @@ describe("SettingsGear", () => {
       expect(toggle.checked).toBe(false);
     });
 
-    it("persists the preference and notifies the callback when toggled on", () => {
-      const onComparisonViewChange = vi.fn();
-      settingsGear.setComparisonViewChangeCallback(onComparisonViewChange);
+    it("persists the preference when toggled on", () => {
       settingsGear.open();
       render(settingsGear.render(), container);
 
@@ -239,7 +236,6 @@ describe("SettingsGear", () => {
       toggle.dispatchEvent(new Event("change"));
 
       expect(localStorage.getItem("numenera-comparison-view-enabled")).toBe("true");
-      expect(onComparisonViewChange).toHaveBeenCalledWith(true);
     });
 
     it("reflects a previously-saved enabled preference on render", () => {

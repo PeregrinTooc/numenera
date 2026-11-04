@@ -1,7 +1,6 @@
 import type { Character } from "@/types/character";
 import type { CharacterVersion } from "@/types/versionHistory";
 import { generateETag } from "@/utils/etag";
-import { CompletionNotifier } from "@/utils/completionNotifier";
 import { VERSION_HISTORY_DB_NAME } from "./storageConstants.js";
 
 const DEFAULT_DB_NAME = VERSION_HISTORY_DB_NAME;
@@ -72,85 +71,62 @@ export class VersionHistoryManager {
    * @returns The created CharacterVersion
    */
   async saveVersion(character: Character, description: string): Promise<CharacterVersion> {
-    const notifier = new CompletionNotifier("version-create");
-    notifier.start();
-
-    try {
-      if (!this.db) {
-        throw new Error("VersionHistoryManager not initialized");
-      }
-
-      // Deep clone character and exclude portrait
-      const { portrait: _portrait, ...characterWithoutPortrait } = character;
-      const clonedCharacter = JSON.parse(JSON.stringify(characterWithoutPortrait)) as Omit<
-        Character,
-        "portrait"
-      >;
-
-      // Generate etag
-      const etag = await generateETag(character);
-
-      // Create version object with unique timestamp
-      // Use Date.now() but ensure uniqueness by adding a small increment if needed
-      let timestamp = Date.now();
-      const existingVersions = await this.getAllVersionsInternal();
-      if (existingVersions.length > 0) {
-        const lastTimestamp = existingVersions[existingVersions.length - 1].timestamp;
-        // Ensure new timestamp is greater than the last one
-        if (timestamp <= lastTimestamp) {
-          timestamp = lastTimestamp + 1;
-        }
-      }
-
-      const version: CharacterVersion = {
-        id: crypto.randomUUID(),
-        character: clonedCharacter,
-        timestamp,
-        description,
-        etag,
-      };
-
-      // Save to IndexedDB first
-      await this.saveToDb(version);
-
-      // Check version count and remove oldest if needed
-      let versions = await this.getAllVersionsInternal();
-      while (versions.length > MAX_VERSIONS) {
-        // Remove oldest version
-        await this.deleteVersion(versions[0].id);
-        // Get fresh list after deletion
-        versions = await this.getAllVersionsInternal();
-      }
-
-      notifier.complete({ versionId: version.id, description: version.description });
-      return version;
-    } catch (error) {
-      notifier.error(error);
-      throw error;
+    if (!this.db) {
+      throw new Error("VersionHistoryManager not initialized");
     }
+
+    // Deep clone character and exclude portrait
+    const { portrait: _portrait, ...characterWithoutPortrait } = character;
+    const clonedCharacter = JSON.parse(JSON.stringify(characterWithoutPortrait)) as Omit<
+      Character,
+      "portrait"
+    >;
+
+    // Generate etag
+    const etag = await generateETag(character);
+
+    // Create version object with unique timestamp
+    // Use Date.now() but ensure uniqueness by adding a small increment if needed
+    let timestamp = Date.now();
+    const existingVersions = await this.getAllVersionsInternal();
+    if (existingVersions.length > 0) {
+      const lastTimestamp = existingVersions[existingVersions.length - 1].timestamp;
+      // Ensure new timestamp is greater than the last one
+      if (timestamp <= lastTimestamp) {
+        timestamp = lastTimestamp + 1;
+      }
+    }
+
+    const version: CharacterVersion = {
+      id: crypto.randomUUID(),
+      character: clonedCharacter,
+      timestamp,
+      description,
+      etag,
+    };
+
+    // Save to IndexedDB first
+    await this.saveToDb(version);
+
+    // Check version count and remove oldest if needed
+    let versions = await this.getAllVersionsInternal();
+    while (versions.length > MAX_VERSIONS) {
+      // Remove oldest version
+      await this.deleteVersion(versions[0].id);
+      // Get fresh list after deletion
+      versions = await this.getAllVersionsInternal();
+    }
+
+    return version;
   }
 
   /**
    * Get all versions in chronological order (oldest first)
    */
   async getAllVersions(): Promise<CharacterVersion[]> {
-    const notifier = new CompletionNotifier("versions-load");
-    notifier.start();
-
-    try {
-      const versions = await this.getAllVersionsInternal();
-      notifier.complete({ count: versions.length });
-      return versions;
-    } catch (error) {
-      notifier.error(error);
-      throw error;
-    }
+    return this.getAllVersionsInternal();
   }
 
-  /**
-   * Private helper: Get all versions without emitting events
-   * Used internally to avoid nested event emissions
-   */
   private async getAllVersionsInternal(): Promise<CharacterVersion[]> {
     if (!this.db) {
       throw new Error("VersionHistoryManager not initialized");

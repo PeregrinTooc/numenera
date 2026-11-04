@@ -27,6 +27,8 @@ interface ServiceInternals {
   channel: MockBroadcastChannel;
   tabId: string;
   pendingCharacter: Character | null;
+  currentEtag: string | null;
+  hasDirtyChanges: boolean;
 }
 
 interface TransportInternals {
@@ -38,11 +40,15 @@ export function internalsOf(service: ConflictDetectionService): ServiceInternals
   const view = service as unknown as {
     transport: TransportInternals;
     pendingCharacter: Character | null;
+    currentEtag: string | null;
+    hasDirtyChanges: boolean;
   };
   return {
     channel: view.transport.channel,
     tabId: view.transport.tabId,
     pendingCharacter: view.pendingCharacter,
+    currentEtag: view.currentEtag,
+    hasDirtyChanges: view.hasDirtyChanges,
   };
 }
 

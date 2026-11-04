@@ -80,26 +80,6 @@ describe("CharacterSheet - Version History Integration", () => {
     expect(container.querySelector(".parchment-container")).toBeTruthy();
   });
 
-  it("should have a method to mount version navigator", () => {
-    expect(characterSheet).toHaveProperty("mountVersionNavigator");
-    expect(typeof characterSheet.mountVersionNavigator).toBe("function");
-  });
-
-  it("should have a method to update version navigator", () => {
-    expect(characterSheet).toHaveProperty("updateVersionNavigator");
-    expect(typeof characterSheet.updateVersionNavigator).toBe("function");
-  });
-
-  it("should have a method to mount version warning banner", () => {
-    expect(characterSheet).toHaveProperty("mountVersionWarningBanner");
-    expect(typeof characterSheet.mountVersionWarningBanner).toBe("function");
-  });
-
-  it("should have a method to unmount version warning banner", () => {
-    expect(characterSheet).toHaveProperty("unmountVersionWarningBanner");
-    expect(typeof characterSheet.unmountVersionWarningBanner).toBe("function");
-  });
-
   describe("rerenderSection", () => {
     it("re-renders the cyphers section in place to reflect a data change", () => {
       characterSheet.mount(container);

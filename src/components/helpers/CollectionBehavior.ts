@@ -4,7 +4,6 @@
 import type { TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { persistCharacterState } from "@/storage/storageFactory";
-import { CompletionNotifier } from "@/utils/completionNotifier";
 import { readCollection, writeCollection } from "./characterCollections";
 
 /**
@@ -67,35 +66,11 @@ export function createAddHandler<T, ItemComponent extends { handleEdit: () => vo
         const newCollection = [...currentCollection, updated];
         writeCollection(character, collectionKey, newCollection);
 
-        // Emit card-added event
-        const cardNotifier = new CompletionNotifier("card", {
-          data: {
-            cardType:
-              typeof updated === "object" && updated !== null && "name" in updated && updated.name
-                ? "item"
-                : "card",
-            cardIndex: newCollection.length - 1,
-          },
-        });
-        cardNotifier.emit("added");
-
         persistCharacterState(character);
         dispatchCollectionUpdate(collectionKey);
       } else {
         // Callback-based update (legacy pattern) - mutate collection
         collection.push(updated);
-
-        // Emit card-added event
-        const cardNotifier = new CompletionNotifier("card", {
-          data: {
-            cardType:
-              typeof updated === "object" && updated !== null && "name" in updated && updated.name
-                ? "item"
-                : "card",
-            cardIndex: collection.length - 1,
-          },
-        });
-        cardNotifier.emit("added");
 
         if (onUpdate) {
           const newIndex = collection.length - 1;
@@ -170,39 +145,12 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
             collection[index] = updated;
           }
 
-          // Emit card-edited event
-          const cardNotifier = new CompletionNotifier("card", {
-            data: {
-              cardType:
-                typeof updated === "object" && updated !== null && "name" in updated && updated.name
-                  ? "item"
-                  : "card",
-              cardIndex: index,
-            },
-          });
-          cardNotifier.emit("edited");
-
           persistCharacterState(character);
           dispatchCollectionUpdate(collectionKey);
         }
       : onUpdate
         ? // Callback-based update pattern (Abilities, Attacks, SpecialAbilities)
           (updated: T) => {
-            // Emit card-edited event
-            const cardNotifier = new CompletionNotifier("card", {
-              data: {
-                cardType:
-                  typeof updated === "object" &&
-                  updated !== null &&
-                  "name" in updated &&
-                  updated.name
-                    ? "item"
-                    : "card",
-                cardIndex: index,
-              },
-            });
-            cardNotifier.emit("edited");
-
             onUpdate(index, updated);
           }
         : undefined;
@@ -211,18 +159,6 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
     const deleteHandler = character
       ? // Event-based delete pattern (CyphersBox, ItemsBox)
         () => {
-          // Emit card-deleted event before deletion
-          const cardNotifier = new CompletionNotifier("card", {
-            data: {
-              cardType:
-                typeof item === "object" && item !== null && "name" in item && item.name
-                  ? "item"
-                  : "card",
-              cardIndex: index,
-            },
-          });
-          cardNotifier.emit("deleted");
-
           // IMMUTABLE DELETE: Create new filtered array and assign to character
           // This ensures version history snapshots don't share array references
           const filtered = collection.filter((_, i) => i !== index);
@@ -240,18 +176,6 @@ export function createItemInstances<T, ItemComponent extends { render: () => Tem
       : onDelete
         ? // Callback-based delete pattern (Abilities, Attacks, SpecialAbilities)
           () => {
-            // Emit card-deleted event before deletion
-            const cardNotifier = new CompletionNotifier("card", {
-              data: {
-                cardType:
-                  typeof item === "object" && item !== null && "name" in item && item.name
-                    ? "item"
-                    : "card",
-                cardIndex: index,
-              },
-            });
-            cardNotifier.emit("deleted");
-
             onDelete(index);
           }
         : undefined;

@@ -13,9 +13,9 @@ import { ChangeBuffer } from "./changeBuffer.js";
 import type { ITimer, TimerHandle } from "./timer.js";
 import { RealTimer } from "./timer.js";
 
-function emit(name: string, detail?: unknown): void {
+function emit(name: string): void {
   if (typeof window !== "undefined") {
-    window.dispatchEvent(new CustomEvent(name, detail === undefined ? undefined : { detail }));
+    window.dispatchEvent(new CustomEvent(name));
   }
 }
 
@@ -76,17 +76,6 @@ export class VersionHistoryService {
   }
 
   /**
-   * Convenience method: reset timer AND buffer change
-   * Used for non-modal edits (e.g., stat buttons, checkboxes)
-   * @param character The character state to buffer
-   * @param description Description of the change
-   */
-  trackChange(character: Character, description: string): void {
-    this.resetTimer();
-    this.bufferChange(character, description);
-  }
-
-  /**
    * Perform squashing operation
    * Combines buffered changes into single version
    */
@@ -105,9 +94,6 @@ export class VersionHistoryService {
     }
 
     this.isSquashInProgress = true;
-
-    // Emit squash-started event
-    emit("squash-started");
 
     try {
       // Edits buffered while the save below is pending belong to the next
@@ -144,7 +130,6 @@ export class VersionHistoryService {
 
       // Dispatch custom event to notify that a version was created
       emit("version-squashed");
-      emit("squash-completed");
     } catch (error) {
       // Log-and-continue is deliberate: the character itself was auto-saved,
       // and reconcileVersionHistory rebuilds the missing version on next boot.
@@ -152,9 +137,6 @@ export class VersionHistoryService {
       // Clear state on error
       this.buffer.clear();
       this.globalTimer = null;
-
-      // Emit error event
-      emit("squash-error", { error });
     } finally {
       this.isSquashInProgress = false;
     }
@@ -172,14 +154,6 @@ export class VersionHistoryService {
    */
   isTimerActive(): boolean {
     return this.globalTimer !== null;
-  }
-
-  /**
-   * Check if currently performing a squash operation
-   * Used to prevent version creation during squash
-   */
-  isSquashing(): boolean {
-    return this.isSquashInProgress;
   }
 
   /**
@@ -206,8 +180,6 @@ export class VersionHistoryService {
     if (!this.buffer.canUndo()) {
       return null;
     }
-
-    emit("undo-started");
 
     // Move the last buffered change to redo stack; the result is the previous
     // state (or the initial state when the buffer is now empty)
@@ -244,8 +216,6 @@ export class VersionHistoryService {
       return null;
     }
 
-    emit("redo-started");
-
     // Move the last undone change back to buffer
     const redone = this.buffer.redo();
 
@@ -253,31 +223,8 @@ export class VersionHistoryService {
     // This ensures changes get squashed after the full delay period
     this.resetTimer();
 
-    emit("redo-completed");
-
     // Return the redone state
     return redone;
-  }
-
-  /**
-   * Clear the buffer without creating a version
-   * Used when the buffered state has been persisted to localStorage
-   * and doesn't need to become a version (e.g., after redo + save)
-   * Note: Does NOT clear the redo stack, only the buffer
-   */
-  clearBuffer(): void {
-    // Doesn't clear the redo stack - it's needed for subsequent redos
-    this.buffer.clear();
-
-    // Clear any active timer since we're clearing the buffer
-    this.cancelTimer();
-  }
-
-  /**
-   * Get the timer handle for testing (allows tests to trigger specific timers)
-   */
-  getTimerHandle(): TimerHandle | null {
-    return this.globalTimer;
   }
 
   /**

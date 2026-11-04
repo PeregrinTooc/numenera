@@ -21,7 +21,6 @@ import {
   withColumns,
 } from "@/types/sectionColumns";
 import { SectionDragController } from "@/components/helpers/SectionDragController";
-import { SheetVersionUi } from "@/components/helpers/SheetVersionUi";
 import { renderEditLayoutButton } from "@/components/helpers/layoutEditButton";
 import { renderSectionColumnsButton } from "@/components/helpers/sectionColumnsButton";
 import {
@@ -33,7 +32,6 @@ import {
 export class CharacterSheet {
   private header: Header;
   private sections: SheetSections;
-  private readonly versionUi = new SheetVersionUi();
   private layout: Layout;
   private sectionColumns: SectionColumns;
   private isLayoutEditMode: boolean = false;
@@ -185,25 +183,10 @@ export class CharacterSheet {
   }
 
   /**
-   * Update the layout
-   */
-  updateLayout(newLayout: Layout): void {
-    this.layout = newLayout;
-    this.rerender();
-  }
-
-  /**
    * Get current layout
    */
   getLayout(): Layout {
     return this.layout;
-  }
-
-  /**
-   * Check if in layout edit mode
-   */
-  isInLayoutEditMode(): boolean {
-    return this.isLayoutEditMode;
   }
 
   /**
@@ -251,61 +234,6 @@ export class CharacterSheet {
     const first = measureSections(container);
     this.mount(container);
     return slideSections(container, first);
-  }
-
-  /**
-   * Mount version navigator to a container
-   */
-  mountVersionNavigator(
-    container: HTMLElement,
-    versionCount: number,
-    currentIndex: number,
-    onNavigateBackward: () => void,
-    onNavigateForward: () => void
-  ): void {
-    this.versionUi.mountNavigator(container, {
-      versionCount,
-      currentIndex,
-      onNavigateBackward,
-      onNavigateForward,
-    });
-  }
-
-  /**
-   * Update version navigator with new props
-   */
-  updateVersionNavigator(
-    versionCount: number,
-    currentIndex: number,
-    onNavigateBackward: () => void,
-    onNavigateForward: () => void
-  ): void {
-    this.versionUi.updateNavigator({
-      versionCount,
-      currentIndex,
-      onNavigateBackward,
-      onNavigateForward,
-    });
-  }
-
-  /**
-   * Mount version warning banner to a container
-   */
-  mountVersionWarningBanner(
-    container: HTMLElement,
-    description: string,
-    timestamp: Date,
-    onReturn: () => void,
-    onRestore: () => void
-  ): void {
-    this.versionUi.mountWarningBanner(container, description, timestamp, onReturn, onRestore);
-  }
-
-  /**
-   * Unmount version warning banner
-   */
-  unmountVersionWarningBanner(): void {
-    this.versionUi.unmountWarningBanner();
   }
 
   /**
