@@ -28,12 +28,6 @@ export class AutoSaveService {
   };
   private savePromise: Promise<void> | null = null;
 
-  /**
-   * Create a new AutoSaveService
-   * @param saveCallback Async function to call when saving
-   * @param debounceMs Debounce delay in milliseconds
-   * @param timer Timer implementation (defaults to RealTimer for production)
-   */
   constructor(
     saveCallback: SaveCallback,
     debounceMs: number = 300,
@@ -44,25 +38,16 @@ export class AutoSaveService {
     this.timer = timer;
   }
 
-  /**
-   * Request a save operation (debounced)
-   * Multiple rapid calls will be debounced into a single save
-   */
   requestSave(): void {
-    // Clear existing timer if any
     if (this.timerId !== null) {
       this.timer.clearTimeout(this.timerId);
     }
 
-    // Set new timer
     this.timerId = this.timer.setTimeout(() => {
       this.performSave();
     }, this.debounceMs);
   }
 
-  /**
-   * Perform the actual save operation
-   */
   private async performSave(): Promise<void> {
     this.timerId = null;
 
@@ -80,10 +65,6 @@ export class AutoSaveService {
     return this.savePromise;
   }
 
-  /**
-   * Flush pending saves immediately
-   * Useful for tests and page unload
-   */
   flush(): Promise<void> {
     // A pending timer means there are unsaved changes: save them now.
     // Not awaited on purpose (unload handlers cannot await): the write is issued in this same task
@@ -93,20 +74,13 @@ export class AutoSaveService {
       return this.performSave();
     }
 
-    // If a save is in progress, wait for it; otherwise nothing is pending
     return this.savePromise ?? Promise.resolve();
   }
 
-  /**
-   * Add event listener
-   */
   on<E extends EventType>(event: E, listener: EventListener<E>): void {
     this.listeners[event].add(listener);
   }
 
-  /**
-   * Emit an event to all listeners
-   */
   private emit<E extends EventType>(event: E, data: AutoSaveEvents[E]): void {
     this.listeners[event].forEach((listener) => listener(data));
   }

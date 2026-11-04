@@ -1,6 +1,3 @@
-/* Attack Item Styling - Red/Combat theme */
-
-/* Dragging states for attack items */
 .attack-item-card[data-dragging="true"] {
   opacity: 0.5;
   transform: scale(0.98);
@@ -20,20 +17,17 @@
   overflow-wrap: anywhere;
 }
 
-/* Attack notes - user data with handwritten font */
 .attack-item-card .attack-notes {
   font-family: "Caveat", "Patrick Hand", cursive;
   font-size: 1.125rem;
   line-height: 1.6;
 }
 
-/* Attack range label - user data with handwritten font */
 .attack-item-card .attack-range {
   font-family: "Caveat", "Patrick Hand", cursive;
   font-size: 1rem;
 }
 
-/* Empty attacks state - red/combat themed */
 .empty-attacks-styled {
   background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
   border: 2px dashed #fca5a5;

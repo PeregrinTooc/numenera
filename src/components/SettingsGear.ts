@@ -1,5 +1,3 @@
-// SettingsGear component - Settings dropdown with language switcher
-
 import { html, TemplateResult, nothing } from "lit-html";
 import { t } from "@/i18n/index";
 import { hasCustomLayout } from "@/storage/layoutStorage";
@@ -19,16 +17,10 @@ export class SettingsGear {
 
   constructor(private onLanguageChange: (lang: string) => void) {}
 
-  /**
-   * Set callback for resetting layout
-   */
   setResetLayoutCallback(callback: () => void): void {
     this.onResetLayout = callback;
   }
 
-  /**
-   * Set callback for triggering re-renders
-   */
   setRerenderCallback(callback: () => void): void {
     this.onRerender = callback;
   }
@@ -84,7 +76,6 @@ export class SettingsGear {
   }
 
   private handleDocumentClick(e: MouseEvent): void {
-    // Check if click was outside the settings container
     const target = e.target as HTMLElement;
     const settingsContainer = target.closest('[data-testid="settings-container"]');
     if (!settingsContainer) {
@@ -125,15 +116,12 @@ export class SettingsGear {
 
   private handleResetLayout(): void {
     if (this.onResetLayout) {
-      // Dispatch event for reset confirmation
       const event = new CustomEvent("layout-reset-requested", {
         bubbles: true,
         composed: true,
       });
       document.dispatchEvent(event);
 
-      // For now, just call the reset callback directly
-      // In a full implementation, this would show a confirmation dialog first
       this.onResetLayout();
       this.close();
     }

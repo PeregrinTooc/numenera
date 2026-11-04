@@ -1,6 +1,3 @@
-// StatPool component - Displays a single stat pool (Might, Speed, or Intellect)
-// Redesigned to match official Numenera character sheet aesthetic
-
 import { html, TemplateResult } from "lit-html";
 import { t } from "@/i18n/index";
 import { StatPool as StatPoolType } from "@/types/character";
@@ -40,10 +37,8 @@ export class StatPool {
 
     return html`
       <div data-testid="stat-${nameLower}" class="stat-pool-card">
-        <!-- Stat name - serif, bold -->
         <h3 data-testid="stat-${nameLower}-label" class="stat-pool-label">${name}</h3>
 
-        <!-- Pool value - VERY LARGE, handwritten font -->
         <div class="stat-pool-value-section">
           <div
             data-testid="stat-${nameLower}-pool"
@@ -58,7 +53,6 @@ export class StatPool {
           <div class="stat-pool-sublabel">${t("stats.pool")}</div>
         </div>
 
-        <!-- Edge and Current - two columns with handwritten values -->
         <div class="stat-pool-grid">
           <div class="stat-pool-stat">
             <div class="stat-pool-stat-label">

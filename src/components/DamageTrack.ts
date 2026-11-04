@@ -18,9 +18,7 @@ export class DamageTrack {
       >
         <h3 class="text-lg font-bold font-serif mb-4 text-red-900">${t("damage.title")}</h3>
 
-        <!-- Damage Status Radio Buttons -->
         <div class="space-y-3">
-          <!-- Healthy -->
           <label
             class="flex items-start gap-3 cursor-pointer hover:bg-red-50 p-2 rounded transition-colors"
           >
@@ -40,7 +38,6 @@ export class DamageTrack {
             </div>
           </label>
 
-          <!-- Impaired -->
           <label
             class="flex items-start gap-3 cursor-pointer hover:bg-red-50 p-2 rounded transition-colors"
           >
@@ -63,7 +60,6 @@ export class DamageTrack {
             </div>
           </label>
 
-          <!-- Debilitated -->
           <label
             class="flex items-start gap-3 cursor-pointer hover:bg-red-50 p-2 rounded transition-colors"
           >

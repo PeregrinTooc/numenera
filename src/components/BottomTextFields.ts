@@ -1,5 +1,3 @@
-// BottomTextFields component - Editable Background and Notes fields
-
 import { html, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { t } from "@/i18n/index";
@@ -58,9 +56,6 @@ export class BottomTextFields {
     `;
   }
 
-  /**
-   * Render the background field only (for layout system)
-   */
   renderBackground(): TemplateResult {
     return this.renderField(
       "background",
@@ -69,9 +64,6 @@ export class BottomTextFields {
     );
   }
 
-  /**
-   * Render the notes field only (for layout system)
-   */
   renderNotes(): TemplateResult {
     return this.renderField(
       "notes",

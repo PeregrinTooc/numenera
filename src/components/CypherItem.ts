@@ -1,5 +1,3 @@
-// CypherItem component - Displays a single cypher card
-
 import { html, TemplateResult } from "lit-html";
 import { Cypher } from "@/types/character";
 import { t } from "@/i18n/index";

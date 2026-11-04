@@ -1,5 +1,3 @@
-// CyphersBox component - Displays cyphers in a standalone section with max cyphers badge
-
 import { html, TemplateResult } from "lit-html";
 import { Character, Cypher } from "@/types/character";
 import { CypherItem } from "./CypherItem.js";
@@ -41,7 +39,6 @@ export class CyphersBox {
   render(): TemplateResult {
     return html`
       <div data-testid="cyphers-section" class="section-box">
-        <!-- Heading row: Max Cyphers Badge (top-left), heading, add button -->
         <div class="section-box-heading-row">
           <div
             data-testid="max-cyphers-badge"

@@ -17,22 +17,19 @@ export function createFileActions(
   character: Character,
   app: HTMLElement
 ): FileActions {
-  // Helper to update header button state after export operations
   const updateHeaderButtonState = (): void => {
     if (ctx.currentSheet) {
       ctx.currentSheet.setHeaderHasRememberedLocation(ctx.exportManager.hasRememberedLocation());
-      // Trigger re-render to show new buttons
       ctx.currentSheet.mount(app);
     }
   };
 
   return {
-    // Handler for importing character from file
     handleLoadFromFile: () =>
       runFileOp(
         async () => {
           const importResult = await importCharacterFromFile();
-          if (!importResult) return; // user cancelled - do nothing
+          if (!importResult) return;
 
           const { character: importedCharacter, warnings } = importResult;
 
@@ -57,7 +54,6 @@ export function createFileActions(
         "fileOperations.importFailed"
       ),
 
-    // Handler for first export (or fallback for non-Chromium)
     handleExport: () =>
       runFileOp(
         () => ctx.exportManager.export(character),
@@ -74,7 +70,6 @@ export function createFileActions(
         "fileOperations.saveFailed"
       ),
 
-    // Handler for Save As
     handleSaveAs: () =>
       runFileOp(
         () => ctx.exportManager.saveAs(character),

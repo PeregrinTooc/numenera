@@ -1,5 +1,3 @@
-// BasicInfo component - Displays character basic information
-
 import { html, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { FieldType as ValidationFieldType } from "@/utils/fieldValidation";
@@ -22,19 +20,16 @@ export class BasicInfo {
 
     if (!file) return;
 
-    // Validate file type
     if (!file.type.startsWith("image/")) {
       alert(t("portrait.notAnImage"));
       return;
     }
 
-    // Validate file size (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
       alert(t("portrait.tooLarge", { maxSize: 2 }));
       return;
     }
 
-    // Read file as base64
     const reader = new FileReader();
     reader.onload = () => {
       const base64 = reader.result as string;
@@ -89,7 +84,6 @@ export class BasicInfo {
   render(): TemplateResult {
     return html`
       <div data-testid="basic-info" class="basic-info-card">
-        <!-- XP Badge - top-left corner - two independently-editable cells -->
         <div class="xp-badge" data-testid="xp-badge">
           <div
             class="xp-badge-cell editable-field"
@@ -115,9 +109,7 @@ export class BasicInfo {
           </div>
         </div>
 
-        <!-- Character info content - left side -->
         <div class="character-info-content">
-          <!-- Large character name - EDITABLE -->
           <div
             data-testid="character-name"
             class="character-name editable-field"
@@ -174,7 +166,6 @@ export class BasicInfo {
           </div>
         </div>
 
-        <!-- Character portrait - RIGHT side, 3:4 ratio (150×200px) -->
         <div class="character-portrait" data-testid="character-portrait">
           ${this.character.portrait
             ? html`

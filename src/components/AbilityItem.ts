@@ -1,5 +1,3 @@
-// AbilityItem component - Individual ability card with cost, pool, and action information
-
 import { html, TemplateResult } from "lit-html";
 import { Ability } from "@/types/character";
 import { t } from "@/i18n/index";

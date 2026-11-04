@@ -1,5 +1,3 @@
-// cardFormFields - Shared label + input/textarea fields for the card edit forms
-
 import { html, TemplateResult } from "lit-html";
 import { ifDefined } from "lit-html/directives/if-defined.js";
 

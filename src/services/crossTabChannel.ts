@@ -1,9 +1,6 @@
 // BroadcastChannel and MessageEvent are DOM globals
 /* eslint-disable no-undef */
 
-/**
- * Message types for cross-tab communication
- */
 export interface ConflictMessage {
   type:
     | "version-saved"
@@ -32,29 +29,20 @@ export class CrossTabChannel {
 
     this.channel.onmessage = (event: MessageEvent) => {
       const message = event.data as ConflictMessage;
-      // Ignore messages from self
       if (message.tabId !== this.tabId) {
         onMessage(message);
       }
     };
 
-    // Announce tab opened
     this.broadcast({ type: "tab-opened" });
 
-    // Clean up on page unload
     window.addEventListener("beforeunload", () => this.close());
   }
 
-  /**
-   * Broadcast a message to all other tabs (the tab id is added here)
-   */
   broadcast(message: Omit<ConflictMessage, "tabId">): void {
     this.channel.postMessage({ ...message, tabId: this.tabId });
   }
 
-  /**
-   * Announce that this tab closed, then close the channel
-   */
   close(): void {
     this.broadcast({ type: "tab-closed" });
     this.channel.close();

@@ -235,14 +235,12 @@ export class SectionDragController {
     return this.livePreview.workingLayout(this.host.getLayout());
   }
 
-  /** A long-press activated: show the section as being dragged */
   private handleTouchDragActivate(sectionId: SectionId): void {
     this.draggedSectionId = sectionId;
     this.setIntent(null);
     this.host.requestRender();
   }
 
-  /** During a touch drag, update the drop intent from the section under the finger */
   private handleTouchDragHover(x: number, y: number): void {
     const hovered = document.elementFromPoint(x, y)?.closest<HTMLElement>("[data-section-id]");
     // Over a gutter (no section) the last intent stands, as for the mouse

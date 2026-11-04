@@ -64,15 +64,11 @@ export function createAppContext(): AppContext {
     versionWarningBanner: null,
     compareView: null,
     exportManager: new ExportManager(),
-    autoSaveService: new AutoSaveService(
-      async () => {
-        if (ctx.currentCharacter) {
-          await saveCharacterState(ctx.currentCharacter);
-        }
-      },
-      300
-      // No timer parameter = uses default RealTimer
-    ),
+    autoSaveService: new AutoSaveService(async () => {
+      if (ctx.currentCharacter) {
+        await saveCharacterState(ctx.currentCharacter);
+      }
+    }, 300),
     saveIndicator: new SaveIndicator(),
     testTimer,
     actions: { renderCharacterSheet: notWired, updateVersionNavigator: notWired },

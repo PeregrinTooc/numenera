@@ -1,4 +1,3 @@
-// LocalStorage implementation of ICharacterStorage
 // Wraps browser localStorage with async interface for consistency
 
 import { ICharacterStorage } from "./ICharacterStorage.js";
@@ -12,15 +11,8 @@ function isVersionedWrapper(data: unknown): data is { character: unknown } {
   return isRecord(data) && data.schemaVersion !== undefined && data.character !== undefined;
 }
 
-/**
- * LocalStorage-based character persistence
- * Uses browser's localStorage API (5-10MB limit)
- */
 export class LocalStorageImpl implements ICharacterStorage {
-  async init(): Promise<void> {
-    // No initialization needed for localStorage
-    // It's always available in browsers
-  }
+  async init(): Promise<void> {}
 
   async save(character: Character): Promise<void> {
     try {
@@ -52,16 +44,13 @@ export class LocalStorageImpl implements ICharacterStorage {
         return stored;
       }
 
-      // Migration: Check if data has old schema version wrapper
       if (isVersionedWrapper(data)) {
-        // Old format detected: extract character and re-save in new format
         logger.info("Migrating from old versioned format to new raw format");
         const character = data.character;
         this.saveInternal(character);
         return character;
       }
 
-      // New format: raw character data
       return data;
     } catch (error) {
       console.error("Failed to load character state:", error);
@@ -96,7 +85,6 @@ export class LocalStorageImpl implements ICharacterStorage {
 
   async isAvailable(): Promise<boolean> {
     try {
-      // Test if localStorage is available and working
       const testKey = "__storage_test__";
       localStorage.setItem(testKey, "test");
       localStorage.removeItem(testKey);

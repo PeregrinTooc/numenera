@@ -1,13 +1,9 @@
-// CollectionBehavior - Reusable helpers for container components managing collections
-// Eliminates duplication across Abilities, Attacks, Cyphers, Items, and SpecialAbilities
-
 import type { TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { persistCharacterState } from "@/storage/storageFactory";
 import { notifyCollectionUpdated } from "./characterEvents.js";
 import { readCollection, writeCollection } from "./characterCollections";
 
-/** Keys on Character that hold collection arrays */
 export type CharacterCollectionKey =
   | "cyphers"
   | "artifacts"
@@ -34,24 +30,13 @@ function dispatchCollectionUpdate(collectionKey: CharacterCollectionKey): void {
   );
 }
 
-/**
- * Configuration for creating an add handler for a collection
- */
 export interface AddHandlerConfig<T, ItemComponent> {
-  /** Empty/default item to use for creation */
   emptyItem: T;
-  /** Constructor for the item component class */
   ItemComponentClass: ItemComponentConstructor<T, ItemComponent>;
-  /** Character whose collection is updated */
   character: Character;
-  /** Key identifying which collection on character to update */
   collectionKey: CharacterCollectionKey;
 }
 
-/**
- * Creates a generic add handler for collection items
- * Handles the pattern: create temp item → create temp component → trigger edit → add to collection
- */
 export function createAddHandler<T, ItemComponent extends { handleEdit: () => void }>(
   config: AddHandlerConfig<T, ItemComponent>
 ): () => void {
@@ -59,7 +44,6 @@ export function createAddHandler<T, ItemComponent extends { handleEdit: () => vo
     const { emptyItem, ItemComponentClass, character, collectionKey } = config;
 
     const tempItem = new ItemComponentClass(emptyItem, -1, (updated: T) => {
-      // IMMUTABLE: create a new array with the added item, read fresh from the character
       const currentCollection = readCollection<T>(character, collectionKey);
       writeCollection(character, collectionKey, [...currentCollection, updated]);
 
@@ -71,17 +55,10 @@ export function createAddHandler<T, ItemComponent extends { handleEdit: () => vo
   };
 }
 
-/**
- * Configuration for creating item instances with update/delete handlers
- */
 export interface ItemInstancesConfig<T, ItemComponent> {
-  /** Collection array to map */
   collection: T[];
-  /** Constructor for the item component class */
   ItemComponentClass: ItemComponentConstructor<T, ItemComponent>;
-  /** Character whose collection is updated */
   character: Character;
-  /** Key identifying which collection on character to update */
   collectionKey: CharacterCollectionKey;
 }
 

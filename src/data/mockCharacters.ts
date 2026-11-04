@@ -1,5 +1,3 @@
-// Mock character data for development and testing
-
 import { Character } from "@/types/character";
 
 export const FULL_CHARACTER: Character = {

@@ -3,14 +3,8 @@ import { generateETag } from "@/utils/etag";
 
 import { CrossTabChannel, type ConflictMessage } from "./crossTabChannel.js";
 
-/**
- * Conflict resolution options
- */
 export type ConflictResolution = "load-remote" | "save-local";
 
-/**
- * Conflict event detail
- */
 export interface ConflictDetail {
   localEtag: string;
   remoteEtag: string;
@@ -19,12 +13,6 @@ export interface ConflictDetail {
   resolve: (resolution: ConflictResolution) => void;
 }
 
-/**
- * Service for detecting and handling conflicts when editing
- * the same character in multiple browser tabs/windows.
- *
- * Uses BroadcastChannel API for cross-tab communication.
- */
 export class ConflictDetectionService {
   private transport: CrossTabChannel;
   private currentEtag: string | null = null;
@@ -39,9 +27,6 @@ export class ConflictDetectionService {
     this.transport = new CrossTabChannel((message) => this.handleMessage(message));
   }
 
-  /**
-   * Handle incoming messages from other tabs
-   */
   private handleMessage(message: ConflictMessage): void {
     switch (message.type) {
       case "version-saved":
@@ -54,36 +39,26 @@ export class ConflictDetectionService {
         this.handleRespondLatest(message);
         break;
       case "tab-opened":
-        // Another tab opened - could notify user if needed
         window.dispatchEvent(new CustomEvent("tab-opened", { detail: { tabId: message.tabId } }));
         break;
       case "tab-closed":
-        // Another tab closed - no action needed
         break;
     }
   }
 
-  /**
-   * Handle notification that another tab saved a version
-   */
   private handleVersionSaved(message: ConflictMessage): void {
     if (!message.etag || !message.timestamp) {
       return;
     }
 
-    // Check if we have pending unsaved changes (either tracked character or dirty flag)
     const hasLocalChanges = this.pendingCharacter || this.hasDirtyChanges;
 
     if (hasLocalChanges && this.currentEtag !== message.etag) {
-      // Conflict detected - we have local changes and remote changed
       this.emitConflict(message.etag, message.timestamp);
     } else {
-      // No current local changes
-      // Store the remote update info so we can detect staleness when user starts editing
       this.remoteEtagReceived = message.etag;
       this.remoteTimestampReceived = message.timestamp;
 
-      // Notify about newer version available (for UI updates)
       window.dispatchEvent(
         new CustomEvent("newer-version-available", {
           detail: {
@@ -96,9 +71,6 @@ export class ConflictDetectionService {
     }
   }
 
-  /**
-   * Handle request for latest version from another tab
-   */
   private handleRequestLatest(_message: ConflictMessage): void {
     if (this.currentEtag) {
       this.transport.broadcast({
@@ -109,9 +81,6 @@ export class ConflictDetectionService {
     }
   }
 
-  /**
-   * Handle response with latest version info
-   */
   private handleRespondLatest(message: ConflictMessage): void {
     if (message.etag && message.etag !== this.currentEtag) {
       window.dispatchEvent(
@@ -125,9 +94,6 @@ export class ConflictDetectionService {
     }
   }
 
-  /**
-   * Emit conflict event for UI to handle
-   */
   private emitConflict(remoteEtag: string, remoteTimestamp: number): void {
     const conflictDetail: ConflictDetail = {
       localEtag: this.currentEtag || "",
@@ -142,9 +108,6 @@ export class ConflictDetectionService {
     window.dispatchEvent(new CustomEvent("version-conflict", { detail: conflictDetail }));
   }
 
-  /**
-   * Resolve a conflict with the chosen resolution
-   */
   private resolveConflict(resolution: ConflictResolution, remoteEtag: string): void {
     window.dispatchEvent(
       new CustomEvent("conflict-resolved", {
@@ -152,17 +115,12 @@ export class ConflictDetectionService {
       })
     );
 
-    // Notify other tabs
     this.transport.broadcast({
       type: "conflict-resolved",
       etag: resolution === "save-local" ? this.currentEtag || undefined : remoteEtag,
     });
   }
 
-  /**
-   * Called after a version is successfully saved
-   * Updates the current ETag and notifies other tabs
-   */
   public async notifyVersionSaved(character: Character): Promise<void> {
     const etag = await generateETag(character as unknown as Record<string, unknown>);
     this.currentEtag = etag;
@@ -176,17 +134,11 @@ export class ConflictDetectionService {
     });
   }
 
-  /**
-   * Set the current ETag (for when loading a character)
-   */
   public async setCurrentEtag(character: Character): Promise<void> {
     this.currentEtag = await generateETag(character as unknown as Record<string, unknown>);
   }
 
   /**
-   * Mark that the current tab has unsaved/dirty changes
-   * Call this when the user starts editing
-   *
    * If we received a remote update while not dirty (stale state),
    * this will emit a conflict event.
    */
@@ -196,28 +148,18 @@ export class ConflictDetectionService {
       this.pendingCharacter = character;
     }
 
-    // Check if we have a stale state (received remote update while not dirty)
     if (this.remoteEtagReceived && this.remoteEtagReceived !== this.currentEtag) {
-      // We're starting to edit but our base state is stale - emit conflict
       this.emitConflict(this.remoteEtagReceived, this.remoteTimestampReceived || Date.now());
-      // Clear the stale marker
       this.remoteEtagReceived = null;
       this.remoteTimestampReceived = null;
     }
   }
 
-  /**
-   * Clear the dirty flag
-   * Call this after changes are saved or discarded
-   */
   public clearDirty(): void {
     this.hasDirtyChanges = false;
     this.pendingCharacter = null;
   }
 
-  /**
-   * Close the broadcast channel
-   */
   public close(): void {
     this.transport.close();
   }

@@ -36,36 +36,28 @@ async function initConflictDetection(ctx: AppContext, initialCharacter: Characte
   const conflictDetectionService = new ConflictDetectionService();
   window.__conflictDetectionService = conflictDetectionService;
 
-  // Set initial ETag for conflict detection
   await conflictDetectionService.setCurrentEtag(initialCharacter);
 
-  // Initialize ConflictWarningModal
   const appEl = document.getElementById("app");
   if (appEl) {
     new ConflictWarningModal(appEl);
 
-    // Listen for settings updates (e.g., settings panel open/close)
     appEl.addEventListener("settings-updated", () => {
-      // Re-render the current sheet to update settings panel visibility
       if (ctx.currentSheet && ctx.currentCharacter) {
         ctx.currentSheet.mount(appEl);
       }
     });
   }
 
-  // Listen for conflict resolution events
   window.addEventListener("conflict-resolved", async (event: Event) => {
     const customEvent = event as CustomEvent<{ resolution: string; remoteEtag: string }>;
     const { resolution } = customEvent.detail;
 
     if (resolution === "load-remote") {
-      // Reload the page to get the latest version
       window.location.reload();
     }
-    // For "save-local", the save will proceed normally
   });
 
-  // Notify conflict detection service when versions are saved and clear dirty flag
   window.addEventListener("version-squashed", async () => {
     if (ctx.currentCharacter) {
       await conflictDetectionService.notifyVersionSaved(ctx.currentCharacter);
@@ -144,10 +136,8 @@ async function initVersionHistory(
   const versionHistory = await getVersionHistory();
   const versions = await versionHistory.getAllVersions();
 
-  // Backfill any stored descriptions still carrying the old hardcoded
-  // "Updated character" literal from before detectChanges was wired up.
-  // Must complete before VersionState is constructed below so it sees
-  // already-migrated descriptions on this same load.
+  // Must complete before VersionState is constructed below, so it sees the
+  // migrated descriptions on this same load.
   await migrateLegacyVersionDescriptions(versionHistory, versions);
 
   // Recover a squash lost to the last unload. Only a stored character counts:
@@ -156,8 +146,6 @@ async function initVersionHistory(
     await reconcileVersionHistory(versionHistory, initialCharacter);
   }
 
-  // Use configured delay if available (for tests), otherwise default 5000ms;
-  // use test timer if available (for E2E tests)
   const squashDelay = window.__SQUASH_DELAY_MS__ || 5000;
   ctx.versionHistoryService = new VersionHistoryService(
     versionHistory,
@@ -165,10 +153,8 @@ async function initVersionHistory(
     ctx.testTimer || undefined
   );
 
-  // Expose versionHistoryService globally for components to access
   window.__versionHistoryService = ctx.versionHistoryService;
 
-  // Only create initial version if no versions exist yet
   if (versions.length === 0) {
     await versionHistory.saveVersion(initialCharacter, "Initial state");
   }
@@ -176,13 +162,11 @@ async function initVersionHistory(
   ctx.versionState = new VersionState(initialCharacter, versionHistory);
   await ctx.versionState.init();
 
-  // Update navigator after versionState is initialized
   await ctx.actions.updateVersionNavigator(true);
 }
 
 /** Boot sequence, run on DOMContentLoaded. */
 export async function bootstrap(ctx: AppContext): Promise<void> {
-  // Expose storage / version history / autoSaveService APIs for E2E tests
   installTestHooks(ctx);
   registerUnloadFlush(ctx);
 

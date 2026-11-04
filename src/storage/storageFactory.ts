@@ -1,7 +1,3 @@
-// Storage factory with pluggable backends
-// Currently supports: LocalStorage
-// Future: IndexedDB, remote server
-
 import { ICharacterStorage } from "./ICharacterStorage.js";
 import type { Character } from "@/types/character";
 import { IndexedDBStorageImpl } from "./indexedDBStorageImpl.js";
@@ -17,9 +13,6 @@ let versionHistoryPromise: Promise<VersionHistoryManager> | null = null;
 
 const DB_NAME = CHARACTER_DB_NAME;
 
-/**
- * Delete the IndexedDB database to clean up corrupted state
- */
 async function deleteCorruptedIndexedDB(): Promise<void> {
   return new Promise((resolve) => {
     const request = indexedDB.deleteDatabase(DB_NAME);
@@ -29,11 +22,11 @@ async function deleteCorruptedIndexedDB(): Promise<void> {
     };
     request.onerror = () => {
       console.warn("Failed to delete corrupted IndexedDB");
-      resolve(); // Continue anyway
+      resolve();
     };
     request.onblocked = () => {
       console.warn("IndexedDB deletion blocked, will use localStorage");
-      resolve(); // Continue anyway
+      resolve();
     };
   });
 }
@@ -79,9 +72,6 @@ async function tryInitIndexedDB(): Promise<ICharacterStorage | null> {
 
 /**
  * Get the storage instance (singleton pattern)
- * Tries IndexedDB first, falls back to localStorage if unavailable
- *
- * @returns Initialized storage instance
  */
 async function getStorage(): Promise<ICharacterStorage> {
   if (storageInstance) {
@@ -95,19 +85,12 @@ async function getStorage(): Promise<ICharacterStorage> {
     return storageInstance;
   }
 
-  // Fallback to localStorage
   storageInstance = new LocalStorageImpl();
   await storageInstance.init();
   logger.info("Using localStorage for character storage");
   return storageInstance;
 }
 
-/**
- * Save character state to storage
- * Maintains same API as original localStorage.ts for backward compatibility
- *
- * @param character The character object to save
- */
 export async function saveCharacterState(character: Character): Promise<void> {
   const storage = await getStorage();
   await storage.save(character);
@@ -124,24 +107,17 @@ export async function saveCharacterState(character: Character): Promise<void> {
  * Failures cannot be thrown to the caller, so they are reported through the
  * app-level `storage-write-failed` event (see storageWriteFailure.ts), which
  * tells the user the change was not saved.
- *
- * @param character The character object to save
  */
 export function persistCharacterState(character: Character): void {
   void saveCharacterState(character).catch(reportStorageWriteFailure);
 }
 
 /**
- * Load character state from storage
- * Maintains same API as original localStorage.ts for backward compatibility
- *
  * Runs the raw stored data through sanitizeCharacter so every caller gets
  * migrated data automatically — in particular, saves persisted before the
  * currentXp/totalXp split (which only have a legacy `xp` field) come back
  * with both new fields populated from it, the same way file import and
  * version-history navigation already migrate legacy data.
- *
- * @returns The stored character object, or null if not found
  */
 export async function loadCharacterState(): Promise<Character | null> {
   const raw = await loadRawCharacterState();
@@ -178,25 +154,16 @@ export async function deleteCorruptedCharacterBackup(): Promise<void> {
   await storage.clearCorruptedBackup();
 }
 
-/**
- * Clear stored character state
- * Maintains same API as original localStorage.ts for backward compatibility
- */
 export async function clearCharacterState(): Promise<void> {
   const storage = await getStorage();
   await storage.clear();
 }
 
 /**
- * Get the version history manager instance (singleton pattern)
- * Initializes on first access
- *
  * Caches the in-flight promise rather than the instance. Publishing the
  * instance before init() resolved meant a concurrent second caller could
  * receive a manager with db === null, failing with
  * "VersionHistoryManager not initialized".
- *
- * @returns Initialized version history manager
  */
 export function getVersionHistory(): Promise<VersionHistoryManager> {
   if (!versionHistoryPromise) {

@@ -1,21 +1,11 @@
-// Modal Behavior Helper - Centralized modal behavior patterns
-// Eliminates duplication across EditFieldModal and CardEditModal
-
 import { html, TemplateResult } from "lit-html";
 import { t } from "@/i18n/index";
 
-/**
- * Base configuration for modal behavior
- */
 export interface BaseModalConfig {
   onConfirm: () => void;
   onCancel: () => void;
 }
 
-/**
- * Common modal event handlers
- * Provides consistent backdrop click and keyboard handling
- */
 export class ModalBehavior {
   protected onConfirm: () => void;
   protected onCancel: () => void;
@@ -24,7 +14,6 @@ export class ModalBehavior {
     this.onConfirm = config.onConfirm;
     this.onCancel = config.onCancel;
 
-    // Bind methods for event handlers
     this.handleConfirm = this.handleConfirm.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleBackdropClick = this.handleBackdropClick.bind(this);
@@ -48,9 +37,6 @@ export class ModalBehavior {
     }
   }
 
-  /**
-   * Handles keyboard events common to all modals
-   */
   protected handleKeyDown(e: KeyboardEvent): void {
     if (e.key === "Escape") {
       e.preventDefault();
@@ -59,10 +45,6 @@ export class ModalBehavior {
   }
 }
 
-/**
- * Renders standard modal action buttons (Cancel + Confirm)
- * Provides consistent button structure with SVG icons
- */
 export function renderModalButtons(config: {
   onConfirm: () => void;
   onCancel: () => void;
@@ -79,14 +61,12 @@ export function renderModalButtons(config: {
 
   return html`
     <div class="edit-modal-buttons">
-      <!-- Cancel Button -->
       <button
         class="edit-modal-button cancel"
         @click=${config.onCancel}
         data-testid=${cancelTestId}
         aria-label=${cancelLabel}
       >
-        <!-- X Icon (SVG) -->
         <svg
           width="24"
           height="24"
@@ -105,7 +85,6 @@ export function renderModalButtons(config: {
         <span class="button-label">${cancelLabel}</span>
       </button>
 
-      <!-- Confirm Button -->
       <button
         class="edit-modal-button confirm"
         @click=${config.onConfirm}
@@ -113,7 +92,6 @@ export function renderModalButtons(config: {
         data-testid=${confirmTestId}
         aria-label=${confirmLabel}
       >
-        <!-- Checkmark Icon (SVG) -->
         <svg
           width="24"
           height="24"

@@ -85,9 +85,6 @@ export function detectChanges(oldChar: Character, newChar: Character): string[] 
   return summarize(changes);
 }
 
-/**
- * Helper to detect changes in a collection (added/removed/modified)
- */
 function detectCollectionChange(
   oldCollection: unknown[],
   newCollection: unknown[],

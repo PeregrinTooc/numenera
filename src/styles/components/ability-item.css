@@ -1,6 +1,3 @@
-/* Ability Item Styling - Purple/Indigo theme */
-
-/* Dragging states for ability items */
 .ability-item-card[data-dragging="true"] {
   opacity: 0.5;
   transform: scale(0.98);
@@ -12,21 +9,18 @@
   background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
 }
 
-/* Ability name - user data with handwritten font */
 .ability-item-card .ability-name {
   font-family: "Caveat", "Patrick Hand", cursive;
   font-size: 1.375rem;
   line-height: 1.4;
 }
 
-/* Ability description - user data with handwritten font */
 .ability-item-card .ability-description {
   font-family: "Caveat", "Patrick Hand", cursive;
   font-size: 1.125rem;
   line-height: 1.6;
 }
 
-/* Empty abilities state - indigo/purple themed */
 .empty-abilities-styled {
   background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
   border: 2px dashed #a5b4fc;
@@ -38,7 +32,6 @@
   font-style: italic;
 }
 
-/* Pool-specific badge styling */
 .pool-might {
   background-color: #fee2e2;
   border: 1px solid #fca5a5;

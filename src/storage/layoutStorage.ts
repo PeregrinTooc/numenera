@@ -1,10 +1,3 @@
-/**
- * Layout Storage Service
- *
- * Handles persistence of layout preferences separately from character data.
- * Layout is stored in localStorage as a user preference.
- */
-
 import { Layout, DEFAULT_LAYOUT, isValidLayout, cloneLayout } from "@/types/layout";
 import { SectionColumns, isValidSectionColumns } from "@/types/sectionColumns";
 import { LAYOUT_STORAGE_KEY, SECTION_COLUMNS_STORAGE_KEY } from "./storageConstants.js";
@@ -44,19 +37,12 @@ function loadValidated<T>(
   }
 }
 
-/**
- * Save layout to localStorage
- *
- * @param layout - The layout configuration to save
- */
 export function saveLayout(layout: Layout): void {
   // Continuing past a failure is fine: a lost layout is cosmetic - the sections visibly revert to the previous order.
   saveJson(LAYOUT_STORAGE_KEY, layout, "Failed to save layout:");
 }
 
 /**
- * Load layout from localStorage
- *
  * @returns The stored layout, or the default layout if not found or invalid
  */
 export function loadLayout(): Layout {
@@ -82,8 +68,6 @@ export function resetLayout(): Layout {
 }
 
 /**
- * Check if a custom layout is stored
- *
  * @returns true if a layout is stored in localStorage
  */
 export function hasCustomLayout(): boolean {
@@ -94,24 +78,16 @@ export function hasCustomLayout(): boolean {
   }
 }
 
-/**
- * Get the default layout (returns a clone to prevent mutation)
- */
 export function getDefaultLayout(): Layout {
   return cloneLayout(DEFAULT_LAYOUT);
 }
 
-/**
- * Save the card sections' column choices (non-default values only)
- */
 export function saveSectionColumns(columns: SectionColumns): void {
   // Continuing past a failure is fine: a lost column choice is cosmetic - the section visibly reverts to its default.
   saveJson(SECTION_COLUMNS_STORAGE_KEY, columns, "Failed to save section columns:");
 }
 
 /**
- * Load the card sections' column choices
- *
  * @returns The stored choices, or none (every section at its default) if not found or invalid
  */
 export function loadSectionColumns(): SectionColumns {

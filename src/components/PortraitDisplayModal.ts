@@ -1,5 +1,3 @@
-// PortraitDisplayModal component - Displays character portrait at full size
-
 import { html, TemplateResult } from "lit-html";
 import { t } from "@/i18n/index";
 
@@ -16,7 +14,6 @@ export class PortraitDisplayModal {
   }
 
   private handleBackdropClick(e: Event): void {
-    // Close if clicking the backdrop (not the image)
     if (e.target === e.currentTarget) {
       this.handleClose();
     }

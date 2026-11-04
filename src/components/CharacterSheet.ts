@@ -1,5 +1,3 @@
-// CharacterSheet component - Main container that composes all sections
-
 import { html, nothing, render, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { Header } from "./Header.js";
@@ -68,28 +66,19 @@ export class CharacterSheet {
     );
     this.sections = new SheetSections(this.character, this.onFieldUpdate);
 
-    // Load layout and column choices from storage
     this.layout = loadLayout();
     this.sectionColumns = loadSectionColumns();
   }
 
-  /**
-   * Re-render a single collection section, leaving the rest of the sheet's DOM
-   * untouched.
-   */
   rerenderSection(sectionId: SectionId): void {
     this.sections.rerenderSection(sectionId, this.mountedContainer());
   }
 
-  /**
-   * Render a layout item (single or grid)
-   */
   private renderLayoutItem(item: LayoutItem, rowIndex: number): TemplateResult {
     if (item.type === "single") {
       return this.renderDraggableSection(item.id, rowIndex);
     }
 
-    // Grid layout - two sections side by side
     const wrapperClass = this.isLayoutEditMode ? "layout-grid" : "";
     const preview = this.drag.rowPreview(rowIndex);
 
@@ -131,9 +120,6 @@ export class CharacterSheet {
     `;
   }
 
-  /**
-   * Switch a card section between one and two columns, persist, and render
-   */
   private toggleSectionColumns(sectionId: CardSectionId): void {
     const next = columnsFor(this.sectionColumns, sectionId) === 2 ? 1 : 2;
     this.sectionColumns = withColumns(this.sectionColumns, sectionId, next);
@@ -151,9 +137,6 @@ export class CharacterSheet {
     this.rerender();
   }
 
-  /**
-   * Toggle layout edit mode
-   */
   toggleLayoutEditMode(): void {
     this.drag.cancelDrag();
     this.isLayoutEditMode = !this.isLayoutEditMode;
@@ -163,28 +146,20 @@ export class CharacterSheet {
       // session from the real persisted state rather than a stale snapshot.
       this.layout = loadLayout();
     }
-    // No save on exit: drops already persist
-    // immediately when they mutate this.layout. Re-saving here used to
-    // overwrite storage with this instance's (possibly stale) in-memory copy
-    // whenever the persisted layout had changed since edit mode was entered.
+    // Leaving saves nothing: drops already persist as they mutate this.layout,
+    // and a save here would overwrite storage with a possibly stale copy.
     this.rerender();
     // The sheet snaps to its layout: no section may go on sliding to a place
     // from the live preview
     cancelSectionSlides(this.mountedContainer());
   }
 
-  /**
-   * Reset layout to default
-   */
   resetLayoutToDefault(): void {
     this.layout = resetLayout();
     this.sectionColumns = {};
     this.rerender();
   }
 
-  /**
-   * Get current layout
-   */
   getLayout(): Layout {
     return this.layout;
   }
@@ -214,9 +189,6 @@ export class CharacterSheet {
     this.sections.mountCollectionSections(container);
   }
 
-  /**
-   * Re-render the whole sheet in place.
-   */
   rerender(): void {
     this.mount(this.mountedContainer());
   }
@@ -245,12 +217,10 @@ export class CharacterSheet {
    */
   setIsViewingOldVersion(isViewing: boolean): void {
     this.header.setIsViewingOldVersion(isViewing);
-    // Trigger re-render to update button state
     this.rerender();
   }
 
   render(): TemplateResult {
-    // Render sections based on layout order
     // While a dragged section is held still, show the layout its drop produces
     const shownLayout = this.drag.liveLayout() ?? this.layout;
     const layoutSections = shownLayout.map((item, rowIndex) =>

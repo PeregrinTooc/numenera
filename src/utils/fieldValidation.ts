@@ -27,9 +27,6 @@ export type FieldType =
   | "intellectEdge"
   | "intellectCurrent";
 
-/**
- * Name validation: must not be empty, max 50 characters
- */
 export function validateName(value: string): ValidationResult {
   const trimmed = value.trim();
 
@@ -44,9 +41,6 @@ export function validateName(value: string): ValidationResult {
   return { valid: true };
 }
 
-/**
- * Descriptor validation: must not be empty, max 30 characters
- */
 export function validateDescriptor(value: string): ValidationResult {
   const trimmed = value.trim();
 
@@ -61,9 +55,6 @@ export function validateDescriptor(value: string): ValidationResult {
   return { valid: true };
 }
 
-/**
- * Focus validation: must not be empty, max 50 characters
- */
 export function validateFocus(value: string): ValidationResult {
   const trimmed = value.trim();
 
@@ -87,17 +78,11 @@ export interface FieldConfig {
   validator?: (value: string) => ValidationResult;
 }
 
-/**
- * Configuration for all editable fields
- * Defines validation rules, input types, and constraints
- */
 export const FIELD_CONFIGS: Record<FieldType, FieldConfig> = {
-  // Text fields with custom validators
   name: { inputType: "text", maxLength: 50, validator: validateName },
   descriptor: { inputType: "text", maxLength: 30, validator: validateDescriptor },
   focus: { inputType: "text", maxLength: 50, validator: validateFocus },
 
-  // Numeric fields with range constraints
   tier: { inputType: "number", inputMode: "numeric", min: 1, max: 6 },
   effort: { inputType: "number", inputMode: "numeric", min: 1, max: 6 },
   currentXp: { inputType: "number", inputMode: "numeric", min: 0, max: 9999 },
@@ -107,7 +92,6 @@ export const FIELD_CONFIGS: Record<FieldType, FieldConfig> = {
   maxCyphers: { inputType: "number", inputMode: "numeric", min: 0, max: 10 },
   recoveryModifier: { inputType: "number", inputMode: "numeric", min: -10, max: 20 },
 
-  // Stat pool fields
   mightPool: { inputType: "number", inputMode: "numeric", min: 0, max: 9999 },
   mightEdge: { inputType: "number", inputMode: "numeric", min: 0, max: 9999 },
   mightCurrent: { inputType: "number", inputMode: "numeric", min: 0, max: 9999 },
@@ -119,9 +103,6 @@ export const FIELD_CONFIGS: Record<FieldType, FieldConfig> = {
   intellectCurrent: { inputType: "number", inputMode: "numeric", min: 0, max: 9999 },
 };
 
-/**
- * Validates a numeric field value against its configuration
- */
 function validateNumericField(
   value: string,
   min: number,
@@ -148,83 +129,55 @@ function validateNumericField(
 }
 
 /**
- * Tier validation: must be between 1-6 (Numenera rules)
  * Constrains values rather than rejecting them
  */
 export function validateTier(value: string | number): number {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
-  // Handle invalid numbers
   if (isNaN(numValue)) {
-    return 1; // Default to minimum
+    return 1;
   }
 
-  // Constrain to valid range
   if (numValue < 1) return 1;
   if (numValue > 6) return 6;
 
   return numValue;
 }
 
-/**
- * Validates a field value based on its type and configuration
- * Centralizes all validation logic in one place
- */
 export function validateField(fieldType: FieldType, value: string): ValidationResult {
   const config = FIELD_CONFIGS[fieldType];
 
-  // Text fields with custom validators
   if (config.validator) {
     return config.validator(value);
   }
 
-  // Numeric fields
   if (config.inputType === "number" && config.min !== undefined && config.max !== undefined) {
     return validateNumericField(value, config.min, config.max, fieldType);
   }
 
-  // Default: valid
   return { valid: true };
 }
 
-/**
- * Gets the input type for a field
- */
 export function getInputType(fieldType: FieldType): string {
   return FIELD_CONFIGS[fieldType].inputType;
 }
 
-/**
- * Gets the input mode for a field (for mobile keyboards)
- */
 export function getInputMode(fieldType: FieldType): string | undefined {
   return FIELD_CONFIGS[fieldType].inputMode;
 }
 
-/**
- * Gets the min value for a numeric field
- */
 export function getMinValue(fieldType: FieldType): number | undefined {
   return FIELD_CONFIGS[fieldType].min;
 }
 
-/**
- * Gets the max value for a numeric field
- */
 export function getMaxValue(fieldType: FieldType): number | undefined {
   return FIELD_CONFIGS[fieldType].max;
 }
 
-/**
- * Gets the max length for a text field
- */
 export function getMaxLength(fieldType: FieldType): number | undefined {
   return FIELD_CONFIGS[fieldType].maxLength;
 }
 
-/**
- * Checks if a field is numeric
- */
 export function isNumericField(fieldType: FieldType): boolean {
   return FIELD_CONFIGS[fieldType].inputType === "number";
 }

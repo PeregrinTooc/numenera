@@ -1,5 +1,3 @@
-// Type definitions for Numenera character sheet
-
 export type StatPool = {
   pool: number;
   edge: number;

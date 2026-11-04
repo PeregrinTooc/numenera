@@ -50,9 +50,9 @@ editing the rule to match the code.
 Found by the 2026-11-04 design-smell review of `main` (`0dbde69`); see
 `docs/rules/design.md` for the rule each row breaks.
 
-| Rule                       | Violation                                                                               | Where                                                                                                                                                                                                           |
-| -------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Rule #12 — over-commenting | About 500–700 comment lines restating code, narrating history or naming absent features | heaviest in `SectionDragController`, `versionHistoryService`, `versionState`, `conflictDetectionService`, `CharacterSheet`, `autoSaveService`, `renderCharacterSheet`; HTML comments such as `<!-- Healthy -->` |
+| Rule                       | Violation                     | Where                                                          |
+| -------------------------- | ----------------------------- | -------------------------------------------------------------- |
+| Rule #12 — over-commenting | `src/` done; `tests/` pending | comment lines in `tests/` that restate code or narrate history |
 
 ## Plan — a sequence of commits on `main`
 

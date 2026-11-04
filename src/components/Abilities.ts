@@ -1,5 +1,3 @@
-// Abilities component - Displays character abilities in two-column grid
-
 import { html, TemplateResult } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
 import { Ability, Character } from "@/types/character";

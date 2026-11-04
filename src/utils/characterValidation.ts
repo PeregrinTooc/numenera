@@ -127,10 +127,6 @@ function validateTextFields(data: Record<string, unknown>, errors: string[]): vo
   requireField(textFields, "notes", "string", "textFields.notes", errors);
 }
 
-/**
- * Validates a character object against the Character type schema
- * Returns validation result with typed character or list of errors
- */
 export function validateCharacter(input: unknown): CharacterValidationResult {
   const errors: string[] = [];
   // Anything that is not an object validates as an empty one: every required field is reported missing
@@ -149,7 +145,6 @@ export function validateCharacter(input: unknown): CharacterValidationResult {
 
   return {
     valid: true,
-    // All required fields were checked above, so the shape is a Character
     character: data as unknown as Character,
     errors: [],
   };

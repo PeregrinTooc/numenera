@@ -1,5 +1,3 @@
-// SpecialAbilityItem component - Individual special ability card with teal styling
-
 import { html, TemplateResult } from "lit-html";
 import { SpecialAbility } from "@/types/character";
 import { t } from "@/i18n/index";

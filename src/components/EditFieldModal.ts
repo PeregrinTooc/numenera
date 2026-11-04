@@ -1,5 +1,3 @@
-// EditFieldModal component - Modal for editing character fields
-
 import { html, render, TemplateResult } from "lit-html";
 import {
   FieldType,
@@ -50,7 +48,6 @@ export class EditFieldModal extends ModalBehavior {
     this.inputValue = this.currentValue;
     this.versionHistoryService = config.versionHistoryService;
 
-    // Bind additional methods for event handlers
     this.handleInput = this.handleInput.bind(this);
   }
 
@@ -63,7 +60,6 @@ export class EditFieldModal extends ModalBehavior {
       return true;
     }
 
-    // Use centralized validation for other fields
     const result = validateField(this.fieldType, value);
     if (!result.valid) {
       this.validationError = result.error || null;
@@ -75,22 +71,18 @@ export class EditFieldModal extends ModalBehavior {
     const input = e.target as HTMLInputElement;
     this.inputValue = input.value;
 
-    // Reset version history timer on each keystroke
     if (this.versionHistoryService) {
       this.versionHistoryService.resetTimer();
     }
 
-    // For numeric fields, validate immediately to disable button if invalid
     if (isNumericField(this.fieldType)) {
       this.validate(this.inputValue);
     }
 
-    // Trigger re-render to update button state
     this.rerender();
   }
 
   private rerender(): void {
-    // Find the modal container and re-render
     const modalContainer = document.querySelector('[data-testid="modal-backdrop"]')?.parentElement;
     if (modalContainer) {
       const focusedTestId = document.activeElement?.getAttribute("data-testid");
@@ -102,7 +94,6 @@ export class EditFieldModal extends ModalBehavior {
   /** The validated, converted input value, or null when it is invalid (the error is shown). */
   private parseConfirmedValue(): string | number | null {
     if (this.fieldType === "tier") {
-      // Apply tier constraints
       return validateTier(this.inputValue);
     }
     if (!this.validate(this.inputValue)) {
@@ -119,10 +110,8 @@ export class EditFieldModal extends ModalBehavior {
   }
 
   protected handleKeyDown(e: KeyboardEvent): void {
-    // Handle Escape through base class
     super.handleKeyDown(e);
 
-    // Handle Enter key
     if (e.key === "Enter") {
       e.preventDefault();
       this.handleConfirm();
@@ -148,7 +137,6 @@ export class EditFieldModal extends ModalBehavior {
         data-testid="modal-backdrop"
       >
         <div class="edit-modal-content" data-testid="edit-modal" role="dialog" aria-modal="true">
-          <!-- Input Field -->
           <input
             type=${inputType}
             class="edit-modal-input ${this.validationError ? "error" : ""}"
@@ -161,12 +149,9 @@ export class EditFieldModal extends ModalBehavior {
             data-testid="edit-modal-input"
           />
 
-          <!-- Validation Error -->
           ${this.validationError
             ? html`<div class="edit-modal-error">${this.validationError}</div>`
             : ""}
-
-          <!-- Action Buttons -->
           ${renderModalButtons({
             onConfirm: this.handleConfirm,
             onCancel: this.handleCancel,

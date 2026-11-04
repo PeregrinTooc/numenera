@@ -1,6 +1,3 @@
-// CardEditModal component - Base modal for editing card content
-// Provides consistent modal behavior across all card types
-
 import { html, render, TemplateResult } from "lit-html";
 import { t } from "@/i18n/index";
 import { ModalBehavior, renderModalButtons } from "@/services/modalBehavior";
@@ -9,7 +6,7 @@ import { FocusTrappingBehavior } from "@/services/focusTrappingBehavior";
 import type { VersionHistoryService } from "@/services/versionHistoryService";
 
 export interface CardEditModalConfig {
-  content: TemplateResult; // The editable card content
+  content: TemplateResult;
   onConfirm: () => void;
   onCancel: () => void;
   versionHistoryService?: VersionHistoryService;
@@ -28,9 +25,7 @@ export class CardEditModal extends ModalBehavior {
     this.content = config.content;
     this.versionHistoryService = config.versionHistoryService;
 
-    // Bind handleKeyDown for Tab key trapping
     this.handleKeyDown = this.handleKeyDown.bind(this);
-    // Bind handleInput for version history timer reset
     this.handleInput = this.handleInput.bind(this);
   }
 
@@ -43,14 +38,9 @@ export class CardEditModal extends ModalBehavior {
     }
   }
 
-  /**
-   * Override handleKeyDown to add Tab key focus trapping
-   */
   protected handleKeyDown(e: KeyboardEvent): void {
-    // Handle Escape through base class
     super.handleKeyDown(e);
 
-    // Handle Tab key for focus trapping
     if (e.key === "Tab") {
       FocusTrappingBehavior.handleTabKey(e, '[data-testid="card-edit-modal"]');
     }
@@ -72,10 +62,8 @@ export class CardEditModal extends ModalBehavior {
           role="dialog"
           aria-modal="true"
         >
-          <!-- Editable card content (scaled up on larger screens) -->
           <div class="card-edit-modal-content">${this.content}</div>
 
-          <!-- Action Buttons -->
           <div class="card-edit-modal-buttons">
             ${renderModalButtons({
               onConfirm: this.handleConfirm,
@@ -92,14 +80,9 @@ export class CardEditModal extends ModalBehavior {
   }
 }
 
-/**
- * Service function to open a card edit modal
- */
 export function openCardEditModal(config: CardEditModalConfig): void {
-  // Create modal container using helper
   const container = new ModalContainer();
 
-  // Create modal with cleanup callbacks
   const modal = new CardEditModal({
     content: config.content,
     onConfirm: () => {
@@ -113,10 +96,8 @@ export function openCardEditModal(config: CardEditModalConfig): void {
     versionHistoryService: config.versionHistoryService,
   });
 
-  // Render modal
   render(modal.render(), container.getElement());
 
-  // Auto-focus first input field in the modal
   container.focusElement(
     '[data-testid="card-edit-modal"] input, [data-testid="card-edit-modal"] textarea'
   );

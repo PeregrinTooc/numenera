@@ -9,12 +9,10 @@ export function syncVersionWarning(ctx: AppContext): void {
 
   const isViewingOldVersion = versionState.isViewingOldVersion();
 
-  // Update import button state based on viewing mode
   if (ctx.currentSheet) {
     ctx.currentSheet.setIsViewingOldVersion(isViewingOldVersion);
   }
 
-  // Show/hide warning banner
   const bannerContainer = ensureBodyContainer("version-warning-banner-container");
 
   if (isViewingOldVersion) {
@@ -25,19 +23,17 @@ export function syncVersionWarning(ctx: AppContext): void {
         timestamp: metadata.timestamp,
         onReturn: async (): Promise<void> => {
           if (!ctx.versionState) return;
-          // Navigate to latest version without creating new version
           ctx.versionState.restoreToLatest();
           const latestCharacter = ctx.versionState.getLatestCharacter();
           await ctx.actions.renderCharacterSheet(latestCharacter, true);
-          await ctx.actions.updateVersionNavigator(false); // Don't reload, just update UI
+          await ctx.actions.updateVersionNavigator(false);
         },
         onRestore: async (): Promise<void> => {
           if (!ctx.versionState) return;
-          // Restore the current old version by saving it as new latest
           await ctx.versionState.restoreCurrentVersion();
           const latestCharacter = ctx.versionState.getLatestCharacter();
           await ctx.actions.renderCharacterSheet(latestCharacter, true);
-          await ctx.actions.updateVersionNavigator(true); // Reload to show new version
+          await ctx.actions.updateVersionNavigator(true);
         },
       };
       if (!ctx.versionWarningBanner) {
@@ -47,9 +43,7 @@ export function syncVersionWarning(ctx: AppContext): void {
         ctx.versionWarningBanner.update(options);
       }
     }
-    // Note: No read-only mode - user can edit from any version, which auto-navigates to latest
   } else {
-    // Remove warning banner if it exists
     if (ctx.versionWarningBanner) {
       ctx.versionWarningBanner.unmount();
       ctx.versionWarningBanner = null;

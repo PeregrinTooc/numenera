@@ -81,7 +81,6 @@ export class LongPressDrag<Id extends string> {
     this.options.onActivate(id);
   }
 
-  /** Return to idle, clearing a pending hold timer. */
   private reset(): void {
     if (this.state.kind === "pending") {
       clearTimeout(this.state.timer);

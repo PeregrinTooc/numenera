@@ -13,8 +13,6 @@ import type { ConflictDetectionService } from "@/services/conflictDetectionServi
 import type { TestTimer } from "@/services/testTimer";
 import type { AutoSaveService } from "@/services/autoSaveService";
 
-// Expose storage functions on window for E2E tests
-// This allows tests to work in both dev and production builds
 declare global {
   interface Window {
     __testStorage?: {
@@ -45,11 +43,8 @@ export function installTestHooks(ctx: AppContext): void {
     loadCorruptedCharacterBackup,
     clearCharacterState: async () => {
       localStorage.clear();
-      // Go through the real adapter rather than deleting a database by name:
-      // this targets whichever backend is actually active (IndexedDB or the
-      // localStorage fallback) under its real name, instead of a hardcoded
-      // "NumeneraCharacterDB" that never matched the real
-      // "numenera-character-db" database.
+      // Through the real adapter, so whichever backend is active (IndexedDB or
+      // the localStorage fallback) is the one cleared.
       await clearCharacterState();
     },
   };
@@ -58,7 +53,6 @@ export function installTestHooks(ctx: AppContext): void {
     createVersion: async (character: Character, description: string) => {
       const versionHistory = await getVersionHistory();
       await versionHistory.saveVersion(character, description);
-      // Update the version navigator after creating a version (reload to get new version)
       await ctx.actions.updateVersionNavigator(true);
     },
     getAllVersions: async () => {
@@ -66,14 +60,9 @@ export function installTestHooks(ctx: AppContext): void {
       return await versionHistory.getAllVersions();
     },
     clearVersions: async () => {
-      // Go through the real manager's own clear(), targeting the actual
-      // "numenera-version-history-db" database and "versions" store, rather
-      // than hand-rolling a transaction against a hardcoded, wrong DB name
-      // ("NumeneraCharacterDB") that has no "versions" store at all.
       const versionHistory = await getVersionHistory();
       await versionHistory.clear();
 
-      // Update navigator to reflect cleared state (reload to get updated list)
       await ctx.actions.updateVersionNavigator(true);
     },
   };

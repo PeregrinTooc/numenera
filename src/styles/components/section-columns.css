@@ -1,6 +1,3 @@
-/* Card columns that follow the section's own width */
-/* A card section's template sits in .section-columns (see CharacterSheet). */
-
 .section-columns {
   container-type: inline-size;
   position: relative;

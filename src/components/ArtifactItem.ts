@@ -1,5 +1,3 @@
-// ArtifactItem component - Displays a single artifact card
-
 import { html, TemplateResult } from "lit-html";
 import { Artifact } from "@/types/character";
 import { t } from "@/i18n/index";

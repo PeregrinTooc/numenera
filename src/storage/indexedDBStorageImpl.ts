@@ -109,10 +109,6 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
     return db;
   }
 
-  /**
-   * Close the database connection
-   * Should be called when done with the storage instance
-   */
   close(): void {
     if (this.db) {
       this.db.close();
@@ -122,12 +118,10 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
 
   async isAvailable(): Promise<boolean> {
     try {
-      // Check if IndexedDB is available
       if (!("indexedDB" in window)) {
         return false;
       }
 
-      // Try to open a test database to verify it actually works
       // (Some browsers report IndexedDB as available but it doesn't work in private mode)
       const testDB = "test-availability";
       return new Promise((resolve) => {
@@ -154,13 +148,8 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
     }
   }
 
-  /**
-   * Migrate data from localStorage to IndexedDB
-   * This is called by the factory when IndexedDB is first initialized
-   */
   async migrateFromLocalStorage(): Promise<void> {
     try {
-      // Verify database and object store are ready
       if (!this.db || !this.db.objectStoreNames.contains(STORE_NAME)) {
         console.warn("IndexedDB not ready for migration, skipping localStorage migration");
         return;
@@ -168,7 +157,7 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
 
       const stored = localStorage.getItem(STORAGE_KEY);
       if (!stored) {
-        return; // Nothing to migrate
+        return;
       }
 
       // Migration is one-way and one-time: adopt the localStorage copy only when
@@ -186,12 +175,10 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
       try {
         const parsed = JSON.parse(stored);
 
-        // Handle old versioned format: { version: 1, data: {...} }
         if (parsed && typeof parsed === "object" && "version" in parsed && "data" in parsed) {
           logger.info("Migrating from old versioned format to IndexedDB");
           character = parsed.data;
         } else {
-          // New format: raw character object
           character = parsed;
         }
       } catch (error) {
@@ -202,10 +189,8 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
         character = stored;
       }
 
-      // Save to IndexedDB using internal method to avoid nested events
       await this.saveInternal(character);
 
-      // Remove from localStorage after successful migration
       localStorage.removeItem(STORAGE_KEY);
       logger.info("Successfully migrated character data from localStorage to IndexedDB");
     } catch (error) {

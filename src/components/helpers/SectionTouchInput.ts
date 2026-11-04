@@ -18,7 +18,6 @@ export interface SectionTouchCallbacks {
 }
 
 export class SectionTouchInput {
-  /** Touch long-press → section drag; mouse drags use native HTML5 DnD. */
   private readonly longPress: LongPressDrag<SectionId>;
 
   /**
@@ -60,33 +59,24 @@ export class SectionTouchInput {
     });
   }
 
-  /** Whether a touch drag is in progress. */
   isActive(): boolean {
     return this.longPress.isActive();
   }
 
-  /** The finger lifted. */
   end(): void {
     this.longPress.end();
   }
 
-  /** Abandon the gesture. */
   cancel(): void {
     this.longPress.cancel();
   }
 
-  /**
-   * Suppress the long-press context menu while a touch drag is in progress
-   */
   handleContextMenu(e: Event): void {
     if (this.longPress.isActive()) {
       e.preventDefault();
     }
   }
 
-  /**
-   * Handle touch start: begin a long-press that may become a section drag
-   */
   private handleTouchStart(e: TouchEvent, sectionId: SectionId): void {
     if (!this.callbacks.isEditMode()) return;
     if (e.touches.length !== 1) {
@@ -97,9 +87,6 @@ export class SectionTouchInput {
     this.longPress.start(sectionId, touch.clientX, touch.clientY);
   }
 
-  /**
-   * Handle touch move: once a long-press is active, the finger drags instead of scrolling
-   */
   private handleTouchMove(e: TouchEvent): void {
     if (e.touches.length !== 1) {
       // A second finger landed outside any section wrapper (touchstart only

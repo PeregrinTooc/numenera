@@ -56,14 +56,12 @@ export async function loadPersistedFileHandle(): Promise<FileSystemFileHandle | 
     const store = tx.objectStore(HANDLES_STORE_NAME);
     const request = store.get(HANDLE_STORAGE_KEY);
 
-    // Wait for the request to complete
     const handle = await requestToPromise<FileSystemFileHandle | undefined>(request, () => {
       return new Error("Failed to read file handle");
     }).catch(() => undefined);
 
     if (!handle) return undefined;
 
-    // Verify we still have permission (if queryPermission exists)
     if (typeof handle.queryPermission === "function") {
       const permission = await handle.queryPermission({ mode: "readwrite" });
       return permission === "granted" ? handle : undefined;

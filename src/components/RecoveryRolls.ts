@@ -38,7 +38,6 @@ export class RecoveryRolls {
       >
         <h3 class="text-lg font-bold font-serif mb-3 text-green-900">${t("recovery.title")}</h3>
 
-        <!-- Recovery Modifier Display -->
         <div class="mb-4 flex items-center gap-2">
           <span class="font-serif text-sm text-green-900">${t("recovery.modifier")}:</span>
           <span
@@ -55,9 +54,7 @@ export class RecoveryRolls {
           </span>
         </div>
 
-        <!-- Recovery Roll Checkboxes -->
         <div class="space-y-2">
-          <!-- Action -->
           <label
             class="flex items-center gap-2 cursor-pointer hover:bg-green-50 p-2 rounded transition-colors"
           >
@@ -75,7 +72,6 @@ export class RecoveryRolls {
             </span>
           </label>
 
-          <!-- Ten Minutes -->
           <label
             class="flex items-center gap-2 cursor-pointer hover:bg-green-50 p-2 rounded transition-colors"
           >
@@ -93,7 +89,6 @@ export class RecoveryRolls {
             </span>
           </label>
 
-          <!-- One Hour -->
           <label
             class="flex items-center gap-2 cursor-pointer hover:bg-green-50 p-2 rounded transition-colors"
           >
@@ -111,7 +106,6 @@ export class RecoveryRolls {
             </span>
           </label>
 
-          <!-- Ten Hours -->
           <label
             class="flex items-center gap-2 cursor-pointer hover:bg-green-50 p-2 rounded transition-colors"
           >

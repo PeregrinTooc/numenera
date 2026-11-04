@@ -1,5 +1,3 @@
-// OddityItem component - Displays a single oddity card
-
 import { html, TemplateResult } from "lit-html";
 import { t } from "@/i18n/index";
 import { createEditHandler, renderCardButtons } from "./helpers/CardEditorBehavior.js";

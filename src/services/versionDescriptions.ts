@@ -3,11 +3,9 @@ import { detectChanges } from "@/utils/changeDetection";
 import { t } from "@/i18n/index";
 
 /**
- * Translates detectChanges' i18n key output into the final description text
- * used for a version-history entry. Kept separate from changeDetection.ts,
- * which is deliberately dependency-free (no i18n import) so it stays a pure,
- * easily unit-testable util — this is the one place that resolves those keys
- * with t(), shared by both live version buffering (main.ts) and the legacy
+ * Translates detectChanges' i18n keys into the description text of a
+ * version-history entry. Kept apart from changeDetection.ts so that stays
+ * dependency-free (no i18n import). Shared by live version buffering and the
  * description migration, so both compute descriptions identically.
  */
 export function describeCharacterChange(before: Character, after: Character): string {

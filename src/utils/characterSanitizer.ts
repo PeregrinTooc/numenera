@@ -14,31 +14,19 @@ import {
   sanitizeTextFields,
 } from "@/utils/sanitizeSections";
 
-/**
- * Result of character sanitization
- */
 export interface SanitizeResult {
   character: Character;
   warnings: string[];
 }
 
-/**
- * Sanitizes character data by fixing invalid types and filling missing fields.
- * Instead of rejecting invalid data, this function corrects it and reports warnings.
- *
- * @param data - Raw character data (potentially invalid)
- * @returns Sanitized character with list of corrections made
- */
 export function sanitizeCharacter(data: unknown): SanitizeResult {
   const warnings: string[] = [];
 
-  // Handle null/undefined input
   if (data === null || data === undefined) {
     warnings.push(t("validation.sanitize.nullInput"));
     return { character: globalThis.structuredClone(CHARACTER_DEFAULTS), warnings };
   }
 
-  // Handle non-object input
   if (typeof data !== "object") {
     warnings.push(t("validation.sanitize.invalidType"));
     return { character: globalThis.structuredClone(CHARACTER_DEFAULTS), warnings };
@@ -46,7 +34,6 @@ export function sanitizeCharacter(data: unknown): SanitizeResult {
 
   const input = data as Record<string, unknown>;
 
-  // Build sanitized character
   const character: Character = {
     name: sanitizeString(input, "name", CHARACTER_DEFAULTS.name, warnings),
     type: sanitizeString(input, "type", CHARACTER_DEFAULTS.type, warnings),
@@ -72,7 +59,6 @@ export function sanitizeCharacter(data: unknown): SanitizeResult {
     specialAbilities: sanitizeArrayField(input, "specialAbilities", warnings),
   };
 
-  // Copy portrait if present and valid
   if (typeof input.portrait === "string") {
     (character as unknown as Record<string, unknown>).portrait = input.portrait;
   }

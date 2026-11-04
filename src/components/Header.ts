@@ -1,5 +1,3 @@
-// Header component - Displays page header with Load/Clear buttons
-
 import { html, TemplateResult } from "lit-html";
 import { t } from "@/i18n/index";
 import { SettingsGear } from "./SettingsGear.js";
@@ -20,22 +18,17 @@ export class Header {
     onLanguageChange?: (lang: string) => void,
     onResetLayout?: () => void
   ) {
-    // Create settings gear component
     this.settingsGear = new SettingsGear(onLanguageChange || (() => {}));
 
-    // Set up re-render callback for settings gear state changes
     this.settingsGear.setRerenderCallback(() => {
-      // Dispatch event to trigger full app re-render
       const event = new CustomEvent("settings-updated");
       document.getElementById("app")?.dispatchEvent(event);
     });
 
-    // Set up reset layout callback
     if (onResetLayout) {
       this.settingsGear.setResetLayoutCallback(onResetLayout);
     }
 
-    // Initialize feature detection state
     this.supportsFileSystemAccess = "showSaveFilePicker" in window;
   }
 
@@ -77,22 +70,15 @@ export class Header {
     `;
   }
 
-  /**
-   * Handle keyboard events for settings panel
-   */
   handleKeyDown(event: KeyboardEvent): void {
     this.settingsGear.handleKeyDown(event);
   }
 
-  /**
-   * Close settings panel (e.g., when clicking outside)
-   */
   closeSettings(): void {
     this.settingsGear.close();
   }
 
   private renderExportButtons(): TemplateResult {
-    // Non-Chromium browsers: Always show only "Export"
     if (!this.supportsFileSystemAccess) {
       return html`
         <button data-testid="export-button" @click=${this.onExport} class="btn-export">
@@ -101,7 +87,6 @@ export class Header {
       `;
     }
 
-    // Chromium browsers without remembered location: Show only "Export"
     if (!this.hasRememberedLocation) {
       return html`
         <button data-testid="export-button" @click=${this.onExport} class="btn-export">
@@ -110,7 +95,6 @@ export class Header {
       `;
     }
 
-    // Chromium browsers with remembered location: Show "Quick Export" + "Save As..."
     return html`
       <button
         data-testid="quick-export-button"

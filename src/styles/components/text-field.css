@@ -1,5 +1,3 @@
-/* Text Field Styling - Parchment theme for background and notes */
-
 .parchment-field {
   background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
   border: 2px solid #d97706;
@@ -23,7 +21,6 @@
   font-style: italic;
 }
 
-/* Two-column layout for bottom fields */
 .bottom-text-fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -31,7 +28,6 @@
   margin-top: 2rem;
 }
 
-/* Inline editing textarea styles */
 .inline-edit-textarea {
   width: 100%;
   min-height: 120px;
@@ -50,7 +46,6 @@
   outline: none;
 }
 
-/* Readonly state - subtle hover effect */
 .inline-edit-textarea[readonly] {
   cursor: pointer;
 }
@@ -60,7 +55,6 @@
   border-radius: 0.25rem;
 }
 
-/* Editing state - visible border and background */
 .inline-edit-textarea:not([readonly]) {
   background-color: rgba(254, 243, 199, 0.5);
   border: 2px solid #d97706;
@@ -75,7 +69,6 @@
   box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
 }
 
-/* Placeholder styling for empty editable fields */
 .inline-edit-textarea::placeholder {
   color: #92400e;
   font-family: serif;

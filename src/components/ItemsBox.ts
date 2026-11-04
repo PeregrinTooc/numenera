@@ -1,5 +1,3 @@
-// ItemsBox component - Combines Equipment, Artifacts, and Oddities in a single box with Shins badge
-
 import { html, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { EquipmentItem } from "./EquipmentItem.js";
@@ -87,7 +85,6 @@ export class ItemsBox {
   private artifacts: CollectionSection<Character["artifacts"][number], ArtifactItem>;
   private oddities: CollectionSection<Character["oddities"][number], OddityItem>;
 
-  // Drag-reorder behaviour for each section
   private drag: Record<ItemSection, CollectionDragReorder> = {
     equipment: new CollectionDragReorder({
       section: "equipment",
@@ -170,7 +167,6 @@ export class ItemsBox {
 
     return html`
       <div data-testid="items-section" class="section-box">
-        <!-- Heading row: Shins Badge (top-left), heading -->
         <div class="section-box-heading-row">
           <div
             class="stat-badge editable-field"
@@ -187,13 +183,11 @@ export class ItemsBox {
           <h2 class="section-box-heading">${t("items.heading")}</h2>
         </div>
 
-        <!-- Equipment Section (full width) -->
         <div>
           ${this.renderHeadingRow(views.equipment, this.equipment.handleAdd)}
           ${this.renderList(views.equipment, equipmentItems)}
         </div>
 
-        <!-- Divider -->
         <div class="section-divider"></div>
 
         <!-- Artifacts and Oddities (two columns where the section is wide) -->

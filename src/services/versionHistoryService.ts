@@ -25,12 +25,6 @@ export class VersionHistoryService {
   private buffer = new ChangeBuffer();
   private isSquashInProgress: boolean = false;
 
-  /**
-   * Create a new VersionHistoryService
-   * @param manager The VersionHistoryManager for persistent storage
-   * @param squashDelayMs Delay in milliseconds before squashing (default: 5000)
-   * @param timer Timer implementation (defaults to RealTimer for production)
-   */
   constructor(
     manager: VersionHistoryManager,
     squashDelayMs: number = 5000,
@@ -41,10 +35,6 @@ export class VersionHistoryService {
     this.timer = timer;
   }
 
-  /**
-   * Reset the squash timer (synchronous)
-   * Called on every user interaction (keystrokes, field changes)
-   */
   resetTimer(): void {
     this.cancelTimer();
     this.globalTimer = this.timer.setTimeout(() => {
@@ -59,17 +49,9 @@ export class VersionHistoryService {
     }
   }
 
-  /**
-   * Buffer a change without immediately saving
-   * Called when user confirms a change (modal confirm, field update)
-   * @param character The character state to buffer
-   * @param description Description of the change
-   */
   bufferChange(character: Character, description: string): void {
-    // Buffer clones the character and clears the redo stack
     this.buffer.push(character, description);
 
-    // Reset timer when buffering
     this.resetTimer();
   }
 
@@ -85,7 +67,6 @@ export class VersionHistoryService {
 
   /** Drop the committed entries, then stop the timer or give late edits a fresh window. */
   private dropSquashedAndRearm(squashedCount: number, latest: Character): void {
-    // Drop the squashed entries and the redo stack
     // Redo stack must be cleared because buffered changes are now committed to a version
     // If user wants to undo the version, they use version navigation (not buffer redo)
     this.buffer.dropSquashed(squashedCount, latest);
@@ -99,10 +80,6 @@ export class VersionHistoryService {
     }
   }
 
-  /**
-   * Perform squashing operation
-   * Combines buffered changes into single version
-   */
   private async performSquash(): Promise<void> {
     // An edit during an in-flight squash restarts the timer, which can fire
     // before that squash's save resolves - without this guard, the second call
@@ -128,13 +105,11 @@ export class VersionHistoryService {
       await this.persistSquash(latest.character, squashedCount);
       this.dropSquashedAndRearm(squashedCount, latest.character);
 
-      // Dispatch custom event to notify that a version was created
       emit("version-squashed");
     } catch (error) {
       // Log-and-continue is deliberate: the character itself was auto-saved,
       // and reconcileVersionHistory rebuilds the missing version on next boot.
       console.error("Error performing squash:", error);
-      // Clear state on error
       this.buffer.clear();
       this.globalTimer = null;
     } finally {
@@ -142,55 +117,32 @@ export class VersionHistoryService {
     }
   }
 
-  /**
-   * Get buffer length (for testing)
-   */
   getBufferLength(): number {
     return this.buffer.length;
   }
 
-  /**
-   * Check if timer is active (for testing)
-   */
   isTimerActive(): boolean {
     return this.globalTimer !== null;
   }
 
-  /**
-   * Check if there are buffered changes that can be undone
-   * Returns true if the buffer has at least one change
-   */
   canUndo(): boolean {
     return this.buffer.canUndo();
   }
 
-  /**
-   * Set the initial character state before any buffered changes
-   * This allows undo to revert back to the state before editing started
-   */
   setInitialState(character: Character): void {
     this.buffer.setInitialState(character);
   }
 
-  /**
-   * Undo the last buffered change
-   * Returns the previous character state, or null if nothing to undo
-   */
   undo(): Character | null {
     if (!this.buffer.canUndo()) {
       return null;
     }
 
-    // Move the last buffered change to redo stack; the result is the previous
-    // state (or the initial state when the buffer is now empty)
     const result = this.buffer.undo();
 
-    // If buffer still has changes, reset the timer to give it a fresh delay
-    // This ensures the remaining buffered changes get squashed after the full delay
     if (this.buffer.length > 0) {
       this.resetTimer();
     } else {
-      // If buffer is now empty, cancel the timer (nothing to squash)
       this.cancelTimer();
     }
 
@@ -199,46 +151,25 @@ export class VersionHistoryService {
     return result;
   }
 
-  /**
-   * Check if there are undone changes that can be redone
-   * Returns true if the redo stack has at least one change
-   */
   canRedo(): boolean {
     return this.buffer.canRedo();
   }
 
-  /**
-   * Redo the last undone change
-   * Returns the redone character state, or null if nothing to redo
-   */
   redo(): Character | null {
     if (!this.buffer.canRedo()) {
       return null;
     }
 
-    // Move the last undone change back to buffer
     const redone = this.buffer.redo();
 
-    // Reset the timer to give the buffered changes a fresh delay
-    // This ensures changes get squashed after the full delay period
     this.resetTimer();
 
-    // Return the redone state
     return redone;
   }
 
-  /**
-   * Force immediate squash (for testing)
-   * Cancels any pending timer and performs squash immediately
-   * This allows tests to deterministically control when squashing occurs
-   * without waiting for timer delays
-   * @returns Promise that resolves when squash is complete
-   */
   async forceSquash(): Promise<void> {
-    // Cancel any pending timer
     this.cancelTimer();
 
-    // Perform squash immediately
     await this.performSquash();
   }
 }

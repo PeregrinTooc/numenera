@@ -1,5 +1,3 @@
-// AttackItem component - Individual attack card with combat styling
-
 import { html, TemplateResult } from "lit-html";
 import { Attack } from "@/types/character";
 import { t } from "@/i18n/index";

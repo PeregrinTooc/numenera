@@ -1,5 +1,3 @@
-// Attacks component - Displays character attacks in grid
-
 import { html, TemplateResult } from "lit-html";
 import { Attack, Character } from "@/types/character";
 import { AttackItem } from "./AttackItem.js";
