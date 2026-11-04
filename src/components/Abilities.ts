@@ -20,11 +20,10 @@ export class Abilities {
   });
 
   constructor(private character: Character) {
-    // Create add handler using CollectionBehavior helper (event-based pattern)
+    // Create add handler using CollectionBehavior helper
     this.handleAddAbility = createAddHandler({
       emptyItem: { name: "", description: "" },
       ItemComponentClass: AbilityItem,
-      collection: this.character.abilities,
       character: this.character,
       collectionKey: "abilities",
     });
@@ -33,7 +32,7 @@ export class Abilities {
   render(): TemplateResult {
     const isEmpty = this.character.abilities.length === 0;
 
-    // Create ability item instances using CollectionBehavior helper (event-based pattern)
+    // Create ability item instances using CollectionBehavior helper
     // collectionKey enables immutable updates for proper version history undo support
     const abilityItems = isEmpty
       ? []

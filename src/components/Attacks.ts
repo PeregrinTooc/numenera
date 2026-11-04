@@ -25,11 +25,10 @@ export class Attacks {
     private character: Character,
     private onFieldUpdate: (field: FieldType, value: number) => void
   ) {
-    // Create add handler using CollectionBehavior helper (event-based pattern)
+    // Create add handler using CollectionBehavior helper
     this.handleAddAttack = createAddHandler({
       emptyItem: { name: "", damage: 0, modifier: 0, range: "" },
       ItemComponentClass: AttackItem,
-      collection: this.character.attacks,
       character: this.character,
       collectionKey: "attacks",
     });
@@ -51,7 +50,7 @@ export class Attacks {
   render(): TemplateResult {
     const isEmpty = this.character.attacks.length === 0;
 
-    // Create attack item instances using CollectionBehavior helper (event-based pattern)
+    // Create attack item instances using CollectionBehavior helper
     // collectionKey enables immutable updates for proper version history undo support
     const attackItems = isEmpty
       ? []

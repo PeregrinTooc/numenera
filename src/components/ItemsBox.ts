@@ -46,11 +46,10 @@ export class ItemsBox {
     private character: Character,
     private onFieldUpdate: (field: FieldType, value: number) => void
   ) {
-    // Create add handlers using CollectionBehavior helper (event-based pattern)
+    // Create add handlers using CollectionBehavior helper
     this.handleAddEquipment = createAddHandler({
       emptyItem: { name: "", description: "" },
       ItemComponentClass: EquipmentItem,
-      collection: this.character.equipment,
       character: this.character,
       collectionKey: "equipment",
     });
@@ -58,7 +57,6 @@ export class ItemsBox {
     this.handleAddArtifact = createAddHandler({
       emptyItem: { name: "", level: "", effect: "" },
       ItemComponentClass: ArtifactItem,
-      collection: this.character.artifacts,
       character: this.character,
       collectionKey: "artifacts",
     });
@@ -66,7 +64,6 @@ export class ItemsBox {
     this.handleAddOddity = createAddHandler({
       emptyItem: "",
       ItemComponentClass: OddityItem,
-      collection: this.character.oddities,
       character: this.character,
       collectionKey: "oddities",
     });
@@ -86,7 +83,7 @@ export class ItemsBox {
   }
 
   render(): TemplateResult {
-    // Create item instances using CollectionBehavior helper (event-based pattern)
+    // Create item instances using CollectionBehavior helper
     // collectionKey enables immutable updates for proper version history undo support
     const equipmentItems = createItemInstances({
       collection: this.character.equipment,

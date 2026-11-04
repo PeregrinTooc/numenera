@@ -26,12 +26,11 @@ export class CyphersBox {
     private character: Character,
     private onFieldUpdate: (field: FieldType, value: number) => void
   ) {
-    // Create add handler using CollectionBehavior helper (event-based pattern)
+    // Create add handler using CollectionBehavior helper
     // collectionKey enables immutable updates and proper event dispatch for re-render
     this.handleAddCypher = createAddHandler({
       emptyItem: { name: "", level: "", effect: "" },
       ItemComponentClass: CypherItem,
-      collection: this.character.cyphers,
       character: this.character,
       collectionKey: "cyphers",
     });
@@ -51,7 +50,7 @@ export class CyphersBox {
   }
 
   render(): TemplateResult {
-    // Create cypher item instances using CollectionBehavior helper (event-based pattern)
+    // Create cypher item instances using CollectionBehavior helper
     // collectionKey enables immutable updates for proper version history undo support
     const cypherItems = createItemInstances({
       collection: this.character.cyphers,

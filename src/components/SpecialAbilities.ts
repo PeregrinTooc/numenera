@@ -20,11 +20,10 @@ export class SpecialAbilities {
   });
 
   constructor(private character: Character) {
-    // Create add handler using CollectionBehavior helper (event-based pattern)
+    // Create add handler using CollectionBehavior helper
     this.handleAddSpecialAbility = createAddHandler({
       emptyItem: { name: "", source: "", description: "" },
       ItemComponentClass: SpecialAbilityItem,
-      collection: this.character.specialAbilities,
       character: this.character,
       collectionKey: "specialAbilities",
     });
@@ -33,7 +32,7 @@ export class SpecialAbilities {
   render(): TemplateResult {
     const isEmpty = this.character.specialAbilities.length === 0;
 
-    // Create special ability item instances using CollectionBehavior helper (event-based pattern)
+    // Create special ability item instances using CollectionBehavior helper
     // collectionKey enables immutable updates for proper version history undo support
     const specialAbilityItems = isEmpty
       ? []
