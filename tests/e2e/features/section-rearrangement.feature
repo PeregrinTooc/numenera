@@ -143,6 +143,14 @@ Feature: Section Re-arrangement
     And the "Cyphers" section should slide into its new place
     And the grid should show "Items" on the left and "Cyphers" on the right
 
+  Scenario: Releasing after the live preview has appeared saves the pair
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I hold the "Cyphers" section over the middle right of the "Items" section
+    And I keep still for a moment
+    And I release the section where it is
+    Then the saved layout should pair "Items" on the left and "Cyphers" on the right
+
   Scenario: Sections slide back when a live preview is cancelled
     Given the viewport is 1280 pixels wide
     And layout edit mode is active

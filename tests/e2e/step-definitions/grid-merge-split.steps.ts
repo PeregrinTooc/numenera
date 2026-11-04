@@ -1,7 +1,7 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
-import { DEFAULT_LAYOUT, getAllSectionIds, type LayoutItem } from "@/types/layout";
+import { DEFAULT_LAYOUT, getAllSectionIds, type Layout, type LayoutItem } from "@/types/layout";
 import { LAYOUT_STORAGE_KEY } from "@/storage/storageConstants";
 import { dragSectionTo, sectionId, sectionLocator, type SectionZone } from "../support/sections.js";
 
@@ -35,6 +35,16 @@ Then("the layout should still be the default layout", async function (this: Cust
   // Nothing saved means the app still uses DEFAULT_LAYOUT.
   expect(stored === null ? DEFAULT_LAYOUT : JSON.parse(stored)).toEqual(DEFAULT_LAYOUT);
 });
+
+// Read from storage: a drop the browser lost leaves the live preview on screen
+Then(
+  "the saved layout should pair {string} on the left and {string} on the right",
+  async function (this: CustomWorld, left: string, right: string) {
+    const stored = await this.page.evaluate((key) => localStorage.getItem(key), LAYOUT_STORAGE_KEY);
+    const layout: Layout = stored === null ? DEFAULT_LAYOUT : JSON.parse(stored);
+    expect(layout).toContainEqual({ type: "grid", items: [sectionId(left), sectionId(right)] });
+  }
+);
 
 Then(
   "the {string} section should be the last section",

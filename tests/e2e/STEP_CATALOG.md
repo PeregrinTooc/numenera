@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **724** in 54 files
-- Feature step lines: **2316**
+- Step definitions: **726** in 54 files
+- Feature step lines: **2322**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -57,7 +57,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 12 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
-| [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 6 | 0 |
+| [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 7 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
@@ -65,7 +65,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
 | [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
-| [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 7 | 0 |
+| [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 8 | 0 |
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
 | [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 6 | 0 |
@@ -631,12 +631,13 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `{string} and {string} are in a grid` | 4 | 48 |
-| Then | `{string} should be in its own row` | 9 | 67 |
+| Given | `{string} and {string} are in a grid` | 4 | 58 |
+| Then | `{string} should be in its own row` | 9 | 77 |
 | When | `I drag the {string} section onto the {zone} of the {string} section` | 9 | 7 |
-| Then | `the {string} section should be the last section` | 2 | 38 |
+| Then | `the {string} section should be the last section` | 2 | 48 |
 | Then | `the grid should show {string} on the left and {string} on the right` | 8 | 14 |
 | Then | `the layout should still be the default layout` | 3 | 32 |
+| Then | `the saved layout should pair {string} on the left and {string} on the right` | 1 | 40 |
 
 ## i18n.steps.ts
 
@@ -693,7 +694,7 @@ pattern this script does not understand):
 | Then | `I should see the {string} button` | 1 | 67 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 30 |
 | Then | `it should be touch-friendly` | 1 | 78 |
-| Given | `layout edit mode is active` | 32 | 41 |
+| Given | `layout edit mode is active` | 33 | 41 |
 | Then | `layout edit mode should be inactive` | 1 | 50 |
 | Then | `the {string} option should be enabled` | 1 | 118 |
 | Then | `the layout should return to the default arrangement` | 1 | 108 |
@@ -787,13 +788,14 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I hold the {string} section over the {zone} of the {string} section` | 10 | 27 |
-| When | `I keep still for a moment` | 7 | 56 |
-| When | `I release the section outside the sheet` | 2 | 61 |
-| Then | `no drop preview should be shown` | 1 | 102 |
-| Then | `the {string} section should preview {string} in its place` | 1 | 81 |
-| Then | `the {string} section should preview {string} on its right` | 1 | 71 |
-| Then | `the row of {string} should preview {string} below it` | 1 | 91 |
+| When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 28 |
+| When | `I keep still for a moment` | 8 | 46 |
+| When | `I release the section outside the sheet` | 2 | 51 |
+| When | `I release the section where it is` | 1 | 61 |
+| Then | `no drop preview should be shown` | 1 | 98 |
+| Then | `the {string} section should preview {string} in its place` | 1 | 77 |
+| Then | `the {string} section should preview {string} on its right` | 1 | 67 |
+| Then | `the row of {string} should preview {string} below it` | 1 | 87 |
 
 ## section-reordering.steps.ts
 
@@ -1087,5 +1089,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 47 | 9 |
+| Given | `the viewport is {int} pixels wide` | 48 | 9 |
 
