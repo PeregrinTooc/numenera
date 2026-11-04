@@ -1,10 +1,10 @@
 import { describe, it, expect, vi } from "vitest";
 import type { Character } from "@/types/character";
+import { abortWriteTransactions } from "./helpers/abortingTransaction";
 import { STORAGE_KEY } from "@/storage/storageConstants";
 import {
   mockCharacter,
   oldVersionedFormat,
-  internalsOf,
   setupIndexedDBStorage,
 } from "./helpers/indexedDBStorageFixture";
 
@@ -110,10 +110,8 @@ describe("IndexedDBStorageImpl", () => {
       // Setup: Valid data in localStorage
       localStorage.setItem(STORAGE_KEY, JSON.stringify(mockCharacter));
 
-      // Mock IndexedDB saveInternal to fail
-      const internals = internalsOf(ctx.storage);
-      const originalSaveInternal = internals.saveInternal.bind(ctx.storage);
-      internals.saveInternal = vi.fn().mockRejectedValue(new Error("Save failed"));
+      // The browser aborts the write transaction
+      abortWriteTransactions(new DOMException("write failed", "AbortError"));
 
       const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
@@ -123,12 +121,11 @@ describe("IndexedDBStorageImpl", () => {
       // Verify: Error was logged
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         "Failed to migrate from localStorage:",
-        expect.any(Error)
+        expect.objectContaining({ name: "AbortError" })
       );
 
-      // Restore
-      internals.saveInternal = originalSaveInternal;
       consoleErrorSpy.mockRestore();
+      vi.restoreAllMocks();
     });
 
     it("should handle migration when IndexedDB already has data", async () => {

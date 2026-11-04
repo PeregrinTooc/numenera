@@ -1,6 +1,6 @@
 import { beforeEach, afterEach } from "vitest";
 import { IndexedDBStorageImpl } from "@/storage/indexedDBStorageImpl";
-import type { Character } from "@/types/character";
+import { CHARACTER_DB_NAME } from "@/storage/storageConstants";
 import { createTestCharacter } from "../../factories/character";
 
 // Mock character data
@@ -22,33 +22,50 @@ export const oldVersionedFormat = {
 
 const TEST_AVAILABILITY_TIMEOUT_MS = 50;
 
-/**
- * Private members the failure-path tests swap out to simulate a broken
- * database. A structural view of the class, not `any`.
- */
-interface StorageInternals {
-  db: IDBDatabase | null;
-  saveInternal: (character: Character) => Promise<void>;
-}
-
-export function internalsOf(storage: IndexedDBStorageImpl): StorageInternals {
-  return storage as unknown as StorageInternals;
-}
-
-/** Swaps in a database without the object store; returns a function that restores the real one. */
-export function replaceDbWithoutObjectStore(storage: IndexedDBStorageImpl): () => void {
-  const internals = internalsOf(storage);
-  const originalDb = internals.db;
-  internals.db = {
-    objectStoreNames: { contains: () => false },
-  } as unknown as IDBDatabase;
-  return () => {
-    internals.db = originalDb;
-  };
-}
-
 export interface IndexedDBStorageFixture {
   readonly storage: IndexedDBStorageImpl;
+}
+
+function deleteDatabase(name: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.deleteDatabase(name);
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function createEmptyDatabase(name: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    // Same name and version as the app's database, but the upgrade creates no store
+    const request = indexedDB.open(name, 1);
+    request.onsuccess = () => {
+      request.result.close();
+      resolve();
+    };
+    request.onerror = () => reject(request.error);
+  });
+}
+
+/**
+ * Runs `run` against an initialised storage whose real database exists without
+ * the object store, then removes that database so later tests start clean.
+ * The fixture's own connection is closed first or the delete would block.
+ */
+export async function withDatabaseLackingObjectStore(
+  fixture: IndexedDBStorageFixture,
+  run: (storage: IndexedDBStorageImpl) => Promise<void>
+): Promise<void> {
+  fixture.storage.close();
+  await deleteDatabase(CHARACTER_DB_NAME);
+  await createEmptyDatabase(CHARACTER_DB_NAME);
+  const storage = new IndexedDBStorageImpl(TEST_AVAILABILITY_TIMEOUT_MS);
+  await storage.init();
+  try {
+    await run(storage);
+  } finally {
+    storage.close();
+    await deleteDatabase(CHARACTER_DB_NAME);
+  }
 }
 
 /**

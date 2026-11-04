@@ -1,6 +1,4 @@
 import { vi } from "vitest";
-import type { ConflictDetectionService } from "@/services/conflictDetectionService";
-import type { Character } from "@/types/character";
 
 // Mock MessageEvent interface for tests
 export interface MockMessageEvent<T = unknown> {
@@ -14,42 +12,43 @@ export class MockBroadcastChannel {
   postMessage = vi.fn();
   close = vi.fn();
 
+  /** Every channel opened since the mock was installed, oldest first. */
+  static instances: MockBroadcastChannel[] = [];
+
   constructor(name: string) {
     this.name = name;
+    MockBroadcastChannel.instances.push(this);
   }
-}
 
-/**
- * Private members the tests read to reach the mock channel and the pending
- * state. A structural view of the class, not `any`.
- */
-interface ServiceInternals {
-  channel: MockBroadcastChannel;
-  tabId: string;
-  pendingCharacter: Character | null;
-  currentEtag: string | null;
-  hasDirtyChanges: boolean;
-}
+  /** The most recently opened channel. */
+  static latest(): MockBroadcastChannel {
+    const channel = MockBroadcastChannel.instances[MockBroadcastChannel.instances.length - 1];
+    if (!channel) {
+      throw new Error("No BroadcastChannel has been opened");
+    }
+    return channel;
+  }
 
-interface TransportInternals {
-  channel: MockBroadcastChannel;
-  tabId: string;
-}
+  /** Deliver a message as if another tab had posted it. */
+  receive(data: unknown): void {
+    this.onmessage?.({ data });
+  }
 
-export function internalsOf(service: ConflictDetectionService): ServiceInternals {
-  const view = service as unknown as {
-    transport: TransportInternals;
-    pendingCharacter: Character | null;
-    currentEtag: string | null;
-    hasDirtyChanges: boolean;
-  };
-  return {
-    channel: view.transport.channel,
-    tabId: view.transport.tabId,
-    pendingCharacter: view.pendingCharacter,
-    currentEtag: view.currentEtag,
-    hasDirtyChanges: view.hasDirtyChanges,
-  };
+  /** The id this tab announced itself with, read from its first posted message. */
+  get tabId(): string {
+    const first = this.postMessage.mock.calls[0]?.[0] as { tabId: string } | undefined;
+    if (!first) {
+      throw new Error("No message posted on this channel yet");
+    }
+    return first.tabId;
+  }
+
+  /** Payloads of posted messages of the given type. */
+  posted(type: string): Array<Record<string, unknown>> {
+    return this.postMessage.mock.calls
+      .map(([message]) => message as Record<string, unknown>)
+      .filter((message) => message.type === type);
+  }
 }
 
 /**
@@ -58,6 +57,7 @@ export function internalsOf(service: ConflictDetectionService): ServiceInternals
 export function installMockBroadcastChannel(): () => void {
   const globals = globalThis as Record<string, unknown>;
   const original = globals.BroadcastChannel;
+  MockBroadcastChannel.instances = [];
   globals.BroadcastChannel = MockBroadcastChannel;
   return () => {
     globals.BroadcastChannel = original;

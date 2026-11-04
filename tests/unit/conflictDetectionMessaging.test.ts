@@ -3,8 +3,7 @@ import { ConflictDetectionService } from "@/services/conflictDetectionService";
 import { createTestCharacter } from "../factories/character";
 import {
   installMockBroadcastChannel,
-  internalsOf,
-  type MockMessageEvent,
+  MockBroadcastChannel,
 } from "../factories/mockBroadcastChannel";
 
 describe("ConflictDetectionService messaging", () => {
@@ -22,7 +21,7 @@ describe("ConflictDetectionService messaging", () => {
   describe("conflict detection", () => {
     it("should emit version-conflict when receiving version-saved with dirty state", async () => {
       const service = new ConflictDetectionService();
-      const mockChannel = internalsOf(service).channel;
+      const mockChannel = MockBroadcastChannel.latest();
       const conflictHandler = vi.fn();
 
       window.addEventListener("version-conflict", conflictHandler);
@@ -40,9 +39,7 @@ describe("ConflictDetectionService messaging", () => {
         characterName: "Remote Character",
       };
 
-      mockChannel.onmessage?.({
-        data: message,
-      } as MockMessageEvent);
+      mockChannel.receive(message);
 
       expect(conflictHandler).toHaveBeenCalled();
 
@@ -52,7 +49,7 @@ describe("ConflictDetectionService messaging", () => {
 
     it("should emit newer-version-available when receiving version-saved without dirty state", async () => {
       const service = new ConflictDetectionService();
-      const mockChannel = internalsOf(service).channel;
+      const mockChannel = MockBroadcastChannel.latest();
       const newerVersionHandler = vi.fn();
 
       window.addEventListener("newer-version-available", newerVersionHandler);
@@ -69,9 +66,7 @@ describe("ConflictDetectionService messaging", () => {
         characterName: "Remote Character",
       };
 
-      mockChannel.onmessage?.({
-        data: message,
-      } as MockMessageEvent);
+      mockChannel.receive(message);
 
       expect(newerVersionHandler).toHaveBeenCalled();
 
@@ -81,8 +76,8 @@ describe("ConflictDetectionService messaging", () => {
 
     it("should ignore messages from same tab", async () => {
       const service = new ConflictDetectionService();
-      const mockChannel = internalsOf(service).channel;
-      const tabId = internalsOf(service).tabId;
+      const mockChannel = MockBroadcastChannel.latest();
+      const tabId = mockChannel.tabId;
       const conflictHandler = vi.fn();
       const newerVersionHandler = vi.fn();
 
@@ -102,9 +97,7 @@ describe("ConflictDetectionService messaging", () => {
         characterName: "Same Tab Character",
       };
 
-      mockChannel.onmessage?.({
-        data: message,
-      } as MockMessageEvent);
+      mockChannel.receive(message);
 
       expect(conflictHandler).not.toHaveBeenCalled();
       expect(newerVersionHandler).not.toHaveBeenCalled();
@@ -116,7 +109,7 @@ describe("ConflictDetectionService messaging", () => {
 
     it("should emit conflict when marking dirty with stale remote ETag", async () => {
       const service = new ConflictDetectionService();
-      const mockChannel = internalsOf(service).channel;
+      const mockChannel = MockBroadcastChannel.latest();
       const conflictHandler = vi.fn();
 
       window.addEventListener("version-conflict", conflictHandler);
@@ -133,9 +126,7 @@ describe("ConflictDetectionService messaging", () => {
         characterName: "Remote Character",
       };
 
-      mockChannel.onmessage?.({
-        data: message,
-      } as MockMessageEvent);
+      mockChannel.receive(message);
 
       // Clear the newer-version-available event
       conflictHandler.mockClear();
@@ -153,7 +144,7 @@ describe("ConflictDetectionService messaging", () => {
   describe("close", () => {
     it("should broadcast tab-closed message on close", () => {
       const service = new ConflictDetectionService();
-      const mockChannel = internalsOf(service).channel;
+      const mockChannel = MockBroadcastChannel.latest();
 
       mockChannel.postMessage.mockClear();
 
@@ -169,7 +160,7 @@ describe("ConflictDetectionService messaging", () => {
 
     it("should close the BroadcastChannel", () => {
       const service = new ConflictDetectionService();
-      const mockChannel = internalsOf(service).channel;
+      const mockChannel = MockBroadcastChannel.latest();
 
       service.close();
 
