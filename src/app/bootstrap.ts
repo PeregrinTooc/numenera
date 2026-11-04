@@ -74,24 +74,21 @@ async function initConflictDetection(ctx: AppContext, initialCharacter: Characte
   });
 }
 
-/** Boot sequence, run on DOMContentLoaded. */
-export async function bootstrap(ctx: AppContext): Promise<void> {
-  // Expose storage / version history / autoSaveService APIs for E2E tests
-  installTestHooks(ctx);
-
-  // Flush a pending debounced save on unload so a last-moment edit is not lost.
-  // Best effort: the save is initiated synchronously, but unload cannot await it.
-  // pagehide covers mobile Safari / bfcache; a second flush is a no-op.
+/**
+ * Flush a pending debounced save on unload so a last-moment edit is not lost.
+ * Best effort: the save is initiated synchronously, but unload cannot await it.
+ * pagehide covers mobile Safari / bfcache; a second flush is a no-op.
+ */
+function registerUnloadFlush(ctx: AppContext): void {
   const flushAutoSaveOnUnload = (): void => {
     void ctx.autoSaveService.flush();
   };
   window.addEventListener("beforeunload", flushAutoSaveOnUnload);
   window.addEventListener("pagehide", flushAutoSaveOnUnload);
+}
 
-  // Initialize i18n first
-  await initI18n();
-
-  // Re-render on language change
+/** Re-render the sheet from storage (or the default character) when the language changes. */
+function registerLanguageChangeRender(ctx: AppContext): void {
   onLanguageChanged(async () => {
     const storedCharacter = await loadCharacterState();
     if (storedCharacter) {
@@ -100,13 +97,17 @@ export async function bootstrap(ctx: AppContext): Promise<void> {
       void ctx.actions.renderCharacterSheet(FULL_CHARACTER);
     }
   });
+}
 
-  // Priority: stored character > default
+/**
+ * Priority: stored character > default. `stored` is null when the default takes over.
+ * Unreadable data is copied to a backup before the default character takes over;
+ * it is never deleted here.
+ */
+async function loadInitialCharacter(): Promise<{ character: Character; stored: Character | null }> {
   const rawStored = await loadRawCharacterState();
 
-  // Unreadable data is copied to a backup before the default character takes over;
-  // it is never deleted here.
-  let storedCharacter: Character | null = null;
+  let stored: Character | null = null;
   if (isUnreadableCharacter(rawStored)) {
     await keepUnreadableCharacter(rawStored, {
       saveBackup: saveCorruptedCharacterBackup,
@@ -115,20 +116,13 @@ export async function bootstrap(ctx: AppContext): Promise<void> {
       reportFailure: reportStorageWriteFailure,
     });
   } else if (rawStored) {
-    storedCharacter = sanitizeCharacter(rawStored).character;
+    stored = sanitizeCharacter(rawStored).character;
   }
-  const initialCharacter = storedCharacter ?? FULL_CHARACTER;
+  return { character: stored ?? FULL_CHARACTER, stored };
+}
 
-  // Register the app-level event listeners once, before the first render
-  const appElement = document.getElementById("app");
-  if (appElement) {
-    registerAppEventListeners(ctx, appElement);
-  }
-
-  // Render the initial character sheet
-  await ctx.actions.renderCharacterSheet(initialCharacter);
-
-  // While a kept copy of unreadable data exists, ask what to do with it on every load
+/** While a kept copy of unreadable data exists, ask what to do with it on every load. */
+async function offerKeptUnreadableBackup(): Promise<void> {
   await offerUnreadableBackup({
     loadBackup: loadCorruptedCharacterBackup,
     deleteBackup: deleteCorruptedCharacterBackup,
@@ -136,8 +130,17 @@ export async function bootstrap(ctx: AppContext): Promise<void> {
     showChoice: (handlers) => ModalService.openUnreadableCharacterModal(handlers),
     now: () => new Date(),
   });
+}
 
-  // Save the initial state as Version 1
+/**
+ * Migrate and reconcile stored versions, create the VersionHistoryService and
+ * Version 1 if needed, then initialise VersionState and the navigator.
+ */
+async function initVersionHistory(
+  ctx: AppContext,
+  initialCharacter: Character,
+  stored: Character | null
+): Promise<void> {
   const versionHistory = await getVersionHistory();
   const versions = await versionHistory.getAllVersions();
 
@@ -149,15 +152,13 @@ export async function bootstrap(ctx: AppContext): Promise<void> {
 
   // Recover a squash lost to the last unload. Only a stored character counts:
   // the default character was never edited, so it has nothing to recover.
-  if (initialCharacter === storedCharacter) {
+  if (initialCharacter === stored) {
     await reconcileVersionHistory(versionHistory, initialCharacter);
   }
 
-  // Initialize VersionHistoryService
-  // Use configured delay if available (for tests), otherwise default 5000ms
+  // Use configured delay if available (for tests), otherwise default 5000ms;
+  // use test timer if available (for E2E tests)
   const squashDelay = window.__SQUASH_DELAY_MS__ || 5000;
-
-  // Use test timer if available (for E2E tests)
   ctx.versionHistoryService = new VersionHistoryService(
     versionHistory,
     squashDelay,
@@ -172,14 +173,33 @@ export async function bootstrap(ctx: AppContext): Promise<void> {
     await versionHistory.saveVersion(initialCharacter, "Initial state");
   }
 
-  // Initialize VersionState
   ctx.versionState = new VersionState(initialCharacter, versionHistory);
   await ctx.versionState.init();
 
   // Update navigator after versionState is initialized
   await ctx.actions.updateVersionNavigator(true);
+}
 
+/** Boot sequence, run on DOMContentLoaded. */
+export async function bootstrap(ctx: AppContext): Promise<void> {
+  // Expose storage / version history / autoSaveService APIs for E2E tests
+  installTestHooks(ctx);
+  registerUnloadFlush(ctx);
+
+  await initI18n();
+  registerLanguageChangeRender(ctx);
+
+  const { character: initialCharacter, stored } = await loadInitialCharacter();
+
+  // Register the app-level event listeners once, before the first render
+  const appElement = document.getElementById("app");
+  if (appElement) {
+    registerAppEventListeners(ctx, appElement);
+  }
+
+  await ctx.actions.renderCharacterSheet(initialCharacter);
+  await offerKeptUnreadableBackup();
+  await initVersionHistory(ctx, initialCharacter, stored);
   await initConflictDetection(ctx, initialCharacter);
-
   registerVersionKeyboardShortcuts(ctx);
 }

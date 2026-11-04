@@ -39,6 +39,45 @@ async function deleteCorruptedIndexedDB(): Promise<void> {
 }
 
 /**
+ * Init IndexedDB and verify it works with a test load. This catches cases where
+ * the database exists but object stores don't: the corrupted database is deleted
+ * and recreated once.
+ */
+async function openVerifiedIndexedDB(): Promise<IndexedDBStorageImpl> {
+  let storage = new IndexedDBStorageImpl();
+  await storage.init();
+
+  try {
+    await storage.load();
+  } catch (loadError) {
+    console.warn("IndexedDB not fully operational, cleaning up:", loadError);
+    storage.close();
+    await deleteCorruptedIndexedDB();
+
+    storage = new IndexedDBStorageImpl();
+    await storage.init();
+    await storage.load();
+    logger.info("IndexedDB recreated successfully");
+  }
+  return storage;
+}
+
+/** A ready IndexedDB storage (with localStorage data migrated in), or null when unavailable or failing. */
+async function tryInitIndexedDB(): Promise<ICharacterStorage | null> {
+  if (!(await new IndexedDBStorageImpl().isAvailable())) {
+    return null;
+  }
+  try {
+    const storage = await openVerifiedIndexedDB();
+    await storage.migrateFromLocalStorage();
+    return storage;
+  } catch (error) {
+    console.warn("IndexedDB initialization failed, falling back to localStorage:", error);
+    return null;
+  }
+}
+
+/**
  * Get the storage instance (singleton pattern)
  * Tries IndexedDB first, falls back to localStorage if unavailable
  *
@@ -49,42 +88,11 @@ async function getStorage(): Promise<ICharacterStorage> {
     return storageInstance;
   }
 
-  // Try IndexedDB first
-  let indexedDB = new IndexedDBStorageImpl();
-  const isIndexedDBAvailable = await indexedDB.isAvailable();
-
-  if (isIndexedDBAvailable) {
-    try {
-      await indexedDB.init();
-
-      // Verify IndexedDB is fully operational by attempting a test load
-      // This catches cases where the database exists but object stores don't
-      try {
-        await indexedDB.load();
-      } catch (loadError) {
-        console.warn("IndexedDB not fully operational, cleaning up:", loadError);
-        indexedDB.close();
-
-        // Auto-cleanup: Delete the corrupted database and try again
-        await deleteCorruptedIndexedDB();
-
-        // Try to initialize IndexedDB fresh
-        indexedDB = new IndexedDBStorageImpl();
-        await indexedDB.init();
-
-        // Verify again after recreation
-        await indexedDB.load();
-        logger.info("IndexedDB recreated successfully");
-      }
-
-      // Migrate data from localStorage if it exists
-      await indexedDB.migrateFromLocalStorage();
-      storageInstance = indexedDB;
-      logger.info("Using IndexedDB for character storage");
-      return storageInstance;
-    } catch (error) {
-      console.warn("IndexedDB initialization failed, falling back to localStorage:", error);
-    }
+  const indexedDBStorage = await tryInitIndexedDB();
+  if (indexedDBStorage) {
+    storageInstance = indexedDBStorage;
+    logger.info("Using IndexedDB for character storage");
+    return storageInstance;
   }
 
   // Fallback to localStorage

@@ -130,7 +130,9 @@ describe("CharacterSheet - Version History Integration", () => {
     });
 
     it("does nothing if the section isn't currently in the DOM", () => {
-      // Nothing mounted yet, so no [data-section-host="cyphers"] exists.
+      // The mounted container holds no [data-section-host="cyphers"].
+      characterSheet.mount(container);
+      container.innerHTML = "";
       expect(() => characterSheet.rerenderSection("cyphers")).not.toThrow();
     });
 

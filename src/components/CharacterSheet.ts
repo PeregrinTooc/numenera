@@ -78,7 +78,7 @@ export class CharacterSheet {
    * untouched.
    */
   rerenderSection(sectionId: SectionId): void {
-    this.sections.rerenderSection(sectionId, this.container ?? document);
+    this.sections.rerenderSection(sectionId, this.mountedContainer());
   }
 
   /**
@@ -170,7 +170,7 @@ export class CharacterSheet {
     this.rerender();
     // The sheet snaps to its layout: no section may go on sliding to a place
     // from the live preview
-    if (this.container) cancelSectionSlides(this.container);
+    cancelSectionSlides(this.mountedContainer());
   }
 
   /**
@@ -218,10 +218,14 @@ export class CharacterSheet {
    * Re-render the whole sheet in place.
    */
   rerender(): void {
-    const container = this.container ?? document.getElementById("app");
-    if (container) {
-      this.mount(container);
+    this.mount(this.mountedContainer());
+  }
+
+  private mountedContainer(): HTMLElement {
+    if (!this.container) {
+      throw new Error("CharacterSheet is not mounted");
     }
+    return this.container;
   }
 
   /**
@@ -229,8 +233,7 @@ export class CharacterSheet {
    * old places. Resolves when the slide has finished; null when nothing slides.
    */
   private rerenderWithSlide(): Promise<void> | null {
-    const container = this.container ?? document.getElementById("app");
-    if (!container) return null;
+    const container = this.mountedContainer();
     const first = measureSections(container);
     this.mount(container);
     return slideSections(container, first);

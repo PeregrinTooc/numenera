@@ -33,6 +33,70 @@ export interface ImportResult {
   sectionColumns?: SectionColumns;
 }
 
+/** Parse the file text into the top-level file object that carries the character. */
+function parseFileJson(text: string): Record<string, unknown> {
+  let data: unknown;
+  try {
+    data = JSON.parse(text);
+  } catch (error) {
+    throw new UserFacingError("errors.invalidJson", { cause: error });
+  }
+
+  if (data === null || typeof data !== "object") {
+    throw new UserFacingError("errors.invalidData");
+  }
+
+  const fileData = data as Record<string, unknown>;
+  if (!fileData.character) {
+    throw new UserFacingError("errors.noCharacterData");
+  }
+  return fileData;
+}
+
+/** Warn about a schema mismatch but don't reject the file. */
+function checkSchemaVersion(fileData: Record<string, unknown>, warnings: string[]): void {
+  if (fileData.schemaVersion !== undefined && fileData.schemaVersion !== SCHEMA_VERSION) {
+    warnings.push(
+      t("fileOperations.schemaMismatch", {
+        fileVersion: String(fileData.schemaVersion),
+        currentVersion: SCHEMA_VERSION,
+      })
+    );
+  }
+}
+
+/** The file's layout, if present and valid, and whether it differs from the current layout. */
+function importLayout(
+  fileData: Record<string, unknown>,
+  warnings: string[]
+): { layout?: Layout; hasLayoutDifference: boolean } {
+  if (!fileData.layout || !Array.isArray(fileData.layout)) {
+    return { hasLayoutDifference: false };
+  }
+  if (!isValidLayout(fileData.layout)) {
+    warnings.push(t("fileOperations.invalidLayout"));
+    return { hasLayoutDifference: false };
+  }
+  const layout = fileData.layout;
+  return {
+    layout,
+    hasLayoutDifference: JSON.stringify(layout) !== JSON.stringify(loadLayout()),
+  };
+}
+
+/** The file's column choices, if present and valid. */
+function importSectionColumns(
+  fileData: Record<string, unknown>,
+  warnings: string[]
+): SectionColumns | undefined {
+  if (fileData.sectionColumns === undefined) return undefined;
+  if (!isValidSectionColumns(fileData.sectionColumns)) {
+    warnings.push(t("fileOperations.invalidLayout"));
+    return undefined;
+  }
+  return fileData.sectionColumns;
+}
+
 /**
  * Parse and sanitize character data from file content.
  * Uses lenient approach: sanitizes invalid data instead of rejecting it.
@@ -42,74 +106,22 @@ export interface ImportResult {
  * @throws Error only for completely invalid JSON or missing character data
  */
 function parseAndSanitizeCharacter(text: string): ImportResult {
-  const warnings: string[] = [];
+  const fileData = parseFileJson(text);
 
-  // Parse JSON
-  let data: unknown;
-  try {
-    data = JSON.parse(text);
-  } catch (error) {
-    throw new UserFacingError("errors.invalidJson", { cause: error });
-  }
-
-  // Check if data is an object
-  if (data === null || typeof data !== "object") {
-    throw new UserFacingError("errors.invalidData");
-  }
-
-  const fileData = data as Record<string, unknown>;
-
-  // Validate file structure - must have character field
-  if (!fileData.character) {
-    throw new UserFacingError("errors.noCharacterData");
-  }
-
-  // Check schema version - warn but don't reject
-  if (fileData.schemaVersion !== undefined && fileData.schemaVersion !== SCHEMA_VERSION) {
-    warnings.push(
-      t("fileOperations.schemaMismatch", {
-        fileVersion: String(fileData.schemaVersion),
-        currentVersion: SCHEMA_VERSION,
-      })
-    );
-  }
+  const schemaWarnings: string[] = [];
+  checkSchemaVersion(fileData, schemaWarnings);
 
   // Sanitize character data - fix invalid fields instead of rejecting
   const sanitizeResult = sanitizeCharacter(fileData.character);
 
-  // Combine warnings
-  const allWarnings = [...warnings, ...sanitizeResult.warnings];
-
-  // Process layout if present
-  let importedLayout: Layout | undefined;
-  let hasLayoutDifference = false;
-
-  if (fileData.layout && Array.isArray(fileData.layout)) {
-    if (isValidLayout(fileData.layout)) {
-      importedLayout = fileData.layout;
-      // Check if imported layout differs from current layout
-      const currentLayout = loadLayout();
-      hasLayoutDifference = JSON.stringify(importedLayout) !== JSON.stringify(currentLayout);
-    } else {
-      allWarnings.push(t("fileOperations.invalidLayout"));
-    }
-  }
-
-  // Process column choices if present
-  let sectionColumns: SectionColumns | undefined;
-
-  if (fileData.sectionColumns !== undefined) {
-    if (isValidSectionColumns(fileData.sectionColumns)) {
-      sectionColumns = fileData.sectionColumns;
-    } else {
-      allWarnings.push(t("fileOperations.invalidLayout"));
-    }
-  }
+  const warnings = [...schemaWarnings, ...sanitizeResult.warnings];
+  const { layout, hasLayoutDifference } = importLayout(fileData, warnings);
+  const sectionColumns = importSectionColumns(fileData, warnings);
 
   return {
     character: sanitizeResult.character,
-    warnings: allWarnings,
-    layout: importedLayout,
+    warnings,
+    layout,
     hasLayoutDifference,
     sectionColumns,
   };

@@ -24,6 +24,12 @@ interface EditFieldModalConfig {
   versionHistoryService?: VersionHistoryService;
 }
 
+/** Focus the element with the given testid again after a re-render replaced it. */
+function restoreFocus(container: Element, testId: string | null | undefined): void {
+  if (!testId) return;
+  container.querySelector<HTMLElement>(`[data-testid="${testId}"]`)?.focus();
+}
+
 export class EditFieldModal extends ModalBehavior {
   private fieldType: FieldType;
   private currentValue: string;
@@ -87,43 +93,28 @@ export class EditFieldModal extends ModalBehavior {
     // Find the modal container and re-render
     const modalContainer = document.querySelector('[data-testid="modal-backdrop"]')?.parentElement;
     if (modalContainer) {
-      // Get currently focused element's testid to restore focus after render
       const focusedTestId = document.activeElement?.getAttribute("data-testid");
-
       render(this.render(), modalContainer);
-
-      // Restore focus to the same element after re-render
-      if (focusedTestId) {
-        const elementToFocus = modalContainer.querySelector(
-          `[data-testid="${focusedTestId}"]`
-        ) as HTMLElement;
-        if (elementToFocus) {
-          elementToFocus.focus();
-        }
-      }
+      restoreFocus(modalContainer, focusedTestId);
     }
   }
 
-  private handleConfirmWithValidation(): void {
+  /** The validated, converted input value, or null when it is invalid (the error is shown). */
+  private parseConfirmedValue(): string | number | null {
     if (this.fieldType === "tier") {
       // Apply tier constraints
-      this.onConfirmWithValue(validateTier(this.inputValue));
-    } else if (isNumericField(this.fieldType)) {
-      // Validate and convert to number
-      if (this.validate(this.inputValue)) {
-        this.onConfirmWithValue(parseInt(this.inputValue, 10));
-      } else {
-        // Validation failed, don't proceed
-        return;
-      }
-    } else {
-      // Validate text fields
-      if (this.validate(this.inputValue)) {
-        this.onConfirmWithValue(this.inputValue.trim());
-      } else {
-        // Validation failed, don't proceed
-        return;
-      }
+      return validateTier(this.inputValue);
+    }
+    if (!this.validate(this.inputValue)) {
+      return null;
+    }
+    return isNumericField(this.fieldType) ? parseInt(this.inputValue, 10) : this.inputValue.trim();
+  }
+
+  private handleConfirmWithValidation(): void {
+    const value = this.parseConfirmedValue();
+    if (value !== null) {
+      this.onConfirmWithValue(value);
     }
   }
 

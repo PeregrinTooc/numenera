@@ -40,6 +40,8 @@ describe("CharacterSheet layout persistence", () => {
       () => {}
     );
 
+    characterSheet.mount(document.createElement("div"));
+
     // Enter edit mode on the sheet's original (default) in-memory layout.
     characterSheet.toggleLayoutEditMode();
 

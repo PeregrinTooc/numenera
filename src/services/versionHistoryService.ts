@@ -73,6 +73,32 @@ export class VersionHistoryService {
     this.resetTimer();
   }
 
+  /** Save the buffered changes as one squashed version and mark it with its metadata. */
+  private async persistSquash(latest: Character, squashedCount: number): Promise<void> {
+    const combinedDescription = squashDescriptions(this.buffer.descriptions());
+    const version = await this.manager.saveVersion(latest, combinedDescription);
+    await this.manager.updateVersionMetadata(version.id, {
+      isSquashed: true,
+      squashedCount,
+    });
+  }
+
+  /** Drop the committed entries, then stop the timer or give late edits a fresh window. */
+  private dropSquashedAndRearm(squashedCount: number, latest: Character): void {
+    // Drop the squashed entries and the redo stack
+    // Redo stack must be cleared because buffered changes are now committed to a version
+    // If user wants to undo the version, they use version navigation (not buffer redo)
+    this.buffer.dropSquashed(squashedCount, latest);
+    if (this.buffer.length === 0) {
+      this.globalTimer = null;
+    } else {
+      // Late edits now build on the version just saved (the new initial
+      // state). Their timer may have fired into the in-progress guard above,
+      // so give them a fresh window.
+      this.resetTimer();
+    }
+  }
+
   /**
    * Perform squashing operation
    * Combines buffered changes into single version
@@ -97,34 +123,10 @@ export class VersionHistoryService {
       // Edits buffered while the save below is pending belong to the next
       // squash, so remember how many entries this one covers.
       const squashedCount = this.buffer.length;
-
-      // Use the latest character state
       const latest = this.buffer.latest()!;
 
-      // Combine all descriptions
-      const combinedDescription = squashDescriptions(this.buffer.descriptions());
-
-      // Save one squashed version
-      const version = await this.manager.saveVersion(latest.character, combinedDescription);
-
-      // Mark as squashed with metadata
-      await this.manager.updateVersionMetadata(version.id, {
-        isSquashed: true,
-        squashedCount,
-      });
-
-      // Drop the squashed entries and the redo stack
-      // Redo stack must be cleared because buffered changes are now committed to a version
-      // If user wants to undo the version, they use version navigation (not buffer redo)
-      this.buffer.dropSquashed(squashedCount, latest.character);
-      if (this.buffer.length === 0) {
-        this.globalTimer = null;
-      } else {
-        // Late edits now build on the version just saved (the new initial
-        // state). Their timer may have fired into the in-progress guard above,
-        // so give them a fresh window.
-        this.resetTimer();
-      }
+      await this.persistSquash(latest.character, squashedCount);
+      this.dropSquashedAndRearm(squashedCount, latest.character);
 
       // Dispatch custom event to notify that a version was created
       emit("version-squashed");
