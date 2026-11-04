@@ -1,5 +1,6 @@
 import type { ICharacterStorage } from "./ICharacterStorage.js";
 import { STORAGE_KEY, CHARACTER_DB_NAME } from "./storageConstants.js";
+import { openDatabase, requireStore, runRequest, transactionDone } from "./idb.js";
 import type { Character } from "@/types/character";
 import { logger } from "@/utils/logger";
 
@@ -20,25 +21,16 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
   constructor(private readonly availabilityTimeoutMs: number = DEFAULT_AVAILABILITY_TIMEOUT_MS) {}
 
   async init(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-      request.onerror = () => {
-        reject(new Error("Failed to open IndexedDB"));
-      };
-
-      request.onsuccess = () => {
-        this.db = request.result;
-        resolve();
-      };
-
-      request.onupgradeneeded = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
+    this.db = await openDatabase(
+      DB_NAME,
+      DB_VERSION,
+      (db) => {
         if (!db.objectStoreNames.contains(STORE_NAME)) {
           db.createObjectStore(STORE_NAME);
         }
-      };
-    });
+      },
+      () => new Error("Failed to open IndexedDB")
+    );
   }
 
   async save(character: Character): Promise<void> {
@@ -50,45 +42,21 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
   }
 
   private async putInternal(key: string, value: unknown): Promise<void> {
-    if (!this.db) {
-      throw new Error("IndexedDB not initialized");
-    }
+    const transaction = this.requireStore().transaction([STORE_NAME], "readwrite");
+    const request = transaction.objectStore(STORE_NAME).put(value, key);
+    const done = transactionDone(
+      transaction,
+      () => request.error ?? new Error("Failed to save character")
+    );
 
-    // Verify object store exists before creating transaction
-    if (!this.db.objectStoreNames.contains(STORE_NAME)) {
-      throw new Error(`Object store '${STORE_NAME}' not found in database`);
-    }
-
-    return new Promise<void>((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], "readwrite");
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.put(value, key);
-
-      // Settle on the transaction, not the request: a write that exceeds the storage
-      // quota succeeds as a request and only aborts the transaction at commit. The
-      // transaction's error carries the real cause (e.g. QuotaExceededError), which
-      // callers use to tell a full storage from other failures.
-      transaction.oncomplete = () => resolve();
-      transaction.onabort = () =>
-        reject(transaction.error ?? request.error ?? new Error("Failed to save character"));
-
-      // Commit as soon as the request is queued instead of waiting for the implicit
-      // auto-commit. A save issued from an unload handler otherwise commits too late:
-      // the reloaded page can read the previous value and overwrite the edit.
-      transaction.commit();
-    });
+    // Commit as soon as the request is queued instead of waiting for the implicit
+    // auto-commit. A save issued from an unload handler otherwise commits too late:
+    // the reloaded page can read the previous value and overwrite the edit.
+    transaction.commit();
+    return done;
   }
 
   async load(): Promise<unknown> {
-    if (!this.db) {
-      throw new Error("IndexedDB not initialized");
-    }
-
-    // Verify object store exists before creating transaction
-    if (!this.db.objectStoreNames.contains(STORE_NAME)) {
-      throw new Error(`Object store '${STORE_NAME}' not found in database`);
-    }
-
     return this.loadInternal();
   }
 
@@ -97,22 +65,14 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
   }
 
   private async getInternal(key: string): Promise<unknown> {
-    if (!this.db) {
-      throw new Error("IndexedDB not initialized");
-    }
-
-    if (!this.db.objectStoreNames.contains(STORE_NAME)) {
-      throw new Error(`Object store '${STORE_NAME}' not found in database`);
-    }
-
-    return new Promise<unknown>((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], "readonly");
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.get(key);
-
-      request.onsuccess = () => resolve(request.result || null);
-      request.onerror = () => reject(new Error("Failed to load character"));
-    });
+    const result = await runRequest(
+      this.requireStore(),
+      STORE_NAME,
+      "readonly",
+      (store) => store.get(key),
+      () => new Error("Failed to load character")
+    );
+    return result || null;
   }
 
   async saveCorruptedBackup(raw: unknown): Promise<void> {
@@ -132,23 +92,17 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
   }
 
   private async deleteInternal(key: string): Promise<void> {
-    if (!this.db) {
-      throw new Error("IndexedDB not initialized");
-    }
+    await runRequest(
+      this.requireStore(),
+      STORE_NAME,
+      "readwrite",
+      (store) => store.delete(key),
+      () => new Error("Failed to clear character")
+    );
+  }
 
-    // Verify object store exists before creating transaction
-    if (!this.db.objectStoreNames.contains(STORE_NAME)) {
-      throw new Error(`Object store '${STORE_NAME}' not found in database`);
-    }
-
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], "readwrite");
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.delete(key);
-
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(new Error("Failed to clear character"));
-    });
+  private requireStore(): IDBDatabase {
+    return requireStore(this.db, STORE_NAME, "IndexedDB not initialized");
   }
 
   /**

@@ -1,6 +1,7 @@
 import type { Character } from "@/types/character";
 import type { CharacterVersion } from "@/types/versionHistory";
 import { generateETag } from "@/utils/etag";
+import { openDatabase, requireDatabase, runRequest } from "./idb.js";
 import { VERSION_HISTORY_DB_NAME } from "./storageConstants.js";
 
 const DEFAULT_DB_NAME = VERSION_HISTORY_DB_NAME;
@@ -29,30 +30,20 @@ export class VersionHistoryManager {
    * Initialize the IndexedDB connection
    */
   async init(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, DB_VERSION);
-
-      request.onerror = () => {
-        reject(new Error("Failed to open IndexedDB for version history"));
-      };
-
-      request.onsuccess = () => {
-        this.db = request.result;
-        resolve();
-      };
-
-      request.onupgradeneeded = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
+    this.db = await openDatabase(
+      this.dbName,
+      DB_VERSION,
+      (db) => {
         if (!db.objectStoreNames.contains(STORE_NAME)) {
-          // Create object store with auto-incrementing key
           const objectStore = db.createObjectStore(STORE_NAME, {
             keyPath: "id",
           });
           // Create index on timestamp for chronological ordering
           objectStore.createIndex("timestamp", "timestamp", { unique: false });
         }
-      };
-    });
+      },
+      () => new Error("Failed to open IndexedDB for version history")
+    );
   }
 
   /**
@@ -71,9 +62,7 @@ export class VersionHistoryManager {
    * @returns The created CharacterVersion
    */
   async saveVersion(character: Character, description: string): Promise<CharacterVersion> {
-    if (!this.db) {
-      throw new Error("VersionHistoryManager not initialized");
-    }
+    this.requireDb();
 
     // Deep clone character and exclude portrait
     const { portrait: _portrait, ...characterWithoutPortrait } = character;
@@ -128,47 +117,32 @@ export class VersionHistoryManager {
   }
 
   private async getAllVersionsInternal(): Promise<CharacterVersion[]> {
-    if (!this.db) {
-      throw new Error("VersionHistoryManager not initialized");
-    }
+    const versions = await runRequest(
+      this.requireDb(),
+      STORE_NAME,
+      "readonly",
+      (store) => store.index("timestamp").getAll() as IDBRequest<CharacterVersion[]>,
+      () => new Error("Failed to get all versions")
+    );
+    return versions || [];
+  }
 
-    return new Promise<CharacterVersion[]>((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], "readonly");
-      const store = transaction.objectStore(STORE_NAME);
-      const index = store.index("timestamp");
-      const request = index.getAll();
-
-      request.onsuccess = () => {
-        resolve(request.result || []);
-      };
-
-      request.onerror = () => {
-        reject(new Error("Failed to get all versions"));
-      };
-    });
+  private requireDb(): IDBDatabase {
+    return requireDatabase(this.db, "VersionHistoryManager not initialized");
   }
 
   /**
    * Get a specific version by ID
    */
   async getVersionById(id: string): Promise<CharacterVersion | null> {
-    if (!this.db) {
-      throw new Error("VersionHistoryManager not initialized");
-    }
-
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], "readonly");
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.get(id);
-
-      request.onsuccess = () => {
-        resolve(request.result || null);
-      };
-
-      request.onerror = () => {
-        reject(new Error("Failed to get version by ID"));
-      };
-    });
+    const version = await runRequest(
+      this.requireDb(),
+      STORE_NAME,
+      "readonly",
+      (store) => store.get(id) as IDBRequest<CharacterVersion | undefined>,
+      () => new Error("Failed to get version by ID")
+    );
+    return version || null;
   }
 
   /**
@@ -209,46 +183,39 @@ export class VersionHistoryManager {
    * Clear all versions from storage
    */
   async clear(): Promise<void> {
-    if (!this.db) {
-      throw new Error("VersionHistoryManager not initialized");
-    }
-
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], "readwrite");
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.clear();
-
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(new Error("Failed to clear versions"));
-    });
+    await runRequest(
+      this.requireDb(),
+      STORE_NAME,
+      "readwrite",
+      (store) => store.clear(),
+      () => new Error("Failed to clear versions")
+    );
   }
 
   /**
    * Private helper: Save version to IndexedDB
    */
   private async saveToDb(version: CharacterVersion): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], "readwrite");
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.put(version);
-
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(new Error("Failed to save version"));
-    });
+    await runRequest(
+      this.requireDb(),
+      STORE_NAME,
+      "readwrite",
+      (store) => store.put(version),
+      () => new Error("Failed to save version")
+    );
   }
 
   /**
    * Private helper: Delete a version by ID
    */
   private async deleteVersion(id: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], "readwrite");
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.delete(id);
-
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(new Error("Failed to delete version"));
-    });
+    await runRequest(
+      this.requireDb(),
+      STORE_NAME,
+      "readwrite",
+      (store) => store.delete(id),
+      () => new Error("Failed to delete version")
+    );
   }
 
   /**
