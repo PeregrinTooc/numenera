@@ -15,6 +15,13 @@ export function sectionLocator(page: Page, name: string): Locator {
   return page.locator(`[data-section-id="${sectionId(name)}"]`);
 }
 
+/** The ids of the sections on the sheet, in document order. */
+export function sectionOrder(page: Page): Promise<string[]> {
+  return page
+    .locator("[data-section-id]")
+    .evaluateAll((sections) => sections.map((s) => s.getAttribute("data-section-id") ?? ""));
+}
+
 /**
  * Run `action` with the viewport grown to the page's full height (width is
  * unchanged, so the layout is unchanged), scrolled to the top.

@@ -824,12 +824,12 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I long-press the {string} section` | 1 | 13 |
-| When | `I long-press the {string} section and drag it above the {string} section` | 1 | 28 |
-| When | `I long-press the {string} section and drag it onto the {zone} of the {string} section` | 1 | 50 |
-| When | `I swipe from the {string} section towards the {string} section` | 1 | 69 |
-| Then | `the {string} section should be in drag mode` | 1 | 21 |
-| Then | `the page should have scrolled` | 1 | 93 |
+| When | `I long-press the {string} section` | 1 | 15 |
+| When | `I long-press the {string} section and drag it above the {string} section` | 1 | 30 |
+| When | `I long-press the {string} section and drag it onto the {zone} of the {string} section` | 1 | 60 |
+| When | `I swipe from the {string} section towards the {string} section` | 1 | 79 |
+| Then | `the {string} section should be in drag mode` | 1 | 23 |
+| Then | `the page should have scrolled` | 1 | 103 |
 
 ## settings-gear.steps.ts
 
