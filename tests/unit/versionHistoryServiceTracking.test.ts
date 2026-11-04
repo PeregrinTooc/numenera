@@ -1,6 +1,4 @@
 import { describe, it, expect, vi } from "vitest";
-import type { CharacterVersion } from "@/types/versionHistory";
-import type { Character } from "@/types/character";
 import { setupVersionHistoryService } from "./helpers/versionHistoryServiceFixture";
 
 describe("VersionHistoryService - tracking, races and edge cases", () => {
@@ -26,21 +24,25 @@ describe("VersionHistoryService - tracking, races and edge cases", () => {
       // User cancels
 
       vi.advanceTimersByTime(1000);
-      await vi.runAllTimersAsync();
+      await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
-      expect(fx.mockManager.saveVersion).not.toHaveBeenCalled();
+      expect(await fx.manager.getAllVersions()).toHaveLength(0);
     });
   });
 
   describe("Squash race", () => {
     it("should not double-save when the timer fires again during an in-flight squash", async () => {
-      // Make saveVersion controllable so we can catch the window between the
-      // first squash starting and it actually finishing.
-      let resolveSave: (value: CharacterVersion) => void = () => {};
-      const pendingSave = new Promise<CharacterVersion>((resolve) => {
-        resolveSave = resolve;
+      // Hold the first save so we can catch the window between the first
+      // squash starting and it actually finishing.
+      let releaseSave: () => void = () => {};
+      const gate = new Promise<void>((resolve) => {
+        releaseSave = resolve;
       });
-      vi.mocked(fx.mockManager.saveVersion).mockReturnValue(pendingSave);
+      const save = fx.manager.saveVersion.bind(fx.manager);
+      vi.spyOn(fx.manager, "saveVersion").mockImplementationOnce(async (character, description) => {
+        await gate;
+        return save(character, description);
+      });
 
       fx.service.bufferChange(fx.mockCharacter, "Change 1");
 
@@ -55,20 +57,14 @@ describe("VersionHistoryService - tracking, races and edge cases", () => {
       vi.advanceTimersByTime(1000);
       await Promise.resolve();
 
-      resolveSave({
-        id: "version-123",
-        character: fx.mockCharacter,
-        description: "Change 1",
-        timestamp: Date.now(),
-        etag: "etag-123",
-      });
-      await vi.runAllTimersAsync();
+      releaseSave();
+      await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
       // Change 1 saved once by the in-flight squash, then Change 2 on its own
       // once that finished - never Change 1 again as a duplicate.
-      const descriptions = vi
-        .mocked(fx.mockManager.saveVersion)
-        .mock.calls.map((call: [Character, string]) => call[1]);
+      const descriptions = (await fx.manager.getAllVersions()).map(
+        (version) => version.description
+      );
       expect(descriptions).toEqual(["Change 1", "Change 2"]);
     });
   });
@@ -88,27 +84,26 @@ describe("VersionHistoryService - tracking, races and edge cases", () => {
       vi.advanceTimersByTime(600); // Total 1400ms, but timer reset at 800ms
 
       // Timer fires at 1400ms (600ms after last edit)
-      expect(fx.mockManager.saveVersion).not.toHaveBeenCalled();
+      expect(await fx.manager.getAllVersions()).toHaveLength(0);
 
       vi.advanceTimersByTime(400); // Now 1000ms from last reset
 
-      await vi.runAllTimersAsync();
-      await vi.runAllTimersAsync(); // Run again for async operations
+      await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
       // Should have squashed all 3 changes
-      expect(fx.mockManager.saveVersion).toHaveBeenCalledTimes(1);
+      expect(await fx.manager.getAllVersions()).toHaveLength(1);
       expect(fx.service.getBufferLength()).toBe(0);
     });
   });
 
   describe("Edge Cases", () => {
-    it("should handle very rapid buffering", () => {
+    it("should handle very rapid buffering", async () => {
       for (let i = 0; i < 100; i++) {
         fx.service.bufferChange(fx.mockCharacter, `Change ${i}`);
       }
 
       expect(fx.service.getBufferLength()).toBe(100);
-      expect(fx.mockManager.saveVersion).not.toHaveBeenCalled();
+      expect(await fx.manager.getAllVersions()).toHaveLength(0);
     });
 
     it("should handle timer firing during additional buffering", async () => {
@@ -122,7 +117,7 @@ describe("VersionHistoryService - tracking, races and edge cases", () => {
       vi.advanceTimersByTime(1); // Original timer fires
 
       // Timer was reset by bufferChange, so shouldn't fire yet
-      await vi.runAllTimersAsync();
+      await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
       // Should still have buffered changes
       expect(fx.service.getBufferLength()).toBeGreaterThanOrEqual(0); // May have squashed

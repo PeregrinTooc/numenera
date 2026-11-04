@@ -20,8 +20,7 @@ describe("VersionHistoryService - Buffer-Based Undo/Redo", () => {
         expect(fx.service.canUndo()).toBe(true);
 
         vi.advanceTimersByTime(1000);
-        await vi.runAllTimersAsync();
-        await vi.runAllTimersAsync();
+        await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
         expect(fx.service.canUndo()).toBe(false);
       });
@@ -121,8 +120,7 @@ describe("VersionHistoryService - Buffer-Based Undo/Redo", () => {
         fx.service.bufferChange(fx.mockCharacter, "Change 1");
 
         vi.advanceTimersByTime(1000);
-        await vi.runAllTimersAsync();
-        await vi.runAllTimersAsync();
+        await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
         // After squash, initial state should be cleared
         // Attempting to undo should return null
