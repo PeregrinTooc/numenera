@@ -111,20 +111,22 @@ export class ItemsBox {
 
     return html`
       <div data-testid="items-section" class="section-box">
-        <!-- Shins Badge - top-right corner -->
-        <div
-          class="stat-badge badge-top-right editable-field"
-          data-testid="shins-badge"
-          @click=${() => this.openEditModal("shins")}
-          role="button"
-          tabindex="0"
-          aria-label=${t("resourceTracker.editShins")}
-        >
-          <span class="stat-badge-value">${this.character.shins}</span>
-          <span class="stat-badge-label">${t("character.shins")}</span>
-        </div>
+        <!-- Heading row: Shins Badge (top-left), heading -->
+        <div class="section-box-heading-row">
+          <div
+            class="stat-badge editable-field"
+            data-testid="shins-badge"
+            @click=${() => this.openEditModal("shins")}
+            role="button"
+            tabindex="0"
+            aria-label=${t("resourceTracker.editShins")}
+          >
+            <span class="stat-badge-value">${this.character.shins}</span>
+            <span class="stat-badge-label">${t("character.shins")}</span>
+          </div>
 
-        <h2 class="section-box-heading">${t("items.heading")}</h2>
+          <h2 class="section-box-heading">${t("items.heading")}</h2>
+        </div>
 
         <!-- Equipment Section (full width) -->
         <div>
@@ -148,7 +150,7 @@ export class ItemsBox {
             : html`
                 <div
                   data-testid="equipment-list"
-                  class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                  class="section-card-grid"
                   @dragstart=${(e: Event) => this.drag.equipment.handleDragStart(e)}
                   @dragover=${(e: Event) => this.drag.equipment.handleDragOver(e)}
                   @drop=${(e: Event) => this.drag.equipment.handleDrop(e)}
@@ -162,8 +164,8 @@ export class ItemsBox {
         <!-- Divider -->
         <div class="section-divider"></div>
 
-        <!-- Artifacts and Oddities (two columns) -->
-        <div class="two-column-grid">
+        <!-- Artifacts and Oddities (two columns where the section is wide) -->
+        <div class="section-card-grid">
           <!-- Artifacts Column -->
           <div data-testid="artifacts-section">
             <div class="flex justify-between items-center mb-2">

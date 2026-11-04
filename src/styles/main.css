@@ -12,6 +12,7 @@
 @import "./components/header.css";
 @import "./components/basic-info.css";
 @import "./components/section-box.css";
+@import "./components/section-columns.css";
 @import "./components/stat-badge.css";
 @import "./components/cypher-item.css";
 @import "./components/artifact-item.css";

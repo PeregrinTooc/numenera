@@ -1,0 +1,63 @@
+/* Card columns that follow the section's own width */
+/* A card section's template sits in .section-columns (see CharacterSheet). */
+
+.section-columns {
+  container-type: inline-size;
+  position: relative;
+}
+
+/* One column unless the section is set to two and has room for them */
+.section-card-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+@container (min-width: 40rem) {
+  .section-columns-2 .section-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* The one/two-column switch (layout edit mode only). It straddles the top
+   edge of the frame at its right corner, so it covers no content, and it is
+   shown only where two columns are possible. */
+.section-columns-button {
+  display: none;
+  position: absolute;
+  top: -1.375rem;
+  right: 1rem;
+  z-index: 15;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background-color: var(--color-numenera-primary, #1a5490);
+  color: white;
+  border: 2px solid #8b4513;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.section-columns-button:hover {
+  background-color: var(--color-numenera-secondary, #8b4513);
+}
+
+.section-columns-button:focus-visible {
+  outline: 2px solid var(--color-numenera-accent, #d4af37);
+  outline-offset: 2px;
+}
+
+.section-columns-icon {
+  width: 24px;
+  height: 24px;
+}
+
+@container (min-width: 40rem) {
+  .section-columns-button {
+    display: inline-flex;
+  }
+}

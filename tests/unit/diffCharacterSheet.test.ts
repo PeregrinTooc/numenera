@@ -125,4 +125,19 @@ describe("DiffCharacterSheet", () => {
 
     expect(getContainer().querySelector('[data-testid="cyphers-section"]')).toBeNull();
   });
+
+  it("lays out cards in two columns only where the pane is wide enough", () => {
+    const left = createBaseCharacter();
+    const right = createBaseCharacter();
+    right.cyphers = [{ name: "Detonation", level: "1d6", effect: "boom" }];
+    const diff = diffCharacters(left, right);
+
+    const sheet = new DiffCharacterSheet(right, diff).forSide("right");
+    render(sheet.render(), getContainer());
+
+    const list = getContainer().querySelector('[data-testid="cypher-item"]')?.parentElement;
+    expect(list?.classList.contains("section-card-grid")).toBe(true);
+    expect(list?.closest(".section-columns.section-columns-2")).not.toBeNull();
+    expect(list?.classList.contains("md:grid-cols-2")).toBe(false);
+  });
 });

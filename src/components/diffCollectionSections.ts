@@ -13,7 +13,8 @@ import type {
 import type { CollectionDiffEntry, CollectionItemStatus } from "@/utils/characterDiff";
 import { t } from "@/i18n/index";
 
-const GRID_TWO_COLUMNS = "grid grid-cols-1 md:grid-cols-2 gap-4";
+// Two columns only where the pane is wide enough (see section-columns.css)
+const GRID_TWO_COLUMNS = "section-card-grid";
 
 export function diffClass(status: CollectionItemStatus): string {
   switch (status) {
@@ -43,9 +44,11 @@ export function renderCollectionDiff<T>(
 ): TemplateResult | typeof nothing {
   if (entries.length === 0) return nothing;
   return html`
-    <div data-testid="${spec.testId}" class="section-box">
-      <h2 class="section-box-heading">${spec.heading}</h2>
-      <div class="${spec.listClass}">${entries.map(spec.renderItem)}</div>
+    <div class="section-columns section-columns-2">
+      <div data-testid="${spec.testId}" class="section-box">
+        <h2 class="section-box-heading">${spec.heading}</h2>
+        <div class="${spec.listClass}">${entries.map(spec.renderItem)}</div>
+      </div>
     </div>
   `;
 }

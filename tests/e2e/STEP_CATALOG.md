@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **716** in 53 files
-- Feature step lines: **2279**
+- Step definitions: **724** in 54 files
+- Feature step lines: **2316**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -64,6 +64,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 13 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
+| [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 7 | 0 |
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
@@ -423,7 +424,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 58 | 27 |
+| Given | `I am on the character sheet page` | 59 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 151 |
 | Then | `I should see {int} cyphers displayed` | 1 | 113 |
 | Then | `I should see {int} oddities displayed` | 1 | 164 |
@@ -552,7 +553,7 @@ pattern this script does not understand):
 | When | `I hover over the tier {string}` | 1 | 106 |
 | When | `I press the Enter key` | 2 | 192 |
 | When | `I press the Escape key` | 5 | 188 |
-| When | `I reload the page` | 58 | 196 |
+| When | `I reload the page` | 59 | 196 |
 | When | `I reload the page immediately` | 1 | 210 |
 | Then | `I should see the {string} value displayed` | 1 | 221 |
 | When | `I tap on the {string} value` | 1 | 34 |
@@ -630,8 +631,8 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `{string} and {string} are in a grid` | 1 | 52 |
-| Then | `{string} should be in its own row` | 9 | 77 |
+| Given | `{string} and {string} are in a grid` | 4 | 52 |
+| Then | `{string} should be in its own row` | 9 | 72 |
 | When | `I drag the {string} section onto the {zone} of the {string} section` | 9 | 11 |
 | Then | `the {string} section should be the last section` | 2 | 42 |
 | Then | `the grid should show {string} on the left and {string} on the right` | 8 | 18 |
@@ -656,7 +657,7 @@ pattern this script does not understand):
 | Then | `the empty notes message should be {string}` | 1 | 157 |
 | Then | `the empty oddities message should be {string}` | 1 | 141 |
 | Then | `the intellect stat should display {string}` | 1 | 59 |
-| Given | `the language is set to {string}` | 3 | 3 |
+| Given | `the language is set to {string}` | 4 | 3 |
 | Then | `the language should remain German` | 1 | 178 |
 | Then | `the load button should display {string}` | 3 | 32 |
 | Then | `the might stat should display {string}` | 1 | 47 |
@@ -692,7 +693,7 @@ pattern this script does not understand):
 | Then | `I should see the {string} button` | 1 | 80 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 36 |
 | Then | `it should be touch-friendly` | 1 | 91 |
-| Given | `layout edit mode is active` | 28 | 48 |
+| Given | `layout edit mode is active` | 32 | 48 |
 | Then | `layout edit mode should be inactive` | 1 | 59 |
 | Then | `the {string} option should be enabled` | 1 | 134 |
 | Then | `the layout should return to the default arrangement` | 1 | 122 |
@@ -769,6 +770,19 @@ pattern this script does not understand):
 | Then | `the Shins badge should show {string}` | 5 | 127 |
 | Then | `the Total XP badge should show {string}` | 5 | 119 |
 
+## section-columns.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I switch the {string} section to {int} column\(s)` | 1 | 28 |
+| Then | `the {string} heading row should stay inside its frame` | 1 | 100 |
+| Then | `the {string} section should offer a column switch` | 1 | 41 |
+| Then | `the {string} section should offer no column switch` | 3 | 49 |
+| Then | `the {string} section should show its cards in {int} column\(s)` | 7 | 13 |
+| Then | `the armor badge should not cover the add attack button` | 1 | 86 |
+| Then | `the max cyphers badge should be left of the {string} heading` | 1 | 72 |
+| Then | `the shins badge should be left of the {string} heading` | 1 | 79 |
+
 ## section-drop-preview.steps.ts
 
 | Keyword | Phrase | Uses | Line |
@@ -786,7 +800,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I drag the {string} section above the {string} section` | 1 | 53 |
-| When | `I exit layout edit mode` | 1 | 120 |
+| When | `I exit layout edit mode` | 2 | 120 |
 | Given | `I have moved the {string} section to the top` | 1 | 91 |
 | Given | `I have reordered sections` | 1 | 10 |
 | Then | `the {string} section should appear before the {string} section` | 11 | 60 |
@@ -1073,5 +1087,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 37 | 9 |
+| Given | `the viewport is {int} pixels wide` | 47 | 9 |
 

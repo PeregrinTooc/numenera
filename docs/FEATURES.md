@@ -180,6 +180,25 @@ All features listed below have full BDD test coverage and are verified working.
     (not under reduced motion)
   - Mouse and touch (long-press), including touch pairing on wide screens
 
+- **Section Columns and Frames** ([section-columns.feature](../tests/e2e/features/section-columns.feature),
+  spec: `docs/superpowers/specs/2026-11-03-section-columns-and-frames-design.md`)
+  - Card sections (Abilities, Special Abilities, Attacks, Cyphers, Items) lay
+    out their cards by their own width: one column when narrow (paired side by
+    side, phones), the section's setting when at least 40rem wide (CSS
+    container query)
+  - In layout edit mode, a card section wide enough for two columns shows a
+    one/two-column switch at its top-right corner; the choice is stored with
+    the layout (`numenera-section-columns`), exported with the character, and
+    cleared by Reset Layout
+  - Defaults are the previous look: Abilities, Cyphers and Items two columns;
+    Special Abilities and Attacks one
+  - Every section sits in the same brown frame (`.section-box`); Background
+    and Notes lose their amber box; Recovery/Damage keeps its green and red
+    boxes inside the frame
+  - Cyphers' max-cyphers badge and Items' shins badge sit at the top left of
+    their heading row
+  - The comparison view applies the same width rule (no switch)
+
 ### Automated Section Drag/Drop Tests & Touch Long-Press Drag
 
 - **Touch Long-Press Section Dragging**

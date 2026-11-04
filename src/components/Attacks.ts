@@ -63,8 +63,8 @@ export class Attacks {
         });
 
     return html`
-      <div data-testid="attacks-section" class="mt-8">
-        <div class="flex justify-between items-center mb-4">
+      <div data-testid="attacks-section" class="section-box">
+        <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
           <div class="flex items-center gap-3">
             <h2 class="text-2xl font-serif font-bold text-gray-700">${t("attacks.title")} ⚔️</h2>
             ${renderAddButton({
@@ -99,7 +99,7 @@ export class Attacks {
           : html`
               <div
                 data-testid="attacks-list"
-                class="grid grid-cols-1 gap-4"
+                class="section-card-grid"
                 @dragstart=${(e: Event) => this.drag.handleDragStart(e)}
                 @dragover=${(e: Event) => this.drag.handleDragOver(e)}
                 @drop=${(e: Event) => this.drag.handleDrop(e)}

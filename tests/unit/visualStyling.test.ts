@@ -215,7 +215,7 @@ describe("Visual Styling Tests", () => {
   });
 
   describe("Text Fields Styling", () => {
-    it("should apply parchment-field class to text field containers", () => {
+    it("should frame text fields like every other section", () => {
       const character = createMockCharacter();
       const textFields = new BottomTextFields(character);
       render(textFields.render(), getContainer());
@@ -224,9 +224,9 @@ describe("Visual Styling Tests", () => {
       const backgroundField = container.querySelector('[data-testid="character-background"]');
       const notesField = container.querySelector('[data-testid="character-notes"]');
 
-      // The parent container should have parchment-field class
-      expect(backgroundField?.closest(".parchment-field")).toBeTruthy();
-      expect(notesField?.closest(".parchment-field")).toBeTruthy();
+      // The parent container should have the shared section frame
+      expect(backgroundField?.closest(".section-box")).toBeTruthy();
+      expect(notesField?.closest(".section-box")).toBeTruthy();
     });
 
     it("should apply inline-edit-textarea class to text areas", () => {

@@ -1,5 +1,5 @@
 /* Shared Section Box Styles */
-/* Used for Stats, Cyphers, and Items sections */
+/* The frame every section sits in (Basic Info has an identical .basic-info-card) */
 
 .section-box {
   position: relative;
@@ -21,6 +21,21 @@
   letter-spacing: 0.05em;
 }
 
+/* Heading row with a badge at its start (Cyphers, Items): badge, heading,
+   add button. The row carries the heading's bottom margin; on a narrow
+   phone a long heading wraps below the badge instead of leaving the frame. */
+.section-box-heading-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-box-heading-row .section-box-heading {
+  margin-bottom: 0;
+}
+
 /* Section dividers for items box */
 .section-divider {
   height: 2px;
@@ -39,18 +54,7 @@
   letter-spacing: 0.05em;
 }
 
-/* Two-column layout for Artifacts | Oddities */
-.two-column-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-}
-
 @media (max-width: 768px) {
-  .two-column-grid {
-    grid-template-columns: 1fr;
-  }
-
   .section-box {
     padding: 1.5rem;
   }

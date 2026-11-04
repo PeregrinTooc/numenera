@@ -27,6 +27,10 @@
     }
   },
   "layout": {
+    "columns": {
+      "showTwo": "Karten zweispaltig anzeigen",
+      "showOne": "Karten einspaltig anzeigen"
+    },
     "editButton": {
       "edit": "Layout bearbeiten",
       "exit": "Fertig"

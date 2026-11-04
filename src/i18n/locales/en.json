@@ -27,6 +27,10 @@
     }
   },
   "layout": {
+    "columns": {
+      "showTwo": "Show cards in two columns",
+      "showOne": "Show cards in one column"
+    },
     "editButton": {
       "edit": "Edit Layout",
       "exit": "Done"

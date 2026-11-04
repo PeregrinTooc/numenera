@@ -9,9 +9,11 @@ import {
   resetLayout,
   hasCustomLayout,
   getDefaultLayout,
+  loadSectionColumns,
+  saveSectionColumns,
 } from "@/storage/layoutStorage";
 import { DEFAULT_LAYOUT, Layout, layoutsAreEqual } from "@/types/layout";
-import { LAYOUT_STORAGE_KEY } from "@/storage/storageConstants";
+import { LAYOUT_STORAGE_KEY, SECTION_COLUMNS_STORAGE_KEY } from "@/storage/storageConstants";
 
 describe("Layout Storage", () => {
   beforeEach(() => {
@@ -209,6 +211,32 @@ describe("Layout Storage", () => {
 
       expect(layout1).not.toBe(layout2);
       expect(layoutsAreEqual(layout1, layout2)).toBe(true);
+    });
+  });
+
+  describe("section columns", () => {
+    it("column choices round-trip through storage", () => {
+      saveSectionColumns({ cyphers: 1, attacks: 2 });
+
+      expect(loadSectionColumns()).toEqual({ cyphers: 1, attacks: 2 });
+    });
+
+    it("missing, unparseable or invalid column choices load as none", () => {
+      expect(loadSectionColumns()).toEqual({});
+
+      localStorage.setItem(SECTION_COLUMNS_STORAGE_KEY, "{");
+      expect(loadSectionColumns()).toEqual({});
+
+      localStorage.setItem(SECTION_COLUMNS_STORAGE_KEY, '{"stats":2}');
+      expect(loadSectionColumns()).toEqual({});
+    });
+
+    it("resetting the layout clears the column choices", () => {
+      saveSectionColumns({ cyphers: 1 });
+
+      resetLayout();
+
+      expect(localStorage.getItem(SECTION_COLUMNS_STORAGE_KEY)).toBeNull();
     });
   });
 });

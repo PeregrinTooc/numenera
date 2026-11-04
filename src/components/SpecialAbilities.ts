@@ -45,7 +45,7 @@ export class SpecialAbilities {
         });
 
     return html`
-      <div data-testid="special-abilities-section" class="mt-8">
+      <div data-testid="special-abilities-section" class="section-box">
         <div class="flex items-center gap-3 mb-4">
           <h2 class="text-2xl font-serif font-bold text-gray-700">
             ${t("specialAbilities.title")} ✨
@@ -66,7 +66,7 @@ export class SpecialAbilities {
           : html`
               <div
                 data-testid="special-abilities-list"
-                class="grid grid-cols-1 gap-4"
+                class="section-card-grid"
                 @dragstart=${(e: Event) => this.drag.handleDragStart(e)}
                 @dragover=${(e: Event) => this.drag.handleDragOver(e)}
                 @drop=${(e: Event) => this.drag.handleDrop(e)}

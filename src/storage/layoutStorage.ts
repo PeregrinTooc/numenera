@@ -6,7 +6,8 @@
  */
 
 import { Layout, DEFAULT_LAYOUT, isValidLayout, cloneLayout } from "@/types/layout";
-import { LAYOUT_STORAGE_KEY } from "./storageConstants.js";
+import { SectionColumns, isValidSectionColumns } from "@/types/sectionColumns";
+import { LAYOUT_STORAGE_KEY, SECTION_COLUMNS_STORAGE_KEY } from "./storageConstants.js";
 
 /**
  * Save layout to localStorage
@@ -52,11 +53,12 @@ export function loadLayout(): Layout {
 
 /**
  * Reset layout to default
- * Clears the stored layout and returns the default
+ * Clears the stored layout and column choices and returns the default
  */
 export function resetLayout(): Layout {
   try {
     localStorage.removeItem(LAYOUT_STORAGE_KEY);
+    localStorage.removeItem(SECTION_COLUMNS_STORAGE_KEY);
   } catch (error) {
     // Continuing is fine: the caller gets the default layout, and a stale stored one only reverts visibly.
     console.error("Failed to clear layout:", error);
@@ -82,4 +84,41 @@ export function hasCustomLayout(): boolean {
  */
 export function getDefaultLayout(): Layout {
   return cloneLayout(DEFAULT_LAYOUT);
+}
+
+/**
+ * Save the card sections' column choices (non-default values only)
+ */
+export function saveSectionColumns(columns: SectionColumns): void {
+  try {
+    localStorage.setItem(SECTION_COLUMNS_STORAGE_KEY, JSON.stringify(columns));
+  } catch (error) {
+    // Continuing is fine: a lost column choice is cosmetic - the section visibly reverts to its default.
+    console.error("Failed to save section columns:", error);
+  }
+}
+
+/**
+ * Load the card sections' column choices
+ *
+ * @returns The stored choices, or none (every section at its default) if not found or invalid
+ */
+export function loadSectionColumns(): SectionColumns {
+  try {
+    const stored = localStorage.getItem(SECTION_COLUMNS_STORAGE_KEY);
+    if (!stored) {
+      return {};
+    }
+
+    const parsed: unknown = JSON.parse(stored);
+    if (!isValidSectionColumns(parsed)) {
+      console.warn("Invalid section columns in storage, using defaults");
+      return {};
+    }
+
+    return parsed;
+  } catch (error) {
+    console.error("Failed to load section columns:", error);
+    return {};
+  }
 }

@@ -44,7 +44,7 @@ export class BottomTextFields {
 
   private renderField(field: TextField, label: string, placeholder: string): TemplateResult {
     return html`
-      <div class="parchment-field">
+      <div data-testid="${field}-section" class="section-box">
         <h3 class="text-lg font-bold mb-2 text-amber-900">${label}</h3>
         <textarea
           data-testid="character-${field}"
