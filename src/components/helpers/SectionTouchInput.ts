@@ -3,18 +3,12 @@
 
 import { SectionId, isSectionId } from "@/types/layout";
 import { LongPressDrag } from "@/components/helpers/LongPressDrag";
+import type { SectionDragCallbacks } from "@/components/helpers/sectionDragInput";
 
-/** What the drag controller does with the touch gesture. */
-export interface SectionTouchCallbacks {
-  isEditMode(): boolean;
-  /** A long-press activated: the section is being dragged. */
-  onActivate(sectionId: SectionId): void;
+/** What the drag session does with the touch gesture. */
+export interface SectionTouchCallbacks extends SectionDragCallbacks {
   /** The finger is at (`x`, `y`) during the drag. */
   onHover(x: number, y: number): void;
-  /** The finger was released: drop. */
-  onDrop(): void;
-  /** The gesture was abandoned. */
-  onAbort(): void;
 }
 
 export class SectionTouchInput {

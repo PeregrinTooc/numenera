@@ -1,5 +1,6 @@
 // Drag-and-drop of character sheet sections: native HTML5 DnD for mouse,
-// long-press (via LongPressDrag) for touch.
+// long-press (via LongPressDrag) for touch. The inputs report to the drag
+// session here: hover → intent → live preview → drop or cancel.
 
 import { nothing, TemplateResult } from "lit-html";
 import { Layout, SectionId, isSectionId, layoutsAreEqual } from "@/types/layout";
@@ -9,6 +10,7 @@ import { dropZoneAt, resolveDropIntent } from "@/utils/sectionDrop";
 import { applyDrop } from "@/utils/layoutOperations";
 import { isWideLayout } from "@/utils/viewport";
 import { SectionTouchInput } from "@/components/helpers/SectionTouchInput";
+import { SectionMouseInput } from "@/components/helpers/SectionMouseInput";
 import {
   SectionDragBindings,
   renderDragSection,
@@ -44,14 +46,7 @@ export class SectionDragController {
   /** The dwell, anchor, slide guard and layout of the live preview. */
   private readonly livePreview = new LivePreview();
 
-  /**
-   * Watches the document during a mouse section drag for a drag whose end
-   * was never reported (see endLostDrag). One stable function, so it can be
-   * removed again.
-   */
-  private readonly lostDragListener = (e: MouseEvent): void => this.endLostDrag(e);
-
-  /** Touch long-press → section drag; mouse drags use native HTML5 DnD. */
+  /** Touch long-press → section drag. */
   private readonly touch = new SectionTouchInput({
     isEditMode: () => this.host.isEditMode(),
     onActivate: (id) => this.handleTouchDragActivate(id),
@@ -60,28 +55,24 @@ export class SectionDragController {
     onAbort: () => this.clearDragState(),
   });
 
-  /**
-   * Lit listener object for dragstart, registered in the capture phase so it
-   * runs before a card's own dragstart handler inside the section (e.g.
-   * Abilities). During an active touch drag, `handleDragStart` stops the
-   * event here so the card never sees it and never marks itself as dragging.
-   */
-  private readonly dragStartListener = {
-    handleEvent: (e: Event): void => {
-      const sectionId = (e.currentTarget as HTMLElement).dataset.sectionId;
-      if (sectionId && isSectionId(sectionId)) {
-        this.handleDragStart(e as DragEvent, sectionId);
-      }
-    },
-    capture: true,
-  };
+  /** Native HTML5 drag and drop → section drag. */
+  private readonly mouse = new SectionMouseInput({
+    isEditMode: () => this.host.isEditMode(),
+    isDragging: () => this.draggedSectionId !== null,
+    isTouchDragging: () => this.touch.isActive(),
+    onActivate: (id) => this.handleMouseDragActivate(id),
+    onHover: (section, x, y) => this.hover(section, x, y),
+    acceptsDrop: () => this.intent !== null || this.livePreview.shownLayout() !== null,
+    onDrop: () => this.drop(),
+    onAbort: () => this.clearDragState(),
+  });
 
-  /** The wrapper's event bindings: the stable listener objects above. */
+  /** The wrapper's event bindings: the inputs' stable listener objects. */
   private readonly bindings: SectionDragBindings = {
-    dragStart: this.dragStartListener,
+    dragStart: this.mouse.dragStartListener,
     touchStart: this.touch.touchStartListener,
     touchMove: this.touch.touchMoveListener,
-    dragEnd: () => this.clearDragState(),
+    dragEnd: () => this.mouse.handleDragEnd(),
     touchEnd: () => this.touch.end(),
     touchCancel: () => this.touch.cancel(),
     contextMenu: (e) => this.touch.handleContextMenu(e),
@@ -122,74 +113,14 @@ export class SectionDragController {
     this.touch.cancel();
   }
 
-  private handleDragStart(e: DragEvent, sectionId: SectionId): void {
-    if (this.touch.isActive()) {
-      // Android can start its own long-press drag; the touch drag owns this
-      // gesture. This listener runs in the capture phase (see
-      // dragStartListener), so stopping it here keeps a card inside the
-      // section (e.g. Abilities) from ever seeing the event and marking
-      // itself as dragging.
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
-    if (!this.host.isEditMode()) return;
-    // A card inside the section is the drag source: that is the card's own
-    // reorder drag, not a section drag.
-    if (e.target !== e.currentTarget) return;
-
-    // A previous drag may never have reported its end (see endLostDrag)
-    this.resetDragState();
-    this.draggedSectionId = sectionId;
-    document.addEventListener("pointermove", this.lostDragListener);
-    if (e.dataTransfer) {
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", sectionId);
-    }
-    this.host.requestRender();
-  }
-
-  /**
-   * Browsers send no pointer events during a native drag, so a pointer move
-   * with no button pressed means the drag ended without a dragend. Firefox
-   * (and sometimes WebKit) skips dragend when the drag source left the page,
-   * which a live preview can cause. End the drag; nothing is saved.
-   */
-  private endLostDrag(e: MouseEvent): void {
-    if (e.buttons !== 0) return;
-    this.clearDragState();
-  }
-
-  /**
-   * Mouse dragover anywhere on the sheet. Bound on the sheet container rather
-   * than on each section, so the gutters between sections reach it too.
-   */
+  /** Mouse dragover anywhere on the sheet (see SectionMouseInput). */
   handleDragOver(e: DragEvent): void {
-    if (!this.host.isEditMode() || !this.draggedSectionId) return;
-
-    // closest() finds the section wrapper even from a card nested inside it,
-    // so the zones span the whole section. Over a gutter (no section) the
-    // last intent stands: crossing a gap neither cancels nor jumps.
-    const section =
-      e.target instanceof Element ? e.target.closest<HTMLElement>("[data-section-id]") : null;
-    if (section) this.hover(section, e.clientX, e.clientY);
-    // Not a drop target: the browser shows "no drop"
-    if (!this.intent && !this.livePreview.shownLayout()) return;
-
-    e.preventDefault();
-    if (e.dataTransfer) {
-      e.dataTransfer.dropEffect = "move";
-    }
+    this.mouse.handleDragOver(e);
   }
 
-  /**
-   * Mouse drop anywhere on the sheet (bound with handleDragOver): apply the
-   * intent from the last dragover
-   */
+  /** Mouse drop anywhere on the sheet (see SectionMouseInput). */
   handleDrop(e: DragEvent): void {
-    if (!this.host.isEditMode() || !this.draggedSectionId) return;
-    e.preventDefault();
-    this.drop();
+    this.mouse.handleDrop(e);
   }
 
   /** The layout to render while a live preview is shown (null: the sheet's own) */
@@ -233,6 +164,13 @@ export class SectionDragController {
   /** The layout hovers are resolved against: the live preview, else the sheet's */
   private workingLayout(): Layout {
     return this.livePreview.workingLayout(this.host.getLayout());
+  }
+
+  private handleMouseDragActivate(sectionId: SectionId): void {
+    // A previous drag may never have reported its end
+    this.resetDragState();
+    this.draggedSectionId = sectionId;
+    this.host.requestRender();
   }
 
   private handleTouchDragActivate(sectionId: SectionId): void {
@@ -287,7 +225,7 @@ export class SectionDragController {
 
   /** Forget the drag, its intent and any live preview (which is not saved) */
   private resetDragState(): void {
-    document.removeEventListener("pointermove", this.lostDragListener);
+    this.mouse.stopWatching();
     this.livePreview.reset();
     this.draggedSectionId = null;
     this.setIntent(null);
