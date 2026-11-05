@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **726** in 54 files
-- Feature step lines: **2322**
+- Step definitions: **727** in 54 files
+- Feature step lines: **2325**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -69,7 +69,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
 | [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 6 | 0 |
-| [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
+| [settings-gear.steps.ts](#settingsgearstepsts) | 18 | 0 |
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
 | [storage-failure.steps.ts](#storagefailurestepsts) | 8 | 0 |
@@ -837,23 +837,24 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am viewing an old version with the version navigator visible` | 1 | 90 |
+| Given | `I am viewing an old version with the version navigator visible` | 1 | 102 |
 | Given | `I am viewing the character sheet` | 1 | 5 |
-| When | `I click outside the settings panel` | 1 | 41 |
-| When | `I click the British flag icon` | 1 | 66 |
-| When | `I click the German flag icon` | 2 | 62 |
-| When | `I click the settings gear icon` | 1 | 25 |
-| Given | `I have opened the settings panel` | 9 | 37 |
-| Then | `I should be able to click the settings gear icon` | 1 | 18 |
-| Then | `I should see a {string} option` | 1 | 97 |
-| Then | `I should see a settings gear icon in the header` | 1 | 10 |
-| Then | `I should see the settings panel` | 1 | 29 |
-| Then | `the {string} option should be disabled` | 1 | 103 |
-| Given | `the interface is in German` | 1 | 80 |
-| Then | `the interface should display in English` | 1 | 75 |
-| Then | `the interface should display in German` | 1 | 70 |
-| Then | `the settings gear icon should still be visible` | 1 | 14 |
-| Then | `the settings panel should close` | 4 | 33 |
+| When | `I click outside the settings panel` | 1 | 53 |
+| When | `I click the British flag icon` | 1 | 78 |
+| When | `I click the German flag icon` | 2 | 74 |
+| When | `I click the settings gear icon` | 2 | 37 |
+| Given | `I have opened the settings panel` | 9 | 49 |
+| Then | `I should be able to click the settings gear icon` | 1 | 30 |
+| Then | `I should see a {string} option` | 1 | 109 |
+| Then | `I should see a settings gear icon in the header` | 1 | 22 |
+| Then | `I should see the settings panel` | 2 | 41 |
+| Then | `the {string} option should be disabled` | 1 | 115 |
+| Given | `the browser offers no secure-origin cryptography` | 1 | 10 |
+| Given | `the interface is in German` | 1 | 92 |
+| Then | `the interface should display in English` | 1 | 87 |
+| Then | `the interface should display in German` | 1 | 82 |
+| Then | `the settings gear icon should still be visible` | 1 | 26 |
+| Then | `the settings panel should close` | 4 | 45 |
 
 ## sheet-toolbar.steps.ts
 

@@ -8,6 +8,18 @@ Given("I am viewing the character sheet", async function (this: CustomWorld) {
   await this.page.waitForSelector('[data-testid="character-header"]');
 });
 
+Given("the browser offers no secure-origin cryptography", async function (this: CustomWorld) {
+  // As on plain HTTP at a network address: the app is served from localhost,
+  // which counts as secure, so take the APIs away before it boots again
+  await this.page.addInitScript(() => {
+    const cryptoPrototype = Object.getPrototypeOf(crypto);
+    Object.defineProperty(cryptoPrototype, "subtle", { get: () => undefined });
+    Object.defineProperty(cryptoPrototype, "randomUUID", { value: undefined });
+  });
+  await this.page.reload();
+  await this.page.waitForSelector('[data-testid="character-header"]');
+});
+
 Then("I should see a settings gear icon in the header", async function (this: CustomWorld) {
   await expect(this.dom.getByTestId("settings-gear-button")).toBeVisible();
 });

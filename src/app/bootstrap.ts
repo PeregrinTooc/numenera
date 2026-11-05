@@ -41,12 +41,6 @@ async function initConflictDetection(ctx: AppContext, initialCharacter: Characte
   const appEl = document.getElementById("app");
   if (appEl) {
     new ConflictWarningModal(appEl);
-
-    appEl.addEventListener("settings-updated", () => {
-      if (ctx.currentSheet && ctx.currentCharacter) {
-        ctx.currentSheet.mount(appEl);
-      }
-    });
   }
 
   window.addEventListener("conflict-resolved", async (event: Event) => {

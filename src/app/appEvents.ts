@@ -55,4 +55,9 @@ export function registerAppEventListeners(ctx: AppContext, app: HTMLElement): vo
   });
 
   app.addEventListener("character-updated", () => handleCharacterUpdated(ctx));
+
+  // The settings panel lives in the sheet's header
+  app.addEventListener("settings-updated", () => {
+    ctx.currentSheet?.rerender();
+  });
 }
