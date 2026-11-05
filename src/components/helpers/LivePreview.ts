@@ -35,6 +35,8 @@ export class LivePreview {
    * Their boxes are in motion, so hovers are ignored meanwhile.
    */
   private slide: Promise<void> | null = null;
+  /** The last hover ignored while the sections slid, handed on once they arrive. */
+  private heldBackHover: Point | null = null;
 
   /** The layout shown by the live preview; null when none is shown. */
   shownLayout(): Layout | null {
@@ -58,7 +60,10 @@ export class LivePreview {
    */
   shouldIgnoreHover(x: number, y: number): boolean {
     this.lastPointer = { x, y };
-    if (this.slide) return true;
+    if (this.slide) {
+      this.heldBackHover = { x, y };
+      return true;
+    }
     if (this.anchor) {
       const { x: ax, y: ay } = this.anchor;
       if (Math.hypot(x - ax, y - ay) <= LIVE_PREVIEW_SETTLE_PX) return true;
@@ -93,16 +98,19 @@ export class LivePreview {
 
   /**
    * Ignore hovers until `slide` (the sections moving into place) is done, then
-   * hand `onArrived` the pointer where it rests: it may have stopped over a new
-   * zone meanwhile and not move again.
+   * hand `onArrived` the last of them: the pointer may have stopped over a new
+   * zone meanwhile and not move again. Without one it still rests where the
+   * preview appeared, which the settle distance ignores anyway.
    */
   followSlide(slide: Promise<void> | null, onArrived: (x: number, y: number) => void): void {
     this.slide = slide;
+    this.heldBackHover = null;
     void slide?.then(() => {
       if (this.slide !== slide) return;
       this.slide = null;
-      if (!this.lastPointer) throw new Error("A live preview slide follows a hover");
-      onArrived(this.lastPointer.x, this.lastPointer.y);
+      const hover = this.heldBackHover;
+      this.heldBackHover = null;
+      if (hover) onArrived(hover.x, hover.y);
     });
   }
 
@@ -112,6 +120,7 @@ export class LivePreview {
     this.shown = null;
     this.anchor = null;
     this.slide = null;
+    this.heldBackHover = null;
     this.lastPointer = null;
   }
 
