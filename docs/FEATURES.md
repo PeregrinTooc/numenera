@@ -178,6 +178,8 @@ All features listed below have full BDD test coverage and are verified working.
     the pointer moves on
   - The sections slide into the live preview, and back when it is cancelled
     (not under reduced motion)
+  - The section under the pointer keeps its place on screen when the live
+    preview appears or is cancelled: the page scrolls instead
   - Mouse and touch (long-press), including touch pairing on wide screens
 
 - **Section Columns and Frames** ([section-columns.feature](../tests/e2e/features/section-columns.feature),

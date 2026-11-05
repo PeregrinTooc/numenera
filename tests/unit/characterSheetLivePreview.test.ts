@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import { createTestCharacter } from "../factories/character.js";
 import {
+  layOutByRows,
   mouseDrag,
   mountSheet,
   placeSection,
@@ -50,6 +51,18 @@ describe("CharacterSheet live layout preview", () => {
     expect(pairGrid()).toBeNull();
     vi.advanceTimersByTime(1);
     expect(pairGrid()).not.toBeNull();
+  });
+
+  it("keeps the section under the finger where it was on screen when the live preview appears", () => {
+    layOutByRows();
+    const before = section("items").getBoundingClientRect().top;
+    touchDragOver("cyphers", "items", 600, before + 120); // middle right: pair
+
+    vi.advanceTimersByTime(300);
+
+    // Cyphers' own row above Items is gone, which would lift Items a row
+    expect(pairGrid()).not.toBeNull();
+    expect(section("items").getBoundingClientRect().top).toBe(before);
   });
 
   it("releasing during the live preview commits what is shown", () => {

@@ -23,6 +23,7 @@ import { renderEditLayoutButton } from "@/components/helpers/layoutEditButton";
 import { renderSectionColumnsButton } from "@/components/helpers/sectionColumnsButton";
 import {
   cancelSectionSlides,
+  keepSectionStill,
   measureSections,
   slideSections,
 } from "@/components/helpers/sectionSlide";
@@ -38,7 +39,7 @@ export class CharacterSheet {
   private readonly drag = new SectionDragController({
     isEditMode: () => this.isLayoutEditMode,
     requestRender: () => this.rerender(),
-    renderWithSlide: () => this.rerenderWithSlide(),
+    renderWithSlide: (keepStill) => this.rerenderWithSlide(keepStill),
     getLayout: () => this.layout,
     commitLayout: (layout) => this.applyLayout(layout),
   });
@@ -202,12 +203,14 @@ export class CharacterSheet {
 
   /**
    * Re-render the whole sheet in place; sections that moved slide from their
-   * old places. Resolves when the slide has finished; null when nothing slides.
+   * old places, except `keepStill` (see `keepSectionStill`). Resolves when the
+   * slide has finished; null when nothing slides.
    */
-  private rerenderWithSlide(): Promise<void> | null {
+  private rerenderWithSlide(keepStill?: SectionId): Promise<void> | null {
     const container = this.mountedContainer();
     const first = measureSections(container);
     this.mount(container);
+    if (keepStill) keepSectionStill(container, first, keepStill);
     return slideSections(container, first);
   }
 

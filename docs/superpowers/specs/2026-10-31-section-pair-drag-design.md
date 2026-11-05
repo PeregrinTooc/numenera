@@ -185,6 +185,17 @@ until the pointer moves on. (The first version of this amendment assumed the
 dragged section would always end up under the pointer as a no-op zone; that
 was wrong.)
 
+- **The section under the pointer stays where it is on screen (amended
+  2026-11-05, chosen by the maintainer after a Safari check).** When the live
+  preview appears, the page scrolls so the section the pointer was over keeps
+  its place on screen; the sections around it slide. Without this the target
+  moved away under a still pointer: pairing Cyphers with Items removes
+  Cyphers' row above Items (all browsers), and WebKit also scrolls by itself
+  when a re-render replaces what is on screen. Cancelling a live preview keeps
+  the section last pointed at still too, so the sheet returns to where it was
+  on screen. Near the top of the page the browser cannot scroll far enough,
+  and the target may still move.
+
 A spike (not committed) confirmed that re-rendering mid-drag re-creates the
 dragged section's element without breaking the gesture: native mouse drags on
 Chromium and WebKit and CDP touch drags on Chromium kept delivering

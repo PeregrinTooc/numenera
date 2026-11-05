@@ -1,7 +1,7 @@
 // The live preview of a section drag: after a drop intent holds still, the
 // sheet shows its result without saving it.
 
-import { Layout } from "@/types/layout";
+import { Layout, type SectionId } from "@/types/layout";
 
 /** How long a drop intent must hold before the sheet shows its result. */
 export const LIVE_PREVIEW_DELAY_MS = 300;
@@ -19,8 +19,11 @@ interface Point {
 }
 
 export class LivePreview {
-  /** The layout shown after the intent held still: not saved until the drop. */
-  private layout: Layout | null = null;
+  /**
+   * The layout shown after the intent held still (not saved until the drop),
+   * and the section it keeps where it was on screen.
+   */
+  private shown: { layout: Layout; keptStill: SectionId } | null = null;
   /** Pending switch to the live preview of the current intent. */
   private dwellTimer: ReturnType<typeof setTimeout> | null = null;
   /** Where the pointer was at the last hover. */
@@ -35,12 +38,17 @@ export class LivePreview {
 
   /** The layout shown by the live preview; null when none is shown. */
   shownLayout(): Layout | null {
-    return this.layout;
+    return this.shown?.layout ?? null;
+  }
+
+  /** The section the live preview keeps still; null when none is shown. */
+  keptStill(): SectionId | null {
+    return this.shown?.keptStill ?? null;
   }
 
   /** The layout hovers are resolved against: the live preview, else `saved` */
   workingLayout(saved: Layout): Layout {
-    return this.layout ?? saved;
+    return this.shown?.layout ?? saved;
   }
 
   /**
@@ -74,9 +82,12 @@ export class LivePreview {
     }, LIVE_PREVIEW_DELAY_MS);
   }
 
-  /** Show `layout`; later hovers build on it until the pointer moves on. */
-  show(layout: Layout | null): void {
-    this.layout = layout;
+  /**
+   * Show `layout`, keeping section `keptStill` where it was on screen; later
+   * hovers build on it until the pointer moves on.
+   */
+  show(layout: Layout | null, keptStill: SectionId): void {
+    this.shown = layout && { layout, keptStill };
     this.anchor = this.lastPointer;
   }
 
@@ -98,7 +109,7 @@ export class LivePreview {
   /** Forget the live preview and everything tracked for it. */
   reset(): void {
     this.cancelDwell();
-    this.layout = null;
+    this.shown = null;
     this.anchor = null;
     this.slide = null;
     this.lastPointer = null;

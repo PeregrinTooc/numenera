@@ -1,48 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from "vitest";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import { createTestCharacter } from "../factories/character.js";
-
-type TouchType = "touchstart" | "touchmove" | "touchend" | "touchcancel";
-
-/** jsdom has TouchEvent but no Touch constructor, so `touches` is stubbed. */
-function touch(target: Element, type: TouchType, points: { x: number; y: number }[] = []): void {
-  const event = new TouchEvent(type, { bubbles: true, cancelable: true });
-  Object.defineProperty(event, "touches", {
-    value: points.map((p) => ({ clientX: p.x, clientY: p.y })),
-  });
-  target.dispatchEvent(event);
-}
-
-function section(id: string): HTMLElement {
-  const element = document.querySelector<HTMLElement>(`[data-section-id="${id}"]`);
-  if (!element) throw new Error(`No section ${id}`);
-  return element;
-}
+import { layOutByRows, ROW_HEIGHT, section, touch } from "./helpers/sectionDragFixture.js";
 
 function pairGrid(): Element | null {
   return document.querySelector('[data-testid="layout-grid-items-cyphers"]');
-}
-
-const ROW_HEIGHT = 200;
-
-/**
- * jsdom lays nothing out: place every section the way a wide browser would,
- * from where it is in the DOM. Row n starts at n * ROW_HEIGHT; a single row is
- * 800 wide, a pair's halves 400 each.
- */
-function layOutByRows(): void {
-  vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (
-    this: HTMLElement
-  ) {
-    const rows = Array.from(
-      document.querySelectorAll('[data-testid^="layout-grid-"], [data-section-id]')
-    ).filter((el) => !el.parentElement?.closest('[data-testid^="layout-grid-"]'));
-    const grid = this.parentElement?.closest('[data-testid^="layout-grid-"]');
-    const top = rows.indexOf(grid ?? this) * ROW_HEIGHT;
-    if (!grid) return new globalThis.DOMRect(0, top, 800, ROW_HEIGHT);
-    const left = grid.firstElementChild === this ? 0 : 400;
-    return new globalThis.DOMRect(left, top, 400, ROW_HEIGHT);
-  });
 }
 
 /** A Web Animations stand-in whose `finished` the test settles. */
@@ -151,8 +113,19 @@ describe("CharacterSheet sections slide into a live preview", () => {
     vi.advanceTimersByTime(300);
 
     expect(pairGrid()).not.toBeNull();
-    // Cyphers and Items now share one row, so the rows below them move up too
-    expect(slidSections().sort()).toEqual(["background", "cyphers", "items", "notes"]);
+    // Cyphers and Items now share one row. Items, under the finger, stays where
+    // it was on screen: the page scrolls a row, so the sections above it slide
+    // down with it, and the rows below have nowhere to move.
+    expect(slidSections()).not.toContain("items");
+    expect(slidSections().sort()).toEqual([
+      "abilities",
+      "attacks",
+      "basicInfo",
+      "cyphers",
+      "recoveryDamage",
+      "specialAbilities",
+      "stats",
+    ]);
     expect(animate).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({ id: "section-slide", duration: 200, easing: "ease-in-out" })
