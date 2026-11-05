@@ -104,23 +104,28 @@ async function reportingSlides(world: CustomWorld, check: () => Promise<void>): 
  * The slides recorded for one section, read after the page has drawn a frame.
  * A slide starts and finishes only as frames are drawn, and after a simulated
  * drag WebKit can stop drawing them for an idle page, which a device showing
- * the page never does; a screenshot draws one. One pixel of it: a whole
- * full-height page takes a slow runner seconds, too few looks to see a slide end.
+ * the page never does; a screenshot of the whole viewport draws one (a clipped
+ * one does not).
  */
 async function slidesOfDrawnPage(world: CustomWorld, name: string): Promise<SectionSlideRecord[]> {
-  await world.page.screenshot({ clip: { x: 0, y: 0, width: 1, height: 1 } });
+  await world.page.screenshot();
   return slidesOf(world, name);
 }
+
+/** A slow runner takes seconds per screenshot of the full-height viewport */
+const DRAWN_SLIDE_POLL = { timeout: 15_000 };
 
 Then(
   "the {string} section should slide into its new place",
   async function (this: CustomWorld, name: string) {
     await reportingSlides(this, () =>
       expect
-        .poll(async () =>
-          (await slidesOfDrawnPage(this, name)).some(
-            (slide) => slide.finished && slide.from !== "none"
-          )
+        .poll(
+          async () =>
+            (await slidesOfDrawnPage(this, name)).some(
+              (slide) => slide.finished && slide.from !== "none"
+            ),
+          DRAWN_SLIDE_POLL
         )
         .toBe(true)
     );
@@ -133,7 +138,9 @@ Then(
     await reportingSlides(this, () =>
       expect
         .poll(
-          async () => (await slidesOfDrawnPage(this, name)).filter((slide) => slide.finished).length
+          async () =>
+            (await slidesOfDrawnPage(this, name)).filter((slide) => slide.finished).length,
+          DRAWN_SLIDE_POLL
         )
         .toBeGreaterThanOrEqual(2)
     );
