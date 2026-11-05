@@ -124,6 +124,14 @@ Feature: Section Re-arrangement
     Then the grid should show "Items" on the left and "Cyphers" on the right
     And the layout should still be the default layout
 
+  Scenario: The section under the pointer stays where it is when the live preview appears
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    And the "Cyphers" section is at the top of the window
+    When I hold the "Cyphers" section over the middle right of the "Items" section as the window shows it
+    And I keep still for a moment
+    Then the "Items" section should not have moved up or down on screen
+
   Scenario: Releasing outside the sheet after a live preview restores the layout
     Given the viewport is 1280 pixels wide
     And layout edit mode is active

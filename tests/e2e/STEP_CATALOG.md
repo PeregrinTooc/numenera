@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **727** in 54 files
-- Feature step lines: **2325**
+- Step definitions: **730** in 54 files
+- Feature step lines: **2331**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -65,7 +65,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
 | [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
-| [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 8 | 0 |
+| [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 11 | 0 |
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
 | [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 6 | 0 |
@@ -694,7 +694,7 @@ pattern this script does not understand):
 | Then | `I should see the {string} button` | 1 | 67 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 30 |
 | Then | `it should be touch-friendly` | 1 | 78 |
-| Given | `layout edit mode is active` | 33 | 41 |
+| Given | `layout edit mode is active` | 34 | 41 |
 | Then | `layout edit mode should be inactive` | 1 | 50 |
 | Then | `the {string} option should be enabled` | 1 | 118 |
 | Then | `the layout should return to the default arrangement` | 1 | 108 |
@@ -788,14 +788,17 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 28 |
-| When | `I keep still for a moment` | 8 | 46 |
-| When | `I release the section outside the sheet` | 2 | 51 |
-| When | `I release the section where it is` | 1 | 64 |
-| Then | `no drop preview should be shown` | 1 | 101 |
-| Then | `the {string} section should preview {string} in its place` | 1 | 80 |
-| Then | `the {string} section should preview {string} on its right` | 1 | 70 |
-| Then | `the row of {string} should preview {string} below it` | 1 | 90 |
+| When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 49 |
+| When | `I hold the {string} section over the {zone} of the {string} section as the window shows it` | 1 | 58 |
+| When | `I keep still for a moment` | 9 | 92 |
+| When | `I release the section outside the sheet` | 2 | 97 |
+| When | `I release the section where it is` | 1 | 110 |
+| Then | `no drop preview should be shown` | 1 | 147 |
+| Given | `the {string} section is at the top of the window` | 1 | 65 |
+| Then | `the {string} section should not have moved up or down on screen` | 1 | 74 |
+| Then | `the {string} section should preview {string} in its place` | 1 | 126 |
+| Then | `the {string} section should preview {string} on its right` | 1 | 116 |
+| Then | `the row of {string} should preview {string} below it` | 1 | 136 |
 
 ## section-reordering.steps.ts
 
@@ -1090,5 +1093,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 48 | 9 |
+| Given | `the viewport is {int} pixels wide` | 49 | 9 |
 

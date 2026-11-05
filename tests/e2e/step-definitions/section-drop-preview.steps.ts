@@ -1,4 +1,4 @@
-import { When, Then } from "@cucumber/cucumber";
+import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
 import { englishText } from "../support/i18nKeys.js";
@@ -26,21 +26,67 @@ async function expectHeldTargetUnmoved(world: CustomWorld): Promise<void> {
   expect(await sectionLocator(world.page, held.name).boundingBox()).toEqual(held.box);
 }
 
+/**
+ * Hold `source` over `zone` of `target`, leaving the drag held. The live
+ * preview appears after the pointer has been still for a while; a paused
+ * clock keeps it from appearing until a step advances time.
+ */
+async function holdOver(
+  world: CustomWorld,
+  source: string,
+  zone: SectionZone,
+  target: string
+): Promise<void> {
+  const page = world.page;
+  await page.clock.install();
+  await page.clock.pauseAt(Date.now() + 1000);
+  const box = await sectionLocator(page, target).boundingBox();
+  if (!box) throw new Error(`Section ${target} has no bounding box (not visible?)`);
+  const point = zonePoint(box, zone);
+  await holdSectionOver(page, source, point);
+  world.heldDropTarget = { name: target, box, point };
+}
+
 When(
   "I hold the {string} section over the {zone} of the {string} section",
   async function (this: CustomWorld, source: string, zone: SectionZone, target: string) {
-    const page = this.page;
-    // The live preview appears after the pointer has been still for a while;
-    // a paused clock keeps it from appearing until a step advances time.
-    await page.clock.install();
-    await page.clock.pauseAt(Date.now() + 1000);
     // Not restored: the drag stays held into the Then steps.
-    await growViewportToFullHeight(page);
-    const box = await sectionLocator(page, target).boundingBox();
-    if (!box) throw new Error(`Section ${target} has no bounding box (not visible?)`);
-    const point = zonePoint(box, zone);
-    await holdSectionOver(page, source, point);
-    this.heldDropTarget = { name: target, box, point };
+    await growViewportToFullHeight(this.page);
+    await holdOver(this, source, zone, target);
+  }
+);
+
+When(
+  "I hold the {string} section over the {zone} of the {string} section as the window shows it",
+  async function (this: CustomWorld, source: string, zone: SectionZone, target: string) {
+    await holdOver(this, source, zone, target);
+  }
+);
+
+Given(
+  "the {string} section is at the top of the window",
+  async function (this: CustomWorld, name: string) {
+    await sectionLocator(this.page, name).evaluate((section) =>
+      section.scrollIntoView({ block: "start" })
+    );
+  }
+);
+
+Then(
+  "the {string} section should not have moved up or down on screen",
+  async function (this: CustomWorld, name: string) {
+    const held = this.heldDropTarget;
+    if (!held) throw new Error("No section is being held over a target");
+    // Where it ends up: a slide starts each section at its old place
+    await this.page.evaluate(() =>
+      document
+        .getAnimations()
+        .filter((animation) => animation.id === "section-slide")
+        .forEach((animation) => animation.finish())
+    );
+    const box = await sectionLocator(this.page, name).boundingBox();
+    if (!box) throw new Error(`Section ${name} has no bounding box (not visible?)`);
+    expect(Math.abs(box.y - held.box.y)).toBeLessThanOrEqual(1);
   }
 );
 

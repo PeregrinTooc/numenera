@@ -27,10 +27,11 @@ export interface SectionDragHost {
   requestRender(): void;
   /**
    * The shown layout changed: re-render the sheet; sections that moved slide
-   * from their old places. Resolves when the slide has finished; null when
+   * from their old places, except `keepStill`, which the page scrolls to keep
+   * where it was on screen. Resolves when the slide has finished; null when
    * nothing slides.
    */
-  renderWithSlide(): Promise<void> | null;
+  renderWithSlide(keepStill?: SectionId): Promise<void> | null;
   /** The layout the drop intents refer to. */
   getLayout(): Layout;
   /** A section was dropped: adopt, persist and render `layout`. */
@@ -134,11 +135,12 @@ export class SectionDragController {
    * intent changes
    */
   private hover(target: HTMLElement, x: number, y: number): void {
+    const targetId = target.dataset.sectionId;
+    if (!targetId || !isSectionId(targetId)) return;
     if (this.livePreview.shouldIgnoreHover(x, y)) return;
     const sourceId = this.draggedSectionId;
-    const targetId = target.dataset.sectionId;
     let intent: DropIntent | null = null;
-    if (sourceId && targetId && isSectionId(targetId)) {
+    if (sourceId) {
       const wide = isWideLayout();
       const zone = dropZoneAt(target.getBoundingClientRect(), x, y, wide);
       intent = resolveDropIntent(this.workingLayout(), sourceId, targetId, zone, wide);
@@ -148,17 +150,21 @@ export class SectionDragController {
     // serialise identically.
     if (JSON.stringify(intent) === JSON.stringify(this.intent)) return;
     this.setIntent(intent);
-    this.livePreview.restartDwell(this.intent !== null, () => this.showLivePreview());
+    this.livePreview.restartDwell(this.intent !== null, () => this.showLivePreview(targetId));
     this.host.requestRender();
   }
 
-  /** The intent held still: show its result. Later hovers build on it. */
-  private showLivePreview(): void {
+  /**
+   * The intent held still: show its result, keeping `pointedAt` (the section
+   * under the pointer) where it was on screen. Later hovers build on it.
+   */
+  private showLivePreview(pointedAt: SectionId): void {
     const sourceId = this.draggedSectionId;
     if (!sourceId || !this.intent) return;
-    this.livePreview.show(applyDrop(this.workingLayout(), sourceId, this.intent));
+    this.livePreview.show(applyDrop(this.workingLayout(), sourceId, this.intent), pointedAt);
     this.setIntent(null);
-    this.livePreview.followSlide(this.host.renderWithSlide(), (x, y) => this.hoverAt(x, y));
+    const slide = this.host.renderWithSlide(pointedAt);
+    this.livePreview.followSlide(slide, (x, y) => this.hoverAt(x, y));
   }
 
   /** The layout hovers are resolved against: the live preview, else the sheet's */
@@ -214,12 +220,13 @@ export class SectionDragController {
 
   /**
    * Clear drag and preview styling and re-render. A live preview on show is
-   * thrown away: the sections slide back to the saved layout.
+   * thrown away: the sections slide back to the saved layout around the
+   * section it kept still, so the sheet is back where it was on screen.
    */
   private clearDragState(): void {
-    const restoring = this.livePreview.shownLayout() !== null;
+    const keepStill = this.livePreview.keptStill();
     this.resetDragState();
-    if (restoring) this.host.renderWithSlide();
+    if (keepStill) this.host.renderWithSlide(keepStill);
     else this.host.requestRender();
   }
 

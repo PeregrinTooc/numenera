@@ -42,6 +42,33 @@ export function placeSection(
   );
 }
 
+export const ROW_HEIGHT = 200;
+
+/**
+ * jsdom lays nothing out: place every section the way a wide browser would,
+ * from where it is in the DOM. Row n starts at n * ROW_HEIGHT; a single row is
+ * 800 wide, a pair's halves 400 each. Boxes are on screen, so they move
+ * against `window.scrollBy`, which jsdom does not implement either.
+ */
+export function layOutByRows(): void {
+  let scrollTop = 0;
+  vi.spyOn(window, "scrollBy").mockImplementation(((_x: number, y: number) => {
+    scrollTop += y;
+  }) as typeof window.scrollBy);
+  vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (
+    this: HTMLElement
+  ) {
+    const rows = Array.from(
+      document.querySelectorAll('[data-testid^="layout-grid-"], [data-section-id]')
+    ).filter((el) => !el.parentElement?.closest('[data-testid^="layout-grid-"]'));
+    const grid = this.parentElement?.closest('[data-testid^="layout-grid-"]');
+    const top = rows.indexOf(grid ?? this) * ROW_HEIGHT - scrollTop;
+    if (!grid) return new globalThis.DOMRect(0, top, 800, ROW_HEIGHT);
+    const left = grid.firstElementChild === this ? 0 : 400;
+    return new globalThis.DOMRect(left, top, 400, ROW_HEIGHT);
+  });
+}
+
 /** jsdom has no DragEvent; the controller only reads the pointer position. */
 export function mouseDrag(
   target: Element,

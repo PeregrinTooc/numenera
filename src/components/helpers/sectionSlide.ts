@@ -24,6 +24,19 @@ export function measureSections(root: Element): Map<string, BoxCorner> {
 }
 
 /**
+ * Scroll the page so section `id` is back where it was on screen in `first`
+ * (taken before the re-render): the rows above it may have changed, and
+ * WebKit may scroll by itself when a re-render replaces what is on screen.
+ * The section under a held pointer then stays under it.
+ */
+export function keepSectionStill(root: Element, first: Map<string, BoxCorner>, id: string): void {
+  const section = root.querySelector(`[data-section-id="${id}"]`);
+  const was = first.get(id);
+  if (!section || !was) throw new Error(`Section ${id} was not on the sheet`);
+  window.scrollBy(0, section.getBoundingClientRect().top - was.top);
+}
+
+/**
  * Stop every section slide in `root`: an element kept from the last render may
  * still be sliding, which would put it where the slide has got to rather than
  * where it now belongs
