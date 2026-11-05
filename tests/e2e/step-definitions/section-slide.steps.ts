@@ -100,13 +100,26 @@ async function reportingSlides(world: CustomWorld, check: () => Promise<void>): 
   }
 }
 
+/**
+ * The slides recorded for one section, read after the page has drawn a frame.
+ * A slide starts and finishes only as frames are drawn, and after a simulated
+ * drag WebKit can stop drawing them for an idle page, which a device showing
+ * the page never does; a screenshot draws one.
+ */
+async function slidesOfDrawnPage(world: CustomWorld, name: string): Promise<SectionSlideRecord[]> {
+  await world.page.screenshot();
+  return slidesOf(world, name);
+}
+
 Then(
   "the {string} section should slide into its new place",
   async function (this: CustomWorld, name: string) {
     await reportingSlides(this, () =>
       expect
         .poll(async () =>
-          (await slidesOf(this, name)).some((slide) => slide.finished && slide.from !== "none")
+          (await slidesOfDrawnPage(this, name)).some(
+            (slide) => slide.finished && slide.from !== "none"
+          )
         )
         .toBe(true)
     );
@@ -118,7 +131,9 @@ Then(
   async function (this: CustomWorld, name: string) {
     await reportingSlides(this, () =>
       expect
-        .poll(async () => (await slidesOf(this, name)).filter((slide) => slide.finished).length)
+        .poll(
+          async () => (await slidesOfDrawnPage(this, name)).filter((slide) => slide.finished).length
+        )
         .toBeGreaterThanOrEqual(2)
     );
     const slides = await slidesOf(this, name);

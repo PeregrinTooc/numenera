@@ -816,11 +816,11 @@ pattern this script does not understand):
 | --- | --- | ---: | ---: |
 | When | `I drop the held section onto the {zone} of the {string} section` | 1 | 52 |
 | Given | `I prefer reduced motion` | 1 | 48 |
-| Then | `no section should have slid` | 1 | 172 |
+| Then | `no section should have slid` | 1 | 187 |
 | Given | `section slides are recorded` | 4 | 22 |
-| Then | `the {string} section should be drawn above the {string} section while they slide` | 1 | 132 |
-| Then | `the {string} section should slide back to where it was` | 1 | 115 |
-| Then | `the {string} section should slide into its new place` | 4 | 102 |
+| Then | `the {string} section should be drawn above the {string} section while they slide` | 1 | 147 |
+| Then | `the {string} section should slide back to where it was` | 1 | 128 |
+| Then | `the {string} section should slide into its new place` | 4 | 113 |
 
 ## section-touch-drag.steps.ts
 
