@@ -114,7 +114,12 @@ design calls for (see commit `624cd01` for the old shape).
 
 - **Check touch dragging on a real iPhone/iPad.** The live preview re-creates
   the dragged section's element mid-gesture. Chromium (mouse and CDP touch) and
-  WebKit (mouse) were verified; WebKit touch cannot be automated.
+  WebKit (mouse) were verified; WebKit touch cannot be automated. Safari on a
+  Mac (mouse) keeps the drop after the live preview and slides the sections
+  back when it is cancelled (checked by hand, 2026-11-05).
+- **Keep the page still when a live preview appears (next PR).** In Safari on
+  a Mac the page jumped as the preview re-laid the sheet, so the zone under
+  the pointer moved and a drop nearly landed somewhere else.
 
 ### Visual Regression Tests for Component Styling
 
