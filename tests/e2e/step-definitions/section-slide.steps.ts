@@ -104,10 +104,11 @@ async function reportingSlides(world: CustomWorld, check: () => Promise<void>): 
  * The slides recorded for one section, read after the page has drawn a frame.
  * A slide starts and finishes only as frames are drawn, and after a simulated
  * drag WebKit can stop drawing them for an idle page, which a device showing
- * the page never does; a screenshot draws one.
+ * the page never does; a screenshot draws one. One pixel of it: a whole
+ * full-height page takes a slow runner seconds, too few looks to see a slide end.
  */
 async function slidesOfDrawnPage(world: CustomWorld, name: string): Promise<SectionSlideRecord[]> {
-  await world.page.screenshot();
+  await world.page.screenshot({ clip: { x: 0, y: 0, width: 1, height: 1 } });
   return slidesOf(world, name);
 }
 
