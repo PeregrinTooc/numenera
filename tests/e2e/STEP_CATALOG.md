@@ -791,11 +791,11 @@ pattern this script does not understand):
 | When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 28 |
 | When | `I keep still for a moment` | 8 | 46 |
 | When | `I release the section outside the sheet` | 2 | 51 |
-| When | `I release the section where it is` | 1 | 61 |
-| Then | `no drop preview should be shown` | 1 | 98 |
-| Then | `the {string} section should preview {string} in its place` | 1 | 77 |
-| Then | `the {string} section should preview {string} on its right` | 1 | 67 |
-| Then | `the row of {string} should preview {string} below it` | 1 | 87 |
+| When | `I release the section where it is` | 1 | 64 |
+| Then | `no drop preview should be shown` | 1 | 101 |
+| Then | `the {string} section should preview {string} in its place` | 1 | 80 |
+| Then | `the {string} section should preview {string} on its right` | 1 | 70 |
+| Then | `the row of {string} should preview {string} below it` | 1 | 90 |
 
 ## section-reordering.steps.ts
 
@@ -816,11 +816,11 @@ pattern this script does not understand):
 | --- | --- | ---: | ---: |
 | When | `I drop the held section onto the {zone} of the {string} section` | 1 | 52 |
 | Given | `I prefer reduced motion` | 1 | 48 |
-| Then | `no section should have slid` | 1 | 133 |
+| Then | `no section should have slid` | 1 | 147 |
 | Given | `section slides are recorded` | 4 | 22 |
-| Then | `the {string} section should be drawn above the {string} section while they slide` | 1 | 93 |
-| Then | `the {string} section should slide back to where it was` | 1 | 78 |
-| Then | `the {string} section should slide into its new place` | 4 | 67 |
+| Then | `the {string} section should be drawn above the {string} section while they slide` | 1 | 107 |
+| Then | `the {string} section should slide back to where it was` | 1 | 90 |
+| Then | `the {string} section should slide into its new place` | 4 | 77 |
 
 ## section-touch-drag.steps.ts
 

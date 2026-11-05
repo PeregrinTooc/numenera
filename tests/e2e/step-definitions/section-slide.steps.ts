@@ -65,23 +65,37 @@ When(
   }
 );
 
+/** Run `check`; if it fails, add every slide recorded so far to the error. */
+async function reportingSlides(world: CustomWorld, check: () => Promise<void>): Promise<void> {
+  try {
+    await check();
+  } catch (error) {
+    const slides = await world.page.evaluate(() => window.__sectionSlides ?? []);
+    throw new Error(`${(error as Error).message}\nRecorded slides: ${JSON.stringify(slides)}`);
+  }
+}
+
 Then(
   "the {string} section should slide into its new place",
   async function (this: CustomWorld, name: string) {
-    await expect
-      .poll(async () =>
-        (await slidesOf(this, name)).some((slide) => slide.finished && slide.from !== "none")
-      )
-      .toBe(true);
+    await reportingSlides(this, () =>
+      expect
+        .poll(async () =>
+          (await slidesOf(this, name)).some((slide) => slide.finished && slide.from !== "none")
+        )
+        .toBe(true)
+    );
   }
 );
 
 Then(
   "the {string} section should slide back to where it was",
   async function (this: CustomWorld, name: string) {
-    await expect
-      .poll(async () => (await slidesOf(this, name)).filter((slide) => slide.finished).length)
-      .toBeGreaterThanOrEqual(2);
+    await reportingSlides(this, () =>
+      expect
+        .poll(async () => (await slidesOf(this, name)).filter((slide) => slide.finished).length)
+        .toBeGreaterThanOrEqual(2)
+    );
     const slides = await slidesOf(this, name);
     const [there, back] = [startOffsets(slides[0]), startOffsets(slides[slides.length - 1])];
     // Back the way it came: each axis it moved along, in the other direction

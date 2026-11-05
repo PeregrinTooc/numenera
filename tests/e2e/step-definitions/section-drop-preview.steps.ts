@@ -57,6 +57,9 @@ When("I release the section outside the sheet", async function (this: CustomWorl
   await page.mouse.move(sheet.x / 2, sheet.y + 100, { steps: 3 });
   await page.mouse.move(sheet.x / 2, sheet.y + 101);
   await page.mouse.up();
+  // WebKit may skip dragend here; the app then notices the drag ended from the
+  // next pointer move, which a user always makes
+  await page.mouse.move(sheet.x / 2, sheet.y + 110);
 });
 
 When("I release the section where it is", async function (this: CustomWorld) {
