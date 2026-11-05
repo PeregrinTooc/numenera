@@ -1,11 +1,6 @@
-// collectionRendering - Shared render helpers (add button, empty state, collection list)
-// for container components managing collections
-
 import { html, TemplateResult } from "lit-html";
+import type { CollectionDragReorder } from "./CollectionDragReorder.js";
 
-/**
- * Color themes available for the add button.
- */
 export type AddButtonColorTheme = "indigo" | "purple" | "red" | "green" | "teal";
 
 /**
@@ -23,24 +18,13 @@ const ADD_BUTTON_THEME_CLASSES: Record<AddButtonColorTheme, string> = {
   teal: "bg-teal-100 hover:bg-teal-200 text-teal-700",
 };
 
-/**
- * Configuration for rendering an add button
- */
 export interface AddButtonConfig {
-  /** Click handler for the button */
   onClick: () => void;
-  /** Test ID for the button */
   testId: string;
-  /** Color theme */
   colorTheme?: AddButtonColorTheme;
-  /** Accessible label for screen readers */
   ariaLabel: string;
 }
 
-/**
- * Renders a standardized add button with SVG icon
- * Provides consistent styling and behavior across all containers
- */
 export function renderAddButton(config: AddButtonConfig): TemplateResult {
   const { onClick, testId, colorTheme = "indigo", ariaLabel } = config;
 
@@ -65,54 +49,50 @@ export function renderAddButton(config: AddButtonConfig): TemplateResult {
   `;
 }
 
-/**
- * Configuration for rendering an empty state message
- */
 export interface EmptyStateConfig {
-  /** Test ID for the empty state container */
   testId: string;
-  /** Message to display (typically from i18n) */
+  className: string;
   message: string;
-  /** Optional custom CSS class name */
-  className?: string;
+  paragraph?: boolean;
 }
 
-/**
- * Renders a standardized empty state message
- * Provides consistent styling across all containers
- */
 export function renderEmptyState(config: EmptyStateConfig): TemplateResult {
-  const { testId, message, className } = config;
+  const { testId, className, message, paragraph } = config;
 
   return html`
-    <div data-testid="${testId}" class="${className || "empty-state"}">${message}</div>
+    <div data-testid="${testId}" class="${className}">
+      ${paragraph ? html`<p>${message}</p>` : message}
+    </div>
   `;
 }
 
-/**
- * Helper for rendering a collection with conditional empty state
- * Simplifies the isEmpty ? empty : items pattern used in all containers
- */
-export interface CollectionRenderConfig<ItemComponent extends { render: () => TemplateResult }> {
-  /** Collection items */
-  items: ItemComponent[];
-  /** Empty state configuration (shown when items.length === 0) */
+export interface CollectionConfig {
+  isEmpty: boolean;
   emptyState: EmptyStateConfig;
-  /** Optional container CSS classes for the items grid/list */
-  containerClass?: string;
+  listTestId: string;
+  listClassName: string;
+  drag: CollectionDragReorder;
+  /** The rendered items: a template array or a keyed `repeat` result (typed unknown by lit) */
+  items: unknown;
 }
 
-/**
- * Renders a collection with automatic empty state handling
- */
-export function renderCollection<ItemComponent extends { render: () => TemplateResult }>(
-  config: CollectionRenderConfig<ItemComponent>
-): TemplateResult {
-  const { items, emptyState, containerClass = "grid grid-cols-1 gap-4" } = config;
+export function renderCollection(config: CollectionConfig): TemplateResult {
+  const { isEmpty, emptyState, listTestId, listClassName, drag, items } = config;
 
-  if (items.length === 0) {
+  if (isEmpty) {
     return renderEmptyState(emptyState);
   }
 
-  return html` <div class="${containerClass}">${items.map((item) => item.render())}</div> `;
+  return html`
+    <div
+      data-testid="${listTestId}"
+      class="${listClassName}"
+      @dragstart=${(e: Event) => drag.handleDragStart(e)}
+      @dragover=${(e: Event) => drag.handleDragOver(e)}
+      @drop=${(e: Event) => drag.handleDrop(e)}
+      @dragend=${() => drag.handleDragEnd()}
+    >
+      ${items}
+    </div>
+  `;
 }

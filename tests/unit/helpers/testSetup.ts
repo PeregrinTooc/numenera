@@ -1,29 +1,5 @@
-/**
- * Shared test setup helpers
- *
- * This module provides common setup patterns to eliminate duplication across test files:
- * - Container setup/teardown
- * - Mock character creation
- * - Common test utilities
- */
-
 import { beforeEach, afterEach, vi, type Mock } from "vitest";
 
-/**
- * Sets up and tears down a test container attached to document.body
- * Returns a function that retrieves the current container
- *
- * Usage:
- * ```typescript
- * describe("MyComponent", () => {
- *   const getContainer = setupTestContainer();
- *
- *   it("should render", () => {
- *     render(component.render(), getContainer());
- *   });
- * });
- * ```
- */
 export function setupTestContainer(): () => HTMLElement {
   let container: HTMLElement;
 
@@ -37,16 +13,12 @@ export function setupTestContainer(): () => HTMLElement {
     if (container && container.parentNode) {
       container.parentNode.removeChild(container);
     }
-    // Clean up any modals or other elements that might have been appended to body
     document.body.innerHTML = "";
   });
 
   return () => container;
 }
 
-/**
- * Creates a mock update function and returns both the mock and a helper to get calls
- */
 export function createMockUpdateFn<T = unknown>(): {
   fn: Mock<(arg: T) => void>;
   getCalls: () => T[];
@@ -64,17 +36,10 @@ export function createMockUpdateFn<T = unknown>(): {
   };
 }
 
-/**
- * Waits for a specified number of milliseconds
- * Useful for waiting on async operations like FileReader
- */
 export function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-/**
- * Waits for the next microtask
- */
 export function nextTick(): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, 0));
 }

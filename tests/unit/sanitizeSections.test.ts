@@ -20,7 +20,6 @@ describe("sanitizeSections", () => {
         const input = {
           stats: {
             might: { pool: 15, edge: 1, current: 15 },
-            // speed and intellect missing
           },
         };
 
@@ -77,7 +76,6 @@ describe("sanitizeSections", () => {
         const input = {
           recoveryRolls: {
             action: true,
-            // other fields missing
           },
         };
 

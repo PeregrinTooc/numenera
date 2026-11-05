@@ -1,6 +1,3 @@
-/* Equipment Item Styling - Light green theme for equipment cards */
-
-/* Dragging states for equipment items */
 .equipment-item-card[data-dragging="true"] {
   opacity: 0.5;
   transform: scale(0.98);
@@ -42,7 +39,6 @@
   line-height: 1.5;
 }
 
-/* Empty state styling */
 .empty-equipment-styled {
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
   border: 2px dashed #86efac;

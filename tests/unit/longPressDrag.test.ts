@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { LongPressDrag } from "@/components/helpers/LongPressDrag";
 
-function createDrag(options: { holdMs?: number; moveTolerancePx?: number } = {}) {
+function createDrag() {
   const onActivate = vi.fn();
   const onHover = vi.fn();
   const onDrop = vi.fn();
   const onAbort = vi.fn();
-  const drag = new LongPressDrag<string>({ ...options, onActivate, onHover, onDrop, onAbort });
+  const drag = new LongPressDrag<string>({ onActivate, onHover, onDrop, onAbort });
   return { drag, onActivate, onHover, onDrop, onAbort };
 }
 
@@ -163,16 +163,5 @@ describe("LongPressDrag", () => {
     expect(onHover).not.toHaveBeenCalled();
     expect(onDrop).not.toHaveBeenCalled();
     expect(onAbort).not.toHaveBeenCalled();
-  });
-
-  it("honours custom hold time and move tolerance", () => {
-    const { drag, onActivate } = createDrag({ holdMs: 500, moveTolerancePx: 30 });
-
-    drag.start("cyphers", 100, 100);
-    drag.move(120, 100);
-    vi.advanceTimersByTime(499);
-    expect(onActivate).not.toHaveBeenCalled();
-    vi.advanceTimersByTime(1);
-    expect(onActivate).toHaveBeenCalledWith("cyphers");
   });
 });

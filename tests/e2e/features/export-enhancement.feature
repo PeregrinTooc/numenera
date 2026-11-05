@@ -6,10 +6,6 @@ Feature: Enhanced File Export
     Background:
         Given I am on the character sheet page
 
-    # ========================================
-    # Basic Export Button Visibility
-    # ========================================
-
     Scenario: Export button is always visible
         When I view the export buttons
         Then I should see an "Export" button
@@ -28,10 +24,6 @@ Feature: Enhanced File Export
         And the download filename should contain "kael-the-wanderer"
         And the download should have correct file structure
 
-    # ========================================
-    # Export Data Validation
-    # ========================================
-
     Scenario: Exported file contains complete character data
         Given my browser supports File System Access API
         When I export the character
@@ -45,10 +37,6 @@ Feature: Enhanced File Export
         And my browser supports File System Access API
         When I click the Export button
         Then the suggested filename should be "test-character.numenera"
-
-    # ========================================
-    # Button State Changes After First Export
-    # ========================================
 
     Scenario: Export button changes to Save As after first export
         Given my browser supports File System Access API
@@ -68,10 +56,6 @@ Feature: Enhanced File Export
         When I click the Export button
         And I click the Save As button
         Then the export dialog should be triggered
-
-    # ========================================
-    # Error Handling
-    # ========================================
 
     Scenario: Handle user cancellation during export
         Given my browser supports File System Access API

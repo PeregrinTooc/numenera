@@ -1,10 +1,6 @@
 import type { CDPSession, Locator, Page } from "@playwright/test";
 import { SECTION_DISPLAY_NAMES, type SectionId } from "@/types/layout";
 
-/**
- * Resolve a section's display name as written in Gherkin ("Special Abilities")
- * to its layout id ("specialAbilities").
- */
 export function sectionId(name: string): SectionId {
   const entry = (Object.entries(SECTION_DISPLAY_NAMES) as [SectionId, string][]).find(
     ([, displayName]) => displayName === name
@@ -17,6 +13,13 @@ export function sectionId(name: string): SectionId {
 
 export function sectionLocator(page: Page, name: string): Locator {
   return page.locator(`[data-section-id="${sectionId(name)}"]`);
+}
+
+/** The ids of the sections on the sheet, in document order. */
+export function sectionOrder(page: Page): Promise<string[]> {
+  return page
+    .locator("[data-section-id]")
+    .evaluateAll((sections) => sections.map((s) => s.getAttribute("data-section-id") ?? ""));
 }
 
 /**
@@ -67,7 +70,6 @@ export interface Point {
   y: number;
 }
 
-/** A drop zone on a section, as written in Gherkin. */
 export type SectionZone = "top edge" | "bottom edge" | "middle left" | "middle right";
 
 /**
@@ -92,7 +94,6 @@ export function zonePoint(
   return { x: box.x + box.width * fx, y: box.y + box.height * fy };
 }
 
-/** Drag a section by its heading with the real mouse and drop it on a zone of another. */
 export async function dragSectionTo(
   page: Page,
   sourceName: string,
@@ -106,13 +107,39 @@ export async function dragSectionTo(
       throw new Error(`Section ${targetName} has no bounding box (not visible?)`);
     }
     const point = zonePoint(box, zone);
-    // Grab the source by its heading: a card inside it would start the
-    // card's own drag instead (as for a user).
-    await sectionLocator(page, sourceName).dragTo(target, {
-      sourcePosition: { x: 20, y: 10 },
-      targetPosition: { x: point.x - box.x, y: point.y - box.y },
-    });
+    await holdSectionOver(page, sourceName, point);
+    await releaseSectionDrag(page, point);
   });
+}
+
+/**
+ * Press on the source's heading (a card inside it would start the card's own
+ * drag instead, as for a user) and drag onto `point`, leaving the button held.
+ */
+export async function holdSectionOver(page: Page, sourceName: string, point: Point): Promise<void> {
+  const start = await nearTopOf(sectionLocator(page, sourceName));
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(start.x + 10, start.y + 10); // start the drag
+  // The browser enters drag mode asynchronously; pointer moves before that
+  // fire no dragover at all.
+  await page.locator(`[data-section-id="${sectionId(sourceName)}"].dragging`).waitFor();
+  // Playwright delivers dragover for a separate move once the drag is
+  // live, so arrive in two moves: most of the way, then onto the point.
+  await page.mouse.move(point.x, point.y - 1, { steps: 5 });
+  await page.mouse.move(point.x, point.y);
+}
+
+/**
+ * Release the held drag at `point`. Browsers keep firing dragover while a drag
+ * rests, so the drop lands on what is under the pointer now, after a live
+ * preview has re-rendered the sheet; Playwright fires dragover only on moves,
+ * and in WebKit only from the second, so two one-pixel moves stand in for it.
+ */
+export async function releaseSectionDrag(page: Page, point: Point): Promise<void> {
+  await page.mouse.move(point.x + 1, point.y);
+  await page.mouse.move(point.x + 2, point.y);
+  await page.mouse.up();
 }
 
 /**

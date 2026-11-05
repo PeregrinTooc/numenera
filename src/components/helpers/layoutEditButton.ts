@@ -1,9 +1,6 @@
 import { html, TemplateResult } from "lit-html";
 import { t } from "@/i18n/index";
 
-/**
- * Render the toolbar button that enters or leaves layout edit mode
- */
 export function renderEditLayoutButton(isEditMode: boolean, onToggle: () => void): TemplateResult {
   const buttonText = isEditMode ? t("layout.editButton.exit") : t("layout.editButton.edit");
   const buttonClass = isEditMode

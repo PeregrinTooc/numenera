@@ -2,26 +2,29 @@ import { beforeEach, afterEach, vi } from "vitest";
 import { VersionHistoryService } from "@/services/versionHistoryService";
 import type { Character } from "@/types/character";
 import type { VersionHistoryManager } from "@/storage/versionHistory";
-import { createMockVersionHistoryManager } from "../../factories/versionHistoryManager";
+import { setupRealVersionHistory } from "./realVersionHistory";
 import { createTestCharacter } from "../../factories/character";
 
 export interface VersionHistoryServiceFixture {
   readonly service: VersionHistoryService;
-  readonly mockManager: VersionHistoryManager;
+  readonly manager: VersionHistoryManager;
   readonly mockCharacter: Character;
 }
 
 /**
  * Registers hooks that give each test a VersionHistoryService (1000ms squash
- * delay) over a mocked manager, with fake timers. Returns live accessors.
+ * delay) over a real manager, with fake timers. Returns live accessors.
  */
 export function setupVersionHistoryService(): VersionHistoryServiceFixture {
+  const history = setupRealVersionHistory();
   let service: VersionHistoryService;
-  let mockManager: VersionHistoryManager;
   let mockCharacter: Character;
 
   beforeEach(() => {
-    vi.useFakeTimers({ shouldAdvanceTime: true });
+    vi.useFakeTimers({
+      shouldAdvanceTime: true,
+      toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval", "Date"],
+    });
 
     mockCharacter = createTestCharacter({
       descriptor: "Swift",
@@ -34,16 +37,7 @@ export function setupVersionHistoryService(): VersionHistoryServiceFixture {
       },
     });
 
-    mockManager = createMockVersionHistoryManager();
-    vi.mocked(mockManager.saveVersion).mockResolvedValue({
-      id: "version-123",
-      character: mockCharacter,
-      description: "Test",
-      timestamp: Date.now(),
-      etag: "etag-123",
-    });
-
-    service = new VersionHistoryService(mockManager, 1000);
+    service = new VersionHistoryService(history.manager, 1000);
   });
 
   afterEach(() => {
@@ -55,8 +49,8 @@ export function setupVersionHistoryService(): VersionHistoryServiceFixture {
     get service() {
       return service;
     },
-    get mockManager() {
-      return mockManager;
+    get manager() {
+      return history.manager;
     },
     get mockCharacter() {
       return mockCharacter;

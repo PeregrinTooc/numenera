@@ -1,7 +1,3 @@
-/**
- * Unit tests for Layout Types
- */
-
 import { describe, it, expect } from "vitest";
 import {
   isGridEligible,

@@ -24,7 +24,6 @@ async function importFileWith(extra: Record<string, unknown>) {
 
 describe("fileStorage", () => {
   beforeEach(() => {
-    // Clear all mocks before each test
     vi.clearAllMocks();
   });
 
@@ -77,7 +76,6 @@ describe("fileStorage", () => {
         character: character,
       };
 
-      // Mock File System Access API
       const mockFile = {
         text: vi.fn().mockResolvedValue(JSON.stringify(fileContent)),
       };
@@ -107,7 +105,6 @@ describe("fileStorage", () => {
     });
 
     it("should return null when user cancels file picker", async () => {
-      // Mock user canceling the picker
       window.showOpenFilePicker = vi.fn().mockRejectedValue(new DOMException("", "AbortError"));
 
       const result = await importCharacterFromFile();
@@ -186,7 +183,6 @@ describe("fileStorage", () => {
 
       expect(result).not.toBeNull();
       expect(result!.character.name).toBe("Test");
-      // Should have a warning about schema version
       expect(result!.warnings.length).toBeGreaterThan(0);
       expect(result!.warnings[0]).toContain("different schema version");
     });
@@ -196,7 +192,6 @@ describe("fileStorage", () => {
         version: "1.0",
         schemaVersion: SCHEMA_VERSION,
         exportDate: "2026-01-27T12:00:00Z",
-        // Missing character field
       };
 
       const mockFile = {
@@ -221,7 +216,6 @@ describe("fileStorage", () => {
         exportDate: "2026-01-27T12:00:00Z",
         character: {
           name: "Test",
-          // Missing most fields - should be filled with defaults
         },
       };
 
@@ -237,14 +231,11 @@ describe("fileStorage", () => {
 
       const result = await importCharacterFromFile();
 
-      // Should not throw, should return sanitized character
       expect(result).not.toBeNull();
       expect(result!.character.name).toBe("Test");
-      // Missing fields should be filled with defaults
-      expect(result!.character.tier).toBe(1); // Default tier
+      expect(result!.character.tier).toBe(1);
       expect(result!.character.stats).toBeDefined();
       expect(result!.character.cyphers).toEqual([]);
-      // Should have warnings about missing fields
       expect(result!.warnings.length).toBeGreaterThan(0);
     });
 

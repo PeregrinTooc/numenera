@@ -2,31 +2,11 @@ import { Page } from "@playwright/test";
 import type { Character } from "@/types/character";
 import type { CharacterVersion } from "@/types/versionHistory";
 
-/**
- * Test helper for character storage operations
- *
- * Abstracts away storage implementation details from E2E tests.
- * Tests use this helper instead of directly manipulating localStorage,
- * ensuring tests continue working regardless of storage backend
- * (localStorage, IndexedDB, remote server, etc.)
- *
- * Benefits:
- * - Tests describe behavior, not implementation
- * - Storage backend can be swapped without changing tests
- * - Single place to update if storage API changes
- */
 export class TestStorageHelper {
   constructor(private page: Page) {}
 
-  /**
-   * Set character data in storage
-   * Uses the app's current storage implementation
-   *
-   * @param character Character object to store
-   */
   async setCharacter(character: unknown): Promise<void> {
     await this.page.evaluate(async (char) => {
-      // Use storage API exposed on window by main.ts (works in dev and production)
       if (!window.__testStorage) {
         throw new Error("Test storage API not available. Make sure the app has loaded.");
       }
@@ -35,12 +15,8 @@ export class TestStorageHelper {
   }
 
   /**
-   * Get character data from storage
-   *
    * Throws when storage is still empty: a step reading the character before
    * the app has persisted one would otherwise pass for the wrong reason.
-   *
-   * @returns Stored character object
    */
   async getCharacter(): Promise<Character> {
     const character = await this.page.evaluate(async () => {
@@ -57,9 +33,6 @@ export class TestStorageHelper {
     return character;
   }
 
-  /**
-   * The kept copy of unreadable stored data, exactly as stored (null when none is kept)
-   */
   async getUnreadableBackup(): Promise<unknown> {
     return await this.page.evaluate(async () => {
       if (!window.__testStorage) {
@@ -69,9 +42,6 @@ export class TestStorageHelper {
     });
   }
 
-  /**
-   * Clear all character storage
-   */
   async clearStorage(): Promise<void> {
     await this.page.evaluate(async () => {
       if (!window.__testStorage) {
@@ -81,37 +51,20 @@ export class TestStorageHelper {
     });
   }
 
-  /**
-   * Direct localStorage access for legacy/migration scenarios
-   *
-   * @deprecated Use setCharacter() instead
-   * @param key Storage key
-   * @param value JSON string value
-   */
+  /** @deprecated Use setCharacter() instead */
   async setLocalStorageDirect(key: string, value: string): Promise<void> {
     await this.page.evaluate(({ k, v }) => localStorage.setItem(k, v), { k: key, v: value });
   }
 
-  /**
-   * Direct localStorage access for legacy/migration scenarios
-   *
-   * @deprecated Use getCharacter() instead
-   * @param key Storage key
-   * @returns Stored value or null
-   */
+  /** @deprecated Use getCharacter() instead */
   async getLocalStorageDirect(key: string): Promise<string | null> {
     return await this.page.evaluate((k) => localStorage.getItem(k), key);
   }
 
   /**
-   * Create a version in version history
-   *
    * Also stores the character, as the app does: its latest version always
    * matches the stored character, and on boot reconcileVersionHistory would
    * otherwise rebuild a phantom version from the mismatch.
-   *
-   * @param character Character data to save as a version
-   * @param description Description of the changes
    */
   async createVersion(character: Character, description: string): Promise<void> {
     await this.page.evaluate(
@@ -126,11 +79,6 @@ export class TestStorageHelper {
     await this.setCharacter(character);
   }
 
-  /**
-   * Get all versions from version history
-   *
-   * @returns Array of version objects
-   */
   async getAllVersions(): Promise<CharacterVersion[]> {
     return await this.page.evaluate(async () => {
       if (!window.__testVersionHistory) {
@@ -140,9 +88,6 @@ export class TestStorageHelper {
     });
   }
 
-  /**
-   * Clear all versions from version history
-   */
   async clearVersions(): Promise<void> {
     await this.page.evaluate(async () => {
       if (!window.__testVersionHistory) {

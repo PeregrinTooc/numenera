@@ -1,5 +1,3 @@
-// SaveIndicator component - Shows the last save timestamp, or that saving failed
-
 import { html, nothing, TemplateResult } from "lit-html";
 import { t } from "@/i18n/index";
 import type { StorageWriteFailedDetail } from "@/storage/storageWriteFailure";
@@ -10,10 +8,6 @@ export class SaveIndicator {
   private timestamp: string | null = null;
   private error: FailureReason | null = null;
 
-  /**
-   * Update the timestamp and make indicator visible
-   * @param timestamp Formatted timestamp string
-   */
   updateTimestamp(timestamp: string): void {
     this.timestamp = timestamp;
     this.error = null;
@@ -29,30 +23,6 @@ export class SaveIndicator {
   }
 
   /**
-   * Check if the indicator is reporting a failed save
-   */
-  hasError(): boolean {
-    return this.error !== null;
-  }
-
-  /**
-   * Get the current timestamp
-   * @returns Current timestamp or null if never saved
-   */
-  getTimestamp(): string | null {
-    return this.timestamp;
-  }
-
-  /**
-   * Check if indicator has a timestamp
-   * @returns true if timestamp exists
-   */
-  hasTimestamp(): boolean {
-    return this.timestamp !== null;
-  }
-
-  /**
-   * Render the save indicator
    * Hidden until first save occurs
    */
   render(): TemplateResult {

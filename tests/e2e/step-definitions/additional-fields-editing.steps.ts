@@ -3,16 +3,10 @@ import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { waitForSaveComplete } from "../support/save.js";
 
-// ============================================================================
-// BACKGROUND DATA SETUP - Unique to additional fields
-// ============================================================================
-
 Given("the character has the following data:", async function (this: CustomWorld, dataTable) {
-  // Parse the data table - it's in vertical format with field/value columns
   const rows = dataTable.raw();
   const data: Record<string, string> = {};
 
-  // Skip header row and convert to key-value pairs
   for (let i = 1; i < rows.length; i++) {
     const [field, value] = rows[i];
     data[field] = value;
@@ -31,10 +25,6 @@ Given("the character has the following data:", async function (this: CustomWorld
 
   await this.setup.character(overrides);
 });
-
-// ============================================================================
-// TYPE DROPDOWN STEPS - Unique to additional fields (not modal-based)
-// ============================================================================
 
 When("I select {string} from the type dropdown", async function (this: CustomWorld, type: string) {
   const select = this.page.locator('[data-testid="character-type-select"]');
@@ -73,10 +63,8 @@ Then(
 Then(
   "the character data should have type {string}",
   async function (this: CustomWorld, type: string) {
-    // Wait for auto-save to complete by monitoring save indicator
     await waitForSaveComplete(this.page);
 
-    // Verify using TestStorageHelper
     const storedData = await this.storageHelper.getCharacter();
 
     expect(storedData).toBeTruthy();

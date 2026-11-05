@@ -41,7 +41,6 @@ describe("characterSanitizer", () => {
       it("should return defaults for array input", () => {
         const result = sanitizeCharacter([1, 2, 3]);
 
-        // Arrays are technically objects, but should still work
         expect(result.character).toBeDefined();
         expect(result.warnings.length).toBeGreaterThan(0);
       });

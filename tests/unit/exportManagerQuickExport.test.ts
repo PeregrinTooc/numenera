@@ -20,23 +20,17 @@ describe("ExportManager", () => {
     it("should save to remembered location without prompting", async () => {
       const { mockHandle } = setupExportTest();
 
-      // First export to set handle
       await ctx.exportManager.export(mockCharacter);
 
-      // Wait for IndexedDB operations to complete
       await new Promise((resolve) => setTimeout(resolve, 10));
 
-      // Verify the handle is stored
       expect(ctx.exportManager.hasRememberedLocation()).toBe(true);
 
-      // Clear showSaveFilePicker mock to verify it's not called again
       vi.mocked(window.showSaveFilePicker!).mockClear();
 
-      // Quick export should not prompt and should use the remembered handle
       await ctx.exportManager.quickExport(mockCharacter);
 
       expect(window.showSaveFilePicker).not.toHaveBeenCalled();
-      // Verify createWritable was called (will be called twice total: once in export, once in quickExport)
       expect(mockHandle.createWritable).toHaveBeenCalledTimes(2);
     });
 
@@ -47,7 +41,6 @@ describe("ExportManager", () => {
       await ctx.exportManager.export(mockCharacter);
       await new Promise((resolve) => setTimeout(resolve, 10));
 
-      // Reset the event spy after export
       const eventSpy = vi.fn();
       window.addEventListener("export-success", eventSpy);
 
@@ -62,7 +55,6 @@ describe("ExportManager", () => {
 
     it("should handle write permission denied", async () => {
       const mockHandle = createMockHandle();
-      // Set up the write mock to fail on the second call
       const writableMock = createMockWritable(
         vi
           .fn()
@@ -82,7 +74,6 @@ describe("ExportManager", () => {
 
     it("should handle disk full error", async () => {
       const mockHandle = createMockHandle();
-      // Set up the write mock to fail on the second call
       const writableMock = createMockWritable(
         vi
           .fn()
@@ -113,7 +104,6 @@ describe("ExportManager", () => {
 
       await ctx.exportManager.export(mockCharacter);
 
-      // Save As should prompt again
       await ctx.exportManager.saveAs(mockCharacter);
 
       expect(window.showSaveFilePicker).toHaveBeenCalledTimes(2);
@@ -132,11 +122,9 @@ describe("ExportManager", () => {
       await ctx.exportManager.export(mockCharacter);
       await ctx.exportManager.saveAs(mockCharacter);
 
-      // Clear mocks
       vi.mocked(window.showSaveFilePicker!).mockClear();
       vi.mocked(writable2.write).mockClear();
 
-      // Quick export should now use handle2
       await ctx.exportManager.quickExport(mockCharacter);
 
       expect(window.showSaveFilePicker).not.toHaveBeenCalled();

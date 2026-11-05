@@ -1,8 +1,5 @@
 import type { Character } from "./character.js";
 
-/**
- * Represents a single version snapshot of a character
- */
 export interface CharacterVersion {
   /** Unique identifier for this version (UUID) */
   id: string;
@@ -36,7 +33,7 @@ export interface VersionHistoryState {
   /** Current position in history (-1 = latest/current character) */
   currentIndex: number;
 
-  /** True when viewing an old version (read-only mode) */
+  /** True when viewing an old version (an older version is displayed) */
   isNavigating: boolean;
 
   /** Temporary storage for unsquashed versions (before 5s timer) */

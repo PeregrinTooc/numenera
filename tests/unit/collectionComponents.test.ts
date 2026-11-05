@@ -71,7 +71,6 @@ describe("Collection Components", () => {
       const newIndex = mockCharacter.attacks.length - 1;
       expect(newIndex).toBe(0);
 
-      // Add another
       mockCharacter.attacks.push({ name: "Bow", damage: 4, modifier: 0, range: "Long" });
       const newIndex2 = mockCharacter.attacks.length - 1;
       expect(newIndex2).toBe(1);
@@ -126,7 +125,6 @@ describe("Collection Components", () => {
       render(abilitiesComp.render(), getContainer());
 
       const addButton = getContainer().querySelector('[data-testid="add-ability-button"]');
-      // Event-based pattern always renders add button
       expect(addButton).toBeTruthy();
     });
 
@@ -187,7 +185,6 @@ describe("Collection Components", () => {
       render(specialAbilitiesComp.render(), getContainer());
 
       const addButton = getContainer().querySelector('[data-testid="add-special-ability-button"]');
-      // Event-based pattern always renders add button
       expect(addButton).toBeTruthy();
     });
 

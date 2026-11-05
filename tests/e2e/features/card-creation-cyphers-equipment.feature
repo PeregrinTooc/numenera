@@ -6,10 +6,6 @@ Feature: Card Creation: Cyphers and Equipment
     Background:
         Given I am on the character sheet page
 
-    # ============================================================================
-    # ITERATION 1: CYPHERS
-    # ============================================================================
-
     Scenario: Add button is visible for Cyphers
         Then I should see an add cypher button
 
@@ -85,21 +81,14 @@ Feature: Card Creation: Cyphers and Equipment
         And the cypher "Energy Shield Mk II" should have level "1d6+2"
         And the cypher "Energy Shield Mk II" should have effect "Provides enhanced protection"
 
-    # ============================================================================
-    # ITERATION 2: EQUIPMENT
-    # ============================================================================
-
-
     Scenario: Add button is visible for Equipment
         Then I should see an add equipment button
-
 
     Scenario: Add Equipment button opens modal with empty fields
         When I click the add equipment button
         Then the card edit modal should be open
         And the modal should show equipment fields
         And all equipment fields should be empty
-
 
     Scenario: Canceling equipment creation does not add a card
         Given the character has 4 equipment cards
@@ -109,7 +98,6 @@ Feature: Card Creation: Cyphers and Equipment
         And I cancel the card edit modal
         Then I should see 4 equipment cards
 
-
     Scenario: Confirming equipment creation adds a new card
         Given the character has 4 equipment cards
         When I click the add equipment button
@@ -118,7 +106,6 @@ Feature: Card Creation: Cyphers and Equipment
         And I confirm the card edit modal
         Then I should see 5 equipment cards
         And I should see an equipment card with name "Climbing Gear"
-
 
     Scenario: New equipment persists after page reload
         Given the character has 4 equipment cards
@@ -130,7 +117,6 @@ Feature: Card Creation: Cyphers and Equipment
         When I reload the page
         Then I should see 5 equipment cards
         And I should see an equipment card with name "Medical Kit"
-
 
     Scenario: Multiple equipment items can be added
         Given the character has 4 equipment cards
@@ -144,7 +130,6 @@ Feature: Card Creation: Cyphers and Equipment
         And I fill in the equipment description with "Second description"
         And I confirm the card edit modal
         Then I should see 6 equipment cards
-
 
     Scenario: Create equipment, then edit it, verify persistence
         Given the character has 4 equipment cards

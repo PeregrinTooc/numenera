@@ -1,14 +1,8 @@
-// CardEditorBehavior - Reusable behavior for card editing
-// Provides common edit handler and button rendering for all item components
-
 import { html, TemplateResult } from "lit-html";
 import { openCardEditModal } from "@/components/CardEditModal";
 import { t } from "@/i18n/index";
 import type { VersionHistoryService } from "@/services/versionHistoryService";
 
-/**
- * Configuration for card editor behavior
- */
 export interface CardEditorConfig<T> {
   item: T;
   getEditedItem: () => T;
@@ -18,13 +12,8 @@ export interface CardEditorConfig<T> {
   versionHistoryService?: VersionHistoryService;
 }
 
-/**
- * Creates a generic edit handler for card items
- * Handles modal opening, confirmation, and cancellation
- */
 export function createEditHandler<T>(config: CardEditorConfig<T>): () => void {
   return () => {
-    // Reset edited item to current item state
     config.resetEditedItem();
 
     openCardEditModal({
@@ -34,17 +23,12 @@ export function createEditHandler<T>(config: CardEditorConfig<T>): () => void {
           config.onUpdate(config.getEditedItem());
         }
       },
-      onCancel: () => {
-        // No action needed on cancel
-      },
+      onCancel: () => {},
       versionHistoryService: config.versionHistoryService,
     });
   };
 }
 
-/**
- * Color themes available for card edit/delete buttons.
- */
 export type CardButtonColorTheme = "indigo" | "purple" | "green" | "orange" | "blue" | "red";
 
 /**
@@ -72,9 +56,6 @@ const EDIT_BUTTON_THEME_CLASSES: Record<CardButtonColorTheme, string> = {
   red: "text-red-600 hover:text-red-800 hover:bg-red-100",
 };
 
-/**
- * Button configuration for rendering edit/delete buttons
- */
 export interface CardButtonConfig {
   index: number;
   onEdit?: () => void;
@@ -84,10 +65,6 @@ export interface CardButtonConfig {
   colorTheme: CardButtonColorTheme;
 }
 
-/**
- * Renders edit and delete buttons for a card item
- * Returns a template with consistent styling and behavior
- */
 export function renderCardButtons(config: CardButtonConfig): TemplateResult {
   const { colorTheme, onEdit, onDelete, editButtonTestId, deleteButtonTestId } = config;
 

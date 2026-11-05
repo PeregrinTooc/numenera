@@ -3,7 +3,7 @@ import type { Character } from "@/types/character";
 import { STORAGE_KEY } from "@/storage/storageConstants";
 import {
   mockCharacter,
-  replaceDbWithoutObjectStore,
+  withDatabaseLackingObjectStore,
   setupIndexedDBStorage,
 } from "./helpers/indexedDBStorageFixture";
 
@@ -49,7 +49,6 @@ describe("IndexedDBStorageImpl", () => {
 
       await Promise.all(promises);
 
-      // Last save should win
       const loaded = (await ctx.storage.load()) as Character;
       expect(loaded.name).toMatch(/Character \d/);
     });
@@ -57,68 +56,43 @@ describe("IndexedDBStorageImpl", () => {
 
   describe("object store validation", () => {
     it("should skip migration gracefully when object store does not exist", async () => {
-      // Setup: Store data in localStorage
       localStorage.setItem(STORAGE_KEY, JSON.stringify(mockCharacter));
-
-      // Create a mock that simulates missing object store
       const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
-      // Mock objectStoreNames to not contain the store
-      const restoreDb = replaceDbWithoutObjectStore(ctx.storage);
+      await withDatabaseLackingObjectStore(ctx, async (storage) => {
+        await expect(storage.migrateFromLocalStorage()).resolves.toBeUndefined();
+      });
 
-      // Execute migration - should skip gracefully, not throw
-      await expect(ctx.storage.migrateFromLocalStorage()).resolves.toBeUndefined();
-
-      // Verify: Warning was logged
       expect(consoleWarnSpy).toHaveBeenCalledWith(
         "IndexedDB not ready for migration, skipping localStorage migration"
       );
-
-      // Verify: localStorage data was NOT removed (migration was skipped)
       expect(localStorage.getItem(STORAGE_KEY)).not.toBeNull();
 
-      // Restore
-      restoreDb();
       consoleWarnSpy.mockRestore();
     });
 
     it("should throw when save is called and object store does not exist", async () => {
-      // Mock objectStoreNames to not contain the store
-      const restoreDb = replaceDbWithoutObjectStore(ctx.storage);
-
-      // Execute - should throw error for save
-      await expect(ctx.storage.save(mockCharacter)).rejects.toThrow(
-        "Object store 'characters' not found in database"
-      );
-
-      // Restore
-      restoreDb();
+      await withDatabaseLackingObjectStore(ctx, async (storage) => {
+        await expect(storage.save(mockCharacter)).rejects.toThrow(
+          "Object store 'characters' not found in database"
+        );
+      });
     });
 
     it("should throw when load is called and object store does not exist", async () => {
-      // Mock objectStoreNames to not contain the store
-      const restoreDb = replaceDbWithoutObjectStore(ctx.storage);
-
-      // Execute - should throw error for load
-      await expect(ctx.storage.load()).rejects.toThrow(
-        "Object store 'characters' not found in database"
-      );
-
-      // Restore
-      restoreDb();
+      await withDatabaseLackingObjectStore(ctx, async (storage) => {
+        await expect(storage.load()).rejects.toThrow(
+          "Object store 'characters' not found in database"
+        );
+      });
     });
 
     it("should throw when clear is called and object store does not exist", async () => {
-      // Mock objectStoreNames to not contain the store
-      const restoreDb = replaceDbWithoutObjectStore(ctx.storage);
-
-      // Execute - should throw error for clear
-      await expect(ctx.storage.clear()).rejects.toThrow(
-        "Object store 'characters' not found in database"
-      );
-
-      // Restore
-      restoreDb();
+      await withDatabaseLackingObjectStore(ctx, async (storage) => {
+        await expect(storage.clear()).rejects.toThrow(
+          "Object store 'characters' not found in database"
+        );
+      });
     });
   });
 });

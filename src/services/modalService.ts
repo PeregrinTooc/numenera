@@ -1,6 +1,3 @@
-// Modal Service - Centralized modal opening logic
-// Eliminates duplicate modal creation code across components
-
 import { render } from "lit-html";
 import { EditFieldModal } from "@/components/EditFieldModal";
 import { UnreadableCharacterModal } from "@/components/UnreadableCharacterModal";
@@ -8,6 +5,7 @@ import { PortraitDisplayModal } from "@/components/PortraitDisplayModal";
 import { FieldType } from "@/utils/fieldValidation";
 import { ModalContainer } from "@/services/modalContainer";
 import type { VersionHistoryService } from "./versionHistoryService.js";
+import { getVersionHistoryService } from "./versionHistoryServiceAccess.js";
 
 export interface ModalConfig {
   fieldType: FieldType;
@@ -17,16 +15,10 @@ export interface ModalConfig {
   versionHistoryService?: VersionHistoryService;
 }
 
-/**
- * Opens an EditFieldModal for editing a character field
- * Handles modal creation, rendering, and cleanup automatically
- */
 export class ModalService {
   static openEditModal(config: ModalConfig): void {
-    // Create modal container using helper
     const container = new ModalContainer();
 
-    // Create modal with cleanup callbacks
     const modal = new EditFieldModal({
       fieldType: config.fieldType,
       currentValue: config.currentValue,
@@ -41,22 +33,14 @@ export class ModalService {
       versionHistoryService: config.versionHistoryService,
     });
 
-    // Render modal
     render(modal.render(), container.getElement());
 
-    // Focus and select input after render
     container.focusElement('[data-testid="edit-modal-input"]', true);
   }
 
-  /**
-   * Opens a PortraitDisplayModal for viewing a character portrait
-   * Handles modal creation, rendering, and cleanup automatically
-   */
   static openPortraitModal(portraitSrc: string): void {
-    // Create modal container using helper
     const container = new ModalContainer();
 
-    // Create modal with cleanup callback
     const modal = new PortraitDisplayModal({
       portraitSrc,
       onClose: () => {
@@ -64,10 +48,8 @@ export class ModalService {
       },
     });
 
-    // Render modal
     render(modal.render(), container.getElement());
 
-    // Focus the modal for keyboard navigation
     container.focusElement(".portrait-display-backdrop");
   }
 
@@ -95,4 +77,18 @@ export class ModalService {
     render(modal.render(), container.getElement());
     container.focusElement('[data-testid="unreadable-download-button"]');
   }
+}
+
+/** Open the edit modal for one field and hand the confirmed value to `onConfirm`. */
+export function openFieldEditor(
+  fieldType: FieldType,
+  currentValue: string | number,
+  onConfirm: (newValue: string | number) => void
+): void {
+  ModalService.openEditModal({
+    fieldType,
+    currentValue,
+    onConfirm,
+    versionHistoryService: getVersionHistoryService(),
+  });
 }

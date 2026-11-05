@@ -18,7 +18,6 @@ describe("VersionWarningBanner", () => {
     const container = getContainer();
     banner.mount(container);
 
-    // Should have warning banner element
     const warningBanner = container.querySelector('[data-testid="version-warning-banner"]');
     expect(warningBanner).toBeTruthy();
   });
@@ -155,7 +154,6 @@ describe("VersionWarningBanner", () => {
     const container = getContainer();
     banner.mount(container);
 
-    // Update with new description
     const newOnReturn = vi.fn();
     const newOnRestore = vi.fn();
     banner.update({

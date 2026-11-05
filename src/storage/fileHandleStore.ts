@@ -1,3 +1,4 @@
+import { openDatabase, requestToPromise, transactionDone } from "./idb";
 import { FILE_HANDLES_DB_NAME } from "./storageConstants";
 
 /** Key under which the last export file handle is stored (IndexedDB, and legacy localStorage). */
@@ -6,19 +7,16 @@ export const HANDLE_STORAGE_KEY = "lastExportFileHandle";
 const HANDLES_STORE_NAME = "handles";
 
 function openHandleDB(): Promise<IDBDatabase> {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(FILE_HANDLES_DB_NAME, 1);
-
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
-
-    request.onupgradeneeded = (event) => {
-      const db = (event.target as IDBOpenDBRequest).result;
+  return openDatabase(
+    FILE_HANDLES_DB_NAME,
+    1,
+    (db) => {
       if (!db.objectStoreNames.contains(HANDLES_STORE_NAME)) {
         db.createObjectStore(HANDLES_STORE_NAME);
       }
-    };
-  });
+    },
+    (cause) => cause
+  );
 }
 
 /**
@@ -31,10 +29,7 @@ export async function persistFileHandle(handle: FileSystemFileHandle): Promise<v
     const tx = db.transaction(HANDLES_STORE_NAME, "readwrite");
     const store = tx.objectStore(HANDLES_STORE_NAME);
     store.put(handle, HANDLE_STORAGE_KEY);
-    await new Promise<void>((resolve, reject) => {
-      tx.oncomplete = () => resolve();
-      tx.onerror = () => reject(tx.error);
-    });
+    await transactionDone(tx);
   } catch (error) {
     // Continuing is fine: the handle is only a cache - Quick Export asks for the location again.
     console.warn("Failed to persist file handle:", error);
@@ -47,10 +42,7 @@ export async function deleteFileHandle(): Promise<void> {
   const tx = db.transaction(HANDLES_STORE_NAME, "readwrite");
   const store = tx.objectStore(HANDLES_STORE_NAME);
   store.delete(HANDLE_STORAGE_KEY);
-  await new Promise<void>((resolve, reject) => {
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
+  await transactionDone(tx);
 }
 
 /**
@@ -64,15 +56,12 @@ export async function loadPersistedFileHandle(): Promise<FileSystemFileHandle | 
     const store = tx.objectStore(HANDLES_STORE_NAME);
     const request = store.get(HANDLE_STORAGE_KEY);
 
-    // Wait for the request to complete
-    const handle = await new Promise<FileSystemFileHandle | undefined>((resolve) => {
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => resolve(undefined);
-    });
+    const handle = await requestToPromise<FileSystemFileHandle | undefined>(request, () => {
+      return new Error("Failed to read file handle");
+    }).catch(() => undefined);
 
     if (!handle) return undefined;
 
-    // Verify we still have permission (if queryPermission exists)
     if (typeof handle.queryPermission === "function") {
       const permission = await handle.queryPermission({ mode: "readwrite" });
       return permission === "granted" ? handle : undefined;

@@ -1,10 +1,8 @@
-// Unit tests for OddityItem component
 import { OddityItem } from "@/components/OddityItem";
 import { testItemEditAndDelete } from "./helpers/itemTestSuite.js";
 
 const mockOddity = "A crystal that hums when near water";
 
-// Use shared parameterized test suite
 // Note: Oddity is a string type, so it's updated directly (not as an object)
 testItemEditAndDelete<string>({
   componentName: "OddityItem",
@@ -22,6 +20,5 @@ testItemEditAndDelete<string>({
   updatedFieldValues: {
     oddity: "A glowing stone that whispers",
   },
-  // Oddity is a string, so the update returns the string directly
   expectedUpdateTransform: (values) => values.oddity as string,
 });

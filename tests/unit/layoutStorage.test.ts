@@ -1,7 +1,3 @@
-/**
- * Unit tests for Layout Storage Service
- */
-
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
   saveLayout,
@@ -17,7 +13,6 @@ import { LAYOUT_STORAGE_KEY, SECTION_COLUMNS_STORAGE_KEY } from "@/storage/stora
 
 describe("Layout Storage", () => {
   beforeEach(() => {
-    // Clear localStorage before each test
     localStorage.clear();
     vi.restoreAllMocks();
   });

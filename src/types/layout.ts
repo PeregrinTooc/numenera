@@ -1,12 +1,4 @@
 /**
- * Layout Types for Section Re-arrangement Feature
- *
- * This module defines the data model for customizable section layouts
- * in the character sheet.
- */
-
-/**
- * Section identifiers for all rearrangeable sections
  * Header is NOT included as it's always fixed at the top
  */
 export type SectionId =
@@ -21,10 +13,6 @@ export type SectionId =
   | "background"
   | "notes";
 
-/**
- * Sections that can be merged into a 2-column grid
- * These are "container" sections that work well side-by-side
- */
 export const GRID_ELIGIBLE_SECTIONS: readonly SectionId[] = [
   "abilities",
   "specialAbilities",
@@ -35,54 +23,30 @@ export const GRID_ELIGIBLE_SECTIONS: readonly SectionId[] = [
   "notes",
 ] as const;
 
-/**
- * Sections that must remain in single-column layout
- * These are not eligible for grid merging
- */
 export const SINGLE_ONLY_SECTIONS: readonly SectionId[] = [
   "basicInfo",
   "stats",
   "recoveryDamage",
 ] as const;
 
-/**
- * A single section displayed in its own row
- */
 export interface SingleLayoutItem {
   type: "single";
   id: SectionId;
 }
 
-/**
- * Two sections displayed side-by-side in a 2-column grid
- * Both sections must be grid-eligible
- */
 export interface GridLayoutItem {
   type: "grid";
   items: [SectionId, SectionId];
 }
 
-/**
- * A layout item can be either a single section or a grid of two sections
- */
 export type LayoutItem = SingleLayoutItem | GridLayoutItem;
 
-/**
- * Complete layout configuration
- * An ordered array of layout items representing the section arrangement
- */
 export type Layout = LayoutItem[];
 
-/**
- * Check if a section is eligible for grid placement
- */
 export function isGridEligible(sectionId: SectionId): boolean {
   return GRID_ELIGIBLE_SECTIONS.includes(sectionId);
 }
 
-/**
- * Get all section IDs from a layout (flattened)
- */
 export function getAllSectionIds(layout: Layout): SectionId[] {
   return layout.flatMap((item) => {
     if (item.type === "single") {
@@ -92,9 +56,6 @@ export function getAllSectionIds(layout: Layout): SectionId[] {
   });
 }
 
-/**
- * Validate that a layout contains all required sections exactly once
- */
 export function isValidLayout(layout: Layout): boolean {
   const allSections: SectionId[] = [
     "basicInfo",
@@ -111,23 +72,21 @@ export function isValidLayout(layout: Layout): boolean {
 
   const layoutSections = getAllSectionIds(layout);
 
-  // Check that all sections are present exactly once
   if (layoutSections.length !== allSections.length) {
     return false;
   }
 
   const sectionSet = new Set(layoutSections);
   if (sectionSet.size !== allSections.length) {
-    return false; // Duplicates exist
+    return false;
   }
 
   for (const section of allSections) {
     if (!sectionSet.has(section)) {
-      return false; // Missing section
+      return false;
     }
   }
 
-  // Check that grid items only contain grid-eligible sections
   for (const item of layout) {
     if (item.type === "grid") {
       if (!isGridEligible(item.items[0]) || !isGridEligible(item.items[1])) {
@@ -139,10 +98,6 @@ export function isValidLayout(layout: Layout): boolean {
   return true;
 }
 
-/**
- * Default layout configuration
- * This represents the standard layout before any customization
- */
 export const DEFAULT_LAYOUT: Layout = [
   { type: "single", id: "basicInfo" },
   { type: "single", id: "stats" },
@@ -154,9 +109,6 @@ export const DEFAULT_LAYOUT: Layout = [
   { type: "grid", items: ["background", "notes"] },
 ];
 
-/**
- * Create a deep copy of a layout
- */
 export function cloneLayout(layout: Layout): Layout {
   return layout.map((item) => {
     if (item.type === "single") {
@@ -166,9 +118,6 @@ export function cloneLayout(layout: Layout): Layout {
   });
 }
 
-/**
- * Check if two layouts are equal
- */
 export function layoutsAreEqual(layout1: Layout, layout2: Layout): boolean {
   if (layout1.length !== layout2.length) {
     return false;
@@ -197,7 +146,6 @@ export function layoutsAreEqual(layout1: Layout, layout2: Layout): boolean {
 }
 
 /**
- * Human-readable section names for UI display
  * These map to i18n keys: layout.sections.{sectionId}
  */
 export const SECTION_DISPLAY_NAMES: Record<SectionId, string> = {
@@ -213,9 +161,6 @@ export const SECTION_DISPLAY_NAMES: Record<SectionId, string> = {
   notes: "Notes",
 };
 
-/**
- * Type guard for values read from the DOM (e.g. `data-section-id`).
- */
 export function isSectionId(value: string): value is SectionId {
   return Object.prototype.hasOwnProperty.call(SECTION_DISPLAY_NAMES, value);
 }

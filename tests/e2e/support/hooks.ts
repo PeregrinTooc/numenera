@@ -8,20 +8,14 @@ import { ModalDsl } from "./modal.js";
 import { FieldsDsl } from "./fields.js";
 import { CardsDsl } from "./cards.js";
 import { SetupDsl } from "./setup.js";
+import { BASE_URL } from "./serverUrl.js";
 
 let browser: Browser;
 
 const DEVICE = resolveDevice(process.env.DEVICE);
 const ENGINES = { chromium, webkit } as const;
 
-// Server is managed by concurrently + wait-on in package.json scripts
-// We just need to know which port to connect to
-const SERVER_PORT = process.env.TEST_PROD === "true" ? 4173 : 3000;
-const BASE_URL = `http://localhost:${SERVER_PORT}`;
-
 BeforeAll({ timeout: 60000 }, async function () {
-  // Server is already running (started by concurrently, verified by wait-on)
-  // Just launch the browser
   browser = await ENGINES[DEVICE.engine].launch({
     headless: !process.env.HEADED,
     // Optional escape hatch for environments where Playwright's pinned
@@ -34,7 +28,6 @@ BeforeAll({ timeout: 60000 }, async function () {
 });
 
 Before(async function (this: CustomWorld) {
-  // Create a new context and page for each test.
   // Locale is pinned to en-US: i18next's LanguageDetector falls back to
   // navigator.language, which otherwise inherits the host OS locale. Step
   // definitions assert on hardcoded English strings, so an unpinned locale
@@ -44,8 +37,7 @@ Before(async function (this: CustomWorld) {
   if (!descriptor) throw new Error(`Playwright has no device "${DEVICE.descriptor}"`);
   this.context = await browser.newContext({
     ...descriptor,
-    // Kept from before device profiles: the desktop profile needs touch for
-    // tap() and the Chromium touch-gesture scenarios.
+    // The desktop profile needs touch for tap() and the Chromium touch-gesture scenarios.
     hasTouch: true,
     locale: "en-US",
   });
@@ -61,10 +53,8 @@ Before(async function (this: CustomWorld) {
   // uses, instead of a one-off inline page.evaluate.
   this.storageHelper = new TestStorageHelper(this.page);
 
-  // Capture console messages for debugging
   this.page.on("console", (msg) => {
     const text = msg.text();
-    // Only log messages related to version history or squashing or debug
     if (
       text.includes("[VersionHistoryService]") ||
       text.includes("[performSquash]") ||
@@ -88,9 +78,7 @@ Before(async function (this: CustomWorld) {
   await this.page.addInitScript("globalThis.__name = (fn) => fn;");
 
   // Inject test configuration and TestTimer BEFORE navigation
-  // Set squash delay to 1000ms for faster tests
   await this.page.addInitScript(() => {
-    // Import and create TestTimer
     class TestTimer {
       private timers = new Map<number, () => void>();
       private nextHandle = 1;
@@ -99,7 +87,6 @@ Before(async function (this: CustomWorld) {
         const handle = this.nextHandle++;
         this.timers.set(handle, callback);
 
-        // Emit event for test observability
         if (typeof window !== "undefined") {
           window.dispatchEvent(
             new CustomEvent("test-timer-scheduled", {
@@ -138,42 +125,31 @@ Before(async function (this: CustomWorld) {
       }
     }
 
-    // Create and expose test timer
     // Structurally the same API as the app's TestTimer; this class has to be
     // self-contained because evaluate() serialises it into the page.
     window.__testTimer = new TestTimer() as unknown as typeof window.__testTimer;
 
-    // Set squash delay for tests (1000ms instead of production 5000ms)
     window.__SQUASH_DELAY_MS__ = 1000;
   });
 
-  // Navigate to the server and clear both localStorage and IndexedDB for clean state.
-  //
-  // This clears through the app's own test APIs (window.__testStorage /
+  // Clears through the app's own test APIs (window.__testStorage /
   // window.__testVersionHistory) rather than indexedDB.deleteDatabase(),
   // because the page we just navigated to has already booted the app and
   // opened its own connections to these exact databases. A delete request
   // against a database the same page holds open fires "blocked" instead of
-  // succeeding, and previously that was masked only because the delete
-  // targeted the wrong database name ("NumeneraCharacterDB", which nothing
-  // ever opens) and so never actually blocked. Clearing through the already-
-  // open connections avoids the blocked-delete problem entirely.
+  // succeeding; clearing through the already-open connections avoids that.
   await this.page.goto(BASE_URL);
   await this.storageHelper.clearStorage();
   await this.storageHelper.clearVersions();
 
-  // Wait for the page to be fully loaded after clearing storage
   await this.page.waitForLoadState("networkidle");
 });
 
 After(async function (this: CustomWorld) {
-  // Clean up page and context after each test
   await this.page?.close();
   await this.context?.close();
 });
 
 AfterAll(async function () {
-  // Close the browser
   await browser?.close();
-  // No server cleanup needed - Playwright handles it automatically!
 });

@@ -1,14 +1,10 @@
-// Unit tests for CyphersBox component
-
 import type { Mock } from "vitest";
 import { render } from "lit-html";
 import { CyphersBox } from "@/components/CyphersBox";
-import { Character, Cypher } from "@/types/character";
-import { CypherItem } from "@/components/CypherItem";
-import { createItemInstances } from "@/components/helpers/CollectionBehavior";
+import { Character } from "@/types/character";
+import { loadCharacterState, clearCharacterState } from "@/storage/storageFactory";
+import { screen, fireEvent } from "@testing-library/dom";
 import { setupTestContainer } from "./helpers/testSetup.js";
-
-vi.mock("@/storage/storageFactory");
 
 describe("CyphersBox", () => {
   const getContainer = setupTestContainer();
@@ -16,7 +12,8 @@ describe("CyphersBox", () => {
   let mockCharacter: Character;
   let mockOnFieldUpdate: Mock<ConstructorParameters<typeof CyphersBox>[1]>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await clearCharacterState();
     // CyphersBox dispatches character-updated on document.getElementById("app").
     container = getContainer();
     container.id = "app";
@@ -74,13 +71,11 @@ describe("CyphersBox", () => {
     const initialCount = mockCharacter.cyphers.length;
     expect(initialCount).toBe(2);
 
-    // Find and click delete button for first cypher
     const deleteButton = container.querySelector('[data-testid="cypher-delete-button-0"]');
     expect(deleteButton).toBeTruthy();
 
     deleteButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-    // Re-render to see the effect
     render(component.render(), container);
 
     expect(mockCharacter.cyphers.length).toBe(1);
@@ -126,26 +121,19 @@ describe("CyphersBox", () => {
     const component = new CyphersBox(mockCharacter, mockOnFieldUpdate);
     render(component.render(), container);
 
-    // Delete first cypher
     let deleteButton = container.querySelector('[data-testid="cypher-delete-button-0"]');
     deleteButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     render(component.render(), container);
 
-    // Delete second cypher (now at index 0)
     deleteButton = container.querySelector('[data-testid="cypher-delete-button-0"]');
     deleteButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     render(component.render(), container);
 
     expect(mockCharacter.cyphers.length).toBe(0);
 
-    // Should show empty state
     const emptyState = container.querySelector('[data-testid="empty-cyphers"]');
     expect(emptyState).toBeTruthy();
   });
-
-  // ========================================================================
-  // ADD BUTTON TESTS
-  // ========================================================================
 
   it("should render add button with correct test ID", () => {
     const component = new CyphersBox(mockCharacter, mockOnFieldUpdate);
@@ -165,23 +153,12 @@ describe("CyphersBox", () => {
   });
 
   it("should open modal when add button is clicked", () => {
-    // Mock ModalService
-    const mockOpenCardModal = vi.fn();
-    vi.doMock("../../src/services/modalService.js", () => ({
-      ModalService: {
-        openCardModal: mockOpenCardModal,
-      },
-    }));
-
     const component = new CyphersBox(mockCharacter, mockOnFieldUpdate);
     render(component.render(), container);
 
-    const addButton = container.querySelector('[data-testid="add-cypher-button"]');
-    addButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    fireEvent.click(screen.getByTestId("add-cypher-button"));
 
-    // The actual implementation will call ModalService.openCardModal
-    // For now, we just verify the button exists and is clickable
-    expect(addButton).toBeTruthy();
+    expect(screen.getByTestId("card-modal-backdrop")).toBeTruthy();
   });
 
   it("should add cypher when onConfirm callback is invoked", () => {
@@ -191,11 +168,9 @@ describe("CyphersBox", () => {
     const initialCount = mockCharacter.cyphers.length;
     expect(initialCount).toBe(2);
 
-    // Simulate adding a new cypher through the callback
     const newCypher = { name: "New Cypher", level: "1d6", effect: "Test effect" };
     mockCharacter.cyphers.push(newCypher);
 
-    // Re-render to see the effect
     render(component.render(), container);
 
     expect(mockCharacter.cyphers.length).toBe(3);
@@ -203,26 +178,20 @@ describe("CyphersBox", () => {
   });
 
   it("should persist through the storage adapter when a cypher is edited", async () => {
-    const { persistCharacterState } = await import("@/storage/storageFactory");
-    vi.mocked(persistCharacterState).mockClear();
-
     const component = new CyphersBox(mockCharacter, mockOnFieldUpdate);
     render(component.render(), container);
 
-    // Drive the real update path: createItemInstances wires an onUpdate handler
-    // onto each rendered cypher, and that handler is what persists.
-    const items = createItemInstances<Cypher, CypherItem>({
-      collection: mockCharacter.cyphers,
-      ItemComponentClass: CypherItem,
-      character: mockCharacter,
-      collectionKey: "cyphers",
+    fireEvent.click(screen.getByTestId("cypher-edit-button-0"));
+    fireEvent.input(screen.getByTestId("edit-cypher-name"), {
+      target: { value: "Renamed Cypher" },
     });
-    const updated = { ...mockCharacter.cyphers[0], name: "Renamed Cypher" };
-    (items[0] as unknown as { onUpdate?: (c: Cypher) => void }).onUpdate?.(updated);
+    fireEvent.click(screen.getByTestId("card-modal-confirm"));
 
-    // Rule #11: persistence goes through the factory, never localStorage directly
-    expect(persistCharacterState).toHaveBeenCalledWith(mockCharacter);
     expect(mockCharacter.cyphers[0].name).toBe("Renamed Cypher");
+    // Persistence is fire-and-forget, so wait for it to land in the real adapter.
+    await vi.waitFor(async () => {
+      expect((await loadCharacterState())?.cyphers[0].name).toBe("Renamed Cypher");
+    });
   });
 
   it("should dispatch character-updated event after adding cypher", () => {
@@ -232,7 +201,6 @@ describe("CyphersBox", () => {
     const eventSpy = vi.fn();
     container.addEventListener("character-updated", eventSpy);
 
-    // Simulate adding a cypher and dispatching the event
     const newCypher = { name: "New Cypher", level: "1d6", effect: "Test effect" };
     mockCharacter.cyphers.push(newCypher);
 

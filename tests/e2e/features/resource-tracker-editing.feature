@@ -6,10 +6,6 @@ Feature: Resource Tracker Fields Editing
     Background:
         Given I am on the character sheet page
 
-    # ============================================================================
-    # XP EDITING SCENARIOS
-    # ============================================================================
-
     Scenario: XP badge displays current and total values independently
         Given the character has 5 current XP and 45 total XP
         Then the Current XP badge should show "5"
@@ -82,10 +78,6 @@ Feature: Resource Tracker Fields Editing
         Then the Current XP badge should show "12"
         And the Total XP badge should show "12"
 
-    # ============================================================================
-    # SHINS EDITING SCENARIOS
-    # ============================================================================
-
     Scenario: Shins badge displays current value
         Given the character has 100 shins
         Then the Shins badge should show "100"
@@ -135,10 +127,6 @@ Feature: Resource Tracker Fields Editing
         And I click the "Confirm" button
         Then the Shins badge should show "250"
 
-    # ============================================================================
-    # ARMOR EDITING SCENARIOS
-    # ============================================================================
-
     Scenario: Armor badge displays current value
         Given the character has 2 armor
         Then the Armor badge should show "2"
@@ -172,10 +160,6 @@ Feature: Resource Tracker Fields Editing
         And I click the "Confirm" button
         Then the Armor badge should show "0"
 
-    # ============================================================================
-    # MAX CYPHERS EDITING SCENARIOS
-    # ============================================================================
-
     Scenario: Max Cyphers badge displays current value
         Given the character has max cyphers 2
         Then the Max Cyphers portion of the badge should show "2"
@@ -201,10 +185,6 @@ Feature: Resource Tracker Fields Editing
         And I click the "Confirm" button
         And I reload the page
         Then the Max Cyphers portion of the badge should show "3"
-
-    # ============================================================================
-    # EFFORT EDITING SCENARIOS
-    # ============================================================================
 
     Scenario: Effort badge displays current value
         Given the character has effort 1

@@ -1,5 +1,14 @@
 import type { CharacterDiff } from "@/utils/characterDiff";
+import {
+  BASIC_INFO_FIELDS,
+  COLLECTION_KEYS,
+  RESOURCE_FIELDS,
+  STAT_NAMES,
+  TEXT_FIELDS,
+} from "@/utils/characterFieldGroups";
 import { t } from "@/i18n/index";
+
+const PREFIX = "versionHistory.changes";
 
 /**
  * Translates a CharacterDiff into the uncapped list of change lines shown in
@@ -13,46 +22,28 @@ import { t } from "@/i18n/index";
 export function describeDiff(diff: CharacterDiff): string[] {
   const lines: string[] = [];
 
-  if (diff.basicInfo.name) lines.push(t("versionHistory.changes.basicInfo.name"));
-  if (diff.basicInfo.tier) lines.push(t("versionHistory.changes.basicInfo.tier"));
-  if (diff.basicInfo.type) lines.push(t("versionHistory.changes.basicInfo.type"));
-  if (diff.basicInfo.descriptor) lines.push(t("versionHistory.changes.basicInfo.descriptor"));
-  if (diff.basicInfo.focus) lines.push(t("versionHistory.changes.basicInfo.focus"));
+  for (const field of BASIC_INFO_FIELDS) {
+    if (diff.basicInfo[field]) lines.push(t(`${PREFIX}.basicInfo.${field}`));
+  }
+  for (const stat of STAT_NAMES) {
+    if (diff.stats[stat]) lines.push(t(`${PREFIX}.stats.${stat}`));
+  }
+  for (const { key } of RESOURCE_FIELDS) {
+    if (diff.resources[key]) lines.push(t(`${PREFIX}.resources.${key}`));
+  }
+  for (const field of TEXT_FIELDS) {
+    if (diff.textFields[field]) lines.push(t(`${PREFIX}.textFields.${field}`));
+  }
 
-  if (diff.stats.might) lines.push(t("versionHistory.changes.stats.might"));
-  if (diff.stats.speed) lines.push(t("versionHistory.changes.stats.speed"));
-  if (diff.stats.intellect) lines.push(t("versionHistory.changes.stats.intellect"));
-
-  if (diff.resources.xp) lines.push(t("versionHistory.changes.resources.xp"));
-  if (diff.resources.shins) lines.push(t("versionHistory.changes.resources.shins"));
-  if (diff.resources.armor) lines.push(t("versionHistory.changes.resources.armor"));
-  if (diff.resources.effort) lines.push(t("versionHistory.changes.resources.effort"));
-  if (diff.resources.maxCyphers) lines.push(t("versionHistory.changes.resources.maxCyphers"));
-
-  if (diff.textFields.background) lines.push(t("versionHistory.changes.textFields.background"));
-  if (diff.textFields.notes) lines.push(t("versionHistory.changes.textFields.notes"));
-
-  const collectionTypes: Array<{
-    diff: CharacterDiff["collections"][keyof CharacterDiff["collections"]];
-    key: string;
-  }> = [
-    { diff: diff.collections.cyphers, key: "cypher" },
-    { diff: diff.collections.artifacts, key: "artifact" },
-    { diff: diff.collections.equipment, key: "equipment" },
-    { diff: diff.collections.attacks, key: "attack" },
-    { diff: diff.collections.abilities, key: "ability" },
-    { diff: diff.collections.specialAbilities, key: "specialAbility" },
-    { diff: diff.collections.oddities, key: "oddity" },
-  ];
-
-  for (const { diff: collectionDiff, key } of collectionTypes) {
+  for (const { key, i18nKey } of COLLECTION_KEYS) {
+    const collectionDiff = diff.collections[key];
     const hasAdded = collectionDiff.right.some((entry) => entry.status === "added");
     const hasRemoved = collectionDiff.left.some((entry) => entry.status === "removed");
     const hasModified = collectionDiff.left.some((entry) => entry.status === "modified");
 
-    if (hasAdded) lines.push(t(`versionHistory.changes.collections.${key}.added`));
-    if (hasRemoved) lines.push(t(`versionHistory.changes.collections.${key}.removed`));
-    if (hasModified) lines.push(t(`versionHistory.changes.collections.${key}.modified`));
+    if (hasAdded) lines.push(t(`${PREFIX}.collections.${i18nKey}.added`));
+    if (hasRemoved) lines.push(t(`${PREFIX}.collections.${i18nKey}.removed`));
+    if (hasModified) lines.push(t(`${PREFIX}.collections.${i18nKey}.modified`));
   }
 
   return lines;

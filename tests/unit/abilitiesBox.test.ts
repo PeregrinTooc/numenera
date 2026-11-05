@@ -3,7 +3,6 @@ import { Abilities } from "@/components/Abilities";
 import { Ability } from "@/types/character";
 import { testContainerAddButton } from "./helpers/containerTestSuite.js";
 
-// Use shared test suite for add button functionality
 testContainerAddButton<Ability>({
   componentName: "Abilities",
   createComponent: (character) => new Abilities(character),

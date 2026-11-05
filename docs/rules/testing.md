@@ -240,7 +240,7 @@ The canonical checklist — `code-quality.md` points here instead of repeating i
 ✅ Test uses meaningful, descriptive names
 ✅ Test has single responsibility
 ✅ Test uses Arrange-Act-Assert pattern
-✅ Test mocks external dependencies
+✅ Test fakes only real boundaries, never code inside its own (design.md §6)
 ✅ Test handles edge cases
 ✅ Test handles error cases
 ✅ Tests can run in any order
@@ -251,11 +251,12 @@ The canonical checklist — `code-quality.md` points here instead of repeating i
 
 ## Using NPM Scripts for E2E Tests
 
-**Never call `cucumber-js` directly** (see `CLAUDE.md`'s gotchas). The npm
-scripts start the dev server via `concurrently`, wait for it with `wait-on`,
-run cucumber-js with the correct configuration, and tear the server down
-afterward. Calling `cucumber-js` directly bypasses server management and every
-scenario fails.
+**Never call `cucumber-js` directly** (see `CLAUDE.md`). The npm scripts run
+`scripts/e2e.js`, which owns the server: it picks a free port (or `E2E_PORT`),
+starts Vite — `vite preview` for `test:e2e:prod` — with `--strictPort`, waits
+for it, runs cucumber-js with `E2E_PORT` set, and stops the server afterwards.
+Because the port is chosen rather than assumed, a run can never test a stale
+server left on a well-known port, and parallel worktrees do not collide.
 
 ```bash
 # ✅ CORRECT
@@ -263,7 +264,7 @@ npm run test:e2e -- tests/e2e/features/basic-info-editing.feature
 npm run test:e2e:current
 npm run test:e2e:prod
 
-# ❌ INCORRECT — no server running
+# ❌ INCORRECT — no server, no E2E_PORT: the support code refuses to start
 cucumber-js tests/e2e/features/**/*.feature
 npx cucumber-js --tags "@current"
 ```
@@ -293,30 +294,34 @@ suite's runtime.
 
 ### When to Mock:
 
-External API calls, database operations, file system operations,
-time-dependent code, random number generation.
+Only at a real boundary: browser features jsdom lacks (layout, Web Animations,
+`matchMedia`, file pickers, downloads, `BroadcastChannel`), time, and failures
+that cannot be produced for real. Never another component, service, util,
+`@/i18n` or the storage adapters — fake-indexeddb is loaded for every unit test
+(`tests/unit/setup.ts`), so use the real adapter and read the result back. The
+full rule and its exceptions: `design.md` §6.
 
 ### Example:
 
 ```typescript
-import { vi } from "vitest";
-import { loadCharacter } from "@/storage/storageFactory";
+import { loadCharacterState } from "@/storage/storageFactory";
 
-vi.mock("@/storage/storageFactory", () => ({
-  loadCharacter: vi.fn(),
-}));
+// ✅ GOOD — act through the UI, assert what was persisted
+it("saves a renamed cypher", async () => {
+  const box = renderCyphersBox(createTestCharacter({ cyphers: [cypher] }));
 
-describe("CharacterSheet", () => {
-  it("should load character on mount", async () => {
-    const mockCharacter = { name: "Test", tier: 1 };
-    vi.mocked(loadCharacter).mockResolvedValue(mockCharacter);
+  await renameFirstCypher(box, "Detonation");
 
-    const sheet = new CharacterSheet();
-    await sheet.init();
-
-    expect(loadCharacter).toHaveBeenCalledWith("default");
-    expect(sheet.character).toEqual(mockCharacter);
+  await vi.waitFor(async () => {
+    expect((await loadCharacterState())?.cyphers[0].name).toBe("Detonation");
   });
+});
+
+// ❌ BAD — replaces the adapter and asserts the call, not the result
+vi.mock("@/storage/storageFactory");
+it("saves a renamed cypher", () => {
+  // ...
+  expect(persistCharacterState).toHaveBeenCalled();
 });
 ```
 

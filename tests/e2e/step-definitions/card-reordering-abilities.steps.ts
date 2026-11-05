@@ -3,10 +3,6 @@ import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 import { withFullHeightViewport } from "../support/sections.js";
 
-// ============================================================================
-// ABILITY SETUP AND DRAG STEPS
-// ============================================================================
-
 Given(
   "the character has {int} abilities named {string}",
   async function (this: CustomWorld, count: number, namesList: string) {
@@ -72,10 +68,6 @@ async function verifyAbilityOrder(world: CustomWorld, expectedOrder: string[]): 
   }
 }
 
-// ============================================================================
-// CROSS-SECTION DRAG PREVENTION
-// ============================================================================
-
 When(
   "I drag cypher {string} into the abilities section",
   async function (this: CustomWorld, cypherName: string) {
@@ -84,7 +76,6 @@ When(
       .locator("xpath=ancestor::div[@data-testid='cypher-item']");
     const abilitiesSection = this.page.locator('[data-testid="abilities-section"]');
 
-    // Attempt to drag cypher into abilities section
     await sourceCard.dragTo(abilitiesSection, {
       targetPosition: { x: 50, y: 50 },
     });

@@ -38,10 +38,6 @@ const VALID_CHARACTER = {
   },
 };
 
-// ============================================================================
-// WHEN STEPS
-// ============================================================================
-
 When(
   "I import a valid character file with matching schema version",
   async function (this: CustomWorld) {
@@ -55,10 +51,6 @@ When("I import a character file with tier {int}", async function (this: CustomWo
   await expect(this.page.getByTestId("character-name")).toHaveText("Imported Hero");
 });
 
-// ============================================================================
-// THEN STEPS
-// ============================================================================
-
 Then(
   "the tier should have been adjusted to {string}",
   async function (this: CustomWorld, tier: string) {
@@ -67,15 +59,12 @@ Then(
 );
 
 Then("the character should be imported successfully", async function (this: CustomWorld) {
-  // Verify the character name changed to the imported character
   const nameElement = this.page.locator('[data-testid="character-name"]');
 
-  // Wait for the name to update (may need a moment for import to process)
   await expect(nameElement).toHaveText("Imported Hero", { timeout: 5000 });
 });
 
 Then("all character data should be correctly displayed", async function (this: CustomWorld) {
-  // Verify key character data is displayed correctly
   const nameElement = this.page.locator('[data-testid="character-name"]');
   await expect(nameElement).toHaveText("Imported Hero");
 

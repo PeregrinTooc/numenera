@@ -11,10 +11,6 @@ import {
 import { loadLayout, loadSectionColumns } from "./layoutStorage";
 import { UserFacingError } from "@/utils/UserFacingError";
 
-/**
- * ExportManager handles file exports with File System Access API support
- * Provides Quick Export, Save As, and fallback download functionality
- */
 export class ExportManager {
   private fileHandle: FileSystemFileHandle | null = null;
   private initPromise: Promise<void>;
@@ -26,22 +22,15 @@ export class ExportManager {
     });
   }
 
-  /**
-   * Ensure initialization is complete before operations
-   */
   private async ensureInitialized(): Promise<void> {
     await this.initPromise;
   }
 
-  /**
-   * Check if File System Access API is available
-   */
   supportsFileSystemAccess(): boolean {
     return "showSaveFilePicker" in window;
   }
 
   /**
-   * Check if we have a remembered export location
    * Note: This is synchronous for simplicity, but initialization happens async in background
    */
   hasRememberedLocation(): boolean {
@@ -58,25 +47,12 @@ export class ExportManager {
     await this.ensureInitialized();
 
     if (this.supportsFileSystemAccess()) {
-      // First-time export in Chromium - prompt and remember
-      const handle = await this.promptForLocation(character);
-      if (!handle) return; // User cancelled
-
-      await this.writeToHandle(handle, character);
-      this.fileHandle = handle;
-      await persistFileHandle(handle);
-
-      // Trigger button update event
-      window.dispatchEvent(new CustomEvent("export-handle-updated"));
+      await this.chooseAndRememberLocation(character);
     } else {
-      // Fallback for non-Chromium browsers
       await this.downloadFile(character);
     }
   }
 
-  /**
-   * Quick Export - only available after first export in Chromium
-   */
   async quickExport(character: Character): Promise<void> {
     if (!this.fileHandle) {
       throw new UserFacingError("errors.noRememberedLocation");
@@ -85,7 +61,6 @@ export class ExportManager {
     try {
       await this.writeToHandle(this.fileHandle, character);
 
-      // Show success notification
       window.dispatchEvent(
         new CustomEvent("export-success", {
           detail: { filename: this.fileHandle.name },
@@ -93,7 +68,6 @@ export class ExportManager {
       );
     } catch (error) {
       if (error instanceof DOMException) {
-        // Handle specific errors
         if (error.name === "NotAllowedError") {
           throw new UserFacingError("errors.permissionDenied", { cause: error });
         }
@@ -105,24 +79,10 @@ export class ExportManager {
     }
   }
 
-  /**
-   * Save As - only available after first export in Chromium
-   */
   async saveAs(character: Character): Promise<void> {
-    const handle = await this.promptForLocation(character);
-    if (!handle) return; // User cancelled
-
-    await this.writeToHandle(handle, character);
-    this.fileHandle = handle;
-    await persistFileHandle(handle);
-
-    // Trigger button update event
-    window.dispatchEvent(new CustomEvent("export-handle-updated"));
+    await this.chooseAndRememberLocation(character);
   }
 
-  /**
-   * Clear remembered location (useful for testing or user request)
-   */
   clearRememberedLocation(): void {
     this.fileHandle = null;
     localStorage.removeItem(HANDLE_STORAGE_KEY);
@@ -132,9 +92,16 @@ export class ExportManager {
     window.dispatchEvent(new CustomEvent("export-handle-updated"));
   }
 
-  // ========================================
-  // Private Methods
-  // ========================================
+  private async chooseAndRememberLocation(character: Character): Promise<void> {
+    const handle = await this.promptForLocation(character);
+    if (!handle) return;
+
+    await this.writeToHandle(handle, character);
+    this.fileHandle = handle;
+    await persistFileHandle(handle);
+
+    window.dispatchEvent(new CustomEvent("export-handle-updated"));
+  }
 
   private async promptForLocation(character: Character): Promise<FileSystemFileHandle | null> {
     const filename = this.generateFilename(character);
@@ -150,7 +117,6 @@ export class ExportManager {
         ],
       });
     } catch (error) {
-      // User cancelled
       if (error instanceof DOMException && error.name === "AbortError") {
         return null;
       }
@@ -159,22 +125,18 @@ export class ExportManager {
   }
 
   private async writeToHandle(handle: FileSystemFileHandle, character: Character): Promise<void> {
-    const fileData = this.createFileData(character);
     const writable = await handle.createWritable();
-    const json = JSON.stringify(fileData, null, 2);
-    await writable.write(json);
+    await writable.write(this.serialize(character));
     await writable.close();
   }
 
   private async downloadFile(character: Character): Promise<void> {
     const filename = this.generateFilename(character);
-    const fileData = this.createFileData(character);
-    const json = JSON.stringify(fileData, null, 2);
-    downloadTextFile(filename, json, "application/json");
+    downloadTextFile(filename, this.serialize(character), "application/json");
   }
 
-  private createFileData(character: Character): CharacterFileData {
-    return {
+  private serialize(character: Character): string {
+    const fileData: CharacterFileData = {
       version: "1.0",
       schemaVersion: SCHEMA_VERSION,
       exportDate: new Date().toISOString(),
@@ -182,6 +144,7 @@ export class ExportManager {
       layout: loadLayout(),
       sectionColumns: loadSectionColumns(),
     };
+    return JSON.stringify(fileData, null, 2);
   }
 
   private generateFilename(character: Character): string {

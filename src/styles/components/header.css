@@ -1,6 +1,3 @@
-/* Header Component Styles */
-
-/* Header container - parchment card matching stat pools */
 .character-header {
   background: linear-gradient(to bottom, #f5e6d3, #ede1cf);
   border: 2px solid #8b4513;
@@ -10,14 +7,12 @@
   margin-bottom: 2rem;
   position: relative;
 
-  /* Centered content (portrait moved to BasicInfo) */
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
 }
 
-/* Settings row - positions settings gear in top-right */
 .header-settings-row {
   position: absolute;
   top: 0.75rem;
@@ -31,7 +26,6 @@
   flex: 1;
 }
 
-/* Page title - large, elegant serif */
 .page-title {
   font-family: "Cinzel", Georgia, serif;
   font-size: 2rem;
@@ -44,20 +38,17 @@
   line-height: 1.2;
 }
 
-/* Decorative underline with gradient */
 .title-underline {
   width: 250px;
   height: 2px;
   background: linear-gradient(to right, transparent, #8b4513, #d4af37, #8b4513, transparent);
 }
 
-/* Button container - centered */
 .header-buttons {
   display: flex;
   gap: 1rem;
 }
 
-/* Load button - Numenera primary blue */
 .btn-load {
   background: #1a5490;
   color: white;
@@ -85,7 +76,6 @@
   box-shadow: 0 1px 2px rgba(26, 84, 144, 0.3);
 }
 
-/* Clear button - Numenera secondary brown */
 .btn-new {
   background: #8b4513;
   color: white;
@@ -113,7 +103,6 @@
   box-shadow: 0 1px 2px rgba(139, 69, 19, 0.3);
 }
 
-/* Import button - Numenera tertiary green */
 .btn-import {
   background: #2d5016;
   color: white;
@@ -141,7 +130,6 @@
   box-shadow: 0 1px 2px rgba(45, 80, 22, 0.3);
 }
 
-/* Export button - Numenera quaternary purple */
 .btn-export {
   background: #5a3d7a;
   color: white;
@@ -169,7 +157,6 @@
   box-shadow: 0 1px 2px rgba(90, 61, 122, 0.3);
 }
 
-/* Quick Export button - Cyan/Teal variant */
 .btn-quick-export {
   background: #0e7490;
   color: white;
@@ -197,7 +184,6 @@
   box-shadow: 0 1px 2px rgba(14, 116, 144, 0.3);
 }
 
-/* Save As button - Cyan/Teal variant (matching Quick Export) */
 .btn-save-as {
   background: #0e7490;
   color: white;
@@ -225,7 +211,6 @@
   box-shadow: 0 1px 2px rgba(14, 116, 144, 0.3);
 }
 
-/* Responsive: Stack buttons on mobile */
 @media (max-width: 768px) {
   .character-header {
     padding: 1.5rem;

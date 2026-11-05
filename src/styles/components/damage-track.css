@@ -1,5 +1,3 @@
-/* Damage Track Component Styles */
-
 .damage-track-section {
   transition: all 0.2s ease;
 }
@@ -10,7 +8,6 @@
     0 2px 4px -1px rgba(239, 68, 68, 0.06);
 }
 
-/* Radio Button Styling */
 .damage-radio {
   cursor: pointer;
 }
@@ -24,7 +21,6 @@
   outline-offset: 2px;
 }
 
-/* Color-coded radio buttons */
 .damage-radio[value="healthy"]:checked {
   accent-color: #16a34a;
 }
@@ -37,17 +33,14 @@
   accent-color: #dc2626;
 }
 
-/* Label hover effects */
 .damage-track-section label:hover {
   background-color: rgba(239, 68, 68, 0.05);
 }
 
-/* Typography */
 .damage-track-section .font-serif {
   font-family: "Cinzel", serif;
 }
 
-/* Status-specific text colors */
 .damage-track-section label:has(input[value="healthy"]:checked) {
   background-color: rgba(16, 185, 129, 0.05);
   border-left: 3px solid #16a34a;

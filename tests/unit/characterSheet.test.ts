@@ -1,11 +1,6 @@
-/**
- * CharacterSheet component tests - version history integration
- */
-
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import { Character } from "@/types/character";
-import * as RecoveryDamageSectionModule from "@/components/RecoveryDamageSection";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("CharacterSheet - Version History Integration", () => {
@@ -20,7 +15,6 @@ describe("CharacterSheet - Version History Integration", () => {
     container = getContainer();
     container.id = "app";
 
-    // Create mock character
     mockCharacter = {
       name: "Test Character",
       descriptor: "Clever",
@@ -61,7 +55,6 @@ describe("CharacterSheet - Version History Integration", () => {
       },
     };
 
-    // Create CharacterSheet
     characterSheet = new CharacterSheet(
       mockCharacter,
       vi.fn(), // onLoad
@@ -78,26 +71,6 @@ describe("CharacterSheet - Version History Integration", () => {
     characterSheet.mount(container);
 
     expect(container.querySelector(".parchment-container")).toBeTruthy();
-  });
-
-  it("should have a method to mount version navigator", () => {
-    expect(characterSheet).toHaveProperty("mountVersionNavigator");
-    expect(typeof characterSheet.mountVersionNavigator).toBe("function");
-  });
-
-  it("should have a method to update version navigator", () => {
-    expect(characterSheet).toHaveProperty("updateVersionNavigator");
-    expect(typeof characterSheet.updateVersionNavigator).toBe("function");
-  });
-
-  it("should have a method to mount version warning banner", () => {
-    expect(characterSheet).toHaveProperty("mountVersionWarningBanner");
-    expect(typeof characterSheet.mountVersionWarningBanner).toBe("function");
-  });
-
-  it("should have a method to unmount version warning banner", () => {
-    expect(characterSheet).toHaveProperty("unmountVersionWarningBanner");
-    expect(typeof characterSheet.unmountVersionWarningBanner).toBe("function");
   });
 
   describe("rerenderSection", () => {
@@ -151,7 +124,8 @@ describe("CharacterSheet - Version History Integration", () => {
     });
 
     it("does nothing if the section isn't currently in the DOM", () => {
-      // Nothing mounted yet, so no [data-section-host="cyphers"] exists.
+      characterSheet.mount(container);
+      container.innerHTML = "";
       expect(() => characterSheet.rerenderSection("cyphers")).not.toThrow();
     });
 
@@ -169,16 +143,7 @@ describe("CharacterSheet - Version History Integration", () => {
   });
 
   describe("getSectionTemplate", () => {
-    it("constructs RecoveryDamageSection once per sheet, not once per render", () => {
-      const OriginalRecoveryDamageSection = RecoveryDamageSectionModule.RecoveryDamageSection;
-      const constructorSpy = vi
-        .spyOn(RecoveryDamageSectionModule, "RecoveryDamageSection")
-        .mockImplementation(function (
-          ...args: ConstructorParameters<typeof OriginalRecoveryDamageSection>
-        ) {
-          return new OriginalRecoveryDamageSection(...args);
-        });
-
+    it("keeps the recovery section's DOM and ticked state across re-mounts", () => {
       const sheet = new CharacterSheet(
         mockCharacter,
         vi.fn(),
@@ -189,13 +154,21 @@ describe("CharacterSheet - Version History Integration", () => {
         vi.fn(),
         vi.fn()
       );
-      const callsAfterConstruction = constructorSpy.mock.calls.length;
-      expect(callsAfterConstruction).toBeGreaterThan(0);
+      sheet.mount(container);
+      const section = container.querySelector('[data-testid="recovery-damage-section"]');
+      const checkbox = container.querySelector(
+        '[data-testid="recovery-ten-minutes"]'
+      ) as HTMLInputElement;
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event("change", { bubbles: true }));
 
       sheet.mount(container);
-      sheet.mount(container);
 
-      expect(constructorSpy.mock.calls.length).toBe(callsAfterConstruction);
+      expect(container.querySelector('[data-testid="recovery-damage-section"]')).toBe(section);
+      const after = container.querySelector(
+        '[data-testid="recovery-ten-minutes"]'
+      ) as HTMLInputElement;
+      expect(after.checked).toBe(true);
     });
   });
 });

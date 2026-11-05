@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { ConflictWarningModal } from "@/components/ConflictWarningModal";
 import type { ConflictDetail } from "@/services/conflictDetectionService";
+import { t } from "@/i18n/index";
 import { createTestCharacter } from "../factories/character";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
@@ -26,23 +27,37 @@ describe("ConflictWarningModal", () => {
       expect(container.querySelector('[data-testid="conflict-modal"]')).toBeNull();
     });
 
-    it("should listen for version-conflict events", () => {
-      const addEventListenerSpy = vi.spyOn(window, "addEventListener");
-
+    it("should react to version-conflict events dispatched on window", () => {
       modal = new ConflictWarningModal(container);
+      expect(modal.isVisible()).toBe(false);
 
-      expect(addEventListenerSpy).toHaveBeenCalledWith("version-conflict", expect.any(Function));
+      window.dispatchEvent(
+        new CustomEvent<ConflictDetail>("version-conflict", {
+          detail: {
+            localEtag: "local-etag",
+            remoteEtag: "remote-etag",
+            remoteTimestamp: Date.now(),
+            localCharacter: createTestCharacter(),
+            resolve: vi.fn(),
+          },
+        })
+      );
+
+      expect(modal.isVisible()).toBe(true);
     });
 
-    it("should listen for newer-version-available events", () => {
-      const addEventListenerSpy = vi.spyOn(window, "addEventListener");
-
+    it("should show a newer-version banner, not the conflict modal, on newer-version-available", () => {
       modal = new ConflictWarningModal(container);
 
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        "newer-version-available",
-        expect.any(Function)
+      window.dispatchEvent(
+        new CustomEvent("newer-version-available", {
+          detail: { etag: "etag", timestamp: Date.now() },
+        })
       );
+
+      const banner = container.querySelector('[data-testid="newer-version-banner"]');
+      expect(banner?.textContent).toContain(t("conflict.newerVersionAvailable"));
+      expect(modal.isVisible()).toBe(false);
     });
   });
 
@@ -246,7 +261,6 @@ describe("ConflictWarningModal", () => {
     it("should remove existing modal before showing new one", () => {
       modal = new ConflictWarningModal(container);
 
-      // Show first modal
       window.dispatchEvent(
         new CustomEvent<ConflictDetail>("version-conflict", {
           detail: {
@@ -261,7 +275,6 @@ describe("ConflictWarningModal", () => {
 
       expect(container.querySelectorAll('[data-testid="conflict-modal"]').length).toBe(1);
 
-      // Show second modal
       window.dispatchEvent(
         new CustomEvent<ConflictDetail>("version-conflict", {
           detail: {
@@ -274,7 +287,6 @@ describe("ConflictWarningModal", () => {
         })
       );
 
-      // Should still only have one modal
       expect(container.querySelectorAll('[data-testid="conflict-modal"]').length).toBe(1);
     });
   });

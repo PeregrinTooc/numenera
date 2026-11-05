@@ -1,5 +1,3 @@
-// CharacterSheet component - Main container that composes all sections
-
 import { html, nothing, render, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { Header } from "./Header.js";
@@ -21,7 +19,6 @@ import {
   withColumns,
 } from "@/types/sectionColumns";
 import { SectionDragController } from "@/components/helpers/SectionDragController";
-import { SheetVersionUi } from "@/components/helpers/SheetVersionUi";
 import { renderEditLayoutButton } from "@/components/helpers/layoutEditButton";
 import { renderSectionColumnsButton } from "@/components/helpers/sectionColumnsButton";
 import {
@@ -33,7 +30,6 @@ import {
 export class CharacterSheet {
   private header: Header;
   private sections: SheetSections;
-  private readonly versionUi = new SheetVersionUi();
   private layout: Layout;
   private sectionColumns: SectionColumns;
   private isLayoutEditMode: boolean = false;
@@ -70,28 +66,19 @@ export class CharacterSheet {
     );
     this.sections = new SheetSections(this.character, this.onFieldUpdate);
 
-    // Load layout and column choices from storage
     this.layout = loadLayout();
     this.sectionColumns = loadSectionColumns();
   }
 
-  /**
-   * Re-render a single collection section, leaving the rest of the sheet's DOM
-   * untouched.
-   */
   rerenderSection(sectionId: SectionId): void {
-    this.sections.rerenderSection(sectionId, this.container ?? document);
+    this.sections.rerenderSection(sectionId, this.mountedContainer());
   }
 
-  /**
-   * Render a layout item (single or grid)
-   */
   private renderLayoutItem(item: LayoutItem, rowIndex: number): TemplateResult {
     if (item.type === "single") {
       return this.renderDraggableSection(item.id, rowIndex);
     }
 
-    // Grid layout - two sections side by side
     const wrapperClass = this.isLayoutEditMode ? "layout-grid" : "";
     const preview = this.drag.rowPreview(rowIndex);
 
@@ -133,9 +120,6 @@ export class CharacterSheet {
     `;
   }
 
-  /**
-   * Switch a card section between one and two columns, persist, and render
-   */
   private toggleSectionColumns(sectionId: CardSectionId): void {
     const next = columnsFor(this.sectionColumns, sectionId) === 2 ? 1 : 2;
     this.sectionColumns = withColumns(this.sectionColumns, sectionId, next);
@@ -153,9 +137,6 @@ export class CharacterSheet {
     this.rerender();
   }
 
-  /**
-   * Toggle layout edit mode
-   */
   toggleLayoutEditMode(): void {
     this.drag.cancelDrag();
     this.isLayoutEditMode = !this.isLayoutEditMode;
@@ -165,45 +146,22 @@ export class CharacterSheet {
       // session from the real persisted state rather than a stale snapshot.
       this.layout = loadLayout();
     }
-    // No save on exit: drops already persist
-    // immediately when they mutate this.layout. Re-saving here used to
-    // overwrite storage with this instance's (possibly stale) in-memory copy
-    // whenever the persisted layout had changed since edit mode was entered.
+    // Leaving saves nothing: drops already persist as they mutate this.layout,
+    // and a save here would overwrite storage with a possibly stale copy.
     this.rerender();
     // The sheet snaps to its layout: no section may go on sliding to a place
     // from the live preview
-    if (this.container) cancelSectionSlides(this.container);
+    cancelSectionSlides(this.mountedContainer());
   }
 
-  /**
-   * Reset layout to default
-   */
   resetLayoutToDefault(): void {
     this.layout = resetLayout();
     this.sectionColumns = {};
     this.rerender();
   }
 
-  /**
-   * Update the layout
-   */
-  updateLayout(newLayout: Layout): void {
-    this.layout = newLayout;
-    this.rerender();
-  }
-
-  /**
-   * Get current layout
-   */
   getLayout(): Layout {
     return this.layout;
-  }
-
-  /**
-   * Check if in layout edit mode
-   */
-  isInLayoutEditMode(): boolean {
-    return this.isLayoutEditMode;
   }
 
   /**
@@ -231,14 +189,15 @@ export class CharacterSheet {
     this.sections.mountCollectionSections(container);
   }
 
-  /**
-   * Re-render the whole sheet in place.
-   */
   rerender(): void {
-    const container = this.container ?? document.getElementById("app");
-    if (container) {
-      this.mount(container);
+    this.mount(this.mountedContainer());
+  }
+
+  private mountedContainer(): HTMLElement {
+    if (!this.container) {
+      throw new Error("CharacterSheet is not mounted");
     }
+    return this.container;
   }
 
   /**
@@ -246,66 +205,10 @@ export class CharacterSheet {
    * old places. Resolves when the slide has finished; null when nothing slides.
    */
   private rerenderWithSlide(): Promise<void> | null {
-    const container = this.container ?? document.getElementById("app");
-    if (!container) return null;
+    const container = this.mountedContainer();
     const first = measureSections(container);
     this.mount(container);
     return slideSections(container, first);
-  }
-
-  /**
-   * Mount version navigator to a container
-   */
-  mountVersionNavigator(
-    container: HTMLElement,
-    versionCount: number,
-    currentIndex: number,
-    onNavigateBackward: () => void,
-    onNavigateForward: () => void
-  ): void {
-    this.versionUi.mountNavigator(container, {
-      versionCount,
-      currentIndex,
-      onNavigateBackward,
-      onNavigateForward,
-    });
-  }
-
-  /**
-   * Update version navigator with new props
-   */
-  updateVersionNavigator(
-    versionCount: number,
-    currentIndex: number,
-    onNavigateBackward: () => void,
-    onNavigateForward: () => void
-  ): void {
-    this.versionUi.updateNavigator({
-      versionCount,
-      currentIndex,
-      onNavigateBackward,
-      onNavigateForward,
-    });
-  }
-
-  /**
-   * Mount version warning banner to a container
-   */
-  mountVersionWarningBanner(
-    container: HTMLElement,
-    description: string,
-    timestamp: Date,
-    onReturn: () => void,
-    onRestore: () => void
-  ): void {
-    this.versionUi.mountWarningBanner(container, description, timestamp, onReturn, onRestore);
-  }
-
-  /**
-   * Unmount version warning banner
-   */
-  unmountVersionWarningBanner(): void {
-    this.versionUi.unmountWarningBanner();
   }
 
   /**
@@ -314,12 +217,10 @@ export class CharacterSheet {
    */
   setIsViewingOldVersion(isViewing: boolean): void {
     this.header.setIsViewingOldVersion(isViewing);
-    // Trigger re-render to update button state
     this.rerender();
   }
 
   render(): TemplateResult {
-    // Render sections based on layout order
     // While a dragged section is held still, show the layout its drop produces
     const shownLayout = this.drag.liveLayout() ?? this.layout;
     const layoutSections = shownLayout.map((item, rowIndex) =>

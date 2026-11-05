@@ -3,10 +3,6 @@ import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world.js";
 import { paneControl } from "../support/comparisonViewHelpers.js";
 
-// ----------------------------------------------------------------------------
-// Per-pane navigation
-// ----------------------------------------------------------------------------
-
 When("I click the left pane's backward arrow", async function (this: CustomWorld) {
   await this.page.locator(paneControl("left", "backward")).click();
 });
@@ -72,10 +68,6 @@ Then(
     await expect(this.page.locator(paneControl("right", "counter"))).toContainText(`${target} of`);
   }
 );
-
-// ----------------------------------------------------------------------------
-// Change header
-// ----------------------------------------------------------------------------
 
 Then(
   "the comparison header should list every changed field, not just the top 3",

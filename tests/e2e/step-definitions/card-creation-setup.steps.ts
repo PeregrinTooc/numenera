@@ -3,11 +3,6 @@ import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { CARD_CONFIGS } from "../support/cardTestFixtures.js";
 
-// ============================================================================
-// PARAMETERIZED PRECONDITION STEPS
-// ============================================================================
-
-// Helper for Given steps
 async function givenCharacterHasCards(
   world: CustomWorld,
   cardType: string,
@@ -17,47 +12,36 @@ async function givenCharacterHasCards(
   await world.cards.expectHasCount(cardType, count);
 }
 
-// Cypher cards
 Given("the character has {int} cypher cards", async function (this: CustomWorld, count: number) {
   await givenCharacterHasCards(this, "cypher", count);
 });
 
-// Equipment cards
 Given("the character has {int} equipment cards", async function (this: CustomWorld, count: number) {
   await givenCharacterHasCards(this, "equipment", count);
 });
 
-// Artifact cards
 Given("the character has {int} artifact cards", async function (this: CustomWorld, count: number) {
   await givenCharacterHasCards(this, "artifact", count);
 });
 
-// Oddity cards
 Given("the character has {int} oddity cards", async function (this: CustomWorld, count: number) {
   await givenCharacterHasCards(this, "oddity", count);
 });
 
-// Attack cards
 Given("the character has {int} attack cards", async function (this: CustomWorld, count: number) {
   await givenCharacterHasCards(this, "attack", count);
 });
 
-// Ability cards
 Given("the character has {int} ability cards", async function (this: CustomWorld, count: number) {
   await givenCharacterHasCards(this, "ability", count);
 });
 
-// Special ability cards
 Given(
   "the character has {int} special ability cards",
   async function (this: CustomWorld, count: number) {
     await givenCharacterHasCards(this, "special-ability", count);
   }
 );
-
-// ============================================================================
-// ADD BUTTON VISIBILITY STEPS
-// ============================================================================
 
 Then("I should see an add cypher button", async function (this: CustomWorld) {
   await expect(this.page.locator(CARD_CONFIGS.cypher.addButtonTestId)).toBeVisible();
@@ -103,10 +87,6 @@ Then("I should see an add ability button", async function (this: CustomWorld) {
 Then("I should see an add special ability button", async function (this: CustomWorld) {
   await expect(this.page.locator(CARD_CONFIGS["special-ability"].addButtonTestId)).toBeVisible();
 });
-
-// ============================================================================
-// ADD BUTTON CLICK STEPS
-// ============================================================================
 
 When("I click the add cypher button", async function (this: CustomWorld) {
   await this.cards.clickAddButton("cypher");

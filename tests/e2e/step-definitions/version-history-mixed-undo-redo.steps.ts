@@ -3,12 +3,9 @@ import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 import { forceSquash } from "../support/versionHistoryHelpers.js";
 
-// Mixed undo/redo step definitions (for buffer and version navigation interaction)
-
 When(
   "I make {int} rapid edits that are buffered",
   async function (this: CustomWorld, editCount: number) {
-    // Make multiple rapid edits to the character name
     const testId = "character-name";
     const field = this.page.locator(`[data-testid="${testId}"]`);
 
@@ -29,10 +26,7 @@ When(
 When(
   "I press {string} to undo buffered changes",
   async function (this: CustomWorld, keyCombo: string) {
-    // This is the same as "I press Control+Z before the squash timer expires"
-    // but with explicit wording about undoing buffered changes
     if (keyCombo === "Control+Z") {
-      // Set up listener for undo-completed event before dispatching
       const undoCompletedPromise = this.page.evaluate(() => {
         return new Promise<void>((resolve) => {
           const handler = () => {
@@ -43,7 +37,6 @@ When(
         });
       });
 
-      // Dispatch the keyboard event
       await this.page.evaluate(() => {
         const event = new KeyboardEvent("keydown", {
           key: "z",
@@ -58,25 +51,20 @@ When(
         document.body.dispatchEvent(event);
       });
 
-      // Wait for undo-completed event
       await undoCompletedPromise;
     }
 
-    // Small wait for UI updates
     await this.page.waitForTimeout(100);
   }
 );
 
 When("I wait for squash timer to complete", async function (this: CustomWorld) {
-  // Force immediate squash instead of waiting for timer
   await forceSquash(this.page);
 });
 
 When(
   "I press {string} to navigate to previous version",
   async function (this: CustomWorld, keyCombo: string) {
-    // This is similar to regular "I press Control+Z" but with explicit wording
-    // about navigating through versions (after squash has completed)
     if (keyCombo === "Control+Z") {
       await this.page.evaluate(() => {
         const event = new KeyboardEvent("keydown", {
@@ -107,7 +95,6 @@ When(
       });
     }
 
-    // Wait longer for async navigation to complete and UI to update
     await this.page.waitForTimeout(800);
   }
 );
@@ -115,12 +102,10 @@ When(
 Then(
   "I should be viewing version {int}",
   async function (this: CustomWorld, versionNumber: number) {
-    // Check the version counter shows the correct version
     const versionCounter = this.page.locator('[data-testid="version-counter"]');
     const versions = await this.storageHelper.getAllVersions();
     await expect(versionCounter).toHaveText(`Version ${versionNumber} of ${versions.length}`);
 
-    // Verify we're viewing the correct character data by checking the name matches
     const expectedVersion = versions[versionNumber - 1];
     const nameField = this.page.locator('[data-testid="character-name"]');
     const displayedName = await nameField.textContent();

@@ -13,6 +13,11 @@ Feature: Settings Gear
     When I click the settings gear icon
     Then I should see the settings panel
 
+  Scenario: Settings open even when version history cannot start
+    Given the browser offers no secure-origin cryptography
+    When I click the settings gear icon
+    Then I should see the settings panel
+
   Scenario: Close settings panel by clicking outside
     Given I have opened the settings panel
     When I click outside the settings panel

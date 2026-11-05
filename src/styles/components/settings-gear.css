@@ -1,12 +1,8 @@
-/* Settings Gear Component Styles */
-
-/* Container - positions the dropdown relative to the gear */
 .settings-container {
   position: relative;
   display: inline-block;
 }
 
-/* Gear button */
 .settings-gear-button {
   background: transparent;
   border: none;
@@ -34,13 +30,11 @@
   transform: scale(0.95);
 }
 
-/* Gear icon */
 .settings-gear-icon {
   width: 1.5rem;
   height: 1.5rem;
 }
 
-/* Settings panel dropdown */
 .settings-panel {
   position: absolute;
   top: 100%;
@@ -55,7 +49,6 @@
   overflow: hidden;
 }
 
-/* Panel header */
 .settings-panel-header {
   padding: 0.75rem 1rem;
   background: rgba(139, 69, 19, 0.1);
@@ -71,12 +64,10 @@
   letter-spacing: 0.05em;
 }
 
-/* Panel content */
 .settings-panel-content {
   padding: 0.75rem 1rem;
 }
 
-/* Settings section */
 .settings-section {
   display: flex;
   align-items: center;
@@ -90,7 +81,6 @@
   color: #5c4033;
 }
 
-/* Comparison view toggle */
 .settings-toggle-row {
   display: flex;
   align-items: center;
@@ -105,7 +95,6 @@
   margin-top: 0.25rem;
 }
 
-/* Language flag buttons */
 .settings-language-flags {
   display: flex;
   gap: 0.5rem;
@@ -142,14 +131,12 @@
   line-height: 1;
 }
 
-/* Divider */
 .settings-divider {
   height: 1px;
   background: linear-gradient(to right, transparent, rgba(139, 69, 19, 0.3), transparent);
   margin: 0.75rem 0;
 }
 
-/* Reset layout button */
 .settings-reset-button {
   width: 100%;
   padding: 0.5rem 0.75rem;
@@ -174,7 +161,6 @@
   cursor: not-allowed;
 }
 
-/* Mobile responsive */
 @media (max-width: 768px) {
   .settings-panel {
     min-width: 180px;

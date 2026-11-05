@@ -22,8 +22,8 @@ export type ColumnCount = 1 | 2;
 export type SectionColumns = Partial<Record<CardSectionId, ColumnCount>>;
 
 /**
- * Today's look: the sections that used to split into two columns on a wide
- * screen default to two, the others to one.
+ * Sections that split into two columns on a wide screen default to two, the
+ * others to one.
  */
 export const DEFAULT_SECTION_COLUMNS: Readonly<Record<CardSectionId, ColumnCount>> = {
   abilities: 2,
@@ -33,9 +33,6 @@ export const DEFAULT_SECTION_COLUMNS: Readonly<Record<CardSectionId, ColumnCount
   items: 2,
 };
 
-/**
- * The column count for a section: its stored choice, else the default.
- */
 export function columnsFor(columns: SectionColumns, id: CardSectionId): ColumnCount {
   return columns[id] ?? DEFAULT_SECTION_COLUMNS[id];
 }
@@ -62,9 +59,6 @@ function isCardSectionKey(key: string): key is CardSectionId {
   return (CARD_SECTION_IDS as readonly string[]).includes(key);
 }
 
-/**
- * True for the sections that lay out cards and so have a column choice.
- */
 export function isCardSection(id: SectionId): id is CardSectionId {
   return isCardSectionKey(id);
 }

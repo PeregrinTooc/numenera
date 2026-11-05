@@ -6,7 +6,6 @@ Feature: Section Re-arrangement
   Background:
     Given I am on the character sheet page
 
-  # Edit Mode Entry
   Scenario: Enter layout edit mode via button
     When I click the Edit Layout button
     Then I should see layout edit mode is active
@@ -25,7 +24,6 @@ Feature: Section Re-arrangement
     Then the layout should be saved
     And the sections should remain in the new order
 
-  # Section Reordering
   Scenario: Reorder sections by dragging
     Given layout edit mode is active
     When I drag the "Cyphers" section above the "Abilities" section
@@ -48,7 +46,6 @@ Feature: Section Re-arrangement
     When I reload the page
     Then the "Cyphers" section should still be at the top
 
-  # Pairing sections side by side
   Scenario Outline: Pair two sections by dropping on the middle of one
     Given the viewport is 1280 pixels wide
     And layout edit mode is active
@@ -93,7 +90,6 @@ Feature: Section Re-arrangement
     When I drag the "Attacks" section onto the middle left of the "Special Abilities" section
     Then the grid should show "Attacks" on the left and "Special Abilities" on the right
 
-  # Leaving a pair
   Scenario: Split sections from grid by dragging out
     Given layout edit mode is active
     And "Background" and "Notes" are in a grid
@@ -101,7 +97,6 @@ Feature: Section Re-arrangement
     Then "Background" should be in its own row
     And "Notes" should be in its own row
 
-  # Previews while a section is held over another
   Scenario: Hovering the middle of a single section previews the pair
     Given the viewport is 1280 pixels wide
     And layout edit mode is active
@@ -138,7 +133,6 @@ Feature: Section Re-arrangement
     Then the "Cyphers" section should appear before the "Items" section
     And the layout should still be the default layout
 
-  # Sliding into the live preview
   Scenario: Sections slide into the layout shown after holding still
     Given the viewport is 1280 pixels wide
     And layout edit mode is active
@@ -148,6 +142,14 @@ Feature: Section Re-arrangement
     Then the "Items" section should slide into its new place
     And the "Cyphers" section should slide into its new place
     And the grid should show "Items" on the left and "Cyphers" on the right
+
+  Scenario: Releasing after the live preview has appeared saves the pair
+    Given the viewport is 1280 pixels wide
+    And layout edit mode is active
+    When I hold the "Cyphers" section over the middle right of the "Items" section
+    And I keep still for a moment
+    And I release the section where it is
+    Then the saved layout should pair "Items" on the left and "Cyphers" on the right
 
   Scenario: Sections slide back when a live preview is cancelled
     Given the viewport is 1280 pixels wide
@@ -188,7 +190,6 @@ Feature: Section Re-arrangement
     Then the grid should show "Items" on the left and "Cyphers" on the right
     And no section should have slid
 
-  # Narrow screens: pairs stack, so dropping only reorders
   Scenario: On a narrow screen dropping on the middle of a section reorders
     Given the viewport is 768 pixels wide
     And layout edit mode is active
@@ -206,7 +207,6 @@ Feature: Section Re-arrangement
     And the "Background" section should appear before the "Cyphers" section
     And the "Cyphers" section should appear before the "Notes" section
 
-  # Settings Integration
   Scenario: Reset layout to default
     Given I have customized the layout
     And I open the settings panel
@@ -217,7 +217,6 @@ Feature: Section Re-arrangement
     When I open the settings panel
     Then the "Reset Layout" option should be enabled
 
-  # Export/Import Integration
   Scenario: Layout is included in character export
     Given I have customized the layout
     When I export the character
@@ -257,7 +256,6 @@ Feature: Section Re-arrangement
     Then I should not see a layout choice prompt
     And the character should be imported normally
 
-  # Mobile Support
   Scenario: Edit layout button is accessible on mobile
     Given the viewport is 768 pixels wide
     Then I should see the "Edit Layout" button

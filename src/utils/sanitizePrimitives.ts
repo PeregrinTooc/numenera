@@ -71,8 +71,8 @@ export function sanitizeXpField(
  * Kind of item a collection holds.
  *
  * Most character collections are arrays of objects, but `oddities` is a plain
- * `string[]` (see src/types/character.ts). Assuming "object" for every
- * collection silently deleted every oddity on import.
+ * `string[]` (see src/types/character.ts), so "object" cannot be assumed for
+ * every collection.
  */
 type ArrayItemKind = "object" | "string";
 
@@ -91,7 +91,6 @@ export function sanitizeArrayField<T>(
     return [];
   }
 
-  // Keep only items of the expected kind; warn about anything else
   const arr = input[field] as unknown[];
   const result: T[] = [];
 

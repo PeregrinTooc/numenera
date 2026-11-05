@@ -1,6 +1,3 @@
-// RecoveryDamageSection component - Combines Recovery Rolls and Damage Track
-// These are always displayed together as they represent related game mechanics
-
 import { html, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { RecoveryRolls } from "./RecoveryRolls.js";
@@ -12,7 +9,6 @@ export class RecoveryDamageSection {
   private damageTrack: DamageTrack;
 
   constructor(private character: Character) {
-    // Create RecoveryRolls with field update handler
     this.recoveryRolls = new RecoveryRolls(this.character.recoveryRolls, (field, value) => {
       if (field === "recoveryModifier") {
         this.character.recoveryRolls.modifier = value as number;
@@ -22,7 +18,6 @@ export class RecoveryDamageSection {
       this.notifyUpdated();
     });
 
-    // Create DamageTrack with field update handler
     this.damageTrack = new DamageTrack(this.character.damageTrack, (impairment) => {
       this.character.damageTrack.impairment = impairment;
       this.notifyUpdated();
@@ -33,7 +28,6 @@ export class RecoveryDamageSection {
     persistCharacterState(this.character);
     const app = document.getElementById("app");
     if (app) {
-      // Dispatch character-updated for auto-save
       app.dispatchEvent(new CustomEvent("character-updated"));
       // Dispatch recovery-updated to re-render the sheet (also covers
       // damage-track changes: its handler re-renders the full sheet)

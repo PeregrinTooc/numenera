@@ -1,18 +1,16 @@
-// Unit tests for RecoveryDamageSection component
-
 import { render } from "lit-html";
 import { RecoveryDamageSection } from "@/components/RecoveryDamageSection";
 import { Character } from "@/types/character";
+import { loadCharacterState, clearCharacterState } from "@/storage/storageFactory";
 import { setupTestContainer } from "./helpers/testSetup.js";
-
-vi.mock("@/storage/storageFactory");
 
 describe("RecoveryDamageSection", () => {
   const getContainer = setupTestContainer();
   let container: HTMLElement;
   let mockCharacter: Character;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await clearCharacterState();
     // RecoveryDamageSection dispatches character-updated on
     // document.getElementById("app"), so this container must keep that id.
     container = getContainer();
@@ -60,9 +58,6 @@ describe("RecoveryDamageSection", () => {
   });
 
   it("should update and persist the model when a recovery checkbox is ticked", async () => {
-    const { persistCharacterState } = await import("@/storage/storageFactory");
-    vi.mocked(persistCharacterState).mockClear();
-
     const component = new RecoveryDamageSection(mockCharacter);
     render(component.render(), container);
 
@@ -73,7 +68,9 @@ describe("RecoveryDamageSection", () => {
     checkbox.dispatchEvent(new Event("change", { bubbles: true }));
 
     expect(mockCharacter.recoveryRolls.tenMinutes).toBe(true);
-    expect(persistCharacterState).toHaveBeenCalledWith(mockCharacter);
+    await vi.waitFor(async () => {
+      expect((await loadCharacterState())?.recoveryRolls.tenMinutes).toBe(true);
+    });
   });
 
   it("should dispatch character-updated when a recovery checkbox is ticked", () => {
@@ -91,9 +88,6 @@ describe("RecoveryDamageSection", () => {
   });
 
   it("should update and persist the model when a damage status is selected", async () => {
-    const { persistCharacterState } = await import("@/storage/storageFactory");
-    vi.mocked(persistCharacterState).mockClear();
-
     const component = new RecoveryDamageSection(mockCharacter);
     render(component.render(), container);
 
@@ -102,7 +96,9 @@ describe("RecoveryDamageSection", () => {
     radio.dispatchEvent(new Event("change", { bubbles: true }));
 
     expect(mockCharacter.damageTrack.impairment).toBe("impaired");
-    expect(persistCharacterState).toHaveBeenCalledWith(mockCharacter);
+    await vi.waitFor(async () => {
+      expect((await loadCharacterState())?.damageTrack.impairment).toBe("impaired");
+    });
   });
 
   it("should dispatch character-updated when a damage status is selected", () => {

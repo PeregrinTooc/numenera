@@ -2,14 +2,6 @@ import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world.js";
 
-// ============================================================================
-// COMPARISON VIEW STEP DEFINITIONS
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// Settings toggle
-// ----------------------------------------------------------------------------
-
 async function setComparisonViewEnabled(world: CustomWorld, enabled: boolean): Promise<void> {
   await world.dom.getByTestId("settings-gear-button").click();
   await expect(world.dom.getByTestId("settings-panel")).toBeVisible();
@@ -45,10 +37,6 @@ Then("comparison view should show as enabled in settings", async function (this:
   await expect(this.dom.getByTestId("settings-comparison-view-toggle")).toBeChecked();
 });
 
-// ----------------------------------------------------------------------------
-// Opening / visibility
-// ----------------------------------------------------------------------------
-
 Given("I am viewing the comparison view", async function (this: CustomWorld) {
   await this.page.locator('[data-testid="version-nav-backward"]').click();
   await expect(this.page.locator('[data-testid="comparison-view"]')).toBeVisible();
@@ -62,10 +50,6 @@ Then("the comparison view should not be visible", async function (this: CustomWo
   const count = await this.page.locator('[data-testid="comparison-view"]').count();
   expect(count).toBe(0);
 });
-
-// ----------------------------------------------------------------------------
-// Data setup - small paired versions for highlighting scenarios
-// ----------------------------------------------------------------------------
 
 async function waitForBootstrap(world: CustomWorld): Promise<void> {
   await world.page.waitForLoadState("networkidle");

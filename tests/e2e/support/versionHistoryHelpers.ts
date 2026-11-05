@@ -1,9 +1,5 @@
 import type { Page } from "@playwright/test";
 
-/**
- * Force immediate squash for testing
- * Replaces arbitrary timeout waits with deterministic squash control
- */
 export async function forceSquash(page: Page): Promise<void> {
   await page.evaluate(async () => {
     const service = window.__versionHistoryService;

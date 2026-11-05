@@ -7,8 +7,6 @@ Feature: Version History Descriptions
         Given I am on the character sheet page
         And the character has no version history yet
 
-    # Meaningful Version Descriptions (detectChanges wiring)
-
     # These scenarios each create one extra trailing version (a name edit)
     # after the change under test, so the change under test is no longer the
     # latest version — its description only renders in the (non-latest)
@@ -81,8 +79,6 @@ Feature: Version History Descriptions
         And I wait for squash timer to complete
         And I click the backward navigation arrow
         Then the version description should contain "Zypher hinzugefügt"
-
-    # Legacy Description Migration
 
     Scenario: Reloading the app upgrades an old "Updated character" description
         Given I am on the character sheet page

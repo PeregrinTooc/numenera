@@ -12,10 +12,6 @@ Feature: Additional Character Fields Editing
             | background | A mysterious wanderer... |
             | notes      | Quest: Find the artifact |
 
-    # ============================================================================
-    # TYPE DROPDOWN SCENARIOS
-    # ============================================================================
-
     Scenario: Type field displays as dropdown with current value selected
         Then the type dropdown should show "Nano" as selected
         And the type dropdown should have 3 options
@@ -44,10 +40,6 @@ Feature: Additional Character Fields Editing
         And the type dropdown option for "Nano" should display as "Nano"
         And the type dropdown option for "Glaive" should display as "Glaive"
         And the type dropdown option for "Jack" should display as "Jack"
-
-    # ============================================================================
-    # BACKGROUND INLINE EDITING SCENARIOS
-    # ============================================================================
 
     Scenario: Background field displays in readonly state initially
         Then the background textarea should be readonly
@@ -106,10 +98,6 @@ Feature: Additional Character Fields Editing
         When I click the background textarea
         And the background textarea is empty
         Then the background placeholder should be "Zum Bearbeiten klicken..."
-
-    # ============================================================================
-    # NOTES INLINE EDITING SCENARIOS
-    # ============================================================================
 
     Scenario: Notes field displays in readonly state initially
         Then the notes textarea should be readonly
@@ -175,10 +163,6 @@ Feature: Additional Character Fields Editing
         And the notes textarea is empty
         Then the notes placeholder should be "Zum Bearbeiten klicken..."
 
-    # ============================================================================
-    # INTERACTION SCENARIOS
-    # ============================================================================
-
     Scenario: Clicking notes while editing background saves background first
         When I click the background textarea
         And I type "Background edit" in the background textarea
@@ -217,14 +201,10 @@ Feature: Additional Character Fields Editing
         And the background textarea should show "Sequential background"
         And the notes textarea should show "Sequential notes"
 
-    # ============================================================================
-    # EDGE CASES
-    # ============================================================================
-
     Scenario: Background with special characters is handled correctly
         When I click the background textarea
         And I type "Special: <>&chars" in the background textarea
         And I click outside the background textarea
         Then the background textarea should show "Special: <>&chars"
         And the character data should have background "Special: <>&chars"
-
+

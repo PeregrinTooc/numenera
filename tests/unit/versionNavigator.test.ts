@@ -97,7 +97,6 @@ describe("VersionNavigator", () => {
       let counter = container.querySelector('[data-testid="version-counter"]');
       expect(counter?.textContent).toBe("Version 3 of 3");
 
-      // Update state
       versionNavigator.update({
         versionCount: 3,
         currentIndex: 0,

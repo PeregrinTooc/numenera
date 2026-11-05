@@ -1,14 +1,11 @@
-/**
- * Step definitions for the preview shown while a section is held over another
- */
-
 import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
 import { englishText } from "../support/i18nKeys.js";
 import {
   growViewportToFullHeight,
-  nearTopOf,
+  holdSectionOver,
+  releaseSectionDrag,
   sectionId,
   sectionLocator,
   zonePoint,
@@ -41,20 +38,9 @@ When(
     await growViewportToFullHeight(page);
     const box = await sectionLocator(page, target).boundingBox();
     if (!box) throw new Error(`Section ${target} has no bounding box (not visible?)`);
-    const start = await nearTopOf(sectionLocator(page, source));
     const point = zonePoint(box, zone);
-
-    await page.mouse.move(start.x, start.y);
-    await page.mouse.down();
-    await page.mouse.move(start.x + 10, start.y + 10); // start the drag
-    // The browser enters drag mode asynchronously; pointer moves before that
-    // fire no dragover at all.
-    await expect(sectionLocator(page, source)).toHaveClass(/\bdragging\b/);
-    // Playwright delivers dragover for a separate move once the drag is
-    // live, so arrive in two moves: most of the way, then onto the point.
-    await page.mouse.move(point.x, point.y - 1, { steps: 5 });
-    await page.mouse.move(point.x, point.y);
-    this.heldDropTarget = { name: target, box };
+    await holdSectionOver(page, source, point);
+    this.heldDropTarget = { name: target, box, point };
   }
 );
 
@@ -71,6 +57,15 @@ When("I release the section outside the sheet", async function (this: CustomWorl
   await page.mouse.move(sheet.x / 2, sheet.y + 100, { steps: 3 });
   await page.mouse.move(sheet.x / 2, sheet.y + 101);
   await page.mouse.up();
+  // WebKit may skip dragend here; the app then notices the drag ended from the
+  // next pointer move, which a user always makes
+  await page.mouse.move(sheet.x / 2, sheet.y + 110);
+});
+
+When("I release the section where it is", async function (this: CustomWorld) {
+  const held = this.heldDropTarget;
+  if (!held) throw new Error("No section is being held over a target");
+  await releaseSectionDrag(this.page, held.point);
 });
 
 Then(

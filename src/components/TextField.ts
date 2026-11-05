@@ -1,5 +1,3 @@
-// TextField component - Displays a text field with label and parchment styling
-
 import { html, TemplateResult } from "lit-html";
 import { t } from "@/i18n/index";
 

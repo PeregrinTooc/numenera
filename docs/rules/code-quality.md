@@ -220,29 +220,23 @@ export class ValidationError extends Error {
 ### When to Document:
 
 ```typescript
-// ✅ GOOD - Public API needs documentation
-/**
- * Creates a new character with default values
- * @param name - Character's name
- * @param type - Character class (Glaive, Nano, Jack)
- * @returns Newly created character with tier 1
- */
-export function createCharacter(name: string, type: CharacterType): Character {
-  // ...
-}
-
-// ✅ GOOD - Complex logic needs explanation
-// Calculate effective pool cost considering edge reduction
-// Edge reduces cost by 1 per point, minimum cost is 0
+// ✅ GOOD - explains a rule the code cannot state by itself
+// Numenera: Edge pays for effort point by point, but a cost never goes negative.
 const effectiveCost = Math.max(0, cost - edge);
 
-// ❌ BAD - Obvious code doesn't need comments
-// Set the name
-character.name = name;
+// ❌ BAD - restates the signature
+/**
+ * Creates a new character
+ * @param name - Character's name
+ */
+export function createCharacter(name: string): Character {}
+
+// ❌ BAD - history and absent features belong in the commit message
+// Previously stored in localStorage; no validation here yet.
 ```
 
+- Comments explain _why_; names say _what_. What to flag: `design.md` §5
 - Keep `docs/ARCHITECTURE.md` updated for significant decisions
-- Explain the "why" not just the "what"
 
 ---
 

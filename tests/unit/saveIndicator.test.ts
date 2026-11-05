@@ -9,19 +9,23 @@ describe("SaveIndicator", () => {
     indicator = new SaveIndicator();
   });
 
+  function renderToElement(): HTMLElement {
+    const container = document.createElement("div");
+    render(indicator.render(), container);
+    return container.querySelector('[data-testid="save-indicator"]') as HTMLElement;
+  }
+
   describe("render", () => {
-    it("should not render when never saved", () => {
-      // Verify component state rather than HTML parsing
-      expect(indicator.hasTimestamp()).toBe(false);
-      expect(indicator.getTimestamp()).toBeNull();
+    it("is hidden when never saved", () => {
+      expect(renderToElement().getAttribute("style")).toContain("display: none");
     });
 
-    it("should render with timestamp when saved", () => {
+    it("shows the timestamp when saved", () => {
       indicator.updateTimestamp("2:45:33 PM");
 
-      // Verify component state
-      expect(indicator.hasTimestamp()).toBe(true);
-      expect(indicator.getTimestamp()).toBe("2:45:33 PM");
+      const element = renderToElement();
+      expect(element.getAttribute("style")).toContain("display: block");
+      expect(element.textContent).toContain("2:45:33 PM");
     });
 
     it("should have save-indicator testid", () => {
@@ -53,60 +57,24 @@ describe("SaveIndicator", () => {
   });
 
   describe("updateTimestamp", () => {
-    it("should update timestamp and make indicator visible", () => {
-      expect(indicator.hasTimestamp()).toBe(false);
-
+    it("replaces the shown timestamp with the new one", () => {
       indicator.updateTimestamp("2:45:33 PM");
-
-      expect(indicator.hasTimestamp()).toBe(true);
-      expect(indicator.getTimestamp()).toBe("2:45:33 PM");
-    });
-
-    it("should update to new timestamp", () => {
-      indicator.updateTimestamp("2:45:33 PM");
-      expect(indicator.getTimestamp()).toBe("2:45:33 PM");
-
       indicator.updateTimestamp("3:00:00 PM");
-      expect(indicator.getTimestamp()).toBe("3:00:00 PM");
-    });
-  });
 
-  describe("getTimestamp", () => {
-    it("should return null when never saved", () => {
-      expect(indicator.getTimestamp()).toBeNull();
-    });
-
-    it("should return timestamp after update", () => {
-      indicator.updateTimestamp("2:45:33 PM");
-      expect(indicator.getTimestamp()).toBe("2:45:33 PM");
-    });
-  });
-
-  describe("hasTimestamp", () => {
-    it("should return false when never saved", () => {
-      expect(indicator.hasTimestamp()).toBe(false);
-    });
-
-    it("should return true after update", () => {
-      indicator.updateTimestamp("2:45:33 PM");
-      expect(indicator.hasTimestamp()).toBe(true);
+      const text = renderToElement().textContent;
+      expect(text).toContain("3:00:00 PM");
+      expect(text).not.toContain("2:45:33 PM");
     });
   });
 
   describe("error state", () => {
-    function renderToElement(): HTMLElement {
-      const container = document.createElement("div");
-      render(indicator.render(), container);
-      return container.querySelector('[data-testid="save-indicator"]') as HTMLElement;
-    }
-
     it("is visible as an alert with the storage-full text when the storage is full", () => {
       indicator.showError("quota");
 
       const element = renderToElement();
 
       expect(element.getAttribute("role")).toBe("alert");
-      expect(element.style.display).not.toBe("none");
+      expect(element.getAttribute("style")).toContain("display: block");
       expect(element.textContent).toContain("Storage is full");
     });
 
@@ -119,8 +87,7 @@ describe("SaveIndicator", () => {
     it("is visible even if nothing was ever saved", () => {
       indicator.showError("unknown");
 
-      expect(indicator.hasError()).toBe(true);
-      expect(renderToElement().style.display).not.toBe("none");
+      expect(renderToElement().getAttribute("style")).toContain("display: block");
     });
 
     it("replaces the last-saved timestamp while in error", () => {
@@ -136,7 +103,6 @@ describe("SaveIndicator", () => {
       indicator.updateTimestamp("2:45:33 PM");
 
       const element = renderToElement();
-      expect(indicator.hasError()).toBe(false);
       expect(element.getAttribute("role")).toBeNull();
       expect(element.textContent).toContain("2:45:33 PM");
     });

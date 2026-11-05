@@ -157,7 +157,6 @@
   font-weight: 600;
 }
 
-/* Diff highlight states, shared by scalar fields and collection cards */
 .diff-added {
   background-color: rgba(22, 163, 74, 0.12);
   outline: 2px solid #16a34a;

@@ -3,20 +3,22 @@ import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 import { openSettingsPanel } from "../support/settings.js";
 
-// ============================================================================
-// SETTINGS GEAR STEP DEFINITIONS
-// ============================================================================
-
-// Background step - reuse if not already defined elsewhere
 Given("I am viewing the character sheet", async function (this: CustomWorld) {
   await this.page.goto(this.getBaseUrl());
-  // Wait for page to load
   await this.page.waitForSelector('[data-testid="character-header"]');
 });
 
-// ============================================================================
-// VISIBILITY STEPS
-// ============================================================================
+Given("the browser offers no secure-origin cryptography", async function (this: CustomWorld) {
+  // As on plain HTTP at a network address: the app is served from localhost,
+  // which counts as secure, so take the APIs away before it boots again
+  await this.page.addInitScript(() => {
+    const cryptoPrototype = Object.getPrototypeOf(crypto);
+    Object.defineProperty(cryptoPrototype, "subtle", { get: () => undefined });
+    Object.defineProperty(cryptoPrototype, "randomUUID", { value: undefined });
+  });
+  await this.page.reload();
+  await this.page.waitForSelector('[data-testid="character-header"]');
+});
 
 Then("I should see a settings gear icon in the header", async function (this: CustomWorld) {
   await expect(this.dom.getByTestId("settings-gear-button")).toBeVisible();
@@ -29,14 +31,9 @@ Then("the settings gear icon should still be visible", async function (this: Cus
 Then("I should be able to click the settings gear icon", async function (this: CustomWorld) {
   const button = this.dom.getByTestId("settings-gear-button");
   await expect(button).toBeEnabled();
-  // Verify it's clickable by checking pointer cursor
   const cursor = await button.evaluate((el: HTMLElement) => window.getComputedStyle(el).cursor);
   expect(cursor).toBe("pointer");
 });
-
-// ============================================================================
-// SETTINGS PANEL STEPS
-// ============================================================================
 
 When("I click the settings gear icon", async function (this: CustomWorld) {
   await this.dom.getByTestId("settings-gear-button").click();
@@ -75,12 +72,6 @@ When("I click outside the settings panel", async function (this: CustomWorld) {
   await title.click({ position: offset });
 });
 
-// Note: "I press the Escape key" is defined in common-steps.ts
-
-// ============================================================================
-// LANGUAGE SWITCHING STEPS
-// ============================================================================
-
 When("I click the German flag icon", async function (this: CustomWorld) {
   await this.dom.getByTestId("language-flag-de").click();
 });
@@ -90,48 +81,31 @@ When("I click the British flag icon", async function (this: CustomWorld) {
 });
 
 Then("the interface should display in German", async function (this: CustomWorld) {
-  // Check that the page title is in German
   const pageTitle = this.page.locator('[data-testid="page-title"]');
   await expect(pageTitle).toHaveText("Numenera Charakterbogen");
 });
 
 Then("the interface should display in English", async function (this: CustomWorld) {
-  // Check that the page title is in English
   const pageTitle = this.page.locator('[data-testid="page-title"]');
   await expect(pageTitle).toHaveText("Numenera Character Sheet");
 });
 
 Given("the interface is in German", async function (this: CustomWorld) {
-  // Click the German flag to switch to German
   await this.dom.getByTestId("language-flag-de").click();
-  // Wait for UI to update
   await this.page.waitForFunction(() => {
     const title = document.querySelector('[data-testid="page-title"]');
     return title?.textContent === "Numenera Charakterbogen";
   });
-  // Re-open the settings panel for the test
   await this.dom.getByTestId("settings-gear-button").click();
   await expect(this.dom.getByTestId("settings-panel")).toBeVisible();
 });
 
-// ============================================================================
-// VERSION NAVIGATOR STEPS
-// ============================================================================
-
 Given(
   "I am viewing an old version with the version navigator visible",
   async function (this: CustomWorld) {
-    // This requires having version history. For now, simulate by checking
-    // that settings gear is accessible even if version navigator were present.
-    // We can implement full version history test setup later if needed.
-    // For now, just verify the gear is in a position that won't conflict.
     await expect(this.dom.getByTestId("settings-gear-button")).toBeVisible();
   }
 );
-
-// ============================================================================
-// RESET LAYOUT STEPS
-// ============================================================================
 
 Then("I should see a {string} option", async function (this: CustomWorld, optionName: string) {
   if (optionName === "Reset Layout") {

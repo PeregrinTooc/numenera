@@ -1,15 +1,13 @@
-// SpecialAbilities component - Displays character special abilities in grid
-
 import { html, TemplateResult } from "lit-html";
-import { Character } from "@/types/character";
+import { Character, SpecialAbility } from "@/types/character";
 import { SpecialAbilityItem } from "./SpecialAbilityItem.js";
 import { t } from "@/i18n/index";
-import { createAddHandler, createItemInstances } from "./helpers/CollectionBehavior.js";
-import { renderAddButton } from "./helpers/collectionRendering.js";
+import { CollectionSection } from "./helpers/CollectionBehavior.js";
+import { renderAddButton, renderCollection } from "./helpers/collectionRendering.js";
 import { CollectionDragReorder } from "./helpers/CollectionDragReorder.js";
 
 export class SpecialAbilities {
-  private handleAddSpecialAbility: () => void;
+  private specialAbilities: CollectionSection<SpecialAbility, SpecialAbilityItem>;
   private drag = new CollectionDragReorder({
     section: "specialAbilities",
     itemTestId: "special-ability-item",
@@ -20,30 +18,14 @@ export class SpecialAbilities {
   });
 
   constructor(private character: Character) {
-    // Create add handler using CollectionBehavior helper (event-based pattern)
-    this.handleAddSpecialAbility = createAddHandler({
-      emptyItem: { name: "", source: "", description: "" },
-      ItemComponentClass: SpecialAbilityItem,
-      collection: this.character.specialAbilities,
-      character: this.character,
+    this.specialAbilities = new CollectionSection(character, {
       collectionKey: "specialAbilities",
+      ItemComponentClass: SpecialAbilityItem,
+      emptyItem: { name: "", source: "", description: "" },
     });
   }
 
   render(): TemplateResult {
-    const isEmpty = this.character.specialAbilities.length === 0;
-
-    // Create special ability item instances using CollectionBehavior helper (event-based pattern)
-    // collectionKey enables immutable updates for proper version history undo support
-    const specialAbilityItems = isEmpty
-      ? []
-      : createItemInstances({
-          collection: this.character.specialAbilities,
-          ItemComponentClass: SpecialAbilityItem,
-          character: this.character,
-          collectionKey: "specialAbilities",
-        });
-
     return html`
       <div data-testid="special-abilities-section" class="section-box">
         <div class="flex items-center gap-3 mb-4">
@@ -51,30 +33,24 @@ export class SpecialAbilities {
             ${t("specialAbilities.title")} ✨
           </h2>
           ${renderAddButton({
-            onClick: this.handleAddSpecialAbility,
+            onClick: this.specialAbilities.handleAdd,
             testId: "add-special-ability-button",
             colorTheme: "teal",
             ariaLabel: t("specialAbilities.add"),
           })}
         </div>
-        ${isEmpty
-          ? html`
-              <div data-testid="empty-special-abilities" class="empty-special-abilities-styled">
-                ${t("specialAbilities.empty")}
-              </div>
-            `
-          : html`
-              <div
-                data-testid="special-abilities-list"
-                class="section-card-grid"
-                @dragstart=${(e: Event) => this.drag.handleDragStart(e)}
-                @dragover=${(e: Event) => this.drag.handleDragOver(e)}
-                @drop=${(e: Event) => this.drag.handleDrop(e)}
-                @dragend=${() => this.drag.handleDragEnd()}
-              >
-                ${specialAbilityItems.map((item) => item.render())}
-              </div>
-            `}
+        ${renderCollection({
+          isEmpty: this.character.specialAbilities.length === 0,
+          emptyState: {
+            testId: "empty-special-abilities",
+            className: "empty-special-abilities-styled",
+            message: t("specialAbilities.empty"),
+          },
+          listTestId: "special-abilities-list",
+          listClassName: "section-card-grid",
+          drag: this.drag,
+          items: this.specialAbilities.items().map((item) => item.render()),
+        })}
       </div>
     `;
   }

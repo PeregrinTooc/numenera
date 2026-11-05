@@ -25,7 +25,6 @@ describe("EditFieldModal", () => {
 
       const backdrop = container.querySelector('[data-testid="modal-backdrop"]') as HTMLElement;
 
-      // Create click event on backdrop itself
       const clickEvent = new MouseEvent("click", { bubbles: true });
       Object.defineProperty(clickEvent, "target", { value: backdrop, enumerable: true });
       Object.defineProperty(clickEvent, "currentTarget", { value: backdrop, enumerable: true });
@@ -48,7 +47,6 @@ describe("EditFieldModal", () => {
 
       const modalContent = container.querySelector('[data-testid="edit-modal"]') as HTMLElement;
 
-      // Click on modal content
       modalContent.click();
 
       expect(onCancel).not.toHaveBeenCalled();
@@ -69,16 +67,13 @@ describe("EditFieldModal", () => {
         '[data-testid="modal-confirm-button"]'
       ) as HTMLButtonElement;
 
-      // Initially should be enabled (valid initial value)
       expect(confirmButton.disabled).toBe(false);
 
-      // Make invalid
       input.value = "-1";
       input.dispatchEvent(new Event("input", { bubbles: true }));
 
       expect(confirmButton.disabled).toBe(true);
 
-      // Make valid again
       input.value = "10";
       input.dispatchEvent(new Event("input", { bubbles: true }));
 
@@ -103,13 +98,11 @@ describe("EditFieldModal", () => {
         '[data-testid="modal-confirm-button"]'
       ) as HTMLButtonElement;
 
-      // Valid text
       input.value = "New Name";
       input.dispatchEvent(new Event("input", { bubbles: true }));
 
       expect(confirmButton.disabled).toBe(false);
 
-      // Confirm
       confirmButton.click();
 
       expect(onConfirm).toHaveBeenCalledWith("New Name");

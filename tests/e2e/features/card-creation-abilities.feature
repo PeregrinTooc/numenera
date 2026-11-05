@@ -6,21 +6,14 @@ Feature: Card Creation: Abilities
     Background:
         Given I am on the character sheet page
 
-    # ============================================================================
-    # ITERATION 6: ABILITIES
-    # ============================================================================
-
-
     Scenario: Add button is visible for Abilities
         Then I should see an add ability button
-
 
     Scenario: Add Ability button opens modal with empty fields
         When I click the add ability button
         Then the card edit modal should be open
         And the modal should show ability fields
         And all ability fields should be empty
-
 
     Scenario: Canceling ability creation does not add a card
         Given the character has 2 ability cards
@@ -29,7 +22,6 @@ Feature: Card Creation: Abilities
         And I fill in the ability description with "Test description"
         And I cancel the card edit modal
         Then I should see 2 ability cards
-
 
     Scenario: Confirming ability creation adds a new card
         Given the character has 2 ability cards
@@ -41,7 +33,6 @@ Feature: Card Creation: Abilities
         And I confirm the card edit modal
         Then I should see 3 ability cards
         And I should see an ability card with name "Flame Strike"
-
 
     Scenario: New ability persists after page reload
         Given the character has 2 ability cards
@@ -56,7 +47,6 @@ Feature: Card Creation: Abilities
         Then I should see 3 ability cards
         And I should see an ability card with name "Ice Shield"
 
-
     Scenario: Multiple abilities can be added
         Given the character has 2 ability cards
         When I click the add ability button
@@ -69,7 +59,6 @@ Feature: Card Creation: Abilities
         And I fill in the ability description with "Second description"
         And I confirm the card edit modal
         Then I should see 4 ability cards
-
 
     Scenario: Create ability, then edit it, verify persistence
         Given the character has 2 ability cards
@@ -94,21 +83,14 @@ Feature: Card Creation: Abilities
         And the ability "Greater Heal" should have cost "5"
         And the ability "Greater Heal" should have pool "Intellect"
 
-    # ============================================================================
-    # ITERATION 7: SPECIAL ABILITIES
-    # ============================================================================
-
-
     Scenario: Add button is visible for Special Abilities
         Then I should see an add special ability button
-
 
     Scenario: Add Special Ability button opens modal with empty fields
         When I click the add special ability button
         Then the card edit modal should be open
         And the modal should show special ability fields
         And all special ability fields should be empty
-
 
     Scenario: Canceling special ability creation does not add a card
         Given the character has 2 special ability cards
@@ -119,7 +101,6 @@ Feature: Card Creation: Abilities
         And I cancel the card edit modal
         Then I should see 2 special ability cards
 
-
     Scenario: Confirming special ability creation adds a new card
         Given the character has 2 special ability cards
         When I click the add special ability button
@@ -129,7 +110,6 @@ Feature: Card Creation: Abilities
         And I confirm the card edit modal
         Then I should see 3 special ability cards
         And I should see a special ability card with name "Energy Mastery"
-
 
     Scenario: New special ability persists after page reload
         Given the character has 2 special ability cards
@@ -142,7 +122,6 @@ Feature: Card Creation: Abilities
         When I reload the page
         Then I should see 3 special ability cards
         And I should see a special ability card with name "Time Manipulation"
-
 
     Scenario: Multiple special abilities can be added
         Given the character has 2 special ability cards
@@ -158,7 +137,6 @@ Feature: Card Creation: Abilities
         And I fill in the special ability description with "Second description"
         And I confirm the card edit modal
         Then I should see 4 special ability cards
-
 
     Scenario: Create special ability, then edit it, verify persistence
         Given the character has 2 special ability cards

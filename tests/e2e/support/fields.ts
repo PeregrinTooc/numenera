@@ -1,11 +1,6 @@
 import { Page } from "@playwright/test";
 
-// ============================================================================
-// FIELD CONFIGURATION - Central mapping of field names to test IDs
-// ============================================================================
-
 export const FIELD_TEST_IDS: Record<string, string> = {
-  // Basic Info fields
   "character name": "character-name",
   "character name value": "character-name",
   tier: "character-tier",
@@ -15,7 +10,6 @@ export const FIELD_TEST_IDS: Record<string, string> = {
   focus: "character-focus",
   "focus value": "character-focus",
 
-  // Stat Pool fields
   "Might Pool": "stat-might-pool",
   "Might Edge": "stat-might-edge",
   "Might Current": "stat-might-current",
@@ -26,7 +20,6 @@ export const FIELD_TEST_IDS: Record<string, string> = {
   "Intellect Edge": "stat-intellect-edge",
   "Intellect Current": "stat-intellect-current",
 
-  // Resource trackers (badges)
   "Current XP badge": "xp-badge-current",
   "Total XP badge": "xp-badge-total",
   "Shins badge": "shins-badge",
@@ -34,7 +27,6 @@ export const FIELD_TEST_IDS: Record<string, string> = {
   "Max Cyphers badge": "max-cyphers-badge",
   "Effort badge": "effort-badge",
 
-  // Resource trackers (legacy - for backward compatibility)
   "Current XP": "xp-badge-current",
   "Total XP": "xp-badge-total",
   Shins: "shins-badge",
@@ -42,7 +34,6 @@ export const FIELD_TEST_IDS: Record<string, string> = {
   "Max Cyphers": "max-cyphers-badge",
   Effort: "effort-badge",
 
-  // Text fields
   background: "character-background",
   notes: "character-notes",
   type: "character-type-select",

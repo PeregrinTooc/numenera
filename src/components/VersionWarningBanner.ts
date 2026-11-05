@@ -1,8 +1,3 @@
-/**
- * VersionWarningBanner - Warning banner shown when viewing an old version of a character
- * Displays version metadata and provides a restore button to return to latest
- */
-
 import { t } from "@/i18n/index";
 
 export interface VersionWarningBannerProps {
@@ -20,9 +15,6 @@ export class VersionWarningBanner {
     this.props = props;
   }
 
-  /**
-   * Format timestamp as relative time (e.g., "5 minutes ago")
-   */
   private formatTimestamp(date: Date): string {
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
@@ -40,14 +32,10 @@ export class VersionWarningBanner {
     } else if (diffDay < 7) {
       return `${diffDay} day${diffDay !== 1 ? "s" : ""} ago`;
     } else {
-      // For older dates, show the actual date
       return date.toLocaleDateString();
     }
   }
 
-  /**
-   * Render the banner content
-   */
   private render(): HTMLElement {
     const banner = document.createElement("div");
     banner.setAttribute("data-testid", "version-warning-banner");
@@ -72,7 +60,6 @@ export class VersionWarningBanner {
             gap: 0.5rem;
         `;
 
-    // Warning text (compact)
     const warningText = document.createElement("div");
     warningText.style.cssText = `
             font-weight: 600;
@@ -81,7 +68,6 @@ export class VersionWarningBanner {
         `;
     warningText.textContent = t("versionHistory.warningBanner.title");
 
-    // Metadata (description + timestamp)
     const metadata = document.createElement("div");
     metadata.style.cssText = `
             color: rgb(146, 64, 14);
@@ -100,14 +86,12 @@ export class VersionWarningBanner {
     metadata.appendChild(description);
     metadata.appendChild(timestamp);
 
-    // Button container
     const buttonContainer = document.createElement("div");
     buttonContainer.style.cssText = `
             display: flex;
             gap: 0.5rem;
         `;
 
-    // Return button (navigate to current without creating new version)
     const returnButton = document.createElement("button");
     returnButton.setAttribute("data-testid", "version-return-button");
     returnButton.style.cssText = `
@@ -130,7 +114,6 @@ export class VersionWarningBanner {
       returnButton.style.background = "rgb(209, 213, 219)";
     });
 
-    // Restore button (save old version as new latest)
     const restoreButton = document.createElement("button");
     restoreButton.setAttribute("data-testid", "version-restore-button");
     restoreButton.style.cssText = `
@@ -164,32 +147,21 @@ export class VersionWarningBanner {
     return banner;
   }
 
-  /**
-   * Mount the banner to a container element
-   */
   mount(container: HTMLElement): void {
     this.container = container;
     const banner = this.render();
     container.appendChild(banner);
   }
 
-  /**
-   * Update the banner with new props
-   */
   update(props: VersionWarningBannerProps): void {
     this.props = props;
     if (this.container) {
-      // Remove old content
       this.unmount();
-      // Re-render with new props
       const banner = this.render();
       this.container.appendChild(banner);
     }
   }
 
-  /**
-   * Unmount the banner from its container
-   */
   unmount(): void {
     if (this.container) {
       const banner = this.container.querySelector('[data-testid="version-warning-banner"]');

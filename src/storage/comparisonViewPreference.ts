@@ -11,9 +11,6 @@ import { COMPARISON_VIEW_STORAGE_KEY } from "./storageConstants.js";
 
 const DEFAULT_ENABLED = false;
 
-/**
- * Save the Comparison View on/off preference to localStorage
- */
 export function saveComparisonViewEnabled(enabled: boolean): void {
   try {
     localStorage.setItem(COMPARISON_VIEW_STORAGE_KEY, String(enabled));
@@ -24,8 +21,6 @@ export function saveComparisonViewEnabled(enabled: boolean): void {
 }
 
 /**
- * Load the Comparison View on/off preference from localStorage.
- *
  * Defaults to false (opt-in): Comparison View replaces the single-pane
  * version browsing flow when active, so defaulting it on would change
  * existing navigation behaviour for every user without them asking for it.

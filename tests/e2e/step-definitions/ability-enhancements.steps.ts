@@ -2,7 +2,6 @@ import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { assertNoRawI18nKeys } from "../support/i18nKeys.js";
 
-// Helper function to sanitize ability names for testid
 function sanitizeForTestId(name: string): string {
   return name.toLowerCase().replace(/\s+/g, "-");
 }
@@ -10,8 +9,6 @@ function sanitizeForTestId(name: string): string {
 Given(
   "the character has an ability {string} with:",
   async function (abilityName: string, dataTable) {
-    // This will set up test data - for now we'll use the default character
-    // and verify the display of abilities
     this.testAbilityName = abilityName;
     this.testAbilityProperties = {};
 
@@ -88,7 +85,6 @@ Then("the ability {string} should not show action indicator", async function (ab
 Then("the ability {string} should have might pool styling", async function (abilityName: string) {
   const testId = `ability-pool-${sanitizeForTestId(abilityName)}`;
 
-  // Check for might-specific class or styling
   const hasClass = await this.dom.hasClass(testId, "pool-might");
   expect(hasClass).toBe(true);
 });
@@ -96,7 +92,6 @@ Then("the ability {string} should have might pool styling", async function (abil
 Then("the ability {string} should have speed pool styling", async function (abilityName: string) {
   const testId = `ability-pool-${sanitizeForTestId(abilityName)}`;
 
-  // Check for speed-specific class or styling
   const hasClass = await this.dom.hasClass(testId, "pool-speed");
   expect(hasClass).toBe(true);
 });
@@ -106,15 +101,12 @@ Then(
   async function (abilityName: string) {
     const testId = `ability-pool-${sanitizeForTestId(abilityName)}`;
 
-    // Check for intellect-specific class or styling
     const hasClass = await this.dom.hasClass(testId, "pool-intellect");
     expect(hasClass).toBe(true);
   }
 );
 
 Then("the empty state should use translation keys", async function () {
-  // This verifies that translation keys are used
-  // We can check for the presence of translated text
   const emptyState = this.dom.getByTestId("empty-abilities");
   await expect(emptyState).not.toBeEmpty();
   await assertNoRawI18nKeys(emptyState);

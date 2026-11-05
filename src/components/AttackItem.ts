@@ -1,9 +1,8 @@
-// AttackItem component - Individual attack card with combat styling
-
 import { html, TemplateResult } from "lit-html";
 import { Attack } from "@/types/character";
 import { t } from "@/i18n/index";
 import { createEditHandler, renderCardButtons } from "./helpers/CardEditorBehavior.js";
+import { renderTextArea, renderTextField } from "./helpers/cardFormFields.js";
 
 export class AttackItem {
   private editedAttack: Attack;
@@ -34,85 +33,64 @@ export class AttackItem {
   }
 
   private renderEditableVersion(): TemplateResult {
+    const theme = "red";
     return html`
       <div class="card-edit-wrapper">
         <div
           class="attack-item-card bg-gradient-to-br from-red-50 to-orange-50 border-2 border-red-200 rounded-lg p-4"
         >
-          <div class="mb-3">
-            <label class="block text-sm font-medium text-red-900 mb-1">
-              ${t("character.name")}
-            </label>
-            <input
-              type="text"
-              .value=${this.editedAttack.name}
-              @input=${(e: Event) => {
-                this.editedAttack.name = (e.target as HTMLInputElement).value;
-              }}
-              class="w-full bg-transparent border-b-2 border-red-300 focus:border-red-500 px-2 py-1 text-red-900 font-semibold"
-              data-testid="edit-attack-name"
-            />
-          </div>
+          ${renderTextField({
+            theme,
+            label: t("character.name"),
+            testId: "edit-attack-name",
+            value: this.editedAttack.name,
+            onInput: (value) => {
+              this.editedAttack.name = value;
+            },
+          })}
           <div class="grid grid-cols-2 gap-3 mb-3">
-            <div>
-              <label class="block text-sm font-medium text-red-900 mb-1">
-                ${t("attacks.damage")}
-              </label>
-              <input
-                type="number"
-                .value=${this.editedAttack.damage.toString()}
-                @input=${(e: Event) => {
-                  const value = (e.target as HTMLInputElement).value;
-                  this.editedAttack.damage = parseInt(value, 10) || 0;
-                }}
-                class="w-full bg-transparent border-b-2 border-red-300 focus:border-red-500 px-2 py-1 text-red-900 font-semibold"
-                data-testid="edit-attack-damage"
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-red-900 mb-1">
-                ${t("attacks.modifier")}
-              </label>
-              <input
-                type="number"
-                .value=${this.editedAttack.modifier.toString()}
-                @input=${(e: Event) => {
-                  const value = (e.target as HTMLInputElement).value;
-                  this.editedAttack.modifier = parseInt(value, 10) || 0;
-                }}
-                class="w-full bg-transparent border-b-2 border-red-300 focus:border-red-500 px-2 py-1 text-red-900 font-semibold"
-                data-testid="edit-attack-modifier"
-              />
-            </div>
+            ${renderTextField({
+              theme,
+              grid: true,
+              type: "number",
+              label: t("attacks.damage"),
+              testId: "edit-attack-damage",
+              value: this.editedAttack.damage.toString(),
+              onInput: (value) => {
+                this.editedAttack.damage = parseInt(value, 10) || 0;
+              },
+            })}
+            ${renderTextField({
+              theme,
+              grid: true,
+              type: "number",
+              label: t("attacks.modifier"),
+              testId: "edit-attack-modifier",
+              value: this.editedAttack.modifier.toString(),
+              onInput: (value) => {
+                this.editedAttack.modifier = parseInt(value, 10) || 0;
+              },
+            })}
           </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium text-red-900 mb-1">
-              ${t("attacks.range")}
-            </label>
-            <input
-              type="text"
-              .value=${this.editedAttack.range}
-              @input=${(e: Event) => {
-                this.editedAttack.range = (e.target as HTMLInputElement).value;
-              }}
-              class="w-full bg-transparent border-b-2 border-red-300 focus:border-red-500 px-2 py-1 text-red-900 font-semibold"
-              data-testid="edit-attack-range"
-            />
-          </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium text-red-900 mb-1">
-              ${t("attacks.notes")}
-            </label>
-            <textarea
-              .value=${this.editedAttack.notes || ""}
-              @input=${(e: Event) => {
-                this.editedAttack.notes = (e.target as HTMLTextAreaElement).value || undefined;
-              }}
-              class="w-full bg-transparent border-b-2 border-red-300 focus:border-red-500 px-2 py-1 text-gray-700"
-              rows="2"
-              data-testid="edit-attack-notes"
-            ></textarea>
-          </div>
+          ${renderTextField({
+            theme,
+            label: t("attacks.range"),
+            testId: "edit-attack-range",
+            value: this.editedAttack.range,
+            onInput: (value) => {
+              this.editedAttack.range = value;
+            },
+          })}
+          ${renderTextArea({
+            theme,
+            rows: 2,
+            label: t("attacks.notes"),
+            testId: "edit-attack-notes",
+            value: this.editedAttack.notes || "",
+            onInput: (value) => {
+              this.editedAttack.notes = value || undefined;
+            },
+          })}
         </div>
       </div>
     `;

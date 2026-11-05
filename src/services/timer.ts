@@ -1,9 +1,3 @@
-/**
- * Timer abstraction for testability
- * Production uses real setTimeout/clearTimeout
- * Tests can use controllable test doubles
- */
-
 export type TimerHandle = ReturnType<typeof setTimeout>;
 
 export interface ITimer {
@@ -11,9 +5,6 @@ export interface ITimer {
   clearTimeout(handle: TimerHandle): void;
 }
 
-/**
- * Real timer implementation using browser APIs
- */
 export class RealTimer implements ITimer {
   setTimeout(callback: () => void, delay: number): TimerHandle {
     return globalThis.setTimeout(callback, delay);

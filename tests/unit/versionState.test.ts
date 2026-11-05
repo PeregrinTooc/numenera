@@ -1,10 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { CharacterVersion } from "@/types/versionHistory";
-import {
-  createMockCharacter,
-  createMockVersion,
-  setupVersionState,
-} from "./helpers/versionStateFixture";
+import { beforeEach, describe, expect, it } from "vitest";
+import { seedRawVersion, seedVersions } from "./helpers/realVersionHistory";
+import { createMockCharacter, setupVersionState } from "./helpers/versionStateFixture";
 
 describe("VersionState", () => {
   const fx = setupVersionState();
@@ -16,23 +12,18 @@ describe("VersionState", () => {
     });
 
     it("should load versions on init", async () => {
-      const timestamp = Date.now();
-      const mockVersions = [
-        createMockVersion("Version 1", "Initial", timestamp),
-        createMockVersion("Version 2", "Edit 1", timestamp),
-      ];
-      vi.mocked(fx.mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
+      await seedVersions(fx.versionHistory, [
+        { name: "Version 1", description: "Initial" },
+        { name: "Version 2", description: "Edit 1" },
+      ]);
 
       await fx.versionState.init();
 
-      expect(fx.mockVersionHistory.getAllVersions).toHaveBeenCalled();
       expect(fx.versionState.getVersionCount()).toBe(2);
       expect(fx.versionState.getCurrentVersionIndex()).toBe(1); // Latest version
     });
 
     it("should handle no versions", async () => {
-      vi.mocked(fx.mockVersionHistory.getAllVersions).mockResolvedValue([]);
-
       await fx.versionState.init();
 
       expect(fx.versionState.getVersionCount()).toBe(0);
@@ -42,12 +33,10 @@ describe("VersionState", () => {
 
   describe("isViewingOldVersion", () => {
     it("should return false when at latest version", async () => {
-      const timestamp = Date.now();
-      const mockVersions = [
-        createMockVersion("Version 1", "Initial", timestamp),
-        createMockVersion("Version 2", "Edit 1", timestamp),
-      ];
-      vi.mocked(fx.mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
+      await seedVersions(fx.versionHistory, [
+        { name: "Version 1", description: "Initial" },
+        { name: "Version 2", description: "Edit 1" },
+      ]);
 
       await fx.versionState.init();
 
@@ -55,12 +44,10 @@ describe("VersionState", () => {
     });
 
     it("should return true when viewing historical version", async () => {
-      const timestamp = Date.now();
-      const mockVersions = [
-        createMockVersion("Version 1", "Initial", timestamp),
-        createMockVersion("Version 2", "Edit 1", timestamp),
-      ];
-      vi.mocked(fx.mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
+      await seedVersions(fx.versionHistory, [
+        { name: "Version 1", description: "Initial" },
+        { name: "Version 2", description: "Edit 1" },
+      ]);
 
       await fx.versionState.init();
       await fx.versionState.navigateBackward();
@@ -75,13 +62,11 @@ describe("VersionState", () => {
 
   describe("navigation", () => {
     beforeEach(async () => {
-      const timestamp = Date.now();
-      const mockVersions = [
-        createMockVersion("Version 1", "Initial", timestamp),
-        createMockVersion("Version 2", "Edit 1", timestamp),
-        createMockVersion("Version 3", "Edit 2", timestamp),
-      ];
-      vi.mocked(fx.mockVersionHistory.getAllVersions).mockResolvedValue(mockVersions);
+      await seedVersions(fx.versionHistory, [
+        { name: "Version 1", description: "Initial" },
+        { name: "Version 2", description: "Edit 1" },
+        { name: "Version 3", description: "Edit 2" },
+      ]);
       await fx.versionState.init();
     });
 
@@ -131,22 +116,10 @@ describe("VersionState", () => {
           ...modernFields
         } = createMockCharacter("Legacy Character");
         // Deliberately not a valid Character: the pre-split shape had only `xp`.
-        const legacyCharacter = {
-          ...modernFields,
-          xp: 12,
-        } as unknown as CharacterVersion["character"];
+        await seedRawVersion(fx.versionHistory, { ...modernFields, xp: 12 }, "Old save");
 
-        const legacyVersion = {
-          id: "version-legacy",
-          character: legacyCharacter,
-          timestamp: Date.now(),
-          description: "Old save",
-          etag: "etag-legacy",
-        };
-        vi.mocked(fx.mockVersionHistory.getAllVersions).mockResolvedValue([legacyVersion]);
-
-        await fx.versionState.init();
-        await fx.versionState.navigateToVersion(0);
+        await fx.versionState.reload();
+        await fx.versionState.navigateToVersion(3); // after the three seeded versions
 
         const displayed = fx.versionState.getDisplayedCharacter();
         expect(displayed.currentXp).toBe(12);

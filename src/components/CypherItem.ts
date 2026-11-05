@@ -1,9 +1,8 @@
-// CypherItem component - Displays a single cypher card
-
 import { html, TemplateResult } from "lit-html";
 import { Cypher } from "@/types/character";
 import { t } from "@/i18n/index";
 import { createEditHandler, renderCardButtons } from "./helpers/CardEditorBehavior.js";
+import { renderTextArea, renderTextField } from "./helpers/cardFormFields.js";
 
 export class CypherItem {
   private editedCypher: Cypher;
@@ -28,59 +27,42 @@ export class CypherItem {
   }
 
   private renderEditableVersion(): TemplateResult {
+    const theme = "purple";
     return html`
       <div class="card-edit-wrapper">
         <div
           class="cypher-item-card bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-lg p-4"
         >
-          <div class="mb-3">
-            <label class="block text-sm font-medium text-purple-900 mb-1">
-              ${t("cyphers.name")}
-            </label>
-            <input
-              type="text"
-              .value=${this.editedCypher.name}
-              @input=${(e: Event) => {
-                const target = e.target as HTMLInputElement;
-                this.editedCypher.name = target.value;
-              }}
-              class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-purple-900 font-semibold"
-              placeholder="${t("cyphers.name")}"
-              data-testid="edit-cypher-name"
-            />
-          </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium text-purple-900 mb-1">
-              ${t("cyphers.level")}
-            </label>
-            <input
-              type="text"
-              .value=${this.editedCypher.level.toString()}
-              @input=${(e: Event) => {
-                const target = e.target as HTMLInputElement;
-                this.editedCypher.level = target.value || "1";
-              }}
-              class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-purple-900 font-semibold"
-              placeholder="${t("cyphers.level")}"
-              data-testid="edit-cypher-level"
-            />
-          </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium text-purple-900 mb-1">
-              ${t("cyphers.effect")}
-            </label>
-            <textarea
-              .value=${this.editedCypher.effect}
-              @input=${(e: Event) => {
-                const target = e.target as HTMLTextAreaElement;
-                this.editedCypher.effect = target.value;
-              }}
-              rows="3"
-              class="w-full bg-transparent border-b-2 border-purple-300 focus:border-purple-500 px-2 py-1 text-gray-700"
-              placeholder="${t("cyphers.effect")}"
-              data-testid="edit-cypher-effect"
-            ></textarea>
-          </div>
+          ${renderTextField({
+            theme,
+            label: t("cyphers.name"),
+            placeholder: t("cyphers.name"),
+            testId: "edit-cypher-name",
+            value: this.editedCypher.name,
+            onInput: (value) => {
+              this.editedCypher.name = value;
+            },
+          })}
+          ${renderTextField({
+            theme,
+            label: t("cyphers.level"),
+            placeholder: t("cyphers.level"),
+            testId: "edit-cypher-level",
+            value: this.editedCypher.level.toString(),
+            onInput: (value) => {
+              this.editedCypher.level = value || "1";
+            },
+          })}
+          ${renderTextArea({
+            theme,
+            label: t("cyphers.effect"),
+            placeholder: t("cyphers.effect"),
+            testId: "edit-cypher-effect",
+            value: this.editedCypher.effect,
+            onInput: (value) => {
+              this.editedCypher.effect = value;
+            },
+          })}
         </div>
       </div>
     `;

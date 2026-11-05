@@ -1,8 +1,7 @@
-// OddityItem component - Displays a single oddity card
-
 import { html, TemplateResult } from "lit-html";
 import { t } from "@/i18n/index";
 import { createEditHandler, renderCardButtons } from "./helpers/CardEditorBehavior.js";
+import { renderTextArea } from "./helpers/cardFormFields.js";
 
 export class OddityItem {
   private editedOddity: string;
@@ -27,25 +26,21 @@ export class OddityItem {
   }
 
   private renderEditableVersion(): TemplateResult {
+    const theme = "indigo";
     return html`
       <div class="card-edit-wrapper">
         <div
           class="oddity-item-card bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-lg p-4"
         >
-          <div class="mb-3">
-            <label class="block text-sm font-medium text-indigo-900 mb-1">
-              ${t("oddities.oddity")}
-            </label>
-            <textarea
-              data-testid="edit-field-oddity"
-              class="w-full bg-transparent border-b-2 border-indigo-300 focus:border-indigo-500 px-2 py-1 text-gray-700"
-              rows="3"
-              .value=${this.editedOddity}
-              @input=${(e: Event) => {
-                this.editedOddity = (e.target as HTMLTextAreaElement).value;
-              }}
-            ></textarea>
-          </div>
+          ${renderTextArea({
+            theme,
+            label: t("oddities.oddity"),
+            testId: "edit-field-oddity",
+            value: this.editedOddity,
+            onInput: (value) => {
+              this.editedOddity = value;
+            },
+          })}
         </div>
       </div>
     `;

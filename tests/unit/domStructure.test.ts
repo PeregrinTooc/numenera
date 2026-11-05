@@ -1,11 +1,3 @@
-/**
- * DOM Structure Tests
- *
- * These tests verify that all required data-testid attributes and DOM structure
- * are present in the rendered components. This replaces E2E tests that only
- * check for element existence (character-dom.feature).
- */
-
 import { describe, it, expect, vi } from "vitest";
 import { render } from "lit-html";
 import { Header } from "@/components/Header";
@@ -25,7 +17,6 @@ describe("DOM Structure Tests", () => {
       const header = new Header(vi.fn(), vi.fn(), vi.fn(), vi.fn());
       render(header.render(), getContainer());
 
-      // Verify all header buttons exist
       expect(getContainer().querySelector('[data-testid="character-header"]')).toBeTruthy();
       expect(getContainer().querySelector('[data-testid="load-button"]')).toBeTruthy();
       expect(getContainer().querySelector('[data-testid="new-button"]')).toBeTruthy();
@@ -55,10 +46,8 @@ describe("DOM Structure Tests", () => {
       const basicInfo = new BasicInfo(character, vi.fn());
       render(basicInfo.render(), getContainer());
 
-      // Verify basic info section
       expect(getContainer().querySelector('[data-testid="basic-info"]')).toBeTruthy();
 
-      // Verify all sentence format fields
       expect(getContainer().querySelector('[data-testid="character-name"]')).toBeTruthy();
       expect(getContainer().querySelector('[data-testid="character-tier"]')).toBeTruthy();
       expect(getContainer().querySelector('[data-testid="character-type-select"]')).toBeTruthy();
@@ -95,21 +84,18 @@ describe("DOM Structure Tests", () => {
 
       const container = getContainer();
 
-      // Verify Might stat pool
       expect(container.querySelector('[data-testid="stat-might"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="stat-might-label"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="stat-might-pool"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="stat-might-edge"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="stat-might-current"]')).toBeTruthy();
 
-      // Verify Speed stat pool
       expect(container.querySelector('[data-testid="stat-speed"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="stat-speed-label"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="stat-speed-pool"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="stat-speed-edge"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="stat-speed-current"]')).toBeTruthy();
 
-      // Verify Intellect stat pool
       expect(container.querySelector('[data-testid="stat-intellect"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="stat-intellect-label"]')).toBeTruthy();
       expect(container.querySelector('[data-testid="stat-intellect-pool"]')).toBeTruthy();

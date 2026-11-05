@@ -1,16 +1,12 @@
-// CardEditModal component - Base modal for editing card content
-// Provides consistent modal behavior across all card types
-
 import { html, render, TemplateResult } from "lit-html";
 import { t } from "@/i18n/index";
 import { ModalBehavior, renderModalButtons } from "@/services/modalBehavior";
 import { ModalContainer } from "@/services/modalContainer";
 import { FocusTrappingBehavior } from "@/services/focusTrappingBehavior";
 import type { VersionHistoryService } from "@/services/versionHistoryService";
-import { CompletionNotifier } from "@/utils/completionNotifier";
 
 export interface CardEditModalConfig {
-  content: TemplateResult; // The editable card content
+  content: TemplateResult;
   onConfirm: () => void;
   onCancel: () => void;
   versionHistoryService?: VersionHistoryService;
@@ -19,7 +15,6 @@ export interface CardEditModalConfig {
 export class CardEditModal extends ModalBehavior {
   private content: TemplateResult;
   private versionHistoryService?: VersionHistoryService;
-  private modalNotifier: CompletionNotifier;
 
   constructor(config: CardEditModalConfig) {
     super({
@@ -30,34 +25,8 @@ export class CardEditModal extends ModalBehavior {
     this.content = config.content;
     this.versionHistoryService = config.versionHistoryService;
 
-    // Initialize completion notifier for modal events
-    this.modalNotifier = new CompletionNotifier("modal", {
-      data: { modalType: "card" },
-    });
-
-    // Bind handleKeyDown for Tab key trapping
     this.handleKeyDown = this.handleKeyDown.bind(this);
-    // Bind handleInput for version history timer reset
     this.handleInput = this.handleInput.bind(this);
-
-    // Emit modal-opened event after construction
-    this.modalNotifier.emit("opened");
-  }
-
-  protected handleConfirm(): void {
-    // Emit modal-closed event with confirm action
-    this.modalNotifier.emit("closed", { action: "confirm" });
-
-    // Call parent confirm handler
-    super.handleConfirm();
-  }
-
-  protected handleCancel(): void {
-    // Emit modal-closed event with cancel action
-    this.modalNotifier.emit("closed", { action: "cancel" });
-
-    // Call parent cancel handler
-    super.handleCancel();
   }
 
   /**
@@ -69,14 +38,9 @@ export class CardEditModal extends ModalBehavior {
     }
   }
 
-  /**
-   * Override handleKeyDown to add Tab key focus trapping
-   */
   protected handleKeyDown(e: KeyboardEvent): void {
-    // Handle Escape through base class
     super.handleKeyDown(e);
 
-    // Handle Tab key for focus trapping
     if (e.key === "Tab") {
       FocusTrappingBehavior.handleTabKey(e, '[data-testid="card-edit-modal"]');
     }
@@ -98,10 +62,8 @@ export class CardEditModal extends ModalBehavior {
           role="dialog"
           aria-modal="true"
         >
-          <!-- Editable card content (scaled up on larger screens) -->
           <div class="card-edit-modal-content">${this.content}</div>
 
-          <!-- Action Buttons -->
           <div class="card-edit-modal-buttons">
             ${renderModalButtons({
               onConfirm: this.handleConfirm,
@@ -118,14 +80,9 @@ export class CardEditModal extends ModalBehavior {
   }
 }
 
-/**
- * Service function to open a card edit modal
- */
 export function openCardEditModal(config: CardEditModalConfig): void {
-  // Create modal container using helper
   const container = new ModalContainer();
 
-  // Create modal with cleanup callbacks
   const modal = new CardEditModal({
     content: config.content,
     onConfirm: () => {
@@ -139,10 +96,8 @@ export function openCardEditModal(config: CardEditModalConfig): void {
     versionHistoryService: config.versionHistoryService,
   });
 
-  // Render modal
   render(modal.render(), container.getElement());
 
-  // Auto-focus first input field in the modal
   container.focusElement(
     '[data-testid="card-edit-modal"] input, [data-testid="card-edit-modal"] textarea'
   );

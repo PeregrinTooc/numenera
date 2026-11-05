@@ -18,36 +18,29 @@ describe("AutoSaveService", () => {
 
   describe("requestSave", () => {
     it("should debounce multiple save requests", () => {
-      // Make multiple rapid save requests
       service.requestSave();
       service.requestSave();
       service.requestSave();
 
-      // Should not have called save yet
       expect(mockSaveCallback).not.toHaveBeenCalled();
 
-      // Fast-forward past debounce time
       vi.advanceTimersByTime(300);
 
-      // Should have called save exactly once
       expect(mockSaveCallback).toHaveBeenCalledTimes(1);
     });
 
     it("should reset debounce timer on new requests", () => {
       service.requestSave();
 
-      // Advance time partially
       vi.advanceTimersByTime(200);
       expect(mockSaveCallback).not.toHaveBeenCalled();
 
-      // Make another request (should reset timer)
       service.requestSave();
 
       // Advance another 200ms (total 400ms from first, but only 200ms from second)
       vi.advanceTimersByTime(200);
       expect(mockSaveCallback).not.toHaveBeenCalled();
 
-      // Advance final 100ms to complete the 300ms from second request
       vi.advanceTimersByTime(100);
       expect(mockSaveCallback).toHaveBeenCalledTimes(1);
     });
@@ -114,18 +107,6 @@ describe("AutoSaveService", () => {
 
       expect(handler1).toHaveBeenCalledTimes(1);
       expect(handler2).toHaveBeenCalledTimes(1);
-    });
-
-    it("should allow removing event listeners", () => {
-      const handler = vi.fn();
-
-      service.on("save-completed", handler);
-      service.off("save-completed", handler);
-
-      service.requestSave();
-      vi.advanceTimersByTime(300);
-
-      expect(handler).not.toHaveBeenCalled();
     });
   });
 });

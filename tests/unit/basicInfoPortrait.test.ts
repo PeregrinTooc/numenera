@@ -28,21 +28,17 @@ describe("BasicInfo", () => {
         '[data-testid="portrait-file-input"]'
       ) as HTMLInputElement;
 
-      // Create a mock file over 2MB
       const largeFile = new File(["x".repeat(3 * 1024 * 1024)], "large.jpg", {
         type: "image/jpeg",
       });
 
-      // Mock the files property
       Object.defineProperty(fileInput, "files", {
         value: [largeFile],
         writable: false,
       });
 
-      // Trigger change event
       fileInput.dispatchEvent(new Event("change", { bubbles: true }));
 
-      // Wait for async operations
       await new Promise((resolve) => setTimeout(resolve, 0));
 
       expect(alertSpy).toHaveBeenCalledWith("Image file is too large. Maximum size is 2MB.");
@@ -59,7 +55,6 @@ describe("BasicInfo", () => {
         '[data-testid="portrait-file-input"]'
       ) as HTMLInputElement;
 
-      // Create a non-image file
       const textFile = new File(["test content"], "test.txt", { type: "text/plain" });
 
       Object.defineProperty(fileInput, "files", {
@@ -83,7 +78,6 @@ describe("BasicInfo", () => {
         '[data-testid="portrait-file-input"]'
       ) as HTMLInputElement;
 
-      // Create a small valid image file
       const imageFile = new File(["fake image content"], "test.jpg", { type: "image/jpeg" });
 
       Object.defineProperty(fileInput, "files", {
@@ -93,10 +87,8 @@ describe("BasicInfo", () => {
 
       fileInput.dispatchEvent(new Event("change", { bubbles: true }));
 
-      // Wait for FileReader
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      // Portrait should be set on character
       expect(ctx.mockCharacter.portrait).toBeTruthy();
     });
 
@@ -180,7 +172,6 @@ describe("BasicInfo", () => {
       // Click should trigger modal (we can't fully test modal opening without ModalService mock)
       portraitImage.click();
 
-      // Just verify the element is clickable and has proper attributes
       expect(portraitImage.getAttribute("role")).toBe("button");
       expect(portraitImage.getAttribute("tabindex")).toBe("0");
     });

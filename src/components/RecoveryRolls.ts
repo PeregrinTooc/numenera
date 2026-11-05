@@ -1,8 +1,7 @@
 import { html, TemplateResult } from "lit-html";
 import { RecoveryRolls as RecoveryRollsType } from "@/types/character";
 import { t } from "@/i18n/index";
-import { ModalService } from "@/services/modalService";
-import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
+import { openFieldEditor } from "@/services/modalService";
 
 type RecoveryRollField = "action" | "tenMinutes" | "oneHour" | "tenHours";
 
@@ -13,16 +12,7 @@ export class RecoveryRolls {
       field: "recoveryModifier" | RecoveryRollField,
       value: number | boolean
     ) => void
-  ) {
-    // Defensive: provide defaults if data is undefined (shouldn't happen with schema v4)
-    this.data = data ?? {
-      action: false,
-      tenMinutes: false,
-      oneHour: false,
-      tenHours: false,
-      modifier: 0,
-    };
-  }
+  ) {}
 
   private handleRollToggle(field: RecoveryRollField, e: Event): void {
     this.onFieldUpdate?.(field, (e.target as HTMLInputElement).checked);
@@ -31,15 +21,10 @@ export class RecoveryRolls {
   private openEditModal(): void {
     if (!this.onFieldUpdate) return;
 
-    ModalService.openEditModal({
-      fieldType: "recoveryModifier",
-      currentValue: this.data.modifier || 0,
-      onConfirm: (newValue) => {
-        if (this.onFieldUpdate) {
-          this.onFieldUpdate("recoveryModifier", newValue as number);
-        }
-      },
-      versionHistoryService: getVersionHistoryService(),
+    openFieldEditor("recoveryModifier", this.data.modifier || 0, (newValue) => {
+      if (this.onFieldUpdate) {
+        this.onFieldUpdate("recoveryModifier", newValue as number);
+      }
     });
   }
 
@@ -53,7 +38,6 @@ export class RecoveryRolls {
       >
         <h3 class="text-lg font-bold font-serif mb-3 text-green-900">${t("recovery.title")}</h3>
 
-        <!-- Recovery Modifier Display -->
         <div class="mb-4 flex items-center gap-2">
           <span class="font-serif text-sm text-green-900">${t("recovery.modifier")}:</span>
           <span
@@ -70,9 +54,7 @@ export class RecoveryRolls {
           </span>
         </div>
 
-        <!-- Recovery Roll Checkboxes -->
         <div class="space-y-2">
-          <!-- Action -->
           <label
             class="flex items-center gap-2 cursor-pointer hover:bg-green-50 p-2 rounded transition-colors"
           >
@@ -90,7 +72,6 @@ export class RecoveryRolls {
             </span>
           </label>
 
-          <!-- Ten Minutes -->
           <label
             class="flex items-center gap-2 cursor-pointer hover:bg-green-50 p-2 rounded transition-colors"
           >
@@ -108,7 +89,6 @@ export class RecoveryRolls {
             </span>
           </label>
 
-          <!-- One Hour -->
           <label
             class="flex items-center gap-2 cursor-pointer hover:bg-green-50 p-2 rounded transition-colors"
           >
@@ -126,7 +106,6 @@ export class RecoveryRolls {
             </span>
           </label>
 
-          <!-- Ten Hours -->
           <label
             class="flex items-center gap-2 cursor-pointer hover:bg-green-50 p-2 rounded transition-colors"
           >

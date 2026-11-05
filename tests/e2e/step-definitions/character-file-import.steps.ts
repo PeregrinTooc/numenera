@@ -83,7 +83,6 @@ const TEST_CHARACTERS: Record<string, Character> = {
   },
 };
 
-// Scenario: Import valid character from file
 When("I import a valid character file {string}", async function (filename: string) {
   const character = TEST_CHARACTERS[filename];
   await importFile(this.page, filename, numeneraFile(character));
@@ -92,16 +91,13 @@ When("I import a valid character file {string}", async function (filename: strin
   await expect(nameElement).toHaveText(character.name, { timeout: 15000 });
 });
 
-// Scenario: Imported character persists in localStorage
 Then("the character {string} should still be displayed", async function (name: string) {
   const nameElement = this.page.getByTestId("character-name");
   const currentName = await nameElement.textContent();
   expect(currentName?.trim()).toBe(name);
 });
 
-// Scenario: Import replaces current character
 Then("the previous character should be replaced", async function () {
-  // Verify that "Kael the Wanderer" (the default loaded character) is no longer displayed
   const nameElement = this.page.getByTestId("character-name");
   const currentName = await nameElement.textContent();
   expect(currentName?.trim()).not.toBe("Kael the Wanderer");

@@ -1,6 +1,3 @@
-// Shared storage constants
-// Centralized to avoid duplication between localStorage and file storage
-
 /**
  * SCHEMA VERSION (Semantic Versioning)
  *
@@ -9,9 +6,6 @@
  * - MINOR: New fields added (backward compatible)
  * - PATCH: Bug fixes, no schema change
  *
- * Version History:
- * - 1.0.0: Initial release schema (February 2026)
- *          Full character structure with stats, abilities, items, etc.
  *
  * Migration Strategy:
  * - Files with different versions are NOT rejected outright
@@ -23,9 +17,6 @@
  */
 export const SCHEMA_VERSION = "1.0.0";
 
-/**
- * localStorage key for character state
- */
 export const STORAGE_KEY = "numenera-character-state";
 
 /**
@@ -35,7 +26,6 @@ export const STORAGE_KEY = "numenera-character-state";
 export const UNREADABLE_BACKUP_STORAGE_KEY = "numenera-character-unreadable-backup";
 
 /**
- * localStorage key for layout preferences
  * Stored separately from character data as it's a user preference
  */
 export const LAYOUT_STORAGE_KEY = "numenera-layout";
@@ -56,7 +46,8 @@ export const COMPARISON_VIEW_STORAGE_KEY = "numenera-comparison-view-enabled";
  * IndexedDB database names.
  *
  * Centralized here so the app code, the storage layer, and the E2E test
- * harness cannot drift apart. They previously did: main.ts's E2E test hooks
+ * harness cannot drift apart.
+ *
  * and tests/e2e/support/hooks.ts both hardcoded "NumeneraCharacterDB", which
  * matches none of the databases below — so test cleanup silently deleted
  * nothing and version-clearing threw ("versions" store not found).

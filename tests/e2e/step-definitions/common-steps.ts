@@ -20,13 +20,8 @@ const DEFAULT_STAT_VALUES: Record<string, string> = Object.fromEntries(
   })
 );
 
-// ============================================================================
-// REUSABLE WHEN STEPS - User Actions
-// ============================================================================
-
 When("I click on the {string} value", async function (this: CustomWorld, fieldName: string) {
   await this.fields.click(fieldName);
-  // For fields that open modals, wait for modal to appear
   if (!["background", "notes", "type"].includes(fieldName)) {
     await this.page.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
   }
@@ -34,7 +29,6 @@ When("I click on the {string} value", async function (this: CustomWorld, fieldNa
 
 When("I tap on the {string} value", async function (this: CustomWorld, fieldName: string) {
   await this.fields.tap(fieldName);
-  // For fields that open modals, wait for modal to appear
   if (!["background", "notes", "type"].includes(fieldName)) {
     await this.page.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
   }
@@ -56,9 +50,7 @@ When('I click the "New" button', async function (this: CustomWorld) {
 });
 
 // Badge click/tap steps, parameterised by the {badge} type (resolves to a
-// data-testid; see support/parameterTypes.ts). No {badge} hover registration:
-// no feature line exercises hovering a badge today, and adding one would be
-// an unreachable step that check:steps would immediately flag as dead.
+// data-testid; see support/parameterTypes.ts).
 When("I click the {badge} badge", async function (this: CustomWorld, testId: string) {
   await this.dom.getByTestId(testId).click();
   await this.page.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
@@ -69,7 +61,6 @@ When("I tap the {badge} badge", async function (this: CustomWorld, testId: strin
   await this.page.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
 });
 
-// Basic info field click steps (with value parameter)
 When("I click on the character name {string}", async function (this: CustomWorld, _name: string) {
   await this.page.locator('[data-testid="character-name"]').click();
   await this.page.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
@@ -120,10 +111,6 @@ When("I type {string} in the modal input", async function (this: CustomWorld, va
   await this.modal.type(value);
 });
 
-// ============================================================================
-// UNIFIED EDIT FIELD STEP - Replaces duplicates across multiple files
-// ============================================================================
-
 async function editFieldViaModal(
   world: CustomWorld,
   fieldName: string,
@@ -132,22 +119,17 @@ async function editFieldViaModal(
   const testId = getTestId(fieldName);
   const field = world.page.locator(`[data-testid="${testId}"]`);
 
-  // Click field to open modal
   await field.click();
 
-  // Wait for modal to appear
   const modal = world.page.locator('[data-testid="edit-modal"]');
   await expect(modal).toBeVisible({ timeout: 5000 });
 
-  // Fill input with new value
   const input = world.page.locator('[data-testid="edit-modal-input"]');
   await input.fill(value);
 
-  // Click confirm button
   const confirmButton = world.page.locator('[data-testid="modal-confirm-button"]');
   await confirmButton.click();
 
-  // Wait for modal to close
   await expect(modal).toHaveCount(0, { timeout: 2000 });
 }
 
@@ -156,7 +138,6 @@ When(
   async function (this: CustomWorld, fieldName: string, value: string) {
     await editFieldViaModal(this, fieldName, value);
 
-    // Wait for auto-save to complete
     await waitForSaveComplete(this.page);
   }
 );
@@ -215,10 +196,6 @@ When("I reload the page immediately", async function (this: CustomWorld) {
   await waitForCharacterSheetReady(this.page);
 });
 
-// ============================================================================
-// REUSABLE THEN STEPS - Assertions
-// ============================================================================
-
 Then(
   "I should see the {string} value displayed",
   async function (this: CustomWorld, fieldName: string) {
@@ -243,14 +220,12 @@ Then(
     const testId = getTestId(fieldName);
     const element = this.page.locator(`[data-testid="${testId}"]`);
 
-    // Get current value
     const currentValue = (await element.textContent())?.trim();
 
     const expectedDefault = DEFAULT_STAT_VALUES[fieldName];
     if (expectedDefault) {
       expect(currentValue).toBe(expectedDefault);
     } else {
-      // For other fields, just verify it's not empty
       expect(currentValue).toBeTruthy();
     }
   }

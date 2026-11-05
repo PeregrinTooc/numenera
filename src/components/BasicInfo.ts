@@ -1,11 +1,9 @@
-// BasicInfo component - Displays character basic information
-
 import { html, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { FieldType as ValidationFieldType } from "@/utils/fieldValidation";
-import { ModalService } from "@/services/modalService";
+import { ModalService, openFieldEditor } from "@/services/modalService";
 import { persistCharacterState } from "@/storage/storageFactory";
-import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
+import { notifyCharacterUpdated } from "./helpers/characterEvents.js";
 import { t } from "@/i18n/index";
 
 type FieldType = "name" | "tier" | "descriptor" | "focus" | "currentXp" | "totalXp";
@@ -22,35 +20,25 @@ export class BasicInfo {
 
     if (!file) return;
 
-    // Validate file type
     if (!file.type.startsWith("image/")) {
       alert(t("portrait.notAnImage"));
       return;
     }
 
-    // Validate file size (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
       alert(t("portrait.tooLarge", { maxSize: 2 }));
       return;
     }
 
-    // Read file as base64
     const reader = new FileReader();
     reader.onload = () => {
       const base64 = reader.result as string;
       this.character.portrait = base64;
       persistCharacterState(this.character);
 
-      // Dispatch character-updated event
-      const event = new CustomEvent("character-updated", {
-        detail: this.character,
-        bubbles: true,
-        composed: true,
-      });
-
       const container = document.querySelector('[data-testid="basic-info"]');
       if (container) {
-        container.dispatchEvent(event);
+        notifyCharacterUpdated(container, this.character);
       }
     };
     reader.readAsDataURL(file);
@@ -60,16 +48,9 @@ export class BasicInfo {
     this.character.portrait = undefined;
     persistCharacterState(this.character);
 
-    // Dispatch character-updated event
-    const event = new CustomEvent("character-updated", {
-      detail: this.character,
-      bubbles: true,
-      composed: true,
-    });
-
     const container = document.querySelector('[data-testid="basic-info"]');
     if (container) {
-      container.dispatchEvent(event);
+      notifyCharacterUpdated(container, this.character);
     }
   }
 
@@ -84,48 +65,25 @@ export class BasicInfo {
     this.character.type = select.value as "Nano" | "Glaive" | "Jack";
     persistCharacterState(this.character);
 
-    // Dispatch character-updated event
-    const event = new CustomEvent("character-updated", {
-      detail: this.character,
-      bubbles: true,
-      composed: true,
-    });
-
-    // Find the container element to dispatch from
     const container = (e.target as HTMLElement).closest('[data-testid="basic-info"]');
     if (container) {
-      container.dispatchEvent(event);
+      notifyCharacterUpdated(container, this.character);
     }
   }
 
   private openEditModal(fieldType: FieldType): void {
-    const currentValue =
-      fieldType === "name"
-        ? this.character.name
-        : fieldType === "tier"
-          ? this.character.tier
-          : fieldType === "descriptor"
-            ? this.character.descriptor
-            : fieldType === "focus"
-              ? this.character.focus
-              : fieldType === "currentXp"
-                ? this.character.currentXp
-                : this.character.totalXp;
-
-    ModalService.openEditModal({
-      fieldType: fieldType as ValidationFieldType,
-      currentValue,
-      onConfirm: async (newValue) => {
+    openFieldEditor(
+      fieldType as ValidationFieldType,
+      this.character[fieldType],
+      async (newValue) => {
         await this.onFieldUpdate(fieldType, newValue);
-      },
-      versionHistoryService: getVersionHistoryService(),
-    });
+      }
+    );
   }
 
   render(): TemplateResult {
     return html`
       <div data-testid="basic-info" class="basic-info-card">
-        <!-- XP Badge - top-left corner - two independently-editable cells -->
         <div class="xp-badge" data-testid="xp-badge">
           <div
             class="xp-badge-cell editable-field"
@@ -151,9 +109,7 @@ export class BasicInfo {
           </div>
         </div>
 
-        <!-- Character info content - left side -->
         <div class="character-info-content">
-          <!-- Large character name - EDITABLE -->
           <div
             data-testid="character-name"
             class="character-name editable-field"
@@ -210,7 +166,6 @@ export class BasicInfo {
           </div>
         </div>
 
-        <!-- Character portrait - RIGHT side, 3:4 ratio (150×200px) -->
         <div class="character-portrait" data-testid="character-portrait">
           ${this.character.portrait
             ? html`

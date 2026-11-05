@@ -20,8 +20,7 @@ describe("VersionHistoryService - Buffer-Based Undo/Redo", () => {
         expect(fx.service.canUndo()).toBe(true);
 
         vi.advanceTimersByTime(1000);
-        await vi.runAllTimersAsync();
-        await vi.runAllTimersAsync();
+        await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
         expect(fx.service.canUndo()).toBe(false);
       });
@@ -75,7 +74,6 @@ describe("VersionHistoryService - Buffer-Based Undo/Redo", () => {
         const initialState = { ...fx.mockCharacter, name: "Initial" };
         const char1 = { ...fx.mockCharacter, name: "Change 1" };
 
-        // Set initial state before buffering
         fx.service.setInitialState(initialState);
         fx.service.bufferChange(char1, "Change 1");
 
@@ -121,11 +119,8 @@ describe("VersionHistoryService - Buffer-Based Undo/Redo", () => {
         fx.service.bufferChange(fx.mockCharacter, "Change 1");
 
         vi.advanceTimersByTime(1000);
-        await vi.runAllTimersAsync();
-        await vi.runAllTimersAsync();
+        await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
-        // After squash, initial state should be cleared
-        // Attempting to undo should return null
         const undone = fx.service.undo();
         expect(undone).toBeNull();
       });
@@ -151,7 +146,6 @@ describe("VersionHistoryService - Buffer-Based Undo/Redo", () => {
         fx.service.undo();
         expect(fx.service.canRedo()).toBe(true);
 
-        // New change should clear redo stack
         fx.service.bufferChange(char2, "Change 2");
         expect(fx.service.canRedo()).toBe(false);
       });

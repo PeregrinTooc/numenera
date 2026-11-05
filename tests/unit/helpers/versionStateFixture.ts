@@ -2,52 +2,34 @@ import { beforeEach } from "vitest";
 import { VersionState } from "@/services/versionState";
 import type { VersionHistoryManager } from "@/storage/versionHistory";
 import type { Character } from "@/types/character";
-import type { CharacterVersion } from "@/types/versionHistory";
 import { createTestCharacter } from "../../factories/character.js";
-import { createMockVersionHistoryManager } from "../../factories/versionHistoryManager";
+import { setupRealVersionHistory } from "./realVersionHistory";
 
 export const createMockCharacter = (name: string): Character => createTestCharacter({ name });
 
-export const createMockVersion = (
-  name: string,
-  description: string,
-  timestamp: number
-): CharacterVersion => {
-  const character = createMockCharacter(name);
-  const { portrait: _portrait, ...characterWithoutPortrait } = character;
-  return {
-    id: `version-${name}`,
-    character: characterWithoutPortrait,
-    timestamp,
-    description,
-    etag: `etag-${name}`,
-  };
-};
-
 export interface VersionStateFixture {
-  readonly mockVersionHistory: VersionHistoryManager;
+  readonly versionHistory: VersionHistoryManager;
   readonly mockCharacter: Character;
   readonly versionState: VersionState;
 }
 
 /**
- * Registers a hook giving each test a VersionState over a mocked history
- * manager. Returns live accessors.
+ * Registers hooks giving each test a VersionState over a real history
+ * manager (isolated fake-indexeddb database). Returns live accessors.
  */
 export function setupVersionState(): VersionStateFixture {
-  let mockVersionHistory: VersionHistoryManager;
+  const history = setupRealVersionHistory();
   let mockCharacter: Character;
   let versionState: VersionState;
 
   beforeEach(() => {
     mockCharacter = createMockCharacter("Test Character");
-    mockVersionHistory = createMockVersionHistoryManager();
-    versionState = new VersionState(mockCharacter, mockVersionHistory);
+    versionState = new VersionState(mockCharacter, history.manager);
   });
 
   return {
-    get mockVersionHistory() {
-      return mockVersionHistory;
+    get versionHistory() {
+      return history.manager;
     },
     get mockCharacter() {
       return mockCharacter;

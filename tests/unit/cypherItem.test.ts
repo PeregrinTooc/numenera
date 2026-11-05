@@ -1,4 +1,3 @@
-// Unit tests for CypherItem component
 import { CypherItem } from "@/components/CypherItem";
 import { Cypher } from "@/types/character";
 import { testItemEditAndDelete } from "./helpers/itemTestSuite.js";
@@ -9,7 +8,6 @@ const mockCypher: Cypher = {
   effect: "Test effect description",
 };
 
-// Use shared parameterized test suite
 testItemEditAndDelete<Cypher>({
   componentName: "CypherItem",
   createComponent: (item, index, onUpdate, onDelete) =>

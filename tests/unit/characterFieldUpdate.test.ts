@@ -1,7 +1,3 @@
-/**
- * applyFieldUpdate - pure field-update logic extracted from main.ts's handleFieldUpdate
- */
-
 import { describe, it, expect } from "vitest";
 import { applyFieldUpdate } from "@/utils/characterFieldUpdate";
 import { createTestCharacter as makeCharacter } from "../factories/character.js";

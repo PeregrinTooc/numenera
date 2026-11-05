@@ -4,7 +4,6 @@ import { reconcileVersionHistory } from "@/services/versionHistoryReconciliation
 import type { Character } from "@/types/character";
 import { createTestCharacter as createMockCharacter } from "../factories/character";
 
-// Helper for async delays
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe.sequential("reconcileVersionHistory", () => {

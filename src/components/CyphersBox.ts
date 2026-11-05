@@ -1,19 +1,16 @@
-// CyphersBox component - Displays cyphers in a standalone section with max cyphers badge
-
 import { html, TemplateResult } from "lit-html";
-import { Character } from "@/types/character";
+import { Character, Cypher } from "@/types/character";
 import { CypherItem } from "./CypherItem.js";
-import { ModalService } from "@/services/modalService";
+import { openFieldEditor } from "@/services/modalService";
 import { t } from "@/i18n/index";
-import { createAddHandler, createItemInstances } from "./helpers/CollectionBehavior.js";
-import { renderAddButton } from "./helpers/collectionRendering.js";
-import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
+import { CollectionSection } from "./helpers/CollectionBehavior.js";
+import { renderAddButton, renderCollection } from "./helpers/collectionRendering.js";
 import { CollectionDragReorder } from "./helpers/CollectionDragReorder.js";
 
 type FieldType = "maxCyphers";
 
 export class CyphersBox {
-  private handleAddCypher: () => void;
+  private cyphers: CollectionSection<Cypher, CypherItem>;
   private drag = new CollectionDragReorder({
     section: "cyphers",
     itemTestId: "cypher-item",
@@ -26,43 +23,22 @@ export class CyphersBox {
     private character: Character,
     private onFieldUpdate: (field: FieldType, value: number) => void
   ) {
-    // Create add handler using CollectionBehavior helper (event-based pattern)
-    // collectionKey enables immutable updates and proper event dispatch for re-render
-    this.handleAddCypher = createAddHandler({
-      emptyItem: { name: "", level: "", effect: "" },
-      ItemComponentClass: CypherItem,
-      collection: this.character.cyphers,
-      character: this.character,
+    this.cyphers = new CollectionSection(character, {
       collectionKey: "cyphers",
+      ItemComponentClass: CypherItem,
+      emptyItem: { name: "", level: "", effect: "" },
     });
   }
 
   private openEditModal(fieldType: FieldType): void {
-    const currentValue = this.character.maxCyphers;
-
-    ModalService.openEditModal({
-      fieldType,
-      currentValue,
-      onConfirm: (newValue) => {
-        this.onFieldUpdate(fieldType, newValue as number);
-      },
-      versionHistoryService: getVersionHistoryService(),
-    });
+    openFieldEditor(fieldType, this.character.maxCyphers, (newValue) =>
+      this.onFieldUpdate(fieldType, newValue as number)
+    );
   }
 
   render(): TemplateResult {
-    // Create cypher item instances using CollectionBehavior helper (event-based pattern)
-    // collectionKey enables immutable updates for proper version history undo support
-    const cypherItems = createItemInstances({
-      collection: this.character.cyphers,
-      ItemComponentClass: CypherItem,
-      character: this.character,
-      collectionKey: "cyphers",
-    });
-
     return html`
       <div data-testid="cyphers-section" class="section-box">
-        <!-- Heading row: Max Cyphers Badge (top-left), heading, add button -->
         <div class="section-box-heading-row">
           <div
             data-testid="max-cyphers-badge"
@@ -83,7 +59,7 @@ export class CyphersBox {
           <h2 data-testid="cyphers-heading" class="section-box-heading">
             ${t("cyphers.heading")}
             ${renderAddButton({
-              onClick: this.handleAddCypher,
+              onClick: this.cyphers.handleAdd,
               testId: "add-cypher-button",
               colorTheme: "purple",
               ariaLabel: t("cyphers.add"),
@@ -91,24 +67,19 @@ export class CyphersBox {
           </h2>
         </div>
 
-        ${this.character.cyphers.length === 0
-          ? html`
-              <div data-testid="empty-cyphers" class="empty-cyphers-styled">
-                <p>${t("cyphers.empty")}</p>
-              </div>
-            `
-          : html`
-              <div
-                data-testid="cyphers-list"
-                class="section-card-grid"
-                @dragstart=${(e: Event) => this.drag.handleDragStart(e)}
-                @dragover=${(e: Event) => this.drag.handleDragOver(e)}
-                @drop=${(e: Event) => this.drag.handleDrop(e)}
-                @dragend=${() => this.drag.handleDragEnd()}
-              >
-                ${cypherItems.map((item) => item.render())}
-              </div>
-            `}
+        ${renderCollection({
+          isEmpty: this.character.cyphers.length === 0,
+          emptyState: {
+            testId: "empty-cyphers",
+            className: "empty-cyphers-styled",
+            message: t("cyphers.empty"),
+            paragraph: true,
+          },
+          listTestId: "cyphers-list",
+          listClassName: "section-card-grid",
+          drag: this.drag,
+          items: this.cyphers.items().map((item) => item.render()),
+        })}
       </div>
     `;
   }

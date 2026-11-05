@@ -6,12 +6,9 @@ import { ModalDsl } from "./modal.js";
 import { FieldsDsl } from "./fields.js";
 import { CardsDsl } from "./cards.js";
 import { SetupDsl } from "./setup.js";
+import { BASE_URL } from "./serverUrl.js";
 
-// Set default timeout for all steps to 30 seconds
 setDefaultTimeout(30000);
-
-// Server port is fixed based on environment
-const SERVER_PORT = process.env.TEST_PROD === "true" ? 4173 : 3000;
 
 export interface ExportedCharacterFile {
   character: Record<string, unknown>;
@@ -38,7 +35,11 @@ export interface CustomWorld extends World {
   // section-rearrangement.steps.ts
   importedLayout?: Array<{ type: string; id: string }> | null;
   scrollYBeforeSwipe?: number;
-  heldDropTarget?: { name: string; box: { x: number; y: number; width: number; height: number } };
+  heldDropTarget?: {
+    name: string;
+    box: { x: number; y: number; width: number; height: number };
+    point: { x: number; y: number };
+  };
   // version-history.steps.ts
   originalCharacterName?: string;
   uploadedPortrait?: string;
@@ -68,7 +69,11 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   draggedCypherName?: string;
   importedLayout?: Array<{ type: string; id: string }> | null;
   scrollYBeforeSwipe?: number;
-  heldDropTarget?: { name: string; box: { x: number; y: number; width: number; height: number } };
+  heldDropTarget?: {
+    name: string;
+    box: { x: number; y: number; width: number; height: number };
+    point: { x: number; y: number };
+  };
   originalCharacterName?: string;
   uploadedPortrait?: string;
   savedTimestamp?: string | null;
@@ -82,7 +87,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   }
 
   getBaseUrl(): string {
-    return `http://localhost:${SERVER_PORT}`;
+    return BASE_URL;
   }
 }
 

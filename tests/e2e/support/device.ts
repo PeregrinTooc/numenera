@@ -5,7 +5,6 @@ export type Engine = "chromium" | "webkit";
 
 export interface DeviceProfile {
   key: DeviceKey;
-  /** Key into Playwright's `devices` registry. */
   descriptor: string;
   engine: Engine;
 }

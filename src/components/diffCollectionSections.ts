@@ -1,6 +1,3 @@
-// Collection sections of DiffCharacterSheet: one generic boxed-list renderer
-// plus a thin item renderer per collection (cyphers, artifacts, ...).
-
 import { html, TemplateResult, nothing } from "lit-html";
 import type {
   Cypher,

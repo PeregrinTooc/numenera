@@ -1,6 +1,3 @@
-/* Oddity Item Card Styling - Brown Theme (Curious Collectibles) */
-
-/* Dragging states for oddity items */
 .oddity-item-card[data-dragging="true"] {
   opacity: 0.5;
   transform: scale(0.98);
@@ -13,32 +10,25 @@
 }
 
 .oddity-item-card {
-  /* Light parchment background */
   background: #f5e6d3;
 
-  /* Brown border - subtle */
   border: 2px solid #8b4513;
   border-radius: 8px;
   padding: 1rem;
 
-  /* Subtle shadow */
   box-shadow: 0 1px 3px rgba(139, 69, 19, 0.1);
 
-  /* Smooth transitions */
   transition: all 0.3s ease;
 
-  /* Less prominent than cyphers/artifacts */
   opacity: 0.95;
 }
 
-/* Gentle hover effect - less dramatic */
 .oddity-item-card:hover {
   box-shadow: 0 2px 6px rgba(139, 69, 19, 0.15);
   transform: translateY(-1px);
   opacity: 1;
 }
 
-/* Oddity text - subtle and understated with handwritten font */
 .oddity-text {
   font-family: "Caveat", "Patrick Hand", cursive;
   color: #5a4a3a;
@@ -47,7 +37,6 @@
   line-height: 1.6;
 }
 
-/* Mystery icon for oddities */
 .oddity-icon {
   color: #8b4513;
   font-size: 1rem;
@@ -67,7 +56,6 @@
   margin-top: 0.25rem;
 }
 
-/* Empty oddities state - brown themed */
 .empty-oddities-styled {
   background: #f5e6d3;
   border: 2px dashed #8b4513;

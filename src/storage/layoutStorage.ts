@@ -1,54 +1,55 @@
-/**
- * Layout Storage Service
- *
- * Handles persistence of layout preferences separately from character data.
- * Layout is stored in localStorage as a user preference.
- */
-
 import { Layout, DEFAULT_LAYOUT, isValidLayout, cloneLayout } from "@/types/layout";
 import { SectionColumns, isValidSectionColumns } from "@/types/sectionColumns";
 import { LAYOUT_STORAGE_KEY, SECTION_COLUMNS_STORAGE_KEY } from "./storageConstants.js";
 
-/**
- * Save layout to localStorage
- *
- * @param layout - The layout configuration to save
- */
-export function saveLayout(layout: Layout): void {
+/** Write `value` as JSON; on failure log and continue, with `failureMessage`. */
+function saveJson(key: string, value: unknown, failureMessage: string): void {
   try {
-    const serialized = JSON.stringify(layout);
-    localStorage.setItem(LAYOUT_STORAGE_KEY, serialized);
+    localStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
-    // Continuing is fine: a lost layout is cosmetic - the sections visibly revert to the previous order.
-    console.error("Failed to save layout:", error);
+    console.error(failureMessage, error);
   }
 }
 
-/**
- * Load layout from localStorage
- *
- * @returns The stored layout, or the default layout if not found or invalid
- */
-export function loadLayout(): Layout {
+/** Read and validate the JSON stored under `key`; any absent, invalid or unreadable value yields `fallback()`. */
+function loadValidated<T>(
+  key: string,
+  isValid: (value: T) => boolean,
+  fallback: () => T,
+  messages: { invalid: string; failed: string }
+): T {
   try {
-    const stored = localStorage.getItem(LAYOUT_STORAGE_KEY);
+    const stored = localStorage.getItem(key);
     if (!stored) {
-      return cloneLayout(DEFAULT_LAYOUT);
+      return fallback();
     }
 
-    const parsed = JSON.parse(stored) as Layout;
-
-    // Validate the loaded layout
-    if (!isValidLayout(parsed)) {
-      console.warn("Invalid layout in storage, using default");
-      return cloneLayout(DEFAULT_LAYOUT);
+    const parsed = JSON.parse(stored) as T;
+    if (!isValid(parsed)) {
+      console.warn(messages.invalid);
+      return fallback();
     }
 
     return parsed;
   } catch (error) {
-    console.error("Failed to load layout:", error);
-    return cloneLayout(DEFAULT_LAYOUT);
+    console.error(messages.failed, error);
+    return fallback();
   }
+}
+
+export function saveLayout(layout: Layout): void {
+  // Continuing past a failure is fine: a lost layout is cosmetic - the sections visibly revert to the previous order.
+  saveJson(LAYOUT_STORAGE_KEY, layout, "Failed to save layout:");
+}
+
+/**
+ * @returns The stored layout, or the default layout if not found or invalid
+ */
+export function loadLayout(): Layout {
+  return loadValidated(LAYOUT_STORAGE_KEY, isValidLayout, () => cloneLayout(DEFAULT_LAYOUT), {
+    invalid: "Invalid layout in storage, using default",
+    failed: "Failed to load layout:",
+  });
 }
 
 /**
@@ -67,8 +68,6 @@ export function resetLayout(): Layout {
 }
 
 /**
- * Check if a custom layout is stored
- *
  * @returns true if a layout is stored in localStorage
  */
 export function hasCustomLayout(): boolean {
@@ -79,46 +78,21 @@ export function hasCustomLayout(): boolean {
   }
 }
 
-/**
- * Get the default layout (returns a clone to prevent mutation)
- */
 export function getDefaultLayout(): Layout {
   return cloneLayout(DEFAULT_LAYOUT);
 }
 
-/**
- * Save the card sections' column choices (non-default values only)
- */
 export function saveSectionColumns(columns: SectionColumns): void {
-  try {
-    localStorage.setItem(SECTION_COLUMNS_STORAGE_KEY, JSON.stringify(columns));
-  } catch (error) {
-    // Continuing is fine: a lost column choice is cosmetic - the section visibly reverts to its default.
-    console.error("Failed to save section columns:", error);
-  }
+  // Continuing past a failure is fine: a lost column choice is cosmetic - the section visibly reverts to its default.
+  saveJson(SECTION_COLUMNS_STORAGE_KEY, columns, "Failed to save section columns:");
 }
 
 /**
- * Load the card sections' column choices
- *
  * @returns The stored choices, or none (every section at its default) if not found or invalid
  */
 export function loadSectionColumns(): SectionColumns {
-  try {
-    const stored = localStorage.getItem(SECTION_COLUMNS_STORAGE_KEY);
-    if (!stored) {
-      return {};
-    }
-
-    const parsed: unknown = JSON.parse(stored);
-    if (!isValidSectionColumns(parsed)) {
-      console.warn("Invalid section columns in storage, using defaults");
-      return {};
-    }
-
-    return parsed;
-  } catch (error) {
-    console.error("Failed to load section columns:", error);
-    return {};
-  }
+  return loadValidated(SECTION_COLUMNS_STORAGE_KEY, isValidSectionColumns, () => ({}), {
+    invalid: "Invalid section columns in storage, using defaults",
+    failed: "Failed to load section columns:",
+  });
 }

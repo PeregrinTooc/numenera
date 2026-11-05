@@ -7,10 +7,6 @@ import {
   paneControl,
 } from "../support/comparisonViewHelpers.js";
 
-// ----------------------------------------------------------------------------
-// Highlighting
-// ----------------------------------------------------------------------------
-
 Then(
   "the {string} field should be highlighted as changed in the {word} pane",
   async function (this: CustomWorld, fieldName: string, side: "left" | "right") {
@@ -83,10 +79,6 @@ Then(
   }
 );
 
-// ----------------------------------------------------------------------------
-// Restore per pane
-// ----------------------------------------------------------------------------
-
 When("I click the left pane's restore button", async function (this: CustomWorld) {
   await this.page.locator(paneControl("left", "restore")).click();
   await this.page.waitForTimeout(300);
@@ -127,17 +119,9 @@ Then(
   }
 );
 
-// ----------------------------------------------------------------------------
-// Exit
-// ----------------------------------------------------------------------------
-
 When("I click the return to editing button", async function (this: CustomWorld) {
   await this.page.locator('[data-testid="comparison-exit-button"]').click();
 });
-
-// ----------------------------------------------------------------------------
-// Editability
-// ----------------------------------------------------------------------------
 
 Then("no field in the comparison view should be editable", async function (this: CustomWorld) {
   const inputs = this.page.locator(
@@ -153,7 +137,3 @@ Then(
     await expect(buttons).toHaveCount(0);
   }
 );
-
-// ----------------------------------------------------------------------------
-// Responsive fallback
-// ----------------------------------------------------------------------------

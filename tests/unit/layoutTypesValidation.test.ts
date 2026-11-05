@@ -1,7 +1,3 @@
-/**
- * Unit tests for Layout Types
- */
-
 import { describe, it, expect } from "vitest";
 import {
   isValidLayout,
@@ -44,7 +40,6 @@ describe("Layout Types validation and comparison", () => {
         { type: "single", id: "cyphers" },
         { type: "single", id: "items" },
         { type: "single", id: "background" },
-        // Missing notes
       ];
       expect(isValidLayout(layout)).toBe(false);
     });

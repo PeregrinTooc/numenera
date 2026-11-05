@@ -59,6 +59,10 @@ export default [
         // IndexedDB
         IDBDatabase: "readonly",
         IDBOpenDBRequest: "readonly",
+        IDBRequest: "readonly",
+        IDBTransaction: "readonly",
+        IDBTransactionMode: "readonly",
+        IDBObjectStore: "readonly",
         IDBFactory: "readonly",
         indexedDB: "readonly",
         Storage: "readonly",

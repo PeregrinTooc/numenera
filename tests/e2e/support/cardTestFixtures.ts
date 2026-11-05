@@ -1,8 +1,3 @@
-/**
- * Shared test fixtures for card-related E2E tests
- * Eliminates duplication of FULL_CHARACTER object across step definitions
- */
-
 import { FULL_CHARACTER } from "@/data/mockCharacters";
 
 // Re-exported so every card fixture builds on the same demo character the
@@ -10,7 +5,6 @@ import { FULL_CHARACTER } from "@/data/mockCharacters";
 // twin that could silently drift from it.
 export { FULL_CHARACTER };
 
-// Empty arrays for all card types
 export const EMPTY_ARRAYS = {
   cyphers: [],
   artifacts: [],
@@ -21,10 +15,6 @@ export const EMPTY_ARRAYS = {
   specialAbilities: [],
 };
 
-/**
- * Creates a character with specific card data
- * All other card arrays are empty
- */
 export function createCharacterWithCards<K extends keyof typeof EMPTY_ARRAYS>(
   cardType: K,
   cards: (typeof EMPTY_ARRAYS)[K]
@@ -36,23 +26,15 @@ export function createCharacterWithCards<K extends keyof typeof EMPTY_ARRAYS>(
   };
 }
 
-// ============================================================================
-// CARD TYPE CONFIGURATIONS
-// ============================================================================
-
 export interface CardTypeConfig {
-  // Test selectors
   itemTestId: string; // Selector for card item (e.g., '[data-testid="cypher-item"]')
-  addButtonTestId: string; // Selector for add button
-  editButtonPrefix: string; // Prefix for edit button testid
+  addButtonTestId: string;
+  editButtonPrefix: string;
 
-  // Field testids for modal (maps field name to testid)
   fieldTestIds: Record<string, string>;
 
-  // Sample data for tests
   sampleCards: unknown[];
 
-  // Empty character for 0-count tests
   emptyCharacterCards: unknown[];
 }
 
@@ -184,10 +166,6 @@ export const CARD_CONFIGS: Record<string, CardTypeConfig> = {
   },
 };
 
-// ============================================================================
-// CARD TYPE TO CHARACTER PROPERTY MAPPING
-// ============================================================================
-
 export const CARD_TYPE_TO_PROPERTY: Record<string, string> = {
   cypher: "cyphers",
   equipment: "equipment",
@@ -198,9 +176,6 @@ export const CARD_TYPE_TO_PROPERTY: Record<string, string> = {
   "special-ability": "specialAbilities",
 };
 
-/**
- * Creates a test character with the specified number of cards for a given type
- */
 export function createTestCharacterWithCardCount(
   cardType: string,
   count: number
@@ -221,9 +196,6 @@ export function createTestCharacterWithCardCount(
   };
 }
 
-/**
- * Creates a minimal empty character for ability-0 tests
- */
 export function createEmptyAbilitiesCharacter(): Record<string, unknown> {
   return {
     name: "Test Character",

@@ -1,26 +1,90 @@
-// ItemsBox component - Combines Equipment, Artifacts, and Oddities in a single box with Shins badge
-
 import { html, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { EquipmentItem } from "./EquipmentItem.js";
 import { ArtifactItem } from "./ArtifactItem.js";
 import { OddityItem } from "./OddityItem.js";
-import { ModalService } from "@/services/modalService";
+import { openFieldEditor } from "@/services/modalService";
 import { t } from "@/i18n/index";
-import { createAddHandler, createItemInstances } from "./helpers/CollectionBehavior.js";
-import { renderAddButton } from "./helpers/collectionRendering.js";
+import { CollectionSection } from "./helpers/CollectionBehavior.js";
+import {
+  AddButtonColorTheme,
+  EmptyStateConfig,
+  renderAddButton,
+  renderCollection,
+} from "./helpers/collectionRendering.js";
 import { CollectionDragReorder } from "./helpers/CollectionDragReorder.js";
-import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
 
 type FieldType = "shins";
 type ItemSection = "equipment" | "artifacts" | "oddities";
 
-export class ItemsBox {
-  private handleAddEquipment: () => void;
-  private handleAddArtifact: () => void;
-  private handleAddOddity: () => void;
+/** What differs between the three sections when rendering heading, add button and list. */
+interface SectionView {
+  section: ItemSection;
+  headingTestId: string;
+  addButtonTestId: string;
+  colorTheme: AddButtonColorTheme;
+  heading: string;
+  addLabel: string;
+  emptyMessage: string;
+  emptyState: Omit<EmptyStateConfig, "message">;
+  listTestId: string;
+  listClassName: string;
+}
 
-  // Drag-reorder behaviour for each section
+function sectionViews(): Record<ItemSection, SectionView> {
+  return {
+    equipment: {
+      section: "equipment",
+      headingTestId: "equipment-heading",
+      addButtonTestId: "add-equipment-button",
+      colorTheme: "green",
+      heading: t("equipment.heading"),
+      addLabel: t("equipment.add"),
+      emptyMessage: t("equipment.empty"),
+      emptyState: {
+        testId: "empty-equipment",
+        className: "empty-equipment-styled",
+        paragraph: true,
+      },
+      listTestId: "equipment-list",
+      listClassName: "section-card-grid",
+    },
+    artifacts: {
+      section: "artifacts",
+      headingTestId: "artifacts-heading",
+      addButtonTestId: "add-artifact-button",
+      colorTheme: "purple",
+      heading: t("artifacts.heading"),
+      addLabel: t("artifacts.add"),
+      emptyMessage: t("artifacts.empty"),
+      emptyState: {
+        testId: "empty-artifacts",
+        className: "empty-artifacts-styled",
+        paragraph: true,
+      },
+      listTestId: "artifacts-list",
+      listClassName: "space-y-4",
+    },
+    oddities: {
+      section: "oddities",
+      headingTestId: "oddities-heading",
+      addButtonTestId: "add-oddity-button",
+      colorTheme: "indigo",
+      heading: t("oddities.heading"),
+      addLabel: t("oddities.add"),
+      emptyMessage: t("oddities.empty"),
+      emptyState: { testId: "empty-oddities", className: "empty-oddities-styled", paragraph: true },
+      listTestId: "oddities-list",
+      listClassName: "space-y-3",
+    },
+  };
+}
+
+export class ItemsBox {
+  private equipment: CollectionSection<Character["equipment"][number], EquipmentItem>;
+  private artifacts: CollectionSection<Character["artifacts"][number], ArtifactItem>;
+  private oddities: CollectionSection<Character["oddities"][number], OddityItem>;
+
   private drag: Record<ItemSection, CollectionDragReorder> = {
     equipment: new CollectionDragReorder({
       section: "equipment",
@@ -46,72 +110,63 @@ export class ItemsBox {
     private character: Character,
     private onFieldUpdate: (field: FieldType, value: number) => void
   ) {
-    // Create add handlers using CollectionBehavior helper (event-based pattern)
-    this.handleAddEquipment = createAddHandler({
-      emptyItem: { name: "", description: "" },
-      ItemComponentClass: EquipmentItem,
-      collection: this.character.equipment,
-      character: this.character,
+    this.equipment = new CollectionSection(character, {
       collectionKey: "equipment",
+      ItemComponentClass: EquipmentItem,
+      emptyItem: { name: "", description: "" },
     });
-
-    this.handleAddArtifact = createAddHandler({
-      emptyItem: { name: "", level: "", effect: "" },
-      ItemComponentClass: ArtifactItem,
-      collection: this.character.artifacts,
-      character: this.character,
+    this.artifacts = new CollectionSection(character, {
       collectionKey: "artifacts",
+      ItemComponentClass: ArtifactItem,
+      emptyItem: { name: "", level: "", effect: "" },
     });
-
-    this.handleAddOddity = createAddHandler({
-      emptyItem: "",
-      ItemComponentClass: OddityItem,
-      collection: this.character.oddities,
-      character: this.character,
+    this.oddities = new CollectionSection(character, {
       collectionKey: "oddities",
+      ItemComponentClass: OddityItem,
+      emptyItem: "",
     });
   }
 
   private openEditModal(fieldType: FieldType): void {
-    const currentValue = this.character.shins;
+    openFieldEditor(fieldType, this.character.shins, (newValue) =>
+      this.onFieldUpdate(fieldType, newValue as number)
+    );
+  }
 
-    ModalService.openEditModal({
-      fieldType,
-      currentValue,
-      onConfirm: (newValue) => {
-        this.onFieldUpdate(fieldType, newValue as number);
-      },
-      versionHistoryService: getVersionHistoryService(),
+  private renderHeadingRow(view: SectionView, handleAdd: () => void): TemplateResult {
+    return html`
+      <div class="flex justify-between items-center mb-2">
+        <h3 data-testid="${view.headingTestId}" class="subsection-heading">${view.heading}</h3>
+        ${renderAddButton({
+          onClick: handleAdd,
+          testId: view.addButtonTestId,
+          colorTheme: view.colorTheme,
+          ariaLabel: view.addLabel,
+        })}
+      </div>
+    `;
+  }
+
+  private renderList(view: SectionView, items: TemplateResult[]): TemplateResult {
+    return renderCollection({
+      isEmpty: this.character[view.section].length === 0,
+      emptyState: { ...view.emptyState, message: view.emptyMessage },
+      listTestId: view.listTestId,
+      listClassName: view.listClassName,
+      drag: this.drag[view.section],
+      items,
     });
   }
 
   render(): TemplateResult {
-    // Create item instances using CollectionBehavior helper (event-based pattern)
     // collectionKey enables immutable updates for proper version history undo support
-    const equipmentItems = createItemInstances({
-      collection: this.character.equipment,
-      ItemComponentClass: EquipmentItem,
-      character: this.character,
-      collectionKey: "equipment",
-    });
-
-    const artifactItems = createItemInstances({
-      collection: this.character.artifacts,
-      ItemComponentClass: ArtifactItem,
-      character: this.character,
-      collectionKey: "artifacts",
-    });
-
-    const oddityItems = createItemInstances({
-      collection: this.character.oddities,
-      ItemComponentClass: OddityItem,
-      character: this.character,
-      collectionKey: "oddities",
-    });
+    const views = sectionViews();
+    const equipmentItems = this.equipment.items().map((item) => item.render());
+    const artifactItems = this.artifacts.items().map((item) => item.render());
+    const oddityItems = this.oddities.items().map((item) => item.render());
 
     return html`
       <div data-testid="items-section" class="section-box">
-        <!-- Heading row: Shins Badge (top-left), heading -->
         <div class="section-box-heading-row">
           <div
             class="stat-badge editable-field"
@@ -128,108 +183,23 @@ export class ItemsBox {
           <h2 class="section-box-heading">${t("items.heading")}</h2>
         </div>
 
-        <!-- Equipment Section (full width) -->
         <div>
-          <div class="flex justify-between items-center mb-2">
-            <h3 data-testid="equipment-heading" class="subsection-heading">
-              ${t("equipment.heading")}
-            </h3>
-            ${renderAddButton({
-              onClick: this.handleAddEquipment,
-              testId: "add-equipment-button",
-              colorTheme: "green",
-              ariaLabel: t("equipment.add"),
-            })}
-          </div>
-          ${this.character.equipment.length === 0
-            ? html`
-                <div data-testid="empty-equipment" class="empty-equipment-styled">
-                  <p>${t("equipment.empty")}</p>
-                </div>
-              `
-            : html`
-                <div
-                  data-testid="equipment-list"
-                  class="section-card-grid"
-                  @dragstart=${(e: Event) => this.drag.equipment.handleDragStart(e)}
-                  @dragover=${(e: Event) => this.drag.equipment.handleDragOver(e)}
-                  @drop=${(e: Event) => this.drag.equipment.handleDrop(e)}
-                  @dragend=${() => this.drag.equipment.handleDragEnd()}
-                >
-                  ${equipmentItems.map((item) => item.render())}
-                </div>
-              `}
+          ${this.renderHeadingRow(views.equipment, this.equipment.handleAdd)}
+          ${this.renderList(views.equipment, equipmentItems)}
         </div>
 
-        <!-- Divider -->
         <div class="section-divider"></div>
 
         <!-- Artifacts and Oddities (two columns where the section is wide) -->
         <div class="section-card-grid">
-          <!-- Artifacts Column -->
           <div data-testid="artifacts-section">
-            <div class="flex justify-between items-center mb-2">
-              <h3 data-testid="artifacts-heading" class="subsection-heading">
-                ${t("artifacts.heading")}
-              </h3>
-              ${renderAddButton({
-                onClick: this.handleAddArtifact,
-                testId: "add-artifact-button",
-                colorTheme: "purple",
-                ariaLabel: t("artifacts.add"),
-              })}
-            </div>
-            ${this.character.artifacts.length === 0
-              ? html`
-                  <div data-testid="empty-artifacts" class="empty-artifacts-styled">
-                    <p>${t("artifacts.empty")}</p>
-                  </div>
-                `
-              : html`
-                  <div
-                    data-testid="artifacts-list"
-                    class="space-y-4"
-                    @dragstart=${(e: Event) => this.drag.artifacts.handleDragStart(e)}
-                    @dragover=${(e: Event) => this.drag.artifacts.handleDragOver(e)}
-                    @drop=${(e: Event) => this.drag.artifacts.handleDrop(e)}
-                    @dragend=${() => this.drag.artifacts.handleDragEnd()}
-                  >
-                    ${artifactItems.map((item) => item.render())}
-                  </div>
-                `}
+            ${this.renderHeadingRow(views.artifacts, this.artifacts.handleAdd)}
+            ${this.renderList(views.artifacts, artifactItems)}
           </div>
 
-          <!-- Oddities Column -->
           <div data-testid="oddities-section">
-            <div class="flex justify-between items-center mb-2">
-              <h3 data-testid="oddities-heading" class="subsection-heading">
-                ${t("oddities.heading")}
-              </h3>
-              ${renderAddButton({
-                onClick: this.handleAddOddity,
-                testId: "add-oddity-button",
-                colorTheme: "indigo",
-                ariaLabel: t("oddities.add"),
-              })}
-            </div>
-            ${this.character.oddities.length === 0
-              ? html`
-                  <div data-testid="empty-oddities" class="empty-oddities-styled">
-                    <p>${t("oddities.empty")}</p>
-                  </div>
-                `
-              : html`
-                  <div
-                    data-testid="oddities-list"
-                    class="space-y-3"
-                    @dragstart=${(e: Event) => this.drag.oddities.handleDragStart(e)}
-                    @dragover=${(e: Event) => this.drag.oddities.handleDragOver(e)}
-                    @drop=${(e: Event) => this.drag.oddities.handleDrop(e)}
-                    @dragend=${() => this.drag.oddities.handleDragEnd()}
-                  >
-                    ${oddityItems.map((item) => item.render())}
-                  </div>
-                `}
+            ${this.renderHeadingRow(views.oddities, this.oddities.handleAdd)}
+            ${this.renderList(views.oddities, oddityItems)}
           </div>
         </div>
       </div>

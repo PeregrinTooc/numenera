@@ -3,8 +3,6 @@ import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 import { forceSquash } from "../support/versionHistoryHelpers.js";
 
-// Smart Squashing System step definitions
-
 Then(
   "the undo buffer should contain exactly {int} changes",
   async function (this: CustomWorld, expectedLength: number) {
@@ -17,26 +15,21 @@ Then(
 );
 
 When("I wait for {int} milliseconds", async function (this: CustomWorld, ms: number) {
-  // For waits >= 1000ms, assume it's waiting for squash and force it
   if (ms >= 1000) {
     await forceSquash(this.page);
   } else {
-    // For shorter waits, just use the timeout
     await this.page.waitForTimeout(ms);
   }
 });
 
 When("the squash timer has completed", async function (this: CustomWorld) {
-  // Force immediate squash instead of waiting for timer
   await forceSquash(this.page);
 });
 
 When("I press {string}", async function (this: CustomWorld, keyCombo: string) {
-  // Dispatch real KeyboardEvent to test the actual keyboard handler in main.ts
   // We dispatch on document.body to ensure e.target is an HTMLElement
   if (keyCombo === "Control+Z") {
     await this.page.evaluate(() => {
-      // Create event with all necessary properties
       const event = new KeyboardEvent("keydown", {
         key: "z",
         code: "KeyZ",
@@ -65,7 +58,6 @@ When("I press {string}", async function (this: CustomWorld, keyCombo: string) {
         composed: true,
       });
 
-      // Dispatch on body (not document) so e.target is an HTMLElement
       document.body.dispatchEvent(event);
     });
   } else if (keyCombo === "Control+Shift+Z") {
@@ -88,6 +80,5 @@ When("I press {string}", async function (this: CustomWorld, keyCombo: string) {
     });
   }
 
-  // Wait longer for async navigation to complete and UI to update
   await this.page.waitForTimeout(800);
 });

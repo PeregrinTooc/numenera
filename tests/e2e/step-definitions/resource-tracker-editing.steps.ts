@@ -3,16 +3,11 @@ import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { FULL_CHARACTER, EMPTY_ARRAYS } from "../support/cardTestFixtures.js";
 
-// ============================================================================
-// GIVEN STEPS - Setup character state with specific resource values
-// ============================================================================
-
 Given(
   "the character has {int} current XP and {int} total XP",
   async function (this: CustomWorld, currentXp: number, totalXp: number) {
     await this.setup.character({ currentXp, totalXp });
 
-    // Wait for both XP cells to show the correct values (increased timeout for CI)
     await this.page.waitForFunction(
       ({ expectedCurrent, expectedTotal }) => {
         const currentCell = document.querySelector(
@@ -105,10 +100,6 @@ Given(
   }
 );
 
-// ============================================================================
-// THEN STEPS - Badge-specific assertions
-// ============================================================================
-
 Then(
   "the Current XP badge should show {string}",
   async function (this: CustomWorld, expectedValue: string) {
@@ -156,10 +147,6 @@ Then(
     await expect(effortValue).toHaveText(expectedValue);
   }
 );
-
-// ============================================================================
-// THEN STEPS - LocalStorage data verification
-// ============================================================================
 
 Then(
   "the character data should have currentXp {int}",
@@ -235,17 +222,3 @@ Then(
     expect(errorText).not.toMatch(/^validation\./);
   }
 );
-
-// ============================================================================
-// NOTE: The following steps are now handled by common-steps.ts:
-// - When I click the XP/Shins/Armor/Max Cyphers/Effort badge
-// - When I tap the XP/Shins badge
-// - When I type {string} in the modal input
-// - When I click the modal confirm/cancel button
-// - When I tap the modal confirm button
-// - When I click the modal backdrop
-// - When I press Escape/Enter
-// - Then the edit modal should open
-// - Then the modal input should contain {string}
-// - Then the modal should close
-// ============================================================================

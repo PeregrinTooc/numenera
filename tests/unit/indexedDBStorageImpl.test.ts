@@ -31,7 +31,6 @@ describe("IndexedDBStorageImpl", () => {
       const result = await ctx.storage.isAvailable();
       expect(result).toBe(false);
 
-      // Restore
       global.indexedDB = originalIndexedDB;
     });
   });
@@ -43,7 +42,6 @@ describe("IndexedDBStorageImpl", () => {
 
     it("should create the object store on first initialization", async () => {
       await ctx.storage.init();
-      // Verify by checking if we can perform operations
       await expect(ctx.storage.save(mockCharacter)).resolves.toBeUndefined();
     });
   });

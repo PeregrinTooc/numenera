@@ -1,7 +1,3 @@
-/**
- * Unit tests for the Comparison View preference storage
- */
-
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
   saveComparisonViewEnabled,

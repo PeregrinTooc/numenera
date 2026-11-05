@@ -1,7 +1,3 @@
-/**
- * Step definitions for card columns that follow the section's width
- */
-
 import { Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world.js";
@@ -24,7 +20,6 @@ Then(
   }
 );
 
-// Clicks the switch only if the section is not already set to `columns`
 When(
   "I switch the {string} section to {int} column\\(s)",
   async function (this: CustomWorld, section: string, columns: number) {

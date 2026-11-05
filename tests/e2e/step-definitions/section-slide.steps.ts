@@ -1,7 +1,3 @@
-/**
- * Step definitions for sections sliding into a live preview and back
- */
-
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
@@ -69,23 +65,85 @@ When(
   }
 );
 
+/**
+ * Run `check`; if it fails, add every slide recorded so far to the error, and
+ * how far the slides still running have got. A slide that never finished was
+ * either cancelled (no longer running) or stuck (its time not moving).
+ */
+async function reportingSlides(world: CustomWorld, check: () => Promise<void>): Promise<void> {
+  try {
+    await check();
+  } catch (error) {
+    const progress = (): Promise<unknown> =>
+      world.page.evaluate(() => ({
+        timeline: document.timeline.currentTime,
+        running: document
+          .getAnimations()
+          .filter((animation) => animation.id === "section-slide")
+          .map((animation) => ({
+            // Only the app's slides carry this id, and they are keyframe effects
+            sectionId: (animation.effect as { target: HTMLElement | null } | null)?.target?.dataset
+              .sectionId,
+            playState: animation.playState,
+            currentTime: animation.currentTime,
+          })),
+      }));
+    const before = await progress();
+    // Real time on the test's side: the page's clock may be paused
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    const report = {
+      recorded: await world.page.evaluate(() => window.__sectionSlides ?? []),
+      before,
+      after: await progress(),
+    };
+    throw new Error(`${(error as Error).message}\nSlides: ${JSON.stringify(report)}`);
+  }
+}
+
+/**
+ * The slides recorded for one section, read after the page has drawn a frame.
+ * A slide starts and finishes only as frames are drawn, and after a simulated
+ * drag WebKit can stop drawing them for an idle page, which a device showing
+ * the page never does; a screenshot of the whole viewport draws one (a clipped
+ * one does not).
+ */
+async function slidesOfDrawnPage(world: CustomWorld, name: string): Promise<SectionSlideRecord[]> {
+  await world.page.screenshot();
+  return slidesOf(world, name);
+}
+
+/** A slow runner takes seconds per screenshot of the full-height viewport */
+const DRAWN_SLIDE_POLL = { timeout: 15_000 };
+
 Then(
   "the {string} section should slide into its new place",
   async function (this: CustomWorld, name: string) {
-    await expect
-      .poll(async () =>
-        (await slidesOf(this, name)).some((slide) => slide.finished && slide.from !== "none")
-      )
-      .toBe(true);
+    await reportingSlides(this, () =>
+      expect
+        .poll(
+          async () =>
+            (await slidesOfDrawnPage(this, name)).some(
+              (slide) => slide.finished && slide.from !== "none"
+            ),
+          DRAWN_SLIDE_POLL
+        )
+        .toBe(true)
+    );
   }
 );
 
 Then(
   "the {string} section should slide back to where it was",
   async function (this: CustomWorld, name: string) {
-    await expect
-      .poll(async () => (await slidesOf(this, name)).filter((slide) => slide.finished).length)
-      .toBeGreaterThanOrEqual(2);
+    await reportingSlides(this, () =>
+      expect
+        .poll(
+          async () =>
+            (await slidesOfDrawnPage(this, name)).filter((slide) => slide.finished).length,
+          DRAWN_SLIDE_POLL
+        )
+        .toBeGreaterThanOrEqual(2)
+    );
     const slides = await slidesOf(this, name);
     const [there, back] = [startOffsets(slides[0]), startOffsets(slides[slides.length - 1])];
     // Back the way it came: each axis it moved along, in the other direction

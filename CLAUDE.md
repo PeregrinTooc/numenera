@@ -33,6 +33,7 @@ see `docs/ARCHITECTURE.md`.
 
 ```bash
 npm run dev              # dev server on http://localhost:3000
+npm run dev:lan          # same over HTTPS on the network, for testing on other devices
 npm run build            # tsc && vite build
 npm run preview          # preview production build
 
@@ -49,9 +50,11 @@ npm run typecheck:tests  # type-check src/ and tests/ (tsconfig.test.json)
 npm run check:i18n       # verify every t() key exists in en.json AND de.json
 ```
 
-**Never invoke `cucumber-js` directly.** The npm scripts start the dev server via
-`concurrently`, wait for it with `wait-on`, and tear it down afterwards. Calling
-`cucumber-js` yourself runs the suite against nothing and every scenario fails.
+**Never invoke `cucumber-js` directly.** The npm scripts go through
+`scripts/e2e.js`, which starts Vite on a free port with `--strictPort`, hands
+that port to Cucumber as `E2E_PORT`, and tears the server down afterwards.
+Without `E2E_PORT` the support code refuses to start. Set `E2E_PORT` yourself to
+pin a port.
 
 ### Filtering test runs
 
@@ -101,7 +104,7 @@ docs/
 
 ---
 
-## The 11 Rules
+## The 12 Rules
 
 **These rules are ABSOLUTE and NON-NEGOTIABLE.** Each one states
 `Exception: None` in its detail file, and that is meant literally.
@@ -179,6 +182,17 @@ Never touch `localStorage` directly from a component. Go through
 `clearCharacterState`), which selects IndexedDB or localStorage at runtime.
 → `docs/rules/architecture.md`
 
+### 12. Simple design — no design smells
+
+No overlong units, no duplication, nothing speculative (YAGNI), no defensive
+checks without a contract in evidence, no comments that restate code, describe
+absent features or narrate history, and no tests that mock, spy on or reach into
+code inside the same architectural boundary. **Every review** — the Rule 1
+presentation, `/code-review`, reviewer agents, `tdd-wrapup` and `refactor` —
+runs the checklist in `docs/rules/design.md` against the change and reports the
+result.
+→ `docs/rules/design.md`
+
 ---
 
 ## Decision Tree
@@ -191,6 +205,7 @@ Starting a task?
 ├─ Adding user-facing text?    Yes → use t() and add both locales (Rule 4)
 ├─ Several tests failing?      Yes → focus on one (Rule 10)
 ├─ All tests passing?          No → fix them (Rule 8)
+├─ Design smell in the change? Yes → remove it (Rule 12)
 └─ Ready to commit?            → present for review (Rule 1)
 ```
 
@@ -226,7 +241,8 @@ Starting a task?
 | Test structure, viewports, mocking        | `docs/rules/testing.md`      |
 | Storage, styling, components, data model  | `docs/rules/architecture.md` |
 | Numenera game mechanics and validation    | `docs/rules/numenera.md`     |
+| Design smells and the review checklist    | `docs/rules/design.md`       |
 
 Project documentation (not rules): `docs/ARCHITECTURE.md`, `docs/FEATURES.md`,
 `docs/TODO.md`, `docs/CURRENT_FEATURE.md`, `docs/I18N.md`,
-`docs/EVENT_CATALOG.md`, `docs/REFACTORING_LOG.md`.
+`docs/REFACTORING_LOG.md`.

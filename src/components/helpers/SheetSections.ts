@@ -47,26 +47,19 @@ export class SheetSections {
     character: Character,
     onFieldUpdate: (field: string, value: string | number) => void
   ) {
-    // Create stateful components once to preserve their state across re-renders
     this.basicInfo = new BasicInfo(character, onFieldUpdate);
     this.bottomTextFields = new BottomTextFields(character);
     this.itemsBox = new ItemsBox(character, onFieldUpdate);
-    // Attacks component uses event-based pattern for updates/deletes
     this.attacks = new Attacks(character, onFieldUpdate);
     this.cyphersBox = new CyphersBox(character, onFieldUpdate);
     this.stats = new Stats(character, onFieldUpdate);
 
-    // Create abilities and specialAbilities using event-based pattern
-    // These use CollectionBehavior helpers which handle immutable updates
-    // for proper version history undo support
     this.abilities = new Abilities(character);
     this.specialAbilities = new SpecialAbilities(character);
     this.recoveryDamageSection = new RecoveryDamageSection(character);
   }
 
   /**
-   * Get the template for a specific section.
-   *
    * Collection sections contribute an empty host element instead of their
    * content: `mountCollectionSections()` fills each host from its own
    * lit-html root, so the sheet's template never owns those nodes. `contents`
@@ -93,9 +86,6 @@ export class SheetSections {
     }
   }
 
-  /**
-   * Get the template for a collection section's content.
-   */
   private getCollectionSectionTemplate(sectionId: CollectionSectionId): TemplateResult {
     switch (sectionId) {
       case "cyphers":

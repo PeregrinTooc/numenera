@@ -1,5 +1,4 @@
 // Parameterized test suite for item components (AbilityItem, AttackItem, etc.)
-// Eliminates duplication across all item test files
 
 import { render, type TemplateResult } from "lit-html";
 import type { Mock } from "vitest";
@@ -22,10 +21,6 @@ export interface ItemTestConfig<T> {
   expectedUpdateTransform?: (values: Record<string, string | number>) => Partial<T>;
 }
 
-/**
- * Complete test suite for item edit and delete functionality
- * Tests all standard item behaviors consistently
- */
 export function testItemEditAndDelete<T>(config: ItemTestConfig<T>): void {
   describe(`${config.componentName} - Edit Functionality`, () => {
     let container: HTMLElement;
@@ -67,7 +62,6 @@ export function testItemEditAndDelete<T>(config: ItemTestConfig<T>): void {
       const editButton = screen.getByTestId(config.editButtonTestId);
       fireEvent.click(editButton);
 
-      // Verify all fields are present with correct values
       Object.entries(config.fieldTestIds).forEach(([fieldKey, testId]) => {
         const field = screen.getByTestId(testId) as HTMLInputElement;
         const expectedValue = config.fieldValues[fieldKey];
@@ -82,7 +76,6 @@ export function testItemEditAndDelete<T>(config: ItemTestConfig<T>): void {
       const editButton = screen.getByTestId(config.editButtonTestId);
       fireEvent.click(editButton);
 
-      // Update fields
       Object.entries(config.updatedFieldValues).forEach(([fieldKey, newValue]) => {
         const testId = config.fieldTestIds[fieldKey];
         const field = screen.getByTestId(testId) as HTMLInputElement;
@@ -96,7 +89,6 @@ export function testItemEditAndDelete<T>(config: ItemTestConfig<T>): void {
       // Items are objects, or a string for oddities (whose character entries line up with expectedValues).
       const updatedItem = updateSpy.mock.calls[0][0] as Record<string, unknown>;
 
-      // Verify updated values
       const expectedValues = config.expectedUpdateTransform
         ? config.expectedUpdateTransform(config.updatedFieldValues)
         : config.updatedFieldValues;
@@ -113,7 +105,6 @@ export function testItemEditAndDelete<T>(config: ItemTestConfig<T>): void {
       const editButton = screen.getByTestId(config.editButtonTestId);
       fireEvent.click(editButton);
 
-      // Make a change
       const firstFieldTestId = Object.values(config.fieldTestIds)[0];
       const field = screen.getByTestId(firstFieldTestId) as HTMLInputElement;
       fireEvent.input(field, { target: { value: "Changed Value" } });

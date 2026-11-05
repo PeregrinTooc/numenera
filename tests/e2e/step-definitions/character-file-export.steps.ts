@@ -3,20 +3,15 @@ import { expect } from "@playwright/test";
 import type { CustomWorld, ExportedCharacterFile } from "../support/world.js";
 import { installExportCapture, waitForExportCapture } from "../support/exportCapture.js";
 
-// Scenario: Export button creates downloadable file
 Given("the character has name {string}", async function (this: CustomWorld, name: string) {
-  // Click on the name field to open the modal
   const nameElement = this.page.getByTestId("character-name");
   await nameElement.click();
 
-  // Fill in the new name
   const input = this.page.locator('[data-testid="edit-modal-input"]');
   await input.fill(name);
 
-  // Click confirm
   await this.page.click('[data-testid="modal-confirm-button"]');
 
-  // Wait for modal to close
   await this.page
     .waitForSelector('[data-testid="edit-modal"]', {
       state: "hidden",
@@ -26,10 +21,8 @@ Given("the character has name {string}", async function (this: CustomWorld, name
       // Modal might already be hidden
     });
 
-  // Wait for auto-save to complete (debounce is 300ms, wait a bit longer)
   await this.page.waitForTimeout(500);
 
-  // Verify the name was updated
   await expect(nameElement).toHaveText(name, { timeout: 5000 });
 });
 
@@ -53,7 +46,6 @@ Then(
   }
 );
 
-// Scenario: Exported file contains complete character data
 Then(
   "the exported file should contain all character properties",
   async function (this: CustomWorld) {
@@ -62,7 +54,6 @@ Then(
 
     const character = this.exportedFileData?.character;
 
-    // Verify essential character properties exist
     expect(character).toHaveProperty("name");
     expect(character).toHaveProperty("tier");
     expect(character).toHaveProperty("type");
@@ -109,7 +100,6 @@ Then("the exported file should have an exportDate", async function (this: Custom
   const exportDate = this.exportedFileData?.exportDate;
   expect(exportDate).toBeTruthy();
 
-  // Verify it's a valid ISO date string
   const date = new Date(exportDate as string);
   expect(date.toISOString()).toBe(exportDate);
 });

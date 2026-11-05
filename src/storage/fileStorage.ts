@@ -1,4 +1,3 @@
-// File storage utilities for character import/export
 // Uses File System Access API for Chromium browsers, falls back to input element for others
 
 import { Character } from "@/types/character";
@@ -10,9 +9,6 @@ import { loadLayout } from "./layoutStorage.js";
 import { t } from "@/i18n/index";
 import { UserFacingError } from "@/utils/UserFacingError";
 
-/**
- * File format structure for exported characters
- */
 export interface CharacterFileData {
   version: string;
   schemaVersion: string;
@@ -22,9 +18,6 @@ export interface CharacterFileData {
   sectionColumns?: SectionColumns;
 }
 
-/**
- * Result of importing a character file
- */
 export interface ImportResult {
   character: Character;
   warnings: string[];
@@ -33,18 +26,8 @@ export interface ImportResult {
   sectionColumns?: SectionColumns;
 }
 
-/**
- * Parse and sanitize character data from file content.
- * Uses lenient approach: sanitizes invalid data instead of rejecting it.
- *
- * @param text - Raw text content from file
- * @returns Sanitized character with any warnings
- * @throws Error only for completely invalid JSON or missing character data
- */
-function parseAndSanitizeCharacter(text: string): ImportResult {
-  const warnings: string[] = [];
-
-  // Parse JSON
+/** Parse the file text into the top-level file object that carries the character. */
+function parseFileJson(text: string): Record<string, unknown> {
   let data: unknown;
   try {
     data = JSON.parse(text);
@@ -52,19 +35,19 @@ function parseAndSanitizeCharacter(text: string): ImportResult {
     throw new UserFacingError("errors.invalidJson", { cause: error });
   }
 
-  // Check if data is an object
   if (data === null || typeof data !== "object") {
     throw new UserFacingError("errors.invalidData");
   }
 
   const fileData = data as Record<string, unknown>;
-
-  // Validate file structure - must have character field
   if (!fileData.character) {
     throw new UserFacingError("errors.noCharacterData");
   }
+  return fileData;
+}
 
-  // Check schema version - warn but don't reject
+/** Warn about a schema mismatch but don't reject the file. */
+function checkSchemaVersion(fileData: Record<string, unknown>, warnings: string[]): void {
   if (fileData.schemaVersion !== undefined && fileData.schemaVersion !== SCHEMA_VERSION) {
     warnings.push(
       t("fileOperations.schemaMismatch", {
@@ -73,56 +56,70 @@ function parseAndSanitizeCharacter(text: string): ImportResult {
       })
     );
   }
+}
 
-  // Sanitize character data - fix invalid fields instead of rejecting
+/** The file's layout, if present and valid, and whether it differs from the current layout. */
+function importLayout(
+  fileData: Record<string, unknown>,
+  warnings: string[]
+): { layout?: Layout; hasLayoutDifference: boolean } {
+  if (!fileData.layout || !Array.isArray(fileData.layout)) {
+    return { hasLayoutDifference: false };
+  }
+  if (!isValidLayout(fileData.layout)) {
+    warnings.push(t("fileOperations.invalidLayout"));
+    return { hasLayoutDifference: false };
+  }
+  const layout = fileData.layout;
+  return {
+    layout,
+    hasLayoutDifference: JSON.stringify(layout) !== JSON.stringify(loadLayout()),
+  };
+}
+
+/** The file's column choices, if present and valid. */
+function importSectionColumns(
+  fileData: Record<string, unknown>,
+  warnings: string[]
+): SectionColumns | undefined {
+  if (fileData.sectionColumns === undefined) return undefined;
+  if (!isValidSectionColumns(fileData.sectionColumns)) {
+    warnings.push(t("fileOperations.invalidLayout"));
+    return undefined;
+  }
+  return fileData.sectionColumns;
+}
+
+/**
+ * @throws Error only for completely invalid JSON or missing character data
+ */
+function parseAndSanitizeCharacter(text: string): ImportResult {
+  const fileData = parseFileJson(text);
+
+  const schemaWarnings: string[] = [];
+  checkSchemaVersion(fileData, schemaWarnings);
+
   const sanitizeResult = sanitizeCharacter(fileData.character);
 
-  // Combine warnings
-  const allWarnings = [...warnings, ...sanitizeResult.warnings];
-
-  // Process layout if present
-  let importedLayout: Layout | undefined;
-  let hasLayoutDifference = false;
-
-  if (fileData.layout && Array.isArray(fileData.layout)) {
-    if (isValidLayout(fileData.layout)) {
-      importedLayout = fileData.layout;
-      // Check if imported layout differs from current layout
-      const currentLayout = loadLayout();
-      hasLayoutDifference = JSON.stringify(importedLayout) !== JSON.stringify(currentLayout);
-    } else {
-      allWarnings.push(t("fileOperations.invalidLayout"));
-    }
-  }
-
-  // Process column choices if present
-  let sectionColumns: SectionColumns | undefined;
-
-  if (fileData.sectionColumns !== undefined) {
-    if (isValidSectionColumns(fileData.sectionColumns)) {
-      sectionColumns = fileData.sectionColumns;
-    } else {
-      allWarnings.push(t("fileOperations.invalidLayout"));
-    }
-  }
+  const warnings = [...schemaWarnings, ...sanitizeResult.warnings];
+  const { layout, hasLayoutDifference } = importLayout(fileData, warnings);
+  const sectionColumns = importSectionColumns(fileData, warnings);
 
   return {
     character: sanitizeResult.character,
-    warnings: allWarnings,
-    layout: importedLayout,
+    warnings,
+    layout,
     hasLayoutDifference,
     sectionColumns,
   };
 }
 
 /**
- * Import using File System Access API (Chrome/Edge/Opera)
  * @returns Import result with character and warnings, or null if user cancels
  * @throws Error only for invalid JSON or missing character data
  */
 async function importWithFileSystemAPI(): Promise<ImportResult | null> {
   try {
-    // Open file picker
     if (!window.showOpenFilePicker) {
       throw new UserFacingError("errors.fileSystemUnavailable");
     }
@@ -138,30 +135,25 @@ async function importWithFileSystemAPI(): Promise<ImportResult | null> {
       multiple: false,
     });
 
-    // Read file contents
     const file = await fileHandle.getFile();
     const text = await file.text();
 
     return parseAndSanitizeCharacter(text);
   } catch (error: unknown) {
-    // User cancelled the file picker
     if (error instanceof DOMException && error.name === "AbortError") {
       return null;
     }
 
-    // Re-throw other errors
     throw error;
   }
 }
 
 /**
- * Import using <input type="file"> element (Safari/Firefox fallback)
  * @returns Import result with character and warnings, or null if user cancels
  * @throws Error only for invalid JSON or missing character data
  */
 async function importWithInputElement(): Promise<ImportResult | null> {
   return new Promise((resolve, reject) => {
-    // Create hidden input element
     const input = document.createElement("input");
     input.type = "file";
     input.accept = ".numenera";
@@ -170,11 +162,10 @@ async function importWithInputElement(): Promise<ImportResult | null> {
     input.onchange = async (e: Event) => {
       const file = (e.target as HTMLInputElement).files?.[0];
 
-      // Clean up
       document.body.removeChild(input);
 
       if (!file) {
-        resolve(null); // No file selected
+        resolve(null);
         return;
       }
 
@@ -192,26 +183,19 @@ async function importWithInputElement(): Promise<ImportResult | null> {
       resolve(null);
     };
 
-    // Add to DOM and trigger
     document.body.appendChild(input);
     input.click();
   });
 }
 
 /**
- * Import a character from a JSON file.
- * Uses lenient approach: sanitizes invalid data instead of rejecting it.
- * Uses File System Access API for Chromium browsers, falls back to input element for others.
- *
  * @returns Import result with character and warnings, or null if user cancels
  * @throws Error only for invalid JSON or missing character data
  */
 export async function importCharacterFromFile(): Promise<ImportResult | null> {
-  // Try modern API first (Chrome/Edge/Opera)
   if ("showOpenFilePicker" in window) {
     return await importWithFileSystemAPI();
   } else {
-    // Fallback for Safari/Firefox
     return await importWithInputElement();
   }
 }

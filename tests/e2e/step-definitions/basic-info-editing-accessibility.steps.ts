@@ -3,19 +3,13 @@ import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 import { getFieldSelector } from "../support/basicInfoHelpers.js";
 
-// ============================================================================
-// UNIQUE THEN STEPS - Focus and Keyboard Navigation
-// ============================================================================
-
 Then(
   "focus should cycle between input field, confirm button, and cancel button",
   async function (this: CustomWorld) {
-    // Get the currently focused element after Tab presses
     const focusedElement = await this.page.evaluate(() =>
       document.activeElement?.getAttribute("data-testid")
     );
 
-    // Check that focus is on one of the modal interactive elements
     const validElements = ["edit-modal-input", "modal-confirm-button", "modal-cancel-button"];
 
     expect(validElements).toContain(focusedElement);
@@ -23,7 +17,6 @@ Then(
 );
 
 Then("focus should not leave the modal", async function (this: CustomWorld) {
-  // Check that focused element is within the modal
   const isWithinModal = await this.page.evaluate(() => {
     const focused = document.activeElement;
     const modalEl = document.querySelector('[data-testid="edit-modal"]');
@@ -54,10 +47,6 @@ Then("I can cancel with Escape key", async function (this: CustomWorld) {
   await expect(modal).toBeVisible();
 });
 
-// ============================================================================
-// UNIQUE THEN STEPS - Accessibility Assertions
-// ============================================================================
-
 Then("the modal should have role={string}", async function (this: CustomWorld, role: string) {
   const modal = this.page.locator('[data-testid="edit-modal"]');
   const actualRole = await modal.getAttribute("role");
@@ -73,15 +62,10 @@ Then(
   }
 );
 
-// ============================================================================
-// UNIQUE GIVEN/THEN STEPS - Mobile Device Configuration
-// ============================================================================
-
 Then("the modal should be sized appropriately for mobile", async function (this: CustomWorld) {
   const modal = this.page.locator('[data-testid="edit-modal"]');
   const box = await modal.boundingBox();
   if (!box) throw new Error("boundingBox() returned null");
-  // Modal should be visible and have reasonable dimensions
   expect(box.width).toBeGreaterThan(0);
   expect(box.width).toBeLessThanOrEqual(375);
 });
@@ -107,7 +91,6 @@ Then("the modal should fill most of the screen width", async function (this: Cus
   const viewport = this.page.viewportSize();
   if (!box) throw new Error("boundingBox() returned null");
   if (!viewport) throw new Error("viewportSize() returned null");
-  // Modal should be at least 80% of viewport width on mobile
   expect(box.width).toBeGreaterThan(viewport.width * 0.8);
 });
 
@@ -133,7 +116,6 @@ Then(
     if (!confirmBox) throw new Error("boundingBox() returned null");
     if (!cancelBox) throw new Error("boundingBox() returned null");
 
-    // Both buttons should be at least 44x44px
     expect(confirmBox.width).toBeGreaterThanOrEqual(44);
     expect(confirmBox.height).toBeGreaterThanOrEqual(44);
     expect(cancelBox.width).toBeGreaterThanOrEqual(44);
@@ -145,7 +127,6 @@ Then("the input field should be large enough for touch input", async function (t
   const input = this.page.locator('[data-testid="edit-modal-input"]');
   const box = await input.boundingBox();
   if (!box) throw new Error("boundingBox() returned null");
-  // Input should be at least 44px tall for touch-friendly input
   expect(box.height).toBeGreaterThanOrEqual(44);
 });
 

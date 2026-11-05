@@ -1,3 +1,4 @@
+import { ensureBodyContainer } from "./bodyContainer";
 import { CompareView } from "@/components/CompareView";
 import type { AppContext } from "./appContext";
 
@@ -22,16 +23,11 @@ export function openCompareView(ctx: AppContext): void {
     },
   });
 
-  let compareViewContainer = document.getElementById("compare-view-container");
-  if (!compareViewContainer) {
-    compareViewContainer = document.createElement("div");
-    compareViewContainer.id = "compare-view-container";
-    document.body.appendChild(compareViewContainer);
-  }
+  const compareViewContainer = ensureBodyContainer("compare-view-container");
   ctx.compareView.mount(compareViewContainer);
 }
 
-export function closeCompareView(ctx: AppContext): void {
+function closeCompareView(ctx: AppContext): void {
   if (ctx.compareView) {
     ctx.compareView.unmount();
     ctx.compareView = null;

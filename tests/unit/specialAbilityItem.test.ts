@@ -1,4 +1,3 @@
-// Unit tests for SpecialAbilityItem edit functionality
 import { SpecialAbilityItem } from "@/components/SpecialAbilityItem";
 import { SpecialAbility } from "@/types/character";
 import { testItemEditAndDelete } from "./helpers/itemTestSuite.js";
@@ -9,7 +8,6 @@ const sampleAbility: SpecialAbility = {
   source: "Test Source",
 };
 
-// Use shared parameterized test suite
 testItemEditAndDelete<SpecialAbility>({
   componentName: "SpecialAbilityItem",
   createComponent: (item, index, onUpdate, onDelete) =>

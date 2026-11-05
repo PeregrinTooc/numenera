@@ -39,7 +39,6 @@ Then("I should see tier {string} displayed", async function (tier: string) {
 });
 
 Then("I should see type {string} displayed", async function (type: string) {
-  // Type is now displayed as a dropdown, check the selected value
   const select = this.page.locator('[data-testid="character-type-select"]');
   await expect(select).toHaveValue(type);
 });
@@ -66,7 +65,6 @@ Then(
   }
 );
 
-// Scenario 2: View character stat pools
 Given(
   "the character has the following stats:",
   async function (this: CustomWorld, table: DataTable) {
@@ -96,7 +94,6 @@ Then(
   }
 );
 
-// Scenario 3: View character items - Cyphers
 Given(
   "the character has the following cyphers:",
   async function (this: CustomWorld, table: DataTable) {
@@ -124,7 +121,6 @@ Then(
   }
 );
 
-// Scenario 4: View character items - Artifacts and Oddities
 Given(
   "the character has the following artifacts:",
   async function (this: CustomWorld, table: DataTable) {
@@ -182,14 +178,11 @@ Then(
   }
 );
 
-// Scenario 7: View empty character text fields
 Given("the character has empty text fields", async function () {
-  // Click the "New" button to start with empty character
   await startNewCharacter(this.page, this.getBaseUrl());
 });
 
 Then("I should see empty state for background", async function () {
-  // Background textarea should be visible and empty
   const textarea = this.page.locator('[data-testid="character-background"]');
   await expect(textarea).toBeVisible();
   const value = await textarea.inputValue();
@@ -197,7 +190,6 @@ Then("I should see empty state for background", async function () {
 });
 
 Then("I should see empty state for notes", async function () {
-  // Notes textarea should be visible and empty
   const textarea = this.page.locator('[data-testid="character-notes"]');
   await expect(textarea).toBeVisible();
   const value = await textarea.inputValue();
@@ -212,7 +204,6 @@ Then("I should see empty state for abilities", async function () {
   await expect(this.dom.getByTestId("empty-abilities")).toBeVisible();
 });
 
-// Scenario: Text with quotes, ampersands and angle brackets is shown verbatim
 type TextRow = { Field: string; Content: string };
 
 const TEXT_FIELD_SETTERS: Record<string, (character: Character, value: string) => void> = {
@@ -264,7 +255,6 @@ Then("no markup from the text should be rendered as HTML", async function (this:
   await expect(this.dom.getByTestId("character-name").locator("*")).toHaveCount(0);
 });
 
-// Scenario Outline: Long unbroken text does not make the sheet scroll sideways
 Given(
   "the character has a {int}-character name without spaces",
   async function (this: CustomWorld, length: number) {
@@ -282,7 +272,6 @@ Then("the page should not scroll horizontally", async function (this: CustomWorl
   expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
 });
 
-// Scenario: Sections appear in the default layout order
 Then("I should see sections in this order:", async function (this: CustomWorld, table: DataTable) {
   const expected = table.raw().map(([name]) => sectionId(name));
   const actual = await this.page

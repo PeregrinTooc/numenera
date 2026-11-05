@@ -44,7 +44,6 @@ export class VersionNavigator {
       return;
     }
 
-    // Create or update element
     if (!this.element) {
       this.element = document.createElement("div");
       this.element.setAttribute("data-testid", "version-navigator");
@@ -65,10 +64,8 @@ export class VersionNavigator {
             font-size: 0.875rem;
         `;
 
-    // Clear existing content
     this.element.innerHTML = "";
 
-    // Create backward arrow button
     const backwardButton = document.createElement("button");
     backwardButton.setAttribute("data-testid", "version-nav-backward");
     backwardButton.innerHTML = "←";
@@ -104,7 +101,6 @@ export class VersionNavigator {
       });
     }
 
-    // Create version counter
     const counter = document.createElement("span");
     counter.setAttribute("data-testid", "version-counter");
     counter.style.cssText = `
@@ -118,7 +114,6 @@ export class VersionNavigator {
       .replace("{{current}}", String(currentVersion))
       .replace("{{total}}", String(this.props.versionCount));
 
-    // Create forward arrow button
     const forwardButton = document.createElement("button");
     forwardButton.setAttribute("data-testid", "version-nav-forward");
     forwardButton.innerHTML = "→";
@@ -154,7 +149,6 @@ export class VersionNavigator {
       });
     }
 
-    // Append elements
     this.element.appendChild(backwardButton);
     this.element.appendChild(counter);
     this.element.appendChild(forwardButton);

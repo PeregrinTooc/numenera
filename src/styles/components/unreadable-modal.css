@@ -1,5 +1,3 @@
-/* Unreadable character modal: builds on the edit-modal look */
-
 .unreadable-modal {
   max-width: min(420px, 92vw);
 }

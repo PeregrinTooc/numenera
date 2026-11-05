@@ -1,26 +1,8 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { SettingsGear } from "@/components/SettingsGear";
 import { render } from "lit-html";
+import { t } from "@/i18n/index";
 import { setupTestContainer } from "./helpers/testSetup.js";
-
-// Mock i18n
-vi.mock("@/i18n/index", () => ({
-  t: (key: string) => {
-    const translations: Record<string, string> = {
-      "settings.title": "Settings",
-      "settings.language": "Language",
-      "settings.resetLayout": "Reset Layout",
-      "settings.resetLayoutDisabled": "Layout customization coming soon",
-      "settings.aria.openSettings": "Open settings",
-      "settings.aria.closeSettings": "Close settings",
-      "settings.aria.selectEnglish": "Switch to English",
-      "settings.aria.selectGerman": "Switch to German",
-    };
-    return translations[key] || key;
-  },
-  changeLanguage: vi.fn(),
-  getCurrentLanguage: vi.fn(() => "en"),
-}));
 
 describe("SettingsGear", () => {
   const getContainer = setupTestContainer();
@@ -46,7 +28,7 @@ describe("SettingsGear", () => {
       render(settingsGear.render(), container);
 
       const gearButton = container.querySelector('[data-testid="settings-gear-button"]');
-      expect(gearButton?.getAttribute("aria-label")).toBe("Open settings");
+      expect(gearButton?.getAttribute("aria-label")).toBe(t("settings.aria.openSettings"));
     });
 
     it("should not show settings panel by default", () => {
@@ -66,7 +48,6 @@ describe("SettingsGear", () => {
       ) as HTMLButtonElement;
       gearButton.click();
 
-      // Re-render after state change
       render(settingsGear.render(), container);
 
       const panel = container.querySelector('[data-testid="settings-panel"]');
@@ -77,7 +58,6 @@ describe("SettingsGear", () => {
       settingsGear.open();
       render(settingsGear.render(), container);
 
-      // Simulate click outside
       settingsGear.close();
       render(settingsGear.render(), container);
 
@@ -98,18 +78,28 @@ describe("SettingsGear", () => {
     it("should not leak a document listener when closed before the deferred setTimeout fires", () => {
       vi.useFakeTimers();
       try {
-        const addEventListenerSpy = vi.spyOn(document, "addEventListener");
+        const onRerender = vi.fn();
+        settingsGear.setRerenderCallback(onRerender);
 
         // open() schedules attaching document listeners via setTimeout(0);
         // closing again before that timer fires must cancel it, or the
         // listeners get attached anyway with no way left to remove them.
         settingsGear.open();
         settingsGear.close();
-
         vi.runAllTimers();
+        onRerender.mockClear();
 
-        expect(addEventListenerSpy).not.toHaveBeenCalledWith("click", expect.any(Function));
-        expect(addEventListenerSpy).not.toHaveBeenCalledWith("keydown", expect.any(Function));
+        document.body.click();
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+        expect(onRerender).not.toHaveBeenCalled();
+        expect(settingsGear.isOpen).toBe(false);
+
+        settingsGear.open();
+        vi.runAllTimers();
+        onRerender.mockClear();
+        document.body.click();
+        expect(settingsGear.isOpen).toBe(false);
+        expect(onRerender).toHaveBeenCalledTimes(1);
       } finally {
         vi.useRealTimers();
       }
@@ -159,8 +149,8 @@ describe("SettingsGear", () => {
       const englishFlag = container.querySelector('[data-testid="language-flag-en"]');
       const germanFlag = container.querySelector('[data-testid="language-flag-de"]');
 
-      expect(englishFlag?.getAttribute("aria-label")).toBe("Switch to English");
-      expect(germanFlag?.getAttribute("aria-label")).toBe("Switch to German");
+      expect(englishFlag?.getAttribute("aria-label")).toBe(t("settings.aria.selectEnglish"));
+      expect(germanFlag?.getAttribute("aria-label")).toBe(t("settings.aria.selectGerman"));
     });
 
     it("should close panel after language selection", () => {
@@ -172,7 +162,6 @@ describe("SettingsGear", () => {
       ) as HTMLButtonElement;
       englishFlag.click();
 
-      // Re-render after state change
       render(settingsGear.render(), container);
 
       expect(settingsGear.isOpen).toBe(false);
@@ -203,7 +192,7 @@ describe("SettingsGear", () => {
       render(settingsGear.render(), container);
 
       const resetOption = container.querySelector('[data-testid="settings-reset-layout"]');
-      expect(resetOption?.getAttribute("title")).toBe("Layout customization coming soon");
+      expect(resetOption?.getAttribute("title")).toBe(t("settings.resetLayoutDisabled"));
     });
   });
 
@@ -226,9 +215,7 @@ describe("SettingsGear", () => {
       expect(toggle.checked).toBe(false);
     });
 
-    it("persists the preference and notifies the callback when toggled on", () => {
-      const onComparisonViewChange = vi.fn();
-      settingsGear.setComparisonViewChangeCallback(onComparisonViewChange);
+    it("persists the preference when toggled on", () => {
       settingsGear.open();
       render(settingsGear.render(), container);
 
@@ -239,7 +226,6 @@ describe("SettingsGear", () => {
       toggle.dispatchEvent(new Event("change"));
 
       expect(localStorage.getItem("numenera-comparison-view-enabled")).toBe("true");
-      expect(onComparisonViewChange).toHaveBeenCalledWith(true);
     });
 
     it("reflects a previously-saved enabled preference on render", () => {

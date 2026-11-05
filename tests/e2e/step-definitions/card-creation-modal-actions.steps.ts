@@ -2,10 +2,6 @@ import { Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 
-// ============================================================================
-// MODAL INTERACTION STEPS
-// ============================================================================
-
 When("I confirm the card edit modal", async function (this: CustomWorld) {
   await this.page.locator('[data-testid="card-modal-confirm"]').click();
   await this.page
@@ -43,10 +39,6 @@ Then("the card edit modal should be open", async function (this: CustomWorld) {
     return !!modal && modal.contains(document.activeElement);
   });
 });
-
-// ============================================================================
-// EDIT EXISTING CARD STEPS
-// ============================================================================
 
 When(
   "I click the edit button on cypher {string}",

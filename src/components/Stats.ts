@@ -1,12 +1,8 @@
-// Stats component - Displays all three stat pools
-// Arranged side-by-side on tablet/desktop to match official character sheet
-
 import { html, TemplateResult } from "lit-html";
 import { Character } from "@/types/character";
 import { StatPool, type StatPoolFieldType } from "./StatPool.js";
-import { ModalService } from "@/services/modalService";
+import { openFieldEditor } from "@/services/modalService";
 import { t } from "@/i18n/index";
-import { getVersionHistoryService } from "@/services/versionHistoryServiceAccess";
 
 type FieldType = "effort" | StatPoolFieldType;
 
@@ -17,16 +13,9 @@ export class Stats {
   ) {}
 
   private openEditModal(fieldType: FieldType): void {
-    const currentValue = this.character.effort;
-
-    ModalService.openEditModal({
-      fieldType,
-      currentValue,
-      onConfirm: (newValue) => {
-        this.onFieldUpdate(fieldType, newValue as number);
-      },
-      versionHistoryService: getVersionHistoryService(),
-    });
+    openFieldEditor(fieldType, this.character.effort, (newValue) =>
+      this.onFieldUpdate(fieldType, newValue as number)
+    );
   }
 
   render(): TemplateResult {
@@ -44,7 +33,6 @@ export class Stats {
 
     return html`
       <div data-testid="stats-section" class="section-box">
-        <!-- Effort Badge - top-right corner -->
         <div
           data-testid="effort-badge"
           class="stat-badge badge-top-right editable-field"
@@ -59,7 +47,6 @@ export class Stats {
 
         <h2 data-testid="stats-heading" class="section-box-heading">${t("stats.heading")}</h2>
 
-        <!-- Three stat pools side-by-side on tablet/desktop - CONDENSED -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           ${mightPool.render()} ${speedPool.render()} ${intellectPool.render()}
         </div>

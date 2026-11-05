@@ -1,14 +1,12 @@
-/**
- * Step definitions for touch long-press dragging of sections
- */
-
 import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
 import {
   LONG_PRESS_HOLD_MS,
   nearTopOf,
+  sectionId,
   sectionLocator,
+  sectionOrder,
   TouchGesture,
   withFullHeightViewport,
   zonePoint,
@@ -34,7 +32,6 @@ When(
   "I long-press the {string} section and drag it above the {string} section",
   async function (this: CustomWorld, sourceName: string, targetName: string) {
     const page = this.page;
-    // No edge auto-scroll yet, so keep both sections on screen for the gesture.
     await withFullHeightViewport(page, async () => {
       const gesture = await TouchGesture.start(
         page,
@@ -45,9 +42,17 @@ When(
       // gesture; confirm the drag actually activated before moving.
       await expect(sectionLocator(page, sourceName)).toHaveClass(/\bdragging\b/);
       await gesture.moveTo(await nearTopOf(sectionLocator(page, targetName)));
-      // The insertion line shows above the target while the drag is held
-      // over it, before the finger lifts.
-      await expect(sectionLocator(page, targetName)).toHaveClass(/\bdrop-line-before\b/);
+      // While the drag is held over the target, the insertion line shows above
+      // it; held still for 300 ms, the live preview replaces the line with the
+      // result. On a loaded runner a poll can miss the line, so either counts.
+      const target = sectionLocator(page, targetName);
+      const lineShown = async (): Promise<boolean> =>
+        /\bdrop-line-before\b/.test((await target.getAttribute("class")) ?? "");
+      const previewShown = async (): Promise<boolean> => {
+        const order = await sectionOrder(page);
+        return order.indexOf(sectionId(sourceName)) === order.indexOf(sectionId(targetName)) - 1;
+      };
+      await expect.poll(async () => (await lineShown()) || (await previewShown())).toBe(true);
       await gesture.end();
     });
   }

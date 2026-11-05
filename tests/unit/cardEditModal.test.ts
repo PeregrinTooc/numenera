@@ -1,4 +1,3 @@
-// Unit tests for CardEditModal component
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { screen, fireEvent } from "@testing-library/dom";
 import { html } from "lit-html";
@@ -127,7 +126,6 @@ describe("CardEditModal", () => {
     const content1 = html`<div data-testid="content-1">Content 1</div>`;
     const content2 = html`<div data-testid="content-2">Content 2</div>`;
 
-    // Open first modal
     openCardEditModal({
       content: content1,
       onConfirm: confirmSpy,
@@ -136,13 +134,11 @@ describe("CardEditModal", () => {
 
     expect(screen.getByTestId("content-1")).toBeTruthy();
 
-    // Close first modal
     const cancelButton = screen.getByTestId("card-modal-cancel");
     fireEvent.click(cancelButton);
 
     expect(screen.queryByTestId("content-1")).toBeNull();
 
-    // Open second modal
     openCardEditModal({
       content: content2,
       onConfirm: confirmSpy,

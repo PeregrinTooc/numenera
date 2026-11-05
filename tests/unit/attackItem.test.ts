@@ -1,4 +1,3 @@
-// Unit tests for AttackItem edit functionality
 import { AttackItem } from "@/components/AttackItem";
 import { Attack } from "@/types/character";
 import { testItemEditAndDelete } from "./helpers/itemTestSuite.js";
@@ -11,7 +10,6 @@ const sampleAttack: Attack = {
   notes: "Sharp blade",
 };
 
-// Use shared parameterized test suite
 testItemEditAndDelete<Attack>({
   componentName: "AttackItem",
   createComponent: (item, index, onUpdate, onDelete) =>
