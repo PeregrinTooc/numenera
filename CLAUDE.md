@@ -33,6 +33,7 @@ see `docs/ARCHITECTURE.md`.
 
 ```bash
 npm run dev              # dev server on http://localhost:3000
+npm run dev:lan          # same over HTTPS on the network, for testing on other devices
 npm run build            # tsc && vite build
 npm run preview          # preview production build
 

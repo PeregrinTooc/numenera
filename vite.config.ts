@@ -1,11 +1,15 @@
 import { defineConfig } from "vite";
+import basicSsl from "@vitejs/plugin-basic-ssl";
 import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig({
-  plugins: [],
+// `npm run dev:lan`: other devices on the network reach the dev server over
+// HTTPS, a secure origin as in production (plain HTTP at a network address
+// hides crypto.subtle, which version history needs)
+export default defineConfig(({ mode }) => ({
+  plugins: mode === "lan" ? [basicSsl()] : [],
   base: "/numenera/",
   resolve: {
     alias: {
@@ -32,4 +36,4 @@ export default defineConfig({
     port: 3000,
     open: false,
   },
-});
+}));

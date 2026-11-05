@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:lan": "vite --mode lan --host",
     "build": "tsc && vite build",
     "typecheck:tests": "tsc --noEmit -p tsconfig.test.json",
     "preview": "vite preview",
@@ -60,6 +61,7 @@
     "@types/node": "^25.0.10",
     "@typescript-eslint/eslint-plugin": "^8.53.1",
     "@typescript-eslint/parser": "^8.53.1",
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
     "@vitejs/plugin-react": "^5.1.2",
     "@vitest/ui": "^4.1.11",
     "autoprefixer": "^10.4.23",
