@@ -65,13 +65,38 @@ When(
   }
 );
 
-/** Run `check`; if it fails, add every slide recorded so far to the error. */
+/**
+ * Run `check`; if it fails, add every slide recorded so far to the error, and
+ * how far the slides still running have got. A slide that never finished was
+ * either cancelled (no longer running) or stuck (its time not moving).
+ */
 async function reportingSlides(world: CustomWorld, check: () => Promise<void>): Promise<void> {
   try {
     await check();
   } catch (error) {
-    const slides = await world.page.evaluate(() => window.__sectionSlides ?? []);
-    throw new Error(`${(error as Error).message}\nRecorded slides: ${JSON.stringify(slides)}`);
+    const progress = (): Promise<unknown> =>
+      world.page.evaluate(() => ({
+        timeline: document.timeline.currentTime,
+        running: document
+          .getAnimations()
+          .filter((animation) => animation.id === "section-slide")
+          .map((animation) => ({
+            // Only the app's slides carry this id, and they are keyframe effects
+            sectionId: (animation.effect as { target: HTMLElement | null } | null)?.target?.dataset
+              .sectionId,
+            playState: animation.playState,
+            currentTime: animation.currentTime,
+          })),
+      }));
+    const before = await progress();
+    // Real time on the test's side: the page's clock may be paused
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    const report = {
+      recorded: await world.page.evaluate(() => window.__sectionSlides ?? []),
+      before,
+      after: await progress(),
+    };
+    throw new Error(`${(error as Error).message}\nSlides: ${JSON.stringify(report)}`);
   }
 }
 
