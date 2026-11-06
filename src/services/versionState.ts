@@ -2,6 +2,7 @@ import { Character } from "@/types/character";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import { CharacterVersion } from "@/types/versionHistory";
 import { sanitizeCharacter } from "@/utils/characterSanitizer";
+import { restoredDescription } from "./versionDescriptionText.js";
 
 export class VersionState {
   private latestCharacter: Character;
@@ -144,7 +145,7 @@ export class VersionState {
       return;
     }
 
-    const description = `Restored: ${metadata.description}`;
+    const description = restoredDescription(metadata.description);
     await this.versionHistory.saveVersion(this.displayedCharacter, description);
 
     this.latestCharacter = this.displayedCharacter;
@@ -168,7 +169,7 @@ export class VersionState {
 
     const character = this.buildCharacterFromVersion(index);
     const version = this.allVersions[index];
-    const description = `Restored: ${version.description}`;
+    const description = restoredDescription(version.description);
     await this.versionHistory.saveVersion(character, description);
 
     this.latestCharacter = character;

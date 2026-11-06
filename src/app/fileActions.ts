@@ -46,7 +46,10 @@ export function createFileActions(
           }
 
           // Buffer change for version history
-          activeHistoryService(ctx)?.bufferChange(importedCharacter, "Imported character");
+          activeHistoryService(ctx)?.bufferChange(
+            importedCharacter,
+            "versionHistory.changes.imported"
+          );
 
           void ctx.actions.renderCharacterSheet(importedCharacter);
         },

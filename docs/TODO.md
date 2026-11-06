@@ -44,37 +44,7 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ## 🚨 Must-Have (Technical Debt)
 
-### Remaining English text (found while translating labels, 2026-10-31)
-
-Left out of `fix(i18n): translate hardcoded labels and text` because each needs a
-decision first:
-
-- **Version-history descriptions are stored as English data.** `"Initial state"`
-  (`src/app/bootstrap.ts`), `"Imported character"` (`src/app/fileActions.ts`),
-  the `"Changed name"`-style strings in `characterFieldUpdate.ts`, and
-  `LEGACY_DESCRIPTION = "Updated character"` in
-  `src/services/versionDescriptionMigration.ts`. `versionHistory.*` description
-  keys already exist in both locales. Translating these means storing a key (or
-  translating at render time) and migrating versions already saved.
-- **File-picker type label.** `"Numenera Character Files"` in
-  `src/storage/exportManager.ts` and `src/storage/fileStorage.ts` shows in the
-  OS open/save dialog. It's user-visible, so it probably belongs in `t()`.
-- **English text nobody renders.** `SECTION_DISPLAY_NAMES` in
-  `src/types/layout.ts` is never shown in the UI (which uses
-  `layout.sections.*`). It is the key set behind `isSectionId`, and the E2E
-  suite uses it to turn Gherkin section names into ids (`sectionId()` in
-  `tests/e2e/support/sections.ts`), so replacing it needs a test-side lookup
-  too, e.g. from `en.json`. The `errors.push(...)` strings in
-  `characterValidation.ts` are never shown either. Drop or key them rather
-  than translating dead text.
-- **Unused layout edit-mode keys.** `layout.editMode.instructions` and
-  `layout.editMode.cannotMerge` exist in both locales but nothing renders
-  them, and the instructions describe the old "drop onto another section to
-  merge" idea. Delete them, or show updated instructions in edit mode.
-- **German game terms to confirm.** `de.json` keeps "Cypher", "Edge", "Pool"
-  and "Shins". The new keys use "EINMALIG" (ONE-USE) and "Deskriptor". Decide
-  whether to use the German rulebook's terms (e.g. "Chiffre", "Vorteil")
-  consistently instead.
+None open.
 
 ---
 

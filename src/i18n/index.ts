@@ -26,6 +26,8 @@ export const t = (key: string, options?: Record<string, unknown>): string => {
   return i18next.t(key, options);
 };
 
+export const hasTranslation = (key: string): boolean => i18next.exists(key);
+
 export const changeLanguage = async (lang: string): Promise<void> => {
   await i18next.changeLanguage(lang);
 };

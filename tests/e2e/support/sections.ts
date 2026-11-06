@@ -1,14 +1,14 @@
 import type { CDPSession, Locator, Page } from "@playwright/test";
-import { SECTION_DISPLAY_NAMES, type SectionId } from "@/types/layout";
+import { SECTION_IDS, type SectionId } from "@/types/layout";
+import { englishText } from "./i18nKeys";
 
+/** The id of the section whose English heading (`layout.sections.*`) is `name`. */
 export function sectionId(name: string): SectionId {
-  const entry = (Object.entries(SECTION_DISPLAY_NAMES) as [SectionId, string][]).find(
-    ([, displayName]) => displayName === name
-  );
-  if (!entry) {
+  const id = SECTION_IDS.find((candidate) => englishText(`layout.sections.${candidate}`) === name);
+  if (!id) {
     throw new Error(`Unknown section: ${name}`);
   }
-  return entry[0];
+  return id;
 }
 
 export function sectionLocator(page: Page, name: string): Locator {

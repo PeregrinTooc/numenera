@@ -3,31 +3,27 @@ import { applyFieldUpdate } from "@/utils/characterFieldUpdate";
 import { createTestCharacter as makeCharacter } from "../factories/character.js";
 
 describe("applyFieldUpdate", () => {
-  it("updates a top-level string field and returns a matching label", () => {
+  it("updates a top-level string field", () => {
     const character = makeCharacter();
     const result = applyFieldUpdate(character, "name", "New Name");
 
-    expect(result.character.name).toBe("New Name");
-    expect(result.label).toBe("Changed name");
+    expect(result.name).toBe("New Name");
   });
 
   it("updates a top-level numeric field", () => {
     const character = makeCharacter();
     const currentResult = applyFieldUpdate(character, "currentXp", 5);
-    expect(currentResult.character.currentXp).toBe(5);
-    expect(currentResult.label).toBe("Changed current XP");
+    expect(currentResult.currentXp).toBe(5);
 
     const totalResult = applyFieldUpdate(character, "totalXp", 20);
-    expect(totalResult.character.totalXp).toBe(20);
-    expect(totalResult.label).toBe("Changed total XP");
+    expect(totalResult.totalXp).toBe(20);
   });
 
   it("updates a nested stat field", () => {
     const character = makeCharacter();
     const result = applyFieldUpdate(character, "mightPool", 25);
 
-    expect(result.character.stats.might.pool).toBe(25);
-    expect(result.label).toBe("Changed Might pool");
+    expect(result.stats.might.pool).toBe(25);
   });
 
   it("does not mutate the original character's top-level fields", () => {
@@ -48,8 +44,8 @@ describe("applyFieldUpdate", () => {
     const character = makeCharacter();
     const result = applyFieldUpdate(character, "mightPool", 25);
 
-    expect(result.character.stats).not.toBe(character.stats);
-    expect(result.character.stats.might).not.toBe(character.stats.might);
+    expect(result.stats).not.toBe(character.stats);
+    expect(result.stats.might).not.toBe(character.stats.might);
   });
 
   it("does not corrupt other cached copies sharing the same stats reference", () => {

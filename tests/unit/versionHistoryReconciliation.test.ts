@@ -71,7 +71,7 @@ describe.sequential("reconcileVersionHistory", () => {
     await reconcileVersionHistory(manager, stored);
 
     const versions = await manager.getAllVersions();
-    expect(versions[1].description).toBe("Changed name");
+    expect(versions[1].description).toBe("versionHistory.changes.basicInfo.name");
   });
 
   it("ignores a portrait-only difference, since versions never store the portrait", async () => {

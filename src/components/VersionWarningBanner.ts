@@ -1,4 +1,5 @@
 import { t } from "@/i18n/index";
+import { versionDescriptionText } from "@/services/versionDescriptionText";
 
 export interface VersionWarningBannerProps {
   description: string;
@@ -77,7 +78,7 @@ export class VersionWarningBanner {
     const description = document.createElement("span");
     description.setAttribute("data-testid", "version-change-description");
     description.style.fontWeight = "500";
-    description.textContent = this.props.description;
+    description.textContent = versionDescriptionText(this.props.description);
 
     const timestamp = document.createElement("span");
     timestamp.setAttribute("data-testid", "version-timestamp");

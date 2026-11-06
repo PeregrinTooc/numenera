@@ -287,6 +287,7 @@ All features listed below have full BDD test coverage and are verified working.
   - English language (development)
   - German language (production)
   - Runtime language switching
+  - File-picker type label ("Numenera character files") translated
   - Translated UI labels and messages
   - Localized date/time formats
 
@@ -340,10 +341,15 @@ All features listed below have full BDD test coverage and are verified working.
   - Meaningful, translated version descriptions for card/collection edits
     (e.g. "Added cypher", "Removed ability", "Modified equipment") instead
     of a generic "Updated character", via `detectChanges`
-  - Legacy version descriptions still carrying the old "Updated character"
-    literal (bare or as part of a squashed/compound description) are
-    automatically backfilled on app boot, recomputed from each version's
-    own stored snapshot diff — safe to re-run every load, no migration flag
+  - Descriptions are stored as i18n keys and translated when shown, so the
+    whole history follows a language switch (scenario "Version descriptions
+    follow a language switch")
+  - On app boot, descriptions stored as text are rewritten as keys: English or
+    German change texts, the old field-edit labels ("Changed Might pool") and
+    the "Restored: " prefix map to their keys, unknown text is kept as stored.
+    The old "Updated character" literal (bare or inside a squashed
+    description) is recomputed from the version's snapshot diff instead.
+    Safe to re-run every load, no migration flag
   - Version Navigator UI (version counter, navigation buttons)
   - Warning banner when viewing old versions
   - Edit from old version creates new version (no read-only mode)

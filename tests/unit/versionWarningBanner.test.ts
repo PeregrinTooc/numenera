@@ -22,6 +22,21 @@ describe("VersionWarningBanner", () => {
     expect(warningBanner).toBeTruthy();
   });
 
+  it("shows a stored description key in the current language", () => {
+    const banner = new VersionWarningBanner({
+      description: "versionHistory.changes.basicInfo.name",
+      timestamp: new Date("2024-01-15T10:30:00"),
+      onReturn: vi.fn(),
+      onRestore: vi.fn(),
+    });
+
+    const container = getContainer();
+    banner.mount(container);
+
+    const description = container.querySelector('[data-testid="version-change-description"]');
+    expect(description?.textContent).toBe("Changed name");
+  });
+
   it("should display change description", () => {
     const onReturn = vi.fn();
     const onRestore = vi.fn();

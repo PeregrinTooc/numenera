@@ -4,6 +4,7 @@ import { VersionState } from "@/services/versionState";
 import { createTestCharacter } from "../factories/character.js";
 import { seedVersions, setupRealVersionHistory } from "./helpers/realVersionHistory";
 import { setupTestContainer } from "./helpers/testSetup.js";
+import { restoredDescription } from "@/services/versionDescriptionText";
 
 describe("CompareView", () => {
   const history = setupRealVersionHistory();
@@ -115,7 +116,7 @@ describe("CompareView", () => {
 
     const stored = await history.manager.getAllVersions();
     expect(stored[stored.length - 1].character.name).toBe("Version 4");
-    expect(stored[stored.length - 1].description).toBe("Restored: Edit 4");
+    expect(stored[stored.length - 1].description).toBe(restoredDescription("Edit 4"));
   });
 
   it("keeps the other pane pointing at the same version id after a restore evicts the oldest (FIFO)", async () => {

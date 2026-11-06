@@ -5,6 +5,7 @@ import { reportStorageWriteFailure } from "@/storage/storageWriteFailure";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import { FULL_CHARACTER, NEW_CHARACTER } from "@/data/mockCharacters";
 import { applyFieldUpdate } from "@/utils/characterFieldUpdate";
+import { describeCharacterChange } from "@/services/versionDescriptions";
 import { createFileActions } from "./fileActions";
 import { syncVersionWarning } from "./versionBanner";
 import { activeHistoryService, type AppContext } from "./appContext";
@@ -26,17 +27,13 @@ async function handleFieldUpdate(
     conflictService.markDirty(character);
   }
 
-  const { character: updatedCharacter, label: fieldLabel } = applyFieldUpdate(
-    character,
-    field,
-    value
-  );
+  const updatedCharacter = applyFieldUpdate(character, field, value);
 
   // Update currentCharacter BEFORE requesting auto-save
   ctx.currentCharacter = updatedCharacter;
 
   if (service) {
-    service.bufferChange(updatedCharacter, fieldLabel);
+    service.bufferChange(updatedCharacter, describeCharacterChange(character, updatedCharacter));
   }
 
   ctx.autoSaveService.requestSave();
