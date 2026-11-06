@@ -1,3 +1,5 @@
+const { availableParallelism } = require("node:os");
+
 // Device-aware tag filter (see tests/e2e/support/device.ts for the profiles).
 // The phone and WebKit sets are listed here rather than loaded from device.ts:
 // this config is CommonJS and is read before tsx is registered, and device.ts
@@ -34,6 +36,6 @@ module.exports = {
     // setDefaultTimeout(30000) in tests/e2e/support/world.ts.
     failFast: false, // Run all scenarios even after a failure
     // eslint-disable-next-line no-undef
-    parallel: process.env.CI ? 1 : 6, // 6 workers locally
+    parallel: process.env.CI ? 1 : availableParallelism(), // one worker per CPU locally
   },
 };
