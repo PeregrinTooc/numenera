@@ -16,10 +16,17 @@
 
 The Cucumber suite runs once per profile, selected by the `DEVICE` env var
 (`tests/e2e/support/device.ts`): `desktop` (default), `pixel5`, `iphone12`,
-`ipadpro`. iPhone 12 and iPad Pro 11 run on WebKit. CI runs all four as
-parallel jobs; a deploy needs all four green.
+`ipadpro`. iPhone 12 and iPad Pro 11 run on WebKit. CI runs all four, each
+split into four shards on runners of their own; a deploy needs every shard
+green.
 
     DEVICE=iphone12 npm run test:e2e -- tests/e2e/features/some.feature
+
+`E2E_SHARD` (e.g. `2/4`) runs one shard: `scripts/e2e.js` asks Cucumber for
+the scenarios left after the device's tag filter and deals them out in turn,
+so the shards of a run together cover each scenario exactly once.
+
+    DEVICE=iphone12 E2E_SHARD=2/4 npm run test:e2e:prod
 
 Scenarios that describe behaviour a device does not have (mouse hover, the
 comparison view on a phone) carry a device tag and a `#` comment above it
