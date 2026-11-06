@@ -2,6 +2,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import { t } from "@/i18n/index";
 import { SECTION_COLUMNS_STORAGE_KEY } from "@/storage/storageConstants";
+import { getDefaultLayout, loadLayout, loadSectionColumns } from "@/storage/layoutStorage";
+import type { Layout } from "@/types/layout";
 import { createCharacterWithItems } from "../factories/character.js";
 
 function mountSheet(): CharacterSheet {
@@ -154,6 +156,47 @@ describe("CharacterSheet section columns", () => {
     sheet.resetLayoutToDefault();
 
     expect(columnsWrapper("cyphers")?.dataset.columns).toBe("2");
+  });
+
+  describe("using an imported layout", () => {
+    const itemsFirst = (): Layout =>
+      getDefaultLayout().sort((a, b) => Number(isItems(b)) - Number(isItems(a)));
+    const isItems = (item: Layout[number]): boolean =>
+      item.type === "single" && item.id === "items";
+    const sectionOrder = (): string[] =>
+      Array.from(document.querySelectorAll<HTMLElement>("[data-section-id]")).map(
+        (el) => el.dataset.sectionId ?? ""
+      );
+
+    it("shows and saves its arrangement and the column choices it names", () => {
+      const sheet = mountSheet();
+
+      sheet.useLayout(itemsFirst(), { cyphers: 1 });
+
+      expect(sectionOrder()[0]).toBe("items");
+      expect(columnsWrapper("cyphers")?.dataset.columns).toBe("1");
+      expect(loadLayout()).toEqual(itemsFirst());
+      expect(loadSectionColumns()).toEqual({ cyphers: 1 });
+    });
+
+    it("keeps the current column choices when it names none", () => {
+      localStorage.setItem(SECTION_COLUMNS_STORAGE_KEY, '{"cyphers":1}');
+      const sheet = mountSheet();
+
+      sheet.useLayout(itemsFirst(), undefined);
+
+      expect(columnsWrapper("cyphers")?.dataset.columns).toBe("1");
+    });
+
+    it("keeps the current arrangement when it has none", () => {
+      const sheet = mountSheet();
+      const before = sectionOrder();
+
+      sheet.useLayout(undefined, { cyphers: 1 });
+
+      expect(sectionOrder()).toEqual(before);
+      expect(columnsWrapper("cyphers")?.dataset.columns).toBe("1");
+    });
   });
 
   it("the switch's icon is drawn as SVG", () => {

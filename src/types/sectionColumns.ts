@@ -55,6 +55,24 @@ export function withColumns(
   return next;
 }
 
+/** Whether any section `imported` names would show a different column count than in `current`. */
+export function columnChoicesDiffer(imported: SectionColumns, current: SectionColumns): boolean {
+  return CARD_SECTION_IDS.some(
+    (id) => imported[id] !== undefined && columnsFor(imported, id) !== columnsFor(current, id)
+  );
+}
+
+/** A copy of `columns` with every choice `choices` names applied. */
+export function withColumnChoices(
+  columns: SectionColumns,
+  choices: SectionColumns
+): SectionColumns {
+  return CARD_SECTION_IDS.reduce((next, id) => {
+    const count = choices[id];
+    return count === undefined ? next : withColumns(next, id, count);
+  }, columns);
+}
+
 function isCardSectionKey(key: string): key is CardSectionId {
   return (CARD_SECTION_IDS as readonly string[]).includes(key);
 }

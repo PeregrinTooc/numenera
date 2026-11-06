@@ -50,36 +50,6 @@ None open.
 
 ## 📋 Feature Backlog
 
-### Import-Layout Conflict Prompt
-
-**Overview**  
-`fileStorage.ts` already computes `layout` and a `hasLayoutDifference` flag on
-import, but `handleLoadFromFile` in `src/app/fileActions.ts` reads only
-`character` and `warnings`, so the imported layout is dropped. Split out of
-"Grid Merge/Split & Import-Layout Conflict Prompt"; the drag half is done (see
-"Pairing Sections by Drag" in `FEATURES.md`). Needs its own design before
-building. Applying an imported layout needs a way to set the sheet's layout;
-`CharacterSheet.updateLayout` was removed as unused (Rule 12), so add what the
-design calls for (see commit `624cd01` for the old shape).
-
-**Goals**
-
-- Warn on import when the imported file's layout differs from the current one,
-  offering "Keep current layout" / "Use imported layout" via a new prompt,
-  wired to the existing `hasLayoutDifference` flag
-- Decide the same for the card sections' column choices: an import returns
-  them as `ImportResult.sectionColumns` (validated), but they are not applied
-  either
-
-**E2E Tests**
-
-- File: `tests/e2e/features/section-rearrangement.feature` (scenarios already
-  written, currently `@skip`ped)
-  - Import with different layout shows prompt
-  - Keep existing layout on import
-  - Use imported layout on import
-  - Import with same layout does not show prompt
-
 ### Section Drag Follow-ups
 
 - **Check touch dragging on a real iPhone/iPad.** The live preview re-creates

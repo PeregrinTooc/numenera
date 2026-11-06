@@ -16,6 +16,7 @@ import {
   SectionColumns,
   columnsFor,
   isCardSection,
+  withColumnChoices,
   withColumns,
 } from "@/types/sectionColumns";
 import { SectionDragController } from "@/components/helpers/SectionDragController";
@@ -158,6 +159,22 @@ export class CharacterSheet {
   resetLayoutToDefault(): void {
     this.layout = resetLayout();
     this.sectionColumns = {};
+    this.rerender();
+  }
+
+  /**
+   * Use an imported file's arrangement and column choices, each where the
+   * file has one: a file without column choices keeps the current ones.
+   */
+  useLayout(layout: Layout | undefined, columns: SectionColumns | undefined): void {
+    if (layout) {
+      this.layout = layout;
+      saveLayout(this.layout);
+    }
+    if (columns) {
+      this.sectionColumns = withColumnChoices(this.sectionColumns, columns);
+      saveSectionColumns(this.sectionColumns);
+    }
     this.rerender();
   }
 

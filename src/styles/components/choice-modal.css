@@ -1,26 +1,27 @@
-.unreadable-modal {
+/* A modal that asks the user to pick one of a few choices, as a column of buttons. */
+.choice-modal {
   max-width: min(420px, 92vw);
 }
 
-.unreadable-modal-message {
+.choice-modal-message {
   font-family: var(--font-serif);
   color: #2c1810;
   line-height: 1.5;
   margin: 0;
 }
 
-.unreadable-modal-buttons {
+.choice-modal-buttons {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: 20px;
 }
 
-.unreadable-modal-buttons .edit-modal-button {
+.choice-modal-buttons .edit-modal-button {
   justify-content: center;
 }
 
-.unreadable-modal-buttons .edit-modal-button.unreadable-later {
+.choice-modal-buttons .edit-modal-button.secondary {
   background: #f5f1e8;
   color: #2c1810;
   border: 2px solid #8b6914;
