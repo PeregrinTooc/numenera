@@ -1,7 +1,7 @@
 import { downloadTextFile } from "@/utils/downloadFile";
 import type { Character } from "@/types/character";
 import { SCHEMA_VERSION } from "./storageConstants";
-import type { CharacterFileData } from "./fileStorage";
+import { characterFileTypes, type CharacterFileData } from "./fileStorage";
 import {
   HANDLE_STORAGE_KEY,
   persistFileHandle,
@@ -109,12 +109,7 @@ export class ExportManager {
     try {
       return await window.showSaveFilePicker!({
         suggestedName: filename,
-        types: [
-          {
-            description: "Numenera Character Files",
-            accept: { "application/json": [".numenera"] },
-          },
-        ],
+        types: characterFileTypes(),
       });
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") {

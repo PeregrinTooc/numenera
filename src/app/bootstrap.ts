@@ -150,7 +150,7 @@ async function initVersionHistory(
   window.__versionHistoryService = ctx.versionHistoryService;
 
   if (versions.length === 0) {
-    await versionHistory.saveVersion(initialCharacter, "Initial state");
+    await versionHistory.saveVersion(initialCharacter, "versionHistory.changes.initialState");
   }
 
   ctx.versionState = new VersionState(initialCharacter, versionHistory);

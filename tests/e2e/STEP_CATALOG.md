@@ -27,7 +27,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 ## Summary
 
 - Step definitions: **730** in 54 files
-- Feature step lines: **2331**
+- Feature step lines: **2349**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -233,7 +233,7 @@ pattern this script does not understand):
 | When | `I click the edit button on equipment {string}` | 1 | 49 |
 | When | `I click the edit button on oddity {string}` | 1 | 63 |
 | When | `I click the edit button on special ability {string}` | 1 | 84 |
-| When | `I confirm the card edit modal` | 51 | 4 |
+| When | `I confirm the card edit modal` | 52 | 4 |
 | Then | `the card edit modal should be open` | 15 | 25 |
 
 ## card-creation-modal-fields.steps.ts
@@ -257,9 +257,9 @@ pattern this script does not understand):
 | When | `I fill in the attack damage with {string}` | 7 | 159 |
 | When | `I fill in the attack modifier with {string}` | 7 | 166 |
 | When | `I fill in the attack name with {string}` | 7 | 155 |
-| When | `I fill in the cypher effect with {string}` | 12 | 109 |
-| When | `I fill in the cypher level with {string}` | 12 | 105 |
-| When | `I fill in the cypher name with {string}` | 12 | 101 |
+| When | `I fill in the cypher effect with {string}` | 13 | 109 |
+| When | `I fill in the cypher level with {string}` | 13 | 105 |
+| When | `I fill in the cypher name with {string}` | 13 | 101 |
 | When | `I fill in the equipment description with {string}` | 7 | 123 |
 | When | `I fill in the equipment name with {string}` | 8 | 116 |
 | When | `I fill in the oddity text with {string}` | 7 | 151 |
@@ -281,7 +281,7 @@ pattern this script does not understand):
 | When | `I click the add ability button` | 15 | 110 |
 | When | `I click the add artifact button` | 7 | 98 |
 | When | `I click the add attack button` | 7 | 106 |
-| When | `I click the add cypher button` | 13 | 90 |
+| When | `I click the add cypher button` | 14 | 90 |
 | When | `I click the add equipment button` | 9 | 94 |
 | When | `I click the add oddity button` | 7 | 102 |
 | When | `I click the add special ability button` | 7 | 114 |
@@ -547,7 +547,7 @@ pattern this script does not understand):
 | When | `I click the "Confirm" button` | 27 | 40 |
 | When | `I click the "New" button` | 7 | 46 |
 | When | `I click the {badge} badge` | 23 | 54 |
-| When | `I edit the {string} field to {string}` | 34 | 135 |
+| When | `I edit the {string} field to {string}` | 35 | 135 |
 | When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 144 |
 | When | `I hover over the character name {string}` | 1 | 93 |
 | When | `I hover over the tier {string}` | 1 | 97 |
@@ -844,9 +844,9 @@ pattern this script does not understand):
 | Given | `I am viewing the character sheet` | 1 | 5 |
 | When | `I click outside the settings panel` | 1 | 53 |
 | When | `I click the British flag icon` | 1 | 78 |
-| When | `I click the German flag icon` | 2 | 74 |
+| When | `I click the German flag icon` | 4 | 74 |
 | When | `I click the settings gear icon` | 2 | 37 |
-| Given | `I have opened the settings panel` | 9 | 49 |
+| Given | `I have opened the settings panel` | 11 | 49 |
 | Then | `I should be able to click the settings gear icon` | 1 | 30 |
 | Then | `I should see a {string} option` | 1 | 109 |
 | Then | `I should see a settings gear icon in the header` | 1 | 22 |
@@ -982,7 +982,7 @@ pattern this script does not understand):
 | Then | `the timestamp should be in human-readable format` | 1 | 12 |
 | Then | `the timestamp should show a relative time like {string}` | 1 | 20 |
 | Then | `the UI should remain responsive` | 2 | 144 |
-| Then | `the version description should contain {string}` | 12 | 4 |
+| Then | `the version description should contain {string}` | 14 | 4 |
 | Then | `the version description should contain the tier change` | 1 | 165 |
 | Then | `the warning banner should not be visible` | 2 | 160 |
 
@@ -1021,7 +1021,7 @@ pattern this script does not understand):
 | Given | `the character has {int} versions with different data` | 3 | 64 |
 | Given | `the character has {int} versions with different names` | 2 | 97 |
 | Given | `the character has a legacy version with a {string} description for a name change and an added ability` | 1 | 34 |
-| Given | `the character has a legacy version with an {string} description for an added cypher` | 1 | 4 |
+| Given | `the character has a legacy version with an {string} description for an added cypher` | 2 | 4 |
 
 ## version-history-mixed-undo-redo.steps.ts
 
@@ -1031,13 +1031,13 @@ pattern this script does not understand):
 | When | `I press {string} to navigate to previous version` | 1 | 64 |
 | When | `I press {string} to undo buffered changes` | 1 | 25 |
 | Then | `I should be viewing version {int}` | 1 | 101 |
-| When | `I wait for squash timer to complete` | 17 | 60 |
+| When | `I wait for squash timer to complete` | 19 | 60 |
 
 ## version-history-navigation.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the backward navigation arrow` | 18 | 10 |
+| When | `I click the backward navigation arrow` | 20 | 10 |
 | When | `I click the backward navigation arrow again` | 1 | 16 |
 | When | `I click the forward navigation arrow` | 3 | 28 |
 | When | `I click the forward navigation arrow again` | 1 | 34 |
@@ -1048,7 +1048,7 @@ pattern this script does not understand):
 | When | `I navigate forward twice` | 1 | 87 |
 | When | `I navigate to version {int}` | 8 | 46 |
 | When | `I rapidly click the backward arrow {int} times` | 1 | 95 |
-| When | `I refresh the browser` | 7 | 107 |
+| When | `I refresh the browser` | 8 | 107 |
 | When | `I view the character sheet` | 4 | 5 |
 
 ## version-history-navigator-state.steps.ts

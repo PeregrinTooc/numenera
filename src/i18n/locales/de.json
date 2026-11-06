@@ -36,9 +36,7 @@
       "exit": "Fertig"
     },
     "editMode": {
-      "active": "Layout-Bearbeitungsmodus",
-      "instructions": "Bereiche ziehen um neu anzuordnen. Einen Bereich auf einen anderen ziehen, um ein 2-Spalten-Raster zu erstellen.",
-      "cannotMerge": "Diese Bereiche können nicht zu einem Raster zusammengefügt werden"
+      "active": "Layout-Bearbeitungsmodus"
     },
     "sections": {
       "basicInfo": "Basisinfo",
@@ -318,6 +316,9 @@
     },
     "changes": {
       "generic": "Charakter aktualisiert",
+      "initialState": "Ausgangszustand",
+      "imported": "Charakter importiert",
+      "restored": "Wiederhergestellt: {{description}}",
       "basicInfo": {
         "name": "Name geändert",
         "tier": "Stufe geändert",
@@ -327,7 +328,7 @@
         "combined": "Basisdaten bearbeitet"
       },
       "stats": {
-        "might": "Macht aktualisiert",
+        "might": "Kraft aktualisiert",
         "speed": "Geschwindigkeit aktualisiert",
         "intellect": "Intellekt aktualisiert",
         "combined": "Werte aktualisiert"
@@ -337,14 +338,14 @@
         "shins": "Shins aktualisiert",
         "armor": "Rüstung aktualisiert",
         "effort": "Anstrengung aktualisiert",
-        "maxCyphers": "Maximale Zyphern aktualisiert",
+        "maxCyphers": "Maximale Cypher aktualisiert",
         "combined": "Ressourcen aktualisiert"
       },
       "collections": {
         "cypher": {
-          "added": "Zypher hinzugefügt",
-          "removed": "Zypher entfernt",
-          "modified": "Zypher geändert"
+          "added": "Cypher hinzugefügt",
+          "removed": "Cypher entfernt",
+          "modified": "Cypher geändert"
         },
         "artifact": {
           "added": "Artefakt hinzugefügt",
@@ -438,7 +439,8 @@
     "importNote": "Hinweis: {{warning}}",
     "importAdjustments": "Hinweis: Beim Import wurden {{count}} Anpassungen vorgenommen. Details stehen in der Konsole.",
     "schemaMismatch": "Die Datei hat eine andere Schemaversion ({{fileVersion}}), die aktuelle Version ist {{currentVersion}}. Daten wurden eventuell angepasst.",
-    "invalidLayout": "Die importierte Datei enthält eine ungültige Layout-Konfiguration. Das aktuelle Layout wird beibehalten."
+    "invalidLayout": "Die importierte Datei enthält eine ungültige Layout-Konfiguration. Das aktuelle Layout wird beibehalten.",
+    "fileTypeDescription": "Numenera-Charakterdateien"
   },
   "portrait": {
     "notAnImage": "Bitte wähle eine Bilddatei aus",

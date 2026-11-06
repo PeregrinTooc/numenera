@@ -2,33 +2,6 @@
 
 import { Character } from "@/types/character";
 
-export interface FieldUpdateResult {
-  character: Character;
-  label: string;
-}
-
-const FIELD_LABELS: Record<string, string> = {
-  name: "Changed name",
-  tier: "Changed tier",
-  descriptor: "Changed descriptor",
-  focus: "Changed focus",
-  currentXp: "Changed current XP",
-  totalXp: "Changed total XP",
-  shins: "Changed shins",
-  armor: "Changed armor",
-  maxCyphers: "Changed max cyphers",
-  effort: "Changed effort",
-  mightPool: "Changed Might pool",
-  mightEdge: "Changed Might edge",
-  mightCurrent: "Changed current Might",
-  speedPool: "Changed Speed pool",
-  speedEdge: "Changed Speed edge",
-  speedCurrent: "Changed current Speed",
-  intellectPool: "Changed Intellect pool",
-  intellectEdge: "Changed Intellect edge",
-  intellectCurrent: "Changed current Intellect",
-};
-
 /**
  * Apply a single field edit immutably. `stats` and each of its stat groups
  * are cloned unconditionally (not just when touched) so the result never
@@ -40,7 +13,7 @@ export function applyFieldUpdate(
   character: Character,
   field: string,
   value: string | number
-): FieldUpdateResult {
+): Character {
   const updatedCharacter: Character = {
     ...character,
     stats: {
@@ -110,5 +83,5 @@ export function applyFieldUpdate(
       break;
   }
 
-  return { character: updatedCharacter, label: FIELD_LABELS[field] ?? field };
+  return updatedCharacter;
 }
