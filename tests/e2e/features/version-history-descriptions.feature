@@ -78,7 +78,29 @@ Feature: Version History Descriptions
         And I edit the "character name" field to "Another Change"
         And I wait for squash timer to complete
         And I click the backward navigation arrow
-        Then the version description should contain "Zypher hinzugefügt"
+        Then the version description should contain "Cypher hinzugefügt"
+
+    Scenario: Version descriptions follow a language switch
+        When I click the add cypher button
+        And I fill in the cypher name with "Test Cypher"
+        And I fill in the cypher level with "1d6"
+        And I fill in the cypher effect with "Test effect"
+        And I confirm the card edit modal
+        And I wait for squash timer to complete
+        And I edit the "character name" field to "Another Change"
+        And I wait for squash timer to complete
+        And I have opened the settings panel
+        And I click the German flag icon
+        And I click the backward navigation arrow
+        Then the version description should contain "Cypher hinzugefügt"
+
+    Scenario: Reloading the app translates an old English description
+        Given the character has a legacy version with an "Added cypher" description for an added cypher
+        And I have opened the settings panel
+        And I click the German flag icon
+        When I refresh the browser
+        And I click the backward navigation arrow
+        Then the version description should contain "Cypher hinzugefügt"
 
     Scenario: Reloading the app upgrades an old "Updated character" description
         Given I am on the character sheet page

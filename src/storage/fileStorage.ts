@@ -26,6 +26,16 @@ export interface ImportResult {
   sectionColumns?: SectionColumns;
 }
 
+/** The file type offered by the open and save pickers, labelled in the current language. */
+export function characterFileTypes(): FilePickerAcceptType[] {
+  return [
+    {
+      description: t("fileOperations.fileTypeDescription"),
+      accept: { "application/json": [".numenera"] },
+    },
+  ];
+}
+
 /** Parse the file text into the top-level file object that carries the character. */
 function parseFileJson(text: string): Record<string, unknown> {
   let data: unknown;
@@ -124,14 +134,7 @@ async function importWithFileSystemAPI(): Promise<ImportResult | null> {
       throw new UserFacingError("errors.fileSystemUnavailable");
     }
     const [fileHandle] = await window.showOpenFilePicker({
-      types: [
-        {
-          description: "Numenera Character Files",
-          accept: {
-            "application/json": [".numenera"],
-          },
-        },
-      ],
+      types: characterFileTypes(),
       multiple: false,
     });
 

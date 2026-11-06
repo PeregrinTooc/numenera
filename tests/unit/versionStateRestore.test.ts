@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { seedVersions } from "./helpers/realVersionHistory";
 import { createMockCharacter, setupVersionState } from "./helpers/versionStateFixture";
+import { restoredDescription } from "@/services/versionDescriptionText";
 
 describe("VersionState restore and lookup", () => {
   const fx = setupVersionState();
@@ -161,7 +162,7 @@ describe("VersionState restore and lookup", () => {
       const stored = await fx.versionHistory.getAllVersions();
       expect(stored).toHaveLength(3);
       expect(stored[2].character.name).toBe("Version 1");
-      expect(stored[2].description).toBe("Restored: Initial");
+      expect(stored[2].description).toBe(restoredDescription("Initial"));
       expect(fx.versionState.getLatestCharacter().name).toBe("Version 1");
     });
 

@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { importCharacterFromFile } from "@/storage/fileStorage";
 import { Character } from "@/types/character";
 import { SCHEMA_VERSION } from "@/storage/storageConstants";
-import { t } from "@/i18n/index";
+import { changeLanguage, t } from "@/i18n/index";
 import { mockCharacter } from "./helpers/exportManagerFixture";
 
 async function importFileWith(extra: Record<string, unknown>) {
@@ -28,6 +28,10 @@ describe("fileStorage", () => {
   });
 
   describe("importCharacterFromFile", () => {
+    afterEach(async () => {
+      await changeLanguage("en");
+    });
+
     it("should import a valid character from file with no warnings", async () => {
       const character: Character = {
         name: "Test Hero",
@@ -94,7 +98,7 @@ describe("fileStorage", () => {
       expect(window.showOpenFilePicker).toHaveBeenCalledWith({
         types: [
           {
-            description: "Numenera Character Files",
+            description: "Numenera character files",
             accept: {
               "application/json": [".numenera"],
             },
@@ -102,6 +106,18 @@ describe("fileStorage", () => {
         ],
         multiple: false,
       });
+    });
+
+    it("labels the file type in the current language", async () => {
+      await changeLanguage("de");
+
+      await importFileWith({});
+
+      expect(window.showOpenFilePicker).toHaveBeenCalledWith(
+        expect.objectContaining({
+          types: [expect.objectContaining({ description: "Numenera-Charakterdateien" })],
+        })
+      );
     });
 
     it("should return null when user cancels file picker", async () => {

@@ -3,7 +3,7 @@ import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 
 Given("the character has no version history yet", async function (this: CustomWorld) {
-  // The app always records one "Initial state" version on first load; "no history yet" means
+  // The app always records one initial-state version on first load; "no history yet" means
   // nothing beyond it (the navigator stays hidden until a second version exists).
   // Poll: that save is asynchronous after the sheet renders, so on a slow
   // engine under load a single read can run before it lands.
@@ -11,7 +11,7 @@ Given("the character has no version history yet", async function (this: CustomWo
     .poll(async () =>
       (await this.storageHelper.getAllVersions()).map((version) => version.description)
     )
-    .toEqual(["Initial state"]);
+    .toEqual(["versionHistory.changes.initialState"]);
 });
 
 Given(

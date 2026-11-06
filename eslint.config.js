@@ -56,6 +56,7 @@ export default [
         // File System Access API
         FileSystemFileHandle: "readonly",
         FileSystemWritableFileStream: "readonly",
+        FilePickerAcceptType: "readonly",
         // IndexedDB
         IDBDatabase: "readonly",
         IDBOpenDBRequest: "readonly",

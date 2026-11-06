@@ -3,38 +3,42 @@ import { describeCharacterChange } from "@/services/versionDescriptions";
 import { createTestCharacter as createBaseCharacter } from "../factories/character.js";
 
 describe("describeCharacterChange", () => {
-  it("translates a single detected change into its English text", () => {
+  it("describes a single detected change by its key", () => {
     const before = createBaseCharacter();
     const after = createBaseCharacter();
     after.name = "New Name";
 
-    expect(describeCharacterChange(before, after)).toBe("Changed name");
+    expect(describeCharacterChange(before, after)).toBe("versionHistory.changes.basicInfo.name");
   });
 
-  it("translates and joins multiple detected changes with a comma", () => {
+  it("joins multiple detected changes with a comma", () => {
     const before = createBaseCharacter();
     const after = createBaseCharacter();
     after.tier = 2;
     after.cyphers = [{ name: "Test", level: "1", effect: "" }];
 
-    expect(describeCharacterChange(before, after)).toBe("Changed tier, Added cypher");
+    expect(describeCharacterChange(before, after)).toBe(
+      "versionHistory.changes.basicInfo.tier, versionHistory.changes.collections.cypher.added"
+    );
   });
 
-  it("translates a combined-category key (e.g. multiple basic info changes)", () => {
+  it("describes several basic info changes by the combined key", () => {
     const before = createBaseCharacter();
     const after = createBaseCharacter();
     after.name = "New Name";
     after.tier = 2;
     after.type = "Jack";
 
-    expect(describeCharacterChange(before, after)).toBe("Edited basic info");
+    expect(describeCharacterChange(before, after)).toBe(
+      "versionHistory.changes.basicInfo.combined"
+    );
   });
 
-  it("falls back to the translated generic description when nothing is detected", () => {
+  it("falls back to the generic key when nothing is detected", () => {
     const before = createBaseCharacter();
     const after = createBaseCharacter();
 
-    expect(describeCharacterChange(before, after)).toBe("Updated character");
+    expect(describeCharacterChange(before, after)).toBe("versionHistory.changes.generic");
   });
 
   it("ignores portrait-only changes and still falls back to generic", () => {
@@ -42,6 +46,6 @@ describe("describeCharacterChange", () => {
     const after = createBaseCharacter();
     after.portrait = "data:image/png;base64,different";
 
-    expect(describeCharacterChange(before, after)).toBe("Updated character");
+    expect(describeCharacterChange(before, after)).toBe("versionHistory.changes.generic");
   });
 });

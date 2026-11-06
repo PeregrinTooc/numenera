@@ -1,17 +1,20 @@
 /**
  * Header is NOT included as it's always fixed at the top
  */
-export type SectionId =
-  | "basicInfo"
-  | "stats"
-  | "recoveryDamage"
-  | "abilities"
-  | "specialAbilities"
-  | "attacks"
-  | "cyphers"
-  | "items"
-  | "background"
-  | "notes";
+export const SECTION_IDS = [
+  "basicInfo",
+  "stats",
+  "recoveryDamage",
+  "abilities",
+  "specialAbilities",
+  "attacks",
+  "cyphers",
+  "items",
+  "background",
+  "notes",
+] as const;
+
+export type SectionId = (typeof SECTION_IDS)[number];
 
 export const GRID_ELIGIBLE_SECTIONS: readonly SectionId[] = [
   "abilities",
@@ -145,22 +148,6 @@ export function layoutsAreEqual(layout1: Layout, layout2: Layout): boolean {
   return true;
 }
 
-/**
- * These map to i18n keys: layout.sections.{sectionId}
- */
-export const SECTION_DISPLAY_NAMES: Record<SectionId, string> = {
-  basicInfo: "Basic Info",
-  stats: "Stats",
-  recoveryDamage: "Recovery & Damage",
-  abilities: "Abilities",
-  specialAbilities: "Special Abilities",
-  attacks: "Attacks",
-  cyphers: "Cyphers",
-  items: "Items",
-  background: "Background",
-  notes: "Notes",
-};
-
 export function isSectionId(value: string): value is SectionId {
-  return Object.prototype.hasOwnProperty.call(SECTION_DISPLAY_NAMES, value);
+  return (SECTION_IDS as readonly string[]).includes(value);
 }

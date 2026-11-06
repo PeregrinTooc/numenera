@@ -1,8 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import { migrateLegacyVersionDescriptions } from "@/services/versionDescriptionMigration";
+import { restoredDescription } from "@/services/versionDescriptionText";
 import type { Character } from "@/types/character";
 import { createTestCharacter as createMockCharacter } from "../factories/character.js";
+
+const KEY = "versionHistory.changes";
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -39,6 +42,15 @@ describe.sequential("migrateLegacyVersionDescriptions", () => {
     });
   });
 
+  async function migrateSecondVersionDescribedAs(description: string): Promise<string> {
+    await manager.saveVersion(mockCharacter, "Initial state");
+    await manager.saveVersion({ ...mockCharacter, name: "New Name" }, description);
+
+    await migrateLegacyVersionDescriptions(manager, await manager.getAllVersions());
+
+    return (await manager.getAllVersions())[1].description;
+  }
+
   it("rewrites a bare legacy literal using the diff against the previous version", async () => {
     await manager.saveVersion(mockCharacter, "Initial state");
     const withCypher = {
@@ -51,7 +63,7 @@ describe.sequential("migrateLegacyVersionDescriptions", () => {
     await migrateLegacyVersionDescriptions(manager, versions);
 
     const migrated = await manager.getAllVersions();
-    expect(migrated[1].description).toBe("Added cypher");
+    expect(migrated[1].description).toBe(`${KEY}.collections.cypher.added`);
   });
 
   it("fully replaces a compound description containing the legacy literal", async () => {
@@ -61,60 +73,79 @@ describe.sequential("migrateLegacyVersionDescriptions", () => {
       name: "New Name",
       abilities: [{ name: "Bash", cost: 1, description: "Attack" }],
     };
-    // Reproduces real squashDescriptions() output: two buffered changes
-    // (one field edit, one card op that still had the old generic literal)
-    // combined into one compound description.
+    // Real squashDescriptions() output: a field edit and a card op that still
+    // had the old generic literal, combined into one compound description.
     await manager.saveVersion(changed, "Changed name, Updated character");
 
     const versions = await manager.getAllVersions();
     await migrateLegacyVersionDescriptions(manager, versions);
 
+    // Recomputed from the snapshot diff, so the added ability, which never
+    // appeared in the stored text, is rediscovered too.
     const migrated = await manager.getAllVersions();
-    // Recomputed from the actual snapshot diff, not patched — so both real
-    // changes are rediscovered independently, including "Added ability",
-    // which never appeared in the original stored text at all.
-    expect(migrated[1].description).toBe("Changed name, Added ability");
+    expect(migrated[1].description).toBe(`${KEY}.basicInfo.name, ${KEY}.collections.ability.added`);
   });
 
-  it("leaves a legacy description alone when there's no actual detectable diff", async () => {
+  it("falls back to the generic key when a legacy literal has no detectable diff", async () => {
     await manager.saveVersion(mockCharacter, "Initial state");
-    // Identical character - detectChanges will find nothing, so the
-    // recomputed description is the same generic fallback text.
     await manager.saveVersion({ ...mockCharacter }, "Updated character");
 
     const versions = await manager.getAllVersions();
-    await expect(migrateLegacyVersionDescriptions(manager, versions)).resolves.not.toThrow();
+    await migrateLegacyVersionDescriptions(manager, versions);
 
     const migrated = await manager.getAllVersions();
-    expect(migrated[1].description).toBe("Updated character");
+    expect(migrated[1].description).toBe(`${KEY}.generic`);
   });
 
-  it("does not touch a non-legacy description", async () => {
+  it("rewrites stored English text as its key", async () => {
+    expect(await migrateSecondVersionDescribedAs("Changed name, Added cypher")).toBe(
+      `${KEY}.basicInfo.name, ${KEY}.collections.cypher.added`
+    );
+  });
+
+  it("rewrites stored German text as its key", async () => {
+    expect(await migrateSecondVersionDescribedAs("Stufe geändert, Cypher hinzugefügt")).toBe(
+      `${KEY}.basicInfo.tier, ${KEY}.collections.cypher.added`
+    );
+  });
+
+  it("rewrites an old field-edit label as the key of its group", async () => {
+    expect(await migrateSecondVersionDescribedAs("Changed Might pool, Changed total XP")).toBe(
+      `${KEY}.stats.might, ${KEY}.resources.xp`
+    );
+  });
+
+  it("rewrites a restored description, however often it was restored", async () => {
+    expect(await migrateSecondVersionDescribedAs("Restored: Restored: Imported character")).toBe(
+      restoredDescription(restoredDescription(`${KEY}.imported`))
+    );
+  });
+
+  it("keeps text it does not know as stored", async () => {
+    expect(await migrateSecondVersionDescribedAs("Edit 4, Changed name")).toBe(
+      `Edit 4, ${KEY}.basicInfo.name`
+    );
+  });
+
+  it("leaves a description that is already keys unchanged", async () => {
+    const stored = restoredDescription(`${KEY}.basicInfo.name, ${KEY}.stats.might`);
+
+    expect(await migrateSecondVersionDescribedAs(stored)).toBe(stored);
+  });
+
+  it("rewrites the first version's text without recomputing it", async () => {
     await manager.saveVersion(mockCharacter, "Initial state");
-    const renamed = { ...mockCharacter, name: "New Name" };
-    await manager.saveVersion(renamed, "Changed name");
 
     const versions = await manager.getAllVersions();
     await migrateLegacyVersionDescriptions(manager, versions);
 
     const migrated = await manager.getAllVersions();
-    expect(migrated[1].description).toBe("Changed name");
-  });
-
-  it("never touches index 0, even if it were somehow the legacy literal", async () => {
-    await manager.saveVersion(mockCharacter, "Updated character");
-
-    const versions = await manager.getAllVersions();
-    await migrateLegacyVersionDescriptions(manager, versions);
-
-    const migrated = await manager.getAllVersions();
-    expect(migrated[0].description).toBe("Updated character");
+    expect(migrated[0].description).toBe(`${KEY}.initialState`);
   });
 
   it("does not crash when a predecessor snapshot predates the current schema", async () => {
-    // Legacy shape: only the old single `xp` field, missing currentXp/totalXp
-    // entirely - reproduces a version snapshot saved before that schema
-    // split, which sanitizeCharacter fills in from defaults/legacy fields.
+    // Only the old single `xp` field: a snapshot saved before the
+    // currentXp/totalXp split, which sanitizeCharacter fills in.
     const legacySnapshot = {
       ...mockCharacter,
       currentXp: undefined,
@@ -131,12 +162,9 @@ describe.sequential("migrateLegacyVersionDescriptions", () => {
     const versions = await manager.getAllVersions();
     await expect(migrateLegacyVersionDescriptions(manager, versions)).resolves.not.toThrow();
 
-    // Best-effort backfill: some specific description is produced instead of
-    // the uninformative generic literal, even if the schema gap means it may
-    // also report fields that only "changed" because sanitizeCharacter
-    // filled in a default on the older side. Still strictly more useful than
-    // "Updated character" for every such version.
+    // Best effort: the schema gap may add fields that only "changed" through
+    // sanitising, but the description is still more specific than generic.
     const migrated = await manager.getAllVersions();
-    expect(migrated[1].description).not.toBe("Updated character");
+    expect(migrated[1].description).not.toBe(`${KEY}.generic`);
   });
 });

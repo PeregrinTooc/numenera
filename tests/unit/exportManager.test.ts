@@ -1,4 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { changeLanguage } from "@/i18n/index";
 import { ExportManager } from "@/storage/exportManager";
 import { saveSectionColumns } from "@/storage/layoutStorage";
 import {
@@ -41,6 +42,23 @@ describe("ExportManager", () => {
   });
 
   describe("export() - First Time Export", () => {
+    afterEach(async () => {
+      await changeLanguage("en");
+    });
+
+    it("labels the file type in the current language", async () => {
+      await changeLanguage("de");
+      setupExportTest();
+
+      await ctx.exportManager.export(mockCharacter);
+
+      expect(window.showSaveFilePicker).toHaveBeenCalledWith(
+        expect.objectContaining({
+          types: [expect.objectContaining({ description: "Numenera-Charakterdateien" })],
+        })
+      );
+    });
+
     it("should prompt for location on first export in Chromium", async () => {
       setupExportTest();
 
@@ -50,7 +68,7 @@ describe("ExportManager", () => {
         suggestedName: "glaive-warrior.numenera",
         types: [
           {
-            description: "Numenera Character Files",
+            description: "Numenera character files",
             accept: { "application/json": [".numenera"] },
           },
         ],
