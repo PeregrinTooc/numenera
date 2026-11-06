@@ -32,14 +32,6 @@ jobs:
           node-version: "24"
           cache: "npm"
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v6
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            playwright-${{ runner.os }}-
-
       - name: Install dependencies
         run: npm ci
 
@@ -61,13 +53,9 @@ jobs:
       - name: Run unit tests
         run: npm run test:unit
 
-      - name: Install Playwright Browsers
-        if: hashFiles('tests/e2e/**/*.ts') != ''
-        run: npx playwright install --with-deps
-
-      # Also produces ./dist, which the deploy job publishes.
-      - name: Build and run E2E tests
-        run: npm run test:e2e:prod
+      # Produces ./dist, which the deploy job publishes. The E2E jobs build their own.
+      - name: Build
+        run: npm run build
 
       - name: Setup Pages
         if: github.event_name != 'pull_request'
@@ -79,20 +67,22 @@ jobs:
         with:
           path: "./dist"
 
-  # The desktop profile runs inside build-test; the other Rule 9 profiles run
-  # here, one job each. Selected by the DEVICE env var (tests/e2e/support/device.ts).
-  e2e-devices:
-    name: E2E (${{ matrix.device }})
+  # Every Rule 9 profile, each split into shards that run on their own runner
+  # with one Cucumber worker (E2E_SHARD, scripts/e2e.js). Wall time is the
+  # slowest shard: the WebKit profiles take about three times as long.
+  e2e:
+    name: E2E (${{ matrix.device }}, ${{ matrix.shard }}/4)
     runs-on: ubuntu-24.04
     permissions:
       contents: read
     concurrency:
-      group: e2e-${{ matrix.device }}-${{ github.ref }}
+      group: e2e-${{ matrix.device }}-${{ matrix.shard }}-${{ github.ref }}
       cancel-in-progress: true
     strategy:
       fail-fast: false
       matrix:
-        device: [pixel5, iphone12, ipadpro]
+        device: [desktop, pixel5, iphone12, ipadpro]
+        shard: [1, 2, 3, 4]
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -114,18 +104,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # All browsers: iphone12 and ipadpro need WebKit, pixel5 needs Chromium.
+      # All browsers: iphone12 and ipadpro need WebKit, desktop and pixel5 Chromium.
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Build and run E2E tests on ${{ matrix.device }}
+      - name: Build and run E2E tests on ${{ matrix.device }}, shard ${{ matrix.shard }}/4
         run: npm run test:e2e:prod
         env:
           DEVICE: ${{ matrix.device }}
+          E2E_SHARD: ${{ matrix.shard }}/4
 
   deploy:
     name: Deploy to GitHub Pages
-    needs: [build-test, e2e-devices]
+    needs: [build-test, e2e]
     runs-on: ubuntu-24.04
     # Only ever publish the default branch. Pull requests run the full test
     # suite above but must never reach production.

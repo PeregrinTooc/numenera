@@ -101,49 +101,50 @@ async function reportingSlides(world: CustomWorld, check: () => Promise<void>): 
 }
 
 /**
- * The slides recorded for one section, read after the page has drawn a frame.
- * A slide starts and finishes only as frames are drawn, and after a simulated
- * drag WebKit can stop drawing them for an idle page, which a device showing
- * the page never does; a screenshot of the whole viewport draws one (a clipped
- * one does not).
+ * Wait until the app has started a slide for `name`, then play every running
+ * slide to its end, as the clock is run forward for timers. A slide finishes
+ * only as frames are drawn, and after a simulated drag WebKit can stop drawing
+ * them for an idle page, which a device showing the page never does.
  */
-async function slidesOfDrawnPage(world: CustomWorld, name: string): Promise<SectionSlideRecord[]> {
-  await world.page.screenshot();
-  return slidesOf(world, name);
+async function finishSlidesOnceStarted(
+  world: CustomWorld,
+  name: string,
+  startedSlides: number
+): Promise<void> {
+  await expect
+    .poll(async () => (await slidesOf(world, name)).length)
+    .toBeGreaterThanOrEqual(startedSlides);
+  await world.page.evaluate(() =>
+    document
+      .getAnimations()
+      .filter((animation) => animation.id === "section-slide")
+      .forEach((animation) => animation.finish())
+  );
 }
-
-/** A slow runner takes seconds per screenshot of the full-height viewport */
-const DRAWN_SLIDE_POLL = { timeout: 15_000 };
 
 Then(
   "the {string} section should slide into its new place",
   async function (this: CustomWorld, name: string) {
-    await reportingSlides(this, () =>
-      expect
-        .poll(
-          async () =>
-            (await slidesOfDrawnPage(this, name)).some(
-              (slide) => slide.finished && slide.from !== "none"
-            ),
-          DRAWN_SLIDE_POLL
+    await reportingSlides(this, async () => {
+      await finishSlidesOnceStarted(this, name, 1);
+      await expect
+        .poll(async () =>
+          (await slidesOf(this, name)).some((slide) => slide.finished && slide.from !== "none")
         )
-        .toBe(true)
-    );
+        .toBe(true);
+    });
   }
 );
 
 Then(
   "the {string} section should slide back to where it was",
   async function (this: CustomWorld, name: string) {
-    await reportingSlides(this, () =>
-      expect
-        .poll(
-          async () =>
-            (await slidesOfDrawnPage(this, name)).filter((slide) => slide.finished).length,
-          DRAWN_SLIDE_POLL
-        )
-        .toBeGreaterThanOrEqual(2)
-    );
+    await reportingSlides(this, async () => {
+      await finishSlidesOnceStarted(this, name, 2);
+      await expect
+        .poll(async () => (await slidesOf(this, name)).filter((slide) => slide.finished).length)
+        .toBeGreaterThanOrEqual(2);
+    });
     const slides = await slidesOf(this, name);
     const [there, back] = [startOffsets(slides[0]), startOffsets(slides[slides.length - 1])];
     // Back the way it came: each axis it moved along, in the other direction
