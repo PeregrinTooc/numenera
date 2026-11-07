@@ -1,5 +1,5 @@
 import { Layout, DEFAULT_LAYOUT, isValidLayout, cloneLayout } from "@/types/layout";
-import { SectionColumns, isValidSectionColumns } from "@/types/sectionColumns";
+import { SectionColumns, knownSectionColumns } from "@/types/sectionColumns";
 import { LAYOUT_STORAGE_KEY, SECTION_COLUMNS_STORAGE_KEY } from "./storageConstants.js";
 
 /** Write `value` as JSON; on failure log and continue, with `failureMessage`. */
@@ -11,10 +11,10 @@ function saveJson(key: string, value: unknown, failureMessage: string): void {
   }
 }
 
-/** Read and validate the JSON stored under `key`; any absent, invalid or unreadable value yields `fallback()`. */
-function loadValidated<T>(
+/** Read the JSON stored under `key` through `parse`; any absent, invalid or unreadable value yields `fallback()`. */
+function loadParsed<T>(
   key: string,
-  isValid: (value: T) => boolean,
+  parse: (value: unknown) => T | undefined,
   fallback: () => T,
   messages: { invalid: string; failed: string }
 ): T {
@@ -24,8 +24,8 @@ function loadValidated<T>(
       return fallback();
     }
 
-    const parsed = JSON.parse(stored) as T;
-    if (!isValid(parsed)) {
+    const parsed = parse(JSON.parse(stored));
+    if (parsed === undefined) {
       console.warn(messages.invalid);
       return fallback();
     }
@@ -37,6 +37,11 @@ function loadValidated<T>(
   }
 }
 
+function parseLayout(value: unknown): Layout | undefined {
+  const layout = value as Layout;
+  return isValidLayout(layout) ? layout : undefined;
+}
+
 export function saveLayout(layout: Layout): void {
   // Continuing past a failure is fine: a lost layout is cosmetic - the sections visibly revert to the previous order.
   saveJson(LAYOUT_STORAGE_KEY, layout, "Failed to save layout:");
@@ -46,7 +51,7 @@ export function saveLayout(layout: Layout): void {
  * @returns The stored layout, or the default layout if not found or invalid
  */
 export function loadLayout(): Layout {
-  return loadValidated(LAYOUT_STORAGE_KEY, isValidLayout, () => cloneLayout(DEFAULT_LAYOUT), {
+  return loadParsed(LAYOUT_STORAGE_KEY, parseLayout, () => cloneLayout(DEFAULT_LAYOUT), {
     invalid: "Invalid layout in storage, using default",
     failed: "Failed to load layout:",
   });
@@ -88,10 +93,10 @@ export function saveSectionColumns(columns: SectionColumns): void {
 }
 
 /**
- * @returns The stored choices, or none (every section at its default) if not found or invalid
+ * @returns The stored choices this version knows, or none (every section at its default) if not found or invalid
  */
 export function loadSectionColumns(): SectionColumns {
-  return loadValidated(SECTION_COLUMNS_STORAGE_KEY, isValidSectionColumns, () => ({}), {
+  return loadParsed(SECTION_COLUMNS_STORAGE_KEY, knownSectionColumns, () => ({}), {
     invalid: "Invalid section columns in storage, using defaults",
     failed: "Failed to load section columns:",
   });

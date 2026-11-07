@@ -1,7 +1,6 @@
 import type { CustomWorld } from "./world.js";
 import type { Character } from "@/types/character";
 import type { Layout } from "@/types/layout";
-import type { SectionColumns } from "@/types/sectionColumns";
 import { LAYOUT_STORAGE_KEY, SECTION_COLUMNS_STORAGE_KEY } from "@/storage/storageConstants";
 import { waitForCharacterSheetReady } from "./app-ready.js";
 import { FULL_CHARACTER, EMPTY_ARRAYS } from "./cardTestFixtures.js";
@@ -45,8 +44,8 @@ export class SetupDsl {
     );
   }
 
-  /** Seeds the saved column choices, reloads, and waits for the sheet to be ready. */
-  async sectionColumns(columns: SectionColumns): Promise<void> {
+  /** Seeds the saved column choices, reloads, and waits for the sheet to be ready. Keys need not be known sections. */
+  async sectionColumns(columns: Record<string, number>): Promise<void> {
     await this.seedLocalStorage(SECTION_COLUMNS_STORAGE_KEY, JSON.stringify(columns));
   }
 

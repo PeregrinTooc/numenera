@@ -3,6 +3,7 @@ import {
   columnsFor,
   isCardSection,
   isValidSectionColumns,
+  knownSectionColumns,
   withColumns,
 } from "@/types/sectionColumns";
 
@@ -32,6 +33,12 @@ describe("section columns", () => {
     expect(isValidSectionColumns({ stats: 2 })).toBe(false);
     expect(isValidSectionColumns({ items: 3 })).toBe(false);
     expect(isValidSectionColumns({ items: "2" })).toBe(false);
+  });
+
+  it("known choices keep the valid entries of a map and drop the rest", () => {
+    expect(knownSectionColumns({ items: 1, futureSection: 2, cyphers: 3 })).toEqual({ items: 1 });
+    expect(knownSectionColumns(null)).toBeUndefined();
+    expect(knownSectionColumns([])).toBeUndefined();
   });
 
   it("card sections are the five collection sections", () => {

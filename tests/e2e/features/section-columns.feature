@@ -44,6 +44,11 @@ Feature: Card columns follow the section's width
     And I reload the page
     Then the "Cyphers" section should show its cards in 1 column(s)
 
+  Scenario: A saved choice for a section the app does not know leaves the others intact
+    Given the viewport is 1280 pixels wide
+    And I have saved the "Cyphers" section as 1 column and an unknown section as 2 columns
+    Then the "Cyphers" section should show its cards in 1 column(s)
+
   Scenario: The switch is only offered where it can do something
     Given the viewport is 1280 pixels wide
     And layout edit mode is active

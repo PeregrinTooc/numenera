@@ -8,7 +8,6 @@ import { CardsDsl } from "./cards.js";
 import { SetupDsl } from "./setup.js";
 import { BASE_URL } from "./serverUrl.js";
 import type { Layout } from "@/types/layout";
-import type { SectionColumns } from "@/types/sectionColumns";
 import type { TouchGesture } from "./sections.js";
 
 setDefaultTimeout(30000);
@@ -36,7 +35,8 @@ export interface CustomWorld extends World {
   // card-reordering.steps.ts
   draggedCypherName?: string;
   // layout-import-export.steps.ts
-  importedFile?: { layout?: Layout; sectionColumns?: SectionColumns };
+  importedFile?: { layout?: Layout; sectionColumns?: Record<string, number> };
+  importNote?: string;
   scrollYBeforeSwipe?: number;
   heldTouchGesture?: TouchGesture;
   heldDropTarget?: {
@@ -71,7 +71,8 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   previousCardCount?: number;
   // card-reordering.steps.ts
   draggedCypherName?: string;
-  importedFile?: { layout?: Layout; sectionColumns?: SectionColumns };
+  importedFile?: { layout?: Layout; sectionColumns?: Record<string, number> };
+  importNote?: string;
   scrollYBeforeSwipe?: number;
   heldTouchGesture?: TouchGesture;
   heldDropTarget?: {

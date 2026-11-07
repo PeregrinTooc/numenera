@@ -226,6 +226,12 @@ describe("Layout Storage", () => {
       expect(loadSectionColumns()).toEqual({});
     });
 
+    it("stored choices for unknown sections cost only their own entry", () => {
+      localStorage.setItem(SECTION_COLUMNS_STORAGE_KEY, '{"cyphers":1,"futureSection":2}');
+
+      expect(loadSectionColumns()).toEqual({ cyphers: 1 });
+    });
+
     it("resetting the layout clears the column choices", () => {
       saveSectionColumns({ cyphers: 1 });
 

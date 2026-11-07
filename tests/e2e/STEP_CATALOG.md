@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **733** in 54 files
-- Feature step lines: **2387**
+- Step definitions: **736** in 54 files
+- Feature step lines: **2399**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -61,7 +61,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
-| [layout-import-export.steps.ts](#layoutimportexportstepsts) | 14 | 0 |
+| [layout-import-export.steps.ts](#layoutimportexportstepsts) | 17 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
 | [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
@@ -688,7 +688,7 @@ pattern this script does not understand):
 | When | `I click the Exit Edit Layout button` | 2 | 10 |
 | When | `I click the Reset Layout button` | 1 | 15 |
 | Given | `I have customized the layout` | 8 | 91 |
-| Given | `I have the default layout` | 3 | 127 |
+| Given | `I have the default layout` | 5 | 127 |
 | Given | `I open the settings panel` | 2 | 104 |
 | Then | `I should see layout edit mode is active` | 1 | 20 |
 | Then | `I should see the {string} button` | 1 | 67 |
@@ -704,20 +704,23 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I choose to {string}` | 4 | 97 |
+| When | `I choose to {string}` | 5 | 125 |
 | Given | `I have a character file with a different layout` | 5 | 38 |
 | Given | `I have a character file with the default layout` | 1 | 42 |
 | Given | `I have a character file with the default layout that sets the {string} section to {int} column(s)` | 1 | 50 |
+| Given | `I have a character file with the default layout that sets the {string} section to {int} column(s) and an unknown section to {int} column(s)` | 2 | 60 |
 | Given | `I have a character file without a layout` | 1 | 46 |
-| Given | `I have set the {string} section to {int} column(s)` | 1 | 60 |
-| When | `I import the character file` | 8 | 69 |
-| Then | `I should not see a layout choice prompt` | 5 | 81 |
-| Then | `I should see a layout choice prompt` | 1 | 77 |
-| Then | `I should see options to {string} or {string}` | 1 | 85 |
-| Then | `the {string} option should have focus` | 1 | 93 |
-| Then | `the {string} section should be set to {int} column(s)` | 2 | 105 |
+| Given | `I have saved the {string} section as {int} column(s) and an unknown section as {int} column(s)` | 1 | 79 |
+| Given | `I have set the {string} section to {int} column(s)` | 1 | 70 |
+| When | `I import the character file` | 10 | 89 |
+| Then | `I should not see a layout choice prompt` | 5 | 109 |
+| Then | `I should see a layout choice prompt` | 1 | 105 |
+| Then | `I should see options to {string} or {string}` | 1 | 113 |
+| Then | `the {string} option should have focus` | 1 | 121 |
+| Then | `the {string} section should be set to {int} column(s)` | 3 | 133 |
 | Then | `the exported file should contain the layout configuration` | 1 | 25 |
-| Then | `the imported character should be shown` | 5 | 101 |
+| Then | `the import note should read {string}` | 1 | 101 |
+| Then | `the imported character should be shown` | 5 | 129 |
 
 ## recovery-damage-track.steps.ts
 
@@ -780,7 +783,7 @@ pattern this script does not understand):
 | Then | `the {string} heading row should stay inside its frame` | 1 | 95 |
 | Then | `the {string} section should offer a column switch` | 1 | 36 |
 | Then | `the {string} section should offer no column switch` | 3 | 44 |
-| Then | `the {string} section should show its cards in {int} column\(s)` | 7 | 9 |
+| Then | `the {string} section should show its cards in {int} column\(s)` | 8 | 9 |
 | Then | `the armor badge should not cover the add attack button` | 1 | 81 |
 | Then | `the max cyphers badge should be left of the {string} heading` | 1 | 67 |
 | Then | `the shins badge should be left of the {string} heading` | 1 | 74 |
@@ -1096,5 +1099,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 50 | 9 |
+| Given | `the viewport is {int} pixels wide` | 51 | 9 |
 

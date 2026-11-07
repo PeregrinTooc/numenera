@@ -59,10 +59,30 @@ Given(
 );
 
 Given(
+  "I have a character file with the default layout that sets the {string} section to {int} column(s) and an unknown section to {int} column(s)",
+  function (this: CustomWorld, section: string, columns: number, unknownColumns: number) {
+    this.importedFile = {
+      layout: cloneLayout(DEFAULT_LAYOUT),
+      sectionColumns: { [sectionId(section)]: columns, futureSection: unknownColumns },
+    };
+  }
+);
+
+Given(
   "I have set the {string} section to {int} column(s)",
   async function (this: CustomWorld, section: string, columns: number) {
     await this.setup.sectionColumns({
       [sectionId(section) as CardSectionId]: columns as ColumnCount,
+    });
+  }
+);
+
+Given(
+  "I have saved the {string} section as {int} column(s) and an unknown section as {int} column(s)",
+  async function (this: CustomWorld, section: string, columns: number, unknownColumns: number) {
+    await this.setup.sectionColumns({
+      [sectionId(section)]: columns,
+      futureSection: unknownColumns,
     });
   }
 );
@@ -72,7 +92,15 @@ When("I import the character file", async function (this: CustomWorld) {
     ...numeneraFile({ ...FULL_CHARACTER, name: IMPORTED_NAME }),
     ...this.importedFile,
   };
+  this.page.once("dialog", (dialog) => {
+    this.importNote = dialog.message();
+    void dialog.dismiss();
+  });
   await importFile(this.page, "imported.numenera", file);
+});
+
+Then("the import note should read {string}", async function (this: CustomWorld, message: string) {
+  await expect.poll(() => this.importNote).toBe(message);
 });
 
 Then("I should see a layout choice prompt", async function (this: CustomWorld) {

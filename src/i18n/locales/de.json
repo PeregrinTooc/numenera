@@ -446,6 +446,7 @@
     "importAdjustments": "Hinweis: Beim Import wurden {{count}} Anpassungen vorgenommen. Details stehen in der Konsole.",
     "schemaMismatch": "Die Datei hat eine andere Schemaversion ({{fileVersion}}), die aktuelle Version ist {{currentVersion}}. Daten wurden eventuell angepasst.",
     "invalidLayout": "Die importierte Datei enthält eine ungültige Layout-Konfiguration. Das aktuelle Layout wird beibehalten.",
+    "invalidSectionColumns": "Einige Spalteneinstellungen der importierten Datei konnten nicht übernommen werden und wurden ignoriert.",
     "fileTypeDescription": "Numenera-Charakterdateien"
   },
   "portrait": {

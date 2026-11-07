@@ -92,13 +92,6 @@ Open points from the section columns and frames work (spec:
   at 390/393). A 1rem phone frame padding only reduces it. Options: let the
   card's badge row wrap (lifts the "cards unchanged" non-goal), a much thinner
   phone frame, or accept it.
-- **One unknown id drops every stored column choice.** `isValidSectionColumns`
-  rejects the whole map, so a future card section would wipe all choices on a
-  downgrade or in an older app reading a new export. Keep the known, valid
-  entries instead.
-- **Own warning for invalid imported column choices.** They reuse
-  `fileOperations.invalidLayout` ("…Using current layout."), which misleads when
-  the layout itself was fine. Add a key in `en.json` and `de.json`.
 - **`IFileStorage.ts` duplicates `ImportResult`** without `layout` and
   `sectionColumns`; make it the one definition.
 - **Comparison view ignores a section's column choice.** It always allows two

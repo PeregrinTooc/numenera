@@ -446,6 +446,7 @@
     "importAdjustments": "Note: {{count}} adjustments were made during import. Check console for details.",
     "schemaMismatch": "File has different schema version ({{fileVersion}}), current version is {{currentVersion}}. Data may have been adjusted.",
     "invalidLayout": "Imported file contains invalid layout configuration. Using current layout.",
+    "invalidSectionColumns": "Some column choices in the imported file could not be used and were ignored.",
     "fileTypeDescription": "Numenera character files"
   },
   "portrait": {
