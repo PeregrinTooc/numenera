@@ -1,6 +1,7 @@
 import { vi } from "vitest";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import type { Character } from "@/types/character";
+import { SECTION_IDS } from "@/types/layout";
 
 type TouchType = "touchstart" | "touchmove" | "touchend" | "touchcancel";
 
@@ -29,7 +30,10 @@ export function sectionOrder(): string[] {
   );
 }
 
-/** jsdom lays nothing out: give a section the box a browser would. */
+/**
+ * jsdom lays nothing out: give a section the box a browser would, on screen
+ * (see showOnScreen).
+ */
 export function placeSection(
   id: string,
   left: number,
@@ -40,6 +44,19 @@ export function placeSection(
   vi.spyOn(section(id), "getBoundingClientRect").mockReturnValue(
     new globalThis.DOMRect(left, top, width, height)
   );
+  showOnScreen(top + height);
+}
+
+/**
+ * Make the viewport a row taller than `bottom` if it is not already, so a box
+ * reaching down to `bottom` is on screen and clear of the bottom edge zone,
+ * where a held touch drag scrolls the page.
+ */
+function showOnScreen(bottom: number): void {
+  const height = bottom + ROW_HEIGHT;
+  if (window.innerHeight < height) {
+    vi.spyOn(window, "innerHeight", "get").mockReturnValue(height);
+  }
 }
 
 export const ROW_HEIGHT = 200;
@@ -51,6 +68,7 @@ export const ROW_HEIGHT = 200;
  * against `window.scrollBy`, which jsdom does not implement either.
  */
 export function layOutByRows(): void {
+  showOnScreen(SECTION_IDS.length * ROW_HEIGHT);
   let scrollTop = 0;
   vi.spyOn(window, "scrollBy").mockImplementation(((_x: number, y: number) => {
     scrollTop += y;

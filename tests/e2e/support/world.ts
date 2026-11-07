@@ -9,6 +9,7 @@ import { SetupDsl } from "./setup.js";
 import { BASE_URL } from "./serverUrl.js";
 import type { Layout } from "@/types/layout";
 import type { SectionColumns } from "@/types/sectionColumns";
+import type { TouchGesture } from "./sections.js";
 
 setDefaultTimeout(30000);
 
@@ -37,6 +38,7 @@ export interface CustomWorld extends World {
   // layout-import-export.steps.ts
   importedFile?: { layout?: Layout; sectionColumns?: SectionColumns };
   scrollYBeforeSwipe?: number;
+  heldTouchGesture?: TouchGesture;
   heldDropTarget?: {
     name: string;
     box: { x: number; y: number; width: number; height: number };
@@ -71,6 +73,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   draggedCypherName?: string;
   importedFile?: { layout?: Layout; sectionColumns?: SectionColumns };
   scrollYBeforeSwipe?: number;
+  heldTouchGesture?: TouchGesture;
   heldDropTarget?: {
     name: string;
     box: { x: number; y: number; width: number; height: number };

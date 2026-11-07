@@ -25,7 +25,7 @@ export class LivePreview {
    */
   private shown: { layout: Layout; keptStill: SectionId } | null = null;
   /** Pending switch to the live preview of the current intent. */
-  private dwellTimer: ReturnType<typeof setTimeout> | null = null;
+  private dwell: { timer: ReturnType<typeof setTimeout>; onHold: () => void } | null = null;
   /** Where the pointer was at the last hover. */
   private lastPointer: Point | null = null;
   /** Where the pointer was when the live preview appeared, until it moves on. */
@@ -81,10 +81,19 @@ export class LivePreview {
   restartDwell(armed: boolean, onHold: () => void): void {
     this.cancelDwell();
     if (!armed) return;
-    this.dwellTimer = setTimeout(() => {
-      this.dwellTimer = null;
+    const timer = setTimeout(() => {
+      this.dwell = null;
       onHold();
     }, LIVE_PREVIEW_DELAY_MS);
+    this.dwell = { timer, onHold };
+  }
+
+  /**
+   * Start the pending wait over: the page scrolled under the pointer, so the
+   * intent has not held still, even if it is unchanged.
+   */
+  postponeDwell(): void {
+    if (this.dwell) this.restartDwell(true, this.dwell.onHold);
   }
 
   /**
@@ -125,7 +134,7 @@ export class LivePreview {
   }
 
   private cancelDwell(): void {
-    if (this.dwellTimer !== null) clearTimeout(this.dwellTimer);
-    this.dwellTimer = null;
+    if (this.dwell) clearTimeout(this.dwell.timer);
+    this.dwell = null;
   }
 }

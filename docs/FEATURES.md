@@ -207,6 +207,10 @@ All features listed below have full BDD test coverage and are verified working.
     long-press a section (250 ms) and drag it onto another section; the drop
     zones work as for the mouse (see "Pairing Sections by Drag" above)
   - A quick swipe still scrolls the page
+  - Held within 64 px of the top or bottom edge, the drag scrolls the page,
+    faster the closer to the edge (up to 900 px/s), so a section can be
+    dropped onto one that was off screen. No live preview appears while the
+    page scrolls (`EdgeAutoScroll`)
 
 - **Automated Section Drag E2E Coverage** ([section-rearrangement.feature](../tests/e2e/features/section-rearrangement.feature))
   - The desktop and touch section-drag scenarios run automatically
