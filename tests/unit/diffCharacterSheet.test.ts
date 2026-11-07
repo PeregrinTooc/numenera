@@ -1,12 +1,34 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { render } from "lit-html";
 import { DiffCharacterSheet } from "@/components/DiffCharacterSheet";
 import { diffCharacters } from "@/utils/characterDiff";
 import { createTestCharacter as createBaseCharacter } from "../factories/character.js";
 import { setupTestContainer } from "./helpers/testSetup.js";
+import { saveSectionColumns } from "@/storage/layoutStorage";
 
 describe("DiffCharacterSheet", () => {
   const getContainer = setupTestContainer();
+
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it("lays a card section out in the columns chosen for it", () => {
+    saveSectionColumns({ cyphers: 1 });
+    const character = createBaseCharacter();
+    character.cyphers = [{ name: "Detonation", level: "3", effect: "Explodes" }];
+    character.equipment = [{ name: "Rope" }];
+    const diff = diffCharacters(character, character);
+
+    render(new DiffCharacterSheet(character, diff).forSide("right").render(), getContainer());
+
+    const inTwoColumns = (testId: string): boolean | undefined =>
+      getContainer()
+        .querySelector(`[data-testid="${testId}"]`)
+        ?.parentElement?.classList.contains("section-columns-2");
+    expect(inTwoColumns("cyphers-section")).toBe(false);
+    expect(inTwoColumns("equipment-section")).toBe(true);
+  });
 
   it("renders no inputs or buttons - the view is fully read-only", () => {
     const left = createBaseCharacter();

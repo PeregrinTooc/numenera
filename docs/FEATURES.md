@@ -199,7 +199,8 @@ All features listed below have full BDD test coverage and are verified working.
     boxes inside the frame
   - Cyphers' max-cyphers badge and Items' shins badge sit at the top left of
     their heading row
-  - The comparison view applies the same width rule (no switch)
+  - The comparison view applies the same width rule and each section's column
+    choice (no switch)
 
 ### Automated Section Drag/Drop Tests & Touch Long-Press Drag
 

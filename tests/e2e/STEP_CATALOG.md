@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **736** in 54 files
-- Feature step lines: **2399**
+- Step definitions: **737** in 54 files
+- Feature step lines: **2405**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -64,7 +64,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 17 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
-| [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
+| [section-columns.steps.ts](#sectioncolumnsstepsts) | 9 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 11 | 0 |
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
@@ -711,7 +711,7 @@ pattern this script does not understand):
 | Given | `I have a character file with the default layout that sets the {string} section to {int} column(s) and an unknown section to {int} column(s)` | 2 | 60 |
 | Given | `I have a character file without a layout` | 1 | 46 |
 | Given | `I have saved the {string} section as {int} column(s) and an unknown section as {int} column(s)` | 1 | 79 |
-| Given | `I have set the {string} section to {int} column(s)` | 1 | 70 |
+| Given | `I have set the {string} section to {int} column(s)` | 2 | 70 |
 | When | `I import the character file` | 10 | 89 |
 | Then | `I should not see a layout choice prompt` | 5 | 109 |
 | Then | `I should see a layout choice prompt` | 1 | 105 |
@@ -779,14 +779,15 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I switch the {string} section to {int} column\(s)` | 1 | 22 |
-| Then | `the {string} heading row should stay inside its frame` | 1 | 95 |
-| Then | `the {string} section should offer a column switch` | 1 | 36 |
-| Then | `the {string} section should offer no column switch` | 3 | 44 |
-| Then | `the {string} section should show its cards in {int} column\(s)` | 8 | 9 |
-| Then | `the armor badge should not cover the add attack button` | 1 | 81 |
-| Then | `the max cyphers badge should be left of the {string} heading` | 1 | 67 |
-| Then | `the shins badge should be left of the {string} heading` | 1 | 74 |
+| When | `I switch the {string} section to {int} column\(s)` | 1 | 41 |
+| Then | `the {string} heading row should stay inside its frame` | 1 | 114 |
+| Then | `the {string} section should offer a column switch` | 1 | 55 |
+| Then | `the {string} section should offer no column switch` | 3 | 63 |
+| Then | `the {string} section should show its cards in {int} column\(s)` | 8 | 18 |
+| Then | `the {word} pane should show its cyphers in {int} column\(s)` | 1 | 28 |
+| Then | `the armor badge should not cover the add attack button` | 1 | 100 |
+| Then | `the max cyphers badge should be left of the {string} heading` | 1 | 86 |
+| Then | `the shins badge should be left of the {string} heading` | 1 | 93 |
 
 ## section-drop-preview.steps.ts
 
@@ -952,16 +953,16 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `comparison view is enabled in settings` | 23 | 19 |
+| Given | `comparison view is enabled in settings` | 24 | 19 |
 | Then | `comparison view should show as enabled in settings` | 1 | 35 |
-| Given | `I am viewing the comparison view` | 19 | 39 |
+| Given | `I am viewing the comparison view` | 20 | 39 |
 | When | `I close the settings panel` | 2 | 30 |
 | When | `I enable comparison view in settings` | 2 | 23 |
 | Given | `the character has a version where a cypher was renamed` | 1 | 112 |
 | Given | `the character has a version with a modified cypher effect` | 1 | 93 |
 | Given | `the character has a version with a name change` | 3 | 58 |
 | Given | `the character has a version with a removed cypher` | 1 | 82 |
-| Given | `the character has a version with an added cypher` | 1 | 68 |
+| Given | `the character has a version with an added cypher` | 2 | 68 |
 | Then | `the comparison view should be visible` | 3 | 44 |
 | Then | `the comparison view should not be visible` | 3 | 48 |
 
@@ -1099,5 +1100,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 51 | 9 |
+| Given | `the viewport is {int} pixels wide` | 52 | 9 |
 

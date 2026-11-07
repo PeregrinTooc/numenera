@@ -94,8 +94,6 @@ Open points from the section columns and frames work (spec:
   phone frame, or accept it.
 - **`IFileStorage.ts` duplicates `ImportResult`** without `layout` and
   `sectionColumns`; make it the one definition.
-- **Comparison view ignores a section's column choice.** It always allows two
-  columns where the pane is wide.
 - **Two-column threshold has little slack.** Just above 40rem, two Ability
   cards are ~288 px wide with ~5 px to spare; ~42rem would give more room if
   card content grows.

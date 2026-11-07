@@ -9,9 +9,10 @@ import type {
 } from "@/types/character";
 import type { CollectionDiffEntry, CollectionItemStatus } from "@/utils/characterDiff";
 import { t } from "@/i18n/index";
+import type { ColumnCount } from "@/types/sectionColumns";
 
-// Two columns only where the pane is wide enough (see section-columns.css)
-const GRID_TWO_COLUMNS = "section-card-grid";
+// Two columns only where the section is set to two and the pane is wide enough (see section-columns.css)
+const CARD_GRID = "section-card-grid";
 
 export function diffClass(status: CollectionItemStatus): string {
   switch (status) {
@@ -35,13 +36,14 @@ export function renderCollectionDiff<T>(
   spec: {
     testId: string;
     heading: string;
+    columns: ColumnCount;
     listClass: string;
     renderItem: (entry: CollectionDiffEntry<T>) => TemplateResult;
   }
 ): TemplateResult | typeof nothing {
   if (entries.length === 0) return nothing;
   return html`
-    <div class="section-columns section-columns-2">
+    <div class="section-columns ${spec.columns === 2 ? "section-columns-2" : ""}">
       <div data-testid="${spec.testId}" class="section-box">
         <h2 class="section-box-heading">${spec.heading}</h2>
         <div class="${spec.listClass}">${entries.map(spec.renderItem)}</div>
@@ -51,12 +53,14 @@ export function renderCollectionDiff<T>(
 }
 
 export function renderCyphersDiff(
-  entries: CollectionDiffEntry<Cypher>[]
+  entries: CollectionDiffEntry<Cypher>[],
+  columns: ColumnCount
 ): TemplateResult | typeof nothing {
   return renderCollectionDiff(entries, {
+    columns,
     testId: "cyphers-section",
     heading: t("cyphers.heading"),
-    listClass: GRID_TWO_COLUMNS,
+    listClass: CARD_GRID,
     renderItem: (entry) => html`
       <div data-testid="cypher-item" class="cypher-item-card ${diffClass(entry.status)}">
         <div class="font-semibold text-lg">⚡ ${entry.item.name}</div>
@@ -71,6 +75,7 @@ export function renderArtifactsDiff(
   entries: CollectionDiffEntry<Artifact>[]
 ): TemplateResult | typeof nothing {
   return renderCollectionDiff(entries, {
+    columns: 1,
     testId: "artifacts-section",
     heading: t("artifacts.heading"),
     listClass: "space-y-4",
@@ -85,12 +90,14 @@ export function renderArtifactsDiff(
 }
 
 export function renderEquipmentDiff(
-  entries: CollectionDiffEntry<EquipmentItem>[]
+  entries: CollectionDiffEntry<EquipmentItem>[],
+  columns: ColumnCount
 ): TemplateResult | typeof nothing {
   return renderCollectionDiff(entries, {
+    columns,
     testId: "equipment-section",
     heading: t("equipment.heading"),
-    listClass: GRID_TWO_COLUMNS,
+    listClass: CARD_GRID,
     renderItem: (entry) => html`
       <div data-testid="equipment-item" class="equipment-item-card ${diffClass(entry.status)}">
         <div class="equipment-name">${entry.item.name}</div>
@@ -106,6 +113,7 @@ export function renderOdditiesDiff(
   entries: CollectionDiffEntry<string>[]
 ): TemplateResult | typeof nothing {
   return renderCollectionDiff(entries, {
+    columns: 1,
     testId: "oddities-section",
     heading: t("oddities.heading"),
     listClass: "space-y-2",
@@ -118,12 +126,14 @@ export function renderOdditiesDiff(
 }
 
 export function renderAttacksDiff(
-  entries: CollectionDiffEntry<Attack>[]
+  entries: CollectionDiffEntry<Attack>[],
+  columns: ColumnCount
 ): TemplateResult | typeof nothing {
   return renderCollectionDiff(entries, {
+    columns,
     testId: "attacks-section",
     heading: t("attacks.title"),
-    listClass: GRID_TWO_COLUMNS,
+    listClass: CARD_GRID,
     renderItem: (entry) => html`
       <div data-testid="attack-item" class="attack-item-card ${diffClass(entry.status)}">
         <div class="attack-name font-bold text-lg">${entry.item.name}</div>
@@ -138,12 +148,14 @@ export function renderAttacksDiff(
 }
 
 export function renderAbilitiesDiff(
-  entries: CollectionDiffEntry<Ability>[]
+  entries: CollectionDiffEntry<Ability>[],
+  columns: ColumnCount
 ): TemplateResult | typeof nothing {
   return renderCollectionDiff(entries, {
+    columns,
     testId: "abilities-section",
     heading: t("abilities.heading"),
-    listClass: GRID_TWO_COLUMNS,
+    listClass: CARD_GRID,
     renderItem: (entry) => html`
       <div data-testid="ability-item" class="ability-item-card ${diffClass(entry.status)}">
         <h4 class="ability-name font-bold text-lg">${entry.item.name}</h4>
@@ -158,12 +170,14 @@ export function renderAbilitiesDiff(
 }
 
 export function renderSpecialAbilitiesDiff(
-  entries: CollectionDiffEntry<SpecialAbility>[]
+  entries: CollectionDiffEntry<SpecialAbility>[],
+  columns: ColumnCount
 ): TemplateResult | typeof nothing {
   return renderCollectionDiff(entries, {
+    columns,
     testId: "special-abilities-section",
     heading: t("specialAbilities.title"),
-    listClass: GRID_TWO_COLUMNS,
+    listClass: CARD_GRID,
     renderItem: (entry) => html`
       <div
         data-testid="special-ability-item"

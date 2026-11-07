@@ -152,6 +152,16 @@ Feature: Version Comparison View
 
     # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
+    Scenario: A pane follows the sections' column choices
+        Given the viewport is 1920 pixels wide
+        And I have set the "Cyphers" section to 1 column
+        And comparison view is enabled in settings
+        And the character has a version with an added cypher
+        And I am viewing the comparison view
+        Then the right pane should show its cyphers in 1 column(s)
+
+    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
+    @not-phone
     Scenario: Unchanged fields and cards show no highlight
         Given comparison view is enabled in settings
         And the character has a version with a name change

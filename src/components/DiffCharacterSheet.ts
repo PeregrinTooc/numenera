@@ -21,6 +21,8 @@ import {
   renderSpecialAbilitiesDiff,
 } from "./diffCollectionSections.js";
 import { t } from "@/i18n/index";
+import { columnsFor } from "@/types/sectionColumns";
+import { loadSectionColumns } from "@/storage/layoutStorage";
 
 function scalarClass(changed: boolean): string {
   return changed ? "diff-modified" : "";
@@ -175,16 +177,23 @@ export class DiffCharacterSheet {
 
   render(): TemplateResult {
     const collections = this.diff.collections;
+    const chosen = loadSectionColumns();
     return html`
       <div data-testid="diff-character-sheet" class="diff-character-sheet">
         ${this.renderBasicInfo()} ${this.renderStats()} ${this.renderResources()}
-        ${renderCyphersDiff(this.paneEntries(collections.cyphers))}
+        ${renderCyphersDiff(this.paneEntries(collections.cyphers), columnsFor(chosen, "cyphers"))}
         ${renderArtifactsDiff(this.paneEntries(collections.artifacts))}
-        ${renderEquipmentDiff(this.paneEntries(collections.equipment))}
+        ${renderEquipmentDiff(this.paneEntries(collections.equipment), columnsFor(chosen, "items"))}
         ${renderOdditiesDiff(this.paneEntries(collections.oddities))}
-        ${renderAttacksDiff(this.paneEntries(collections.attacks))}
-        ${renderAbilitiesDiff(this.paneEntries(collections.abilities))}
-        ${renderSpecialAbilitiesDiff(this.paneEntries(collections.specialAbilities))}
+        ${renderAttacksDiff(this.paneEntries(collections.attacks), columnsFor(chosen, "attacks"))}
+        ${renderAbilitiesDiff(
+          this.paneEntries(collections.abilities),
+          columnsFor(chosen, "abilities")
+        )}
+        ${renderSpecialAbilitiesDiff(
+          this.paneEntries(collections.specialAbilities),
+          columnsFor(chosen, "specialAbilities")
+        )}
         ${this.renderTextFields()}
       </div>
     `;
