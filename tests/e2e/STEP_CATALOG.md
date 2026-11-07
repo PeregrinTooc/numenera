@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **733** in 54 files
-- Feature step lines: **2387**
+- Step definitions: **734** in 54 files
+- Feature step lines: **2393**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -58,7 +58,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 12 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
 | [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 7 | 0 |
-| [i18n.steps.ts](#i18nstepsts) | 29 | 0 |
+| [i18n.steps.ts](#i18nstepsts) | 30 | 0 |
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 14 | 0 |
@@ -645,7 +645,7 @@ pattern this script does not understand):
 | --- | --- | ---: | ---: |
 | Then | `artifact level labels should display {string}` | 1 | 95 |
 | Then | `cypher level labels should display {string}` | 1 | 85 |
-| Given | `I am on the character sheet page with {string}` | 11 | 8 |
+| Given | `I am on the character sheet page with {string}` | 13 | 8 |
 | When | `I navigate to the page with {string}` | 1 | 13 |
 | Then | `the artifacts heading should be {string}` | 1 | 90 |
 | Then | `the background field label should be {string}` | 2 | 108 |
@@ -665,6 +665,7 @@ pattern this script does not understand):
 | Then | `the new button should display {string}` | 3 | 33 |
 | Then | `the notes field label should be {string}` | 2 | 114 |
 | Then | `the oddities heading should be {string}` | 1 | 103 |
+| Then | `the page should declare its language as {string}` | 2 | 166 |
 | Then | `the page title should be {string}` | 2 | 23 |
 | Then | `the page title should be in English` | 2 | 18 |
 | Then | `the speed stat should display {string}` | 1 | 49 |
@@ -847,9 +848,9 @@ pattern this script does not understand):
 | Given | `I am viewing the character sheet` | 1 | 5 |
 | When | `I click outside the settings panel` | 1 | 53 |
 | When | `I click the British flag icon` | 1 | 78 |
-| When | `I click the German flag icon` | 4 | 74 |
+| When | `I click the German flag icon` | 5 | 74 |
 | When | `I click the settings gear icon` | 2 | 37 |
-| Given | `I have opened the settings panel` | 11 | 49 |
+| Given | `I have opened the settings panel` | 12 | 49 |
 | Then | `I should be able to click the settings gear icon` | 1 | 30 |
 | Then | `I should see a {string} option` | 1 | 109 |
 | Then | `I should see a settings gear icon in the header` | 1 | 22 |
