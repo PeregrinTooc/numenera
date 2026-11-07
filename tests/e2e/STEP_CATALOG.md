@@ -27,7 +27,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 ## Summary
 
 - Step definitions: **738** in 54 files
-- Feature step lines: **2408**
+- Feature step lines: **2409**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -714,7 +714,7 @@ pattern this script does not understand):
 | Given | `I have set the {string} section to {int} column(s)` | 2 | 70 |
 | When | `I import the character file` | 10 | 89 |
 | Then | `I should not see a layout choice prompt` | 5 | 109 |
-| Then | `I should see a layout choice prompt` | 1 | 105 |
+| Then | `I should see a layout choice prompt` | 2 | 105 |
 | Then | `I should see options to {string} or {string}` | 1 | 113 |
 | Then | `the {string} option should have focus` | 1 | 121 |
 | Then | `the {string} section should be set to {int} column(s)` | 3 | 133 |
