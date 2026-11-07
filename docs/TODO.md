@@ -115,19 +115,6 @@ Open points from the section columns and frames work (spec:
   cards are ~288 px wide with ~5 px to spare; ~42rem would give more room if
   card content grows.
 
-### Edge Auto-Scroll for Touch Section Drags
-
-**Overview**  
-Touch long-press section dragging has no auto-scroll, so on a phone a section
-can only be dropped onto a section that is already on screen.
-
-**Goals**
-
-- Scroll the page while a touch drag is held near the top/bottom edge of the
-  viewport
-- Cover it with an E2E scenario that drags between sections that aren't both
-  on screen (don't use `withFullHeightViewport` for that one)
-
 ### Multiple Images
 
 **Overview**  

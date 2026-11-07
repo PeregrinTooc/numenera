@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import { createTestCharacter } from "../factories/character.js";
+import { mountSheet } from "./helpers/sectionDragFixture";
 
 type TouchType = "touchstart" | "touchmove" | "touchend" | "touchcancel";
 
@@ -246,6 +247,110 @@ describe("CharacterSheet touch long-press drag", () => {
 
     expect(dragStart.defaultPrevented).toBe(true);
     expect(card.getAttribute("data-dragging")).not.toBe("true");
+  });
+});
+
+describe("CharacterSheet touch drag edge auto-scroll", () => {
+  /** Total vertical scroll requested so far. */
+  let scrolledY = 0;
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    localStorage.clear();
+    document.elementFromPoint = (): Element | null => null;
+    mountSheet(createTestCharacter());
+    // jsdom does not scroll; record what the drag asks the window to scroll.
+    scrolledY = 0;
+    vi.spyOn(window, "scrollBy").mockImplementation(((_x: number, y: number) => {
+      scrolledY += y;
+    }) as typeof window.scrollBy);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  function dragTo(y: number): void {
+    touch(section("cyphers"), "touchstart", [{ x: 20, y: 400 }]);
+    vi.advanceTimersByTime(250);
+    touch(section("cyphers"), "touchmove", [{ x: 20, y }]);
+  }
+
+  it("scrolls the page up while the drag is held at the top edge", () => {
+    dragTo(5);
+    vi.advanceTimersByTime(500);
+
+    expect(scrolledY).toBeLessThan(-100);
+  });
+
+  it("scrolls the page down while the drag is held at the bottom edge", () => {
+    dragTo(window.innerHeight - 5);
+    vi.advanceTimersByTime(500);
+
+    expect(scrolledY).toBeGreaterThan(100);
+  });
+
+  it("scrolls faster the closer the finger is to the edge", () => {
+    dragTo(50);
+    vi.advanceTimersByTime(500);
+    touch(section("cyphers"), "touchend");
+    const nearZoneStart = scrolledY;
+    scrolledY = 0;
+
+    dragTo(5);
+    vi.advanceTimersByTime(500);
+
+    expect(scrolledY).toBeLessThan(nearZoneStart * 2);
+  });
+
+  it("targets the section scrolled under the finger while it holds still", () => {
+    // Stats comes under the finger once the page has scrolled up a little.
+    vi.spyOn(document, "elementFromPoint").mockImplementation(() =>
+      scrolledY < -50 ? section("stats") : null
+    );
+    vi.spyOn(section("stats"), "getBoundingClientRect").mockReturnValue(
+      new globalThis.DOMRect(0, 0, 800, 400)
+    );
+
+    dragTo(5);
+    vi.advanceTimersByTime(200);
+
+    expect(section("stats").classList.contains("drop-line-before")).toBe(true);
+  });
+
+  it("shows no live preview while the page is scrolling", () => {
+    const before = sectionOrder();
+    vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("stats"));
+    vi.spyOn(section("stats"), "getBoundingClientRect").mockReturnValue(
+      new globalThis.DOMRect(0, 0, 800, 400)
+    );
+
+    dragTo(5);
+    vi.advanceTimersByTime(1000);
+
+    expect(sectionOrder()).toEqual(before);
+    expect(section("stats").classList.contains("drop-line-before")).toBe(true);
+  });
+
+  it("stops scrolling when the drag is released", () => {
+    dragTo(5);
+    vi.advanceTimersByTime(100);
+    touch(section("cyphers"), "touchend");
+    const atRelease = scrolledY;
+    vi.advanceTimersByTime(500);
+
+    expect(scrolledY).toBe(atRelease);
+  });
+
+  it("stops scrolling when the finger moves away from the edge", () => {
+    dragTo(5);
+    vi.advanceTimersByTime(100);
+    touch(section("cyphers"), "touchmove", [{ x: 20, y: 300 }]);
+    const atLeave = scrolledY;
+    vi.advanceTimersByTime(500);
+
+    expect(scrolledY).toBe(atLeave);
   });
 });
 

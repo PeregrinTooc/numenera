@@ -261,6 +261,15 @@ Feature: Section Re-arrangement
 
   # The gesture helper uses CDP touch input, which Playwright offers only on Chromium; covered on Pixel 5.
   @chromium-only
+  Scenario: Holding a touch drag at the top edge scrolls to a section that was off screen
+    Given the viewport is 768 pixels wide
+    And layout edit mode is active
+    When I long-press the "Items" section and hold it at the top edge until the "Stats" section is on screen
+    And I drag it above the "Stats" section and release it
+    Then the "Items" section should appear before the "Stats" section
+
+  # The gesture helper uses CDP touch input, which Playwright offers only on Chromium; covered on Pixel 5.
+  @chromium-only
   Scenario: A quick swipe does not start a section drag
     Given the viewport is 768 pixels wide
     And layout edit mode is active

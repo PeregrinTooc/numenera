@@ -17,6 +17,7 @@ import {
   rowPreviewOf,
 } from "@/components/helpers/sectionDragRender";
 import { LivePreview } from "@/components/helpers/LivePreview";
+import { EdgeAutoScroll } from "@/components/helpers/EdgeAutoScroll";
 
 export { LIVE_PREVIEW_DELAY_MS, LIVE_PREVIEW_SETTLE_PX } from "@/components/helpers/LivePreview";
 
@@ -47,11 +48,21 @@ export class SectionDragController {
   /** The dwell, anchor, slide guard and layout of the live preview. */
   private readonly livePreview = new LivePreview();
 
+  /** Scrolls the page while a touch drag rests at a viewport edge. */
+  private readonly edgeScroll = new EdgeAutoScroll((x, y) => {
+    this.hoverAt(x, y);
+    // A live preview mid-scroll would jump the sheet while it moves
+    this.livePreview.postponeDwell();
+  });
+
   /** Touch long-press → section drag. */
   private readonly touch = new SectionTouchInput({
     isEditMode: () => this.host.isEditMode(),
     onActivate: (id) => this.handleTouchDragActivate(id),
-    onHover: (x, y) => this.hoverAt(x, y),
+    onHover: (x, y) => {
+      this.edgeScroll.follow(x, y);
+      this.hoverAt(x, y);
+    },
     onDrop: () => this.drop(),
     onAbort: () => this.clearDragState(),
   });
@@ -233,6 +244,7 @@ export class SectionDragController {
   /** Forget the drag, its intent and any live preview (which is not saved) */
   private resetDragState(): void {
     this.mouse.stopWatching();
+    this.edgeScroll.stop();
     this.livePreview.reset();
     this.draggedSectionId = null;
     this.setIntent(null);
