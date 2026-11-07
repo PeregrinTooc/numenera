@@ -50,14 +50,6 @@ None open.
 
 ## 📋 Feature Backlog
 
-### Section Drag Follow-ups
-
-- **Check touch dragging on a real iPhone/iPad.** The live preview re-creates
-  the dragged section's element mid-gesture. Chromium (mouse and CDP touch) and
-  WebKit (mouse) were verified; WebKit touch cannot be automated. Safari on a
-  Mac (mouse) keeps the drop after the live preview and slides the sections
-  back when it is cancelled (checked by hand, 2026-11-05).
-
 ### Visual Regression Tests for Component Styling
 
 **Overview**  
