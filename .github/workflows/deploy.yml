@@ -83,6 +83,8 @@ jobs:
       matrix:
         device: [desktop, pixel5, iphone12, ipadpro]
         shard: [1, 2, 3, 4]
+    env:
+      DEVICE: ${{ matrix.device }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -93,25 +95,32 @@ jobs:
           node-version: "24"
           cache: "npm"
 
+      # Only the device's browser engine and its system packages: every other
+      # browser only adds downloads, which a slow package mirror turns into
+      # half an hour. device.ts says which engine a profile runs on.
+      - name: Find the device's browser engine
+        id: engine
+        run: >-
+          node --input-type=module -e 'import { resolveDevice } from "./tests/e2e/support/device.ts";
+          console.log("name=" + resolveDevice(process.env.DEVICE).engine)' >> "$GITHUB_OUTPUT"
+
       - name: Cache Playwright browsers
         uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          key: playwright-${{ runner.os }}-${{ steps.engine.outputs.name }}-${{ hashFiles('package-lock.json') }}
           restore-keys: |
-            playwright-${{ runner.os }}-
+            playwright-${{ runner.os }}-${{ steps.engine.outputs.name }}-
 
       - name: Install dependencies
         run: npm ci
 
-      # All browsers: iphone12 and ipadpro need WebKit, desktop and pixel5 Chromium.
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+      - name: Install Playwright ${{ steps.engine.outputs.name }}
+        run: npx playwright install --with-deps ${{ steps.engine.outputs.name }}
 
       - name: Build and run E2E tests on ${{ matrix.device }}, shard ${{ matrix.shard }}/4
         run: npm run test:e2e:prod
         env:
-          DEVICE: ${{ matrix.device }}
           E2E_SHARD: ${{ matrix.shard }}/4
 
   deploy:
