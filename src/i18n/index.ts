@@ -4,6 +4,9 @@ import en from "./locales/en.json";
 import de from "./locales/de.json";
 
 export async function initI18n(): Promise<void> {
+  i18next.on("languageChanged", (lang) => {
+    document.documentElement.lang = lang;
+  });
   await i18next.use(LanguageDetector).init({
     resources: {
       en: { translation: en },

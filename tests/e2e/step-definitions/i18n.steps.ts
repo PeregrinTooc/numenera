@@ -163,3 +163,7 @@ Then("the language should remain German", async function () {
   const title = this.dom.getByTestId("page-title");
   await expect(title).toHaveText("Numenera Charakterbogen");
 });
+
+Then("the page should declare its language as {string}", async function (language: string) {
+  await expect(this.page.locator("html")).toHaveAttribute("lang", language);
+});

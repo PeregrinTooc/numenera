@@ -67,3 +67,13 @@ Feature: Internationalization (i18n)
         Then the page title should be in English
         And the load button should display "Load Example"
         And the new button should display "New"
+
+    Scenario: The page declares the language it is shown in
+        Given I am on the character sheet page with "?lang=de"
+        Then the page should declare its language as "de"
+
+    Scenario: The declared page language follows a language switch
+        Given I am on the character sheet page with "?lang=en"
+        And I have opened the settings panel
+        When I click the German flag icon
+        Then the page should declare its language as "de"
