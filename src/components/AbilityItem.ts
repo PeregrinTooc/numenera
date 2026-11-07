@@ -127,14 +127,16 @@ export class AbilityItem {
           colorTheme: "indigo",
         })}
 
-        <div class="ability-header flex justify-between items-start mb-2 pr-8">
+        <div
+          class="ability-header flex flex-wrap justify-between items-start gap-x-2 gap-y-1 mb-2 pr-8"
+        >
           <h4
             data-testid="ability-name-${this.ability.name}"
             class="ability-name font-bold text-lg text-indigo-900"
           >
             ${this.ability.name}
           </h4>
-          <div class="ability-badges flex gap-2">
+          <div class="ability-badges flex flex-wrap gap-2">
             ${this.ability.cost !== undefined
               ? html`
                   <span

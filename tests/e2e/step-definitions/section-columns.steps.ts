@@ -132,3 +132,30 @@ Then(
     expect(overflow).toBeLessThanOrEqual(0.5);
   }
 );
+
+// Inside the card's border and clear of its edit button
+Then("every ability card's badges should stay inside the card", async function (this: CustomWorld) {
+  const cards = await sectionLocator(this.page, "Abilities").locator(".ability-item-card").all();
+  expect(cards.length).toBeGreaterThan(0);
+  for (const card of cards) {
+    const misplaced = await card.evaluate((el) => {
+      const inner =
+        el.getBoundingClientRect().right - parseFloat(window.getComputedStyle(el).borderRightWidth);
+      const edit = el
+        .querySelector("[data-testid^='ability-edit-button']")
+        ?.getBoundingClientRect();
+      return Array.from(el.querySelectorAll(".ability-badge"))
+        .map((badge) => badge.getBoundingClientRect())
+        .filter(
+          (b) =>
+            b.right > inner + 0.5 ||
+            (edit !== undefined &&
+              b.left < edit.right &&
+              edit.left < b.right &&
+              b.top < edit.bottom &&
+              edit.top < b.bottom)
+        ).length;
+    });
+    expect(misplaced).toBe(0);
+  }
+});

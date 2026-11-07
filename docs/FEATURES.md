@@ -201,6 +201,7 @@ All features listed below have full BDD test coverage and are verified working.
     their heading row
   - The comparison view applies the same width rule and each section's column
     choice (no switch)
+  - An ability card's badges wrap under its name when the card is narrow
 
 ### Automated Section Drag/Drop Tests & Touch Long-Press Drag
 

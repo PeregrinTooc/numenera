@@ -79,25 +79,6 @@ request, re-optimises and reloads the page. Starting the server in
 the cost of a few seconds per run. CI runs the production build and is not
 affected.
 
-### Section Columns and Frames Follow-ups
-
-Open points from the section columns and frames work (spec:
-`docs/superpowers/specs/2026-11-03-section-columns-and-frames-design.md`).
-
-- **Ability-card badge rows overflow their card on phones (needs a design
-  decision).** The frame every section now has takes ~52 px of width; with the
-  cards unchanged (a spec non-goal), badge rows such as "Kosten: 2 |
-  Geschwindigkeit" stick out of the card: +17/+26 px at 390 px (iPhone 12),
-  +14/+23 px at 393 px (Pixel 5), +47/+56 px at 360 px (none before the frame
-  at 390/393). A 1rem phone frame padding only reduces it. Options: let the
-  card's badge row wrap (lifts the "cards unchanged" non-goal), a much thinner
-  phone frame, or accept it.
-- **`IFileStorage.ts` duplicates `ImportResult`** without `layout` and
-  `sectionColumns`; make it the one definition.
-- **Two-column threshold has little slack.** Just above 40rem, two Ability
-  cards are ~288 px wide with ~5 px to spare; ~42rem would give more room if
-  card content grows.
-
 ### Multiple Images
 
 **Overview**  

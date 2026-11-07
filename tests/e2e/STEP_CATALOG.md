@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **737** in 54 files
-- Feature step lines: **2405**
+- Step definitions: **738** in 54 files
+- Feature step lines: **2408**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -64,7 +64,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 17 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
-| [section-columns.steps.ts](#sectioncolumnsstepsts) | 9 | 0 |
+| [section-columns.steps.ts](#sectioncolumnsstepsts) | 10 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 11 | 0 |
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
@@ -658,7 +658,7 @@ pattern this script does not understand):
 | Then | `the empty notes message should be {string}` | 1 | 143 |
 | Then | `the empty oddities message should be {string}` | 1 | 130 |
 | Then | `the intellect stat should display {string}` | 1 | 54 |
-| Given | `the language is set to {string}` | 4 | 3 |
+| Given | `the language is set to {string}` | 5 | 3 |
 | Then | `the language should remain German` | 1 | 161 |
 | Then | `the load button should display {string}` | 3 | 28 |
 | Then | `the might stat should display {string}` | 1 | 43 |
@@ -779,6 +779,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
+| Then | `every ability card's badges should stay inside the card` | 1 | 137 |
 | When | `I switch the {string} section to {int} column\(s)` | 1 | 41 |
 | Then | `the {string} heading row should stay inside its frame` | 1 | 114 |
 | Then | `the {string} section should offer a column switch` | 1 | 55 |
@@ -1100,5 +1101,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 52 | 9 |
+| Given | `the viewport is {int} pixels wide` | 53 | 9 |
 

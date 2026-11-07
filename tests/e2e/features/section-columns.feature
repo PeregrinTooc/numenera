@@ -74,3 +74,8 @@ Feature: Card columns follow the section's width
     Given the language is set to "de"
     And the viewport is 360 pixels wide
     Then the "Items" heading row should stay inside its frame
+
+  Scenario: On a narrow phone the German ability badges stay inside their card
+    Given the language is set to "de"
+    And the viewport is 360 pixels wide
+    Then every ability card's badges should stay inside the card
