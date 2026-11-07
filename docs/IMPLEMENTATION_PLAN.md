@@ -21,11 +21,9 @@ before commit (Rule #1).
 **Defect:** §2.7. `mergeSections`, `splitGrid`, `updateLayout` and `getLayout`
 have no callers; the imported layout returned by `fileStorage` is discarded.
 
-**Decision:** finish wiring it up rather than delete the dead code. Not yet
-built — tracked as a proper feature in `docs/TODO.md` under "Grid Merge/Split
-& Import-Layout Conflict Prompt", with the implementation sketch and known
-risk (this project's Playwright drag/drop automation limitation will likely
-apply to the merge/split scenarios too).
+**Decision:** finish wiring it up rather than delete the dead code. Done: the
+drag half is "Pairing Sections by Drag", the imported layout is offered by
+"Layout Choice on Import" (both in `docs/FEATURES.md`).
 
 ---
 

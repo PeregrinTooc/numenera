@@ -152,9 +152,8 @@ All features listed below have full BDD test coverage and are verified working.
   - Drag reordering is covered by automated E2E — desktop via `dragSectionTo`,
     touch long-press via `TouchGesture` (see "Automated Section Drag/Drop
     Tests & Touch Long-Press Drag" below)
-  - **Not implemented**: a conflict prompt on importing a character with a
-    different layout. Tracked in `docs/TODO.md` ("Import-Layout Conflict
-    Prompt"); its scenarios are `@skip`ped.
+  - Importing a file with a different layout asks which to use (see "Layout
+    Choice on Import" below)
 
 - **Pairing Sections by Drag** ([section-rearrangement.feature](../tests/e2e/features/section-rearrangement.feature),
   spec: `docs/superpowers/specs/2026-10-31-section-pair-drag-design.md`)
@@ -252,6 +251,16 @@ All features listed below have full BDD test coverage and are verified working.
   - Import character from JSON file
   - Data validation on import
   - Replace current character data
+
+- **Layout Choice on Import** ([import-layout-choice.feature](../tests/e2e/features/import-layout-choice.feature))
+  - The character is imported right away; when the file's section arrangement
+    or column choices differ from the sheet's, a prompt offers "Keep current
+    layout" (focused; also Escape and the backdrop) or "Use imported layout"
+  - Using the imported layout applies only what the file carries: a file
+    without column choices keeps the current ones
+  - Import warnings are shown first, the prompt once they are closed
+  - Layout is not part of version history: undoing an import restores the
+    character, not the layout
 
 ### Cloud Storage Integration
 

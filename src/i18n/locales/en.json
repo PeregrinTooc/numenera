@@ -400,6 +400,12 @@
     "discard": "Discard",
     "later": "Ask me later"
   },
+  "layoutChoice": {
+    "title": "Use the imported layout?",
+    "message": "The imported file arranges the sections differently from your sheet. The character has been imported either way.",
+    "keep": "Keep current layout",
+    "useImported": "Use imported layout"
+  },
   "conflict": {
     "title": "Version Conflict Detected",
     "message": "Another tab has saved changes to this character while you were editing. Your unsaved changes may be lost.",

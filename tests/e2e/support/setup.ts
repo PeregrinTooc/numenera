@@ -1,7 +1,8 @@
 import type { CustomWorld } from "./world.js";
 import type { Character } from "@/types/character";
 import type { Layout } from "@/types/layout";
-import { LAYOUT_STORAGE_KEY } from "@/storage/storageConstants";
+import type { SectionColumns } from "@/types/sectionColumns";
+import { LAYOUT_STORAGE_KEY, SECTION_COLUMNS_STORAGE_KEY } from "@/storage/storageConstants";
 import { waitForCharacterSheetReady } from "./app-ready.js";
 import { FULL_CHARACTER, EMPTY_ARRAYS } from "./cardTestFixtures.js";
 
@@ -38,12 +39,24 @@ export class SetupDsl {
    * DEFAULT_LAYOUT), reloads, and waits for the sheet to be ready.
    */
   async layout(layout: Layout | null): Promise<void> {
+    await this.seedLocalStorage(
+      LAYOUT_STORAGE_KEY,
+      layout === null ? null : JSON.stringify(layout)
+    );
+  }
+
+  /** Seeds the saved column choices, reloads, and waits for the sheet to be ready. */
+  async sectionColumns(columns: SectionColumns): Promise<void> {
+    await this.seedLocalStorage(SECTION_COLUMNS_STORAGE_KEY, JSON.stringify(columns));
+  }
+
+  private async seedLocalStorage(key: string, value: string | null): Promise<void> {
     await this.world.page.evaluate(
       ({ key, value }) => {
         if (value === null) localStorage.removeItem(key);
         else localStorage.setItem(key, value);
       },
-      { key: LAYOUT_STORAGE_KEY, value: layout === null ? null : JSON.stringify(layout) }
+      { key, value }
     );
     await this.world.page.reload();
     await waitForCharacterSheetReady(this.world.page);

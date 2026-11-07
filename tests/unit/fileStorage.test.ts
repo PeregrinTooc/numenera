@@ -4,6 +4,7 @@ import { Character } from "@/types/character";
 import { SCHEMA_VERSION } from "@/storage/storageConstants";
 import { changeLanguage, t } from "@/i18n/index";
 import { mockCharacter } from "./helpers/exportManagerFixture";
+import { getDefaultLayout, saveSectionColumns } from "@/storage/layoutStorage";
 
 async function importFileWith(extra: Record<string, unknown>) {
   const fileContent = {
@@ -282,6 +283,48 @@ describe("fileStorage", () => {
 
       expect(result.sectionColumns).toBeUndefined();
       expect(result.warnings).toEqual([]);
+    });
+  });
+
+  describe("whether the imported layout differs from the current one", () => {
+    const reordered = (): ReturnType<typeof getDefaultLayout> => getDefaultLayout().reverse();
+
+    it("differs when the file arranges the sections differently", async () => {
+      const result = await importFileWith({ layout: reordered() });
+
+      expect(result.hasLayoutDifference).toBe(true);
+    });
+
+    it("does not differ when the file has the current arrangement", async () => {
+      const result = await importFileWith({ layout: getDefaultLayout() });
+
+      expect(result.hasLayoutDifference).toBe(false);
+    });
+
+    it("differs when only a column choice the file names differs", async () => {
+      const result = await importFileWith({
+        layout: getDefaultLayout(),
+        sectionColumns: { items: 1 },
+      });
+
+      expect(result.hasLayoutDifference).toBe(true);
+    });
+
+    it("does not differ when the file's column choices match the current ones", async () => {
+      saveSectionColumns({ items: 1 });
+
+      const result = await importFileWith({
+        layout: getDefaultLayout(),
+        sectionColumns: { items: 1, cyphers: 2 },
+      });
+
+      expect(result.hasLayoutDifference).toBe(false);
+    });
+
+    it("does not differ when the file has neither a layout nor column choices", async () => {
+      const result = await importFileWith({});
+
+      expect(result.hasLayoutDifference).toBe(false);
     });
   });
 });

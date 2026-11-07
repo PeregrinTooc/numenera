@@ -230,40 +230,6 @@ Feature: Section Re-arrangement
     When I export the character
     Then the exported file should contain the layout configuration
 
-  @skip
-  Scenario: Import with different layout shows prompt
-    Given I have customized the layout
-    And I have a character file with a different layout
-    When I import the character file
-    Then I should see a layout choice prompt
-    And I should see options to "Keep current layout" or "Use imported layout"
-
-  @skip
-  Scenario: Keep existing layout on import
-    Given I have customized the layout
-    And I have a character file with a different layout
-    When I import the character file
-    And I choose to "Keep current layout"
-    Then my current layout should be preserved
-    And only the character data should be imported
-
-  @skip
-  Scenario: Use imported layout on import
-    Given I have customized the layout
-    And I have a character file with a different layout
-    When I import the character file
-    And I choose to "Use imported layout"
-    Then the layout from the imported file should be applied
-    And the character data should be imported
-
-  @skip
-  Scenario: Import with same layout does not show prompt
-    Given I have the default layout
-    And I have a character file with the default layout
-    When I import the character file
-    Then I should not see a layout choice prompt
-    And the character should be imported normally
-
   Scenario: Edit layout button is accessible on mobile
     Given the viewport is 768 pixels wide
     Then I should see the "Edit Layout" button

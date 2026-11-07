@@ -2,10 +2,10 @@
 
 import { Character } from "@/types/character";
 import { Layout, isValidLayout } from "@/types/layout";
-import { SectionColumns, isValidSectionColumns } from "@/types/sectionColumns";
+import { SectionColumns, columnChoicesDiffer, isValidSectionColumns } from "@/types/sectionColumns";
 import { SCHEMA_VERSION } from "./storageConstants.js";
 import { sanitizeCharacter } from "@/utils/characterSanitizer";
-import { loadLayout } from "./layoutStorage.js";
+import { loadLayout, loadSectionColumns } from "./layoutStorage.js";
 import { t } from "@/i18n/index";
 import { UserFacingError } from "@/utils/UserFacingError";
 
@@ -22,7 +22,7 @@ export interface ImportResult {
   character: Character;
   warnings: string[];
   layout?: Layout;
-  hasLayoutDifference?: boolean;
+  hasLayoutDifference: boolean;
   sectionColumns?: SectionColumns;
 }
 
@@ -68,23 +68,23 @@ function checkSchemaVersion(fileData: Record<string, unknown>, warnings: string[
   }
 }
 
-/** The file's layout, if present and valid, and whether it differs from the current layout. */
-function importLayout(
-  fileData: Record<string, unknown>,
-  warnings: string[]
-): { layout?: Layout; hasLayoutDifference: boolean } {
-  if (!fileData.layout || !Array.isArray(fileData.layout)) {
-    return { hasLayoutDifference: false };
-  }
+/** The file's layout, if present and valid. */
+function importLayout(fileData: Record<string, unknown>, warnings: string[]): Layout | undefined {
+  if (!fileData.layout || !Array.isArray(fileData.layout)) return undefined;
   if (!isValidLayout(fileData.layout)) {
     warnings.push(t("fileOperations.invalidLayout"));
-    return { hasLayoutDifference: false };
+    return undefined;
   }
-  const layout = fileData.layout;
-  return {
-    layout,
-    hasLayoutDifference: JSON.stringify(layout) !== JSON.stringify(loadLayout()),
-  };
+  return fileData.layout;
+}
+
+/** Whether using the file's layout and column choices would change the sheet. */
+function layoutDiffers(layout?: Layout, sectionColumns?: SectionColumns): boolean {
+  const arrangementDiffers =
+    layout !== undefined && JSON.stringify(layout) !== JSON.stringify(loadLayout());
+  const columnsDiffer =
+    sectionColumns !== undefined && columnChoicesDiffer(sectionColumns, loadSectionColumns());
+  return arrangementDiffers || columnsDiffer;
 }
 
 /** The file's column choices, if present and valid. */
@@ -112,14 +112,14 @@ function parseAndSanitizeCharacter(text: string): ImportResult {
   const sanitizeResult = sanitizeCharacter(fileData.character);
 
   const warnings = [...schemaWarnings, ...sanitizeResult.warnings];
-  const { layout, hasLayoutDifference } = importLayout(fileData, warnings);
+  const layout = importLayout(fileData, warnings);
   const sectionColumns = importSectionColumns(fileData, warnings);
 
   return {
     character: sanitizeResult.character,
     warnings,
     layout,
-    hasLayoutDifference,
+    hasLayoutDifference: layoutDiffers(layout, sectionColumns),
     sectionColumns,
   };
 }

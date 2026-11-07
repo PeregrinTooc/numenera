@@ -1,6 +1,27 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
+import { importFile, numeneraFile } from "../support/fileImport.js";
+import { FULL_CHARACTER } from "../support/cardTestFixtures.js";
+import { sectionId } from "../support/sections.js";
+import { DEFAULT_LAYOUT, cloneLayout, type Layout } from "@/types/layout";
+import type { CardSectionId, ColumnCount } from "@/types/sectionColumns";
+
+const IMPORTED_NAME = "Imported Character";
+
+/** The default layout with Items moved above Cyphers. */
+const DIFFERENT_LAYOUT: Layout = [
+  { type: "single", id: "basicInfo" },
+  { type: "single", id: "stats" },
+  { type: "single", id: "recoveryDamage" },
+  { type: "single", id: "items" },
+  { type: "single", id: "cyphers" },
+  { type: "single", id: "abilities" },
+  { type: "single", id: "specialAbilities" },
+  { type: "single", id: "attacks" },
+  { type: "single", id: "background" },
+  { type: "single", id: "notes" },
+];
 
 Then(
   "the exported file should contain the layout configuration",
@@ -15,149 +36,80 @@ Then(
   }
 );
 
-Given("I have a character file with a different layout", async function (this: CustomWorld) {
-  this.importedLayout = [
-    { type: "single", id: "basicInfo" },
-    { type: "single", id: "stats" },
-    { type: "single", id: "recoveryDamage" },
-    { type: "single", id: "items" },
-    { type: "single", id: "cyphers" },
-    { type: "single", id: "abilities" },
-    { type: "single", id: "specialAbilities" },
-    { type: "single", id: "attacks" },
-    { type: "single", id: "background" },
-    { type: "single", id: "notes" },
-  ];
+Given("I have a character file with a different layout", function (this: CustomWorld) {
+  this.importedFile = { layout: DIFFERENT_LAYOUT };
 });
 
-Given("I have a character file with the default layout", async function (this: CustomWorld) {
-  this.importedLayout = null;
+Given("I have a character file with the default layout", function (this: CustomWorld) {
+  this.importedFile = { layout: cloneLayout(DEFAULT_LAYOUT) };
 });
+
+Given("I have a character file without a layout", function (this: CustomWorld) {
+  this.importedFile = {};
+});
+
+Given(
+  "I have a character file with the default layout that sets the {string} section to {int} column(s)",
+  function (this: CustomWorld, section: string, columns: number) {
+    this.importedFile = {
+      layout: cloneLayout(DEFAULT_LAYOUT),
+      sectionColumns: { [sectionId(section)]: columns },
+    };
+  }
+);
+
+Given(
+  "I have set the {string} section to {int} column(s)",
+  async function (this: CustomWorld, section: string, columns: number) {
+    await this.setup.sectionColumns({
+      [sectionId(section) as CardSectionId]: columns as ColumnCount,
+    });
+  }
+);
 
 When("I import the character file", async function (this: CustomWorld) {
-  const page = this.page;
-
-  const characterData = {
-    name: "Imported Character",
-    tier: 2,
-    type: "Nano",
-    descriptor: "Clever",
-    focus: "Talks to Machines",
-    might: { pool: 10, edge: 0, current: 10 },
-    speed: { pool: 10, edge: 0, current: 10 },
-    intellect: { pool: 14, edge: 1, current: 14 },
-    layout: this.importedLayout,
+  const file = {
+    ...numeneraFile({ ...FULL_CHARACTER, name: IMPORTED_NAME }),
+    ...this.importedFile,
   };
-
-  // The import button is in the header, not in settings panel
-  const [fileChooser] = await Promise.all([
-    page.waitForEvent("filechooser"),
-    page.click('[data-testid="import-button"]'),
-  ]);
-
-  const fileContent = JSON.stringify(characterData);
-  const buffer = Buffer.from(fileContent, "utf-8");
-
-  await fileChooser.setFiles({
-    name: "character.json",
-    mimeType: "application/json",
-    buffer: buffer,
-  });
+  await importFile(this.page, "imported.numenera", file);
 });
 
 Then("I should see a layout choice prompt", async function (this: CustomWorld) {
-  const page = this.page;
-
-  const prompt = page.locator('[data-testid="layout-choice-modal"]');
-  await expect(prompt).toBeVisible({ timeout: 5000 });
+  await expect(this.page.getByTestId("layout-choice-modal")).toBeVisible();
 });
 
 Then("I should not see a layout choice prompt", async function (this: CustomWorld) {
-  const page = this.page;
-
-  // Wait a moment to ensure modal would have appeared
-  await page.waitForTimeout(500);
-
-  const prompt = page.locator('[data-testid="layout-choice-modal"]');
-  await expect(prompt).not.toBeVisible();
+  await expect(this.page.getByTestId("layout-choice-modal")).toHaveCount(0);
 });
 
 Then(
   "I should see options to {string} or {string}",
-  async function (this: CustomWorld, _option1: string, _option2: string) {
-    const page = this.page;
-
-    const keepButton = page.locator('[data-testid="keep-current-layout"]');
-    const useButton = page.locator('[data-testid="use-imported-layout"]');
-
-    await expect(keepButton).toBeVisible();
-    await expect(useButton).toBeVisible();
+  async function (this: CustomWorld, keep: string, use: string) {
+    await expect(this.page.getByTestId("keep-current-layout")).toHaveText(keep);
+    await expect(this.page.getByTestId("use-imported-layout")).toHaveText(use);
   }
 );
 
-When("I choose to {string}", async function (this: CustomWorld, choice: string) {
-  const page = this.page;
+Then("the {string} option should have focus", async function (this: CustomWorld, option: string) {
+  await expect(this.page.getByRole("button", { name: option })).toBeFocused();
+});
 
-  if (choice === "Keep current layout") {
-    await page.click('[data-testid="keep-current-layout"]');
-  } else if (choice === "Use imported layout") {
-    await page.click('[data-testid="use-imported-layout"]');
-  } else {
-    throw new Error(`Unknown choice: ${choice}`);
+When("I choose to {string}", async function (this: CustomWorld, option: string) {
+  await this.page.getByRole("button", { name: option }).click();
+});
+
+Then("the imported character should be shown", async function (this: CustomWorld) {
+  await expect(this.page.getByTestId("character-name")).toContainText(IMPORTED_NAME);
+});
+
+Then(
+  "the {string} section should be set to {int} column(s)",
+  async function (this: CustomWorld, section: string, columns: number) {
+    // The chosen count, which a narrow screen may still show as one column
+    await expect(this.page.getByTestId(`section-columns-${sectionId(section)}`)).toHaveAttribute(
+      "data-columns",
+      String(columns)
+    );
   }
-});
-
-Then("my current layout should be preserved", async function (this: CustomWorld) {
-  const page = this.page;
-
-  const layoutData = await page.evaluate(() => {
-    return localStorage.getItem("numenera-layout");
-  });
-
-  if (layoutData === null) throw new Error("numenera-layout was not saved");
-  const layout: Array<{ type: string; id: string }> = JSON.parse(layoutData);
-
-  const cypherIndex = layout.findIndex((item) => item.type === "single" && item.id === "cyphers");
-  const abilitiesIndex = layout.findIndex(
-    (item) => item.type === "single" && item.id === "abilities"
-  );
-
-  expect(cypherIndex).toBeLessThan(abilitiesIndex);
-});
-
-Then("only the character data should be imported", async function (this: CustomWorld) {
-  const page = this.page;
-
-  const name = await page.locator('[data-testid="character-name"]').textContent();
-  expect(name).toContain("Imported Character");
-});
-
-Then("the layout from the imported file should be applied", async function (this: CustomWorld) {
-  const page = this.page;
-
-  const layoutData = await page.evaluate(() => {
-    return localStorage.getItem("numenera-layout");
-  });
-
-  if (layoutData === null) throw new Error("numenera-layout was not saved");
-  const layout: Array<{ type: string; id: string }> = JSON.parse(layoutData);
-
-  const itemsIndex = layout.findIndex((item) => item.type === "single" && item.id === "items");
-  const cyphersIndex = layout.findIndex((item) => item.type === "single" && item.id === "cyphers");
-
-  expect(itemsIndex).toBeLessThan(cyphersIndex);
-});
-
-Then("the character data should be imported", async function (this: CustomWorld) {
-  const page = this.page;
-
-  const name = await page.locator('[data-testid="character-name"]').textContent();
-  expect(name).toContain("Imported Character");
-});
-
-Then("the character should be imported normally", async function (this: CustomWorld) {
-  const page = this.page;
-
-  const name = await page.locator('[data-testid="character-name"]').textContent();
-  expect(name).toContain("Imported Character");
-});
+);

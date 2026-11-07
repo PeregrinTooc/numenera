@@ -1,4 +1,5 @@
-import { importCharacterFromFile } from "@/storage/fileStorage";
+import { importCharacterFromFile, type ImportResult } from "@/storage/fileStorage";
+import { ModalService } from "@/services/modalService";
 import { t } from "@/i18n/index";
 import { describeError } from "@/utils/describeError";
 import { activeHistoryService, type AppContext } from "./appContext";
@@ -9,6 +10,40 @@ export interface FileActions {
   handleExport: () => Promise<void>;
   handleQuickExport: () => Promise<void>;
   handleSaveAs: () => Promise<void>;
+}
+
+/**
+ * Show a character from a file. Warnings and the layout prompt wait until it
+ * has rendered; alert() blocks, so the prompt opens once the warning is closed.
+ */
+async function importCharacter(ctx: AppContext): Promise<void> {
+  const result = await importCharacterFromFile();
+  if (!result) return;
+
+  activeHistoryService(ctx)?.bufferChange(result.character, "versionHistory.changes.imported");
+  void ctx.actions.renderCharacterSheet(result.character);
+
+  setTimeout(() => {
+    showImportWarnings(result.warnings);
+    if (result.hasLayoutDifference) offerImportedLayout(ctx, result);
+  }, 100);
+}
+
+function showImportWarnings(warnings: string[]): void {
+  if (warnings.length === 0) return;
+  console.warn("Character import warnings:", warnings);
+  alert(
+    warnings.length === 1
+      ? t("fileOperations.importNote", { warning: warnings[0] })
+      : t("fileOperations.importAdjustments", { count: warnings.length })
+  );
+}
+
+function offerImportedLayout(ctx: AppContext, result: ImportResult): void {
+  ModalService.openLayoutChoiceModal({
+    onKeep: () => undefined,
+    onUseImported: () => ctx.currentSheet?.useLayout(result.layout, result.sectionColumns),
+  });
 }
 
 /** Import / export handlers for the sheet header, bound to the character being rendered. */
@@ -27,32 +62,7 @@ export function createFileActions(
   return {
     handleLoadFromFile: () =>
       runFileOp(
-        async () => {
-          const importResult = await importCharacterFromFile();
-          if (!importResult) return;
-
-          const { character: importedCharacter, warnings } = importResult;
-
-          // Log any warnings from sanitization
-          if (warnings.length > 0) {
-            console.warn("Character import warnings:", warnings);
-            // Show warning to user if there were significant corrections
-            const warningMessage =
-              warnings.length === 1
-                ? t("fileOperations.importNote", { warning: warnings[0] })
-                : t("fileOperations.importAdjustments", { count: warnings.length });
-            // Use setTimeout to avoid blocking the import
-            setTimeout(() => alert(warningMessage), 100);
-          }
-
-          // Buffer change for version history
-          activeHistoryService(ctx)?.bufferChange(
-            importedCharacter,
-            "versionHistory.changes.imported"
-          );
-
-          void ctx.actions.renderCharacterSheet(importedCharacter);
-        },
+        () => importCharacter(ctx),
         "Error importing character:",
         "fileOperations.importFailed"
       ),

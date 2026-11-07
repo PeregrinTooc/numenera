@@ -7,6 +7,8 @@ import { FieldsDsl } from "./fields.js";
 import { CardsDsl } from "./cards.js";
 import { SetupDsl } from "./setup.js";
 import { BASE_URL } from "./serverUrl.js";
+import type { Layout } from "@/types/layout";
+import type { SectionColumns } from "@/types/sectionColumns";
 
 setDefaultTimeout(30000);
 
@@ -32,8 +34,8 @@ export interface CustomWorld extends World {
   previousCardCount?: number;
   // card-reordering.steps.ts
   draggedCypherName?: string;
-  // section-rearrangement.steps.ts
-  importedLayout?: Array<{ type: string; id: string }> | null;
+  // layout-import-export.steps.ts
+  importedFile?: { layout?: Layout; sectionColumns?: SectionColumns };
   scrollYBeforeSwipe?: number;
   heldDropTarget?: {
     name: string;
@@ -67,7 +69,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   previousCardCount?: number;
   // card-reordering.steps.ts
   draggedCypherName?: string;
-  importedLayout?: Array<{ type: string; id: string }> | null;
+  importedFile?: { layout?: Layout; sectionColumns?: SectionColumns };
   scrollYBeforeSwipe?: number;
   heldDropTarget?: {
     name: string;

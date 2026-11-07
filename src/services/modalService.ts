@@ -1,6 +1,7 @@
 import { render } from "lit-html";
 import { EditFieldModal } from "@/components/EditFieldModal";
 import { UnreadableCharacterModal } from "@/components/UnreadableCharacterModal";
+import { LayoutChoiceModal } from "@/components/LayoutChoiceModal";
 import { PortraitDisplayModal } from "@/components/PortraitDisplayModal";
 import { FieldType } from "@/utils/fieldValidation";
 import { ModalContainer } from "@/services/modalContainer";
@@ -13,6 +14,14 @@ export interface ModalConfig {
   onConfirm: (newValue: string | number) => void;
   onCancel?: () => void;
   versionHistoryService?: VersionHistoryService;
+}
+
+/** Wraps a choice's handler so the modal closes once it has run. */
+function closingAfter(container: ModalContainer): (handler: () => void) => () => void {
+  return (handler) => () => {
+    handler();
+    container.remove();
+  };
 }
 
 export class ModalService {
@@ -63,10 +72,7 @@ export class ModalService {
     onLater: () => void;
   }): void {
     const container = new ModalContainer();
-    const closeAfter = (handler: () => void) => () => {
-      handler();
-      container.remove();
-    };
+    const closeAfter = closingAfter(container);
 
     const modal = new UnreadableCharacterModal({
       onDownload: closeAfter(handlers.onDownload),
@@ -76,6 +82,23 @@ export class ModalService {
 
     render(modal.render(), container.getElement());
     container.focusElement('[data-testid="unreadable-download-button"]');
+  }
+
+  /**
+   * Opens the modal asking whether an imported layout replaces the current
+   * one. Every choice closes it.
+   */
+  static openLayoutChoiceModal(handlers: { onKeep: () => void; onUseImported: () => void }): void {
+    const container = new ModalContainer();
+    const closeAfter = closingAfter(container);
+
+    const modal = new LayoutChoiceModal({
+      onKeep: closeAfter(handlers.onKeep),
+      onUseImported: closeAfter(handlers.onUseImported),
+    });
+
+    render(modal.render(), container.getElement());
+    container.focusElement('[data-testid="keep-current-layout"]');
   }
 }
 

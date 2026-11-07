@@ -400,6 +400,12 @@
     "discard": "Verwerfen",
     "later": "Später erinnern"
   },
+  "layoutChoice": {
+    "title": "Importiertes Layout übernehmen?",
+    "message": "Die importierte Datei ordnet die Bereiche anders an als dein Bogen. Der Charakter wurde in jedem Fall importiert.",
+    "keep": "Aktuelles Layout behalten",
+    "useImported": "Importiertes Layout verwenden"
+  },
   "conflict": {
     "title": "Versionskonflikt erkannt",
     "message": "Ein anderer Tab hat Änderungen an diesem Charakter gespeichert, während Sie bearbeitet haben. Ihre ungespeicherten Änderungen könnten verloren gehen.",
