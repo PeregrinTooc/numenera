@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **734** in 54 files
-- Feature step lines: **2393**
+- Step definitions: **737** in 55 files
+- Feature step lines: **2397**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -73,6 +73,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
 | [storage-failure.steps.ts](#storagefailurestepsts) | 8 | 0 |
+| [third-party-requests.steps.ts](#thirdpartyrequestsstepsts) | 3 | 0 |
 | [unreadable-character.steps.ts](#unreadablecharacterstepsts) | 10 | 0 |
 | [version-comparison-highlighting.steps.ts](#versioncomparisonhighlightingstepsts) | 17 | 0 |
 | [version-comparison-navigation.steps.ts](#versioncomparisonnavigationstepsts) | 12 | 0 |
@@ -891,6 +892,14 @@ pattern this script does not understand):
 | Then | `the save indicator should report that changes could not be saved` | 1 | 23 |
 | Then | `the save indicator should report that storage is full` | 5 | 17 |
 | Given | `writing to the browser storage fails` | 1 | 9 |
+
+## third-party-requests.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I open the character sheet and watch its requests` | 2 | 5 |
+| Then | `nothing should have been requested from another site` | 1 | 15 |
+| Then | `the {string} and {string} fonts should be loaded` | 1 | 23 |
 
 ## unreadable-character.steps.ts
 
