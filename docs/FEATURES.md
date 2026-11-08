@@ -122,6 +122,10 @@ All features listed below have full BDD test coverage and are verified working.
   - Edit state indicators
   - Focus and hover states
 
+- **Self-Hosted Fonts** ([third-party-requests.feature](../tests/e2e/features/third-party-requests.feature))
+  - Cinzel, Caveat and Patrick Hand served from `public/fonts/` with their OFL licences
+  - Opening the sheet requests nothing from another site (no visitor IP goes to Google)
+
 > **Testing Notes.** DOM structure and visual styling were originally covered by
 > five E2E feature files. They were migrated to `tests/unit/domStructure.test.ts`
 > and `tests/unit/visualStyling.test.ts` to
