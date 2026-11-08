@@ -790,17 +790,17 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 49 |
-| When | `I hold the {string} section over the {zone} of the {string} section as the window shows it` | 1 | 58 |
-| When | `I keep still for a moment` | 9 | 92 |
-| When | `I release the section outside the sheet` | 2 | 97 |
-| When | `I release the section where it is` | 1 | 110 |
-| Then | `no drop preview should be shown` | 1 | 147 |
-| Given | `the {string} section is at the top of the window` | 1 | 65 |
-| Then | `the {string} section should not have moved up or down on screen` | 1 | 74 |
-| Then | `the {string} section should preview {string} in its place` | 1 | 126 |
-| Then | `the {string} section should preview {string} on its right` | 1 | 116 |
-| Then | `the row of {string} should preview {string} below it` | 1 | 136 |
+| When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 50 |
+| When | `I hold the {string} section over the {zone} of the {string} section as the window shows it` | 1 | 59 |
+| When | `I keep still for a moment` | 9 | 88 |
+| When | `I release the section outside the sheet` | 2 | 93 |
+| When | `I release the section where it is` | 1 | 106 |
+| Then | `no drop preview should be shown` | 1 | 143 |
+| Given | `the {string} section is at the top of the window` | 1 | 66 |
+| Then | `the {string} section should not have moved up or down on screen` | 1 | 75 |
+| Then | `the {string} section should preview {string} in its place` | 1 | 122 |
+| Then | `the {string} section should preview {string} on its right` | 1 | 112 |
+| Then | `the row of {string} should preview {string} below it` | 1 | 132 |
 
 ## section-reordering.steps.ts
 
@@ -819,13 +819,13 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drop the held section onto the {zone} of the {string} section` | 1 | 52 |
-| Given | `I prefer reduced motion` | 1 | 48 |
-| Then | `no section should have slid` | 1 | 196 |
-| Given | `section slides are recorded` | 4 | 22 |
-| Then | `the {string} section should be drawn above the {string} section while they slide` | 1 | 156 |
-| Then | `the {string} section should slide back to where it was` | 1 | 138 |
-| Then | `the {string} section should slide into its new place` | 4 | 124 |
+| When | `I drop the held section onto the {zone} of the {string} section` | 1 | 58 |
+| Given | `I prefer reduced motion` | 1 | 54 |
+| Then | `no section should have slid` | 1 | 197 |
+| Given | `section slides are recorded` | 4 | 28 |
+| Then | `the {string} section should be drawn above the {string} section while they slide` | 1 | 157 |
+| Then | `the {string} section should slide back to where it was` | 1 | 139 |
+| Then | `the {string} section should slide into its new place` | 4 | 125 |
 
 ## section-touch-drag.steps.ts
 

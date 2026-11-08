@@ -3,6 +3,7 @@ import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
 import { englishText } from "../support/i18nKeys.js";
 import {
+  finishSectionSlides,
   growViewportToFullHeight,
   holdSectionOver,
   releaseSectionDrag,
@@ -78,12 +79,7 @@ Then(
     const held = this.heldDropTarget;
     if (!held) throw new Error("No section is being held over a target");
     // Where it ends up: a slide starts each section at its old place
-    await this.page.evaluate(() =>
-      document
-        .getAnimations()
-        .filter((animation) => animation.id === "section-slide")
-        .forEach((animation) => animation.finish())
-    );
+    await finishSectionSlides(this.page);
     const box = await sectionLocator(this.page, name).boundingBox();
     if (!box) throw new Error(`Section ${name} has no bounding box (not visible?)`);
     expect(Math.abs(box.y - held.box.y)).toBeLessThanOrEqual(1);
