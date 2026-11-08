@@ -45,6 +45,17 @@ export async function installExportCapture(page: Page): Promise<void> {
       };
     }
 
+    // The blob is read from the object, not fetched by its URL: the app revokes
+    // the URL right after click(), and under request interception WebKit
+    // resolves a fetch of it too late.
+    const blobsByUrl = new Map<string, Blob>();
+    const originalCreateObjectURL = URL.createObjectURL.bind(URL);
+    URL.createObjectURL = (object: Parameters<typeof URL.createObjectURL>[0]) => {
+      const url = originalCreateObjectURL(object);
+      if (object instanceof Blob) blobsByUrl.set(url, object);
+      return url;
+    };
+
     const originalCreateElement = document.createElement.bind(document);
     document.createElement = ((tagName: string) => {
       const element = originalCreateElement(tagName);
@@ -52,17 +63,15 @@ export async function installExportCapture(page: Page): Promise<void> {
         const anchor = element as unknown as { download: string; href: string };
         element.click = () => {
           window.__exportedFilename = anchor.download;
-          if (anchor.href.startsWith("blob:")) {
-            void window
-              .fetch(anchor.href)
-              .then((res) => res.text())
-              .then((data) => {
-                window.__exportedData = data;
-              })
-              .catch((error: unknown) => {
-                window.__exportError = String(error);
-              });
-          }
+          blobsByUrl
+            .get(anchor.href)
+            ?.text()
+            .then((data) => {
+              window.__exportedData = data;
+            })
+            .catch((error: unknown) => {
+              window.__exportError = String(error);
+            });
         };
       }
       return element;
@@ -72,7 +81,7 @@ export async function installExportCapture(page: Page): Promise<void> {
 
 /**
  * Waits until the stubbed export has delivered both filename and data, or a
- * blob fetch error. Rejects with an "Export capture: ..." message on either
+ * blob read error. Rejects with an "Export capture: ..." message on either
  * an error or a timeout, rather than hanging until the step timeout.
  */
 export async function waitForExportCapture(page: Page, timeoutMs = 5000): Promise<CapturedExport> {
@@ -94,7 +103,7 @@ export async function waitForExportCapture(page: Page, timeoutMs = 5000): Promis
     );
   }
   const error = await page.evaluate(() => window.__exportError);
-  if (error !== undefined) throw new Error(`Export capture: blob fetch failed: ${error}`);
+  if (error !== undefined) throw new Error(`Export capture: blob read failed: ${error}`);
   return page.evaluate(() => ({
     filename: window.__exportedFilename as string,
     data: window.__exportedData as string,
