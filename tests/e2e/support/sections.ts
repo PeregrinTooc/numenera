@@ -94,6 +94,16 @@ export function zonePoint(
   return { x: box.x + box.width * fx, y: box.y + box.height * fy };
 }
 
+/**
+ * Drag `sourceName` onto `zone` of `targetName` and drop it straight away,
+ * before the live preview appears (the preview has its own steps, which hold
+ * the drag and advance the clock).
+ *
+ * The page's clock is paused for the drag: on a busy machine the preview's
+ * delay could otherwise run out between the last move and the release. Its
+ * re-render detaches the element the last dragover reached, which is where
+ * the browser sends the drop, so the drop is lost and the drag just ends.
+ */
 export async function dragSectionTo(
   page: Page,
   sourceName: string,
@@ -107,8 +117,17 @@ export async function dragSectionTo(
       throw new Error(`Section ${targetName} has no bounding box (not visible?)`);
     }
     const point = zonePoint(box, zone);
-    await holdSectionOver(page, sourceName, point);
-    await releaseSectionDrag(page, point);
+    await page.clock.install();
+    // Ahead of the page's time, which runs on while the call travels: pausing
+    // in the page's past throws
+    const pageNow = await page.evaluate(() => Date.now());
+    await page.clock.pauseAt(pageNow + 1000);
+    try {
+      await holdSectionOver(page, sourceName, point);
+      await releaseSectionDrag(page, point);
+    } finally {
+      await page.clock.resume();
+    }
   });
 }
 
@@ -130,13 +149,28 @@ export async function holdSectionOver(page: Page, sourceName: string, point: Poi
   await page.mouse.move(point.x, point.y);
 }
 
+/** Play every running section slide to its end at once. */
+export async function finishSectionSlides(page: Page): Promise<void> {
+  await page.evaluate(() =>
+    document
+      .getAnimations()
+      .filter((animation) => animation.id === "section-slide")
+      .forEach((animation) => animation.finish())
+  );
+}
+
 /**
  * Release the held drag at `point`. Browsers keep firing dragover while a drag
  * rests, so the drop lands on what is under the pointer now, after a live
  * preview has re-rendered the sheet; Playwright fires dragover only on moves,
  * and in WebKit only from the second, so two one-pixel moves stand in for it.
+ *
+ * A live preview's slide is finished first: in Chromium, a drag that has a
+ * dragover while the slide runs ends as the slide finishes if the drop has not
+ * come by then, and on a busy machine it may not have.
  */
 export async function releaseSectionDrag(page: Page, point: Point): Promise<void> {
+  await finishSectionSlides(page);
   await page.mouse.move(point.x + 1, point.y);
   await page.mouse.move(point.x + 2, point.y);
   await page.mouse.up();
