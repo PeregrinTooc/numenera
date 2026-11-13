@@ -6,6 +6,7 @@ import { ModalDsl } from "./modal.js";
 import { FieldsDsl } from "./fields.js";
 import { CardsDsl } from "./cards.js";
 import { SetupDsl } from "./setup.js";
+import type { CharacterDsl } from "./character.js";
 import { BASE_URL } from "./serverUrl.js";
 import type { Layout } from "@/types/layout";
 import type { SectionColumns } from "@/types/sectionColumns";
@@ -32,6 +33,7 @@ export interface CustomWorld extends World {
   fields: FieldsDsl;
   cards: CardsDsl;
   setup: SetupDsl;
+  character: CharacterDsl;
   previousCardCount?: number;
   // card-reordering.steps.ts
   draggedCypherName?: string;
@@ -70,6 +72,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   fields!: FieldsDsl;
   cards!: CardsDsl;
   setup!: SetupDsl;
+  character!: CharacterDsl;
   previousCardCount?: number;
   // card-reordering.steps.ts
   draggedCypherName?: string;

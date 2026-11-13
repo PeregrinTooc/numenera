@@ -53,6 +53,23 @@ defineParameterType({
   transformer: (s: string) => EMPTY_STATE_TEST_IDS[s],
 });
 
+// The plural kind of entry a character carries, mapped to its card type key.
+const CARD_KINDS: Record<string, string> = {
+  cyphers: "cypher",
+  equipment: "equipment",
+  artifacts: "artifact",
+  oddities: "oddity",
+  attacks: "attack",
+  abilities: "ability",
+  "special abilities": "special-ability",
+};
+
+defineParameterType({
+  name: "cardKind",
+  regexp: /special abilities|abilities|cyphers|equipment|artifacts|oddities|attacks/,
+  transformer: (s: string) => CARD_KINDS[s],
+});
+
 // A drop zone on a section, e.g. "the bottom edge of the "Items" section".
 defineParameterType({
   name: "zone",

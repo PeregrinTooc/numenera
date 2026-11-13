@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **739** in 55 files
-- Feature step lines: **2402**
+- Step definitions: **745** in 55 files
+- Feature step lines: **2411**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -43,7 +43,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [card-creation-modal-fields.steps.ts](#cardcreationmodalfieldsstepsts) | 33 | 0 |
 | [card-creation-setup.steps.ts](#cardcreationsetupstepsts) | 22 | 0 |
 | [card-creation-verification.steps.ts](#cardcreationverificationstepsts) | 24 | 0 |
-| [card-deletion.steps.ts](#carddeletionstepsts) | 40 | 0 |
+| [card-deletion.steps.ts](#carddeletionstepsts) | 46 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
 | [card-reordering-abilities.steps.ts](#cardreorderingabilitiesstepsts) | 5 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 8 | 0 |
@@ -335,6 +335,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
+| Then | `{string} is still gone the next time I open my character` | 1 | 238 |
 | When | `I click the delete button on the first ability` | 1 | 116 |
 | When | `I click the delete button on the first artifact` | 1 | 104 |
 | When | `I click the delete button on the first attack` | 1 | 112 |
@@ -343,6 +344,7 @@ pattern this script does not understand):
 | When | `I click the delete button on the first equipment item` | 1 | 100 |
 | When | `I click the delete button on the first oddity` | 1 | 108 |
 | When | `I click the delete button on the first special ability` | 1 | 120 |
+| When | `I discard {string}` | 2 | 227 |
 | Given | `I have {int} abilities` | 1 | 80 |
 | Given | `I have {int} artifact` | 1 | 59 |
 | Given | `I have {int} attacks` | 1 | 73 |
@@ -366,12 +368,16 @@ pattern this script does not understand):
 | Then | `I should have {int} special ability remaining` | 2 | 172 |
 | Then | `I should not see a confirmation dialog` | 1 | 215 |
 | Then | `I should see a delete button on the {cardType} card` | 7 | 36 |
+| Then | `it was discarded without my being asked to confirm` | 1 | 245 |
+| Given | `my character has the {cardKind} {string} and {string}` | 3 | 220 |
+| Then | `my character's {cardKind} are only {string}` | 1 | 231 |
 | Then | `the ability should be removed from the DOM` | 1 | 146 |
 | Then | `the artifact should be removed from the DOM` | 1 | 134 |
 | Then | `the attack should be removed from the DOM` | 1 | 142 |
 | Then | `the cypher should be removed from the DOM` | 1 | 127 |
 | Then | `the cypher should be removed immediately` | 1 | 211 |
 | Then | `the delete button should be in the top-left corner of the card` | 1 | 198 |
+| Then | `the discard control of {string} is in the top-left corner of its entry` | 1 | 249 |
 | Then | `the equipment item should be removed from the DOM` | 1 | 130 |
 | Then | `the oddity should be removed from the DOM` | 1 | 138 |
 | Then | `the special ability should be removed from the DOM` | 1 | 150 |
