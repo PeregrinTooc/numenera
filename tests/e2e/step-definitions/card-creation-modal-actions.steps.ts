@@ -4,13 +4,7 @@ import { CustomWorld } from "../support/world.js";
 
 When("I confirm the card edit modal", async function (this: CustomWorld) {
   await this.page.locator('[data-testid="card-modal-confirm"]').click();
-  await this.page
-    .waitForSelector('[data-testid="card-edit-modal"]', {
-      state: "hidden",
-      timeout: 2000,
-    })
-    .catch(() => {});
-  await this.page.waitForTimeout(200);
+  await expect(this.page.locator('[data-testid="card-edit-modal"]')).toBeHidden();
 });
 
 When("I cancel the card edit modal", async function (this: CustomWorld) {

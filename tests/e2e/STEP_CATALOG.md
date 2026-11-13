@@ -226,16 +226,16 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I cancel the card edit modal` | 7 | 15 |
-| When | `I click the edit button on ability {string}` | 1 | 77 |
-| When | `I click the edit button on artifact {string}` | 1 | 56 |
-| When | `I click the edit button on attack {string}` | 1 | 70 |
-| When | `I click the edit button on cypher {string}` | 2 | 42 |
-| When | `I click the edit button on equipment {string}` | 1 | 49 |
-| When | `I click the edit button on oddity {string}` | 1 | 63 |
-| When | `I click the edit button on special ability {string}` | 1 | 84 |
+| When | `I cancel the card edit modal` | 7 | 9 |
+| When | `I click the edit button on ability {string}` | 1 | 71 |
+| When | `I click the edit button on artifact {string}` | 1 | 50 |
+| When | `I click the edit button on attack {string}` | 1 | 64 |
+| When | `I click the edit button on cypher {string}` | 2 | 36 |
+| When | `I click the edit button on equipment {string}` | 1 | 43 |
+| When | `I click the edit button on oddity {string}` | 1 | 57 |
+| When | `I click the edit button on special ability {string}` | 1 | 78 |
 | When | `I confirm the card edit modal` | 52 | 4 |
-| Then | `the card edit modal should be open` | 15 | 25 |
+| Then | `the card edit modal should be open` | 15 | 19 |
 
 ## card-creation-modal-fields.steps.ts
 
@@ -462,14 +462,14 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a file export should be triggered` | 1 | 36 |
-| When | `I export the character` | 6 | 28 |
+| Then | `a file export should be triggered` | 1 | 27 |
+| When | `I export the character` | 6 | 19 |
 | Given | `the character has name {string}` | 3 | 5 |
-| Then | `the exported file should contain all character properties` | 2 | 48 |
-| Then | `the exported file should have an exportDate` | 2 | 97 |
-| Then | `the exported file should have schemaVersion {string}` | 2 | 89 |
-| Then | `the exported file should have version {string}` | 2 | 81 |
-| Then | `the exported filename should be {string}` | 2 | 41 |
+| Then | `the exported file should contain all character properties` | 2 | 39 |
+| Then | `the exported file should have an exportDate` | 2 | 88 |
+| Then | `the exported file should have schemaVersion {string}` | 2 | 80 |
+| Then | `the exported file should have version {string}` | 2 | 72 |
+| Then | `the exported filename should be {string}` | 2 | 32 |
 
 ## character-file-import.steps.ts
 
@@ -606,27 +606,27 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a file download should be triggered` | 1 | 161 |
-| When | `I cancel the file save dialog` | 1 | 102 |
-| When | `I click the Export button` | 7 | 96 |
-| When | `I click the Quick Export button` | 1 | 108 |
-| When | `I click the Save As button` | 1 | 114 |
-| Then | `I should not see an {string} button` | 1 | 130 |
-| Then | `I should see a {string} button` | 2 | 125 |
-| Then | `I should see an {string} button` | 2 | 120 |
-| When | `I view the export buttons` | 1 | 92 |
-| Given | `my browser does not support File System Access API` | 1 | 41 |
+| Then | `a file download should be triggered` | 1 | 165 |
+| When | `I cancel the file save dialog` | 1 | 94 |
+| When | `I click the Export button` | 7 | 89 |
+| When | `I click the Quick Export button` | 1 | 100 |
+| When | `I click the Save As button` | 1 | 111 |
+| Then | `I should not see an {string} button` | 1 | 132 |
+| Then | `I should see a {string} button` | 2 | 127 |
+| Then | `I should see an {string} button` | 2 | 122 |
+| When | `I view the export buttons` | 1 | 85 |
+| Given | `my browser does not support File System Access API` | 1 | 43 |
 | Given | `my browser supports File System Access API` | 7 | 5 |
-| Then | `no file should be saved` | 1 | 201 |
-| Given | `the character name is {string}` | 1 | 69 |
-| Then | `the download filename should contain {string}` | 1 | 170 |
-| Then | `the download should have correct file structure` | 1 | 178 |
-| Then | `the Export button should still be visible` | 1 | 208 |
-| Then | `the export dialog should be triggered` | 1 | 226 |
-| Then | `the export dialog should be triggered with filename containing {string}` | 1 | 136 |
-| Then | `the exported data should have correct structure` | 1 | 148 |
-| Then | `the file should be saved without prompting` | 1 | 213 |
-| Then | `the suggested filename should be {string}` | 1 | 194 |
+| Then | `no file should be saved` | 1 | 204 |
+| Given | `the character name is {string}` | 1 | 71 |
+| Then | `the download filename should contain {string}` | 1 | 174 |
+| Then | `the download should have correct file structure` | 1 | 182 |
+| Then | `the Export button should still be visible` | 1 | 212 |
+| Then | `the export dialog should be triggered` | 1 | 230 |
+| Then | `the export dialog should be triggered with filename containing {string}` | 1 | 138 |
+| Then | `the exported data should have correct structure` | 1 | 151 |
+| Then | `the file should be saved without prompting` | 1 | 217 |
+| Then | `the suggested filename should be {string}` | 1 | 196 |
 
 ## grid-merge-split.steps.ts
 
@@ -726,31 +726,31 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all recovery checkboxes should be unchecked` | 1 | 144 |
-| When | `I click on the recovery modifier display` | 1 | 154 |
-| When | `I click the {string} recovery checkbox` | 1 | 176 |
-| When | `I confirm the edit` | 3 | 170 |
-| When | `I enter {string} in the modifier field` | 1 | 160 |
-| When | `I select the {string} damage status` | 1 | 183 |
-| Then | `I should see {int} damage status options` | 1 | 47 |
-| Then | `I should see {int} recovery roll checkboxes` | 1 | 17 |
-| Then | `I should see {string} in the recovery section` | 3 | 132 |
-| Then | `I should see a section titled {string}` | 2 | 6 |
-| Then | `I should see an edit modal` | 1 | 165 |
-| Then | `I should see damage status {string}` | 1 | 52 |
-| Then | `I should see damage status {string} with description {string}` | 2 | 57 |
-| Then | `I should see recovery roll {string} with time {string}` | 4 | 22 |
-| Then | `I should see the recovery modifier display {string}` | 1 | 11 |
-| Then | `the {string} radio button should be selected` | 4 | 83 |
-| Then | `the {string} radio button should not be selected` | 6 | 89 |
-| Then | `the {string} recovery checkbox should be checked` | 2 | 35 |
-| Then | `the {string} recovery checkbox should be unchecked` | 3 | 41 |
-| Given | `the character has {string} recovery used` | 1 | 31 |
-| Given | `the character has recovery modifier {int}` | 2 | 111 |
-| Given | `the character is {string}` | 3 | 66 |
-| Given | `the character is new` | 1 | 137 |
-| Then | `the damage track section should have red styling` | 1 | 103 |
-| Then | `the recovery rolls section should have green styling` | 1 | 95 |
+| Then | `all recovery checkboxes should be unchecked` | 1 | 145 |
+| When | `I click on the recovery modifier display` | 1 | 155 |
+| When | `I click the {string} recovery checkbox` | 1 | 177 |
+| When | `I confirm the edit` | 3 | 171 |
+| When | `I enter {string} in the modifier field` | 1 | 161 |
+| When | `I select the {string} damage status` | 1 | 184 |
+| Then | `I should see {int} damage status options` | 1 | 48 |
+| Then | `I should see {int} recovery roll checkboxes` | 1 | 18 |
+| Then | `I should see {string} in the recovery section` | 3 | 133 |
+| Then | `I should see a section titled {string}` | 2 | 7 |
+| Then | `I should see an edit modal` | 1 | 166 |
+| Then | `I should see damage status {string}` | 1 | 53 |
+| Then | `I should see damage status {string} with description {string}` | 2 | 58 |
+| Then | `I should see recovery roll {string} with time {string}` | 4 | 23 |
+| Then | `I should see the recovery modifier display {string}` | 1 | 12 |
+| Then | `the {string} radio button should be selected` | 4 | 84 |
+| Then | `the {string} radio button should not be selected` | 6 | 90 |
+| Then | `the {string} recovery checkbox should be checked` | 2 | 36 |
+| Then | `the {string} recovery checkbox should be unchecked` | 3 | 42 |
+| Given | `the character has {string} recovery used` | 1 | 32 |
+| Given | `the character has recovery modifier {int}` | 2 | 112 |
+| Given | `the character is {string}` | 3 | 67 |
+| Given | `the character is new` | 1 | 138 |
+| Then | `the damage track section should have red styling` | 1 | 104 |
+| Then | `the recovery rolls section should have green styling` | 1 | 96 |
 
 ## resource-tracker-editing.steps.ts
 

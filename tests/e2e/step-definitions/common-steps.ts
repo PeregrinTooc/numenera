@@ -4,7 +4,7 @@ import { CustomWorld } from "../support/world.js";
 import { waitForSaveComplete } from "../support/save.js";
 import { getTestId } from "../support/fields.js";
 import { FULL_CHARACTER } from "../support/cardTestFixtures.js";
-import { waitForCharacterSheetReady } from "../support/app-ready.js";
+import { waitForCharacterSheetReady, waitForNewCharacterPersisted } from "../support/app-ready.js";
 
 // Default stat values for verification, derived from FULL_CHARACTER so this
 // map can't drift from the character every card fixture builds on.
@@ -46,7 +46,7 @@ When('I click the "Cancel" button', cancelModal);
 
 When('I click the "New" button', async function (this: CustomWorld) {
   await this.page.locator('[data-testid="new-button"]').click();
-  await this.page.waitForTimeout(200); // Wait for re-render
+  await waitForNewCharacterPersisted(this.page);
 });
 
 // Badge click/tap steps, parameterised by the {badge} type (resolves to a

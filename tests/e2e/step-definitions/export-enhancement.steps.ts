@@ -18,6 +18,7 @@ Given("my browser supports File System Access API", async function (this: Custom
         write: async (data: string) => {
           mockWindow._lastWrittenData = data;
           mockWindow._exportedData = data;
+          mockWindow._writeCount = (mockWindow._writeCount ?? 0) + 1;
         },
         close: async () => {},
       }),
@@ -25,6 +26,7 @@ Given("my browser supports File System Access API", async function (this: Custom
     });
 
     mockWindow.showSaveFilePicker = async (options?: { suggestedName?: string }) => {
+      mockWindow._saveDialogCallCount = (mockWindow._saveDialogCallCount ?? 0) + 1;
       if (mockWindow._cancelFilePicker) {
         throw new window.DOMException("User cancelled", "AbortError");
       }
@@ -76,16 +78,7 @@ Given("the character name is {string}", async function (name: string) {
 
   await this.page.click('[data-testid="modal-confirm-button"]');
 
-  await this.page
-    .waitForSelector('[data-testid="edit-modal"]', {
-      state: "hidden",
-      timeout: 2000,
-    })
-    .catch(() => {
-      // Modal might already be hidden
-    });
-
-  await this.page.waitForTimeout(500);
+  await expect(this.page.locator('[data-testid="edit-modal"]')).toBeHidden();
 
   await expect(nameElement).toHaveText(name, { timeout: 5000 });
 });
@@ -97,7 +90,6 @@ When("I view the export buttons", async function () {
 When("I click the Export button", async function () {
   const button = this.page.locator('button[data-testid="export-button"]');
   await button.click();
-  await this.page.waitForTimeout(500);
 });
 
 When("I cancel the file save dialog", async function () {
@@ -108,14 +100,24 @@ When("I cancel the file save dialog", async function () {
 
 When("I click the Quick Export button", async function () {
   const button = this.page.locator('button[data-testid="quick-export-button"]');
+  await expect(button).toBeVisible();
+  const writesBefore = await this.page.evaluate(() => window._writeCount ?? 0);
   await button.click();
-  await this.page.waitForTimeout(100);
+  await this.page.waitForFunction(
+    (before: number) => (window._writeCount ?? 0) > before,
+    writesBefore
+  );
 });
 
 When("I click the Save As button", async function () {
   const button = this.page.locator('button[data-testid="save-as-button"]');
+  await expect(button).toBeVisible();
+  const dialogsBefore = await this.page.evaluate(() => window._saveDialogCallCount ?? 0);
   await button.click();
-  await this.page.waitForTimeout(100);
+  await this.page.waitForFunction(
+    (before: number) => (window._saveDialogCallCount ?? 0) > before,
+    dialogsBefore
+  );
 });
 
 Then("I should see an {string} button", async function (buttonText: string) {
@@ -137,6 +139,7 @@ Then("I should not see an {string} button", async function (buttonText: string) 
 Then(
   "the export dialog should be triggered with filename containing {string}",
   async function (expectedName: string) {
+    await this.page.waitForFunction(() => Boolean(window._suggestedFilename));
     const filename = await this.page.evaluate(() => {
       return window._suggestedFilename;
     });
@@ -147,6 +150,7 @@ Then(
 );
 
 Then("the exported data should have correct structure", async function () {
+  await this.page.waitForFunction(() => Boolean(window._lastWrittenData));
   const data = await this.page.evaluate(() => {
     return window._lastWrittenData;
   });
@@ -160,7 +164,7 @@ Then("the exported data should have correct structure", async function () {
 });
 
 Then("a file download should be triggered", async function () {
-  await this.page.waitForTimeout(500);
+  await this.page.waitForFunction(() => Boolean(window._downloadFilename));
 
   const downloadFilename = await this.page.evaluate(() => {
     return window._downloadFilename;
@@ -177,22 +181,21 @@ Then("the download filename should contain {string}", async function (expectedNa
 });
 
 Then("the download should have correct file structure", async function () {
-  await this.page.waitForTimeout(500);
+  await this.page.waitForFunction(() => Boolean(window._downloadData));
 
   const data = await this.page.evaluate(() => {
     return window._downloadData;
   });
 
-  if (data) {
-    const parsed = JSON.parse(data);
-    expect(parsed).toHaveProperty("version");
-    expect(parsed).toHaveProperty("schemaVersion");
-    expect(parsed).toHaveProperty("exportDate");
-    expect(parsed).toHaveProperty("character");
-  }
+  const parsed = JSON.parse(data);
+  expect(parsed).toHaveProperty("version");
+  expect(parsed).toHaveProperty("schemaVersion");
+  expect(parsed).toHaveProperty("exportDate");
+  expect(parsed).toHaveProperty("character");
 });
 
 Then("the suggested filename should be {string}", async function (expectedFilename: string) {
+  await this.page.waitForFunction(() => Boolean(window._suggestedFilename));
   const filename = await this.page.evaluate(() => {
     return window._suggestedFilename;
   });
@@ -200,6 +203,7 @@ Then("the suggested filename should be {string}", async function (expectedFilena
 });
 
 Then("no file should be saved", async function () {
+  await this.page.waitForFunction(() => (window._saveDialogCallCount ?? 0) >= 1);
   const dataSaved = await this.page.evaluate(() => {
     return window._lastWrittenData !== undefined;
   });

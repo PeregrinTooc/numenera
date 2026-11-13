@@ -23,6 +23,7 @@ declare global {
     _cancelFilePicker?: boolean;
     _saveDialogShown?: boolean;
     _saveDialogCallCount?: number;
+    _writeCount?: number;
     _suggestedFilename?: string;
     _downloadFilename?: string;
     _downloadData?: string;

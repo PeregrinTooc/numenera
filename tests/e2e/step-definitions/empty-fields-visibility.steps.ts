@@ -57,13 +57,13 @@ Then("the focus field should be clickable", async function (this: CustomWorld) {
 When("I click on the descriptor field", async function (this: CustomWorld) {
   const descriptorField = this.dom.getByTestId("character-descriptor");
   await descriptorField.click();
-  await this.page.waitForTimeout(200);
+  await expect(this.page.locator('[data-testid="edit-modal"]')).toBeVisible();
 });
 
 When("I click on the focus field", async function (this: CustomWorld) {
   const focusField = this.dom.getByTestId("character-focus");
   await focusField.click();
-  await this.page.waitForTimeout(200);
+  await expect(this.page.locator('[data-testid="edit-modal"]')).toBeVisible();
 });
 
 When("I enter {string} in the edit field", async function (this: CustomWorld, value: string) {
