@@ -3,6 +3,8 @@ import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
 import { EDGE_ZONE_PX } from "@/components/helpers/EdgeAutoScroll";
 import {
+  finishSectionSlides,
+  growViewportToFullHeight,
   LONG_PRESS_HOLD_MS,
   nearTopOf,
   sectionId,
@@ -106,6 +108,29 @@ When(
 );
 
 When(
+  "I long-press the {string} section and hold it over the {zone} of the {string} section until the sheet shows the result",
+  async function (this: CustomWorld, sourceName: string, zone: SectionZone, targetName: string) {
+    const page = this.page;
+    // Not restored: the drag stays held into the next step
+    await growViewportToFullHeight(page);
+    const orderBefore = await sectionOrder(page);
+    const gesture = await TouchGesture.start(
+      page,
+      await nearTopOf(sectionLocator(page, sourceName))
+    );
+    this.heldTouchGesture = gesture;
+    await page.waitForTimeout(LONG_PRESS_HOLD_MS);
+    await expect(sectionLocator(page, sourceName)).toHaveClass(/\bdragging\b/);
+    const box = await sectionLocator(page, targetName).boundingBox();
+    if (!box) throw new Error(`Section ${targetName} has no bounding box (not visible?)`);
+    await gesture.moveTo(zonePoint(box, zone));
+    // Held still, the live preview re-renders the sheet in the drop's layout
+    await expect.poll(() => sectionOrder(page)).not.toEqual(orderBefore);
+    await finishSectionSlides(page);
+  }
+);
+
+When(
   "I drag it above the {string} section and release it",
   async function (this: CustomWorld, targetName: string) {
     const gesture = this.heldTouchGesture;
@@ -137,7 +162,8 @@ When(
     const to = { x: from.x, y: from.y + direction * 400 };
 
     const gesture = await TouchGesture.start(page, from);
-    await gesture.moveTo(to);
+    // A scroll, unlike a drag, needs a stream of moves
+    await gesture.moveTo(to, 10);
     await gesture.end();
   }
 );

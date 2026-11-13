@@ -270,6 +270,15 @@ Feature: Section Re-arrangement
 
   # The gesture helper uses CDP touch input, which Playwright offers only on Chromium; covered on Pixel 5.
   @chromium-only
+  Scenario: A touch drag carries on after holding still has rearranged the sheet
+    Given the viewport is 768 pixels wide
+    And layout edit mode is active
+    When I long-press the "Cyphers" section and hold it over the bottom edge of the "Items" section until the sheet shows the result
+    And I drag it above the "Abilities" section and release it
+    Then the "Cyphers" section should appear before the "Abilities" section
+
+  # The gesture helper uses CDP touch input, which Playwright offers only on Chromium; covered on Pixel 5.
+  @chromium-only
   Scenario: A quick swipe does not start a section drag
     Given the viewport is 768 pixels wide
     And layout edit mode is active

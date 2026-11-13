@@ -5,17 +5,26 @@ import { SECTION_IDS } from "@/types/layout";
 
 type TouchType = "touchstart" | "touchmove" | "touchend" | "touchcancel";
 
-/** jsdom has TouchEvent but no Touch constructor, so `touches` is stubbed. */
+/** The element the current one-finger touch started on. */
+let startedOn: Element | null = null;
+
+/**
+ * jsdom has TouchEvent but no Touch constructor, so `touches` is stubbed.
+ * As in browsers, the rest of a touch goes to the element it started on,
+ * whatever `target` is now: a re-render may have replaced that element.
+ */
 export function touch(
   target: Element,
   type: TouchType,
   points: { x: number; y: number }[] = []
 ): void {
+  if (type === "touchstart" && points.length === 1) startedOn = target;
   const event = new TouchEvent(type, { bubbles: true, cancelable: true });
   Object.defineProperty(event, "touches", {
     value: points.map((p) => ({ clientX: p.x, clientY: p.y })),
   });
-  target.dispatchEvent(event);
+  (type === "touchstart" ? target : (startedOn ?? target)).dispatchEvent(event);
+  if (type === "touchend" || type === "touchcancel") startedOn = null;
 }
 
 export function section(id: string): HTMLElement {

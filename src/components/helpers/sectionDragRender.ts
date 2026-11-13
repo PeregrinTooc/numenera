@@ -16,8 +16,6 @@ export interface SectionDragBindings {
   touchStart: ListenerObject;
   touchMove: ListenerObject;
   dragEnd(): void;
-  touchEnd(): void;
-  touchCancel(): void;
   contextMenu(e: Event): void;
 }
 
@@ -83,8 +81,6 @@ export function renderDragSection(
       @dragend=${() => bindings.dragEnd()}
       @touchstart=${editMode ? bindings.touchStart : nothing}
       @touchmove=${editMode ? bindings.touchMove : nothing}
-      @touchend=${editMode ? () => bindings.touchEnd() : nothing}
-      @touchcancel=${editMode ? () => bindings.touchCancel() : nothing}
       @contextmenu=${(e: Event) => bindings.contextMenu(e)}
     >
       ${content}

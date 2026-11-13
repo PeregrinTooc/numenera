@@ -205,7 +205,14 @@ export class TouchGesture {
     return new TouchGesture(cdp, point);
   }
 
-  async moveTo(point: Point, steps = 10): Promise<void> {
+  /**
+   * Move the finger to `point` in `steps` evenly spaced moves. Drags take one:
+   * each move is a CDP round trip, slow on a loaded runner, and a drag that
+   * rests 300 ms over a section on the way shows that section's live preview,
+   * rearranging the sheet under the rest of the move. Chromium does not
+   * deliver moves within 15 px of where the touch started.
+   */
+  async moveTo(point: Point, steps = 1): Promise<void> {
     const from = this.current;
     for (let i = 1; i <= steps; i++) {
       const next = {
