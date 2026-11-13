@@ -41,7 +41,7 @@ Feature: Choosing the layout when importing a character
         Given I have customized the layout
         And I have a character file with a different layout
         When I import the character file
-        And I press the Escape key
+        And I dismiss the layout choice prompt with the Escape key
         Then I should not see a layout choice prompt
         And the "Cyphers" section should appear before the "Abilities" section
 

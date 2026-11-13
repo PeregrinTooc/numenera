@@ -79,6 +79,12 @@ Then("I should see a layout choice prompt", async function (this: CustomWorld) {
   await expect(this.page.getByTestId("layout-choice-modal")).toBeVisible();
 });
 
+When("I dismiss the layout choice prompt with the Escape key", async function (this: CustomWorld) {
+  // The modal takes keys only once focus has moved into it, a task after it renders.
+  await expect(this.page.getByTestId("keep-current-layout")).toBeFocused();
+  await this.page.keyboard.press("Escape");
+});
+
 Then("I should not see a layout choice prompt", async function (this: CustomWorld) {
   await expect(this.page.getByTestId("layout-choice-modal")).toHaveCount(0);
 });

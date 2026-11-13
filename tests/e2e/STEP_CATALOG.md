@@ -26,7 +26,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **738** in 55 files
+- Step definitions: **739** in 55 files
 - Feature step lines: **2402**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
@@ -61,7 +61,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [i18n.steps.ts](#i18nstepsts) | 30 | 0 |
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
-| [layout-import-export.steps.ts](#layoutimportexportstepsts) | 14 | 0 |
+| [layout-import-export.steps.ts](#layoutimportexportstepsts) | 15 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
 | [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
@@ -553,7 +553,7 @@ pattern this script does not understand):
 | When | `I hover over the character name {string}` | 1 | 93 |
 | When | `I hover over the tier {string}` | 1 | 97 |
 | When | `I press the Enter key` | 2 | 173 |
-| When | `I press the Escape key` | 6 | 169 |
+| When | `I press the Escape key` | 5 | 169 |
 | When | `I reload the page` | 59 | 177 |
 | When | `I reload the page immediately` | 1 | 190 |
 | Then | `I should see the {string} value displayed` | 1 | 197 |
@@ -706,20 +706,21 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I choose to {string}` | 4 | 97 |
+| When | `I choose to {string}` | 4 | 103 |
+| When | `I dismiss the layout choice prompt with the Escape key` | 1 | 81 |
 | Given | `I have a character file with a different layout` | 5 | 38 |
 | Given | `I have a character file with the default layout` | 1 | 42 |
 | Given | `I have a character file with the default layout that sets the {string} section to {int} column(s)` | 1 | 50 |
 | Given | `I have a character file without a layout` | 1 | 46 |
 | Given | `I have set the {string} section to {int} column(s)` | 1 | 60 |
 | When | `I import the character file` | 8 | 69 |
-| Then | `I should not see a layout choice prompt` | 5 | 81 |
+| Then | `I should not see a layout choice prompt` | 5 | 87 |
 | Then | `I should see a layout choice prompt` | 1 | 77 |
-| Then | `I should see options to {string} or {string}` | 1 | 85 |
-| Then | `the {string} option should have focus` | 1 | 93 |
-| Then | `the {string} section should be set to {int} column(s)` | 2 | 105 |
+| Then | `I should see options to {string} or {string}` | 1 | 91 |
+| Then | `the {string} option should have focus` | 1 | 99 |
+| Then | `the {string} section should be set to {int} column(s)` | 2 | 111 |
 | Then | `the exported file should contain the layout configuration` | 1 | 25 |
-| Then | `the imported character should be shown` | 5 | 101 |
+| Then | `the imported character should be shown` | 5 | 107 |
 
 ## recovery-damage-track.steps.ts
 
