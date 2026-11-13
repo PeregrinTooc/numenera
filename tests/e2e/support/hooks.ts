@@ -10,6 +10,8 @@ import { CardsDsl } from "./cards.js";
 import { SetupDsl } from "./setup.js";
 import { CharacterDsl } from "./character.js";
 import { PlaywrightSheetDriver } from "./sheetDriver.js";
+import { LayoutDsl } from "./layout.js";
+import { MouseInput, TouchInput } from "./sectionInput.js";
 import { BASE_URL } from "./serverUrl.js";
 
 let browser: Browser;
@@ -50,6 +52,9 @@ Before(async function (this: CustomWorld, { pickle }) {
   this.cards = new CardsDsl(this);
   this.setup = new SetupDsl(this);
   this.character = new CharacterDsl(new PlaywrightSheetDriver(this.page), this.setup);
+  this.layout = new LayoutDsl(
+    DEVICE.sectionInput === "touch" ? new TouchInput(this.page) : new MouseInput(this.page)
+  );
 
   // Initialize storage helper before navigation, so the Before hook's own
   // storage clearing goes through the same adapter-backed helper every step

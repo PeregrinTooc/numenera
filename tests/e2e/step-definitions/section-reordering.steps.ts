@@ -1,7 +1,7 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
-import { dragSectionTo, sectionId } from "../support/sections.js";
+import { sectionId } from "../support/sections.js";
 import type { LayoutItem, SectionId } from "@/types/layout";
 
 Given("I have reordered sections", async function (this: CustomWorld) {
@@ -45,7 +45,7 @@ Then("the sections should remain in the new order", async function (this: Custom
 When(
   "I drag the {string} section above the {string} section",
   async function (this: CustomWorld, sourceSection: string, targetSection: string) {
-    await dragSectionTo(this.page, sourceSection, targetSection);
+    await this.layout.moveSection(sourceSection, { target: targetSection, edge: "top edge" });
   }
 );
 
