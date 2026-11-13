@@ -1,5 +1,6 @@
 import { Given } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
+import { waitForInitialVersionSaved } from "../support/app-ready.js";
 import type { CustomWorld } from "../support/world";
 
 Given("the character has no version history yet", async function (this: CustomWorld) {
@@ -17,8 +18,7 @@ Given("the character has no version history yet", async function (this: CustomWo
 Given(
   "the character has {int} versions in history",
   async function (this: CustomWorld, versionCount: number) {
-    await this.page.waitForLoadState("networkidle");
-    await this.page.waitForTimeout(500);
+    await waitForInitialVersionSaved(this.page);
 
     const nameField = this.page.locator('[data-testid="character-name"]');
     const originalName = await nameField.textContent();
@@ -77,8 +77,7 @@ Given(
     // Wait for the app's own bootstrap (which saves the initial version) to
     // finish before creating more, or this step's first created version can
     // race the app's initial-version save for the same IndexedDB store.
-    await this.page.waitForLoadState("networkidle");
-    await this.page.waitForTimeout(500);
+    await waitForInitialVersionSaved(this.page);
 
     const baseCharacter = await this.storageHelper.getCharacter();
     const versionCharacter = {
@@ -117,8 +116,7 @@ Given(
     // Wait for the app's own bootstrap (which saves the initial version) to
     // finish before creating more, or this step's first created version can
     // race the app's initial-version save for the same IndexedDB store.
-    await this.page.waitForLoadState("networkidle");
-    await this.page.waitForTimeout(500);
+    await waitForInitialVersionSaved(this.page);
 
     const baseCharacter = await this.storageHelper.getCharacter();
     const versionCharacter = {

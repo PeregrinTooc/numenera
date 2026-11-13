@@ -70,3 +70,21 @@ export async function startNewCharacter(page: Page, baseUrl: string): Promise<vo
   await page.getByTestId("new-button").click();
   await waitForNewCharacterPersisted(page);
 }
+
+/**
+ * Wait until the app's bootstrap has saved its initial version and rendered
+ * the version navigator (initVersionHistory in src/app/bootstrap.ts).
+ *
+ * Steps that add versions through storageHelper.createVersion would otherwise
+ * race that initial save for the same IndexedDB "versions" store. The
+ * bootstrap saves Version 1 whenever the store is empty, so after a
+ * navigation at least one version always appears.
+ */
+export async function waitForInitialVersionSaved(page: Page): Promise<void> {
+  await waitForCharacterSheetReady(page);
+  await page.waitForFunction(async () => {
+    if (!window.__testVersionHistory) return false;
+    const versions = await window.__testVersionHistory.getAllVersions();
+    return versions.length >= 1;
+  });
+}

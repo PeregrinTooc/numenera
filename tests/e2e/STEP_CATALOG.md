@@ -644,36 +644,36 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `artifact level labels should display {string}` | 1 | 95 |
-| Then | `cypher level labels should display {string}` | 1 | 85 |
-| Given | `I am on the character sheet page with {string}` | 13 | 8 |
-| When | `I navigate to the page with {string}` | 1 | 13 |
-| Then | `the artifacts heading should be {string}` | 1 | 90 |
-| Then | `the background field label should be {string}` | 2 | 108 |
-| Then | `the cyphers heading should be {string}` | 1 | 80 |
-| Then | `the empty abilities message should be {string}` | 1 | 156 |
-| Then | `the empty artifacts message should be {string}` | 1 | 125 |
-| Then | `the empty background message should be {string}` | 1 | 135 |
-| Then | `the empty cyphers message should be {string}` | 1 | 120 |
-| Then | `the empty equipment message should be {string}` | 1 | 151 |
-| Then | `the empty notes message should be {string}` | 1 | 143 |
-| Then | `the empty oddities message should be {string}` | 1 | 130 |
-| Then | `the intellect stat should display {string}` | 1 | 54 |
-| Given | `the language is set to {string}` | 4 | 3 |
-| Then | `the language should remain German` | 1 | 161 |
-| Then | `the load button should display {string}` | 3 | 28 |
-| Then | `the might stat should display {string}` | 1 | 43 |
-| Then | `the new button should display {string}` | 3 | 33 |
-| Then | `the notes field label should be {string}` | 2 | 114 |
-| Then | `the oddities heading should be {string}` | 1 | 103 |
-| Then | `the page should declare its language as {string}` | 2 | 166 |
-| Then | `the page title should be {string}` | 2 | 23 |
-| Then | `the page title should be in English` | 2 | 18 |
-| Then | `the speed stat should display {string}` | 1 | 49 |
-| Then | `the stat current label should be {string}` | 1 | 73 |
-| Then | `the stat edge label should be {string}` | 1 | 66 |
-| Then | `the stat pool label should be {string}` | 1 | 59 |
-| Then | `the stats heading should be {string}` | 1 | 38 |
+| Then | `artifact level labels should display {string}` | 1 | 96 |
+| Then | `cypher level labels should display {string}` | 1 | 86 |
+| Given | `I am on the character sheet page with {string}` | 13 | 9 |
+| When | `I navigate to the page with {string}` | 1 | 14 |
+| Then | `the artifacts heading should be {string}` | 1 | 91 |
+| Then | `the background field label should be {string}` | 2 | 109 |
+| Then | `the cyphers heading should be {string}` | 1 | 81 |
+| Then | `the empty abilities message should be {string}` | 1 | 157 |
+| Then | `the empty artifacts message should be {string}` | 1 | 126 |
+| Then | `the empty background message should be {string}` | 1 | 136 |
+| Then | `the empty cyphers message should be {string}` | 1 | 121 |
+| Then | `the empty equipment message should be {string}` | 1 | 152 |
+| Then | `the empty notes message should be {string}` | 1 | 144 |
+| Then | `the empty oddities message should be {string}` | 1 | 131 |
+| Then | `the intellect stat should display {string}` | 1 | 55 |
+| Given | `the language is set to {string}` | 4 | 4 |
+| Then | `the language should remain German` | 1 | 162 |
+| Then | `the load button should display {string}` | 3 | 29 |
+| Then | `the might stat should display {string}` | 1 | 44 |
+| Then | `the new button should display {string}` | 3 | 34 |
+| Then | `the notes field label should be {string}` | 2 | 115 |
+| Then | `the oddities heading should be {string}` | 1 | 104 |
+| Then | `the page should declare its language as {string}` | 2 | 167 |
+| Then | `the page title should be {string}` | 2 | 24 |
+| Then | `the page title should be in English` | 2 | 19 |
+| Then | `the speed stat should display {string}` | 1 | 50 |
+| Then | `the stat current label should be {string}` | 1 | 74 |
+| Then | `the stat edge label should be {string}` | 1 | 67 |
+| Then | `the stat pool label should be {string}` | 1 | 60 |
+| Then | `the stats heading should be {string}` | 1 | 39 |
 
 ## import-error-messages.steps.ts
 
@@ -960,18 +960,18 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `comparison view is enabled in settings` | 23 | 19 |
-| Then | `comparison view should show as enabled in settings` | 1 | 35 |
-| Given | `I am viewing the comparison view` | 19 | 39 |
-| When | `I close the settings panel` | 2 | 30 |
-| When | `I enable comparison view in settings` | 2 | 23 |
+| Given | `comparison view is enabled in settings` | 23 | 20 |
+| Then | `comparison view should show as enabled in settings` | 1 | 36 |
+| Given | `I am viewing the comparison view` | 19 | 40 |
+| When | `I close the settings panel` | 2 | 31 |
+| When | `I enable comparison view in settings` | 2 | 24 |
 | Given | `the character has a version where a cypher was renamed` | 1 | 112 |
 | Given | `the character has a version with a modified cypher effect` | 1 | 93 |
 | Given | `the character has a version with a name change` | 3 | 58 |
 | Given | `the character has a version with a removed cypher` | 1 | 82 |
 | Given | `the character has a version with an added cypher` | 1 | 68 |
-| Then | `the comparison view should be visible` | 3 | 44 |
-| Then | `the comparison view should not be visible` | 3 | 48 |
+| Then | `the comparison view should be visible` | 3 | 45 |
+| Then | `the comparison view should not be visible` | 3 | 49 |
 
 ## version-history-assertions.steps.ts
 
@@ -1017,25 +1017,25 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am viewing that version` | 3 | 135 |
+| Given | `I am viewing that version` | 3 | 133 |
 | Given | `I am viewing the latest version` | 6 | 45 |
 | Given | `I am viewing version {int}` | 8 | 49 |
-| Given | `the character has {int} versions in history` | 45 | 16 |
+| Given | `the character has {int} versions in history` | 45 | 17 |
 | Given | `the character has a later version` | 1 | 62 |
-| Given | `the character has a portrait image` | 2 | 104 |
-| Given | `the character has a version from {int} minutes ago` | 1 | 113 |
+| Given | `the character has a portrait image` | 2 | 103 |
+| Given | `the character has a version from {int} minutes ago` | 1 | 112 |
 | Given | `the character has a version with multiple basic info changes` | 2 | 73 |
-| Given | `the character has no version history yet` | 7 | 4 |
+| Given | `the character has no version history yet` | 7 | 5 |
 
 ## version-history-given-data.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I have made buffered edits that were undone` | 2 | 122 |
-| Given | `the character has {int} versions with different data` | 3 | 64 |
-| Given | `the character has {int} versions with different names` | 2 | 97 |
+| Given | `I have made buffered edits that were undone` | 2 | 119 |
+| Given | `the character has {int} versions with different data` | 3 | 63 |
+| Given | `the character has {int} versions with different names` | 2 | 95 |
 | Given | `the character has a legacy version with a {string} description for a name change and an added ability` | 1 | 34 |
-| Given | `the character has a legacy version with an {string} description for an added cypher` | 2 | 4 |
+| Given | `the character has a legacy version with an {string} description for an added cypher` | 2 | 5 |
 
 ## version-history-mixed-undo-redo.steps.ts
 

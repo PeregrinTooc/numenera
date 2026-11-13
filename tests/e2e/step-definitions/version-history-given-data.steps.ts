@@ -1,5 +1,6 @@
 import { Given } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
+import { waitForInitialVersionSaved } from "../support/app-ready.js";
 import type { CustomWorld } from "../support/world";
 
 Given(
@@ -8,8 +9,7 @@ Given(
     // Reproduces pre-migration stored data: a version whose description is the
     // old hardcoded literal, created by bypassing the live detectChanges path
     // (same as the other legacy-description Given step below).
-    await this.page.waitForLoadState("networkidle");
-    await this.page.waitForTimeout(500);
+    await waitForInitialVersionSaved(this.page);
 
     const baseCharacter = await this.storageHelper.getCharacter();
     const versionCharacter = {
@@ -37,8 +37,7 @@ Given(
   async function (this: CustomWorld, description: string) {
     // Reproduces a real squashDescriptions() output: a compound description
     // with the legacy literal as one of its comma-separated segments.
-    await this.page.waitForLoadState("networkidle");
-    await this.page.waitForTimeout(500);
+    await waitForInitialVersionSaved(this.page);
 
     const baseCharacter = await this.storageHelper.getCharacter();
     const versionCharacter = {
@@ -69,8 +68,7 @@ Given(
     // finish before creating more, or the two races for the same IndexedDB
     // "versions" store and this step's first created version can overwrite
     // the initial one instead of following it.
-    await this.page.waitForLoadState("networkidle");
-    await this.page.waitForTimeout(500);
+    await waitForInitialVersionSaved(this.page);
 
     const baseCharacter = await this.storageHelper.getCharacter();
 
@@ -98,8 +96,7 @@ Given(
 Given(
   "the character has {int} versions with different names",
   async function (this: CustomWorld, versionCount: number) {
-    await this.page.waitForLoadState("networkidle");
-    await this.page.waitForTimeout(500);
+    await waitForInitialVersionSaved(this.page);
 
     const baseCharacter = await this.storageHelper.getCharacter();
 

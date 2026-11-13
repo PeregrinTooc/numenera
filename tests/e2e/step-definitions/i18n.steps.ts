@@ -1,19 +1,20 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
+import { waitForCharacterSheetReady } from "../support/app-ready.js";
 
 Given("the language is set to {string}", async function (language: string) {
   await this.page.goto(`${this.getBaseUrl()}?lang=${language}`);
-  await this.page.waitForTimeout(200);
+  await waitForCharacterSheetReady(this.page);
 });
 
 Given("I am on the character sheet page with {string}", async function (queryString: string) {
   await this.page.goto(`${this.getBaseUrl()}${queryString}`);
-  await this.page.waitForTimeout(200);
+  await waitForCharacterSheetReady(this.page);
 });
 
 When("I navigate to the page with {string}", async function (queryString: string) {
   await this.page.goto(`${this.getBaseUrl()}${queryString}`);
-  await this.page.waitForTimeout(200);
+  await waitForCharacterSheetReady(this.page);
 });
 
 Then("the page title should be in English", async function () {

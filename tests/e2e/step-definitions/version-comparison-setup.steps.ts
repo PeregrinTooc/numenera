@@ -1,5 +1,6 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
+import { waitForInitialVersionSaved } from "../support/app-ready.js";
 import type { CustomWorld } from "../support/world.js";
 
 async function setComparisonViewEnabled(world: CustomWorld, enabled: boolean): Promise<void> {
@@ -52,8 +53,7 @@ Then("the comparison view should not be visible", async function (this: CustomWo
 });
 
 async function waitForBootstrap(world: CustomWorld): Promise<void> {
-  await world.page.waitForLoadState("networkidle");
-  await world.page.waitForTimeout(500);
+  await waitForInitialVersionSaved(world.page);
 }
 
 Given("the character has a version with a name change", async function (this: CustomWorld) {
