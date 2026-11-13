@@ -314,22 +314,22 @@ pattern this script does not understand):
 | Then | `I should see {int} oddity cards` | 8 | 17 |
 | Then | `I should see {int} special ability cards` | 8 | 29 |
 | Then | `I should see a cypher card with name {string}` | 5 | 33 |
-| Then | `I should see a special ability card with name {string}` | 5 | 159 |
-| Then | `I should see an ability card with name {string}` | 7 | 134 |
-| Then | `I should see an artifact card with name {string}` | 5 | 75 |
-| Then | `I should see an attack card with name {string}` | 5 | 109 |
-| Then | `I should see an equipment card with name {string}` | 5 | 58 |
-| Then | `I should see an oddity card with text {string}` | 6 | 100 |
-| Then | `the ability {string} should have cost {string}` | 1 | 143 |
-| Then | `the ability {string} should have pool {string}` | 1 | 151 |
-| Then | `the artifact {string} should have effect {string}` | 1 | 92 |
-| Then | `the artifact {string} should have level {string}` | 1 | 84 |
-| Then | `the attack {string} should have damage {string}` | 1 | 126 |
-| Then | `the attack {string} should have modifier {string}` | 1 | 118 |
-| Then | `the cypher {string} should have effect {string}` | 1 | 50 |
-| Then | `the cypher {string} should have level {string}` | 1 | 42 |
-| Then | `the equipment {string} should have description {string}` | 1 | 67 |
-| Then | `the special ability {string} should have source {string}` | 1 | 170 |
+| Then | `I should see a special ability card with name {string}` | 5 | 153 |
+| Then | `I should see an ability card with name {string}` | 7 | 129 |
+| Then | `I should see an artifact card with name {string}` | 5 | 73 |
+| Then | `I should see an attack card with name {string}` | 5 | 105 |
+| Then | `I should see an equipment card with name {string}` | 5 | 57 |
+| Then | `I should see an oddity card with text {string}` | 6 | 97 |
+| Then | `the ability {string} should have cost {string}` | 1 | 137 |
+| Then | `the ability {string} should have pool {string}` | 1 | 145 |
+| Then | `the artifact {string} should have effect {string}` | 1 | 89 |
+| Then | `the artifact {string} should have level {string}` | 1 | 81 |
+| Then | `the attack {string} should have damage {string}` | 1 | 121 |
+| Then | `the attack {string} should have modifier {string}` | 1 | 113 |
+| Then | `the cypher {string} should have effect {string}` | 1 | 49 |
+| Then | `the cypher {string} should have level {string}` | 1 | 41 |
+| Then | `the equipment {string} should have description {string}` | 1 | 65 |
+| Then | `the special ability {string} should have source {string}` | 1 | 163 |
 
 ## card-deletion.steps.ts
 
@@ -364,7 +364,7 @@ pattern this script does not understand):
 | Then | `I should have {int} equipment items remaining` | 2 | 180 |
 | Then | `I should have {int} oddity remaining` | 2 | 162 |
 | Then | `I should have {int} special ability remaining` | 2 | 172 |
-| Then | `I should not see a confirmation dialog` | 1 | 216 |
+| Then | `I should not see a confirmation dialog` | 1 | 215 |
 | Then | `I should see a delete button on the {cardType} card` | 7 | 36 |
 | Then | `the ability should be removed from the DOM` | 1 | 146 |
 | Then | `the artifact should be removed from the DOM` | 1 | 134 |

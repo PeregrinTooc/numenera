@@ -4,37 +4,36 @@ import { CustomWorld } from "../support/world.js";
 import { CARD_CONFIGS } from "../support/cardTestFixtures.js";
 
 Then("I should see {int} cypher card(s)", async function (this: CustomWorld, count: number) {
-  await this.cards.expectVisibleCount("cypher", count);
+  await this.cards.expectHasCount("cypher", count);
 });
 
 Then("I should see {int} equipment cards", async function (this: CustomWorld, count: number) {
-  await this.cards.expectVisibleCount("equipment", count);
+  await this.cards.expectHasCount("equipment", count);
 });
 
 Then("I should see {int} artifact cards", async function (this: CustomWorld, count: number) {
-  await this.cards.expectVisibleCount("artifact", count);
+  await this.cards.expectHasCount("artifact", count);
 });
 
 Then("I should see {int} oddity cards", async function (this: CustomWorld, count: number) {
-  await this.cards.expectVisibleCount("oddity", count);
+  await this.cards.expectHasCount("oddity", count);
 });
 
 Then("I should see {int} attack cards", async function (this: CustomWorld, count: number) {
-  await this.cards.expectVisibleCount("attack", count);
+  await this.cards.expectHasCount("attack", count);
 });
 
 Then("I should see {int} ability cards", async function (this: CustomWorld, count: number) {
-  await this.cards.expectVisibleCount("ability", count);
+  await this.cards.expectHasCount("ability", count);
 });
 
 Then("I should see {int} special ability cards", async function (this: CustomWorld, count: number) {
-  await this.cards.expectVisibleCount("special-ability", count);
+  await this.cards.expectHasCount("special-ability", count);
 });
 
 Then(
   "I should see a cypher card with name {string}",
   async function (this: CustomWorld, name: string) {
-    await this.page.waitForTimeout(100);
     const card = this.page.locator(CARD_CONFIGS.cypher.itemTestId).filter({ hasText: name });
     await expect(card).toBeVisible();
   }
@@ -59,7 +58,6 @@ Then(
 Then(
   "I should see an equipment card with name {string}",
   async function (this: CustomWorld, name: string) {
-    await this.page.waitForTimeout(100);
     const card = this.page.locator(CARD_CONFIGS.equipment.itemTestId).filter({ hasText: name });
     await expect(card).toBeVisible();
   }
@@ -76,7 +74,6 @@ Then(
 Then(
   "I should see an artifact card with name {string}",
   async function (this: CustomWorld, name: string) {
-    await this.page.waitForTimeout(100);
     const card = this.page.locator(CARD_CONFIGS.artifact.itemTestId).filter({ hasText: name });
     await expect(card).toBeVisible();
   }
@@ -101,7 +98,6 @@ Then(
 Then(
   "I should see an oddity card with text {string}",
   async function (this: CustomWorld, text: string) {
-    await this.page.waitForTimeout(100);
     const card = this.page.locator(CARD_CONFIGS.oddity.itemTestId).filter({ hasText: text });
     await expect(card).toBeVisible();
   }
@@ -110,7 +106,6 @@ Then(
 Then(
   "I should see an attack card with name {string}",
   async function (this: CustomWorld, name: string) {
-    await this.page.waitForTimeout(100);
     const card = this.page.locator(CARD_CONFIGS.attack.itemTestId).filter({ hasText: name });
     await expect(card).toBeVisible();
   }
@@ -135,7 +130,6 @@ Then(
 Then(
   "I should see an ability card with name {string}",
   async function (this: CustomWorld, name: string) {
-    await this.page.waitForTimeout(100);
     const card = this.page.locator(CARD_CONFIGS.ability.itemTestId).filter({ hasText: name });
     await expect(card).toBeVisible();
   }
@@ -160,7 +154,6 @@ Then(
 Then(
   "I should see a special ability card with name {string}",
   async function (this: CustomWorld, name: string) {
-    await this.page.waitForTimeout(100);
     const card = this.page.locator(CARD_CONFIGS["special-ability"].itemTestId).filter({
       hasText: name,
     });

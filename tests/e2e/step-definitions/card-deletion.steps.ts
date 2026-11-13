@@ -210,8 +210,7 @@ Then(
 );
 
 Then("the cypher should be removed immediately", async function (this: CustomWorld) {
-  // This is tested by the fact that it's removed without needing additional interaction
-  await this.page.waitForTimeout(100);
+  await this.cards.expectRemoved("cypher");
 });
 
 Then("I should not see a confirmation dialog", async function (this: CustomWorld) {

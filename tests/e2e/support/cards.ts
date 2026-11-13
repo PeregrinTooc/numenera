@@ -44,15 +44,8 @@ export class CardsDsl {
     }
   }
 
-  /** Asserts the rendered card count with no extra wait. */
+  /** Asserts the rendered card count, retrying until it matches. */
   async expectHasCount(cardType: string, count: number): Promise<void> {
-    const config = CARD_CONFIGS[cardType];
-    await expect(this.page.locator(config.itemTestId)).toHaveCount(count);
-  }
-
-  /** Asserts the rendered card count after a short settle wait. */
-  async expectVisibleCount(cardType: string, count: number): Promise<void> {
-    await this.page.waitForTimeout(100);
     const config = CARD_CONFIGS[cardType];
     await expect(this.page.locator(config.itemTestId)).toHaveCount(count);
   }
@@ -71,11 +64,12 @@ export class CardsDsl {
     await this.page.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
   }
 
-  /** Records the pre-delete count on the World (for expectRemoved) and clicks delete. */
+  /** Records the pre-delete count on the World, clicks delete and waits for the card to go. */
   async clickDeleteButton(cardType: string, index = 0): Promise<void> {
-    this.world.previousCardCount = await this.count(cardType);
+    const before = await this.count(cardType);
+    this.world.previousCardCount = before;
     await this.page.locator(this.deleteButtonSelector(cardType, index)).click();
-    await this.page.waitForTimeout(100);
+    await expect(this.page.locator(this.deleteButtonSelector(cardType))).toHaveCount(before - 1);
   }
 
   async count(cardType: string): Promise<number> {
