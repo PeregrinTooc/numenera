@@ -6,6 +6,7 @@ import {
   mouseDrag,
   mountSheet,
   placeSection,
+  ROW_HEIGHT,
   section,
   sectionOrder,
   touch,
@@ -154,6 +155,30 @@ describe("CharacterSheet live layout preview", () => {
 
     expect(sectionOrder()).toEqual(before);
     expect(localStorage.getItem("numenera-layout")).toBeNull();
+  });
+
+  it("a touch drag follows the finger on after the live preview re-rendered the touched element", () => {
+    layOutByRows(); // Cyphers is row 5, Items row 6
+    document.elementFromPoint = (x, y): Element | null =>
+      Array.from(document.querySelectorAll("[data-section-id]")).find((el) => {
+        const box = el.getBoundingClientRect();
+        return x >= box.left && x < box.right && y >= box.top && y < box.bottom;
+      }) ?? null;
+    const touched = section("cyphers").querySelector(".section-box") as Element;
+    touch(touched, "touchstart", [{ x: 20, y: 5 * ROW_HEIGHT + 20 }]);
+    vi.advanceTimersByTime(250);
+    touch(touched, "touchmove", [{ x: 20, y: 7 * ROW_HEIGHT - 20 }]); // bottom edge of Items
+    vi.advanceTimersByTime(300);
+    // Browsers send the rest of the touch to the element it started on
+    expect(touched.isConnected).toBe(false);
+
+    // The preview scrolled the page to keep Items under the finger
+    const abilities = section("abilities").getBoundingClientRect();
+    touch(touched, "touchmove", [{ x: 20, y: abilities.top + 20 }]);
+    touch(touched, "touchend");
+
+    const order = sectionOrder();
+    expect(order.indexOf("cyphers")).toBe(order.indexOf("abilities") - 1);
   });
 
   /** A mouse drag of Cyphers whose live preview pairs it with Items. */

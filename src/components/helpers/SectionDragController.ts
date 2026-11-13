@@ -85,8 +85,6 @@ export class SectionDragController {
     touchStart: this.touch.touchStartListener,
     touchMove: this.touch.touchMoveListener,
     dragEnd: () => this.mouse.handleDragEnd(),
-    touchEnd: () => this.touch.end(),
-    touchCancel: () => this.touch.cancel(),
     contextMenu: (e) => this.touch.handleContextMenu(e),
   };
 
