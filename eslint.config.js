@@ -140,6 +140,13 @@ export default [
     files: ["tests/e2e/**/*.ts"],
     rules: {
       "@typescript-eslint/no-non-null-assertion": "error",
+      "no-restricted-properties": [
+        "error",
+        {
+          property: "waitForTimeout",
+          message: "Wait for an observable outcome instead of sleeping (see docs/atdd-review.md).",
+        },
+      ],
     },
   },
   {

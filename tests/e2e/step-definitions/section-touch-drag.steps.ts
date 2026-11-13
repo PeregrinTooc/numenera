@@ -5,7 +5,7 @@ import { EDGE_ZONE_PX } from "@/components/helpers/EdgeAutoScroll";
 import {
   finishSectionSlides,
   growViewportToFullHeight,
-  LONG_PRESS_HOLD_MS,
+  holdForLongPress,
   nearTopOf,
   sectionId,
   sectionLocator,
@@ -24,7 +24,7 @@ When("I long-press the {string} section", async function (this: CustomWorld, nam
   await section.scrollIntoViewIfNeeded();
   // The gesture is deliberately left held: the Then step asserts the drag state.
   await TouchGesture.start(this.page, await nearTopOf(section));
-  await this.page.waitForTimeout(LONG_PRESS_HOLD_MS);
+  await holdForLongPress(this.page);
 });
 
 Then(
@@ -43,7 +43,7 @@ When(
         page,
         await nearTopOf(sectionLocator(page, sourceName))
       );
-      await page.waitForTimeout(LONG_PRESS_HOLD_MS);
+      await holdForLongPress(page);
       // A late app timer on a loaded runner could still cancel a pending
       // gesture; confirm the drag actually activated before moving.
       await expect(sectionLocator(page, sourceName)).toHaveClass(/\bdragging\b/);
@@ -73,7 +73,7 @@ When(
         page,
         await nearTopOf(sectionLocator(page, sourceName))
       );
-      await page.waitForTimeout(LONG_PRESS_HOLD_MS);
+      await holdForLongPress(page);
       await expect(sectionLocator(page, sourceName)).toHaveClass(/\bdragging\b/);
       const box = await sectionLocator(page, targetName).boundingBox();
       if (!box) throw new Error(`Section ${targetName} has no bounding box (not visible?)`);
@@ -95,7 +95,7 @@ When(
 
     const gesture = await TouchGesture.start(page, await nearTopOf(source));
     this.heldTouchGesture = gesture;
-    await page.waitForTimeout(LONG_PRESS_HOLD_MS);
+    await holdForLongPress(page);
     await expect(source).toHaveClass(/\bdragging\b/);
     const from = await nearTopOf(source);
     await gesture.moveTo({ x: from.x, y: 4 });
@@ -119,7 +119,7 @@ When(
       await nearTopOf(sectionLocator(page, sourceName))
     );
     this.heldTouchGesture = gesture;
-    await page.waitForTimeout(LONG_PRESS_HOLD_MS);
+    await holdForLongPress(page);
     await expect(sectionLocator(page, sourceName)).toHaveClass(/\bdragging\b/);
     const box = await sectionLocator(page, targetName).boundingBox();
     if (!box) throw new Error(`Section ${targetName} has no bounding box (not visible?)`);
