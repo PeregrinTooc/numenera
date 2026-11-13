@@ -27,7 +27,7 @@ BeforeAll({ timeout: 60000 }, async function () {
   });
 });
 
-Before(async function (this: CustomWorld) {
+Before(async function (this: CustomWorld, { pickle }) {
   // Locale is pinned to en-US: i18next's LanguageDetector falls back to
   // navigator.language, which otherwise inherits the host OS locale. Step
   // definitions assert on hardcoded English strings, so an unpinned locale
@@ -76,6 +76,12 @@ Before(async function (this: CustomWorld) {
   // identity function before anything else runs. Passed as a string so the
   // shim itself is never transformed.
   await this.page.addInitScript("globalThis.__name = (fn) => fn;");
+
+  // Scenarios tagged @fake-clock drive the app's real timers and Date with page.clock;
+  // it only fakes timers created after install, so it must precede navigation.
+  if (pickle.tags.some((tag) => tag.name === "@fake-clock")) {
+    await this.page.clock.install();
+  }
 
   // Inject test configuration and TestTimer BEFORE navigation
   await this.page.addInitScript(() => {

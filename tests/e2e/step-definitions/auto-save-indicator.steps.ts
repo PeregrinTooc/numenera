@@ -14,7 +14,7 @@ When("I note the current save timestamp", async function (this: CustomWorld) {
 });
 
 When("I wait for {int} second(s)", async function (this: CustomWorld, seconds: number) {
-  await this.page.waitForTimeout(seconds * 1000);
+  await this.page.clock.runFor(seconds * 1000);
 });
 
 When("I rapidly edit the character name multiple times", async function (this: CustomWorld) {
@@ -49,10 +49,10 @@ When("I rapidly edit the character name multiple times", async function (this: C
     await this.page.waitForSelector('[data-testid="edit-modal"]', { state: "hidden" }).catch(() => {
       // Modal might already be hidden
     });
-    await this.page.waitForTimeout(50); // Short delay, within debounce window
   }
 
-  await this.page.waitForTimeout(600);
+  await this.page.clock.runFor(600);
+  await expect(this.page.locator('[data-testid="save-indicator"]')).toBeVisible();
 
   this.saveCount = await this.page.evaluate(() => {
     const count = window.__saveCount || 0;
