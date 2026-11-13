@@ -8,49 +8,32 @@ Then("the card edit modal should be closed", async function () {
 
 When("I press the Tab key", async function () {
   await this.page.keyboard.press("Tab");
-  await this.page.waitForTimeout(30);
 });
 
 When("I press Shift+Tab", async function () {
   await this.page.keyboard.press("Shift+Tab");
-  await this.page.waitForTimeout(30);
 });
 
 Then("the first input field in the modal should be automatically focused", async function () {
-  await this.page.waitForTimeout(100);
-
-  const focusedElement = await this.page.evaluate(() => {
-    const activeElement = document.activeElement;
-    return {
-      tagName: activeElement?.tagName,
-      type: (activeElement as HTMLInputElement)?.type,
-      isInModal:
-        document.querySelector('[data-testid="card-edit-modal"]')?.contains(activeElement) ?? false,
-    };
-  });
-
-  expect(focusedElement.tagName).toBe("INPUT");
-  expect(focusedElement.isInModal).toBe(true);
+  const firstInput = this.page.locator('[data-testid="card-edit-modal"] input').first();
+  await expect(firstInput).toBeFocused();
 });
 
 When("I press the Tab key repeatedly", async function () {
   for (let i = 0; i < 10; i++) {
     await this.page.keyboard.press("Tab");
-    await this.page.waitForTimeout(50);
   }
 });
 
 When("I press Shift+Tab repeatedly", async function () {
   for (let i = 0; i < 10; i++) {
     await this.page.keyboard.press("Shift+Tab");
-    await this.page.waitForTimeout(50);
   }
 });
 
 When("I press the Tab key {int} times", async function (times: number) {
   for (let i = 0; i < times; i++) {
     await this.page.keyboard.press("Tab");
-    await this.page.waitForTimeout(30);
   }
 });
 
@@ -136,15 +119,7 @@ Then("the active element should not be the document body", async function () {
 
 Then("focus should be on the description textarea", async function () {
   // The trap's own focusable list must include the textarea, or Tab can never land on it.
-  const focused = await this.page.evaluate(() => {
-    const activeElement = document.activeElement;
-    return {
-      tagName: activeElement?.tagName,
-      testId: activeElement?.getAttribute("data-testid"),
-    };
-  });
-  expect(focused.tagName).toBe("TEXTAREA");
-  expect(focused.testId).toBe("edit-ability-description");
+  await expect(this.page.locator('[data-testid="edit-ability-description"]')).toBeFocused();
 });
 
 Then("the active element should not be the browser chrome", async function () {

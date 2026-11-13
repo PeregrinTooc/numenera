@@ -380,22 +380,22 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `focus should be on the description textarea` | 1 | 136 |
-| Then | `focus should eventually wrap back to the first input field` | 1 | 74 |
-| Then | `focus should eventually wrap back to the last focusable element` | 1 | 92 |
-| Then | `focus should move to the last focusable element in the modal` | 1 | 65 |
-| Then | `focus should move to the next focusable element in the modal` | 1 | 56 |
-| Then | `focus should never escape to the page body or address bar` | 4 | 101 |
-| Then | `focus should still be within the card modal` | 3 | 120 |
-| When | `I press Shift+Tab` | 1 | 13 |
-| When | `I press Shift+Tab repeatedly` | 1 | 42 |
+| Then | `focus should be on the description textarea` | 1 | 119 |
+| Then | `focus should eventually wrap back to the first input field` | 1 | 57 |
+| Then | `focus should eventually wrap back to the last focusable element` | 1 | 75 |
+| Then | `focus should move to the last focusable element in the modal` | 1 | 48 |
+| Then | `focus should move to the next focusable element in the modal` | 1 | 39 |
+| Then | `focus should never escape to the page body or address bar` | 4 | 84 |
+| Then | `focus should still be within the card modal` | 3 | 103 |
+| When | `I press Shift+Tab` | 1 | 12 |
+| When | `I press Shift+Tab repeatedly` | 1 | 27 |
 | When | `I press the Tab key` | 1 | 8 |
-| When | `I press the Tab key {int} times` | 4 | 49 |
-| When | `I press the Tab key repeatedly` | 1 | 35 |
-| Then | `the active element should not be the browser chrome` | 1 | 149 |
-| Then | `the active element should not be the document body` | 1 | 129 |
+| When | `I press the Tab key {int} times` | 4 | 33 |
+| When | `I press the Tab key repeatedly` | 1 | 21 |
+| Then | `the active element should not be the browser chrome` | 1 | 124 |
+| Then | `the active element should not be the document body` | 1 | 112 |
 | Then | `the card edit modal should be closed` | 1 | 3 |
-| Then | `the first input field in the modal should be automatically focused` | 1 | 18 |
+| Then | `the first input field in the modal should be automatically focused` | 1 | 16 |
 
 ## card-reordering-abilities.steps.ts
 
