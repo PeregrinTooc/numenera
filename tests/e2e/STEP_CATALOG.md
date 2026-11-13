@@ -402,8 +402,8 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I drag ability {string} before ability {string}` | 2 | 28 |
-| When | `I drag ability {string} onto cypher {string}` | 1 | 86 |
-| When | `I drag cypher {string} into the abilities section` | 1 | 70 |
+| When | `I drag ability {string} onto cypher {string}` | 1 | 80 |
+| When | `I drag cypher {string} into the abilities section` | 1 | 64 |
 | Then | `the abilities should be in order {string}` | 5 | 49 |
 | Given | `the character has {int} abilities named {string}` | 5 | 5 |
 
@@ -411,14 +411,14 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag cypher {string} after cypher {string}` | 1 | 42 |
+| When | `I drag cypher {string} after cypher {string}` | 1 | 41 |
 | When | `I drag cypher {string} before cypher {string}` | 3 | 21 |
-| When | `I hover over cypher {string}` | 1 | 95 |
-| When | `I start dragging cypher {string}` | 2 | 68 |
+| When | `I hover over cypher {string}` | 1 | 91 |
+| When | `I start dragging cypher {string}` | 2 | 66 |
 | Given | `the character has {int} cyphers named {string}` | 9 | 5 |
-| Then | `the cypher {string} should have a dragging visual state` | 1 | 138 |
-| Then | `the cyphers should be in order {string}` | 7 | 116 |
-| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 157 |
+| Then | `the cypher {string} should have a dragging visual state` | 1 | 127 |
+| Then | `the cyphers should be in order {string}` | 7 | 110 |
+| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 138 |
 
 ## character-display.steps.ts
 
@@ -498,10 +498,10 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag {string} after {string} in the {string} collection` | 1 | 79 |
+| When | `I drag {string} after {string} in the {string} collection` | 1 | 78 |
 | When | `I drag {string} before {string} in the {string} collection` | 1 | 66 |
 | Given | `the {string} collection holds {string}` | 2 | 54 |
-| Then | `the {string} collection should be in order {string}` | 2 | 96 |
+| Then | `the {string} collection should be in order {string}` | 2 | 94 |
 
 ## combat.steps.ts
 

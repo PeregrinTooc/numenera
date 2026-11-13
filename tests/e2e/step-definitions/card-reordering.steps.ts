@@ -35,8 +35,7 @@ When(
         targetPosition: { x: 10, y: 5 }, // Drop near top of target
       })
     );
-
-    await this.page.waitForTimeout(200);
+    await expect(sourceCard).not.toHaveAttribute("data-dragging", "true");
   }
 );
 
@@ -61,8 +60,7 @@ When(
         targetPosition: { x: targetBBox.width / 2, y: targetBBox.height - 5 },
       });
     });
-
-    await this.page.waitForTimeout(200);
+    await expect(sourceCard).not.toHaveAttribute("data-dragging", "true");
   }
 );
 
@@ -89,8 +87,6 @@ When("I start dragging cypher {string}", async function (this: CustomWorld, cyph
     });
     el.dispatchEvent(event);
   });
-
-  await this.page.waitForTimeout(100);
 });
 
 When("I hover over cypher {string}", async function (this: CustomWorld, cypherName: string) {
@@ -110,8 +106,6 @@ When("I hover over cypher {string}", async function (this: CustomWorld, cypherNa
     });
     el.dispatchEvent(event);
   });
-
-  await this.page.waitForTimeout(200);
 });
 
 Then(
@@ -123,17 +117,12 @@ Then(
 );
 
 async function verifyCypherOrder(world: CustomWorld, expectedOrder: string[]): Promise<void> {
-  const cypherItems = world.page.locator('[data-testid="cypher-item"]');
-  const count = await cypherItems.count();
-
-  expect(count).toBe(expectedOrder.length);
-
-  for (let i = 0; i < expectedOrder.length; i++) {
-    const cypherName = cypherItems.nth(i).locator('[data-testid^="cypher-name-"]');
-    const nameText = await cypherName.textContent();
-    const cleanName = nameText?.replace("⚡", "").trim();
-    expect(cleanName).toBe(expectedOrder[i]);
-  }
+  const cypherNames = world.page.locator(
+    '[data-testid="cypher-item"] [data-testid^="cypher-name-"]'
+  );
+  await expect(cypherNames).toHaveText(
+    expectedOrder.map((name) => new RegExp(`^\\W*${name}\\W*$`))
+  );
 }
 
 Then(
@@ -143,15 +132,7 @@ Then(
       .locator(`[data-testid="cypher-name-${cypherName}"]`)
       .locator("xpath=ancestor::div[@data-testid='cypher-item']");
 
-    const hasDraggingClass = await cypherCard.evaluate((el) => {
-      return (
-        el.classList.contains("dragging") ||
-        el.classList.contains("is-dragging") ||
-        el.getAttribute("data-dragging") === "true"
-      );
-    });
-
-    expect(hasDraggingClass).toBe(true);
+    await expect(cypherCard).toHaveAttribute("data-dragging", "true");
   }
 );
 
@@ -165,28 +146,22 @@ Then(
 
 async function verifyVisualCypherOrder(world: CustomWorld, expectedOrder: string[]): Promise<void> {
   const cypherItems = world.page.locator('[data-testid="cypher-item"]');
-  const count = await cypherItems.count();
+  await expect(cypherItems).toHaveCount(expectedOrder.length);
 
-  expect(count).toBe(expectedOrder.length);
-
-  const itemsWithOrder: { name: string; order: number }[] = [];
-  for (let i = 0; i < count; i++) {
-    const item = cypherItems.nth(i);
-    const cypherName = item.locator('[data-testid^="cypher-name-"]');
-    const nameText = await cypherName.textContent();
-    const cleanName = nameText?.replace("⚡", "").trim() || "";
-
-    const orderValue = await item.evaluate((el) => {
-      const order = (el as HTMLElement).style.order;
-      return order === "" ? 0 : parseInt(order, 10);
-    });
-
-    itemsWithOrder.push({ name: cleanName, order: orderValue });
-  }
-
-  itemsWithOrder.sort((a, b) => a.order - b.order);
-
-  for (let i = 0; i < expectedOrder.length; i++) {
-    expect(itemsWithOrder[i].name).toBe(expectedOrder[i]);
-  }
+  await expect
+    .poll(async () => {
+      const items = await cypherItems.evaluateAll((els) =>
+        els.map((el) => ({
+          name: (el.querySelector('[data-testid^="cypher-name-"]')?.textContent ?? "")
+            .replace("⚡", "")
+            .trim(),
+          order:
+            (el as HTMLElement).style.order === ""
+              ? 0
+              : parseInt((el as HTMLElement).style.order, 10),
+        }))
+      );
+      return items.sort((a, b) => a.order - b.order).map((item) => item.name);
+    })
+    .toEqual(expectedOrder);
 }

@@ -73,7 +73,6 @@ When(
         targetPosition: { x: 10, y: 5 },
       })
     );
-    await this.page.waitForTimeout(200);
   }
 );
 
@@ -90,7 +89,6 @@ When(
         targetPosition: { x: box.width / 2, y: box.height - 5 },
       });
     });
-    await this.page.waitForTimeout(200);
   }
 );
 

@@ -43,7 +43,7 @@ When(
       })
     );
 
-    await this.page.waitForTimeout(200);
+    await expect(sourceCard).not.toHaveAttribute("data-dragging", "true");
   }
 );
 
@@ -56,16 +56,10 @@ Then(
 );
 
 async function verifyAbilityOrder(world: CustomWorld, expectedOrder: string[]): Promise<void> {
-  const abilityItems = world.page.locator('[data-testid^="ability-item"]');
-  const count = await abilityItems.count();
-
-  expect(count).toBe(expectedOrder.length);
-
-  for (let i = 0; i < expectedOrder.length; i++) {
-    const abilityName = abilityItems.nth(i).locator('[data-testid^="ability-name-"]');
-    const nameText = await abilityName.textContent();
-    expect(nameText?.trim()).toBe(expectedOrder[i]);
-  }
+  const abilityNames = world.page.locator(
+    '[data-testid^="ability-item"] [data-testid^="ability-name-"]'
+  );
+  await expect(abilityNames).toHaveText(expectedOrder);
 }
 
 When(
@@ -80,7 +74,7 @@ When(
       targetPosition: { x: 50, y: 50 },
     });
 
-    await this.page.waitForTimeout(200);
+    await expect(sourceCard).not.toHaveAttribute("data-dragging", "true");
   }
 );
 
@@ -101,6 +95,6 @@ When(
       })
     );
 
-    await this.page.waitForTimeout(200);
+    await expect(sourceCard).not.toHaveAttribute("data-dragging", "true");
   }
 );
