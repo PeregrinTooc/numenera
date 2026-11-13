@@ -34,7 +34,6 @@ export interface CustomWorld extends World {
   cards: CardsDsl;
   setup: SetupDsl;
   character: CharacterDsl;
-  previousCardCount?: number;
   // card-reordering.steps.ts
   draggedCypherName?: string;
   // layout-import-export.steps.ts
@@ -73,7 +72,6 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   cards!: CardsDsl;
   setup!: SetupDsl;
   character!: CharacterDsl;
-  previousCardCount?: number;
   // card-reordering.steps.ts
   draggedCypherName?: string;
   importedFile?: { layout?: Layout; sectionColumns?: SectionColumns };
