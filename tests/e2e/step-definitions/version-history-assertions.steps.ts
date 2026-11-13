@@ -1,6 +1,7 @@
 import { Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
+import { clickAndAwaitNavigation } from "../support/versionHistoryHelpers.js";
 
 Then(
   "the version description should contain {string}",
@@ -35,8 +36,7 @@ Then(
     const expectedVersion = versions[versionNumber - 1];
 
     const nameField = this.page.locator('[data-testid="character-name"]');
-    const displayedName = await nameField.textContent();
-    expect(displayedName?.trim()).toBe(expectedVersion.character.name);
+    await expect(nameField).toHaveText(expectedVersion.character.name);
   }
 );
 
@@ -113,8 +113,6 @@ Then("a new version should be created", async function (this: CustomWorld) {
 });
 
 Then("I should be viewing the latest version", async function (this: CustomWorld) {
-  await this.page.waitForTimeout(500);
-
   const forwardArrow = this.page.locator('[data-testid="version-nav-forward"]');
   await expect(forwardArrow).toBeDisabled();
 
@@ -179,12 +177,9 @@ Then("the oldest version should have been removed", async function (this: Custom
 Then(
   "I click the backward navigation arrow {int} times",
   async function (this: CustomWorld, times: number) {
-    const backwardArrow = this.page.locator('[data-testid="version-nav-backward"]');
     for (let i = 0; i < times; i++) {
-      await backwardArrow.click();
-      await this.page.waitForTimeout(100);
+      await clickAndAwaitNavigation(this.page, "version-nav-backward");
     }
-    await this.page.waitForTimeout(200);
   }
 );
 

@@ -2,6 +2,7 @@ import { Given } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { waitForInitialVersionSaved } from "../support/app-ready.js";
 import type { CustomWorld } from "../support/world";
+import { clickAndAwaitNavigation } from "../support/versionHistoryHelpers.js";
 
 Given("the character has no version history yet", async function (this: CustomWorld) {
   // The app always records one initial-state version on first load; "no history yet" means
@@ -33,13 +34,14 @@ Given(
       };
 
       await this.storageHelper.createVersion(versionCharacter, `Changed name`);
-
-      if (versionCount > 50 && i % 10 === 0) {
-        await this.page.waitForTimeout(100);
-      }
     }
 
-    await this.page.waitForTimeout(200);
+    if (versionCount > 1) {
+      await expect(this.page.locator('[data-testid="version-counter"]')).toHaveText(
+        `Version ${versionCount} of ${versionCount}`,
+        { timeout: 10000 }
+      );
+    }
   }
 );
 
@@ -53,10 +55,8 @@ Given("I am viewing version {int}", async function (this: CustomWorld, versionNu
   const targetIndex = versionNumber;
   const clicksNeeded = currentIndex - targetIndex;
 
-  const backwardArrow = this.page.locator('[data-testid="version-nav-backward"]');
   for (let i = 0; i < clicksNeeded; i++) {
-    await backwardArrow.click();
-    await this.page.waitForTimeout(100);
+    await clickAndAwaitNavigation(this.page, "version-nav-backward");
   }
 });
 
@@ -132,7 +132,5 @@ Given(
 );
 
 Given("I am viewing that version", async function (this: CustomWorld) {
-  const backwardArrow = this.page.locator('[data-testid="version-nav-backward"]');
-  await backwardArrow.click();
-  await this.page.waitForTimeout(200);
+  await clickAndAwaitNavigation(this.page, "version-nav-backward");
 });

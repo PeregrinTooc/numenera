@@ -922,23 +922,23 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the left pane's restore button` | 2 | 81 |
-| When | `I click the return to editing button` | 2 | 121 |
+| When | `I click the left pane's restore button` | 2 | 82 |
+| When | `I click the return to editing button` | 2 | 120 |
 | When | `I click the right pane's restore button` | 1 | 86 |
-| Then | `no add or delete button should be present in the comparison view` | 1 | 132 |
-| Then | `no field in the comparison view should be editable` | 1 | 125 |
-| Then | `the {string} field should be highlighted as changed in the {word} pane` | 2 | 9 |
-| Then | `the {string} field should not be highlighted in the {word} pane` | 2 | 18 |
-| Then | `the {word} pane should show the newly restored version` | 1 | 96 |
-| Then | `the added cypher card should be highlighted as added in the right pane` | 1 | 27 |
-| Then | `the left pane should not show the added cypher card` | 1 | 35 |
-| Then | `the modified cypher card should be highlighted as changed in the {word} pane` | 2 | 55 |
-| Then | `the new cypher name should be highlighted as added in the right pane` | 1 | 73 |
-| Then | `the old cypher name should be highlighted as removed in the left pane` | 1 | 63 |
-| Then | `the removed cypher card should be highlighted as removed in the left pane` | 1 | 40 |
-| Then | `the right pane should not show the removed cypher card` | 1 | 50 |
-| Then | `the right pane should still show the same character name as before the restore` | 1 | 106 |
-| Then | `the right pane's restore button should be disabled` | 1 | 91 |
+| Then | `no add or delete button should be present in the comparison view` | 1 | 131 |
+| Then | `no field in the comparison view should be editable` | 1 | 124 |
+| Then | `the {string} field should be highlighted as changed in the {word} pane` | 2 | 10 |
+| Then | `the {string} field should not be highlighted in the {word} pane` | 2 | 19 |
+| Then | `the {word} pane should show the newly restored version` | 1 | 95 |
+| Then | `the added cypher card should be highlighted as added in the right pane` | 1 | 28 |
+| Then | `the left pane should not show the added cypher card` | 1 | 36 |
+| Then | `the modified cypher card should be highlighted as changed in the {word} pane` | 2 | 56 |
+| Then | `the new cypher name should be highlighted as added in the right pane` | 1 | 74 |
+| Then | `the old cypher name should be highlighted as removed in the left pane` | 1 | 64 |
+| Then | `the removed cypher card should be highlighted as removed in the left pane` | 1 | 41 |
+| Then | `the right pane should not show the removed cypher card` | 1 | 51 |
+| Then | `the right pane should still show the same character name as before the restore` | 1 | 105 |
+| Then | `the right pane's restore button should be disabled` | 1 | 90 |
 
 ## version-comparison-navigation.steps.ts
 
@@ -948,91 +948,91 @@ pattern this script does not understand):
 | When | `I click the left pane's backward arrow {int} time(s)` | 2 | 17 |
 | When | `I click the left pane's forward arrow` | 1 | 9 |
 | When | `I click the right pane's backward arrow` | 1 | 13 |
-| When | `I click the right pane's backward arrow {int} time(s)` | 1 | 28 |
-| Then | `the comparison header should indicate there are no differences` | 1 | 96 |
-| Then | `the comparison header should list every changed field, not just the top 3` | 1 | 71 |
-| Then | `the comparison header should reflect the new left pane version` | 1 | 86 |
-| Then | `the left pane should show version {int}` | 5 | 60 |
-| Given | `the left pane shows version {int}` | 2 | 52 |
-| Then | `the right pane should show version {int}` | 4 | 64 |
-| Given | `the right pane shows version {int}` | 1 | 56 |
+| When | `I click the right pane's backward arrow {int} time(s)` | 1 | 26 |
+| Then | `the comparison header should indicate there are no differences` | 1 | 90 |
+| Then | `the comparison header should list every changed field, not just the top 3` | 1 | 65 |
+| Then | `the comparison header should reflect the new left pane version` | 1 | 80 |
+| Then | `the left pane should show version {int}` | 5 | 54 |
+| Given | `the left pane shows version {int}` | 2 | 46 |
+| Then | `the right pane should show version {int}` | 4 | 58 |
+| Given | `the right pane shows version {int}` | 1 | 50 |
 
 ## version-comparison-setup.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `comparison view is enabled in settings` | 23 | 20 |
-| Then | `comparison view should show as enabled in settings` | 1 | 36 |
-| Given | `I am viewing the comparison view` | 19 | 40 |
-| When | `I close the settings panel` | 2 | 31 |
-| When | `I enable comparison view in settings` | 2 | 24 |
-| Given | `the character has a version where a cypher was renamed` | 1 | 112 |
-| Given | `the character has a version with a modified cypher effect` | 1 | 93 |
-| Given | `the character has a version with a name change` | 3 | 58 |
-| Given | `the character has a version with a removed cypher` | 1 | 82 |
-| Given | `the character has a version with an added cypher` | 1 | 68 |
-| Then | `the comparison view should be visible` | 3 | 45 |
-| Then | `the comparison view should not be visible` | 3 | 49 |
+| Given | `comparison view is enabled in settings` | 23 | 19 |
+| Then | `comparison view should show as enabled in settings` | 1 | 35 |
+| Given | `I am viewing the comparison view` | 19 | 39 |
+| When | `I close the settings panel` | 2 | 30 |
+| When | `I enable comparison view in settings` | 2 | 23 |
+| Given | `the character has a version where a cypher was renamed` | 1 | 111 |
+| Given | `the character has a version with a modified cypher effect` | 1 | 92 |
+| Given | `the character has a version with a name change` | 3 | 57 |
+| Given | `the character has a version with a removed cypher` | 1 | 81 |
+| Given | `the character has a version with an added cypher` | 1 | 67 |
+| Then | `the comparison view should be visible` | 3 | 44 |
+| Then | `the comparison view should not be visible` | 3 | 48 |
 
 ## version-history-assertions.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `a new version should be created` | 1 | 109 |
-| Then | `a new version should be created with description {string}` | 3 | 152 |
-| Then | `I click the backward navigation arrow {int} times` | 1 | 178 |
+| Then | `a new version should be created with description {string}` | 3 | 150 |
+| Then | `I click the backward navigation arrow {int} times` | 1 | 176 |
 | Then | `I should be viewing the latest version` | 3 | 114 |
-| Then | `I should navigate to version {int}` | 2 | 123 |
-| Then | `the character data should be correct for version {int}` | 1 | 132 |
+| Then | `I should navigate to version {int}` | 2 | 121 |
+| Then | `the character data should be correct for version {int}` | 1 | 130 |
 | Then | `the character equipment should match version {int} equipment` | 2 | 54 |
-| Then | `the character name should match version {int} name` | 4 | 30 |
+| Then | `the character name should match version {int} name` | 4 | 31 |
 | Then | `the character stats should match version {int} stats` | 2 | 42 |
 | Then | `the exported file should contain version {int} data` | 1 | 86 |
 | Then | `the exported file should not contain version history` | 1 | 96 |
 | Then | `the exported file should use the current portrait` | 1 | 102 |
-| Then | `the import button should be disabled` | 1 | 195 |
-| Then | `the import button should be enabled` | 2 | 190 |
-| Then | `the oldest version should have been removed` | 2 | 173 |
+| Then | `the import button should be disabled` | 1 | 190 |
+| Then | `the import button should be enabled` | 2 | 185 |
+| Then | `the oldest version should have been removed` | 2 | 171 |
 | Then | `the portrait should remain unchanged` | 3 | 74 |
-| Then | `the timestamp should be in human-readable format` | 1 | 12 |
-| Then | `the timestamp should show a relative time like {string}` | 1 | 20 |
-| Then | `the UI should remain responsive` | 2 | 144 |
-| Then | `the version description should contain {string}` | 14 | 4 |
-| Then | `the version description should contain the tier change` | 1 | 165 |
-| Then | `the warning banner should not be visible` | 2 | 160 |
+| Then | `the timestamp should be in human-readable format` | 1 | 13 |
+| Then | `the timestamp should show a relative time like {string}` | 1 | 21 |
+| Then | `the UI should remain responsive` | 2 | 142 |
+| Then | `the version description should contain {string}` | 14 | 5 |
+| Then | `the version description should contain the tier change` | 1 | 163 |
+| Then | `the warning banner should not be visible` | 2 | 158 |
 
 ## version-history-buffer-undo-redo.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I press {string} again` | 2 | 41 |
-| When | `I press {string} again before the squash timer expires` | 2 | 75 |
+| When | `I press {string} again` | 2 | 39 |
+| When | `I press {string} again before the squash timer expires` | 2 | 71 |
 | When | `I press {string} before the squash timer expires` | 11 | 4 |
-| Then | `I should see {int} versions in history` | 4 | 136 |
-| Then | `no new version should be created yet` | 2 | 121 |
-| Then | `the changes should be reapplied` | 2 | 144 |
-| Then | `the character name should be {string}` | 10 | 112 |
-| Then | `the character name should revert to the original value` | 2 | 127 |
+| Then | `I should see {int} versions in history` | 4 | 128 |
+| Then | `no new version should be created yet` | 2 | 114 |
+| Then | `the changes should be reapplied` | 2 | 136 |
+| Then | `the character name should be {string}` | 10 | 106 |
+| Then | `the character name should revert to the original value` | 2 | 120 |
 
 ## version-history-given-basic.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `I am viewing that version` | 3 | 133 |
-| Given | `I am viewing the latest version` | 6 | 45 |
-| Given | `I am viewing version {int}` | 8 | 49 |
-| Given | `the character has {int} versions in history` | 45 | 17 |
+| Given | `I am viewing the latest version` | 6 | 47 |
+| Given | `I am viewing version {int}` | 8 | 51 |
+| Given | `the character has {int} versions in history` | 45 | 18 |
 | Given | `the character has a later version` | 1 | 62 |
 | Given | `the character has a portrait image` | 2 | 103 |
 | Given | `the character has a version from {int} minutes ago` | 1 | 112 |
 | Given | `the character has a version with multiple basic info changes` | 2 | 73 |
-| Given | `the character has no version history yet` | 7 | 5 |
+| Given | `the character has no version history yet` | 7 | 6 |
 
 ## version-history-given-data.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I have made buffered edits that were undone` | 2 | 119 |
+| Given | `I have made buffered edits that were undone` | 2 | 117 |
 | Given | `the character has {int} versions with different data` | 3 | 63 |
 | Given | `the character has {int} versions with different names` | 2 | 95 |
 | Given | `the character has a legacy version with a {string} description for a name change and an added ability` | 1 | 34 |
@@ -1043,28 +1043,28 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I make {int} rapid edits that are buffered` | 1 | 5 |
-| When | `I press {string} to navigate to previous version` | 1 | 64 |
+| When | `I press {string} to navigate to previous version` | 1 | 62 |
 | When | `I press {string} to undo buffered changes` | 1 | 25 |
-| Then | `I should be viewing version {int}` | 1 | 101 |
-| When | `I wait for squash timer to complete` | 19 | 60 |
+| Then | `I should be viewing version {int}` | 1 | 97 |
+| When | `I wait for squash timer to complete` | 19 | 58 |
 
 ## version-history-navigation.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the backward navigation arrow` | 20 | 10 |
-| When | `I click the backward navigation arrow again` | 1 | 16 |
-| When | `I click the forward navigation arrow` | 3 | 28 |
-| When | `I click the forward navigation arrow again` | 1 | 34 |
-| When | `I click the restore button in the warning banner` | 3 | 40 |
-| When | `I click the return to latest button` | 1 | 22 |
-| When | `I create a new version by editing the name` | 1 | 112 |
-| When | `I navigate backward` | 1 | 81 |
-| When | `I navigate forward twice` | 1 | 87 |
-| When | `I navigate to version {int}` | 8 | 46 |
-| When | `I rapidly click the backward arrow {int} times` | 1 | 95 |
-| When | `I refresh the browser` | 10 | 107 |
-| When | `I view the character sheet` | 4 | 5 |
+| When | `I click the backward navigation arrow` | 20 | 11 |
+| When | `I click the backward navigation arrow again` | 1 | 15 |
+| When | `I click the forward navigation arrow` | 3 | 23 |
+| When | `I click the forward navigation arrow again` | 1 | 27 |
+| When | `I click the restore button in the warning banner` | 3 | 31 |
+| When | `I click the return to latest button` | 1 | 19 |
+| When | `I create a new version by editing the name` | 1 | 74 |
+| When | `I navigate backward` | 1 | 46 |
+| When | `I navigate forward twice` | 1 | 50 |
+| When | `I navigate to version {int}` | 8 | 35 |
+| When | `I rapidly click the backward arrow {int} times` | 1 | 55 |
+| When | `I refresh the browser` | 10 | 69 |
+| When | `I view the character sheet` | 4 | 6 |
 
 ## version-history-navigator-state.steps.ts
 
@@ -1091,9 +1091,9 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I press {string}` | 5 | 28 |
+| When | `I press {string}` | 5 | 24 |
 | When | `I wait for {int} milliseconds` | 4 | 16 |
-| When | `the squash timer has completed` | 2 | 24 |
+| When | `the squash timer has completed` | 2 | 20 |
 | Then | `the undo buffer should contain exactly {int} changes` | 1 | 5 |
 
 ## version-history-squash-race.steps.ts

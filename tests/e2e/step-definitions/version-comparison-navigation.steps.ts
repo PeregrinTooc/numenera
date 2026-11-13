@@ -1,27 +1,25 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world.js";
-import { paneControl } from "../support/comparisonViewHelpers.js";
+import { clickPaneArrowAndAwaitMove, paneControl } from "../support/comparisonViewHelpers.js";
 
 When("I click the left pane's backward arrow", async function (this: CustomWorld) {
-  await this.page.locator(paneControl("left", "backward")).click();
+  await clickPaneArrowAndAwaitMove(this.page, "left", "backward");
 });
 
 When("I click the left pane's forward arrow", async function (this: CustomWorld) {
-  await this.page.locator(paneControl("left", "forward")).click();
+  await clickPaneArrowAndAwaitMove(this.page, "left", "forward");
 });
 
 When("I click the right pane's backward arrow", async function (this: CustomWorld) {
-  await this.page.locator(paneControl("right", "backward")).click();
+  await clickPaneArrowAndAwaitMove(this.page, "right", "backward");
 });
 
 When(
   "I click the left pane's backward arrow {int} time(s)",
   async function (this: CustomWorld, times: number) {
-    const arrow = this.page.locator(paneControl("left", "backward"));
     for (let i = 0; i < times; i++) {
-      await arrow.click();
-      await this.page.waitForTimeout(50);
+      await clickPaneArrowAndAwaitMove(this.page, "left", "backward");
     }
   }
 );
@@ -29,10 +27,8 @@ When(
 When(
   "I click the right pane's backward arrow {int} time(s)",
   async function (this: CustomWorld, times: number) {
-    const arrow = this.page.locator(paneControl("right", "backward"));
     for (let i = 0; i < times; i++) {
-      await arrow.click();
-      await this.page.waitForTimeout(50);
+      await clickPaneArrowAndAwaitMove(this.page, "right", "backward");
     }
   }
 );
@@ -43,10 +39,8 @@ async function moveTo(world: CustomWorld, side: "left" | "right", target: number
   const match = text.match(/(\d+)/);
   const current = match ? parseInt(match[1], 10) : target;
   const diff = current - target;
-  const arrow = world.page.locator(paneControl(side, diff > 0 ? "backward" : "forward"));
   for (let i = 0; i < Math.abs(diff); i++) {
-    await arrow.click();
-    await world.page.waitForTimeout(50);
+    await clickPaneArrowAndAwaitMove(world.page, side, diff > 0 ? "backward" : "forward");
   }
 }
 

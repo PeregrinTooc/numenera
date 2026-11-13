@@ -14,12 +14,8 @@ Then(
   }
 );
 
-When("I wait for {int} milliseconds", async function (this: CustomWorld, ms: number) {
-  if (ms >= 1000) {
-    await forceSquash(this.page);
-  } else {
-    await this.page.waitForTimeout(ms);
-  }
+When("I wait for {int} milliseconds", async function (this: CustomWorld, _ms: number) {
+  await forceSquash(this.page);
 });
 
 When("the squash timer has completed", async function (this: CustomWorld) {
@@ -79,6 +75,4 @@ When("I press {string}", async function (this: CustomWorld, keyCombo: string) {
       document.body.dispatchEvent(event);
     });
   }
-
-  await this.page.waitForTimeout(800);
 });

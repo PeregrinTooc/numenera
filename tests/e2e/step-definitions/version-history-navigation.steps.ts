@@ -2,6 +2,7 @@ import { When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 import { waitForCharacterSheetReady } from "../support/app-ready.js";
+import { clickAndAwaitNavigation, readVersionPosition } from "../support/versionHistoryHelpers.js";
 
 When("I view the character sheet", async function (this: CustomWorld) {
   await this.page.reload();
@@ -9,99 +10,60 @@ When("I view the character sheet", async function (this: CustomWorld) {
 });
 
 When("I click the backward navigation arrow", async function (this: CustomWorld) {
-  const backwardArrow = this.page.locator('[data-testid="version-nav-backward"]');
-  await backwardArrow.click();
-  await this.page.waitForTimeout(100);
+  await clickAndAwaitNavigation(this.page, "version-nav-backward");
 });
 
 When("I click the backward navigation arrow again", async function (this: CustomWorld) {
-  const backwardArrow = this.page.locator('[data-testid="version-nav-backward"]');
-  await backwardArrow.click();
-  await this.page.waitForTimeout(100);
+  await clickAndAwaitNavigation(this.page, "version-nav-backward");
 });
 
 When("I click the return to latest button", async function (this: CustomWorld) {
-  const returnButton = this.page.locator('[data-testid="version-return-button"]');
-  await returnButton.click();
-  await this.page.waitForTimeout(100);
+  await clickAndAwaitNavigation(this.page, "version-return-button");
 });
 
 When("I click the forward navigation arrow", async function (this: CustomWorld) {
-  const forwardArrow = this.page.locator('[data-testid="version-nav-forward"]');
-  await forwardArrow.click();
-  await this.page.waitForTimeout(100);
+  await clickAndAwaitNavigation(this.page, "version-nav-forward");
 });
 
 When("I click the forward navigation arrow again", async function (this: CustomWorld) {
-  const forwardArrow = this.page.locator('[data-testid="version-nav-forward"]');
-  await forwardArrow.click();
-  await this.page.waitForTimeout(100);
+  await clickAndAwaitNavigation(this.page, "version-nav-forward");
 });
 
 When("I click the restore button in the warning banner", async function (this: CustomWorld) {
-  const restoreButton = this.page.locator('[data-testid="version-restore-button"]');
-  await restoreButton.click();
-  await this.page.waitForTimeout(100);
+  await clickAndAwaitNavigation(this.page, "version-restore-button");
 });
 
 When("I navigate to version {int}", async function (this: CustomWorld, versionNumber: number) {
-  const versions = await this.storageHelper.getAllVersions();
+  const { current } = await readVersionPosition(this.page);
+  const direction = versionNumber < current ? "backward" : "forward";
+  const arrow = this.page.locator(`[data-testid="version-nav-${direction}"]`);
 
-  const versionCounter = this.page.locator('[data-testid="version-counter"]');
-  const counterText = await versionCounter.textContent();
-  const currentMatch = counterText?.match(/Version (\d+) of/);
-  const currentIndex = currentMatch ? parseInt(currentMatch[1]) : versions.length;
-
-  const targetIndex = versionNumber;
-
-  if (targetIndex < currentIndex) {
-    const backwardArrow = this.page.locator('[data-testid="version-nav-backward"]');
-    const clicksNeeded = currentIndex - targetIndex;
-
-    for (let i = 0; i < clicksNeeded; i++) {
-      await expect(backwardArrow).toBeEnabled({ timeout: 5000 });
-      await backwardArrow.click();
-      await this.page.waitForTimeout(300);
-      await this.page.waitForLoadState("networkidle");
-    }
-    await this.page.waitForTimeout(500);
-  } else if (targetIndex > currentIndex) {
-    const forwardArrow = this.page.locator('[data-testid="version-nav-forward"]');
-    const clicksNeeded = targetIndex - currentIndex;
-
-    for (let i = 0; i < clicksNeeded; i++) {
-      await expect(forwardArrow).toBeEnabled({ timeout: 5000 });
-      await forwardArrow.click();
-      await this.page.waitForTimeout(300);
-      await this.page.waitForLoadState("networkidle");
-    }
-    await this.page.waitForTimeout(500);
+  for (let i = 0; i < Math.abs(versionNumber - current); i++) {
+    await expect(arrow).toBeEnabled({ timeout: 5000 });
+    await clickAndAwaitNavigation(this.page, `version-nav-${direction}`);
   }
 });
 
 When("I navigate backward", async function (this: CustomWorld) {
-  const backwardArrow = this.page.locator('[data-testid="version-nav-backward"]');
-  await backwardArrow.click();
-  await this.page.waitForTimeout(100);
+  await clickAndAwaitNavigation(this.page, "version-nav-backward");
 });
 
 When("I navigate forward twice", async function (this: CustomWorld) {
-  const forwardArrow = this.page.locator('[data-testid="version-nav-forward"]');
-  await forwardArrow.click();
-  await this.page.waitForTimeout(100);
-  await forwardArrow.click();
-  await this.page.waitForTimeout(100);
+  await clickAndAwaitNavigation(this.page, "version-nav-forward");
+  await clickAndAwaitNavigation(this.page, "version-nav-forward");
 });
 
 When(
   "I rapidly click the backward arrow {int} times",
   async function (this: CustomWorld, times: number) {
+    const { current, total } = await readVersionPosition(this.page);
     const backwardArrow = this.page.locator('[data-testid="version-nav-backward"]');
     for (let i = 0; i < times; i++) {
       await backwardArrow.click();
-      await this.page.waitForTimeout(10);
     }
-    await this.page.waitForTimeout(200);
+    await expect(this.page.locator('[data-testid="version-counter"]')).toHaveText(
+      `Version ${current - times} of ${total}`
+    );
   }
 );
 
@@ -126,5 +88,5 @@ When("I create a new version by editing the name", async function (this: CustomW
   await confirmButton.click();
 
   await expect(modal).toHaveCount(0, { timeout: 2000 });
-  await this.page.waitForTimeout(200);
+  await expect(field).toHaveText("New Version Name");
 });

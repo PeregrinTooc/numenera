@@ -34,8 +34,6 @@ When(
         document.body.dispatchEvent(event);
       });
     }
-
-    await this.page.waitForTimeout(200);
   }
 );
 
@@ -69,8 +67,6 @@ When("I press {string} again", async function (this: CustomWorld, keyCombo: stri
       document.body.dispatchEvent(event);
     });
   }
-
-  await this.page.waitForTimeout(200);
 });
 
 When(
@@ -105,8 +101,6 @@ When(
         document.body.dispatchEvent(event);
       });
     }
-
-    await this.page.waitForTimeout(200);
   }
 );
 
@@ -114,8 +108,7 @@ Then(
   "the character name should be {string}",
   async function (this: CustomWorld, expectedName: string) {
     const nameField = this.page.locator('[data-testid="character-name"]');
-    const actualName = await nameField.textContent();
-    expect(actualName?.trim()).toBe(expectedName);
+    await expect(nameField).toHaveText(expectedName);
   }
 );
 
@@ -127,11 +120,10 @@ Then("no new version should be created yet", async function (this: CustomWorld) 
 
 Then("the character name should revert to the original value", async function (this: CustomWorld) {
   const originalName = this.originalCharacterName;
-  expect(originalName).toBeTruthy();
+  if (!originalName) throw new Error("originalCharacterName was not recorded");
 
   const nameField = this.page.locator('[data-testid="character-name"]');
-  const actualName = await nameField.textContent();
-  expect(actualName?.trim()).toBe(originalName);
+  await expect(nameField).toHaveText(originalName);
 });
 
 Then(
@@ -144,7 +136,5 @@ Then(
 
 Then("the changes should be reapplied", async function (this: CustomWorld) {
   const nameField = this.page.locator('[data-testid="character-name"]');
-  const actualName = await nameField.textContent();
-
-  expect(actualName?.trim()).toBe("First Edit");
+  await expect(nameField).toHaveText("First Edit");
 });

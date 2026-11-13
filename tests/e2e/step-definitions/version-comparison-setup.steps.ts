@@ -6,7 +6,6 @@ import type { CustomWorld } from "../support/world.js";
 async function setComparisonViewEnabled(world: CustomWorld, enabled: boolean): Promise<void> {
   await world.dom.getByTestId("settings-gear-button").click();
   await expect(world.dom.getByTestId("settings-panel")).toBeVisible();
-  await world.page.waitForTimeout(50);
 
   const toggle = world.dom.getByTestId("settings-comparison-view-toggle");
   const isChecked = await toggle.isChecked();

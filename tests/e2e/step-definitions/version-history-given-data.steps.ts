@@ -108,8 +108,6 @@ Given(
       await this.storageHelper.createVersion(versionCharacter, `Changed name`);
     }
 
-    await this.page.waitForTimeout(200);
-
     const versionCounter = this.page.locator('[data-testid="version-counter"]');
     await expect(versionCounter).toContainText(`Version ${versionCount} of ${versionCount}`, {
       timeout: 10000,
@@ -129,14 +127,14 @@ Given("I have made buffered edits that were undone", async function (this: Custo
   const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
   await confirmButton.click();
   await expect(modal).toHaveCount(0, { timeout: 2000 });
-  await this.page.waitForTimeout(100);
+  await expect(field).toHaveText("First Edit");
 
   await field.click();
   await expect(modal).toBeVisible({ timeout: 5000 });
   await input.fill("Second Edit");
   await confirmButton.click();
   await expect(modal).toHaveCount(0, { timeout: 2000 });
-  await this.page.waitForTimeout(100);
+  await expect(field).toHaveText("Second Edit");
 
   await this.page.evaluate(() => {
     const event1 = new KeyboardEvent("keydown", {
@@ -151,7 +149,6 @@ Given("I have made buffered edits that were undone", async function (this: Custo
     });
     document.body.dispatchEvent(event1);
   });
-  await this.page.waitForTimeout(200);
 
   await this.page.evaluate(() => {
     const event2 = new KeyboardEvent("keydown", {
@@ -166,5 +163,4 @@ Given("I have made buffered edits that were undone", async function (this: Custo
     });
     document.body.dispatchEvent(event2);
   });
-  await this.page.waitForTimeout(200);
 });

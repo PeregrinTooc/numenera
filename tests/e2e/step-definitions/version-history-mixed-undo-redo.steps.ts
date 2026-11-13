@@ -18,7 +18,7 @@ When(
       const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
       await confirmButton.click();
       await expect(modal).toHaveCount(0, { timeout: 2000 });
-      await this.page.waitForTimeout(100);
+      await expect(field).toHaveText(`Rapid Edit ${i}`);
     }
   }
 );
@@ -53,8 +53,6 @@ When(
 
       await undoCompletedPromise;
     }
-
-    await this.page.waitForTimeout(100);
   }
 );
 
@@ -94,8 +92,6 @@ When(
         document.body.dispatchEvent(event);
       });
     }
-
-    await this.page.waitForTimeout(800);
   }
 );
 

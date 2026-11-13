@@ -5,6 +5,7 @@ import {
   COMPARE_FIELD_TEST_IDS,
   panePrefix,
   paneControl,
+  restoreFromPane,
 } from "../support/comparisonViewHelpers.js";
 
 Then(
@@ -80,13 +81,11 @@ Then(
 );
 
 When("I click the left pane's restore button", async function (this: CustomWorld) {
-  await this.page.locator(paneControl("left", "restore")).click();
-  await this.page.waitForTimeout(300);
+  await restoreFromPane(this.page, "left");
 });
 
 When("I click the right pane's restore button", async function (this: CustomWorld) {
-  await this.page.locator(paneControl("right", "restore")).click();
-  await this.page.waitForTimeout(300);
+  await restoreFromPane(this.page, "right");
 });
 
 Then("the right pane's restore button should be disabled", async function (this: CustomWorld) {
