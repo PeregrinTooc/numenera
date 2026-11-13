@@ -57,7 +57,6 @@ When(
 When("I click outside the {textarea} textarea", async function (this: CustomWorld, field: string) {
   await textareaLocator(this, field).blur();
 
-  await this.page.waitForTimeout(100);
   await waitForSaveComplete(this.page);
 });
 
@@ -242,5 +241,5 @@ Then("the virtual keyboard should appear", async function (this: CustomWorld) {
 When("I tap outside the {textarea} textarea", async function (this: CustomWorld, field: string) {
   // On mobile, just blur the textarea directly which is more reliable
   await textareaLocator(this, field).blur();
-  await this.page.waitForTimeout(100);
+  await waitForSaveComplete(this.page);
 });

@@ -1,6 +1,7 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
+import { waitForSaveComplete } from "../support/save.js";
 import { FULL_CHARACTER, EMPTY_ARRAYS } from "../support/cardTestFixtures.js";
 
 Given(
@@ -151,7 +152,7 @@ Then(
 Then(
   "the character data should have currentXp {int}",
   async function (this: CustomWorld, expectedCurrentXp: number) {
-    await this.page.waitForTimeout(200);
+    await waitForSaveComplete(this.page);
     const storedData = await this.storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
     expect(storedData.currentXp).toBe(expectedCurrentXp);
@@ -161,7 +162,7 @@ Then(
 Then(
   "the character data should have totalXp {int}",
   async function (this: CustomWorld, expectedTotalXp: number) {
-    await this.page.waitForTimeout(200);
+    await waitForSaveComplete(this.page);
     const storedData = await this.storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
     expect(storedData.totalXp).toBe(expectedTotalXp);
@@ -171,7 +172,7 @@ Then(
 Then(
   "the character data should have shins {int}",
   async function (this: CustomWorld, expectedShins: number) {
-    await this.page.waitForTimeout(200);
+    await waitForSaveComplete(this.page);
     const storedData = await this.storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
     expect(storedData.shins).toBe(expectedShins);
@@ -181,7 +182,7 @@ Then(
 Then(
   "the character data should have armor {int}",
   async function (this: CustomWorld, expectedArmor: number) {
-    await this.page.waitForTimeout(200);
+    await waitForSaveComplete(this.page);
     const storedData = await this.storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
     expect(storedData.armor).toBe(expectedArmor);
@@ -191,7 +192,7 @@ Then(
 Then(
   "the character data should have maxCyphers {int}",
   async function (this: CustomWorld, expectedMaxCyphers: number) {
-    await this.page.waitForTimeout(200);
+    await waitForSaveComplete(this.page);
     const storedData = await this.storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
     expect(storedData.maxCyphers).toBe(expectedMaxCyphers);
@@ -201,7 +202,7 @@ Then(
 Then(
   "the character data should have effort {int}",
   async function (this: CustomWorld, expectedEffort: number) {
-    await this.page.waitForTimeout(200);
+    await waitForSaveComplete(this.page);
     const storedData = await this.storageHelper.getCharacter();
     expect(storedData).toBeTruthy();
     expect(storedData.effort).toBe(expectedEffort);

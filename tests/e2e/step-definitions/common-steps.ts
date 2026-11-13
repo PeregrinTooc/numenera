@@ -176,10 +176,9 @@ When("I press the Enter key", async function (this: CustomWorld) {
 });
 
 When("I reload the page", async function (this: CustomWorld) {
-  // Always wait out the 300ms auto-save debounce. The save indicator can't
-  // tell us whether a save is pending: it stays hidden until the first
-  // auto-save has completed, so right after the first edit it is hidden even
-  // though a save is queued. When nothing is pending this is just a fixed wait.
+  // The save indicator can't tell us whether a save is pending: it stays hidden
+  // until the first auto-save has completed. Flush instead, so a queued save
+  // lands before the reload.
   await waitForSaveComplete(this.page);
 
   await this.page.reload();

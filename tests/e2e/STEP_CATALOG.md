@@ -134,31 +134,31 @@ pattern this script does not understand):
 | When | `I clear the {textarea} textarea` | 4 | 45 |
 | When | `I click outside the {textarea} textarea` | 11 | 56 |
 | When | `I click the {textarea} textarea` | 20 | 41 |
-| When | `I select {string} from the mobile picker` | 1 | 192 |
-| When | `I tap outside the {textarea} textarea` | 2 | 241 |
-| When | `I tap the {textarea} textarea` | 3 | 205 |
-| When | `I tap the type dropdown` | 1 | 182 |
+| When | `I select {string} from the mobile picker` | 1 | 191 |
+| When | `I tap outside the {textarea} textarea` | 2 | 240 |
+| When | `I tap the {textarea} textarea` | 3 | 204 |
+| When | `I tap the type dropdown` | 1 | 181 |
 | When | `I type {string} in the {textarea} textarea` | 12 | 49 |
-| When | `I type a {int} character string in the background textarea` | 1 | 122 |
-| When | `I type a {int} character string in the notes textarea` | 1 | 131 |
-| Then | `the {textarea} placeholder should be {string}` | 2 | 102 |
-| When | `the {textarea} textarea is empty` | 2 | 98 |
-| Then | `the {textarea} textarea should be empty` | 2 | 88 |
-| Then | `the {textarea} textarea should be focused` | 4 | 72 |
+| When | `I type a {int} character string in the background textarea` | 1 | 121 |
+| When | `I type a {int} character string in the notes textarea` | 1 | 130 |
+| Then | `the {textarea} placeholder should be {string}` | 2 | 101 |
+| When | `the {textarea} textarea is empty` | 2 | 97 |
+| Then | `the {textarea} textarea should be empty` | 2 | 87 |
+| Then | `the {textarea} textarea should be focused` | 4 | 71 |
 | Then | `the {textarea} textarea should be readonly` | 8 | 15 |
-| Then | `the {textarea} textarea should become editable` | 2 | 220 |
+| Then | `the {textarea} textarea should become editable` | 2 | 219 |
 | Then | `the {textarea} textarea should have a pointer cursor` | 2 | 31 |
-| Then | `the {textarea} textarea should have an edit state visual indicator` | 2 | 79 |
-| Then | `the {textarea} textarea should not be readonly` | 4 | 63 |
+| Then | `the {textarea} textarea should have an edit state visual indicator` | 2 | 78 |
+| Then | `the {textarea} textarea should not be readonly` | 4 | 62 |
 | Then | `the {textarea} textarea should show {string}` | 14 | 22 |
-| Then | `the background textarea should contain the full {int} character text` | 1 | 140 |
-| Then | `the background textarea should still be editable` | 1 | 92 |
-| Then | `the character data should have {textarea} {string}` | 5 | 110 |
-| Then | `the character data should have the full background text` | 1 | 160 |
-| Then | `the character data should have the full notes text` | 1 | 171 |
-| Then | `the mobile OS picker should open` | 1 | 187 |
-| Then | `the notes textarea should contain the full {int} character text` | 1 | 150 |
-| Then | `the virtual keyboard should appear` | 3 | 229 |
+| Then | `the background textarea should contain the full {int} character text` | 1 | 139 |
+| Then | `the background textarea should still be editable` | 1 | 91 |
+| Then | `the character data should have {textarea} {string}` | 5 | 109 |
+| Then | `the character data should have the full background text` | 1 | 159 |
+| Then | `the character data should have the full notes text` | 1 | 170 |
+| Then | `the mobile OS picker should open` | 1 | 186 |
+| Then | `the notes textarea should contain the full {int} character text` | 1 | 149 |
+| Then | `the virtual keyboard should appear` | 3 | 228 |
 
 ## auto-save-indicator.steps.ts
 
@@ -536,7 +536,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 10 | 237 |
+| Then | `an edit modal should appear` | 10 | 236 |
 | When | `I clear the input field` | 18 | 105 |
 | When | `I click on the {string} value` | 9 | 22 |
 | When | `I click on the character name {string}` | 12 | 63 |
@@ -555,8 +555,8 @@ pattern this script does not understand):
 | When | `I press the Enter key` | 2 | 173 |
 | When | `I press the Escape key` | 6 | 169 |
 | When | `I reload the page` | 59 | 177 |
-| When | `I reload the page immediately` | 1 | 191 |
-| Then | `I should see the {string} value displayed` | 1 | 198 |
+| When | `I reload the page immediately` | 1 | 190 |
+| Then | `I should see the {string} value displayed` | 1 | 197 |
 | When | `I tap on the {string} value` | 1 | 29 |
 | When | `I tap on the character name {string}` | 4 | 83 |
 | When | `I tap on the tier {string}` | 1 | 88 |
@@ -564,14 +564,14 @@ pattern this script does not understand):
 | When | `I tap the {badge} badge` | 2 | 58 |
 | When | `I tap the modal confirm button` | 3 | 101 |
 | When | `I type {string} in the modal input` | 40 | 109 |
-| Then | `the {string} value should display {string}` | 6 | 207 |
-| Then | `the {string} value should not have changed` | 2 | 216 |
-| Then | `the edit modal should open` | 9 | 238 |
-| Then | `the input field should be focused` | 1 | 254 |
-| Then | `the input field should contain the current {string} value` | 1 | 256 |
-| Then | `the input field should receive focus automatically` | 1 | 253 |
-| Then | `the modal input should contain {string}` | 11 | 244 |
-| Then | `the modal should close` | 21 | 245 |
+| Then | `the {string} value should display {string}` | 6 | 206 |
+| Then | `the {string} value should not have changed` | 2 | 215 |
+| Then | `the edit modal should open` | 9 | 237 |
+| Then | `the input field should be focused` | 1 | 253 |
+| Then | `the input field should contain the current {string} value` | 1 | 255 |
+| Then | `the input field should receive focus automatically` | 1 | 252 |
+| Then | `the modal input should contain {string}` | 11 | 243 |
+| Then | `the modal should close` | 21 | 244 |
 
 ## data-validation.steps.ts
 
@@ -755,24 +755,24 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `the Armor badge should show {string}` | 5 | 126 |
-| Then | `the character data should have armor {int}` | 1 | 180 |
-| Then | `the character data should have currentXp {int}` | 1 | 150 |
-| Then | `the character data should have effort {int}` | 1 | 200 |
-| Then | `the character data should have maxCyphers {int}` | 1 | 190 |
-| Then | `the character data should have shins {int}` | 1 | 170 |
-| Then | `the character data should have totalXp {int}` | 1 | 160 |
-| Given | `the character has {int} {resource}` | 13 | 87 |
-| Given | `the character has {int} current XP and {int} total XP` | 9 | 5 |
-| Given | `the character has {resource} {int}` | 9 | 94 |
-| Given | `the character was saved with a single legacy XP value of {int}` | 1 | 29 |
-| Then | `the Current XP badge should show {string}` | 7 | 102 |
-| Then | `the Effort badge should show {string}` | 3 | 142 |
-| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 134 |
-| Then | `the modal confirm button should be disabled` | 2 | 210 |
-| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 215 |
-| Then | `the Shins badge should show {string}` | 5 | 118 |
-| Then | `the Total XP badge should show {string}` | 5 | 110 |
+| Then | `the Armor badge should show {string}` | 5 | 127 |
+| Then | `the character data should have armor {int}` | 1 | 181 |
+| Then | `the character data should have currentXp {int}` | 1 | 151 |
+| Then | `the character data should have effort {int}` | 1 | 201 |
+| Then | `the character data should have maxCyphers {int}` | 1 | 191 |
+| Then | `the character data should have shins {int}` | 1 | 171 |
+| Then | `the character data should have totalXp {int}` | 1 | 161 |
+| Given | `the character has {int} {resource}` | 13 | 88 |
+| Given | `the character has {int} current XP and {int} total XP` | 9 | 6 |
+| Given | `the character has {resource} {int}` | 9 | 95 |
+| Given | `the character was saved with a single legacy XP value of {int}` | 1 | 30 |
+| Then | `the Current XP badge should show {string}` | 7 | 103 |
+| Then | `the Effort badge should show {string}` | 3 | 143 |
+| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 135 |
+| Then | `the modal confirm button should be disabled` | 2 | 211 |
+| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 216 |
+| Then | `the Shins badge should show {string}` | 5 | 119 |
+| Then | `the Total XP badge should show {string}` | 5 | 111 |
 
 ## section-columns.steps.ts
 
