@@ -112,8 +112,9 @@ Feature: Version History Navigation
 
     Scenario: Timestamp displays in readable format
         Given my character has a history of 2 versions
-        When I step back to the previous version
-        Then the navigator gives the age of this version in relative terms
+        When 5 minutes pass
+        And I step back to the previous version
+        Then the navigator gives the age of this version as "5 minutes ago"
 
     Scenario: Navigation preserves character integrity
         Given my character has a history of 5 versions with different data

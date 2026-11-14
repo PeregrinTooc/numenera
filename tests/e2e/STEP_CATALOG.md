@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **457** in 41 files
-- Feature step lines: **1780**
+- Step definitions: **458** in 42 files
+- Feature step lines: **1781**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -47,6 +47,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
+| [clock.steps.ts](#clockstepsts) | 1 | 0 |
 | [collection-reordering.steps.ts](#collectionreorderingstepsts) | 4 | 0 |
 | [combat.steps.ts](#combatstepsts) | 13 | 0 |
 | [common-steps.ts](#commonstepsts) | 4 | 0 |
@@ -277,6 +278,12 @@ pattern this script does not understand):
 | Then | `the character sheet should show empty states` | 2 | 8 |
 | Then | `the character should be displayed` | 1 | 57 |
 | Then | `the same character should still be displayed` | 1 | 63 |
+
+## clock.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `{int} minute(s) pass` | 1 | 5 |
 
 ## collection-reordering.steps.ts
 
@@ -732,7 +739,7 @@ pattern this script does not understand):
 | Then | `the navigator dates this version` | 1 | 190 |
 | Then | `the navigator describes this version` | 1 | 179 |
 | Then | `the navigator describes this version as {string}` | 15 | 183 |
-| Then | `the navigator gives the age of this version in relative terms` | 1 | 194 |
+| Then | `the navigator gives the age of this version as {string}` | 1 | 194 |
 | Then | `the navigator is hidden` | 2 | 117 |
 | Then | `the navigator shows version {int} of {int}` | 28 | 140 |
 | Then | `the original version has been dropped` | 2 | 208 |

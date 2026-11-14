@@ -44,7 +44,7 @@ export interface VersionHistoryDriver {
   expectDescriptionShown(): Promise<void>;
   expectDescriptionContains(text: string): Promise<void>;
   expectTimestampShown(): Promise<void>;
-  expectTimestampRelative(): Promise<void>;
+  expectTimestampReads(text: string): Promise<void>;
   expectOriginalVersionDropped(originalName: string): Promise<void>;
   expectPortraitShows(portrait: string): Promise<void>;
 }
@@ -251,8 +251,8 @@ export class PlaywrightVersionHistoryDriver implements VersionHistoryDriver {
     await expect(this.page.getByTestId("version-timestamp")).not.toBeEmpty();
   }
 
-  async expectTimestampRelative(): Promise<void> {
-    await expect(this.page.getByTestId("version-timestamp")).toHaveText(/ago|just now/);
+  async expectTimestampReads(text: string): Promise<void> {
+    await expect(this.page.getByTestId("version-timestamp")).toContainText(text);
   }
 
   async expectOriginalVersionDropped(originalName: string): Promise<void> {
