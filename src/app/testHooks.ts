@@ -53,7 +53,7 @@ export function installTestHooks(ctx: AppContext): void {
     createVersions: async (versions) => {
       const versionHistory = await getVersionHistory();
       for (const { character, description } of versions) {
-        await versionHistory.saveVersion(character, description);
+        await versionHistory.saveVersion(character, description, ctx.clock.now());
       }
       await ctx.actions.updateVersionNavigator(true);
     },

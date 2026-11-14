@@ -2,6 +2,7 @@ import { Character } from "@/types/character";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import { CharacterVersion } from "@/types/versionHistory";
 import { sanitizeCharacter } from "@/utils/characterSanitizer";
+import type { Clock } from "@/services/clock";
 import { restoredDescription } from "./versionDescriptionText.js";
 
 export class VersionState {
@@ -10,8 +11,10 @@ export class VersionState {
   private currentVersionIndex: number;
   private versionHistory: VersionHistoryManager;
   private allVersions: CharacterVersion[] = [];
+  private clock: Clock;
 
-  constructor(latestCharacter: Character, versionHistory: VersionHistoryManager) {
+  constructor(latestCharacter: Character, versionHistory: VersionHistoryManager, clock: Clock) {
+    this.clock = clock;
     this.latestCharacter = latestCharacter;
     this.displayedCharacter = latestCharacter;
     this.versionHistory = versionHistory;
@@ -146,7 +149,7 @@ export class VersionState {
     }
 
     const description = restoredDescription(metadata.description);
-    await this.versionHistory.saveVersion(this.displayedCharacter, description);
+    await this.versionHistory.saveVersion(this.displayedCharacter, description, this.clock.now());
 
     this.latestCharacter = this.displayedCharacter;
 
@@ -170,7 +173,7 @@ export class VersionState {
     const character = this.buildCharacterFromVersion(index);
     const version = this.allVersions[index];
     const description = restoredDescription(version.description);
-    await this.versionHistory.saveVersion(character, description);
+    await this.versionHistory.saveVersion(character, description, this.clock.now());
 
     this.latestCharacter = character;
     await this.reload();

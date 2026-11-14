@@ -1,3 +1,4 @@
+import { DEFAULT_START_MS } from "@/services/manualClock";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import { createTestCharacter } from "../factories/character.js";
@@ -17,7 +18,11 @@ describe("VersionHistoryManager.updateVersionMetadata", () => {
   });
 
   it("stores the squash metadata on the version and keeps the rest", async () => {
-    const saved = await manager.saveVersion(createTestCharacter(), "Combined change");
+    const saved = await manager.saveVersion(
+      createTestCharacter(),
+      "Combined change",
+      DEFAULT_START_MS
+    );
 
     await manager.updateVersionMetadata(saved.id, { isSquashed: true, squashedCount: 3 });
 

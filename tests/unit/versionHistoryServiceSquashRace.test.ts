@@ -45,10 +45,12 @@ describe.sequential("VersionHistoryService - edits during an in-flight squash", 
       releaseSave = resolve;
     });
     const save = manager.saveVersion.bind(manager);
-    vi.spyOn(manager, "saveVersion").mockImplementationOnce(async (character, description) => {
-      await gate;
-      return save(character, description);
-    });
+    vi.spyOn(manager, "saveVersion").mockImplementationOnce(
+      async (character, description, savedAt) => {
+        await gate;
+        return save(character, description, savedAt);
+      }
+    );
     return releaseSave;
   }
 

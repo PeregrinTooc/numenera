@@ -1,3 +1,4 @@
+import { DEFAULT_START_MS, ManualClock } from "@/services/manualClock";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import { reconcileVersionHistory } from "@/services/versionHistoryReconciliation";
@@ -40,10 +41,10 @@ describe.sequential("reconcileVersionHistory", () => {
   });
 
   it("saves the stored character as a new version when it differs from the latest version", async () => {
-    await manager.saveVersion(mockCharacter, "Initial state");
+    await manager.saveVersion(mockCharacter, "Initial state", DEFAULT_START_MS);
     const stored = { ...mockCharacter, name: "Unsquashed Hero" };
 
-    await reconcileVersionHistory(manager, stored);
+    await reconcileVersionHistory(manager, stored, new ManualClock());
 
     const versions = await manager.getAllVersions();
     expect(versions).toHaveLength(2);
@@ -51,34 +52,34 @@ describe.sequential("reconcileVersionHistory", () => {
   });
 
   it("does nothing when the stored character matches the latest version", async () => {
-    await manager.saveVersion(mockCharacter, "Initial state");
+    await manager.saveVersion(mockCharacter, "Initial state", DEFAULT_START_MS);
 
-    await reconcileVersionHistory(manager, mockCharacter);
+    await reconcileVersionHistory(manager, mockCharacter, new ManualClock());
 
     expect(await manager.getAllVersions()).toHaveLength(1);
   });
 
   it("leaves an empty history to the initial-state path", async () => {
-    await reconcileVersionHistory(manager, mockCharacter);
+    await reconcileVersionHistory(manager, mockCharacter, new ManualClock());
 
     expect(await manager.getAllVersions()).toHaveLength(0);
   });
 
   it("describes the rebuilt version by its diff against the latest version", async () => {
-    await manager.saveVersion(mockCharacter, "Initial state");
+    await manager.saveVersion(mockCharacter, "Initial state", DEFAULT_START_MS);
     const stored = { ...mockCharacter, name: "Unsquashed Hero" };
 
-    await reconcileVersionHistory(manager, stored);
+    await reconcileVersionHistory(manager, stored, new ManualClock());
 
     const versions = await manager.getAllVersions();
     expect(versions[1].description).toBe("versionHistory.changes.basicInfo.name");
   });
 
   it("ignores a portrait-only difference, since versions never store the portrait", async () => {
-    await manager.saveVersion(mockCharacter, "Initial state");
+    await manager.saveVersion(mockCharacter, "Initial state", DEFAULT_START_MS);
     const stored = { ...mockCharacter, portrait: "data:image/png;base64,AAAA" };
 
-    await reconcileVersionHistory(manager, stored);
+    await reconcileVersionHistory(manager, stored, new ManualClock());
 
     expect(await manager.getAllVersions()).toHaveLength(1);
   });

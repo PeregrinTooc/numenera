@@ -138,7 +138,7 @@ async function initVersionHistory(
   // Recover a squash lost to the last unload. Only a stored character counts:
   // the default character was never edited, so it has nothing to recover.
   if (initialCharacter === stored) {
-    await reconcileVersionHistory(versionHistory, initialCharacter);
+    await reconcileVersionHistory(versionHistory, initialCharacter, ctx.clock);
   }
 
   const squashDelay = window.__SQUASH_DELAY_MS__ || 5000;
@@ -151,10 +151,14 @@ async function initVersionHistory(
   window.__versionHistoryService = ctx.versionHistoryService;
 
   if (versions.length === 0) {
-    await versionHistory.saveVersion(initialCharacter, "versionHistory.changes.initialState");
+    await versionHistory.saveVersion(
+      initialCharacter,
+      "versionHistory.changes.initialState",
+      ctx.clock.now()
+    );
   }
 
-  ctx.versionState = new VersionState(initialCharacter, versionHistory);
+  ctx.versionState = new VersionState(initialCharacter, versionHistory, ctx.clock);
   await ctx.versionState.init();
 
   await ctx.actions.updateVersionNavigator(true);

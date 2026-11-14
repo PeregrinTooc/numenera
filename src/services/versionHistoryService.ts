@@ -53,7 +53,7 @@ export class VersionHistoryService {
   /** Save the buffered changes as one squashed version and mark it with its metadata. */
   private async persistSquash(latest: Character, squashedCount: number): Promise<void> {
     const combinedDescription = squashDescriptions(this.buffer.descriptions());
-    const version = await this.manager.saveVersion(latest, combinedDescription);
+    const version = await this.manager.saveVersion(latest, combinedDescription, this.clock.now());
     await this.manager.updateVersionMetadata(version.id, {
       isSquashed: true,
       squashedCount,

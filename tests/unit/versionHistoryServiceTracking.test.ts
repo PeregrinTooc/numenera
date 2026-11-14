@@ -34,10 +34,12 @@ describe("VersionHistoryService - tracking, races and edge cases", () => {
         releaseSave = resolve;
       });
       const save = fx.manager.saveVersion.bind(fx.manager);
-      vi.spyOn(fx.manager, "saveVersion").mockImplementationOnce(async (character, description) => {
-        await gate;
-        return save(character, description);
-      });
+      vi.spyOn(fx.manager, "saveVersion").mockImplementationOnce(
+        async (character, description, savedAt) => {
+          await gate;
+          return save(character, description, savedAt);
+        }
+      );
 
       fx.service.bufferChange(fx.mockCharacter, "Change 1");
 

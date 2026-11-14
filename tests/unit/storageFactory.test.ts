@@ -1,3 +1,4 @@
+import { DEFAULT_START_MS } from "@/services/manualClock";
 import { describe, it, expect, vi, afterEach } from "vitest";
 import {
   clearCharacterState,
@@ -79,7 +80,7 @@ describe("storageFactory", () => {
       const [managerA, managerB] = await Promise.all([first, second]);
 
       expect(managerA).toBe(managerB);
-      const saved = await managerB.saveVersion(NEW_CHARACTER, "first save");
+      const saved = await managerB.saveVersion(NEW_CHARACTER, "first save", DEFAULT_START_MS);
       const stored = await managerA.getAllVersions();
       expect(stored.map((version) => version.id)).toContain(saved.id);
     });
