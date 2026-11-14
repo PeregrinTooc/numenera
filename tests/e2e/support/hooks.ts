@@ -18,6 +18,7 @@ import { MouseInput, TouchInput } from "./sectionInput.js";
 import { ScreenDsl } from "./screen.js";
 import { PlaywrightViewportDriver } from "./viewportDriver.js";
 import { VersionHistoryDsl } from "./versionHistory.js";
+import { waitForInitialVersionSaved } from "./app-ready.js";
 import { PlaywrightVersionHistoryDriver } from "./versionHistoryDriver.js";
 import { BASE_URL } from "./serverUrl.js";
 
@@ -169,7 +170,12 @@ Before(async function (this: CustomWorld, { pickle }) {
   // opened its own connections to these exact databases. A delete request
   // against a database the same page holds open fires "blocked" instead of
   // succeeding; clearing through the already-open connections avoids that.
+  //
+  // On a fresh store the app saves its initial version after a wall-clock
+  // delay. Clearing before that save lands lets it arrive afterwards as a stale
+  // version, which the next boot then reconciles into an extra one.
   await this.page.goto(BASE_URL);
+  await waitForInitialVersionSaved(this.page);
   await this.storageHelper.clearStorage();
   await this.storageHelper.clearVersions();
 
