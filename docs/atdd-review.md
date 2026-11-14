@@ -323,14 +323,39 @@ their own, and write the other stat-edit scenarios at the intent level.
      modal. `value-editor.feature` is the one spec of the modal's
      interaction; stat edits are written as "I change my Might pool to 12".
 
-   Still to move: the remaining users of the generic value-editor steps
-   (`basic-info-editing`, `resource-tracker-editing`,
-   `additional-fields-editing`), `empty-fields-visibility` (still uses the
-   no-op "the character data is loaded"), `character-display` (its shared
-   "the page should not scroll horizontally" step calls the page directly),
-   the version-history step vocabulary, and the remaining feature files.
-   Viewport switching currently sits on `CharacterDsl`/`SheetDriver`; it
-   belongs in its own place once a second area needs it.
+   Second round:
+   - **Value editing.** `basic-info-editing`, `resource-tracker-editing`,
+     `empty-fields-visibility` and the edits in `auto-save-indicator`,
+     `storage-failure`, `sheet-toolbar` and `recovery-damage-track` go through
+     `CharacterDsl` and `ValueEditorDriver`. `value-editor.feature` is the one
+     spec of the edit-value modal, including its phone-only sizing
+     (`@phone-only`). `ModalDsl`, `FieldsDsl` and the generic modal steps are
+     gone.
+   - **Inline fields.** `additional-fields-editing` has an
+     `InlineFieldsDriver` behind `AdditionalFieldsDsl` for the click-to-edit,
+     save-on-blur text fields and the type dropdown.
+   - **Viewport.** A `ViewportDriver` behind `ScreenDsl` is the only place that
+     resizes the page, grows it to full height or checks sideways scroll.
+   - **Character display.** `character-display` creates its own data and states
+     the no-untranslated-text requirement once.
+   - **Version history.** `VersionHistoryDriver` (navigator, undo/redo,
+     export), `VersionSaveDriver` (settling edits, the held-save gate) and
+     `ComparisonDriver` (the side-by-side view) sit behind `VersionHistoryDsl`,
+     `HistorySeedDsl` and `ComparisonDsl`. Edits settle "into a version"
+     rather than waiting for a squash timer, and several assertions that only
+     checked a count now check the versions' content.
+   - **Seeding fix.** The Before hook waits for the first boot's initial version
+     before clearing storage. Clearing earlier could leave a stale version that
+     the next boot reconciled into an extra one.
+
+   Still to move: step files that call the page directly, most of them in the
+   layout and section-drag specs (`layout-edit-mode`, `section-drop-preview`,
+   `section-reordering`, `section-slide`, `section-columns`,
+   `grid-merge-split`, `card-reordering*`), import and export
+   (`export-enhancement`, `layout-import-export`, `character-file-*`),
+   `character-storage`, `i18n`, `auto-save-indicator`, `recovery-damage-track`,
+   `data-validation` and `settings-gear`. App time is still read directly in
+   many places; see "One Injectable Clock for All App Time" in `docs/TODO.md`.
 
 ---
 
