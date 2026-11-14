@@ -1,235 +1,89 @@
 import { Given, Then, type DataTable } from "@cucumber/cucumber";
-import { expect } from "@playwright/test";
-import type { Attack, SpecialAbility } from "@/types/character";
-import { FULL_CHARACTER } from "@/data/mockCharacters";
 import type { CustomWorld } from "../support/world.js";
-import { assertNoRawI18nKeys } from "../support/i18nKeys.js";
-import { intCell, propertyTable } from "../support/tableRows.js";
+import type { CardTheme } from "../support/sheetDriver.js";
+import { propertyTable } from "../support/tableRows.js";
 
 Given(
-  "the character has an attack {string} with:",
-  async function (this: CustomWorld, name: string, table: DataTable) {
-    const data = propertyTable(table);
-    const attack: Attack = {
-      name,
-      damage: intCell(data.damage, "Damage"),
-      modifier: intCell(data.modifier, "Modifier"),
-      range: data.range,
-      ...(data.notes ? { notes: data.notes } : {}),
-    };
-    await this.setup.updateCharacter((character) => {
-      character.attacks = [...character.attacks.filter((a) => a.name !== name), attack];
-    });
-  }
-);
-
-Given("the character has an attack {string}", async function (this: CustomWorld, name: string) {
-  await this.setup.updateCharacter((character) => {
-    if (!character.attacks.some((a) => a.name === name)) {
-      character.attacks.push({ name, damage: 4, modifier: 0, range: "Immediate" });
-    }
-  });
-});
-
-Then("I should see the attack {string}", async function (attackName: string) {
-  const attackItem = this.page.locator(
-    `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
-  );
-  await expect(attackItem).toBeVisible();
-});
-
-Then(
-  "the attack {string} should show damage {string}",
-  async function (attackName: string, damage: string) {
-    const attackItem = this.page.locator(
-      `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
-    );
-    const damageElement = attackItem.locator('[data-testid^="attack-damage-"]');
-    await expect(damageElement).toBeVisible();
-    await expect(damageElement).toContainText(damage);
-  }
-);
-
-Then(
-  "the attack {string} should show modifier {string}",
-  async function (attackName: string, modifier: string) {
-    const attackItem = this.page.locator(
-      `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
-    );
-    const modifierElement = attackItem.locator('[data-testid^="attack-modifier-"]');
-    await expect(modifierElement).toBeVisible();
-    await expect(modifierElement).toContainText(modifier);
-  }
-);
-
-Then(
-  "the attack {string} should show range {string}",
-  async function (attackName: string, range: string) {
-    const attackItem = this.page.locator(
-      `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
-    );
-    const rangeElement = attackItem.locator('[data-testid^="attack-range-"]');
-    await expect(rangeElement).toBeVisible();
-    await expect(rangeElement).toContainText(range);
-  }
-);
-
-Then(
-  "the attack {string} should show notes {string}",
-  async function (attackName: string, notes: string) {
-    const attackItem = this.page.locator(
-      `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
-    );
-    const notesElement = attackItem.locator('[data-testid^="attack-notes-"]');
-    await expect(notesElement).toBeVisible();
-    await expect(notesElement).toContainText(notes);
-  }
-);
-
-Then("the attack {string} should not show notes", async function (attackName: string) {
-  const attackItem = this.page.locator(
-    `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
-  );
-  const notesElement = attackItem.locator('[data-testid^="attack-notes-"]');
-  await expect(notesElement).not.toBeVisible();
-});
-
-Then(
-  "the attack {string} should have red combat theme styling",
-  async function (attackName: string) {
-    const attackItem = this.page.locator(
-      `[data-testid="attack-item"]:has([data-testid="attack-name-${attackName}"])`
-    );
-    const classAttr = await attackItem.first().getAttribute("class");
-    expect(classAttr).toContain("from-red-50");
-  }
-);
-
-Then("the empty attacks state should use translation keys", async function () {
-  const emptyState = this.dom.getByTestId("empty-attacks");
-  await expect(emptyState).not.toBeEmpty();
-  await assertNoRawI18nKeys(emptyState);
-});
-
-Given(
-  "the character has a special ability {string} with:",
-  async function (this: CustomWorld, name: string, table: DataTable) {
-    const data = propertyTable(table);
-    const ability: SpecialAbility = { name, description: data.description, source: data.source };
-    await this.setup.updateCharacter((character) => {
-      character.specialAbilities = [
-        ...character.specialAbilities.filter((a) => a.name !== name),
-        ability,
-      ];
-    });
+  "my character has the {cardType} {string} with:",
+  async function (this: CustomWorld, kind: string, name: string, table: DataTable) {
+    await this.character.hasEntry(kind, name, propertyTable(table));
   }
 );
 
 Given(
-  "the character has a special ability {string}",
-  async function (this: CustomWorld, name: string) {
-    await this.setup.updateCharacter((character) => {
-      if (!character.specialAbilities.some((a) => a.name === name)) {
-        character.specialAbilities.push({ name, description: name, source: name });
-      }
-    });
+  "my character has the {cardType} {string}",
+  async function (this: CustomWorld, kind: string, name: string) {
+    await this.character.has(kind, [name]);
   }
 );
-
-Then("I should see the special ability {string}", async function (abilityName: string) {
-  const specialAbilityItem = this.page.locator(
-    `[data-testid="special-ability-item"]:has([data-testid="special-ability-name-${abilityName}"])`
-  );
-  await expect(specialAbilityItem).toBeVisible();
-});
-
-Then(
-  "the special ability {string} should show description {string}",
-  async function (abilityName: string, description: string) {
-    const specialAbilityItem = this.page.locator(
-      `[data-testid="special-ability-item"]:has([data-testid="special-ability-name-${abilityName}"])`
-    );
-    const descriptionElement = specialAbilityItem.locator(
-      '[data-testid^="special-ability-description-"]'
-    );
-    await expect(descriptionElement).toBeVisible();
-    await expect(descriptionElement).toContainText(description);
-  }
-);
-
-Then(
-  "the special ability {string} should show source {string}",
-  async function (abilityName: string, source: string) {
-    const specialAbilityItem = this.page.locator(
-      `[data-testid="special-ability-item"]:has([data-testid="special-ability-name-${abilityName}"])`
-    );
-    const sourceElement = specialAbilityItem.locator('[data-testid^="special-ability-source-"]');
-    await expect(sourceElement).toBeVisible();
-    await expect(sourceElement).toContainText(source);
-  }
-);
-
-Then(
-  "the special ability {string} should have teal theme styling",
-  async function (abilityName: string) {
-    const specialAbilityItem = this.page.locator(
-      `[data-testid="special-ability-item"]:has([data-testid="special-ability-name-${abilityName}"])`
-    );
-    const classAttr = await specialAbilityItem.first().getAttribute("class");
-    expect(classAttr).toContain("from-cyan-50");
-  }
-);
-
-Then("the empty special abilities state should use translation keys", async function () {
-  const emptyState = this.dom.getByTestId("empty-special-abilities");
-  await expect(emptyState).not.toBeEmpty();
-  await assertNoRawI18nKeys(emptyState);
-});
-
-Then("I should see the armor badge in the attacks section", async function () {
-  await expect(this.dom.getByTestId("armor-badge")).toBeVisible();
-});
-
-Given("the character has special abilities and attacks", async function (this: CustomWorld) {
-  await this.setup.character({
-    attacks: FULL_CHARACTER.attacks,
-    specialAbilities: FULL_CHARACTER.specialAbilities,
-  });
-});
-
-Then("the special abilities section should be in the left column", async function () {
-  const specialAbilitiesSection = this.dom.getByTestId("special-abilities-section");
-  await expect(specialAbilitiesSection).toBeVisible();
-});
-
-Then("the attacks section should be in the right column", async function () {
-  const attacksSection = this.dom.getByTestId("attacks-section");
-  await expect(attacksSection).toBeVisible();
-});
-
-Then("the sections should stack vertically on mobile", async function () {
-  await expect(this.dom.getByTestId("special-abilities-section")).toBeVisible();
-  await expect(this.dom.getByTestId("attacks-section")).toBeVisible();
-});
 
 Given(
-  "the character has an attack with a {int}-character name without spaces",
+  "my character has an attack whose name is {int} characters long without spaces",
   async function (this: CustomWorld, length: number) {
-    await this.setup.updateCharacter((character) => {
-      character.attacks = [{ name: "W".repeat(length), damage: 4, modifier: 1, range: "Short" }];
-    });
+    await this.character.hasEntryWithUnbrokenName("attack", length);
+  }
+);
+
+Given("I view my character on a wide screen", async function (this: CustomWorld) {
+  await this.character.viewOn("wide screen");
+});
+
+Given("I view my character on a phone", async function (this: CustomWorld) {
+  await this.character.viewOn("phone");
+});
+
+Then(
+  "the {cardType} {string} shows {word} {string}",
+  async function (this: CustomWorld, kind: string, name: string, field: string, value: string) {
+    await this.character.expectEntryField(kind, name, field, value);
   }
 );
 
 Then(
-  "the attack badges should sit at the right edge of their card",
+  "the {cardType} {string} shows no {word}",
+  async function (this: CustomWorld, kind: string, name: string, field: string) {
+    await this.character.expectEntryWithoutField(kind, name, field);
+  }
+);
+
+Then(
+  "the {cardType} {string} is themed {word}",
+  async function (this: CustomWorld, kind: string, name: string, theme: string) {
+    await this.character.expectEntryThemed(kind, name, theme as CardTheme);
+  }
+);
+
+Then(
+  "my character's {cardKind} section says it is empty",
+  async function (this: CustomWorld, kind: string) {
+    await this.character.expectEmptySection(kind);
+  }
+);
+
+Then(
+  "the attacks section shows my character's armor of {int}",
+  async function (this: CustomWorld, armor: number) {
+    await this.character.expectArmorBesideAttacks(armor);
+  }
+);
+
+Then(
+  "the {cardKind} section sits left of the {cardKind} section",
+  async function (this: CustomWorld, kind: string, other: string) {
+    await this.character.expectSectionLeftOf(kind, other);
+  }
+);
+
+Then(
+  "the {cardKind} section sits above the {cardKind} section",
+  async function (this: CustomWorld, kind: string, other: string) {
+    await this.character.expectSectionAbove(kind, other);
+  }
+);
+
+Then(
+  "my character's attack keeps its badges at the right edge of its card",
   async function (this: CustomWorld) {
-    const card = this.page.getByTestId("attack-item").first();
-    const badges = card.locator(".attack-badges");
-    const cardBox = await card.boundingBox();
-    const badgeBox = await badges.boundingBox();
-    if (!cardBox || !badgeBox) throw new Error("attack card or badges not rendered");
-    // pr-8 (2rem) leaves room for the edit/delete buttons; allow that plus border/padding.
-    expect(cardBox.x + cardBox.width - (badgeBox.x + badgeBox.width)).toBeLessThanOrEqual(56);
+    await this.character.expectBadgesAtRightEdge("attack");
   }
 );

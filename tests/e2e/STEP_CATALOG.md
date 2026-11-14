@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **617** in 52 files
-- Feature step lines: **2196**
+- Step definitions: **606** in 52 files
+- Feature step lines: **2194**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -49,7 +49,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [collection-reordering.steps.ts](#collectionreorderingstepsts) | 4 | 0 |
-| [combat.steps.ts](#combatstepsts) | 24 | 0 |
+| [combat.steps.ts](#combatstepsts) | 13 | 0 |
 | [common-steps.ts](#commonstepsts) | 36 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 12 | 0 |
@@ -241,8 +241,8 @@ pattern this script does not understand):
 | When | `I start a new {cardType}` | 52 | 10 |
 | When | `I start editing the {cardType} {string}` | 8 | 14 |
 | Then | `my character carries {int} {cardKind}` | 36 | 54 |
-| Then | `my character carries the {cardType} {string}` | 24 | 61 |
-| Given | `my character has {int} {cardKind}` | 43 | 3 |
+| Then | `my character carries the {cardType} {string}` | 27 | 61 |
+| Given | `my character has {int} {cardKind}` | 47 | 3 |
 | Then | `the {cardType} {string} shows {string}` | 10 | 68 |
 | Then | `the add {cardType} button has a themed background colour` | 7 | 47 |
 | Then | `the card editor opens with empty {cardType} fields` | 7 | 40 |
@@ -288,11 +288,11 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 47 | 27 |
+| Given | `I am on the character sheet page` | 45 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 147 |
 | Then | `I should see {int} cyphers displayed` | 1 | 110 |
 | Then | `I should see {int} oddities displayed` | 1 | 160 |
-| Then | `I should see an empty {cardTypes} section` | 6 | 173 |
+| Then | `I should see an empty {cardTypes} section` | 4 | 173 |
 | Then | `I should see artifact {string} with level {string}` | 1 | 152 |
 | Then | `I should see cypher {string} with level {string}` | 2 | 115 |
 | Then | `I should see descriptor {string} displayed` | 1 | 45 |
@@ -311,7 +311,7 @@ pattern this script does not understand):
 | Then | `no untranslated text keys should be visible` | 6 | 53 |
 | Given | `the character has a {int}-character name without spaces` | 1 | 257 |
 | Given | `the character has empty text fields` | 1 | 180 |
-| Given | `the character has no {cardTypes}` | 6 | 169 |
+| Given | `the character has no {cardTypes}` | 4 | 169 |
 | Given | `the character has the following artifacts:` | 1 | 123 |
 | Given | `the character has the following cyphers:` | 1 | 96 |
 | Given | `the character has the following oddities:` | 1 | 137 |
@@ -370,30 +370,19 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `I should see the armor badge in the attacks section` | 1 | 188 |
-| Then | `I should see the attack {string}` | 2 | 33 |
-| Then | `I should see the special ability {string}` | 1 | 138 |
-| Then | `the attack {string} should have red combat theme styling` | 1 | 96 |
-| Then | `the attack {string} should not show notes` | 1 | 88 |
-| Then | `the attack {string} should show damage {string}` | 2 | 40 |
-| Then | `the attack {string} should show modifier {string}` | 2 | 52 |
-| Then | `the attack {string} should show notes {string}` | 1 | 76 |
-| Then | `the attack {string} should show range {string}` | 2 | 64 |
-| Then | `the attack badges should sit at the right edge of their card` | 1 | 223 |
-| Then | `the attacks section should be in the right column` | 1 | 204 |
-| Given | `the character has a special ability {string}` | 1 | 127 |
-| Given | `the character has a special ability {string} with:` | 1 | 113 |
-| Given | `the character has an attack {string}` | 1 | 25 |
-| Given | `the character has an attack {string} with:` | 1 | 8 |
-| Given | `the character has an attack with a {int}-character name without spaces` | 1 | 214 |
-| Given | `the character has special abilities and attacks` | 1 | 192 |
-| Then | `the empty attacks state should use translation keys` | 1 | 107 |
-| Then | `the empty special abilities state should use translation keys` | 1 | 182 |
-| Then | `the sections should stack vertically on mobile` | 1 | 209 |
-| Then | `the special abilities section should be in the left column` | 1 | 199 |
-| Then | `the special ability {string} should have teal theme styling` | 1 | 171 |
-| Then | `the special ability {string} should show description {string}` | 1 | 145 |
-| Then | `the special ability {string} should show source {string}` | 1 | 159 |
+| Given | `I view my character on a phone` | 1 | 30 |
+| Given | `I view my character on a wide screen` | 1 | 26 |
+| Given | `my character has an attack whose name is {int} characters long without spaces` | 1 | 19 |
+| Given | `my character has the {cardType} {string}` | 2 | 12 |
+| Given | `my character has the {cardType} {string} with:` | 3 | 5 |
+| Then | `my character's {cardKind} section says it is empty` | 2 | 55 |
+| Then | `my character's attack keeps its badges at the right edge of its card` | 1 | 83 |
+| Then | `the {cardKind} section sits above the {cardKind} section` | 1 | 76 |
+| Then | `the {cardKind} section sits left of the {cardKind} section` | 1 | 69 |
+| Then | `the {cardType} {string} is themed {word}` | 2 | 48 |
+| Then | `the {cardType} {string} shows {word} {string}` | 9 | 34 |
+| Then | `the {cardType} {string} shows no {word}` | 1 | 41 |
+| Then | `the attacks section shows my character's armor of {int}` | 1 | 62 |
 
 ## common-steps.ts
 
@@ -619,7 +608,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `the Armor badge should show {string}` | 5 | 127 |
+| Then | `the Armor badge should show {string}` | 4 | 127 |
 | Then | `the character data should have armor {int}` | 1 | 181 |
 | Then | `the character data should have currentXp {int}` | 1 | 151 |
 | Then | `the character data should have effort {int}` | 1 | 201 |
