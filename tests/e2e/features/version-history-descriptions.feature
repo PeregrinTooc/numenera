@@ -26,9 +26,8 @@ Feature: Version History Descriptions
         Then the version description should contain "Added cypher"
 
     Scenario: Removing a card shows a specific description
-        Given I am on the character sheet page
-        And I should see 2 cypher cards
-        When I click the delete button on the first cypher
+        Given my character has the cyphers "Detonation (Cell)" and "Stim (Injector)"
+        When I discard "Detonation (Cell)"
         And I wait for squash timer to complete
         And I edit the "character name" field to "Another Change"
         And I wait for squash timer to complete
