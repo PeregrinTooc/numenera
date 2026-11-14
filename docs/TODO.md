@@ -69,6 +69,43 @@ checked template class names, not the look. Needs its own design (Rule 2).
   Cucumber on the Playwright library, so the comparison and baseline store are
   ours to write.
 
+### One Injectable Clock for All App Time
+
+**Overview**
+The app reads real time in many scattered places: about ten source files call
+`setTimeout` directly (long-press, modal container, downloads, settings,
+conflict modal, IndexedDB, live preview), about eleven sites call `Date.now()`
+or `new Date()`, and only two services (`AutoSaveService`,
+`VersionHistoryService`) take an injectable `ITimer`. Time is an architectural
+boundary like persistence: it belongs behind one interface, even with a single
+production implementation (`docs/rules/design.md`, smell 3), so tests control
+it through the app's own seam instead of patching the browser.
+
+**Goals**
+
+- One `Clock` interface (timers and the current time) with a production
+  implementation, created once at boot and passed to whatever needs it. No
+  direct `setTimeout`, `setInterval`, `Date.now()` or `new Date()` outside it.
+- A controllable implementation for tests, installed before boot, that unit and
+  E2E tests share instead of each keeping their own.
+- Retire the parallel E2E time seams once the clock exists:
+  `window.__testTimer`, `window.__SQUASH_DELAY_MS__`, the hand-copied
+  `TestTimer` clone in `tests/e2e/support/hooks.ts`, and Playwright's
+  `page.clock` in the `@fake-clock` scenarios. Drivers advance the injected
+  clock where the app waits on a timer (the auto-save flush, edits settling into
+  a version, the long-press hold, modal transitions).
+- Behaviour unchanged for users.
+
+**E2E Tests**
+
+- No new user-visible behaviour, so no new feature file: the existing suite
+  stays green on all four profiles with the injected clock, and the
+  `@fake-clock` tag goes away.
+- `version-history-navigation.feature`: the timestamp scenario asserts a
+  concrete relative age ("5 minutes ago") instead of `/ago|just now/`.
+- Unit tests: a lint rule or test that fails on direct timer and date access
+  outside the clock module.
+
 ### E2E: Vite Re-optimises Dependencies Mid-Run
 
 The first dev-mode E2E run after a commit that adds a new bare import (e.g.
