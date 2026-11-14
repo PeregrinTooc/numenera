@@ -1,3 +1,4 @@
+import type { Clock } from "@/services/clock";
 import type { Character } from "@/types/character";
 import { generateETag } from "@/utils/etag";
 
@@ -20,10 +21,9 @@ export class ConflictDetectionService {
   private hasDirtyChanges: boolean = false;
   // Remote update received while not dirty; lets us detect stale state when
   // the user starts editing
-  private remoteEtagReceived: string | null = null;
-  private remoteTimestampReceived: number | null = null;
+  private remoteVersionReceived: { etag: string; timestamp: number } | null = null;
 
-  constructor() {
+  constructor(private readonly clock: Clock) {
     this.transport = new CrossTabChannel((message) => this.handleMessage(message));
   }
 
@@ -56,8 +56,7 @@ export class ConflictDetectionService {
     if (hasLocalChanges && this.currentEtag !== message.etag) {
       this.emitConflict(message.etag, message.timestamp);
     } else {
-      this.remoteEtagReceived = message.etag;
-      this.remoteTimestampReceived = message.timestamp;
+      this.remoteVersionReceived = { etag: message.etag, timestamp: message.timestamp };
 
       window.dispatchEvent(
         new CustomEvent("newer-version-available", {
@@ -76,7 +75,7 @@ export class ConflictDetectionService {
       this.transport.broadcast({
         type: "respond-latest",
         etag: this.currentEtag,
-        timestamp: Date.now(),
+        timestamp: this.clock.now(),
       });
     }
   }
@@ -129,7 +128,7 @@ export class ConflictDetectionService {
     this.transport.broadcast({
       type: "version-saved",
       etag,
-      timestamp: Date.now(),
+      timestamp: this.clock.now(),
       characterName: character.name,
     });
   }
@@ -148,10 +147,9 @@ export class ConflictDetectionService {
       this.pendingCharacter = character;
     }
 
-    if (this.remoteEtagReceived && this.remoteEtagReceived !== this.currentEtag) {
-      this.emitConflict(this.remoteEtagReceived, this.remoteTimestampReceived || Date.now());
-      this.remoteEtagReceived = null;
-      this.remoteTimestampReceived = null;
+    if (this.remoteVersionReceived && this.remoteVersionReceived.etag !== this.currentEtag) {
+      this.emitConflict(this.remoteVersionReceived.etag, this.remoteVersionReceived.timestamp);
+      this.remoteVersionReceived = null;
     }
   }
 

@@ -33,7 +33,7 @@ import type { Character } from "@/types/character";
 
 /** Multi-tab conflict detection: service, modal, and the events that feed it. */
 async function initConflictDetection(ctx: AppContext, initialCharacter: Character): Promise<void> {
-  const conflictDetectionService = new ConflictDetectionService();
+  const conflictDetectionService = new ConflictDetectionService(ctx.clock);
   window.__conflictDetectionService = conflictDetectionService;
 
   await conflictDetectionService.setCurrentEtag(initialCharacter);

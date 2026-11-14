@@ -24,7 +24,7 @@ export class CrossTabChannel {
   private channel: BroadcastChannel;
 
   constructor(onMessage: (message: ConflictMessage) => void) {
-    this.tabId = `tab-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    this.tabId = `tab-${crypto.randomUUID()}`;
     this.channel = new BroadcastChannel("numenera-character-sync");
 
     this.channel.onmessage = (event: MessageEvent) => {
