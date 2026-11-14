@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { waitForCharacterSheetReady } from "./app-ready.js";
 import { CARD_CONFIGS, CARD_TYPE_TO_PROPERTY } from "./cardTestFixtures.js";
+import { getTestId } from "./fields.js";
 import { englishText } from "./i18nKeys.js";
 import { waitForSaveComplete } from "./save.js";
 
@@ -45,6 +46,7 @@ export interface SheetDriver {
   expectSectionLeftOf(kind: string, other: string): Promise<void>;
   expectSectionAbove(kind: string, other: string): Promise<void>;
   expectFirstEntryBadgesAtRightEdge(kind: string): Promise<void>;
+  expectValueShows(valueName: string, value: string): Promise<void>;
 }
 
 const ANY_ENTRY = Object.values(CARD_CONFIGS)
@@ -198,5 +200,9 @@ export class PlaywrightSheetDriver implements SheetDriver {
     if (!cardBox || !badgeBox) throw new Error(`The ${kind} card or its badges are not rendered`);
     // pr-8 (2rem) leaves room for the edit/delete buttons; allow that plus border/padding.
     expect(cardBox.x + cardBox.width - (badgeBox.x + badgeBox.width)).toBeLessThanOrEqual(56);
+  }
+
+  async expectValueShows(valueName: string, value: string): Promise<void> {
+    await expect(this.page.getByTestId(getTestId(valueName))).toHaveText(value);
   }
 }

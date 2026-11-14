@@ -3,32 +3,10 @@ import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { waitForSaveComplete } from "../support/save.js";
 import { getTestId } from "../support/fields.js";
-import { FULL_CHARACTER } from "../support/cardTestFixtures.js";
 import { waitForCharacterSheetReady, waitForNewCharacterPersisted } from "../support/app-ready.js";
-
-// Default stat values for verification, derived from FULL_CHARACTER so this
-// map can't drift from the character every card fixture builds on.
-const DEFAULT_STAT_VALUES: Record<string, string> = Object.fromEntries(
-  (["might", "speed", "intellect"] as const).flatMap((stat) => {
-    const { pool, edge, current } = FULL_CHARACTER.stats[stat];
-    const label = stat.charAt(0).toUpperCase() + stat.slice(1);
-    return [
-      [`${label} Pool`, String(pool)],
-      [`${label} Edge`, String(edge)],
-      [`${label} Current`, String(current)],
-    ];
-  })
-);
 
 When("I click on the {string} value", async function (this: CustomWorld, fieldName: string) {
   await this.fields.click(fieldName);
-  if (!["background", "notes", "type"].includes(fieldName)) {
-    await this.page.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-  }
-});
-
-When("I tap on the {string} value", async function (this: CustomWorld, fieldName: string) {
-  await this.fields.tap(fieldName);
   if (!["background", "notes", "type"].includes(fieldName)) {
     await this.page.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
   }
@@ -196,37 +174,11 @@ When("I reload the page immediately", async function (this: CustomWorld) {
 });
 
 Then(
-  "I should see the {string} value displayed",
-  async function (this: CustomWorld, fieldName: string) {
-    const testId = getTestId(fieldName);
-    const element = this.page.locator(`[data-testid="${testId}"]`);
-    await expect(element).toBeVisible();
-  }
-);
-
-Then(
   "the {string} value should display {string}",
   async function (this: CustomWorld, fieldName: string, expectedValue: string) {
     const testId = getTestId(fieldName);
     const element = this.page.locator(`[data-testid="${testId}"]`);
     await expect(element).toHaveText(expectedValue);
-  }
-);
-
-Then(
-  "the {string} value should not have changed",
-  async function (this: CustomWorld, fieldName: string) {
-    const testId = getTestId(fieldName);
-    const element = this.page.locator(`[data-testid="${testId}"]`);
-
-    const currentValue = (await element.textContent())?.trim();
-
-    const expectedDefault = DEFAULT_STAT_VALUES[fieldName];
-    if (expectedDefault) {
-      expect(currentValue).toBe(expectedDefault);
-    } else {
-      expect(currentValue).toBeTruthy();
-    }
   }
 );
 
@@ -250,17 +202,3 @@ async function expectInputFocused(this: CustomWorld): Promise<void> {
   await this.modal.expectInputFocused();
 }
 Then("the input field should receive focus automatically", expectInputFocused);
-
-Then("the input field should be focused", expectInputFocused);
-
-Then(
-  "the input field should contain the current {string} value",
-  async function (this: CustomWorld, fieldName: string) {
-    const input = this.page.locator('[data-testid="edit-modal-input"]');
-
-    const expectedValue = DEFAULT_STAT_VALUES[fieldName];
-    if (expectedValue) {
-      await expect(input).toHaveValue(expectedValue, { timeout: 10000 });
-    }
-  }
-);

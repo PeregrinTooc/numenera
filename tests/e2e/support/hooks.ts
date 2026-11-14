@@ -11,6 +11,8 @@ import { CharacterDsl } from "./character.js";
 import { PlaywrightSheetDriver } from "./sheetDriver.js";
 import { CardEditorDsl } from "./cardEditor.js";
 import { PlaywrightCardEditorDriver } from "./cardEditorDriver.js";
+import { ValueEditorDsl } from "./valueEditor.js";
+import { PlaywrightValueEditorDriver } from "./valueEditorDriver.js";
 import { LayoutDsl } from "./layout.js";
 import { MouseInput, TouchInput } from "./sectionInput.js";
 import { BASE_URL } from "./serverUrl.js";
@@ -51,7 +53,9 @@ Before(async function (this: CustomWorld, { pickle }) {
   this.modal = new ModalDsl(this.page);
   this.fields = new FieldsDsl(this.page);
   this.setup = new SetupDsl(this);
-  this.character = new CharacterDsl(new PlaywrightSheetDriver(this.page), this.setup);
+  const valueEditor = new PlaywrightValueEditorDriver(this.page);
+  this.character = new CharacterDsl(new PlaywrightSheetDriver(this.page), this.setup, valueEditor);
+  this.valueEditor = new ValueEditorDsl(valueEditor);
   this.cardEditor = new CardEditorDsl(new PlaywrightCardEditorDriver(this.page));
   this.layout = new LayoutDsl(
     DEVICE.sectionInput === "touch" ? new TouchInput(this.page) : new MouseInput(this.page)

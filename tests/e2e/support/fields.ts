@@ -54,10 +54,6 @@ export class FieldsDsl {
     await this.page.locator(`[data-testid="${getTestId(fieldName)}"]`).click();
   }
 
-  async tap(fieldName: string): Promise<void> {
-    await this.page.locator(`[data-testid="${getTestId(fieldName)}"]`).tap();
-  }
-
   async hover(fieldName: string): Promise<void> {
     await this.page.locator(`[data-testid="${getTestId(fieldName)}"]`).hover();
   }

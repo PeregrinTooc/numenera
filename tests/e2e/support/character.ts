@@ -1,6 +1,9 @@
 import { intCell } from "./tableRows.js";
 import { CARD_CONFIGS, CARD_TYPE_TO_PROPERTY } from "./cardTestFixtures.js";
+import { FULL_CHARACTER } from "@/data/mockCharacters";
 import type { SetupDsl } from "./setup.js";
+import { statLabel } from "./valueEditor.js";
+import type { ValueEditorDriver } from "./valueEditorDriver.js";
 import type { CardTheme, Screen, SheetDriver } from "./sheetDriver.js";
 
 function nameOf(card: unknown): string {
@@ -26,8 +29,29 @@ function cardWith(name: string, properties: Record<string, string>): Record<stri
 export class CharacterDsl {
   constructor(
     private sheet: SheetDriver,
-    private setup: SetupDsl
+    private setup: SetupDsl,
+    private valueEditor: ValueEditorDriver
   ) {}
+
+  async hasStat(stat: string, field: string, value: number): Promise<void> {
+    const current = FULL_CHARACTER.stats[stat.toLowerCase() as keyof typeof FULL_CHARACTER.stats];
+    await this.setup.newCharacter({
+      stats: {
+        ...FULL_CHARACTER.stats,
+        [stat.toLowerCase()]: { ...current, [field.toLowerCase()]: value },
+      },
+    });
+  }
+
+  async changeStat(stat: string, field: string, value: number): Promise<void> {
+    await this.valueEditor.open(statLabel(stat, field));
+    await this.valueEditor.setValue(String(value));
+    await this.valueEditor.confirm();
+  }
+
+  async expectStatShows(stat: string, field: string, value: number): Promise<void> {
+    await this.sheet.expectValueShows(statLabel(stat, field), String(value));
+  }
 
   async has(kind: string, names: string[]): Promise<void> {
     await this.setup.newCharacter({
