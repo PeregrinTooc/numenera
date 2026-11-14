@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **549** in 52 files
-- Feature step lines: **1859**
+- Step definitions: **537** in 51 files
+- Feature step lines: **1840**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -37,7 +37,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 5 | 0 |
 | [additional-fields-textarea.steps.ts](#additionalfieldstextareastepsts) | 13 | 0 |
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
-| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 11 | 0 |
+| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 14 | 0 |
 | [card-deletion.steps.ts](#carddeletionstepsts) | 6 | 0 |
 | [card-editing.steps.ts](#cardeditingstepsts) | 12 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 8 | 0 |
@@ -49,16 +49,15 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [collection-reordering.steps.ts](#collectionreorderingstepsts) | 4 | 0 |
 | [combat.steps.ts](#combatstepsts) | 13 | 0 |
-| [common-steps.ts](#commonstepsts) | 12 | 0 |
+| [common-steps.ts](#commonstepsts) | 11 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
-| [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 13 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
 | [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 7 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 30 | 0 |
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 15 | 0 |
-| [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 23 | 0 |
+| [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 22 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 7 | 0 |
 | [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 11 | 0 |
@@ -161,17 +160,20 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I change my {word} to {string}` | 5 | 14 |
+| When | `I change my {word} to {string}` | 6 | 14 |
 | When | `I change my tier to {int}` | 3 | 21 |
+| When | `I open my {word} for editing` | 1 | 55 |
 | When | `I try to change my {word} to nothing` | 1 | 25 |
-| Then | `my character sheet shows my {word} as {string}` | 7 | 33 |
+| Then | `my {word} looks clickable` | 1 | 66 |
+| Given | `my character has no {word}` | 2 | 51 |
+| Then | `my character sheet shows my {word} as {string}` | 8 | 33 |
 | Then | `my character sheet shows my tier as {int}` | 3 | 40 |
-| Given | `my character's {word} is {string}` | 10 | 3 |
+| Then | `my character sheet shows the placeholder for my {word}` | 1 | 59 |
+| Given | `my character's {word} is {string}` | 11 | 3 |
 | Given | `my character's tier is {int}` | 2 | 10 |
 | Then | `the change is refused` | 2 | 29 |
 | Then | `the character name should display {string}` | 1 | 44 |
-| Then | `the descriptor should display {string}` | 2 | 51 |
-| Then | `the focus should display {string}` | 2 | 58 |
+| Then | `the value editor is open showing {string}` | 1 | 70 |
 
 ## card-deletion.steps.ts
 
@@ -242,7 +244,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 1 | 9 |
-| Given | `I am on the character sheet page` | 40 | 27 |
+| Given | `I am on the character sheet page` | 39 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 147 |
 | Then | `I should see {int} cyphers displayed` | 1 | 110 |
 | Then | `I should see {int} oddities displayed` | 1 | 160 |
@@ -342,11 +344,10 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 2 | 107 |
 | When | `I clear the input field` | 1 | 24 |
 | When | `I click on the {string} value` | 1 | 7 |
 | When | `I click the "Confirm" button` | 1 | 18 |
-| When | `I click the "New" button` | 7 | 19 |
+| When | `I click the "New" button` | 3 | 19 |
 | When | `I edit the {string} field to {string}` | 35 | 54 |
 | When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 63 |
 | When | `I press the Escape key` | 2 | 70 |
@@ -366,24 +367,6 @@ pattern this script does not understand):
 | Then | `the character should be imported successfully` | 1 | 60 |
 | Then | `the tier should have been adjusted to {string}` | 1 | 53 |
 | Then | `the tier should still be {string}` | 1 | 85 |
-
-## empty-fields-visibility.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Then | `an edit modal should appear with value {string}` | 1 | 93 |
-| When | `I click on the descriptor field` | 2 | 60 |
-| When | `I click on the focus field` | 1 | 66 |
-| When | `I enter {string} in the edit field` | 2 | 72 |
-| Given | `the character data is loaded` | 1 | 4 |
-| Then | `the descriptor field should be clickable` | 1 | 32 |
-| Then | `the descriptor field should be visible` | 1 | 22 |
-| Then | `the descriptor field should display placeholder text` | 1 | 8 |
-| Then | `the descriptor field should not show placeholder text` | 1 | 77 |
-| Then | `the focus field should be clickable` | 1 | 46 |
-| Then | `the focus field should be visible` | 1 | 27 |
-| Then | `the focus field should display placeholder text` | 1 | 15 |
-| Then | `the focus field should not show placeholder text` | 1 | 85 |
 
 ## export-enhancement.steps.ts
 
@@ -511,9 +494,8 @@ pattern this script does not understand):
 | --- | --- | ---: | ---: |
 | Then | `all recovery checkboxes should be unchecked` | 1 | 145 |
 | When | `I change my recovery modifier to {int}` | 1 | 155 |
-| When | `I click the {string} recovery checkbox` | 1 | 165 |
-| When | `I confirm the edit` | 2 | 159 |
-| When | `I select the {string} damage status` | 1 | 172 |
+| When | `I click the {string} recovery checkbox` | 1 | 159 |
+| When | `I select the {string} damage status` | 1 | 166 |
 | Then | `I should see {int} damage status options` | 1 | 48 |
 | Then | `I should see {int} recovery roll checkboxes` | 1 | 18 |
 | Then | `I should see {string} in the recovery section` | 3 | 133 |

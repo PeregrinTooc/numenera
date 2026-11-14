@@ -2,6 +2,7 @@ import { intCell } from "./tableRows.js";
 import { CARD_CONFIGS, CARD_TYPE_TO_PROPERTY, EMPTY_ARRAYS } from "./cardTestFixtures.js";
 import { FULL_CHARACTER } from "@/data/mockCharacters";
 import type { SetupDsl } from "./setup.js";
+import { englishText } from "./i18nKeys.js";
 import { statLabel } from "./valueEditor.js";
 import type { ValueEditorDriver } from "./valueEditorDriver.js";
 import type { CardTheme, Screen, SheetDriver } from "./sheetDriver.js";
@@ -93,6 +94,22 @@ export class CharacterDsl {
 
   async changeBasicInfo(field: string, value: string): Promise<void> {
     await this.change(basicInfoLabel(field), value);
+  }
+
+  async openBasicInfoForEditing(field: string): Promise<void> {
+    await this.valueEditor.open(basicInfoLabel(field));
+  }
+
+  async expectEditorShowing(value: string): Promise<void> {
+    await this.valueEditor.expectOpenShowing(value);
+  }
+
+  async expectBasicInfoLooksClickable(field: string): Promise<void> {
+    await this.valueEditor.expectValueLooksClickable(basicInfoLabel(field));
+  }
+
+  async expectBasicInfoPlaceholder(field: string): Promise<void> {
+    await this.sheet.expectValueShows(basicInfoLabel(field), englishText(`character.${field}`));
   }
 
   async tryToChange(valueName: string, value: string): Promise<void> {

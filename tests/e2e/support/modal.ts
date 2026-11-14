@@ -1,4 +1,4 @@
-import { Page, expect } from "@playwright/test";
+import { Page } from "@playwright/test";
 import { waitForSaveComplete } from "./save.js";
 
 export class ModalDsl {
@@ -30,10 +30,5 @@ export class ModalDsl {
   async clearInput(): Promise<void> {
     const input = this.page.locator('[data-testid="edit-modal-input"]');
     await input.clear();
-  }
-
-  async expectOpen(): Promise<void> {
-    const modal = this.page.locator('[data-testid="edit-modal"]');
-    await expect(modal).toBeVisible();
   }
 }

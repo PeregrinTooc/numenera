@@ -157,12 +157,6 @@ When("I change my recovery modifier to {int}", async function (this: CustomWorld
   await this.character.change("recovery modifier", String(value));
 });
 
-When("I confirm the edit", async function () {
-  const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
-  await confirmButton.click();
-  await expect(this.page.locator('[data-testid="edit-modal"]')).toBeHidden();
-});
-
 When("I click the {string} recovery checkbox", async function (rollType: string) {
   const sanitized = rollType.toLowerCase().replace(/\s+/g, "-");
   const checkbox = this.dom.getByTestId(`recovery-${sanitized}`);

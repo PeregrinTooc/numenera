@@ -100,8 +100,3 @@ Then(
     await expect(element).toHaveText(expectedValue);
   }
 );
-
-async function expectModalOpen(this: CustomWorld): Promise<void> {
-  await this.modal.expectOpen();
-}
-Then("an edit modal should appear", expectModalOpen);

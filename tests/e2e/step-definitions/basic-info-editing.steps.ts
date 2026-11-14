@@ -49,13 +49,28 @@ Then(
   }
 );
 
+Given("my character has no {word}", async function (this: CustomWorld, field: string) {
+  await this.character.hasBasicInfo(field, "");
+});
+
+When("I open my {word} for editing", async function (this: CustomWorld, field: string) {
+  await this.character.openBasicInfoForEditing(field);
+});
+
 Then(
-  "the descriptor should display {string}",
-  async function (this: CustomWorld, descriptor: string) {
-    await this.character.expectBasicInfoShows("descriptor", descriptor);
+  "my character sheet shows the placeholder for my {word}",
+  async function (this: CustomWorld, field: string) {
+    await this.character.expectBasicInfoPlaceholder(field);
   }
 );
 
-Then("the focus should display {string}", async function (this: CustomWorld, focus: string) {
-  await this.character.expectBasicInfoShows("focus", focus);
+Then("my {word} looks clickable", async function (this: CustomWorld, field: string) {
+  await this.character.expectBasicInfoLooksClickable(field);
 });
+
+Then(
+  "the value editor is open showing {string}",
+  async function (this: CustomWorld, value: string) {
+    await this.character.expectEditorShowing(value);
+  }
+);
