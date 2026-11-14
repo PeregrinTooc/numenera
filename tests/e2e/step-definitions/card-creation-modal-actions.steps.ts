@@ -7,16 +7,6 @@ When("I confirm the card edit modal", async function (this: CustomWorld) {
   await expect(this.page.locator('[data-testid="card-edit-modal"]')).toBeHidden();
 });
 
-When("I cancel the card edit modal", async function (this: CustomWorld) {
-  await this.page.locator('[data-testid="card-modal-cancel"]').click();
-  await this.page
-    .waitForSelector('[data-testid="card-edit-modal"]', {
-      state: "hidden",
-      timeout: 2000,
-    })
-    .catch(() => {});
-});
-
 Then("the card edit modal should be open", async function (this: CustomWorld) {
   await expect(this.page.locator('[data-testid="card-edit-modal"]')).toBeVisible();
 
@@ -38,19 +28,5 @@ When(
   "I click the edit button on cypher {string}",
   async function (this: CustomWorld, name: string) {
     await this.cards.clickEditButton("cypher", name);
-  }
-);
-
-When(
-  "I click the edit button on ability {string}",
-  async function (this: CustomWorld, name: string) {
-    await this.cards.clickEditButton("ability", name);
-  }
-);
-
-When(
-  "I click the edit button on special ability {string}",
-  async function (this: CustomWorld, name: string) {
-    await this.cards.clickEditButton("special-ability", name);
   }
 );

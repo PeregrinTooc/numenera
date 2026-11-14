@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **663** in 56 files
-- Feature step lines: **2246**
+- Step definitions: **643** in 56 files
+- Feature step lines: **2213**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -39,10 +39,10 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
 | [basic-info-editing-accessibility.steps.ts](#basicinfoeditingaccessibilitystepsts) | 18 | 0 |
 | [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 16 | 0 |
-| [card-creation-modal-actions.steps.ts](#cardcreationmodalactionsstepsts) | 6 | 0 |
-| [card-creation-modal-fields.steps.ts](#cardcreationmodalfieldsstepsts) | 15 | 0 |
-| [card-creation-setup.steps.ts](#cardcreationsetupstepsts) | 8 | 0 |
-| [card-creation-verification.steps.ts](#cardcreationverificationstepsts) | 9 | 0 |
+| [card-creation-modal-actions.steps.ts](#cardcreationmodalactionsstepsts) | 3 | 0 |
+| [card-creation-modal-fields.steps.ts](#cardcreationmodalfieldsstepsts) | 8 | 0 |
+| [card-creation-setup.steps.ts](#cardcreationsetupstepsts) | 3 | 0 |
+| [card-creation-verification.steps.ts](#cardcreationverificationstepsts) | 4 | 0 |
 | [card-deletion.steps.ts](#carddeletionstepsts) | 6 | 0 |
 | [card-editing.steps.ts](#cardeditingstepsts) | 12 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
@@ -227,59 +227,39 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I cancel the card edit modal` | 2 | 9 |
-| When | `I click the edit button on ability {string}` | 1 | 43 |
-| When | `I click the edit button on cypher {string}` | 1 | 36 |
-| When | `I click the edit button on special ability {string}` | 1 | 50 |
-| When | `I confirm the card edit modal` | 22 | 4 |
-| Then | `the card edit modal should be open` | 10 | 19 |
+| When | `I click the edit button on cypher {string}` | 1 | 26 |
+| When | `I confirm the card edit modal` | 10 | 4 |
+| Then | `the card edit modal should be open` | 8 | 9 |
 
 ## card-creation-modal-fields.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all ability fields should be empty` | 1 | 13 |
-| Then | `all special ability fields should be empty` | 1 | 28 |
-| When | `I fill in the ability cost with {string}` | 6 | 61 |
-| When | `I fill in the ability description with {string}` | 9 | 69 |
-| When | `I fill in the ability name with {string}` | 9 | 57 |
-| When | `I fill in the ability pool with {string}` | 6 | 65 |
-| When | `I fill in the cypher effect with {string}` | 7 | 43 |
-| When | `I fill in the cypher level with {string}` | 6 | 39 |
-| When | `I fill in the cypher name with {string}` | 6 | 35 |
-| When | `I fill in the equipment name with {string}` | 1 | 50 |
-| When | `I fill in the special ability description with {string}` | 7 | 90 |
-| When | `I fill in the special ability name with {string}` | 7 | 76 |
-| When | `I fill in the special ability source with {string}` | 7 | 83 |
-| Then | `the modal should show ability fields` | 1 | 5 |
-| Then | `the modal should show special ability fields` | 1 | 21 |
+| When | `I fill in the ability cost with {string}` | 2 | 30 |
+| When | `I fill in the ability description with {string}` | 2 | 38 |
+| When | `I fill in the ability name with {string}` | 2 | 26 |
+| When | `I fill in the ability pool with {string}` | 2 | 34 |
+| When | `I fill in the cypher effect with {string}` | 7 | 12 |
+| When | `I fill in the cypher level with {string}` | 6 | 8 |
+| When | `I fill in the cypher name with {string}` | 6 | 4 |
+| When | `I fill in the equipment name with {string}` | 1 | 19 |
 
 ## card-creation-setup.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the add ability button` | 15 | 41 |
-| When | `I click the add cypher button` | 7 | 33 |
-| When | `I click the add equipment button` | 2 | 37 |
-| When | `I click the add special ability button` | 7 | 45 |
-| Then | `I should see an add ability button` | 1 | 25 |
-| Then | `I should see an add special ability button` | 1 | 29 |
-| Given | `the character has {int} ability cards` | 5 | 14 |
-| Given | `the character has {int} special ability cards` | 5 | 18 |
+| When | `I click the add ability button` | 8 | 11 |
+| When | `I click the add cypher button` | 7 | 3 |
+| When | `I click the add equipment button` | 2 | 7 |
 
 ## card-creation-verification.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `I should see {int} ability cards` | 14 | 9 |
+| Then | `I should see {int} ability cards` | 6 | 9 |
 | Then | `I should see {int} cypher card(s)` | 4 | 5 |
-| Then | `I should see {int} special ability cards` | 8 | 13 |
-| Then | `I should see a special ability card with name {string}` | 5 | 49 |
-| Then | `I should see an ability card with name {string}` | 7 | 25 |
-| Then | `I should see an oddity card with text {string}` | 1 | 17 |
-| Then | `the ability {string} should have cost {string}` | 1 | 33 |
-| Then | `the ability {string} should have pool {string}` | 1 | 41 |
-| Then | `the special ability {string} should have source {string}` | 1 | 59 |
+| Then | `I should see an ability card with name {string}` | 2 | 21 |
+| Then | `I should see an oddity card with text {string}` | 1 | 13 |
 
 ## card-deletion.steps.ts
 
@@ -296,18 +276,18 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I cancel the card` | 5 | 32 |
-| When | `I open my character again` | 10 | 36 |
-| When | `I save the card` | 20 | 28 |
-| When | `I set its {word} to {string}` | 59 | 21 |
-| When | `I start a new {cardType}` | 25 | 10 |
-| When | `I start editing the {cardType} {string}` | 5 | 14 |
-| Then | `my character carries {int} {cardKind}` | 20 | 54 |
-| Then | `my character carries the {cardType} {string}` | 15 | 61 |
-| Given | `my character has {int} {cardKind}` | 30 | 3 |
-| Then | `the {cardType} {string} shows {string}` | 7 | 68 |
-| Then | `the add {cardType} button has a themed background colour` | 5 | 47 |
-| Then | `the card editor opens with empty {cardType} fields` | 5 | 40 |
+| When | `I cancel the card` | 7 | 32 |
+| When | `I open my character again` | 14 | 36 |
+| When | `I save the card` | 28 | 28 |
+| When | `I set its {word} to {string}` | 92 | 21 |
+| When | `I start a new {cardType}` | 35 | 10 |
+| When | `I start editing the {cardType} {string}` | 7 | 14 |
+| Then | `my character carries {int} {cardKind}` | 28 | 54 |
+| Then | `my character carries the {cardType} {string}` | 21 | 61 |
+| Given | `my character has {int} {cardKind}` | 42 | 3 |
+| Then | `the {cardType} {string} shows {string}` | 10 | 68 |
+| Then | `the add {cardType} button has a themed background colour` | 7 | 47 |
+| Then | `the card editor opens with empty {cardType} fields` | 7 | 40 |
 
 ## card-modal-focus-trap.steps.ts
 
@@ -358,7 +338,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 54 | 27 |
+| Given | `I am on the character sheet page` | 53 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 147 |
 | Then | `I should see {int} cyphers displayed` | 1 | 110 |
 | Then | `I should see {int} oddities displayed` | 1 | 160 |
@@ -487,7 +467,7 @@ pattern this script does not understand):
 | When | `I hover over the tier {string}` | 1 | 97 |
 | When | `I press the Enter key` | 2 | 173 |
 | When | `I press the Escape key` | 5 | 169 |
-| When | `I reload the page` | 41 | 177 |
+| When | `I reload the page` | 37 | 177 |
 | When | `I reload the page immediately` | 1 | 190 |
 | Then | `I should see the {string} value displayed` | 1 | 197 |
 | When | `I tap on the {string} value` | 1 | 29 |

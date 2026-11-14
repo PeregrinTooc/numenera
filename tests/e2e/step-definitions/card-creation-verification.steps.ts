@@ -11,10 +11,6 @@ Then("I should see {int} ability cards", async function (this: CustomWorld, coun
   await this.cards.expectHasCount("ability", count);
 });
 
-Then("I should see {int} special ability cards", async function (this: CustomWorld, count: number) {
-  await this.cards.expectHasCount("special-ability", count);
-});
-
 Then(
   "I should see an oddity card with text {string}",
   async function (this: CustomWorld, text: string) {
@@ -28,41 +24,5 @@ Then(
   async function (this: CustomWorld, name: string) {
     const card = this.page.locator(CARD_CONFIGS.ability.itemTestId).filter({ hasText: name });
     await expect(card).toBeVisible();
-  }
-);
-
-Then(
-  "the ability {string} should have cost {string}",
-  async function (this: CustomWorld, name: string, cost: string) {
-    const card = this.page.locator(CARD_CONFIGS.ability.itemTestId).filter({ hasText: name });
-    await expect(card).toContainText(cost);
-  }
-);
-
-Then(
-  "the ability {string} should have pool {string}",
-  async function (this: CustomWorld, name: string, pool: string) {
-    const card = this.page.locator(CARD_CONFIGS.ability.itemTestId).filter({ hasText: name });
-    await expect(card).toContainText(pool);
-  }
-);
-
-Then(
-  "I should see a special ability card with name {string}",
-  async function (this: CustomWorld, name: string) {
-    const card = this.page.locator(CARD_CONFIGS["special-ability"].itemTestId).filter({
-      hasText: name,
-    });
-    await expect(card).toBeVisible();
-  }
-);
-
-Then(
-  "the special ability {string} should have source {string}",
-  async function (this: CustomWorld, name: string, source: string) {
-    const card = this.page.locator(CARD_CONFIGS["special-ability"].itemTestId).filter({
-      hasText: name,
-    });
-    await expect(card).toContainText(source);
   }
 );
