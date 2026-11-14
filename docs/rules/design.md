@@ -75,6 +75,12 @@ Build what a current feature or test needs, nothing more.
   is planned in `docs/TODO.md`;
 - code is kept "for later" or "just in case".
 
+Weigh this one carefully. **Not the smell:** an interface that marks an
+identified architectural boundary — for example the E2E suite's DSL ↔ protocol
+driver split (`SheetDriver`, `SectionInput`). Once a boundary has been
+identified, it needs a clear interface, even while only one implementation
+exists. The smell is an interface _inside_ a layer that no boundary calls for.
+
 Fix with Remove Dead Code, Inline Function, Inline Class, Remove Flag Argument,
 Collapse Hierarchy. Git keeps the history; the code does not need to.
 
