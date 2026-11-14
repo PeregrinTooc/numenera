@@ -44,7 +44,27 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ## 🚨 Must-Have (Technical Debt)
 
-None open.
+### WebKit Browser Close Hangs in E2E `AfterAll`
+
+**Overview**  
+On WebKit profiles (iPhone 12, iPad Pro), `browser.close()` in the `AfterAll`
+hook (`tests/e2e/support/hooks.ts`) sometimes never resolves and hits
+Cucumber's 30 s hook timeout. Every scenario in the shard has passed, but the
+worker exits with "a BeforeAll hook errored on worker 0" (Cucumber's wording for
+a test-run hook), the job goes red and the GitHub Pages deploy is skipped. Seen
+on `main` after PR #30 (run 43641525572, iphone12 shard 3/4: 95 of 95 scenarios
+passed). Rerunning the job is the current workaround.
+
+**Goals**
+
+- A WebKit E2E job is red only when a scenario fails, so a green suite always deploys.
+- Find why the close hangs (open contexts or pages left behind, a WebKit or
+  Playwright bug) and fix that, rather than masking it with a longer timeout.
+
+**E2E Tests**
+
+- No new scenario: the full suite on `iphone12` and `ipadpro`, run repeatedly
+  locally and in CI, finishes without an `AfterAll` timeout.
 
 ---
 
