@@ -171,9 +171,10 @@ Before(async function (this: CustomWorld, { pickle }) {
   // against a database the same page holds open fires "blocked" instead of
   // succeeding; clearing through the already-open connections avoids that.
   //
-  // On a fresh store the app saves its initial version after a wall-clock
-  // delay. Clearing before that save lands lets it arrive afterwards as a stale
-  // version, which the next boot then reconciles into an extra one.
+  // On a fresh store the app saves its initial version at the end of its
+  // asynchronous boot, which page.goto can return before. Clearing before that
+  // save lands lets it arrive afterwards as a stale version, which the next boot
+  // then reconciles into an extra one.
   await this.page.goto(BASE_URL);
   await waitForInitialVersionSaved(this.page);
   await this.storageHelper.clearStorage();
