@@ -7,6 +7,7 @@ export interface ValueEditorDriver {
   open(valueName: string): Promise<void>;
   setValue(value: string): Promise<void>;
   confirm(): Promise<void>;
+  confirmWithoutWaitingForSave(): Promise<void>;
   confirmWithEnter(): Promise<void>;
   cancel(): Promise<void>;
   dismissWithEscape(): Promise<void>;
@@ -61,6 +62,11 @@ export class PlaywrightValueEditorDriver implements ValueEditorDriver {
   async confirm(): Promise<void> {
     await this.page.getByTestId("modal-confirm-button").click();
     await this.expectSaved();
+  }
+
+  async confirmWithoutWaitingForSave(): Promise<void> {
+    await this.page.getByTestId("modal-confirm-button").click();
+    await this.expectClosed();
   }
 
   async confirmWithEnter(): Promise<void> {

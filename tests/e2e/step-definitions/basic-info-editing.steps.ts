@@ -38,16 +38,16 @@ Then(
   }
 );
 
+When(
+  "I change my {word} to {string} without waiting for the auto-save",
+  async function (this: CustomWorld, field: string, value: string) {
+    await this.character.changeBasicInfoWithoutWaitingForSave(field, value);
+  }
+);
+
 Then("my character sheet shows my tier as {int}", async function (this: CustomWorld, tier: number) {
   await this.character.expectBasicInfoShows("tier", tier);
 });
-
-Then(
-  "the character name should display {string}",
-  async function (this: CustomWorld, name: string) {
-    await this.character.expectBasicInfoShows("name", name);
-  }
-);
 
 Given("my character has no {word}", async function (this: CustomWorld, field: string) {
   await this.character.hasBasicInfo(field, "");

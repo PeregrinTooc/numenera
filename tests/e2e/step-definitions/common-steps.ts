@@ -61,13 +61,6 @@ When(
   }
 );
 
-When(
-  "I edit the {string} field to {string} without waiting for the auto-save",
-  async function (this: CustomWorld, fieldName: string, value: string) {
-    await editFieldViaModal(this, fieldName, value);
-  }
-);
-
 When("I press the Escape key", async function (this: CustomWorld) {
   await this.page.keyboard.press("Escape");
 });

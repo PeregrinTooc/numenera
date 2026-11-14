@@ -88,6 +88,12 @@ export class CharacterDsl {
     await this.valueEditor.confirm();
   }
 
+  async changeBasicInfoWithoutWaitingForSave(field: string, value: string): Promise<void> {
+    await this.valueEditor.open(basicInfoLabel(field));
+    await this.valueEditor.setValue(value);
+    await this.valueEditor.confirmWithoutWaitingForSave();
+  }
+
   async changeStat(stat: string, field: string, value: number): Promise<void> {
     await this.change(statLabel(stat, field), String(value));
   }

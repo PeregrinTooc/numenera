@@ -26,7 +26,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **537** in 51 files
+- Step definitions: **536** in 51 files
 - Feature step lines: **1840**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
@@ -49,7 +49,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [collection-reordering.steps.ts](#collectionreorderingstepsts) | 4 | 0 |
 | [combat.steps.ts](#combatstepsts) | 13 | 0 |
-| [common-steps.ts](#commonstepsts) | 11 | 0 |
+| [common-steps.ts](#commonstepsts) | 10 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
 | [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 7 | 0 |
@@ -160,19 +160,19 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I change my {word} to {string}` | 6 | 14 |
-| When | `I change my tier to {int}` | 3 | 21 |
+| When | `I change my {word} to {string}` | 17 | 14 |
+| When | `I change my {word} to {string} without waiting for the auto-save` | 1 | 40 |
+| When | `I change my tier to {int}` | 4 | 21 |
 | When | `I open my {word} for editing` | 1 | 55 |
 | When | `I try to change my {word} to nothing` | 1 | 25 |
 | Then | `my {word} looks clickable` | 1 | 66 |
 | Given | `my character has no {word}` | 2 | 51 |
-| Then | `my character sheet shows my {word} as {string}` | 8 | 33 |
-| Then | `my character sheet shows my tier as {int}` | 3 | 40 |
+| Then | `my character sheet shows my {word} as {string}` | 9 | 33 |
+| Then | `my character sheet shows my tier as {int}` | 3 | 47 |
 | Then | `my character sheet shows the placeholder for my {word}` | 1 | 59 |
 | Given | `my character's {word} is {string}` | 11 | 3 |
 | Given | `my character's tier is {int}` | 2 | 10 |
 | Then | `the change is refused` | 2 | 29 |
-| Then | `the character name should display {string}` | 1 | 44 |
 | Then | `the value editor is open showing {string}` | 1 | 70 |
 
 ## card-deletion.steps.ts
@@ -348,13 +348,12 @@ pattern this script does not understand):
 | When | `I click on the {string} value` | 1 | 7 |
 | When | `I click the "Confirm" button` | 1 | 18 |
 | When | `I click the "New" button` | 3 | 19 |
-| When | `I edit the {string} field to {string}` | 35 | 54 |
-| When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 63 |
-| When | `I press the Escape key` | 2 | 70 |
-| When | `I reload the page` | 21 | 74 |
-| When | `I reload the page immediately` | 1 | 87 |
+| When | `I edit the {string} field to {string}` | 22 | 54 |
+| When | `I press the Escape key` | 2 | 63 |
+| When | `I reload the page` | 21 | 67 |
+| When | `I reload the page immediately` | 1 | 80 |
 | When | `I type {string} in the modal input` | 1 | 28 |
-| Then | `the {string} value should display {string}` | 1 | 94 |
+| Then | `the {string} value should display {string}` | 1 | 87 |
 
 ## data-validation.steps.ts
 
@@ -629,7 +628,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I change my {stat} {word} to {int}` | 4 | 10 |
+| When | `I change my {stat} {word} to {int}` | 5 | 10 |
 | Then | `my character sheet shows my {stat} {word} as {int}` | 9 | 17 |
 | Given | `my character's {stat} {word} is {int}` | 6 | 3 |
 
