@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { createCharacterWithItems, createTestCharacter } from "../factories/character.js";
+import { ManualClock } from "@/services/manualClock";
 import {
   mouseDrag,
   mountSheet,
@@ -10,24 +11,25 @@ import {
   touchDragOver,
 } from "./helpers/sectionDragFixture";
 
+let clock: ManualClock;
+
 describe("CharacterSheet section drop zones", () => {
   beforeEach(() => {
-    vi.useFakeTimers();
+    clock = new ManualClock();
     localStorage.clear();
     // jsdom does not implement elementFromPoint; tests spy on this stub.
     document.elementFromPoint = (): Element | null => null;
-    mountSheet(createTestCharacter());
+    mountSheet(createTestCharacter(), clock);
   });
 
   afterEach(() => {
-    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
   it("dropping on the bottom edge of a section moves the dragged section below it", () => {
     placeSection("items", 0, 1000, 800, 200);
 
-    touchDragOver("abilities", "items", 400, 1180);
+    touchDragOver(clock, "abilities", "items", 400, 1180);
     touch(section("abilities"), "touchend");
 
     const order = sectionOrder();
@@ -41,7 +43,7 @@ describe("CharacterSheet section drop zones", () => {
       ({ matches: wide, media: query }) as MediaQueryList;
     try {
       placeSection("items", 0, 1000, 800, 200);
-      touchDragOver("cyphers", "items", 600, 1120); // middle right: would pair
+      touchDragOver(clock, "cyphers", "items", 600, 1120); // middle right: would pair
       wide = false; // e.g. the window was narrowed mid-drag
       touch(section("cyphers"), "touchmove", [{ x: 600, y: 1121 }]);
       touch(section("cyphers"), "touchend");
@@ -55,7 +57,7 @@ describe("CharacterSheet section drop zones", () => {
   });
 
   it("a mouse dragover on a card nested in a section uses the whole section's zones", () => {
-    mountSheet(createCharacterWithItems());
+    mountSheet(createCharacterWithItems(), clock);
     placeSection("abilities", 0, 1000, 800, 200);
     const card = section("abilities").querySelector('[data-testid="abilities-list"] > *');
     if (!card) throw new Error("No ability card");
@@ -83,7 +85,7 @@ describe("CharacterSheet section drop zones", () => {
 
   it("a touch release over the gutter between sections keeps the last intent (Review Focus 1)", () => {
     placeSection("items", 0, 1000, 800, 200);
-    touchDragOver("cyphers", "items", 600, 1120); // middle right of Items
+    touchDragOver(clock, "cyphers", "items", 600, 1120); // middle right of Items
     vi.spyOn(document, "elementFromPoint").mockReturnValue(null); // a gutter: no section
     touch(section("cyphers"), "touchmove", [{ x: 600, y: 1210 }]);
     touch(section("cyphers"), "touchend");
@@ -103,7 +105,7 @@ describe("CharacterSheet section drop zones", () => {
   });
 
   it("dragging a card inside a paired section reorders cards, not the section", () => {
-    mountSheet(createCharacterWithItems());
+    mountSheet(createCharacterWithItems(), clock);
     placeSection("attacks", 400, 1000, 400, 200);
     const cards = section("attacks").querySelectorAll('[draggable="true"]');
     if (cards.length < 2) throw new Error("Attacks needs two cards");

@@ -6,6 +6,8 @@
  * ignored. DOM-free: the caller feeds it coordinates and reacts to callbacks.
  */
 
+import type { Clock, TimerHandle } from "@/services/clock";
+
 const HOLD_MS = 250;
 const MOVE_TOLERANCE_PX = 10;
 
@@ -23,19 +25,22 @@ type LongPressState<Id extends string> =
       id: Id;
       startX: number;
       startY: number;
-      timer: ReturnType<typeof setTimeout>;
+      timer: TimerHandle;
     }
   | { kind: "active"; id: Id };
 
 export class LongPressDrag<Id extends string> {
   private state: LongPressState<Id> = { kind: "idle" };
 
-  constructor(private readonly options: LongPressDragOptions<Id>) {}
+  constructor(
+    private readonly options: LongPressDragOptions<Id>,
+    private readonly clock: Clock
+  ) {}
 
   start(id: Id, x: number, y: number): void {
     const wasActive = this.isActive();
     this.reset();
-    const timer = setTimeout(() => this.activate(id), HOLD_MS);
+    const timer = this.clock.setTimeout(() => this.activate(id), HOLD_MS);
     this.state = { kind: "pending", id, startX: x, startY: y, timer };
     if (wasActive) {
       this.options.onAbort();
@@ -83,7 +88,7 @@ export class LongPressDrag<Id extends string> {
 
   private reset(): void {
     if (this.state.kind === "pending") {
-      clearTimeout(this.state.timer);
+      this.clock.clearTimeout(this.state.timer);
     }
     this.state = { kind: "idle" };
   }

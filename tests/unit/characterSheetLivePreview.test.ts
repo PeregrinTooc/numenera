@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { ManualClock } from "@/services/manualClock";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import { createTestCharacter } from "../factories/character.js";
 import {
@@ -13,18 +14,19 @@ import {
   touchDragOver,
 } from "./helpers/sectionDragFixture";
 
+let clock: ManualClock;
+
 describe("CharacterSheet live layout preview", () => {
   let sheet: CharacterSheet;
 
   beforeEach(() => {
-    vi.useFakeTimers();
+    clock = new ManualClock();
     localStorage.clear();
     document.elementFromPoint = (): Element | null => null;
-    sheet = mountSheet(createTestCharacter());
+    sheet = mountSheet(createTestCharacter(), clock);
   });
 
   afterEach(() => {
-    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
@@ -33,33 +35,33 @@ describe("CharacterSheet live layout preview", () => {
 
   it("shows the resulting layout after the intent has held for 300 ms, without saving", () => {
     placeSection("items", 0, 1000, 800, 200);
-    touchDragOver("cyphers", "items", 600, 1120); // middle right: pair
+    touchDragOver(clock, "cyphers", "items", 600, 1120); // middle right: pair
 
-    vi.advanceTimersByTime(299);
+    clock.advance(299);
     expect(pairGrid()).toBeNull();
-    vi.advanceTimersByTime(1);
+    clock.advance(1);
     expect(pairGrid()).not.toBeNull();
     expect(localStorage.getItem("numenera-layout")).toBeNull();
   });
 
   it("an intent change restarts the wait", () => {
     placeSection("items", 0, 1000, 800, 200);
-    touchDragOver("cyphers", "items", 200, 1120); // middle left
-    vi.advanceTimersByTime(200);
+    touchDragOver(clock, "cyphers", "items", 200, 1120); // middle left
+    clock.advance(200);
     touch(section("cyphers"), "touchmove", [{ x: 600, y: 1120 }]); // middle right
 
-    vi.advanceTimersByTime(299);
+    clock.advance(299);
     expect(pairGrid()).toBeNull();
-    vi.advanceTimersByTime(1);
+    clock.advance(1);
     expect(pairGrid()).not.toBeNull();
   });
 
   it("keeps the section under the finger where it was on screen when the live preview appears", () => {
     layOutByRows();
     const before = section("items").getBoundingClientRect().top;
-    touchDragOver("cyphers", "items", 600, before + 120); // middle right: pair
+    touchDragOver(clock, "cyphers", "items", 600, before + 120); // middle right: pair
 
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
 
     // Cyphers' own row above Items is gone, which would lift Items a row
     expect(pairGrid()).not.toBeNull();
@@ -68,8 +70,8 @@ describe("CharacterSheet live layout preview", () => {
 
   it("releasing during the live preview commits what is shown", () => {
     placeSection("items", 0, 1000, 800, 200);
-    touchDragOver("cyphers", "items", 600, 1120);
-    vi.advanceTimersByTime(300);
+    touchDragOver(clock, "cyphers", "items", 600, 1120);
+    clock.advance(300);
     // The finger now rests on Cyphers in its new place (the right half of the
     // pair): dropping a section on itself is a no-op zone
     placeSection("cyphers", 400, 1000, 400, 200);
@@ -83,8 +85,8 @@ describe("CharacterSheet live layout preview", () => {
 
   it("after the live preview, the next hover builds on the previewed layout", () => {
     placeSection("items", 0, 1000, 800, 200);
-    touchDragOver("cyphers", "items", 600, 1120);
-    vi.advanceTimersByTime(300);
+    touchDragOver(clock, "cyphers", "items", 600, 1120);
+    clock.advance(300);
     // Over the top edge of Items, now Cyphers' partner. Against the preview
     // that takes Cyphers out of the pair to the row above; against the saved
     // layout it would be a no-op (Cyphers is already right above Items).
@@ -101,8 +103,8 @@ describe("CharacterSheet live layout preview", () => {
   it("a cancelled touch drag restores the layout from before the drag and saves nothing", () => {
     const before = sectionOrder();
     placeSection("items", 0, 1000, 800, 200);
-    touchDragOver("cyphers", "items", 600, 1120);
-    vi.advanceTimersByTime(300);
+    touchDragOver(clock, "cyphers", "items", 600, 1120);
+    clock.advance(300);
     touch(section("cyphers"), "touchcancel");
 
     expect(sectionOrder()).toEqual(before);
@@ -115,7 +117,7 @@ describe("CharacterSheet live layout preview", () => {
     placeSection("items", 0, 1000, 800, 200);
     mouseDrag(section("cyphers"), "dragstart");
     mouseDrag(section("items"), "dragover", 600, 1120);
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
     expect(pairGrid()).not.toBeNull();
     section("cyphers").dispatchEvent(new Event("dragend", { bubbles: true }));
 
@@ -125,32 +127,32 @@ describe("CharacterSheet live layout preview", () => {
 
   it("a live preview holds until the pointer moves more than a few pixels", () => {
     placeSection("items", 0, 1000, 800, 200);
-    touchDragOver("cyphers", "items", 600, 1120);
-    vi.advanceTimersByTime(300); // Cyphers paired with Items
+    touchDragOver(clock, "cyphers", "items", 600, 1120);
+    clock.advance(300); // Cyphers paired with Items
     // Cyphers is taller in its narrower new place, so the still pointer now
     // lies in its bottom quarter, which would take it out of the pair again.
     placeSection("cyphers", 400, 900, 400, 240);
     vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("cyphers"));
 
     touch(section("cyphers"), "touchmove", [{ x: 602, y: 1121 }]); // a wobble
-    vi.advanceTimersByTime(600);
+    clock.advance(600);
     expect(pairGrid()).not.toBeNull();
 
     touch(section("cyphers"), "touchmove", [{ x: 602, y: 1140 }]); // a real move
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
     expect(pairGrid()).toBeNull();
   });
 
   it("releasing on a live preview that is back at the saved layout writes nothing", () => {
     const before = sectionOrder();
     placeSection("items", 0, 1000, 800, 200);
-    touchDragOver("cyphers", "items", 600, 1120);
-    vi.advanceTimersByTime(300); // Cyphers paired with Items
+    touchDragOver(clock, "cyphers", "items", 600, 1120);
+    clock.advance(300); // Cyphers paired with Items
     // The top edge of Items, now in the pair: Cyphers back to its own row above
     placeSection("items", 0, 1000, 400, 200);
     vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("items"));
     touch(section("cyphers"), "touchmove", [{ x: 200, y: 1010 }]);
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
     touch(section("cyphers"), "touchend");
 
     expect(sectionOrder()).toEqual(before);
@@ -166,9 +168,9 @@ describe("CharacterSheet live layout preview", () => {
       }) ?? null;
     const touched = section("cyphers").querySelector(".section-box") as Element;
     touch(touched, "touchstart", [{ x: 20, y: 5 * ROW_HEIGHT + 20 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
     touch(touched, "touchmove", [{ x: 20, y: 7 * ROW_HEIGHT - 20 }]); // bottom edge of Items
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
     // Browsers send the rest of the touch to the element it started on
     expect(touched.isConnected).toBe(false);
 
@@ -186,7 +188,7 @@ describe("CharacterSheet live layout preview", () => {
     placeSection("items", 0, 1000, 800, 200);
     mouseDrag(section("cyphers"), "dragstart");
     mouseDrag(section("items"), "dragover", 600, 1120);
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
     expect(pairGrid()).not.toBeNull();
   }
 

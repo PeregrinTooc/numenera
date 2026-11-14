@@ -18,6 +18,7 @@ import {
 } from "@/components/helpers/sectionDragRender";
 import { LivePreview } from "@/components/helpers/LivePreview";
 import { EdgeAutoScroll } from "@/components/helpers/EdgeAutoScroll";
+import type { Clock } from "@/services/clock";
 
 export { LIVE_PREVIEW_DELAY_MS, LIVE_PREVIEW_SETTLE_PX } from "@/components/helpers/LivePreview";
 
@@ -46,7 +47,7 @@ export class SectionDragController {
   /** What to draw for `intent`. */
   private preview: DropPreview = {};
   /** The dwell, anchor, slide guard and layout of the live preview. */
-  private readonly livePreview = new LivePreview();
+  private readonly livePreview: LivePreview;
 
   /** Scrolls the page while a touch drag rests at a viewport edge. */
   private readonly edgeScroll = new EdgeAutoScroll((x, y) => {
@@ -56,16 +57,7 @@ export class SectionDragController {
   });
 
   /** Touch long-press → section drag. */
-  private readonly touch = new SectionTouchInput({
-    isEditMode: () => this.host.isEditMode(),
-    onActivate: (id) => this.handleTouchDragActivate(id),
-    onHover: (x, y) => {
-      this.edgeScroll.follow(x, y);
-      this.hoverAt(x, y);
-    },
-    onDrop: () => this.drop(),
-    onAbort: () => this.clearDragState(),
-  });
+  private readonly touch: SectionTouchInput;
 
   /** Native HTML5 drag and drop → section drag. */
   private readonly mouse = new SectionMouseInput({
@@ -80,15 +72,34 @@ export class SectionDragController {
   });
 
   /** The wrapper's event bindings: the inputs' stable listener objects. */
-  private readonly bindings: SectionDragBindings = {
-    dragStart: this.mouse.dragStartListener,
-    touchStart: this.touch.touchStartListener,
-    touchMove: this.touch.touchMoveListener,
-    dragEnd: () => this.mouse.handleDragEnd(),
-    contextMenu: (e) => this.touch.handleContextMenu(e),
-  };
+  private readonly bindings: SectionDragBindings;
 
-  constructor(private readonly host: SectionDragHost) {}
+  constructor(
+    private readonly host: SectionDragHost,
+    clock: Clock
+  ) {
+    this.livePreview = new LivePreview(clock);
+    this.touch = new SectionTouchInput(
+      {
+        isEditMode: () => this.host.isEditMode(),
+        onActivate: (id) => this.handleTouchDragActivate(id),
+        onHover: (x, y) => {
+          this.edgeScroll.follow(x, y);
+          this.hoverAt(x, y);
+        },
+        onDrop: () => this.drop(),
+        onAbort: () => this.clearDragState(),
+      },
+      clock
+    );
+    this.bindings = {
+      dragStart: this.mouse.dragStartListener,
+      touchStart: this.touch.touchStartListener,
+      touchMove: this.touch.touchMoveListener,
+      dragEnd: () => this.mouse.handleDragEnd(),
+      contextMenu: (e) => this.touch.handleContextMenu(e),
+    };
+  }
 
   /**
    * Render a section wrapped for layout editing (drag handle, drop preview).

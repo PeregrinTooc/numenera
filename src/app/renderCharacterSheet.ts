@@ -64,6 +64,7 @@ export async function renderCharacterSheet(
     const fileActions = createFileActions(ctx, character, app);
     ctx.currentSheet = new CharacterSheet(
       character,
+      ctx.clock,
       async () => {
         void renderCharacterSheet(ctx, FULL_CHARACTER);
         await saveCharacterState(FULL_CHARACTER);

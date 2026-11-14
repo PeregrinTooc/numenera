@@ -9,6 +9,7 @@ import type {
 } from "@/types/character";
 import { render } from "lit-html";
 import { setupTestContainer } from "./helpers/testSetup.js";
+import { ManualClock } from "@/services/manualClock";
 
 describe("State Management Components", () => {
   const getContainer = setupTestContainer();
@@ -236,6 +237,7 @@ describe("State Management Components", () => {
       const onFieldUpdate = vi.fn();
       const sheet = new CharacterSheet(
         mockCharacter,
+        new ManualClock(),
         vi.fn(),
         vi.fn(),
         vi.fn(),

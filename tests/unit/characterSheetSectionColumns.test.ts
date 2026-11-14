@@ -5,11 +5,13 @@ import { SECTION_COLUMNS_STORAGE_KEY } from "@/storage/storageConstants";
 import { getDefaultLayout, loadLayout, loadSectionColumns } from "@/storage/layoutStorage";
 import type { Layout } from "@/types/layout";
 import { createCharacterWithItems } from "../factories/character.js";
+import { ManualClock } from "@/services/manualClock";
 
 function mountSheet(): CharacterSheet {
   document.body.innerHTML = '<div id="app"></div>';
   const sheet = new CharacterSheet(
     createCharacterWithItems(),
+    new ManualClock(),
     vi.fn(),
     vi.fn(),
     vi.fn(),

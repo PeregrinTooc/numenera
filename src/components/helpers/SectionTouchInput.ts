@@ -3,6 +3,7 @@
 
 import { SectionId, isSectionId } from "@/types/layout";
 import { LongPressDrag } from "@/components/helpers/LongPressDrag";
+import type { Clock } from "@/services/clock";
 import type { SectionDragCallbacks } from "@/components/helpers/sectionDragInput";
 
 /** What the drag session does with the touch gesture. */
@@ -63,13 +64,19 @@ export class SectionTouchInput {
     passive: true,
   };
 
-  constructor(private readonly callbacks: SectionTouchCallbacks) {
-    this.longPress = new LongPressDrag<SectionId>({
-      onActivate: (id) => callbacks.onActivate(id),
-      onHover: (x, y) => callbacks.onHover(x, y),
-      onDrop: () => callbacks.onDrop(),
-      onAbort: () => callbacks.onAbort(),
-    });
+  constructor(
+    private readonly callbacks: SectionTouchCallbacks,
+    clock: Clock
+  ) {
+    this.longPress = new LongPressDrag<SectionId>(
+      {
+        onActivate: (id) => callbacks.onActivate(id),
+        onHover: (x, y) => callbacks.onHover(x, y),
+        onDrop: () => callbacks.onDrop(),
+        onAbort: () => callbacks.onAbort(),
+      },
+      clock
+    );
   }
 
   isActive(): boolean {
