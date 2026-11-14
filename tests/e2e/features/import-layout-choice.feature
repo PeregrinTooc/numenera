@@ -23,7 +23,7 @@ Feature: Choosing the layout when importing a character
         Then I should not see a layout choice prompt
         And the "Cyphers" section should appear before the "Abilities" section
         And the imported character should be shown
-        When I refresh the browser
+        When I reopen my character
         Then the "Cyphers" section should appear before the "Abilities" section
 
     Scenario: Using the imported layout
@@ -34,7 +34,7 @@ Feature: Choosing the layout when importing a character
         Then I should not see a layout choice prompt
         And the "Items" section should appear before the "Cyphers" section
         And the imported character should be shown
-        When I refresh the browser
+        When I reopen my character
         Then the "Items" section should appear before the "Cyphers" section
 
     Scenario: Escape keeps the current layout

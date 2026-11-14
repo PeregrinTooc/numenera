@@ -22,7 +22,7 @@ declare global {
       loadCorruptedCharacterBackup: typeof loadCorruptedCharacterBackup;
     };
     __testVersionHistory?: {
-      createVersion: (character: Character, description: string) => Promise<void>;
+      createVersions: (versions: { character: Character; description: string }[]) => Promise<void>;
       getAllVersions: () => Promise<CharacterVersion[]>;
       clearVersions: () => Promise<void>;
     };
@@ -50,9 +50,11 @@ export function installTestHooks(ctx: AppContext): void {
   };
 
   window.__testVersionHistory = {
-    createVersion: async (character: Character, description: string) => {
+    createVersions: async (versions) => {
       const versionHistory = await getVersionHistory();
-      await versionHistory.saveVersion(character, description);
+      for (const { character, description } of versions) {
+        await versionHistory.saveVersion(character, description);
+      }
       await ctx.actions.updateVersionNavigator(true);
     },
     getAllVersions: async () => {

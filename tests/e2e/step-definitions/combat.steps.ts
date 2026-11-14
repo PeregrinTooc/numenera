@@ -25,11 +25,11 @@ Given(
 );
 
 Given("I view my character on a wide screen", async function (this: CustomWorld) {
-  await this.character.viewOn("wide screen");
+  await this.screen.viewOn("wide screen");
 });
 
 Given("I view my character on a phone", async function (this: CustomWorld) {
-  await this.character.viewOn("phone");
+  await this.screen.viewOn("phone");
 });
 
 Then(

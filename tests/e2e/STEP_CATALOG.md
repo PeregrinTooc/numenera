@@ -26,41 +26,39 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **612** in 53 files
-- Feature step lines: **2177**
+- Step definitions: **457** in 41 files
+- Feature step lines: **1780**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
 | [ability-enhancements.steps.ts](#abilityenhancementsstepsts) | 13 | 0 |
-| [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 8 | 0 |
-| [additional-fields-textarea.steps.ts](#additionalfieldstextareastepsts) | 28 | 0 |
+| [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 5 | 0 |
+| [additional-fields-textarea.steps.ts](#additionalfieldstextareastepsts) | 13 | 0 |
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
-| [basic-info-editing-accessibility.steps.ts](#basicinfoeditingaccessibilitystepsts) | 18 | 0 |
-| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 16 | 0 |
+| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 12 | 0 |
 | [card-deletion.steps.ts](#carddeletionstepsts) | 6 | 0 |
 | [card-editing.steps.ts](#cardeditingstepsts) | 12 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 8 | 0 |
 | [card-reordering-abilities.steps.ts](#cardreorderingabilitiesstepsts) | 5 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 8 | 0 |
-| [character-display.steps.ts](#characterdisplaystepsts) | 33 | 0 |
+| [character-display.steps.ts](#characterdisplaystepsts) | 10 | 0 |
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [collection-reordering.steps.ts](#collectionreorderingstepsts) | 4 | 0 |
 | [combat.steps.ts](#combatstepsts) | 13 | 0 |
-| [common-steps.ts](#commonstepsts) | 31 | 0 |
+| [common-steps.ts](#commonstepsts) | 4 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
-| [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 13 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
 | [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 7 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 30 | 0 |
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 15 | 0 |
-| [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
-| [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
+| [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 22 | 0 |
+| [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 7 | 0 |
 | [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 11 | 0 |
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 7 | 0 |
@@ -69,23 +67,13 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [settings-gear.steps.ts](#settingsgearstepsts) | 18 | 0 |
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 3 | 0 |
-| [stat-value-editor.steps.ts](#statvalueeditorstepsts) | 8 | 0 |
 | [storage-failure.steps.ts](#storagefailurestepsts) | 8 | 0 |
 | [third-party-requests.steps.ts](#thirdpartyrequestsstepsts) | 3 | 0 |
 | [unreadable-character.steps.ts](#unreadablecharacterstepsts) | 10 | 0 |
-| [version-comparison-highlighting.steps.ts](#versioncomparisonhighlightingstepsts) | 17 | 0 |
-| [version-comparison-navigation.steps.ts](#versioncomparisonnavigationstepsts) | 12 | 0 |
-| [version-comparison-setup.steps.ts](#versioncomparisonsetupstepsts) | 12 | 0 |
-| [version-history-assertions.steps.ts](#versionhistoryassertionsstepsts) | 22 | 0 |
-| [version-history-buffer-undo-redo.steps.ts](#versionhistorybufferundoredostepsts) | 8 | 0 |
-| [version-history-given-basic.steps.ts](#versionhistorygivenbasicstepsts) | 9 | 0 |
-| [version-history-given-data.steps.ts](#versionhistorygivendatastepsts) | 5 | 0 |
-| [version-history-mixed-undo-redo.steps.ts](#versionhistorymixedundoredostepsts) | 5 | 0 |
-| [version-history-navigation.steps.ts](#versionhistorynavigationstepsts) | 13 | 0 |
-| [version-history-navigator-state.steps.ts](#versionhistorynavigatorstatestepsts) | 16 | 0 |
-| [version-history-shortcuts.steps.ts](#versionhistoryshortcutsstepsts) | 4 | 0 |
-| [version-history-squash-race.steps.ts](#versionhistorysquashracestepsts) | 3 | 0 |
-| [viewport.steps.ts](#viewportstepsts) | 1 | 0 |
+| [value-editor.steps.ts](#valueeditorstepsts) | 18 | 0 |
+| [version-comparison.steps.ts](#versioncomparisonstepsts) | 24 | 0 |
+| [version-history.steps.ts](#versionhistorystepsts) | 53 | 0 |
+| [viewport.steps.ts](#viewportstepsts) | 2 | 0 |
 
 ## ⚠️ Feature lines with no matching step definition
 
@@ -116,47 +104,29 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I select {string} from the type dropdown` | 4 | 28 |
-| Then | `the character data should have type {string}` | 1 | 62 |
-| Given | `the character has the following data:` | 1 | 5 |
-| Then | `the type dropdown label should be {string}` | 1 | 74 |
-| Then | `the type dropdown option for {string} should display as {string}` | 3 | 83 |
-| Then | `the type dropdown options should be {string}, {string}, {string}` | 1 | 50 |
-| Then | `the type dropdown should have {int} options` | 1 | 41 |
-| Then | `the type dropdown should show {string} as selected` | 6 | 33 |
+| When | `I choose {string} as my character type` | 2 | 10 |
+| Then | `my character type shows as {string}` | 5 | 14 |
+| Given | `my character's {textarea} reads {string}` | 12 | 3 |
+| Then | `the character type is labelled {string}` | 1 | 25 |
+| Then | `the character types to choose from are {string}, {string}, {string}` | 1 | 18 |
 
 ## additional-fields-textarea.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I clear the {textarea} textarea` | 4 | 45 |
-| When | `I click outside the {textarea} textarea` | 11 | 56 |
-| When | `I click the {textarea} textarea` | 20 | 41 |
-| When | `I select {string} from the mobile picker` | 1 | 191 |
-| When | `I tap outside the {textarea} textarea` | 2 | 240 |
-| When | `I tap the {textarea} textarea` | 3 | 204 |
-| When | `I tap the type dropdown` | 1 | 181 |
-| When | `I type {string} in the {textarea} textarea` | 12 | 49 |
-| When | `I type a {int} character string in the background textarea` | 1 | 121 |
-| When | `I type a {int} character string in the notes textarea` | 1 | 130 |
-| Then | `the {textarea} placeholder should be {string}` | 2 | 101 |
-| When | `the {textarea} textarea is empty` | 2 | 97 |
-| Then | `the {textarea} textarea should be empty` | 2 | 87 |
-| Then | `the {textarea} textarea should be focused` | 4 | 71 |
-| Then | `the {textarea} textarea should be readonly` | 8 | 15 |
-| Then | `the {textarea} textarea should become editable` | 2 | 219 |
-| Then | `the {textarea} textarea should have a pointer cursor` | 2 | 31 |
-| Then | `the {textarea} textarea should have an edit state visual indicator` | 2 | 78 |
-| Then | `the {textarea} textarea should not be readonly` | 4 | 62 |
-| Then | `the {textarea} textarea should show {string}` | 14 | 22 |
-| Then | `the background textarea should contain the full {int} character text` | 1 | 139 |
-| Then | `the background textarea should still be editable` | 1 | 91 |
-| Then | `the character data should have {textarea} {string}` | 5 | 109 |
-| Then | `the character data should have the full background text` | 1 | 159 |
-| Then | `the character data should have the full notes text` | 1 | 170 |
-| Then | `the mobile OS picker should open` | 1 | 186 |
-| Then | `the notes textarea should contain the full {int} character text` | 1 | 149 |
-| Then | `the virtual keyboard should appear` | 3 | 228 |
+| Then | `I can edit my {textarea}` | 2 | 64 |
+| Then | `I can still edit my {textarea}` | 1 | 68 |
+| When | `I click away from my {textarea}` | 1 | 53 |
+| When | `I click my {textarea}` | 5 | 38 |
+| When | `I tap my {textarea}` | 1 | 42 |
+| When | `I type {string} in my {textarea}` | 3 | 46 |
+| When | `I write {int} characters as my {textarea}` | 1 | 10 |
+| When | `I write {string} as my {textarea}` | 3 | 3 |
+| Then | `my {textarea} cannot be edited yet and looks clickable` | 3 | 57 |
+| Then | `my {textarea} holds all {int} characters` | 2 | 24 |
+| Then | `my {textarea} reads {string}` | 14 | 17 |
+| Then | `my empty {textarea} invites me to write with {string}` | 1 | 31 |
+| Then | `the on-screen keyboard comes up` | 1 | 72 |
 
 ## auto-save-indicator.steps.ts
 
@@ -176,49 +146,22 @@ pattern this script does not understand):
 | Then | `the save indicator should still be visible` | 1 | 114 |
 | Then | `the save timestamp should be updated` | 2 | 87 |
 
-## basic-info-editing-accessibility.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 5 |
-| Then | `focus should not leave the modal` | 1 | 18 |
-| Then | `I can cancel with Escape key` | 1 | 42 |
-| Then | `I can confirm with Enter key` | 1 | 35 |
-| Then | `I can navigate with Tab key` | 1 | 27 |
-| Then | `the backdrop should have aria-hidden={string}` | 1 | 55 |
-| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 106 |
-| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 132 |
-| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 152 |
-| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 162 |
-| Then | `the input field should be large enough for touch input` | 1 | 125 |
-| Then | `the input field should have inputmode={string} for mobile` | 1 | 78 |
-| Then | `the mobile keyboard should appear` | 1 | 72 |
-| Then | `the modal should be sized appropriately for mobile` | 1 | 64 |
-| Then | `the modal should fill most of the screen width` | 1 | 87 |
-| Then | `the modal should have role={string}` | 1 | 49 |
-| Then | `the modal should not overflow the viewport` | 1 | 96 |
-| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 142 |
-
 ## basic-info-editing.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I press Tab repeatedly` | 1 | 5 |
-| Then | `the cancel button should have an X icon` | 1 | 98 |
-| Then | `the character name should display {string}` | 7 | 44 |
-| Then | `the character name should still display {string}` | 6 | 52 |
-| Then | `the confirm button should have a checkmark icon` | 1 | 92 |
-| Then | `the descriptor should display {string}` | 4 | 66 |
-| Then | `the focus should display {string}` | 4 | 74 |
-| Then | `the input field should be of type {string}` | 1 | 35 |
-| Then | `the modal backdrop should be semi-transparent` | 1 | 104 |
-| Then | `the modal should have a cancel button with icon` | 1 | 28 |
-| Then | `the modal should have a confirm button with icon` | 1 | 21 |
-| Then | `the modal should have Numenera-themed styling` | 1 | 84 |
-| Then | `the modal should not close` | 1 | 79 |
-| Then | `the name should show a hover state indicating it's editable` | 1 | 122 |
-| Then | `the tier should display {string}` | 6 | 60 |
-| Then | `the tier should show a hover state indicating it's editable` | 1 | 133 |
+| When | `I change my {word} to {string}` | 49 | 14 |
+| When | `I change my {word} to {string} without waiting for the auto-save` | 1 | 40 |
+| When | `I change my tier to {int}` | 5 | 21 |
+| When | `I try to change my {word} to nothing` | 1 | 25 |
+| Then | `my {word} looks clickable` | 1 | 62 |
+| Given | `my character has no {word}` | 2 | 51 |
+| Then | `my character sheet shows my {word} as {string}` | 32 | 33 |
+| Then | `my character sheet shows my tier as {int}` | 4 | 47 |
+| Then | `my character sheet shows the placeholder for my {word}` | 1 | 55 |
+| Given | `my character's {word} is {string}` | 11 | 3 |
+| Given | `my character's tier is {int}` | 2 | 10 |
+| Then | `the change is refused` | 2 | 29 |
 
 ## card-deletion.steps.ts
 
@@ -227,7 +170,7 @@ pattern this script does not understand):
 | Then | `{string} is still gone the next time I open my character` | 1 | 21 |
 | When | `I discard {string}` | 4 | 10 |
 | Then | `it was discarded without my being asked to confirm` | 1 | 28 |
-| Given | `my character has the {cardKind} {string} and {string}` | 6 | 3 |
+| Given | `my character has the {cardKind} {string} and {string}` | 8 | 3 |
 | Then | `my character's {cardKind} are only {string}` | 3 | 14 |
 | Then | `the discard control of {string} is in the top-left corner of its entry` | 1 | 32 |
 
@@ -236,14 +179,14 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I cancel the card` | 7 | 32 |
-| When | `I open my character again` | 15 | 36 |
+| When | `I open my character again` | 23 | 36 |
 | When | `I save the card` | 38 | 28 |
 | When | `I set its {word} to {string}` | 120 | 21 |
 | When | `I start a new {cardType}` | 52 | 10 |
 | When | `I start editing the {cardType} {string}` | 8 | 14 |
-| Then | `my character carries {int} {cardKind}` | 36 | 54 |
-| Then | `my character carries the {cardType} {string}` | 27 | 61 |
-| Given | `my character has {int} {cardKind}` | 47 | 3 |
+| Then | `my character carries {int} {cardKind}` | 39 | 54 |
+| Then | `my character carries the {cardType} {string}` | 30 | 61 |
+| Given | `my character has {int} {cardKind}` | 48 | 3 |
 | Then | `the {cardType} {string} shows {string}` | 10 | 68 |
 | Then | `the add {cardType} button has a themed background colour` | 7 | 47 |
 | Then | `the card editor opens with empty {cardType} fields` | 7 | 40 |
@@ -265,69 +208,46 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag ability {string} before ability {string}` | 2 | 28 |
-| When | `I drag ability {string} onto cypher {string}` | 1 | 80 |
-| When | `I drag cypher {string} into the abilities section` | 1 | 64 |
-| Then | `the abilities should be in order {string}` | 5 | 49 |
-| Given | `the character has {int} abilities named {string}` | 5 | 5 |
+| When | `I drag ability {string} before ability {string}` | 2 | 27 |
+| When | `I drag ability {string} onto cypher {string}` | 1 | 79 |
+| When | `I drag cypher {string} into the abilities section` | 1 | 63 |
+| Then | `the abilities should be in order {string}` | 5 | 48 |
+| Given | `the character has {int} abilities named {string}` | 5 | 4 |
 
 ## card-reordering.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag cypher {string} after cypher {string}` | 1 | 41 |
-| When | `I drag cypher {string} before cypher {string}` | 3 | 21 |
-| When | `I hover over cypher {string}` | 1 | 91 |
-| When | `I start dragging cypher {string}` | 2 | 66 |
-| Given | `the character has {int} cyphers named {string}` | 9 | 5 |
-| Then | `the cypher {string} should have a dragging visual state` | 1 | 127 |
-| Then | `the cyphers should be in order {string}` | 7 | 110 |
-| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 138 |
+| When | `I drag cypher {string} after cypher {string}` | 1 | 40 |
+| When | `I drag cypher {string} before cypher {string}` | 3 | 20 |
+| When | `I hover over cypher {string}` | 1 | 90 |
+| When | `I start dragging cypher {string}` | 2 | 65 |
+| Given | `the character has {int} cyphers named {string}` | 9 | 4 |
+| Then | `the cypher {string} should have a dragging visual state` | 1 | 126 |
+| Then | `the cyphers should be in order {string}` | 7 | 109 |
+| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 137 |
 
 ## character-display.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 44 | 27 |
-| Then | `I should see {int} artifact displayed` | 1 | 147 |
-| Then | `I should see {int} cyphers displayed` | 1 | 110 |
-| Then | `I should see {int} oddities displayed` | 1 | 160 |
-| Then | `I should see an empty {cardTypes} section` | 4 | 173 |
-| Then | `I should see artifact {string} with level {string}` | 1 | 152 |
-| Then | `I should see cypher {string} with level {string}` | 2 | 115 |
-| Then | `I should see descriptor {string} displayed` | 1 | 45 |
-| Then | `I should see empty state for abilities` | 1 | 202 |
-| Then | `I should see empty state for background` | 1 | 184 |
-| Then | `I should see empty state for equipment` | 1 | 198 |
-| Then | `I should see empty state for notes` | 1 | 191 |
-| Then | `I should see focus {string} displayed` | 1 | 49 |
-| Then | `I should see oddity {string}` | 2 | 165 |
-| Then | `I should see sections in this order:` | 1 | 274 |
-| Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 85 |
-| Then | `I should see the character name {string}` | 3 | 32 |
-| Then | `I should see tier {string} displayed` | 1 | 36 |
-| Then | `I should see type {string} displayed` | 1 | 40 |
-| Then | `no markup from the text should be rendered as HTML` | 1 | 252 |
-| Then | `no untranslated text keys should be visible` | 6 | 53 |
-| Given | `the character has a {int}-character name without spaces` | 1 | 257 |
-| Given | `the character has empty text fields` | 1 | 180 |
-| Given | `the character has no {cardTypes}` | 4 | 169 |
-| Given | `the character has the following artifacts:` | 1 | 123 |
-| Given | `the character has the following cyphers:` | 1 | 96 |
-| Given | `the character has the following oddities:` | 1 | 137 |
-| Given | `the character has the following stats:` | 1 | 67 |
-| Given | `the character has the following text:` | 2 | 220 |
-| Then | `the character text should read exactly:` | 2 | 234 |
-| Then | `the page should not scroll horizontally` | 2 | 266 |
-| Then | `these controls should have their translated accessible label:` | 1 | 57 |
+| Given | `I am on the character sheet page` | 23 | 14 |
+| Given | `my character has every kind of entry` | 1 | 29 |
+| Given | `my character has these stats:` | 1 | 25 |
+| Given | `my character has this basic information:` | 1 | 18 |
+| Then | `my character sheet lists its sections in this order:` | 1 | 62 |
+| Then | `my character sheet shows these stats:` | 1 | 40 |
+| Then | `my character sheet's editable values and add controls have translated accessible labels` | 1 | 48 |
+| Given | `my character's name is {int} characters long without spaces` | 1 | 33 |
+| Then | `my character's name is shown as plain text, not as markup` | 1 | 55 |
+| Then | `nothing on my character sheet is left untranslated` | 1 | 44 |
 
 ## character-file-export.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `a file export should be triggered` | 1 | 27 |
-| When | `I export the character` | 6 | 19 |
+| When | `I export the character` | 5 | 19 |
 | Given | `the character has name {string}` | 3 | 5 |
 | Then | `the exported file should contain all character properties` | 2 | 39 |
 | Then | `the exported file should have an exportDate` | 2 | 88 |
@@ -353,7 +273,7 @@ pattern this script does not understand):
 | Then | `all sections should display empty state messages` | 2 | 14 |
 | When | `I click the "Load" button` | 2 | 28 |
 | Then | `the character {string} should be displayed` | 3 | 33 |
-| Given | `the character sheet is empty` | 3 | 24 |
+| Given | `the character sheet is empty` | 4 | 24 |
 | Then | `the character sheet should show empty states` | 2 | 8 |
 | Then | `the character should be displayed` | 1 | 57 |
 | Then | `the same character should still be displayed` | 1 | 63 |
@@ -362,10 +282,10 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag {string} after {string} in the {string} collection` | 1 | 78 |
-| When | `I drag {string} before {string} in the {string} collection` | 1 | 66 |
-| Given | `the {string} collection holds {string}` | 2 | 54 |
-| Then | `the {string} collection should be in order {string}` | 2 | 94 |
+| When | `I drag {string} after {string} in the {string} collection` | 1 | 77 |
+| When | `I drag {string} before {string} in the {string} collection` | 1 | 65 |
+| Given | `the {string} collection holds {string}` | 2 | 53 |
+| Then | `the {string} collection should be in order {string}` | 2 | 93 |
 
 ## combat.steps.ts
 
@@ -374,14 +294,14 @@ pattern this script does not understand):
 | Given | `I view my character on a phone` | 1 | 30 |
 | Given | `I view my character on a wide screen` | 1 | 26 |
 | Given | `my character has an attack whose name is {int} characters long without spaces` | 1 | 19 |
-| Given | `my character has the {cardType} {string}` | 2 | 12 |
+| Given | `my character has the {cardType} {string}` | 3 | 12 |
 | Given | `my character has the {cardType} {string} with:` | 3 | 5 |
-| Then | `my character's {cardKind} section says it is empty` | 2 | 55 |
+| Then | `my character's {cardKind} section says it is empty` | 8 | 55 |
 | Then | `my character's attack keeps its badges at the right edge of its card` | 1 | 83 |
 | Then | `the {cardKind} section sits above the {cardKind} section` | 1 | 76 |
 | Then | `the {cardKind} section sits left of the {cardKind} section` | 1 | 69 |
 | Then | `the {cardType} {string} is themed {word}` | 2 | 48 |
-| Then | `the {cardType} {string} shows {word} {string}` | 9 | 34 |
+| Then | `the {cardType} {string} shows {word} {string}` | 12 | 34 |
 | Then | `the {cardType} {string} shows no {word}` | 1 | 41 |
 | Then | `the attacks section shows my character's armor of {int}` | 1 | 62 |
 
@@ -389,37 +309,10 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 8 | 188 |
-| When | `I clear the input field` | 11 | 83 |
-| When | `I click on the {string} value` | 1 | 7 |
-| When | `I click on the character name {string}` | 12 | 41 |
-| When | `I click on the descriptor {string}` | 2 | 51 |
-| When | `I click on the focus {string}` | 2 | 56 |
-| When | `I click on the tier {string}` | 5 | 46 |
-| When | `I click outside the modal on the backdrop` | 1 | 129 |
-| When | `I click the "Cancel" button` | 2 | 23 |
-| When | `I click the "Confirm" button` | 23 | 18 |
-| When | `I click the "New" button` | 7 | 24 |
-| When | `I click the {badge} badge` | 23 | 32 |
-| When | `I edit the {string} field to {string}` | 35 | 113 |
-| When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 122 |
-| When | `I hover over the character name {string}` | 1 | 71 |
-| When | `I hover over the tier {string}` | 1 | 75 |
-| When | `I press the Enter key` | 1 | 151 |
-| When | `I press the Escape key` | 3 | 147 |
-| When | `I reload the page` | 36 | 155 |
-| When | `I reload the page immediately` | 1 | 168 |
-| When | `I tap on the character name {string}` | 4 | 61 |
-| When | `I tap on the tier {string}` | 1 | 66 |
-| When | `I tap outside the modal on the backdrop` | 1 | 138 |
-| When | `I tap the {badge} badge` | 2 | 36 |
-| When | `I tap the modal confirm button` | 3 | 79 |
-| When | `I type {string} in the modal input` | 33 | 87 |
-| Then | `the {string} value should display {string}` | 1 | 175 |
-| Then | `the edit modal should open` | 9 | 189 |
-| Then | `the input field should receive focus automatically` | 1 | 204 |
-| Then | `the modal input should contain {string}` | 11 | 195 |
-| Then | `the modal should close` | 15 | 196 |
+| When | `I click the "New" button` | 3 | 5 |
+| When | `I press the Escape key` | 2 | 10 |
+| When | `I reload the page` | 21 | 14 |
+| When | `I reload the page immediately` | 1 | 27 |
 
 ## data-validation.steps.ts
 
@@ -432,24 +325,6 @@ pattern this script does not understand):
 | Then | `the character should be imported successfully` | 1 | 60 |
 | Then | `the tier should have been adjusted to {string}` | 1 | 53 |
 | Then | `the tier should still be {string}` | 1 | 85 |
-
-## empty-fields-visibility.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Then | `an edit modal should appear with value {string}` | 1 | 93 |
-| When | `I click on the descriptor field` | 2 | 60 |
-| When | `I click on the focus field` | 1 | 66 |
-| When | `I enter {string} in the edit field` | 2 | 72 |
-| Given | `the character data is loaded` | 1 | 4 |
-| Then | `the descriptor field should be clickable` | 1 | 32 |
-| Then | `the descriptor field should be visible` | 1 | 22 |
-| Then | `the descriptor field should display placeholder text` | 1 | 8 |
-| Then | `the descriptor field should not show placeholder text` | 1 | 77 |
-| Then | `the focus field should be clickable` | 1 | 46 |
-| Then | `the focus field should be visible` | 1 | 27 |
-| Then | `the focus field should display placeholder text` | 1 | 15 |
-| Then | `the focus field should not show placeholder text` | 1 | 85 |
 
 ## export-enhancement.steps.ts
 
@@ -498,7 +373,7 @@ pattern this script does not understand):
 | Given | `I am on the character sheet page with {string}` | 13 | 9 |
 | When | `I navigate to the page with {string}` | 1 | 14 |
 | Then | `the artifacts heading should be {string}` | 1 | 91 |
-| Then | `the background field label should be {string}` | 2 | 109 |
+| Then | `the background field label should be {string}` | 1 | 109 |
 | Then | `the cyphers heading should be {string}` | 1 | 81 |
 | Then | `the empty abilities message should be {string}` | 1 | 157 |
 | Then | `the empty artifacts message should be {string}` | 1 | 126 |
@@ -508,12 +383,12 @@ pattern this script does not understand):
 | Then | `the empty notes message should be {string}` | 1 | 144 |
 | Then | `the empty oddities message should be {string}` | 1 | 131 |
 | Then | `the intellect stat should display {string}` | 1 | 55 |
-| Given | `the language is set to {string}` | 4 | 4 |
+| Given | `the language is set to {string}` | 3 | 4 |
 | Then | `the language should remain German` | 1 | 162 |
 | Then | `the load button should display {string}` | 3 | 29 |
 | Then | `the might stat should display {string}` | 1 | 44 |
 | Then | `the new button should display {string}` | 3 | 34 |
-| Then | `the notes field label should be {string}` | 2 | 115 |
+| Then | `the notes field label should be {string}` | 1 | 115 |
 | Then | `the oddities heading should be {string}` | 1 | 104 |
 | Then | `the page should declare its language as {string}` | 2 | 167 |
 | Then | `the page title should be {string}` | 2 | 24 |
@@ -576,16 +451,13 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `all recovery checkboxes should be unchecked` | 1 | 145 |
-| When | `I click on the recovery modifier display` | 1 | 155 |
-| When | `I click the {string} recovery checkbox` | 1 | 177 |
-| When | `I confirm the edit` | 3 | 171 |
-| When | `I enter {string} in the modifier field` | 1 | 161 |
-| When | `I select the {string} damage status` | 1 | 184 |
+| When | `I change my recovery modifier to {int}` | 1 | 155 |
+| When | `I click the {string} recovery checkbox` | 1 | 159 |
+| When | `I select the {string} damage status` | 1 | 166 |
 | Then | `I should see {int} damage status options` | 1 | 48 |
 | Then | `I should see {int} recovery roll checkboxes` | 1 | 18 |
 | Then | `I should see {string} in the recovery section` | 3 | 133 |
 | Then | `I should see a section titled {string}` | 2 | 7 |
-| Then | `I should see an edit modal` | 1 | 166 |
 | Then | `I should see damage status {string}` | 1 | 53 |
 | Then | `I should see damage status {string} with description {string}` | 2 | 58 |
 | Then | `I should see recovery roll {string} with time {string}` | 4 | 23 |
@@ -605,24 +477,13 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `the Armor badge should show {string}` | 4 | 127 |
-| Then | `the character data should have armor {int}` | 1 | 181 |
-| Then | `the character data should have currentXp {int}` | 1 | 151 |
-| Then | `the character data should have effort {int}` | 1 | 201 |
-| Then | `the character data should have maxCyphers {int}` | 1 | 191 |
-| Then | `the character data should have shins {int}` | 1 | 171 |
-| Then | `the character data should have totalXp {int}` | 1 | 161 |
-| Given | `the character has {int} {resource}` | 13 | 88 |
-| Given | `the character has {int} current XP and {int} total XP` | 9 | 6 |
-| Given | `the character has {resource} {int}` | 9 | 95 |
-| Given | `the character was saved with a single legacy XP value of {int}` | 1 | 30 |
-| Then | `the Current XP badge should show {string}` | 7 | 103 |
-| Then | `the Effort badge should show {string}` | 3 | 143 |
-| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 135 |
-| Then | `the modal confirm button should be disabled` | 2 | 211 |
-| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 216 |
-| Then | `the Shins badge should show {string}` | 5 | 119 |
-| Then | `the Total XP badge should show {string}` | 5 | 111 |
+| Then | `I am told why` | 1 | 45 |
+| When | `I change my {resourceName} to {int}` | 7 | 24 |
+| When | `I try to change my {resourceName} to {string}` | 1 | 31 |
+| Given | `my character has {int} current XP and {int} total XP` | 3 | 3 |
+| Then | `my character sheet shows my {resourceName} as {int}` | 12 | 38 |
+| Given | `my character was saved with a single legacy XP value of {int}` | 1 | 10 |
+| Given | `my character's {resourceName} is {int}` | 7 | 17 |
 
 ## section-columns.steps.ts
 
@@ -641,17 +502,17 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 50 |
-| When | `I hold the {string} section over the {zone} of the {string} section as the window shows it` | 1 | 59 |
-| When | `I keep still for a moment` | 9 | 88 |
-| When | `I release the section outside the sheet` | 2 | 93 |
-| When | `I release the section where it is` | 1 | 106 |
-| Then | `no drop preview should be shown` | 1 | 143 |
-| Given | `the {string} section is at the top of the window` | 1 | 66 |
-| Then | `the {string} section should not have moved up or down on screen` | 1 | 75 |
-| Then | `the {string} section should preview {string} in its place` | 1 | 122 |
-| Then | `the {string} section should preview {string} on its right` | 1 | 112 |
-| Then | `the row of {string} should preview {string} below it` | 1 | 132 |
+| When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 49 |
+| When | `I hold the {string} section over the {zone} of the {string} section as the window shows it` | 1 | 58 |
+| When | `I keep still for a moment` | 9 | 87 |
+| When | `I release the section outside the sheet` | 2 | 92 |
+| When | `I release the section where it is` | 1 | 105 |
+| Then | `no drop preview should be shown` | 1 | 142 |
+| Given | `the {string} section is at the top of the window` | 1 | 65 |
+| Then | `the {string} section should not have moved up or down on screen` | 1 | 74 |
+| Then | `the {string} section should preview {string} in its place` | 1 | 121 |
+| Then | `the {string} section should preview {string} on its right` | 1 | 111 |
+| Then | `the row of {string} should preview {string} below it` | 1 | 131 |
 
 ## section-reordering.steps.ts
 
@@ -697,9 +558,9 @@ pattern this script does not understand):
 | Given | `I am viewing the character sheet` | 1 | 5 |
 | When | `I click outside the settings panel` | 1 | 53 |
 | When | `I click the British flag icon` | 1 | 78 |
-| When | `I click the German flag icon` | 5 | 74 |
+| When | `I click the German flag icon` | 4 | 74 |
 | When | `I click the settings gear icon` | 2 | 37 |
-| Given | `I have opened the settings panel` | 12 | 49 |
+| Given | `I have opened the settings panel` | 8 | 49 |
 | Then | `I should be able to click the settings gear icon` | 1 | 30 |
 | Then | `I should see a {string} option` | 1 | 109 |
 | Then | `I should see a settings gear icon in the header` | 1 | 22 |
@@ -726,22 +587,9 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I change my {word} {word} to {int}` | 4 | 10 |
-| Then | `my character sheet shows my {word} {word} as {int}` | 8 | 17 |
-| Given | `my character's {word} {word} is {int}` | 6 | 3 |
-
-## stat-value-editor.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| When | `I cancel the value editor` | 1 | 19 |
-| When | `I click my {word} {word}` | 4 | 3 |
-| When | `I enter {int} in the value editor` | 3 | 7 |
-| When | `I press Enter in the value editor` | 1 | 11 |
-| When | `I press Escape in the value editor` | 1 | 15 |
-| Then | `the value editor has the keyboard focus` | 1 | 27 |
-| Then | `the value editor is closed` | 3 | 31 |
-| Then | `the value editor is open showing {int}` | 1 | 23 |
+| When | `I change my {stat} {word} to {int}` | 6 | 10 |
+| Then | `my character sheet shows my {stat} {word} as {int}` | 9 | 17 |
+| Given | `my character's {stat} {word} is {int}` | 6 | 3 |
 
 ## storage-failure.steps.ts
 
@@ -779,195 +627,120 @@ pattern this script does not understand):
 | Then | `the kept unreadable data should be {string}` | 4 | 72 |
 | Given | `the stored character data is the unreadable text {string}` | 4 | 9 |
 
-## version-comparison-highlighting.steps.ts
+## value-editor.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the left pane's restore button` | 2 | 82 |
-| When | `I click the return to editing button` | 2 | 120 |
-| When | `I click the right pane's restore button` | 1 | 86 |
-| Then | `no add or delete button should be present in the comparison view` | 1 | 131 |
-| Then | `no field in the comparison view should be editable` | 1 | 124 |
-| Then | `the {string} field should be highlighted as changed in the {word} pane` | 2 | 10 |
-| Then | `the {string} field should not be highlighted in the {word} pane` | 2 | 19 |
-| Then | `the {word} pane should show the newly restored version` | 1 | 95 |
-| Then | `the added cypher card should be highlighted as added in the right pane` | 1 | 28 |
-| Then | `the left pane should not show the added cypher card` | 1 | 36 |
-| Then | `the modified cypher card should be highlighted as changed in the {word} pane` | 2 | 56 |
-| Then | `the new cypher name should be highlighted as added in the right pane` | 1 | 74 |
-| Then | `the old cypher name should be highlighted as removed in the left pane` | 1 | 64 |
-| Then | `the removed cypher card should be highlighted as removed in the left pane` | 1 | 41 |
-| Then | `the right pane should not show the removed cypher card` | 1 | 51 |
-| Then | `the right pane should still show the same character name as before the restore` | 1 | 105 |
-| Then | `the right pane's restore button should be disabled` | 1 | 90 |
+| When | `I cancel the value editor` | 1 | 19 |
+| When | `I click my {word} {word}` | 11 | 3 |
+| When | `I click outside the value editor` | 1 | 35 |
+| When | `I enter {int} in the value editor` | 4 | 7 |
+| When | `I press Enter in the value editor` | 1 | 11 |
+| When | `I press Escape in the value editor` | 1 | 15 |
+| Then | `my {word} {word} is big enough to tap` | 1 | 77 |
+| Then | `my {word} {word} looks clickable` | 1 | 70 |
+| Then | `the value editor dims the sheet behind it` | 1 | 54 |
+| Then | `the value editor fits the screen` | 1 | 62 |
+| Then | `the value editor has an icon on its confirm and cancel buttons` | 1 | 47 |
+| Then | `the value editor has the keyboard focus` | 1 | 27 |
+| Then | `the value editor is a dialog` | 1 | 58 |
+| Then | `the value editor is closed` | 4 | 31 |
+| Then | `the value editor is open showing {int}` | 1 | 23 |
+| Then | `the value editor keeps the keyboard focus inside itself` | 1 | 43 |
+| Then | `the value editor shows a numeric keypad` | 1 | 39 |
+| Then | `the value editor's controls are big enough to tap` | 1 | 66 |
 
-## version-comparison-navigation.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| When | `I click the left pane's backward arrow` | 3 | 5 |
-| When | `I click the left pane's backward arrow {int} time(s)` | 2 | 17 |
-| When | `I click the left pane's forward arrow` | 1 | 9 |
-| When | `I click the right pane's backward arrow` | 1 | 13 |
-| When | `I click the right pane's backward arrow {int} time(s)` | 1 | 26 |
-| Then | `the comparison header should indicate there are no differences` | 1 | 90 |
-| Then | `the comparison header should list every changed field, not just the top 3` | 1 | 65 |
-| Then | `the comparison header should reflect the new left pane version` | 1 | 80 |
-| Then | `the left pane should show version {int}` | 5 | 54 |
-| Given | `the left pane shows version {int}` | 2 | 46 |
-| Then | `the right pane should show version {int}` | 4 | 58 |
-| Given | `the right pane shows version {int}` | 1 | 50 |
-
-## version-comparison-setup.steps.ts
+## version-comparison.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `comparison view is enabled in settings` | 23 | 19 |
-| Then | `comparison view should show as enabled in settings` | 1 | 35 |
-| Given | `I am viewing the comparison view` | 19 | 39 |
-| When | `I close the settings panel` | 2 | 30 |
-| When | `I enable comparison view in settings` | 2 | 23 |
-| Given | `the character has a version where a cypher was renamed` | 1 | 111 |
-| Given | `the character has a version with a modified cypher effect` | 1 | 92 |
-| Given | `the character has a version with a name change` | 3 | 57 |
-| Given | `the character has a version with a removed cypher` | 1 | 81 |
-| Given | `the character has a version with an added cypher` | 1 | 67 |
-| Then | `the comparison view should be visible` | 3 | 44 |
-| Then | `the comparison view should not be visible` | 3 | 48 |
+| Then | `comparison view is still switched on in settings` | 1 | 45 |
+| Given | `comparison view is switched on in settings` | 23 | 4 |
+| Given | `I am viewing the comparison view` | 19 | 12 |
+| When | `I move the {pane} pane to version {int}` | 4 | 30 |
+| When | `I restore the version in the {pane} pane` | 3 | 37 |
+| When | `I return to editing` | 2 | 41 |
+| When | `I step the {pane} pane back to the previous version` | 4 | 16 |
+| When | `I step the {pane} pane forward to the next version` | 1 | 23 |
+| When | `I switch on comparison view in settings` | 2 | 8 |
+| Then | `my history gains a version restored from version {int}` | 2 | 79 |
+| Then | `nothing in the comparison view can be edited` | 1 | 132 |
+| Then | `the {pane} pane can restore its version` | 1 | 71 |
+| Then | `the {pane} pane cannot restore its version` | 1 | 75 |
+| Then | `the {pane} pane does not show the cypher {string}` | 4 | 125 |
+| Then | `the {pane} pane shows my character as it was in version {int}` | 1 | 64 |
+| Then | `the {pane} pane shows version {int}` | 10 | 57 |
+| Then | `the {word} is highlighted yellow in both panes` | 1 | 97 |
+| Then | `the {word} is not highlighted in either pane` | 1 | 104 |
+| Then | `the comparison header lists exactly these changes` | 4 | 86 |
+| Then | `the comparison header says there are no differences` | 1 | 93 |
+| Then | `the comparison view is not shown` | 3 | 53 |
+| Then | `the comparison view is shown` | 3 | 49 |
+| Then | `the cypher {string} is highlighted {colour} in both panes` | 1 | 118 |
+| Then | `the cypher {string} is highlighted {colour} in the {pane} pane` | 4 | 111 |
 
-## version-history-assertions.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Then | `a new version should be created` | 1 | 109 |
-| Then | `a new version should be created with description {string}` | 3 | 150 |
-| Then | `I click the backward navigation arrow {int} times` | 1 | 176 |
-| Then | `I should be viewing the latest version` | 3 | 114 |
-| Then | `I should navigate to version {int}` | 2 | 121 |
-| Then | `the character data should be correct for version {int}` | 1 | 130 |
-| Then | `the character equipment should match version {int} equipment` | 2 | 54 |
-| Then | `the character name should match version {int} name` | 4 | 31 |
-| Then | `the character stats should match version {int} stats` | 2 | 42 |
-| Then | `the exported file should contain version {int} data` | 1 | 86 |
-| Then | `the exported file should not contain version history` | 1 | 96 |
-| Then | `the exported file should use the current portrait` | 1 | 102 |
-| Then | `the import button should be disabled` | 1 | 190 |
-| Then | `the import button should be enabled` | 2 | 185 |
-| Then | `the oldest version should have been removed` | 2 | 171 |
-| Then | `the portrait should remain unchanged` | 3 | 74 |
-| Then | `the timestamp should be in human-readable format` | 1 | 13 |
-| Then | `the timestamp should show a relative time like {string}` | 1 | 21 |
-| Then | `the UI should remain responsive` | 2 | 142 |
-| Then | `the version description should contain {string}` | 14 | 5 |
-| Then | `the version description should contain the tier change` | 1 | 163 |
-| Then | `the warning banner should not be visible` | 2 | 158 |
-
-## version-history-buffer-undo-redo.steps.ts
+## version-history.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I press {string} again` | 2 | 39 |
-| When | `I press {string} again before the squash timer expires` | 2 | 71 |
-| When | `I press {string} before the squash timer expires` | 11 | 4 |
-| Then | `I should see {int} versions in history` | 4 | 128 |
-| Then | `no new version should be created yet` | 2 | 114 |
-| Then | `the changes should be reapplied` | 2 | 136 |
-| Then | `the character name should be {string}` | 10 | 106 |
-| Then | `the character name should revert to the original value` | 2 | 120 |
-
-## version-history-given-basic.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Given | `I am viewing that version` | 3 | 133 |
-| Given | `I am viewing the latest version` | 6 | 47 |
-| Given | `I am viewing version {int}` | 8 | 51 |
-| Given | `the character has {int} versions in history` | 45 | 18 |
-| Given | `the character has a later version` | 1 | 62 |
-| Given | `the character has a portrait image` | 2 | 103 |
-| Given | `the character has a version from {int} minutes ago` | 1 | 112 |
-| Given | `the character has a version with multiple basic info changes` | 2 | 73 |
-| Given | `the character has no version history yet` | 7 | 6 |
-
-## version-history-given-data.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Given | `I have made buffered edits that were undone` | 2 | 117 |
-| Given | `the character has {int} versions with different data` | 3 | 63 |
-| Given | `the character has {int} versions with different names` | 2 | 95 |
-| Given | `the character has a legacy version with a {string} description for a name change and an added ability` | 1 | 34 |
-| Given | `the character has a legacy version with an {string} description for an added cypher` | 2 | 5 |
-
-## version-history-mixed-undo-redo.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| When | `I make {int} rapid edits that are buffered` | 1 | 5 |
-| When | `I press {string} to navigate to previous version` | 1 | 62 |
-| When | `I press {string} to undo buffered changes` | 1 | 25 |
-| Then | `I should be viewing version {int}` | 1 | 97 |
-| When | `I wait for squash timer to complete` | 19 | 58 |
-
-## version-history-navigation.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| When | `I click the backward navigation arrow` | 20 | 11 |
-| When | `I click the backward navigation arrow again` | 1 | 15 |
-| When | `I click the forward navigation arrow` | 3 | 23 |
-| When | `I click the forward navigation arrow again` | 1 | 27 |
-| When | `I click the restore button in the warning banner` | 3 | 31 |
-| When | `I click the return to latest button` | 1 | 19 |
-| When | `I create a new version by editing the name` | 1 | 74 |
-| When | `I navigate backward` | 1 | 46 |
-| When | `I navigate forward twice` | 1 | 50 |
-| When | `I navigate to version {int}` | 8 | 35 |
-| When | `I rapidly click the backward arrow {int} times` | 1 | 55 |
-| When | `I refresh the browser` | 10 | 69 |
-| When | `I view the character sheet` | 4 | 6 |
-
-## version-history-navigator-state.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Then | `all edit controls should be enabled` | 2 | 9 |
-| Then | `both navigation arrows should be enabled` | 2 | 71 |
-| Then | `no warning banner should be visible` | 6 | 27 |
-| Then | `the backward arrow should be disabled` | 1 | 83 |
-| Then | `the backward arrow should be enabled` | 3 | 32 |
-| Then | `the change description should be displayed` | 1 | 57 |
-| Then | `the character data should match version {int}` | 5 | 42 |
-| Then | `the forward arrow should be disabled` | 4 | 37 |
-| Then | `the forward arrow should be enabled` | 1 | 88 |
-| Then | `the timestamp should be displayed` | 1 | 64 |
-| Then | `the version counter should show {string}` | 25 | 19 |
-| Then | `the version navigator should be visible` | 5 | 14 |
-| Then | `the version navigator should not be visible` | 2 | 4 |
-| Then | `the warning banner should be visible` | 7 | 78 |
-| Then | `the warning banner should contain text {string}` | 1 | 93 |
-| Then | `the warning banner should have a restore button` | 1 | 101 |
-
-## version-history-shortcuts.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| When | `I press {string}` | 5 | 24 |
-| When | `I wait for {int} milliseconds` | 4 | 16 |
-| When | `the squash timer has completed` | 2 | 20 |
-| Then | `the undo buffer should contain exactly {int} changes` | 1 | 5 |
-
-## version-history-squash-race.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| When | `the held version save is released` | 1 | 42 |
-| When | `the squash starts while version saves are held` | 1 | 31 |
-| Given | `version saves are held` | 1 | 16 |
+| Then | `I am not warned about an old version` | 5 | 167 |
+| Then | `I am on the latest version` | 3 | 175 |
+| Then | `I am warned that I am viewing an old version` | 7 | 163 |
+| Then | `I can edit my character` | 2 | 136 |
+| Then | `I can import a character` | 2 | 121 |
+| Then | `I can restore this version` | 1 | 171 |
+| Then | `I cannot import a character` | 1 | 125 |
+| When | `I export what I am viewing` | 1 | 113 |
+| When | `I go to the oldest version` | 1 | 58 |
+| When | `I go to version {int}` | 15 | 54 |
+| When | `I redo with Ctrl+Shift+Z` | 1 | 105 |
+| When | `I redo with Ctrl+Y` | 8 | 101 |
+| When | `I reopen my character` | 10 | 109 |
+| When | `I restore this version` | 3 | 77 |
+| When | `I return to the latest version` | 1 | 81 |
+| Then | `I see my character as it was in version {int}` | 12 | 201 |
+| When | `I step back {int} times in quick succession` | 1 | 70 |
+| When | `I step back to the previous version` | 24 | 62 |
+| When | `I step forward to the next version` | 4 | 66 |
+| When | `I undo with Ctrl+Z` | 19 | 97 |
+| Given | `my character has a history of {int} versions` | 46 | 11 |
+| Given | `my character has a history of {int} versions with different data` | 1 | 18 |
+| Given | `my character has a portrait` | 3 | 50 |
+| Given | `my character has no history yet` | 5 | 4 |
+| Then | `my character sheet shows the name it had before my edits` | 3 | 129 |
+| When | `my edits have settled into a version` | 26 | 85 |
+| When | `my edits start to be saved as a version` | 1 | 89 |
+| Given | `my history has a version in which I added the cypher {string}` | 1 | 245 |
+| Given | `my history has a version in which I changed` | 1 | 231 |
+| Given | `my history has a version in which I changed my name to {string}, followed by one in which I changed my tier to {int}` | 1 | 238 |
+| Given | `my history has a version in which I changed the effect of the cypher {string}` | 1 | 259 |
+| Given | `my history has a version in which I removed the cypher {string}` | 1 | 252 |
+| Given | `my history has a version in which I renamed the cypher {string} to {string}` | 1 | 266 |
+| Given | `my history holds an old version recorded as {string} for a name change and an added ability` | 1 | 39 |
+| Given | `my history holds an old version recorded as {string} for an added cypher` | 2 | 32 |
+| Given | `my Might pool went from {int} to {int} to {int}` | 1 | 25 |
+| Then | `my portrait is unchanged` | 3 | 212 |
+| Given | `saving a version is held up` | 1 | 46 |
+| Then | `the back control is available` | 4 | 147 |
+| Then | `the back control is unavailable` | 1 | 151 |
+| Then | `the export carries no version history` | 1 | 223 |
+| Then | `the export holds version {int} of my character` | 1 | 216 |
+| Then | `the export keeps my current portrait` | 1 | 227 |
+| Then | `the forward control is available` | 3 | 155 |
+| Then | `the forward control is unavailable` | 3 | 159 |
+| When | `the held-up save goes through` | 1 | 93 |
+| Then | `the navigator dates this version` | 1 | 190 |
+| Then | `the navigator describes this version` | 1 | 179 |
+| Then | `the navigator describes this version as {string}` | 15 | 183 |
+| Then | `the navigator gives the age of this version in relative terms` | 1 | 194 |
+| Then | `the navigator is hidden` | 2 | 117 |
+| Then | `the navigator shows version {int} of {int}` | 28 | 140 |
+| Then | `the original version has been dropped` | 2 | 208 |
 
 ## viewport.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 49 | 9 |
+| Then | `the page should not scroll horizontally` | 2 | 12 |
+| Given | `the viewport is {int} pixels wide` | 38 | 9 |
 

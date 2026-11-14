@@ -4,8 +4,6 @@ import { CustomWorld } from "./world";
 import { resolveDevice } from "./device.js";
 import { TestStorageHelper } from "./testStorageHelper.js";
 import { DOMHelpers } from "./dom-helpers.js";
-import { ModalDsl } from "./modal.js";
-import { FieldsDsl } from "./fields.js";
 import { SetupDsl } from "./setup.js";
 import { CharacterDsl } from "./character.js";
 import { PlaywrightSheetDriver } from "./sheetDriver.js";
@@ -13,8 +11,19 @@ import { CardEditorDsl } from "./cardEditor.js";
 import { PlaywrightCardEditorDriver } from "./cardEditorDriver.js";
 import { ValueEditorDsl } from "./valueEditor.js";
 import { PlaywrightValueEditorDriver } from "./valueEditorDriver.js";
+import { AdditionalFieldsDsl } from "./additionalFields.js";
+import { PlaywrightInlineFieldsDriver } from "./inlineFieldsDriver.js";
 import { LayoutDsl } from "./layout.js";
 import { MouseInput, TouchInput } from "./sectionInput.js";
+import { ScreenDsl } from "./screen.js";
+import { PlaywrightViewportDriver } from "./viewportDriver.js";
+import { VersionHistoryDsl } from "./versionHistory.js";
+import { HistorySeedDsl } from "./historySeed.js";
+import { ComparisonDsl } from "./comparison.js";
+import { PlaywrightComparisonDriver } from "./comparisonDriver.js";
+import { waitForInitialVersionSaved } from "./app-ready.js";
+import { PlaywrightVersionHistoryDriver } from "./versionHistoryDriver.js";
+import { PlaywrightVersionSaveDriver } from "./versionSaveDriver.js";
 import { BASE_URL } from "./serverUrl.js";
 
 let browser: Browser;
@@ -50,21 +59,37 @@ Before(async function (this: CustomWorld, { pickle }) {
   });
   this.page = await this.context.newPage();
   this.dom = new DOMHelpers(this.page);
-  this.modal = new ModalDsl(this.page);
-  this.fields = new FieldsDsl(this.page);
   this.setup = new SetupDsl(this);
   const valueEditor = new PlaywrightValueEditorDriver(this.page);
   this.character = new CharacterDsl(new PlaywrightSheetDriver(this.page), this.setup, valueEditor);
   this.valueEditor = new ValueEditorDsl(valueEditor);
+  this.additionalFields = new AdditionalFieldsDsl(new PlaywrightInlineFieldsDriver(this.page));
   this.cardEditor = new CardEditorDsl(new PlaywrightCardEditorDriver(this.page));
+  const viewport = new PlaywrightViewportDriver(this.page);
+  this.screen = new ScreenDsl(viewport);
   this.layout = new LayoutDsl(
-    DEVICE.sectionInput === "touch" ? new TouchInput(this.page) : new MouseInput(this.page)
+    DEVICE.sectionInput === "touch"
+      ? new TouchInput(this.page, viewport)
+      : new MouseInput(this.page, viewport)
   );
 
   // Initialize storage helper before navigation, so the Before hook's own
   // storage clearing goes through the same adapter-backed helper every step
   // uses, instead of a one-off inline page.evaluate.
   this.storageHelper = new TestStorageHelper(this.page);
+  const historyDriver = new PlaywrightVersionHistoryDriver(this.page, this.storageHelper);
+  this.historySeed = new HistorySeedDsl(historyDriver, this.setup);
+  this.history = new VersionHistoryDsl(
+    historyDriver,
+    new PlaywrightVersionSaveDriver(this.page),
+    this.historySeed,
+    this.character
+  );
+  this.comparison = new ComparisonDsl(
+    new PlaywrightComparisonDriver(this.page, this.storageHelper),
+    this.history,
+    this.historySeed
+  );
 
   this.page.on("console", (msg) => {
     const text = msg.text();
@@ -157,7 +182,13 @@ Before(async function (this: CustomWorld, { pickle }) {
   // opened its own connections to these exact databases. A delete request
   // against a database the same page holds open fires "blocked" instead of
   // succeeding; clearing through the already-open connections avoids that.
+  //
+  // On a fresh store the app saves its initial version at the end of its
+  // asynchronous boot, which page.goto can return before. Clearing before that
+  // save lands lets it arrive afterwards as a stale version, which the next boot
+  // then reconciles into an extra one.
   await this.page.goto(BASE_URL);
+  await waitForInitialVersionSaved(this.page);
   await this.storageHelper.clearStorage();
   await this.storageHelper.clearVersions();
 

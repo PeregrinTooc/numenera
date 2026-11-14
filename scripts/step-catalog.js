@@ -88,7 +88,7 @@ function readFeatureSteps() {
 
 const OUTLINE = "<[^>]+>"; // Scenario Outline placeholder
 const PARAM = {
-  string: `(?:"[^"]*"|'[^']*'|${OUTLINE})`,
+  string: `(?:"(?:\\\\.|[^"\\\\])*"|'(?:\\\\.|[^'\\\\])*'|${OUTLINE})`,
   int: `(?:-?\\d+|${OUTLINE})`,
   float: `(?:-?\\d+(?:\\.\\d+)?|${OUTLINE})`,
   word: `(?:\\S+|${OUTLINE})`,

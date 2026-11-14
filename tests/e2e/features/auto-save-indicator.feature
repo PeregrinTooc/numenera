@@ -8,7 +8,7 @@ Feature: Auto-Save Indicator
 
     Scenario: Save indicator appears after first edit
         Given the character sheet is displayed
-        When I edit the "character name" field to "Test Hero"
+        When I change my name to "Test Hero"
         Then the save indicator should be visible
         And the save indicator should show a timestamp
         And the save indicator should contain "Last saved:"
@@ -16,10 +16,10 @@ Feature: Auto-Save Indicator
     @fake-clock
     Scenario: Save indicator updates timestamp on subsequent edits
         Given the character sheet is displayed
-        And I edit the "character name" field to "Test Hero"
+        And I change my name to "Test Hero"
         And I note the current save timestamp
         When I wait for 1 second
-        And I edit the "tier" field to "2"
+        And I change my tier to 2
         Then the save timestamp should be updated
 
     @fake-clock
@@ -31,20 +31,20 @@ Feature: Auto-Save Indicator
 
     Scenario: Save indicator persists across sections
         Given the character sheet is displayed
-        When I edit the "character name" field to "Test Hero"
+        When I change my name to "Test Hero"
         And the save indicator should be visible
-        When I edit the "Might Pool" field to "15"
+        When I change my Might pool to 15
         Then the save indicator should still be visible
         And the save timestamp should be updated
 
     Scenario: Save indicator is positioned in lower-right corner
         Given the character sheet is displayed
-        When I edit the "character name" field to "Test Hero"
+        When I change my name to "Test Hero"
         Then the save indicator should be in the lower-right corner
         And the save indicator should have subtle styling
 
     Scenario: Edit made immediately before reload is not lost
         Given the character sheet is displayed
-        When I edit the "character name" field to "Quick Reload Hero" without waiting for the auto-save
+        When I change my name to "Quick Reload Hero" without waiting for the auto-save
         And I reload the page immediately
-        Then the character name should display "Quick Reload Hero"
+        Then my character sheet shows my name as "Quick Reload Hero"

@@ -3,243 +3,232 @@ Feature: Version Comparison View
     I want to see two versions side by side with differences highlighted
     So that I can understand exactly what changed between them
 
+    # Comparison view is unavailable below 768px by design, so every scenario that
+    # opens it is tagged @not-phone; the phone-width scenario covers that behaviour.
+    # Highlight colours are part of the requirement: yellow for changed, green for
+    # added, red for removed.
+
     Background:
-        Given I am on the character sheet page
-        And the character has no version history yet
+        Given my character has no history yet
 
     Scenario: Comparison view is off by default
-        Given the character has 3 versions in history
-        When I click the backward navigation arrow
-        Then the version counter should show "Version 2 of 3"
-        And the comparison view should not be visible
+        Given my character has a history of 3 versions
+        When I step back to the previous version
+        Then the navigator shows version 2 of 3
+        And the comparison view is not shown
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Enabling comparison view in settings
-        Given the character has 3 versions in history
-        And I have opened the settings panel
-        When I enable comparison view in settings
-        And I close the settings panel
-        And I click the backward navigation arrow
-        Then the comparison view should be visible
+        Given my character has a history of 3 versions
+        When I switch on comparison view in settings
+        And I step back to the previous version
+        Then the comparison view is shown
 
     Scenario: Comparison view preference persists across reload
-        Given I have opened the settings panel
-        When I enable comparison view in settings
-        And I close the settings panel
-        And I refresh the browser
-        And I have opened the settings panel
-        Then comparison view should show as enabled in settings
+        When I switch on comparison view in settings
+        And I reopen my character
+        Then comparison view is still switched on in settings
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Opening comparison view defaults to the last two versions
-        Given comparison view is enabled in settings
-        And the character has 5 versions in history
-        When I click the backward navigation arrow
-        Then the comparison view should be visible
-        And the right pane should show version 5
-        And the left pane should show version 4
+        Given comparison view is switched on in settings
+        And my character has a history of 5 versions
+        When I step back to the previous version
+        Then the comparison view is shown
+        And the right pane shows version 5
+        And the left pane shows version 4
 
     Scenario: Comparison view is unavailable with fewer than two versions
-        Given comparison view is enabled in settings
-        And the character has no version history yet
-        Then the version navigator should not be visible
+        Given comparison view is switched on in settings
+        Then the navigator is hidden
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Navigating the left pane does not move the right pane
-        Given comparison view is enabled in settings
-        And the character has 5 versions in history
+        Given comparison view is switched on in settings
+        And my character has a history of 5 versions
         And I am viewing the comparison view
-        When I click the left pane's backward arrow
-        Then the left pane should show version 3
-        And the right pane should show version 5
+        When I step the left pane back to the previous version
+        Then the left pane shows version 3
+        And the right pane shows version 5
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Navigating the right pane does not move the left pane
-        Given comparison view is enabled in settings
-        And the character has 5 versions in history
+        Given comparison view is switched on in settings
+        And my character has a history of 5 versions
         And I am viewing the comparison view
-        When I click the right pane's backward arrow
-        Then the right pane should show version 4
-        And the left pane should show version 4
+        When I step the right pane back to the previous version
+        Then the right pane shows version 4
+        And the left pane shows version 4
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Either pane can be moved to an arbitrary version
-        Given comparison view is enabled in settings
-        And the character has 10 versions in history
+        Given comparison view is switched on in settings
+        And my character has a history of 10 versions
         And I am viewing the comparison view
-        When I click the left pane's backward arrow 8 times
-        And I click the right pane's backward arrow 1 time
-        Then the left pane should show version 1
-        And the right pane should show version 9
+        When I move the left pane to version 1
+        And I move the right pane to version 9
+        Then the left pane shows version 1
+        And the right pane shows version 9
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Header lists every changed field between the two panes
-        Given comparison view is enabled in settings
-        And the character has a version with multiple basic info changes
+        Given comparison view is switched on in settings
+        And my history has a version in which I changed
+            | Field      | Value              |
+            | name       | Changed Name       |
+            | descriptor | Changed Descriptor |
+            | type       | Changed Type       |
+            | focus      | Changed Focus      |
         And I am viewing the comparison view
-        When I click the left pane's backward arrow
-        Then the comparison header should list every changed field, not just the top 3
+        Then the comparison header lists exactly these changes
+            | Changed name       |
+            | Changed type       |
+            | Changed descriptor |
+            | Changed focus      |
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Header updates when either pane moves
-        Given comparison view is enabled in settings
-        And the character has 5 versions with different data
+        Given comparison view is switched on in settings
+        And my history has a version in which I changed my name to "Renamed", followed by one in which I changed my tier to 4
         And I am viewing the comparison view
-        When I click the left pane's backward arrow
-        Then the comparison header should reflect the new left pane version
+        Then the comparison header lists exactly these changes
+            | Changed tier |
+        When I step the left pane back to the previous version
+        Then the comparison header lists exactly these changes
+            | Changed name |
+            | Changed tier |
+        When I step the right pane back to the previous version
+        Then the comparison header lists exactly these changes
+            | Changed name |
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Header shows no differences when both panes show the same version
-        Given comparison view is enabled in settings
-        And the character has 5 versions in history
+        Given comparison view is switched on in settings
+        And my character has a history of 5 versions
         And I am viewing the comparison view
-        When I click the left pane's forward arrow
-        Then the left pane should show version 5
-        And the comparison header should indicate there are no differences
+        When I step the left pane forward to the next version
+        Then the left pane shows version 5
+        And the comparison header says there are no differences
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: A changed scalar field is highlighted yellow in both panes
-        Given comparison view is enabled in settings
-        And the character has a version with a name change
+        Given comparison view is switched on in settings
+        And my character has a history of 2 versions
         And I am viewing the comparison view
-        Then the "character name" field should be highlighted as changed in the left pane
-        And the "character name" field should be highlighted as changed in the right pane
+        Then the name is highlighted yellow in both panes
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: An added cypher is highlighted green in the right pane only
-        Given comparison view is enabled in settings
-        And the character has a version with an added cypher
+        Given comparison view is switched on in settings
+        And my history has a version in which I added the cypher "Stim (Injector)"
         And I am viewing the comparison view
-        Then the added cypher card should be highlighted as added in the right pane
-        And the left pane should not show the added cypher card
+        Then the cypher "Stim (Injector)" is highlighted green in the right pane
+        And the left pane does not show the cypher "Stim (Injector)"
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: A removed cypher is highlighted red in the left pane only
-        Given comparison view is enabled in settings
-        And the character has a version with a removed cypher
+        Given comparison view is switched on in settings
+        And my history has a version in which I removed the cypher "Stim (Injector)"
         And I am viewing the comparison view
-        Then the removed cypher card should be highlighted as removed in the left pane
-        And the right pane should not show the removed cypher card
+        Then the cypher "Stim (Injector)" is highlighted red in the left pane
+        And the right pane does not show the cypher "Stim (Injector)"
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: A modified cypher is highlighted yellow in both panes
-        Given comparison view is enabled in settings
-        And the character has a version with a modified cypher effect
+        Given comparison view is switched on in settings
+        And my history has a version in which I changed the effect of the cypher "Detonation (Cell)"
         And I am viewing the comparison view
-        Then the modified cypher card should be highlighted as changed in the left pane
-        And the modified cypher card should be highlighted as changed in the right pane
+        Then the cypher "Detonation (Cell)" is highlighted yellow in both panes
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Renaming a card shows as removed and added, not modified
-        Given comparison view is enabled in settings
-        And the character has a version where a cypher was renamed
+        Given comparison view is switched on in settings
+        And my history has a version in which I renamed the cypher "Detonation (Cell)" to "Renamed Cypher"
         And I am viewing the comparison view
-        Then the old cypher name should be highlighted as removed in the left pane
-        And the new cypher name should be highlighted as added in the right pane
+        Then the cypher "Detonation (Cell)" is highlighted red in the left pane
+        And the right pane does not show the cypher "Detonation (Cell)"
+        And the cypher "Renamed Cypher" is highlighted green in the right pane
+        And the left pane does not show the cypher "Renamed Cypher"
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Unchanged fields and cards show no highlight
-        Given comparison view is enabled in settings
-        And the character has a version with a name change
+        Given comparison view is switched on in settings
+        And my character has a history of 2 versions
         And I am viewing the comparison view
-        Then the "tier" field should not be highlighted in the left pane
-        And the "tier" field should not be highlighted in the right pane
+        Then the tier is not highlighted in either pane
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Restoring the left pane saves it as the new latest version
-        Given comparison view is enabled in settings
-        And the character has 5 versions in history
+        Given comparison view is switched on in settings
+        And my character has a history of 5 versions
         And I am viewing the comparison view
-        And the left pane shows version 4
-        When I click the left pane's restore button
-        Then a new version should be created with description "Restored: <version 4 description>"
-        And the left pane should show the newly restored version
+        When I restore the version in the left pane
+        Then my history gains a version restored from version 4
+        And the left pane shows version 6
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Restoring the right pane saves it as the new latest version
-        Given comparison view is enabled in settings
-        And the character has 5 versions in history
+        Given comparison view is switched on in settings
+        And my character has a history of 5 versions
         And I am viewing the comparison view
-        And the right pane shows version 3
-        When I click the right pane's restore button
-        Then a new version should be created with description "Restored: <version 3 description>"
+        And I move the right pane to version 3
+        When I restore the version in the right pane
+        Then my history gains a version restored from version 3
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: A pane's restore button is disabled when it already shows the latest version
-        Given comparison view is enabled in settings
-        And the character has 5 versions in history
+        Given comparison view is switched on in settings
+        And my character has a history of 5 versions
         And I am viewing the comparison view
-        Then the right pane's restore button should be disabled
+        Then the right pane cannot restore its version
+        And the left pane can restore its version
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: The other pane keeps pointing at the same version after a FIFO eviction
-        Given comparison view is enabled in settings
-        And the character has 99 versions in history
+        Given comparison view is switched on in settings
+        And my character has a history of 99 versions
         And I am viewing the comparison view
-        And the left pane shows version 50
-        When I click the left pane's restore button
-        Then the oldest version should have been removed
-        And the right pane should still show the same character name as before the restore
+        When I restore the version in the left pane
+        Then the original version has been dropped
+        And the right pane shows my character as it was in version 99
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Return to editing closes comparison view
-        Given comparison view is enabled in settings
-        And the character has 3 versions in history
+        Given comparison view is switched on in settings
+        And my character has a history of 3 versions
         And I am viewing the comparison view
-        When I click the return to editing button
-        Then the comparison view should not be visible
-        And I should be viewing the latest version
-        And all edit controls should be enabled
+        When I return to editing
+        Then the comparison view is not shown
+        And I am on the latest version
+        And I can edit my character
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Comparison view does not affect single-pane version position
-        Given comparison view is enabled in settings
-        And the character has 5 versions in history
+        Given comparison view is switched on in settings
+        And my character has a history of 5 versions
         And I am viewing the comparison view
-        When I click the left pane's backward arrow 3 times
-        And I click the return to editing button
-        Then the version counter should show "Version 5 of 5"
+        When I move the left pane to version 2
+        And I return to editing
+        Then the navigator shows version 5 of 5
 
-    # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
     Scenario: Fields in comparison view are read-only
-        Given comparison view is enabled in settings
-        And the character has 3 versions in history
+        Given comparison view is switched on in settings
+        And my character has a history of 3 versions
         And I am viewing the comparison view
-        Then no field in the comparison view should be editable
-        And no add or delete button should be present in the comparison view
+        Then nothing in the comparison view can be edited
 
     Scenario: Comparison view is unavailable on phone-width viewports
         Given the viewport is 390 pixels wide
-        And comparison view is enabled in settings
-        And the character has 3 versions in history
-        When I click the backward navigation arrow
-        Then the comparison view should not be visible
-        And the version counter should show "Version 2 of 3"
+        And comparison view is switched on in settings
+        And my character has a history of 3 versions
+        When I step back to the previous version
+        Then the comparison view is not shown
+        And the navigator shows version 2 of 3
 
     Scenario: Comparison view is available on tablet-width viewports
         Given the viewport is 1024 pixels wide
-        And comparison view is enabled in settings
-        And the character has 3 versions in history
-        When I click the backward navigation arrow
-        Then the comparison view should be visible
+        And comparison view is switched on in settings
+        And my character has a history of 3 versions
+        When I step back to the previous version
+        Then the comparison view is shown

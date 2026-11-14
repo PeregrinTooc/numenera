@@ -175,3 +175,14 @@ export const CARD_TYPE_TO_PROPERTY: Record<string, string> = {
   ability: "abilities",
   "special-ability": "specialAbilities",
 };
+
+function nameOf(card: unknown): string {
+  return typeof card === "string" ? card : (card as { name: string }).name;
+}
+
+/** The sample card of `kind` called `name`; throws on a name no sample has. */
+export function sampleCard(kind: string, name: string): unknown {
+  const card = CARD_CONFIGS[kind].sampleCards.find((sample) => nameOf(sample) === name);
+  if (card === undefined) throw new Error(`No sample ${kind} named "${name}"`);
+  return card;
+}

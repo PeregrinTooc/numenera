@@ -1,7 +1,6 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
-import { withFullHeightViewport } from "../support/sections.js";
 
 Given(
   "the character has {int} cyphers named {string}",
@@ -30,7 +29,7 @@ When(
       .locator("xpath=ancestor::div[@data-testid='cypher-item']");
 
     // Full-height viewport: on phones the stacked cards don't all fit on screen.
-    await withFullHeightViewport(this.page, () =>
+    await this.screen.withFullHeight(() =>
       sourceCard.dragTo(targetCard, {
         targetPosition: { x: 10, y: 5 }, // Drop near top of target
       })
@@ -50,7 +49,7 @@ When(
       .locator("xpath=ancestor::div[@data-testid='cypher-item']");
 
     // Full-height viewport: on phones the stacked cards don't all fit on screen.
-    await withFullHeightViewport(this.page, async () => {
+    await this.screen.withFullHeight(async () => {
       const targetBBox = await targetCard.boundingBox();
       if (!targetBBox) {
         throw new Error(`Could not find cypher card: ${targetName}`);

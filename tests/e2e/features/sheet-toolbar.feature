@@ -7,22 +7,19 @@ Feature: Sheet Toolbar
         Given I am on the character sheet page
 
     Scenario: Toolbar controls do not cover the character sheet
-        Given the character has 2 versions in history
-        When I view the character sheet
-        Then the version navigator should be visible
+        Given my character has a history of 2 versions
+        Then the navigator shows version 2 of 2
         And the version navigator should not overlap the character sheet
         And the Edit Layout button should not overlap the character sheet
 
     Scenario: Effort badge stays editable when version history exists
-        Given the character has 2 versions in history
-        And the character has effort 1
-        When I click the Effort badge
-        Then the edit modal should open
-        And the modal input should contain "1"
+        Given my character's Effort is 1
+        And my character has a history of 2 versions
+        When I change my Effort to 3
+        Then my character sheet shows my Effort as 3
 
     Scenario: Toolbar stays in view while scrolling
-        Given the character has 2 versions in history
-        When I view the character sheet
-        And I scroll to the bottom of the page
+        Given my character has a history of 2 versions
+        When I scroll to the bottom of the page
         Then the version navigator should be in view
         And the Edit Layout button should be in view

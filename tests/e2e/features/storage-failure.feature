@@ -8,28 +8,28 @@ Feature: Storage failure is reported
 
     Scenario: A full storage is reported after an edit
         Given the browser storage is full
-        When I edit the "character name" field to "Test Hero"
+        When I change my name to "Test Hero"
         Then the save indicator should report that storage is full
 
     Scenario: Any other write failure is reported as a failed save
         Given writing to the browser storage fails
-        When I edit the "character name" field to "Test Hero"
+        When I change my name to "Test Hero"
         Then the save indicator should report that changes could not be saved
 
     Scenario: The last successful save time is not shown while saving fails
-        Given I edit the "character name" field to "First Hero"
+        Given I change my name to "First Hero"
         And the save indicator should contain "Last saved:"
         And the browser storage is full
-        When I edit the "character name" field to "Second Hero"
+        When I change my name to "Second Hero"
         Then the save indicator should report that storage is full
         And the save indicator should not contain "Last saved:"
 
     Scenario: The report disappears once saving works again
         Given the browser storage is full
-        And I edit the "character name" field to "Test Hero"
+        And I change my name to "Test Hero"
         And the save indicator should report that storage is full
         When the browser storage works again
-        And I edit the "character name" field to "Recovered Hero"
+        And I change my name to "Recovered Hero"
         Then the save indicator should contain "Last saved:"
         And the save indicator should not report a storage problem
 
@@ -44,6 +44,6 @@ Feature: Storage failure is reported
 
     Scenario: The report does not cover the card controls
         Given the browser storage is full
-        When I edit the "character name" field to "Test Hero"
+        When I change my name to "Test Hero"
         Then the save indicator should report that storage is full
         And the save indicator should be inside the viewport

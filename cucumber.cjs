@@ -12,6 +12,7 @@ const TOUCH_DEVICES = ["pixel5"]; // the profiles whose sectionInput is "touch"
 const excludedTags = ["@skip", "@wip", "@deprecated"];
 if (device !== "desktop") excludedTags.push("@desktop-only");
 if (PHONE_DEVICES.includes(device)) excludedTags.push("@not-phone");
+else excludedTags.push("@phone-only");
 if (!TOUCH_DEVICES.includes(device)) excludedTags.push("@touch");
 
 module.exports = {
