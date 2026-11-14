@@ -16,9 +16,8 @@ Feature: Sheet Toolbar
     Scenario: Effort badge stays editable when version history exists
         Given my character's Effort is 1
         And the character has 2 versions in history
-        When I click the Effort badge
-        Then the edit modal should open
-        And the modal input should contain "1"
+        When I change my Effort to 3
+        Then my character sheet shows my Effort as 3
 
     Scenario: Toolbar stays in view while scrolling
         Given the character has 2 versions in history

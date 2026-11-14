@@ -153,20 +153,8 @@ Then("all recovery checkboxes should be unchecked", async function () {
   }
 });
 
-When("I click on the recovery modifier display", async function () {
-  const modifierDisplay = this.dom.getByTestId("recovery-modifier-display");
-  await modifierDisplay.click();
-  await expect(this.page.locator('[data-testid="edit-modal"]')).toBeVisible();
-});
-
-When("I enter {string} in the modifier field", async function (value: string) {
-  const input = this.page.locator('[data-testid="edit-modal-input"]');
-  await input.fill(value);
-});
-
-Then("I should see an edit modal", async function () {
-  const modal = this.page.locator('[data-testid="edit-modal"]');
-  await expect(modal).toBeVisible();
+When("I change my recovery modifier to {int}", async function (this: CustomWorld, value: number) {
+  await this.character.change("recovery modifier", String(value));
 });
 
 When("I confirm the edit", async function () {

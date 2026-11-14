@@ -22,13 +22,6 @@ When('I click the "New" button', async function (this: CustomWorld) {
   await waitForNewCharacterPersisted(this.page);
 });
 
-// Badge click/tap steps, parameterised by the {badge} type (resolves to a
-// data-testid; see support/parameterTypes.ts).
-When("I click the {badge} badge", async function (this: CustomWorld, testId: string) {
-  await this.dom.getByTestId(testId).click();
-  await this.page.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-});
-
 When("I clear the input field", async function (this: CustomWorld) {
   await this.modal.clearInput();
 });
@@ -112,10 +105,3 @@ async function expectModalOpen(this: CustomWorld): Promise<void> {
   await this.modal.expectOpen();
 }
 Then("an edit modal should appear", expectModalOpen);
-
-Then("the edit modal should open", expectModalOpen);
-
-async function expectModalInputContains(this: CustomWorld, value: string): Promise<void> {
-  await this.modal.expectInputValue(value);
-}
-Then("the modal input should contain {string}", expectModalInputContains);

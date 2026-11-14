@@ -34,6 +34,8 @@ export const FIELD_TEST_IDS: Record<string, string> = {
   "Max Cyphers": "max-cyphers-badge",
   Effort: "effort-badge",
 
+  "recovery modifier": "recovery-modifier-display",
+
   background: "character-background",
   notes: "character-notes",
   type: "character-type-select",

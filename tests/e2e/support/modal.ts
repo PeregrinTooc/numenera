@@ -14,25 +14,6 @@ export class ModalDsl {
     await waitForSaveComplete(this.page);
   }
 
-  async cancel(): Promise<void> {
-    await this.page.click('[data-testid="modal-cancel-button"]');
-    await this.page
-      .waitForSelector('[data-testid="edit-modal"]', { state: "hidden", timeout: 2000 })
-      .catch(() => {
-        // Modal might already be hidden
-      });
-  }
-
-  async tapConfirm(): Promise<void> {
-    await this.page.tap('[data-testid="modal-confirm-button"]');
-    await this.page
-      .waitForSelector('[data-testid="edit-modal"]', { state: "hidden", timeout: 2000 })
-      .catch(() => {
-        // Modal might already be hidden
-      });
-    await waitForSaveComplete(this.page);
-  }
-
   async type(value: string): Promise<void> {
     const input = this.page.locator('[data-testid="edit-modal-input"]');
     await input.clear();
@@ -54,10 +35,5 @@ export class ModalDsl {
   async expectOpen(): Promise<void> {
     const modal = this.page.locator('[data-testid="edit-modal"]');
     await expect(modal).toBeVisible();
-  }
-
-  async expectInputValue(value: string): Promise<void> {
-    const input = this.page.locator('[data-testid="edit-modal-input"]');
-    await expect(input).toHaveValue(value);
   }
 }

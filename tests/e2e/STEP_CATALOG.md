@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **554** in 52 files
-- Feature step lines: **1863**
+- Step definitions: **549** in 52 files
+- Feature step lines: **1859**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -49,7 +49,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [collection-reordering.steps.ts](#collectionreorderingstepsts) | 4 | 0 |
 | [combat.steps.ts](#combatstepsts) | 13 | 0 |
-| [common-steps.ts](#commonstepsts) | 15 | 0 |
+| [common-steps.ts](#commonstepsts) | 12 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 13 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
@@ -58,7 +58,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 15 | 0 |
-| [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
+| [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 23 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 7 | 0 |
 | [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 11 | 0 |
@@ -342,21 +342,18 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 2 | 114 |
-| When | `I clear the input field` | 1 | 31 |
+| Then | `an edit modal should appear` | 2 | 107 |
+| When | `I clear the input field` | 1 | 24 |
 | When | `I click on the {string} value` | 1 | 7 |
 | When | `I click the "Confirm" button` | 1 | 18 |
 | When | `I click the "New" button` | 7 | 19 |
-| When | `I click the {badge} badge` | 1 | 27 |
-| When | `I edit the {string} field to {string}` | 35 | 61 |
-| When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 70 |
-| When | `I press the Escape key` | 2 | 77 |
-| When | `I reload the page` | 21 | 81 |
-| When | `I reload the page immediately` | 1 | 94 |
-| When | `I type {string} in the modal input` | 1 | 35 |
-| Then | `the {string} value should display {string}` | 1 | 101 |
-| Then | `the edit modal should open` | 1 | 115 |
-| Then | `the modal input should contain {string}` | 1 | 121 |
+| When | `I edit the {string} field to {string}` | 35 | 54 |
+| When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 63 |
+| When | `I press the Escape key` | 2 | 70 |
+| When | `I reload the page` | 21 | 74 |
+| When | `I reload the page immediately` | 1 | 87 |
+| When | `I type {string} in the modal input` | 1 | 28 |
+| Then | `the {string} value should display {string}` | 1 | 94 |
 
 ## data-validation.steps.ts
 
@@ -513,16 +510,14 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `all recovery checkboxes should be unchecked` | 1 | 145 |
-| When | `I click on the recovery modifier display` | 1 | 155 |
-| When | `I click the {string} recovery checkbox` | 1 | 177 |
-| When | `I confirm the edit` | 3 | 171 |
-| When | `I enter {string} in the modifier field` | 1 | 161 |
-| When | `I select the {string} damage status` | 1 | 184 |
+| When | `I change my recovery modifier to {int}` | 1 | 155 |
+| When | `I click the {string} recovery checkbox` | 1 | 165 |
+| When | `I confirm the edit` | 2 | 159 |
+| When | `I select the {string} damage status` | 1 | 172 |
 | Then | `I should see {int} damage status options` | 1 | 48 |
 | Then | `I should see {int} recovery roll checkboxes` | 1 | 18 |
 | Then | `I should see {string} in the recovery section` | 3 | 133 |
 | Then | `I should see a section titled {string}` | 2 | 7 |
-| Then | `I should see an edit modal` | 1 | 166 |
 | Then | `I should see damage status {string}` | 1 | 53 |
 | Then | `I should see damage status {string} with description {string}` | 2 | 58 |
 | Then | `I should see recovery roll {string} with time {string}` | 4 | 23 |
@@ -543,10 +538,10 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `I am told why` | 1 | 45 |
-| When | `I change my {resourceName} to {int}` | 6 | 24 |
+| When | `I change my {resourceName} to {int}` | 7 | 24 |
 | When | `I try to change my {resourceName} to {string}` | 1 | 31 |
 | Given | `my character has {int} current XP and {int} total XP` | 3 | 3 |
-| Then | `my character sheet shows my {resourceName} as {int}` | 11 | 38 |
+| Then | `my character sheet shows my {resourceName} as {int}` | 12 | 38 |
 | Given | `my character was saved with a single legacy XP value of {int}` | 1 | 10 |
 | Given | `my character's {resourceName} is {int}` | 7 | 17 |
 

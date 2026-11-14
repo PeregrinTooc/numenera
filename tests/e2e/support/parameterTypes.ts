@@ -1,18 +1,11 @@
 import { defineParameterType } from "@cucumber/cucumber";
 import { CARD_CONFIGS } from "./cardTestFixtures.js";
-import { FIELD_TEST_IDS } from "./fields.js";
 import type { SectionZone } from "./sections.js";
 
 defineParameterType({
   name: "cardType",
   regexp: /cypher|equipment|artifact|oddity|attack|ability|special ability/,
   transformer: (s: string) => s.replace(" ", "-") as keyof typeof CARD_CONFIGS,
-});
-
-defineParameterType({
-  name: "badge",
-  regexp: /Current XP|Total XP|Shins|Armor|Max Cyphers|Effort/,
-  transformer: (s: string) => FIELD_TEST_IDS[s],
 });
 
 defineParameterType({
