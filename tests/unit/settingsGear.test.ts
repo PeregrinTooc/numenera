@@ -75,34 +75,62 @@ describe("SettingsGear", () => {
       expect(settingsGear.isOpen).toBe(false);
     });
 
-    it("should not leak a document listener when closed before the deferred setTimeout fires", () => {
-      vi.useFakeTimers();
-      try {
-        const onRerender = vi.fn();
-        settingsGear.setRerenderCallback(onRerender);
+    describe("with the gear on the page", () => {
+      beforeEach(() => {
+        const draw = (): void => {
+          render(settingsGear.render(), container);
+        };
+        settingsGear.setRerenderCallback(draw);
+        draw();
+      });
 
-        // open() schedules attaching document listeners via setTimeout(0);
-        // closing again before that timer fires must cancel it, or the
-        // listeners get attached anyway with no way left to remove them.
+      const gearButton = (): HTMLButtonElement =>
+        container.querySelector('[data-testid="settings-gear-button"]') as HTMLButtonElement;
+      const panel = (): Element | null => container.querySelector('[data-testid="settings-panel"]');
+
+      it("stays open after the click that opened it", () => {
+        gearButton().click();
+
+        expect(settingsGear.isOpen).toBe(true);
+        expect(panel()).toBeTruthy();
+      });
+
+      it("closes on a click outside the panel", () => {
+        gearButton().click();
+
+        document.body.click();
+
+        expect(settingsGear.isOpen).toBe(false);
+        expect(panel()).toBeFalsy();
+      });
+
+      it("stays open on a click inside the panel", () => {
+        gearButton().click();
+
+        container.querySelector<HTMLElement>(".settings-panel-title")?.click();
+
+        expect(settingsGear.isOpen).toBe(true);
+      });
+
+      it("closes on Escape", () => {
+        gearButton().click();
+
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+
+        expect(settingsGear.isOpen).toBe(false);
+      });
+
+      it("does not react to the document once closed", () => {
+        const onRerender = vi.fn();
         settingsGear.open();
         settingsGear.close();
-        vi.runAllTimers();
-        onRerender.mockClear();
+        settingsGear.setRerenderCallback(onRerender);
 
         document.body.click();
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
-        expect(onRerender).not.toHaveBeenCalled();
-        expect(settingsGear.isOpen).toBe(false);
 
-        settingsGear.open();
-        vi.runAllTimers();
-        onRerender.mockClear();
-        document.body.click();
-        expect(settingsGear.isOpen).toBe(false);
-        expect(onRerender).toHaveBeenCalledTimes(1);
-      } finally {
-        vi.useRealTimers();
-      }
+        expect(onRerender).not.toHaveBeenCalled();
+      });
     });
   });
 
