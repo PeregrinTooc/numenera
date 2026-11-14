@@ -1,4 +1,5 @@
 import { FULL_CHARACTER } from "@/data/mockCharacters";
+import type { Character } from "@/types/character";
 import type { CharacterDsl } from "./character.js";
 import type { SetupDsl } from "./setup.js";
 import type { ExportedView, VersionHistoryDriver, VersionSeed } from "./versionHistoryDriver.js";
@@ -8,6 +9,9 @@ const NAME_CHANGE = "versionHistory.changes.basicInfo.name";
 const ORIGINAL_NAME = "Original";
 const PORTRAIT =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+
+/** What an older release of the app stored in a version. */
+type OldChange = "added cypher" | "name change and added ability";
 
 /** What the sheet shows for one version; only what a scenario set up is checked. */
 interface VersionFacts {
@@ -73,6 +77,28 @@ export class VersionHistoryDsl {
     }));
   }
 
+  /** Stored by an older release of the app, which recorded descriptions as English text. */
+  async hasOldVersionRecordedAs(description: string, change: OldChange): Promise<void> {
+    const changes: Partial<Character> =
+      change === "added cypher"
+        ? { cyphers: [{ name: "Legacy Test Cypher", level: "3", effect: "Test effect" }] }
+        : {
+            name: "Changed Name",
+            abilities: [{ name: "Legacy Test Ability", cost: 1, description: "Test ability" }],
+          };
+    await this.store(3, (number) =>
+      number === 2
+        ? { facts: { name: ORIGINAL_NAME }, seed: { description, changes } }
+        : {
+            facts: { name: "Latest Version" },
+            seed: {
+              description: "Another change",
+              changes: { ...changes, name: "Latest Version" },
+            },
+          }
+    );
+  }
+
   async hasPortrait(): Promise<void> {
     await this.setup.updateCharacter((character) => {
       character.portrait = PORTRAIT;
@@ -111,6 +137,18 @@ export class VersionHistoryDsl {
     await this.driver.settleEdits();
   }
 
+  async holdsVersionSaves(): Promise<void> {
+    await this.driver.holdVersionSaves();
+  }
+
+  async beginsSavingVersion(): Promise<void> {
+    await this.driver.beginSavingVersion();
+  }
+
+  async releasesHeldVersionSave(): Promise<void> {
+    await this.driver.releaseHeldVersionSave();
+  }
+
   async undoes(): Promise<void> {
     await this.driver.undo();
   }
@@ -139,7 +177,7 @@ export class VersionHistoryDsl {
     await this.driver.expectImportAvailable(available);
   }
 
-  async expectOriginalName(): Promise<void> {
+  async expectNameBeforeEdits(): Promise<void> {
     const { name } = this.versions[this.versions.length - 1];
     await this.character.expectBasicInfoShows("name", name);
   }

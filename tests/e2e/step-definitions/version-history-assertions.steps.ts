@@ -2,14 +2,6 @@ import { Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 
-Then(
-  "the version description should contain {string}",
-  async function (this: CustomWorld, text: string) {
-    const description = this.page.locator('[data-testid="version-change-description"]');
-    await expect(description).toContainText(text);
-  }
-);
-
 Then("I should be viewing the latest version", async function (this: CustomWorld) {
   const forwardArrow = this.page.locator('[data-testid="version-nav-forward"]');
   await expect(forwardArrow).toBeDisabled();

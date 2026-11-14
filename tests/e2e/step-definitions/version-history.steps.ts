@@ -26,6 +26,24 @@ Given(
   }
 );
 
+Given(
+  "my history holds an old version recorded as {string} for an added cypher",
+  async function (this: CustomWorld, description: string) {
+    await this.history.hasOldVersionRecordedAs(description, "added cypher");
+  }
+);
+
+Given(
+  "my history holds an old version recorded as {string} for a name change and an added ability",
+  async function (this: CustomWorld, description: string) {
+    await this.history.hasOldVersionRecordedAs(description, "name change and added ability");
+  }
+);
+
+Given("saving a version is held up", async function (this: CustomWorld) {
+  await this.history.holdsVersionSaves();
+});
+
 Given("my character has a portrait", async function (this: CustomWorld) {
   await this.history.hasPortrait();
 });
@@ -65,6 +83,14 @@ When("my edits have settled into a version", async function (this: CustomWorld) 
   await this.history.editsHaveSettled();
 });
 
+When("my edits start to be saved as a version", async function (this: CustomWorld) {
+  await this.history.beginsSavingVersion();
+});
+
+When("the held-up save goes through", async function (this: CustomWorld) {
+  await this.history.releasesHeldVersionSave();
+});
+
 When("I undo with Ctrl+Z", async function (this: CustomWorld) {
   await this.history.undoes();
 });
@@ -97,9 +123,12 @@ Then("I cannot import a character", async function (this: CustomWorld) {
   await this.history.expectImportAvailable(false);
 });
 
-Then("my character sheet shows my original name", async function (this: CustomWorld) {
-  await this.history.expectOriginalName();
-});
+Then(
+  "my character sheet shows the name it had before my edits",
+  async function (this: CustomWorld) {
+    await this.history.expectNameBeforeEdits();
+  }
+);
 
 Then("I can edit my character", async function (this: CustomWorld) {
   await this.history.expectEditable();

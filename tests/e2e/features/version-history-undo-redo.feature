@@ -14,7 +14,7 @@ Feature: Version History Undo and Redo
         Then my character sheet shows my name as "First Edit"
         And the navigator shows version 3 of 3
         When I undo with Ctrl+Z
-        Then my character sheet shows my original name
+        Then my character sheet shows the name it had before my edits
         And the navigator shows version 3 of 3
 
     Scenario: Redo unsquashed changes
@@ -50,7 +50,7 @@ Feature: Version History Undo and Redo
         When I undo with Ctrl+Z
         Then my character sheet shows my name as "Edit 1"
         When I undo with Ctrl+Z
-        Then my character sheet shows my original name
+        Then my character sheet shows the name it had before my edits
         And the navigator shows version 3 of 3
 
     Scenario: Undo steps back through settled versions
@@ -160,7 +160,7 @@ Feature: Version History Undo and Redo
         And I change my name to "Buffer Edit 2"
         And I undo with Ctrl+Z
         And I undo with Ctrl+Z
-        Then my character sheet shows my original name
+        Then my character sheet shows the name it had before my edits
         When I redo with Ctrl+Y
         Then my character sheet shows my name as "Buffer Edit 1"
         When I redo with Ctrl+Y

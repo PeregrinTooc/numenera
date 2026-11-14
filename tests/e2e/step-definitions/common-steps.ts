@@ -1,45 +1,12 @@
 import { When } from "@cucumber/cucumber";
-import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { waitForSaveComplete } from "../support/save.js";
-import { getTestId } from "../support/fields.js";
 import { waitForCharacterSheetReady, waitForNewCharacterPersisted } from "../support/app-ready.js";
 
 When('I click the "New" button', async function (this: CustomWorld) {
   await this.page.locator('[data-testid="new-button"]').click();
   await waitForNewCharacterPersisted(this.page);
 });
-
-async function editFieldViaModal(
-  world: CustomWorld,
-  fieldName: string,
-  value: string
-): Promise<void> {
-  const testId = getTestId(fieldName);
-  const field = world.page.locator(`[data-testid="${testId}"]`);
-
-  await field.click();
-
-  const modal = world.page.locator('[data-testid="edit-modal"]');
-  await expect(modal).toBeVisible({ timeout: 5000 });
-
-  const input = world.page.locator('[data-testid="edit-modal-input"]');
-  await input.fill(value);
-
-  const confirmButton = world.page.locator('[data-testid="modal-confirm-button"]');
-  await confirmButton.click();
-
-  await expect(modal).toHaveCount(0, { timeout: 2000 });
-}
-
-When(
-  "I edit the {string} field to {string}",
-  async function (this: CustomWorld, fieldName: string, value: string) {
-    await editFieldViaModal(this, fieldName, value);
-
-    await waitForSaveComplete(this.page);
-  }
-);
 
 When("I press the Escape key", async function (this: CustomWorld) {
   await this.page.keyboard.press("Escape");
