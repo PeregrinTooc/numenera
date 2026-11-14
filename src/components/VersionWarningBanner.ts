@@ -1,9 +1,11 @@
+import type { Clock } from "@/services/clock";
 import { t } from "@/i18n/index";
 import { versionDescriptionText } from "@/services/versionDescriptionText";
 
 export interface VersionWarningBannerProps {
   description: string;
   timestamp: Date;
+  clock: Clock;
   onReturn: () => void;
   onRestore: () => void;
 }
@@ -17,8 +19,7 @@ export class VersionWarningBanner {
   }
 
   private formatTimestamp(date: Date): string {
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
+    const diffMs = this.props.clock.now() - date.getTime();
     const diffSec = Math.floor(diffMs / 1000);
     const diffMin = Math.floor(diffSec / 60);
     const diffHour = Math.floor(diffMin / 60);
