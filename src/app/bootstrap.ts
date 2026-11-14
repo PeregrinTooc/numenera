@@ -115,7 +115,7 @@ async function offerKeptUnreadableBackup(ctx: AppContext): Promise<void> {
     download: (filename, content) =>
       downloadTextFile(filename, content, "application/json", ctx.clock),
     showChoice: (handlers) => ModalService.openUnreadableCharacterModal(handlers),
-    now: () => new Date(),
+    now: () => new Date(ctx.clock.now()),
   });
 }
 
