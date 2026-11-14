@@ -245,7 +245,7 @@ All features listed below have full BDD test coverage and are verified working.
   - The Cucumber suite runs once per device profile via `DEVICE`:
     desktop, Pixel 5, iPhone 12 and iPad Pro (the last two on WebKit)
   - CI runs all four profiles; a deploy needs every one green
-  - Device-specific exclusions are tagged (`@not-phone`, `@chromium-only`)
+  - Device-specific exclusions are tagged (`@not-phone`, `@touch`)
     with a comment explaining why
 
 ### File Management

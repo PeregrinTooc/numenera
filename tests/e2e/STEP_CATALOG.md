@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **706** in 55 files
-- Feature step lines: **2339**
+- Step definitions: **703** in 55 files
+- Feature step lines: **2331**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -66,9 +66,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
 | [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 11 | 0 |
-| [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
+| [section-reordering.steps.ts](#sectionreorderingstepsts) | 7 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
-| [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 9 | 0 |
+| [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 7 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 18 | 0 |
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
@@ -601,9 +601,9 @@ pattern this script does not understand):
 | --- | --- | ---: | ---: |
 | Given | `{string} and {string} are in a grid` | 4 | 58 |
 | Then | `{string} should be in its own row` | 9 | 77 |
-| When | `I drag the {string} section onto the {zone} of the {string} section` | 9 | 7 |
+| When | `I drag the {string} section onto the {zone} of the {string} section` | 10 | 7 |
 | Then | `the {string} section should be the last section` | 2 | 48 |
-| Then | `the grid should show {string} on the left and {string} on the right` | 8 | 14 |
+| Then | `the grid should show {string} on the left and {string} on the right` | 7 | 14 |
 | Then | `the layout should still be the default layout` | 3 | 32 |
 | Then | `the saved layout should pair {string} on the left and {string} on the right` | 1 | 40 |
 
@@ -663,7 +663,7 @@ pattern this script does not understand):
 | Then | `I should see the {string} button` | 1 | 67 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 30 |
 | Then | `it should be touch-friendly` | 1 | 78 |
-| Given | `layout edit mode is active` | 36 | 41 |
+| Given | `layout edit mode is active` | 34 | 41 |
 | Then | `layout edit mode should be inactive` | 1 | 50 |
 | Then | `the {string} option should be enabled` | 1 | 118 |
 | Then | `the layout should return to the default arrangement` | 1 | 108 |
@@ -775,12 +775,11 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag the {string} section above the {string} section` | 1 | 44 |
-| When | `I exit layout edit mode` | 2 | 108 |
-| Given | `I have moved the {string} section to the top` | 1 | 81 |
+| When | `I exit layout edit mode` | 2 | 101 |
+| Given | `I have moved the {string} section to the top` | 1 | 74 |
 | Given | `I have reordered sections` | 1 | 6 |
-| Then | `the {string} section should appear before the {string} section` | 20 | 51 |
-| Then | `the {string} section should still be at the top` | 1 | 116 |
+| Then | `the {string} section should appear before the {string} section` | 19 | 44 |
+| Then | `the {string} section should still be at the top` | 1 | 109 |
 | Then | `the layout should be saved` | 1 | 26 |
 | Then | `the sections should remain in the new order` | 1 | 36 |
 
@@ -800,15 +799,13 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag it above the {string} section and release it` | 2 | 132 |
-| When | `I long-press the {string} section` | 1 | 21 |
-| When | `I long-press the {string} section and drag it above the {string} section` | 1 | 36 |
-| When | `I long-press the {string} section and drag it onto the {zone} of the {string} section` | 1 | 66 |
-| When | `I long-press the {string} section and hold it at the top edge until the {string} section is on screen` | 1 | 85 |
-| When | `I long-press the {string} section and hold it over the {zone} of the {string} section until the sheet shows the result` | 1 | 109 |
-| When | `I swipe from the {string} section towards the {string} section` | 1 | 145 |
-| Then | `the {string} section should be in drag mode` | 1 | 29 |
-| Then | `the page should have scrolled` | 1 | 170 |
+| When | `I drag it above the {string} section and release it` | 2 | 29 |
+| When | `I long-press the {string} section` | 1 | 4 |
+| When | `I long-press the {string} section and hold it at the top edge until the {string} section is on screen` | 1 | 15 |
+| When | `I long-press the {string} section and hold it over the {zone} of the {string} section until the sheet shows the result` | 1 | 22 |
+| When | `I swipe from the {string} section towards the {string} section` | 1 | 36 |
+| Then | `the {string} section should be in drag mode` | 1 | 8 |
+| Then | `the page should have scrolled` | 1 | 43 |
 
 ## settings-gear.steps.ts
 
@@ -1075,5 +1072,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 51 | 9 |
+| Given | `the viewport is {int} pixels wide` | 49 | 9 |
 

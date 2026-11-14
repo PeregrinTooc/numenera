@@ -42,13 +42,6 @@ Then("the sections should remain in the new order", async function (this: Custom
   expect(layoutData).not.toBeNull();
 });
 
-When(
-  "I drag the {string} section above the {string} section",
-  async function (this: CustomWorld, sourceSection: string, targetSection: string) {
-    await this.layout.moveSection(sourceSection, { target: targetSection, edge: "top edge" });
-  }
-);
-
 Then(
   "the {string} section should appear before the {string} section",
   async function (this: CustomWorld, firstSection: string, secondSection: string) {

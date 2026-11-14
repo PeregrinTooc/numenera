@@ -62,15 +62,6 @@ export async function growViewportToFullHeight(
   return original;
 }
 
-/** How long E2E long-presses hold — safely above the app's 250ms threshold. */
-const LONG_PRESS_HOLD_MS = 300;
-
-/** Keeps the finger down for the long-press duration. */
-export async function holdForLongPress(page: Page): Promise<void> {
-  // eslint-disable-next-line no-restricted-properties -- holding the touch IS the long-press gesture
-  await page.waitForTimeout(LONG_PRESS_HOLD_MS);
-}
-
 export interface Point {
   x: number;
   y: number;

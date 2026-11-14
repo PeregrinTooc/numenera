@@ -1,20 +1,18 @@
 const { availableParallelism } = require("node:os");
 
 // Device-aware tag filter (see tests/e2e/support/device.ts for the profiles).
-// The phone and WebKit sets are listed here rather than loaded from device.ts:
+// The phone and touch sets are listed here rather than loaded from device.ts:
 // this config is CommonJS and is read before tsx is registered, and device.ts
 // has no notion of "phone" anyway. Keep these lists in step with DEVICE_PROFILES.
 // eslint-disable-next-line no-undef
 const device = process.env.DEVICE || "desktop";
 const PHONE_DEVICES = ["pixel5", "iphone12"]; // narrower than the app's 768px phone breakpoint
-const WEBKIT_DEVICES = ["iphone12", "ipadpro"];
+const TOUCH_DEVICES = ["pixel5"]; // the profiles whose sectionInput is "touch"
 
 const excludedTags = ["@skip", "@wip", "@deprecated"];
 if (device !== "desktop") excludedTags.push("@desktop-only");
 if (PHONE_DEVICES.includes(device)) excludedTags.push("@not-phone");
-if (WEBKIT_DEVICES.includes(device)) {
-  excludedTags.push("@chromium-only");
-}
+if (!TOUCH_DEVICES.includes(device)) excludedTags.push("@touch");
 
 module.exports = {
   default: {
