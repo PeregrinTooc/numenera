@@ -23,10 +23,3 @@ Then("the card edit modal should be open", async function (this: CustomWorld) {
     return !!modal && modal.contains(document.activeElement);
   });
 });
-
-When(
-  "I click the edit button on cypher {string}",
-  async function (this: CustomWorld, name: string) {
-    await this.cards.clickEditButton("cypher", name);
-  }
-);

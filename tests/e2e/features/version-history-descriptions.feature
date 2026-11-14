@@ -14,11 +14,11 @@ Feature: Version History Descriptions
 
     Scenario: Adding a card shows a specific description
         Given I am on the character sheet page
-        When I click the add cypher button
-        And I fill in the cypher name with "Test Cypher"
-        And I fill in the cypher level with "1d6"
-        And I fill in the cypher effect with "Test effect"
-        And I confirm the card edit modal
+        When I start a new cypher
+        And I set its name to "Test Cypher"
+        And I set its level to "1d6"
+        And I set its effect to "Test effect"
+        And I save the card
         And I wait for squash timer to complete
         And I edit the "character name" field to "Another Change"
         And I wait for squash timer to complete
@@ -35,10 +35,10 @@ Feature: Version History Descriptions
         Then the version description should contain "Removed cypher"
 
     Scenario: Modifying a card shows a specific description
-        Given I am on the character sheet page
-        When I click the edit button on cypher "Detonation (Cell)"
-        And I fill in the cypher effect with "Updated effect text"
-        And I confirm the card edit modal
+        Given my character has the cyphers "Detonation (Cell)" and "Stim (Injector)"
+        When I start editing the cypher "Detonation (Cell)"
+        And I set its effect to "Updated effect text"
+        And I save the card
         And I wait for squash timer to complete
         And I edit the "character name" field to "Another Change"
         And I wait for squash timer to complete
@@ -47,17 +47,17 @@ Feature: Version History Descriptions
 
     Scenario: Different collection changes in one squash window list individually
         Given I am on the character sheet page
-        When I click the add cypher button
-        And I fill in the cypher name with "Test Cypher"
-        And I fill in the cypher level with "1d6"
-        And I fill in the cypher effect with "Test effect"
-        And I confirm the card edit modal
-        And I click the add ability button
-        And I fill in the ability name with "Test Ability"
-        And I fill in the ability cost with "3"
-        And I fill in the ability pool with "Might"
-        And I fill in the ability description with "A test ability"
-        And I confirm the card edit modal
+        When I start a new cypher
+        And I set its name to "Test Cypher"
+        And I set its level to "1d6"
+        And I set its effect to "Test effect"
+        And I save the card
+        And I start a new ability
+        And I set its name to "Test Ability"
+        And I set its cost to "3"
+        And I set its pool to "Might"
+        And I set its description to "A test ability"
+        And I save the card
         And I wait for squash timer to complete
         And I edit the "character name" field to "Another Change"
         And I wait for squash timer to complete
@@ -68,11 +68,11 @@ Feature: Version History Descriptions
     Scenario: Version descriptions render in German
         Given I have opened the settings panel
         And I click the German flag icon
-        When I click the add cypher button
-        And I fill in the cypher name with "Test Cypher"
-        And I fill in the cypher level with "1d6"
-        And I fill in the cypher effect with "Test effect"
-        And I confirm the card edit modal
+        When I start a new cypher
+        And I set its name to "Test Cypher"
+        And I set its level to "1d6"
+        And I set its effect to "Test effect"
+        And I save the card
         And I wait for squash timer to complete
         And I edit the "character name" field to "Another Change"
         And I wait for squash timer to complete
@@ -80,11 +80,11 @@ Feature: Version History Descriptions
         Then the version description should contain "Cypher hinzugefügt"
 
     Scenario: Version descriptions follow a language switch
-        When I click the add cypher button
-        And I fill in the cypher name with "Test Cypher"
-        And I fill in the cypher level with "1d6"
-        And I fill in the cypher effect with "Test effect"
-        And I confirm the card edit modal
+        When I start a new cypher
+        And I set its name to "Test Cypher"
+        And I set its level to "1d6"
+        And I set its effect to "Test effect"
+        And I save the card
         And I wait for squash timer to complete
         And I edit the "character name" field to "Another Change"
         And I wait for squash timer to complete

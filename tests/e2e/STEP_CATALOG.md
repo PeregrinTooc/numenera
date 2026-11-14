@@ -26,7 +26,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **643** in 56 files
+- Step definitions: **642** in 56 files
 - Feature step lines: **2213**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
@@ -39,7 +39,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
 | [basic-info-editing-accessibility.steps.ts](#basicinfoeditingaccessibilitystepsts) | 18 | 0 |
 | [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 16 | 0 |
-| [card-creation-modal-actions.steps.ts](#cardcreationmodalactionsstepsts) | 3 | 0 |
+| [card-creation-modal-actions.steps.ts](#cardcreationmodalactionsstepsts) | 2 | 0 |
 | [card-creation-modal-fields.steps.ts](#cardcreationmodalfieldsstepsts) | 8 | 0 |
 | [card-creation-setup.steps.ts](#cardcreationsetupstepsts) | 3 | 0 |
 | [card-creation-verification.steps.ts](#cardcreationverificationstepsts) | 4 | 0 |
@@ -227,29 +227,28 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the edit button on cypher {string}` | 1 | 26 |
-| When | `I confirm the card edit modal` | 10 | 4 |
+| When | `I confirm the card edit modal` | 4 | 4 |
 | Then | `the card edit modal should be open` | 8 | 9 |
 
 ## card-creation-modal-fields.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I fill in the ability cost with {string}` | 2 | 30 |
-| When | `I fill in the ability description with {string}` | 2 | 38 |
-| When | `I fill in the ability name with {string}` | 2 | 26 |
-| When | `I fill in the ability pool with {string}` | 2 | 34 |
-| When | `I fill in the cypher effect with {string}` | 7 | 12 |
-| When | `I fill in the cypher level with {string}` | 6 | 8 |
-| When | `I fill in the cypher name with {string}` | 6 | 4 |
+| When | `I fill in the ability cost with {string}` | 1 | 30 |
+| When | `I fill in the ability description with {string}` | 1 | 38 |
+| When | `I fill in the ability name with {string}` | 1 | 26 |
+| When | `I fill in the ability pool with {string}` | 1 | 34 |
+| When | `I fill in the cypher effect with {string}` | 2 | 12 |
+| When | `I fill in the cypher level with {string}` | 2 | 8 |
+| When | `I fill in the cypher name with {string}` | 2 | 4 |
 | When | `I fill in the equipment name with {string}` | 1 | 19 |
 
 ## card-creation-setup.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the add ability button` | 8 | 11 |
-| When | `I click the add cypher button` | 7 | 3 |
+| When | `I click the add ability button` | 7 | 11 |
+| When | `I click the add cypher button` | 3 | 3 |
 | When | `I click the add equipment button` | 2 | 7 |
 
 ## card-creation-verification.steps.ts
@@ -268,7 +267,7 @@ pattern this script does not understand):
 | Then | `{string} is still gone the next time I open my character` | 1 | 21 |
 | When | `I discard {string}` | 4 | 10 |
 | Then | `it was discarded without my being asked to confirm` | 1 | 28 |
-| Given | `my character has the {cardKind} {string} and {string}` | 5 | 3 |
+| Given | `my character has the {cardKind} {string} and {string}` | 6 | 3 |
 | Then | `my character's {cardKind} are only {string}` | 2 | 14 |
 | Then | `the discard control of {string} is in the top-left corner of its entry` | 1 | 32 |
 
@@ -278,10 +277,10 @@ pattern this script does not understand):
 | --- | --- | ---: | ---: |
 | When | `I cancel the card` | 7 | 32 |
 | When | `I open my character again` | 14 | 36 |
-| When | `I save the card` | 28 | 28 |
-| When | `I set its {word} to {string}` | 92 | 21 |
-| When | `I start a new {cardType}` | 35 | 10 |
-| When | `I start editing the {cardType} {string}` | 7 | 14 |
+| When | `I save the card` | 34 | 28 |
+| When | `I set its {word} to {string}` | 109 | 21 |
+| When | `I start a new {cardType}` | 40 | 10 |
+| When | `I start editing the {cardType} {string}` | 8 | 14 |
 | Then | `my character carries {int} {cardKind}` | 28 | 54 |
 | Then | `my character carries the {cardType} {string}` | 21 | 61 |
 | Given | `my character has {int} {cardKind}` | 42 | 3 |
@@ -338,7 +337,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 53 | 27 |
+| Given | `I am on the character sheet page` | 52 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 147 |
 | Then | `I should see {int} cyphers displayed` | 1 | 110 |
 | Then | `I should see {int} oddities displayed` | 1 | 160 |
