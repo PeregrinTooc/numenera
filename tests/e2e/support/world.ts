@@ -8,6 +8,7 @@ import { SetupDsl } from "./setup.js";
 import type { CharacterDsl } from "./character.js";
 import type { CardEditorDsl } from "./cardEditor.js";
 import type { ValueEditorDsl } from "./valueEditor.js";
+import type { AdditionalFieldsDsl } from "./additionalFields.js";
 import type { LayoutDsl } from "./layout.js";
 import { BASE_URL } from "./serverUrl.js";
 import type { Layout } from "@/types/layout";
@@ -37,6 +38,7 @@ export interface CustomWorld extends World {
   cardEditor: CardEditorDsl;
   layout: LayoutDsl;
   valueEditor: ValueEditorDsl;
+  additionalFields: AdditionalFieldsDsl;
   // card-reordering.steps.ts
   draggedCypherName?: string;
   // layout-import-export.steps.ts
@@ -55,8 +57,6 @@ export interface CustomWorld extends World {
   // character-file-export.steps.ts
   exportedFileData?: ExportedCharacterFile | null;
   exportedFilename?: string;
-  // additional-fields-textarea.steps.ts
-  tappedTextarea?: string;
   // third-party-requests.steps.ts
   requestedUrls?: string[];
   getBaseUrl(): string;
@@ -75,6 +75,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   cardEditor!: CardEditorDsl;
   layout!: LayoutDsl;
   valueEditor!: ValueEditorDsl;
+  additionalFields!: AdditionalFieldsDsl;
   // card-reordering.steps.ts
   draggedCypherName?: string;
   importedFile?: { layout?: Layout; sectionColumns?: SectionColumns };
@@ -89,7 +90,6 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   saveCount?: number;
   exportedFileData?: ExportedCharacterFile | null;
   exportedFilename?: string;
-  tappedTextarea?: string;
   requestedUrls?: string[];
 
   constructor(options: IWorldOptions) {

@@ -60,6 +60,10 @@ export class CharacterDsl {
     await this.setup.newCharacter({ [field]: value });
   }
 
+  async hasText(field: string, text: string): Promise<void> {
+    await this.setup.newCharacter({ textFields: { ...FULL_CHARACTER.textFields, [field]: text } });
+  }
+
   async hasResource(resource: string, value: number): Promise<void> {
     await this.setup.newCharacter({ [RESOURCE_PROPERTIES[resource]]: value });
   }

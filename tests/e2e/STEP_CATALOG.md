@@ -26,16 +26,16 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **572** in 52 files
-- Feature step lines: **1943**
+- Step definitions: **554** in 52 files
+- Feature step lines: **1863**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
 | [ability-enhancements.steps.ts](#abilityenhancementsstepsts) | 13 | 0 |
-| [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 8 | 0 |
-| [additional-fields-textarea.steps.ts](#additionalfieldstextareastepsts) | 28 | 0 |
+| [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 5 | 0 |
+| [additional-fields-textarea.steps.ts](#additionalfieldstextareastepsts) | 13 | 0 |
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
 | [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 11 | 0 |
 | [card-deletion.steps.ts](#carddeletionstepsts) | 6 | 0 |
@@ -115,47 +115,29 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I select {string} from the type dropdown` | 4 | 28 |
-| Then | `the character data should have type {string}` | 1 | 62 |
-| Given | `the character has the following data:` | 1 | 5 |
-| Then | `the type dropdown label should be {string}` | 1 | 74 |
-| Then | `the type dropdown option for {string} should display as {string}` | 3 | 83 |
-| Then | `the type dropdown options should be {string}, {string}, {string}` | 1 | 50 |
-| Then | `the type dropdown should have {int} options` | 1 | 41 |
-| Then | `the type dropdown should show {string} as selected` | 6 | 33 |
+| When | `I choose {string} as my character type` | 2 | 10 |
+| Then | `my character type shows as {string}` | 4 | 14 |
+| Given | `my character's {textarea} reads {string}` | 10 | 3 |
+| Then | `the character type is labelled {string}` | 1 | 25 |
+| Then | `the character types to choose from are {string}, {string}, {string}` | 1 | 18 |
 
 ## additional-fields-textarea.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I clear the {textarea} textarea` | 4 | 45 |
-| When | `I click outside the {textarea} textarea` | 11 | 56 |
-| When | `I click the {textarea} textarea` | 20 | 41 |
-| When | `I select {string} from the mobile picker` | 1 | 191 |
-| When | `I tap outside the {textarea} textarea` | 2 | 240 |
-| When | `I tap the {textarea} textarea` | 3 | 204 |
-| When | `I tap the type dropdown` | 1 | 181 |
-| When | `I type {string} in the {textarea} textarea` | 12 | 49 |
-| When | `I type a {int} character string in the background textarea` | 1 | 121 |
-| When | `I type a {int} character string in the notes textarea` | 1 | 130 |
-| Then | `the {textarea} placeholder should be {string}` | 2 | 101 |
-| When | `the {textarea} textarea is empty` | 2 | 97 |
-| Then | `the {textarea} textarea should be empty` | 2 | 87 |
-| Then | `the {textarea} textarea should be focused` | 4 | 71 |
-| Then | `the {textarea} textarea should be readonly` | 8 | 15 |
-| Then | `the {textarea} textarea should become editable` | 2 | 219 |
-| Then | `the {textarea} textarea should have a pointer cursor` | 2 | 31 |
-| Then | `the {textarea} textarea should have an edit state visual indicator` | 2 | 78 |
-| Then | `the {textarea} textarea should not be readonly` | 4 | 62 |
-| Then | `the {textarea} textarea should show {string}` | 14 | 22 |
-| Then | `the background textarea should contain the full {int} character text` | 1 | 139 |
-| Then | `the background textarea should still be editable` | 1 | 91 |
-| Then | `the character data should have {textarea} {string}` | 5 | 109 |
-| Then | `the character data should have the full background text` | 1 | 159 |
-| Then | `the character data should have the full notes text` | 1 | 170 |
-| Then | `the mobile OS picker should open` | 1 | 186 |
-| Then | `the notes textarea should contain the full {int} character text` | 1 | 149 |
-| Then | `the virtual keyboard should appear` | 3 | 228 |
+| Then | `I can edit my {textarea}` | 2 | 64 |
+| Then | `I can still edit my {textarea}` | 1 | 68 |
+| When | `I click away from my {textarea}` | 1 | 53 |
+| When | `I click my {textarea}` | 5 | 38 |
+| When | `I tap my {textarea}` | 1 | 42 |
+| When | `I type {string} in my {textarea}` | 3 | 46 |
+| When | `I write {int} characters as my {textarea}` | 1 | 10 |
+| When | `I write {string} as my {textarea}` | 3 | 3 |
+| Then | `my {textarea} cannot be edited yet and looks clickable` | 3 | 57 |
+| Then | `my {textarea} holds all {int} characters` | 2 | 24 |
+| Then | `my {textarea} reads {string}` | 10 | 17 |
+| Then | `my empty {textarea} invites me to write with {string}` | 1 | 31 |
+| Then | `the on-screen keyboard comes up` | 1 | 72 |
 
 ## auto-save-indicator.steps.ts
 
@@ -184,7 +166,7 @@ pattern this script does not understand):
 | When | `I try to change my {word} to nothing` | 1 | 25 |
 | Then | `my character sheet shows my {word} as {string}` | 7 | 33 |
 | Then | `my character sheet shows my tier as {int}` | 3 | 40 |
-| Given | `my character's {word} is {string}` | 7 | 3 |
+| Given | `my character's {word} is {string}` | 10 | 3 |
 | Given | `my character's tier is {int}` | 2 | 10 |
 | Then | `the change is refused` | 2 | 29 |
 | Then | `the character name should display {string}` | 1 | 44 |
@@ -207,7 +189,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I cancel the card` | 7 | 32 |
-| When | `I open my character again` | 17 | 36 |
+| When | `I open my character again` | 23 | 36 |
 | When | `I save the card` | 38 | 28 |
 | When | `I set its {word} to {string}` | 120 | 21 |
 | When | `I start a new {cardType}` | 52 | 10 |
@@ -260,7 +242,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 1 | 9 |
-| Given | `I am on the character sheet page` | 41 | 27 |
+| Given | `I am on the character sheet page` | 40 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 147 |
 | Then | `I should see {int} cyphers displayed` | 1 | 110 |
 | Then | `I should see {int} oddities displayed` | 1 | 160 |
@@ -369,7 +351,7 @@ pattern this script does not understand):
 | When | `I edit the {string} field to {string}` | 35 | 61 |
 | When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 70 |
 | When | `I press the Escape key` | 2 | 77 |
-| When | `I reload the page` | 24 | 81 |
+| When | `I reload the page` | 21 | 81 |
 | When | `I reload the page immediately` | 1 | 94 |
 | When | `I type {string} in the modal input` | 1 | 35 |
 | Then | `the {string} value should display {string}` | 1 | 101 |
@@ -453,7 +435,7 @@ pattern this script does not understand):
 | Given | `I am on the character sheet page with {string}` | 13 | 9 |
 | When | `I navigate to the page with {string}` | 1 | 14 |
 | Then | `the artifacts heading should be {string}` | 1 | 91 |
-| Then | `the background field label should be {string}` | 2 | 109 |
+| Then | `the background field label should be {string}` | 1 | 109 |
 | Then | `the cyphers heading should be {string}` | 1 | 81 |
 | Then | `the empty abilities message should be {string}` | 1 | 157 |
 | Then | `the empty artifacts message should be {string}` | 1 | 126 |
@@ -463,12 +445,12 @@ pattern this script does not understand):
 | Then | `the empty notes message should be {string}` | 1 | 144 |
 | Then | `the empty oddities message should be {string}` | 1 | 131 |
 | Then | `the intellect stat should display {string}` | 1 | 55 |
-| Given | `the language is set to {string}` | 4 | 4 |
+| Given | `the language is set to {string}` | 2 | 4 |
 | Then | `the language should remain German` | 1 | 162 |
 | Then | `the load button should display {string}` | 3 | 29 |
 | Then | `the might stat should display {string}` | 1 | 44 |
 | Then | `the new button should display {string}` | 3 | 34 |
-| Then | `the notes field label should be {string}` | 2 | 115 |
+| Then | `the notes field label should be {string}` | 1 | 115 |
 | Then | `the oddities heading should be {string}` | 1 | 104 |
 | Then | `the page should declare its language as {string}` | 2 | 167 |
 | Then | `the page title should be {string}` | 2 | 24 |
@@ -923,5 +905,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 41 | 9 |
+| Given | `the viewport is {int} pixels wide` | 38 | 9 |
 
