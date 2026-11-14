@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { DEFAULT_START_MS, ManualClock } from "@/services/manualClock";
 import { VersionWarningBanner } from "@/components/VersionWarningBanner";
+import { changeLanguage } from "@/i18n/index";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("VersionWarningBanner", () => {
@@ -32,6 +33,23 @@ describe("VersionWarningBanner", () => {
     [2 * 86_400_000, "2 days ago"],
   ])("shows a version saved %i ms ago as %s", (ageMs, expected) => {
     expect(ageText(ageMs)).toContain(expected);
+  });
+
+  it.each([
+    [30_000, "gerade eben"],
+    [60_000, "vor 1 Minute"],
+    [5 * 60_000, "vor 5 Minuten"],
+    [3_600_000, "vor 1 Stunde"],
+    [3 * 3_600_000, "vor 3 Stunden"],
+    [86_400_000, "vor 1 Tag"],
+    [2 * 86_400_000, "vor 2 Tagen"],
+  ])("shows a version saved %i ms ago in German as %s", async (ageMs, expected) => {
+    await changeLanguage("de");
+    try {
+      expect(ageText(ageMs)).toContain(expected);
+    } finally {
+      await changeLanguage("en");
+    }
   });
 
   it("measures the age against the clock", () => {

@@ -26,13 +26,13 @@ export class VersionWarningBanner {
     const diffDay = Math.floor(diffHour / 24);
 
     if (diffSec < 60) {
-      return "just now";
+      return t("versionHistory.age.justNow");
     } else if (diffMin < 60) {
-      return `${diffMin} minute${diffMin !== 1 ? "s" : ""} ago`;
+      return t("versionHistory.age.minutes", { count: diffMin });
     } else if (diffHour < 24) {
-      return `${diffHour} hour${diffHour !== 1 ? "s" : ""} ago`;
+      return t("versionHistory.age.hours", { count: diffHour });
     } else if (diffDay < 7) {
-      return `${diffDay} day${diffDay !== 1 ? "s" : ""} ago`;
+      return t("versionHistory.age.days", { count: diffDay });
     } else {
       return date.toLocaleDateString();
     }

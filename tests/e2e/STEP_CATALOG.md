@@ -27,7 +27,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 ## Summary
 
 - Step definitions: **458** in 42 files
-- Feature step lines: **1781**
+- Feature step lines: **1788**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -232,7 +232,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am on the character sheet page` | 23 | 14 |
+| Given | `I am on the character sheet page` | 24 | 14 |
 | Given | `my character has every kind of entry` | 1 | 29 |
 | Given | `my character has these stats:` | 1 | 25 |
 | Given | `my character has this basic information:` | 1 | 18 |
@@ -283,7 +283,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `{int} minute(s) pass` | 1 | 5 |
+| When | `{int} minute(s) pass` | 2 | 5 |
 
 ## collection-reordering.steps.ts
 
@@ -565,9 +565,9 @@ pattern this script does not understand):
 | Given | `I am viewing the character sheet` | 1 | 5 |
 | When | `I click outside the settings panel` | 1 | 53 |
 | When | `I click the British flag icon` | 1 | 78 |
-| When | `I click the German flag icon` | 4 | 74 |
+| When | `I click the German flag icon` | 5 | 74 |
 | When | `I click the settings gear icon` | 2 | 37 |
-| Given | `I have opened the settings panel` | 8 | 49 |
+| Given | `I have opened the settings panel` | 9 | 49 |
 | Then | `I should be able to click the settings gear icon` | 1 | 30 |
 | Then | `I should see a {string} option` | 1 | 109 |
 | Then | `I should see a settings gear icon in the header` | 1 | 22 |
@@ -707,10 +707,10 @@ pattern this script does not understand):
 | When | `I return to the latest version` | 1 | 81 |
 | Then | `I see my character as it was in version {int}` | 12 | 201 |
 | When | `I step back {int} times in quick succession` | 1 | 70 |
-| When | `I step back to the previous version` | 24 | 62 |
+| When | `I step back to the previous version` | 25 | 62 |
 | When | `I step forward to the next version` | 4 | 66 |
 | When | `I undo with Ctrl+Z` | 19 | 97 |
-| Given | `my character has a history of {int} versions` | 46 | 11 |
+| Given | `my character has a history of {int} versions` | 47 | 11 |
 | Given | `my character has a history of {int} versions with different data` | 1 | 18 |
 | Given | `my character has a portrait` | 3 | 50 |
 | Given | `my character has no history yet` | 5 | 4 |
@@ -739,7 +739,7 @@ pattern this script does not understand):
 | Then | `the navigator dates this version` | 1 | 190 |
 | Then | `the navigator describes this version` | 1 | 179 |
 | Then | `the navigator describes this version as {string}` | 15 | 183 |
-| Then | `the navigator gives the age of this version as {string}` | 1 | 194 |
+| Then | `the navigator gives the age of this version as {string}` | 2 | 194 |
 | Then | `the navigator is hidden` | 2 | 117 |
 | Then | `the navigator shows version {int} of {int}` | 28 | 140 |
 | Then | `the original version has been dropped` | 2 | 208 |

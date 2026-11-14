@@ -309,6 +309,15 @@
     "navigateBackward": "Navigate to previous version",
     "navigateForward": "Navigate to next version",
     "versionCounter": "Version {{current}} of {{total}}",
+    "age": {
+      "justNow": "just now",
+      "minutes_one": "{{count}} minute ago",
+      "minutes_other": "{{count}} minutes ago",
+      "hours_one": "{{count}} hour ago",
+      "hours_other": "{{count}} hours ago",
+      "days_one": "{{count}} day ago",
+      "days_other": "{{count}} days ago"
+    },
     "warningBanner": {
       "title": "You are viewing an old version",
       "returnButton": "Return to Current Version",

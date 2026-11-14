@@ -54,8 +54,15 @@ function hasKey(obj, keyPath) {
 }
 
 /**
+ * A key used with a count is stored as plural forms (key_one, key_other, ...)
+ */
+function hasTranslation(obj, keyPath) {
+  return hasKey(obj, keyPath) || hasKey(obj, `${keyPath}_other`);
+}
+
+/**
  * Extract all t() function calls from a file
- * Matches patterns like: t("key") or t('key')
+ * Matches patterns like: t("key"), t('key') or t("key", { count })
  * Excludes false positives like createElement("div")
  */
 function extractTranslationKeys(content) {
@@ -63,7 +70,7 @@ function extractTranslationKeys(content) {
 
   // Match t("...") or t('...') but not when preceded by word characters
   // This excludes createElement("div") but matches t("div")
-  const regex = /\bt\(\s*["']([^"']+)["']\s*\)/g;
+  const regex = /\bt\(\s*["']([^"']+)["']\s*[,)]/g;
   let match;
 
   while ((match = regex.exec(content)) !== null) {
@@ -135,7 +142,7 @@ async function checkTranslationCoverage() {
       checkedKeys.add(key);
 
       // Check English
-      if (!hasKey(enTranslations, key)) {
+      if (!hasTranslation(enTranslations, key)) {
         missingKeys.push({
           file: relativePath,
           key,
@@ -145,7 +152,7 @@ async function checkTranslationCoverage() {
       }
 
       // Check German
-      if (!hasKey(deTranslations, key)) {
+      if (!hasTranslation(deTranslations, key)) {
         missingKeys.push({
           file: relativePath,
           key,
