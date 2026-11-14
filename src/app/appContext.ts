@@ -8,7 +8,7 @@ import type { VersionWarningBanner } from "@/components/VersionWarningBanner";
 import type { CompareView } from "@/components/CompareView";
 import type { VersionState } from "@/services/versionState";
 import type { VersionHistoryService } from "@/services/versionHistoryService";
-import type { ITimer } from "@/services/timer";
+import { SystemClock, type Clock } from "@/services/clock";
 import type { Character } from "@/types/character";
 
 /**
@@ -38,11 +38,12 @@ export interface AppContext {
   /** Comparison View overlay, opt-in via settings. */
   compareView: CompareView | null;
   readonly exportManager: ExportManager;
-  /** Always a RealTimer so the 300ms debounce fires on its own, in prod and tests. */
+  /** The one source of time for the app's services. */
+  readonly clock: Clock;
   readonly autoSaveService: AutoSaveService;
   readonly saveIndicator: SaveIndicator;
-  /** Only for the VersionHistoryService squash timer; AutoSaveService never uses it. */
-  readonly testTimer: ITimer | undefined;
+  /** E2E-installed clock for the squash timer only, so it never fires on its own. */
+  readonly testTimer: Clock | undefined;
   actions: AppActions;
 }
 
@@ -53,6 +54,7 @@ function notWired(): Promise<void> {
 export function createAppContext(): AppContext {
   // Tests can set window.__testTimer before DOMContentLoaded
   const testTimer = window.__testTimer;
+  const clock = new SystemClock();
 
   const ctx: AppContext = {
     currentSheet: null,
@@ -64,11 +66,12 @@ export function createAppContext(): AppContext {
     versionWarningBanner: null,
     compareView: null,
     exportManager: new ExportManager(),
+    clock,
     autoSaveService: new AutoSaveService(async () => {
       if (ctx.currentCharacter) {
         await saveCharacterState(ctx.currentCharacter);
       }
-    }, 300),
+    }, clock),
     saveIndicator: new SaveIndicator(),
     testTimer,
     actions: { renderCharacterSheet: notWired, updateVersionNavigator: notWired },

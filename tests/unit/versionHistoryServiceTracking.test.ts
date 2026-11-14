@@ -18,7 +18,7 @@ describe("VersionHistoryService - tracking, races and edge cases", () => {
       fx.service.resetTimer();
       fx.service.resetTimer();
 
-      vi.advanceTimersByTime(1000);
+      fx.clock.advance(1000);
       await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
       expect(await fx.manager.getAllVersions()).toHaveLength(0);
@@ -43,16 +43,19 @@ describe("VersionHistoryService - tracking, races and edge cases", () => {
 
       // Fire the squash timer - performSquash() starts and suspends on the
       // still-pending saveVersion call, leaving the buffer not yet cleared.
-      vi.advanceTimersByTime(1000);
+      fx.clock.advance(1000);
       await Promise.resolve();
 
       // A further edit restarts the timer, which fires while the first
       // squash is still in flight and sees a non-empty buffer.
       fx.service.bufferChange(fx.mockCharacter, "Change 2");
-      vi.advanceTimersByTime(1000);
+      fx.clock.advance(1000);
       await Promise.resolve();
 
       releaseSave();
+      // The squash that was in flight leaves Change 2 buffered with a fresh window.
+      await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(1));
+      fx.clock.advance(1000);
       await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
       // Change 1 saved once by the in-flight squash, then Change 2 on its own
@@ -67,17 +70,17 @@ describe("VersionHistoryService - tracking, races and edge cases", () => {
   describe("Integration Scenario: Multiple Quick Edits", () => {
     it("should handle realistic editing scenario", async () => {
       fx.service.bufferChange({ ...fx.mockCharacter, name: "Aria" }, "Changed name");
-      vi.advanceTimersByTime(400);
+      fx.clock.advance(400);
 
       fx.service.bufferChange({ ...fx.mockCharacter, tier: 2 }, "Changed tier");
-      vi.advanceTimersByTime(400);
+      fx.clock.advance(400);
 
       fx.service.bufferChange({ ...fx.mockCharacter, descriptor: "Swift" }, "Changed descriptor");
-      vi.advanceTimersByTime(600); // Total 1400ms, but timer reset at 800ms
+      fx.clock.advance(600); // Total 1400ms, but timer reset at 800ms
 
       expect(await fx.manager.getAllVersions()).toHaveLength(0);
 
-      vi.advanceTimersByTime(400); // Now 1000ms from last reset
+      fx.clock.advance(400); // Now 1000ms from last reset
 
       await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
@@ -99,13 +102,15 @@ describe("VersionHistoryService - tracking, races and edge cases", () => {
     it("should handle timer firing during additional buffering", async () => {
       fx.service.bufferChange(fx.mockCharacter, "Change 1");
 
-      vi.advanceTimersByTime(999);
+      fx.clock.advance(999);
 
       fx.service.bufferChange(fx.mockCharacter, "Change 2");
 
-      vi.advanceTimersByTime(1); // Original timer fires
+      fx.clock.advance(1); // The original timer was reset, so nothing fires here
 
       expect(await fx.manager.getAllVersions()).toHaveLength(0);
+
+      fx.clock.advance(999);
 
       await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 

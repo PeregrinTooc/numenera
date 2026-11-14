@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import { VersionHistoryService } from "@/services/versionHistoryService";
-import { TestTimer } from "@/services/testTimer";
+import { ManualClock } from "@/services/manualClock";
 import type { Character } from "@/types/character";
 import { createTestCharacter as createMockCharacter } from "../factories/character";
 
@@ -10,7 +10,7 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 describe.sequential("VersionHistoryService - edits during an in-flight squash", () => {
   let manager: VersionHistoryManager;
   let service: VersionHistoryService;
-  let timer: TestTimer;
+  let clock: ManualClock;
   let mockCharacter: Character;
   const testDbName = "test-version-history-squash-race-suite";
 
@@ -20,9 +20,9 @@ describe.sequential("VersionHistoryService - edits during an in-flight squash", 
     await manager.clear();
     await wait(100);
 
-    // Squash timers fire only when a test triggers them.
-    timer = new TestTimer();
-    service = new VersionHistoryService(manager, 1000, timer);
+    // Squash timers fire only when a test advances the clock.
+    clock = new ManualClock();
+    service = new VersionHistoryService(manager, clock, 1000);
     mockCharacter = createMockCharacter();
   });
 
@@ -76,10 +76,10 @@ describe.sequential("VersionHistoryService - edits during an in-flight squash", 
     const inFlight = service.forceSquash();
     service.bufferChange({ ...mockCharacter, name: "Late Hero" }, "Changed name");
     // The late edit's timer fires while the first save is still pending.
-    timer.triggerAll();
+    clock.advance(1000);
     releaseSave();
     await inFlight;
-    timer.triggerAll();
+    clock.advance(1000);
 
     await vi.waitFor(async () => {
       const versions = await manager.getAllVersions();

@@ -19,7 +19,7 @@ describe("VersionHistoryService - Buffer-Based Undo/Redo", () => {
         fx.service.bufferChange(fx.mockCharacter, "Change 1");
         expect(fx.service.canUndo()).toBe(true);
 
-        vi.advanceTimersByTime(1000);
+        fx.clock.advance(1000);
         await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
         expect(fx.service.canUndo()).toBe(false);
@@ -118,7 +118,7 @@ describe("VersionHistoryService - Buffer-Based Undo/Redo", () => {
         fx.service.setInitialState(initialState);
         fx.service.bufferChange(fx.mockCharacter, "Change 1");
 
-        vi.advanceTimersByTime(1000);
+        fx.clock.advance(1000);
         await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
         const undone = fx.service.undo();

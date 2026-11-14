@@ -1,19 +1,20 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { AutoSaveService } from "@/services/autoSaveService";
+import { ManualClock } from "@/services/manualClock";
 import { forwardAutoSaveFailures } from "@/services/autoSaveFailureBridge";
 import { STORAGE_WRITE_FAILED_EVENT } from "@/storage/storageWriteFailure";
 
 describe("forwardAutoSaveFailures", () => {
   afterEach(() => {
     vi.restoreAllMocks();
-    vi.useRealTimers();
   });
 
   it("turns a failed auto-save into a storage-write-failed event", async () => {
-    vi.useFakeTimers();
+    const clock = new ManualClock();
     vi.spyOn(console, "error").mockImplementation(() => {});
     const service = new AutoSaveService(
       () => Promise.reject(new DOMException("full", "QuotaExceededError")),
+      clock,
       300
     );
     forwardAutoSaveFailures(service);
@@ -21,7 +22,8 @@ describe("forwardAutoSaveFailures", () => {
     window.addEventListener(STORAGE_WRITE_FAILED_EVENT, listener);
 
     service.requestSave();
-    await vi.advanceTimersByTimeAsync(300);
+    clock.advance(300);
+    await service.flush();
 
     window.removeEventListener(STORAGE_WRITE_FAILED_EVENT, listener);
     expect(listener).toHaveBeenCalledTimes(1);

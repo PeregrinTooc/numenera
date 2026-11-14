@@ -143,8 +143,8 @@ async function initVersionHistory(
   const squashDelay = window.__SQUASH_DELAY_MS__ || 5000;
   ctx.versionHistoryService = new VersionHistoryService(
     versionHistory,
-    squashDelay,
-    ctx.testTimer || undefined
+    ctx.testTimer ?? ctx.clock,
+    squashDelay
   );
 
   window.__versionHistoryService = ctx.versionHistoryService;

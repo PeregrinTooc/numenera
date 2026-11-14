@@ -10,7 +10,7 @@ import type { Character } from "@/types/character";
 import type { CharacterVersion } from "@/types/versionHistory";
 import type { VersionHistoryService } from "@/services/versionHistoryService";
 import type { ConflictDetectionService } from "@/services/conflictDetectionService";
-import type { TestTimer } from "@/services/testTimer";
+import type { Clock } from "@/services/clock";
 import type { AutoSaveService } from "@/services/autoSaveService";
 
 declare global {
@@ -28,7 +28,7 @@ declare global {
     };
     __versionHistoryService?: VersionHistoryService | null;
     __conflictDetectionService?: ConflictDetectionService | null;
-    __testTimer?: TestTimer;
+    __testTimer?: Clock;
     __autoSaveService?: AutoSaveService;
     /** E2E hook: overrides the version-history squash delay (ms). */
     __SQUASH_DELAY_MS__?: number;

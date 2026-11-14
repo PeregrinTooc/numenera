@@ -3,8 +3,7 @@
  * Emits events for save lifecycle: save-completed, save-error
  */
 
-import type { ITimer, TimerHandle } from "./timer.js";
-import { RealTimer } from "./timer.js";
+import type { Clock, TimerHandle } from "@/services/clock";
 
 type SaveCallback = () => Promise<void>;
 
@@ -20,7 +19,7 @@ type EventListener<E extends EventType> = (event: AutoSaveEvents[E]) => void;
 export class AutoSaveService {
   private saveCallback: SaveCallback;
   private debounceMs: number;
-  private timer: ITimer;
+  private clock: Clock;
   private timerId: TimerHandle | null = null;
   private listeners: { [E in EventType]: Set<EventListener<E>> } = {
     "save-completed": new Set(),
@@ -28,22 +27,18 @@ export class AutoSaveService {
   };
   private savePromise: Promise<void> | null = null;
 
-  constructor(
-    saveCallback: SaveCallback,
-    debounceMs: number = 300,
-    timer: ITimer = new RealTimer()
-  ) {
+  constructor(saveCallback: SaveCallback, clock: Clock, debounceMs: number = 300) {
     this.saveCallback = saveCallback;
     this.debounceMs = debounceMs;
-    this.timer = timer;
+    this.clock = clock;
   }
 
   requestSave(): void {
     if (this.timerId !== null) {
-      this.timer.clearTimeout(this.timerId);
+      this.clock.clearTimeout(this.timerId);
     }
 
-    this.timerId = this.timer.setTimeout(() => {
+    this.timerId = this.clock.setTimeout(() => {
       this.performSave();
     }, this.debounceMs);
   }
@@ -53,7 +48,7 @@ export class AutoSaveService {
 
     this.savePromise = this.saveCallback()
       .then(() => {
-        const timestamp = Date.now();
+        const timestamp = this.clock.now();
         this.emit("save-completed", { timestamp });
         this.savePromise = null;
       })
@@ -70,7 +65,7 @@ export class AutoSaveService {
     // Not awaited on purpose (unload handlers cannot await): the write is issued in this same task
     // (after the storage-singleton microtask), not after the debounce.
     if (this.timerId !== null) {
-      this.timer.clearTimeout(this.timerId);
+      this.clock.clearTimeout(this.timerId);
       return this.performSave();
     }
 

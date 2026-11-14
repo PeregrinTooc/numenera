@@ -127,6 +127,10 @@ Before(async function (this: CustomWorld, { pickle }) {
       private timers = new Map<number, () => void>();
       private nextHandle = 1;
 
+      now(): number {
+        return Date.now();
+      }
+
       setTimeout(callback: () => void, _delay: number): number {
         const handle = this.nextHandle++;
         this.timers.set(handle, callback);
@@ -169,7 +173,7 @@ Before(async function (this: CustomWorld, { pickle }) {
       }
     }
 
-    // Structurally the same API as the app's TestTimer; this class has to be
+    // Structurally a Clock whose timers fire only when a driver triggers them; it has to be
     // self-contained because evaluate() serialises it into the page.
     window.__testTimer = new TestTimer() as unknown as typeof window.__testTimer;
 

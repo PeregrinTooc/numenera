@@ -13,40 +13,36 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
 
     it("should reset the timer on each call to resetTimer", async () => {
       fx.service.resetTimer();
-      vi.advanceTimersByTime(500);
+      fx.clock.advance(500);
 
       fx.service.resetTimer(); // Reset at 500ms
-      vi.advanceTimersByTime(500); // Advance another 500ms (1000ms total from start)
+      fx.clock.advance(500); // Advance another 500ms (1000ms total from start)
 
       // Timer should NOT have fired yet (reset at 500ms, so fires at 1500ms)
       expect(await fx.manager.getAllVersions()).toHaveLength(0);
 
-      vi.advanceTimersByTime(500); // Now at 1500ms
-
-      await vi.runAllTimersAsync();
+      fx.clock.advance(500); // Now at 1500ms
 
       expect(fx.service.isTimerActive()).toBe(false);
     });
 
     it("should handle multiple rapid resets correctly", async () => {
       fx.service.resetTimer();
-      vi.advanceTimersByTime(200);
+      fx.clock.advance(200);
 
       fx.service.resetTimer();
-      vi.advanceTimersByTime(200);
+      fx.clock.advance(200);
 
       fx.service.resetTimer();
-      vi.advanceTimersByTime(200);
+      fx.clock.advance(200);
 
       fx.service.resetTimer();
-      vi.advanceTimersByTime(200);
+      fx.clock.advance(200);
 
       // 800ms total, but timer keeps resetting
       expect(await fx.manager.getAllVersions()).toHaveLength(0);
 
-      vi.advanceTimersByTime(800); // Now 1000ms from last reset
-
-      await vi.runAllTimersAsync();
+      fx.clock.advance(800); // Now 1000ms from last reset
 
       expect(fx.service.isTimerActive()).toBe(false);
     });
@@ -54,7 +50,7 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
     it("should clear timer state after squash completes", async () => {
       fx.service.bufferChange(fx.mockCharacter, "Test change");
 
-      vi.advanceTimersByTime(1000);
+      fx.clock.advance(1000);
       await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
       expect(fx.service.isTimerActive()).toBe(false);
@@ -90,7 +86,7 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
 
       char.name = "Modified";
 
-      vi.advanceTimersByTime(1000);
+      fx.clock.advance(1000);
       expect(fx.service.getBufferLength()).toBe(1);
     });
   });
@@ -99,7 +95,7 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
     it("should not squash if buffer is empty", async () => {
       fx.service.resetTimer();
 
-      vi.advanceTimersByTime(1000);
+      fx.clock.advance(1000);
       await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
       expect(await fx.manager.getAllVersions()).toHaveLength(0);
@@ -110,7 +106,7 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
       fx.service.bufferChange(fx.mockCharacter, "Change 2");
       fx.service.bufferChange(fx.mockCharacter, "Change 3");
 
-      vi.advanceTimersByTime(1000);
+      fx.clock.advance(1000);
       await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
       expect(await fx.manager.getAllVersions()).toHaveLength(1);
@@ -125,7 +121,7 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
       fx.service.bufferChange(char2, "Change 2");
       fx.service.bufferChange(char3, "Change 3");
 
-      vi.advanceTimersByTime(1000);
+      fx.clock.advance(1000);
       await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
       const [version] = await fx.manager.getAllVersions();
@@ -137,7 +133,7 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
       fx.service.bufferChange(fx.mockCharacter, "Changed tier");
       fx.service.bufferChange(fx.mockCharacter, "Changed descriptor");
 
-      vi.advanceTimersByTime(1000);
+      fx.clock.advance(1000);
       await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
       const [version] = await fx.manager.getAllVersions();
@@ -152,7 +148,7 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
       fx.service.bufferChange(fx.mockCharacter, "Change 1");
       fx.service.bufferChange(fx.mockCharacter, "Change 2");
 
-      vi.advanceTimersByTime(1000);
+      fx.clock.advance(1000);
       await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
       const [version] = await fx.manager.getAllVersions();
@@ -166,7 +162,7 @@ describe("VersionHistoryService - Smart Squashing Refactor", () => {
 
       expect(fx.service.getBufferLength()).toBe(2);
 
-      vi.advanceTimersByTime(1000);
+      fx.clock.advance(1000);
       await vi.waitFor(() => expect(fx.service.getBufferLength()).toBe(0));
 
       expect(fx.service.getBufferLength()).toBe(0);

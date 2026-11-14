@@ -10,8 +10,7 @@ import type { Character } from "@/types/character";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import { squashDescriptions } from "@/utils/squashDescriptions";
 import { ChangeBuffer } from "./changeBuffer.js";
-import type { ITimer, TimerHandle } from "./timer.js";
-import { RealTimer } from "./timer.js";
+import type { Clock, TimerHandle } from "@/services/clock";
 
 function emit(name: string): void {
   window.dispatchEvent(new CustomEvent(name));
@@ -20,31 +19,27 @@ function emit(name: string): void {
 export class VersionHistoryService {
   private manager: VersionHistoryManager;
   private squashDelayMs: number;
-  private timer: ITimer;
+  private clock: Clock;
   private globalTimer: TimerHandle | null = null;
   private buffer = new ChangeBuffer();
   private isSquashInProgress: boolean = false;
 
-  constructor(
-    manager: VersionHistoryManager,
-    squashDelayMs: number = 5000,
-    timer: ITimer = new RealTimer()
-  ) {
+  constructor(manager: VersionHistoryManager, clock: Clock, squashDelayMs: number = 5000) {
     this.manager = manager;
     this.squashDelayMs = squashDelayMs;
-    this.timer = timer;
+    this.clock = clock;
   }
 
   resetTimer(): void {
     this.cancelTimer();
-    this.globalTimer = this.timer.setTimeout(() => {
+    this.globalTimer = this.clock.setTimeout(() => {
       this.performSquash();
     }, this.squashDelayMs);
   }
 
   private cancelTimer(): void {
     if (this.globalTimer !== null) {
-      this.timer.clearTimeout(this.globalTimer);
+      this.clock.clearTimeout(this.globalTimer);
       this.globalTimer = null;
     }
   }
