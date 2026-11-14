@@ -93,13 +93,23 @@ export class PlaywrightVersionHistoryDriver implements VersionHistoryDriver {
     private storage: TestStorageHelper
   ) {}
 
+  /**
+   * Rewrites the whole history while the app is idle, then reloads so it boots
+   * on a history whose latest version is the stored character. Writing versions
+   * into a running app, or leaving a stale version from an earlier boot in
+   * place, makes reconcileVersionHistory record an extra version at boot.
+   */
   async storeVersions(seeds: VersionSeed[]): Promise<void> {
     await waitForInitialVersionSaved(this.page);
     const base = await this.storage.getCharacter();
+    const [initial] = await this.storage.getAllVersions();
+    await this.storage.clearVersions();
+    await this.storage.createVersion(base, initial.description);
     for (const { description, changes } of seeds) {
       await this.storage.createVersion({ ...base, ...changes }, description);
     }
-    if (seeds.length > 0) await this.expectPosition(seeds.length + 1, seeds.length + 1);
+    await this.reopen();
+    await this.expectPosition(seeds.length + 1, seeds.length + 1);
   }
 
   async settleEdits(): Promise<void> {

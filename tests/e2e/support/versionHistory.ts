@@ -140,7 +140,8 @@ export class VersionHistoryDsl {
   }
 
   async expectOriginalName(): Promise<void> {
-    await this.character.expectBasicInfoShows("name", ORIGINAL_NAME);
+    const { name } = this.versions[this.versions.length - 1];
+    await this.character.expectBasicInfoShows("name", name);
   }
 
   async expectEditable(): Promise<void> {
