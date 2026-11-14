@@ -4,7 +4,6 @@ import { TestStorageHelper } from "./testStorageHelper.js";
 import { DOMHelpers } from "./dom-helpers.js";
 import { ModalDsl } from "./modal.js";
 import { FieldsDsl } from "./fields.js";
-import { CardsDsl } from "./cards.js";
 import { SetupDsl } from "./setup.js";
 import type { CharacterDsl } from "./character.js";
 import type { CardEditorDsl } from "./cardEditor.js";
@@ -32,7 +31,6 @@ export interface CustomWorld extends World {
   dom: DOMHelpers;
   modal: ModalDsl;
   fields: FieldsDsl;
-  cards: CardsDsl;
   setup: SetupDsl;
   character: CharacterDsl;
   cardEditor: CardEditorDsl;
@@ -70,7 +68,6 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   dom!: DOMHelpers;
   modal!: ModalDsl;
   fields!: FieldsDsl;
-  cards!: CardsDsl;
   setup!: SetupDsl;
   character!: CharacterDsl;
   cardEditor!: CardEditorDsl;

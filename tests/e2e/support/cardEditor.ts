@@ -31,4 +31,33 @@ export class CardEditorDsl {
   async expectOpenWithEmptyFields(kind: string): Promise<void> {
     await this.editor.expectEmptyFields(kind);
   }
+
+  async pressTab(times: number): Promise<void> {
+    await this.editor.pressTab(times);
+  }
+
+  async pressShiftTab(times: number): Promise<void> {
+    await this.editor.pressShiftTab(times);
+  }
+
+  async pressEscape(): Promise<void> {
+    await this.editor.pressEscape();
+  }
+
+  async expectClosed(): Promise<void> {
+    await this.editor.expectClosed();
+  }
+
+  async expectFocusWithin(): Promise<void> {
+    await this.editor.expectFocusWithin();
+  }
+
+  async expectFirstFieldFocused(): Promise<void> {
+    await this.editor.expectFirstFieldFocused();
+  }
+
+  async expectFieldFocused(field: string): Promise<void> {
+    if (this.kind === undefined) throw new Error("No card is being edited; start one first");
+    await this.editor.expectFieldFocused(this.kind, field);
+  }
 }

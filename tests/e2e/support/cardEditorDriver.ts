@@ -8,6 +8,13 @@ export interface CardEditorDriver {
   save(): Promise<void>;
   cancel(): Promise<void>;
   expectEmptyFields(kind: string): Promise<void>;
+  pressTab(times: number): Promise<void>;
+  pressShiftTab(times: number): Promise<void>;
+  pressEscape(): Promise<void>;
+  expectClosed(): Promise<void>;
+  expectFocusWithin(): Promise<void>;
+  expectFirstFieldFocused(): Promise<void>;
+  expectFieldFocused(kind: string, field: string): Promise<void>;
 }
 
 // What a freshly opened editor holds for fields that do not start blank.
@@ -79,5 +86,33 @@ export class PlaywrightCardEditorDriver implements CardEditorDriver {
       await expect(input).toBeVisible();
       await expect(input).toHaveValue(INITIAL_VALUES[kind]?.[field] ?? "");
     }
+  }
+
+  async pressTab(times: number): Promise<void> {
+    for (let i = 0; i < times; i++) await this.page.keyboard.press("Tab");
+  }
+
+  async pressShiftTab(times: number): Promise<void> {
+    for (let i = 0; i < times; i++) await this.page.keyboard.press("Shift+Tab");
+  }
+
+  async pressEscape(): Promise<void> {
+    await this.page.keyboard.press("Escape");
+  }
+
+  async expectClosed(): Promise<void> {
+    await expect(this.editor).toBeHidden();
+  }
+
+  async expectFocusWithin(): Promise<void> {
+    await expect(this.editor.locator(":focus")).toHaveCount(1);
+  }
+
+  async expectFirstFieldFocused(): Promise<void> {
+    await expect(this.editor.locator("input").first()).toBeFocused();
+  }
+
+  async expectFieldFocused(kind: string, field: string): Promise<void> {
+    await expect(this.field(kind, field)).toBeFocused();
   }
 }

@@ -6,7 +6,6 @@ import { TestStorageHelper } from "./testStorageHelper.js";
 import { DOMHelpers } from "./dom-helpers.js";
 import { ModalDsl } from "./modal.js";
 import { FieldsDsl } from "./fields.js";
-import { CardsDsl } from "./cards.js";
 import { SetupDsl } from "./setup.js";
 import { CharacterDsl } from "./character.js";
 import { PlaywrightSheetDriver } from "./sheetDriver.js";
@@ -51,7 +50,6 @@ Before(async function (this: CustomWorld, { pickle }) {
   this.dom = new DOMHelpers(this.page);
   this.modal = new ModalDsl(this.page);
   this.fields = new FieldsDsl(this.page);
-  this.cards = new CardsDsl(this);
   this.setup = new SetupDsl(this);
   this.character = new CharacterDsl(new PlaywrightSheetDriver(this.page), this.setup);
   this.cardEditor = new CardEditorDsl(new PlaywrightCardEditorDriver(this.page));
