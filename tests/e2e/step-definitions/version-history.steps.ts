@@ -1,12 +1,16 @@
-import { Given, When, Then } from "@cucumber/cucumber";
+import { Given, When, Then, type DataTable } from "@cucumber/cucumber";
 import type { CustomWorld } from "../support/world.js";
+import { propertyTable } from "../support/tableRows.js";
 
 Given("my character has no history yet", async function (this: CustomWorld) {
   await this.history.startsWithNoHistory();
 });
 
+// The app re-reads the whole history on every save, so a history at the 99-version
+// cap takes long enough to outlast the default step timeout on a loaded machine.
 Given(
   "my character has a history of {int} versions",
+  { timeout: 120000 },
   async function (this: CustomWorld, count: number) {
     await this.history.hasVersions(count);
   }
@@ -224,3 +228,45 @@ Then("the export carries no version history", function (this: CustomWorld) {
 Then("the export keeps my current portrait", function (this: CustomWorld) {
   this.history.expectExportKeepsPortrait();
 });
+
+Given(
+  "my history has a version in which I changed",
+  async function (this: CustomWorld, changes: DataTable) {
+    await this.history.hasVersionChangingBasicInfo(propertyTable(changes));
+  }
+);
+
+Given(
+  "my history has a version in which I changed my name to {string}, followed by one in which I changed my tier to {int}",
+  async function (this: CustomWorld, name: string, tier: number) {
+    await this.history.hasVersionsChangingNameThenTier(name, tier);
+  }
+);
+
+Given(
+  "my history has a version in which I added the cypher {string}",
+  async function (this: CustomWorld, name: string) {
+    await this.history.hasVersionAddingCypher(name);
+  }
+);
+
+Given(
+  "my history has a version in which I removed the cypher {string}",
+  async function (this: CustomWorld, name: string) {
+    await this.history.hasVersionRemovingCypher(name);
+  }
+);
+
+Given(
+  "my history has a version in which I changed the effect of the cypher {string}",
+  async function (this: CustomWorld, name: string) {
+    await this.history.hasVersionChangingCypherEffect(name);
+  }
+);
+
+Given(
+  "my history has a version in which I renamed the cypher {string} to {string}",
+  async function (this: CustomWorld, name: string, newName: string) {
+    await this.history.hasVersionRenamingCypher(name, newName);
+  }
+);

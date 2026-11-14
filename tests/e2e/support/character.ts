@@ -1,21 +1,16 @@
 import { intCell } from "./tableRows.js";
-import { CARD_CONFIGS, CARD_TYPE_TO_PROPERTY, EMPTY_ARRAYS } from "./cardTestFixtures.js";
+import {
+  CARD_CONFIGS,
+  CARD_TYPE_TO_PROPERTY,
+  EMPTY_ARRAYS,
+  sampleCard,
+} from "./cardTestFixtures.js";
 import { FULL_CHARACTER } from "@/data/mockCharacters";
 import type { SetupDsl } from "./setup.js";
 import { englishText } from "./i18nKeys.js";
 import { statLabel } from "./valueEditor.js";
 import type { ValueEditorDriver } from "./valueEditorDriver.js";
 import type { CardTheme, SheetDriver } from "./sheetDriver.js";
-
-function nameOf(card: unknown): string {
-  return typeof card === "string" ? card : (card as { name: string }).name;
-}
-
-function sampleCard(kind: string, name: string): unknown {
-  const card = CARD_CONFIGS[kind].sampleCards.find((sample) => nameOf(sample) === name);
-  if (card === undefined) throw new Error(`No sample ${kind} named "${name}"`);
-  return card;
-}
 
 const NUMERIC_PROPERTIES = ["damage", "modifier"];
 

@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **480** in 48 files
-- Feature step lines: **1788**
+- Step definitions: **457** in 41 files
+- Feature step lines: **1780**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -71,15 +71,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [third-party-requests.steps.ts](#thirdpartyrequestsstepsts) | 3 | 0 |
 | [unreadable-character.steps.ts](#unreadablecharacterstepsts) | 10 | 0 |
 | [value-editor.steps.ts](#valueeditorstepsts) | 18 | 0 |
-| [version-comparison-highlighting.steps.ts](#versioncomparisonhighlightingstepsts) | 17 | 0 |
-| [version-comparison-navigation.steps.ts](#versioncomparisonnavigationstepsts) | 12 | 0 |
-| [version-comparison-setup.steps.ts](#versioncomparisonsetupstepsts) | 12 | 0 |
-| [version-history-assertions.steps.ts](#versionhistoryassertionsstepsts) | 3 | 0 |
-| [version-history-given-basic.steps.ts](#versionhistorygivenbasicstepsts) | 3 | 0 |
-| [version-history-given-data.steps.ts](#versionhistorygivendatastepsts) | 1 | 0 |
-| [version-history-navigation.steps.ts](#versionhistorynavigationstepsts) | 2 | 0 |
-| [version-history-navigator-state.steps.ts](#versionhistorynavigatorstatestepsts) | 3 | 0 |
-| [version-history.steps.ts](#versionhistorystepsts) | 47 | 0 |
+| [version-comparison.steps.ts](#versioncomparisonstepsts) | 24 | 0 |
+| [version-history.steps.ts](#versionhistorystepsts) | 53 | 0 |
 | [viewport.steps.ts](#viewportstepsts) | 2 | 0 |
 
 ## ⚠️ Feature lines with no matching step definition
@@ -238,7 +231,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am on the character sheet page` | 24 | 14 |
+| Given | `I am on the character sheet page` | 23 | 14 |
 | Given | `my character has every kind of entry` | 1 | 29 |
 | Given | `my character has these stats:` | 1 | 25 |
 | Given | `my character has this basic information:` | 1 | 18 |
@@ -567,7 +560,7 @@ pattern this script does not understand):
 | When | `I click the British flag icon` | 1 | 78 |
 | When | `I click the German flag icon` | 4 | 74 |
 | When | `I click the settings gear icon` | 2 | 37 |
-| Given | `I have opened the settings panel` | 11 | 49 |
+| Given | `I have opened the settings panel` | 8 | 49 |
 | Then | `I should be able to click the settings gear icon` | 1 | 30 |
 | Then | `I should see a {string} option` | 1 | 109 |
 | Then | `I should see a settings gear icon in the header` | 1 | 22 |
@@ -657,150 +650,92 @@ pattern this script does not understand):
 | Then | `the value editor shows a numeric keypad` | 1 | 39 |
 | Then | `the value editor's controls are big enough to tap` | 1 | 66 |
 
-## version-comparison-highlighting.steps.ts
+## version-comparison.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the left pane's restore button` | 2 | 82 |
-| When | `I click the return to editing button` | 2 | 120 |
-| When | `I click the right pane's restore button` | 1 | 86 |
-| Then | `no add or delete button should be present in the comparison view` | 1 | 131 |
-| Then | `no field in the comparison view should be editable` | 1 | 124 |
-| Then | `the {string} field should be highlighted as changed in the {word} pane` | 2 | 10 |
-| Then | `the {string} field should not be highlighted in the {word} pane` | 2 | 19 |
-| Then | `the {word} pane should show the newly restored version` | 1 | 95 |
-| Then | `the added cypher card should be highlighted as added in the right pane` | 1 | 28 |
-| Then | `the left pane should not show the added cypher card` | 1 | 36 |
-| Then | `the modified cypher card should be highlighted as changed in the {word} pane` | 2 | 56 |
-| Then | `the new cypher name should be highlighted as added in the right pane` | 1 | 74 |
-| Then | `the old cypher name should be highlighted as removed in the left pane` | 1 | 64 |
-| Then | `the removed cypher card should be highlighted as removed in the left pane` | 1 | 41 |
-| Then | `the right pane should not show the removed cypher card` | 1 | 51 |
-| Then | `the right pane should still show the same character name as before the restore` | 1 | 105 |
-| Then | `the right pane's restore button should be disabled` | 1 | 90 |
-
-## version-comparison-navigation.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| When | `I click the left pane's backward arrow` | 3 | 5 |
-| When | `I click the left pane's backward arrow {int} time(s)` | 2 | 17 |
-| When | `I click the left pane's forward arrow` | 1 | 9 |
-| When | `I click the right pane's backward arrow` | 1 | 13 |
-| When | `I click the right pane's backward arrow {int} time(s)` | 1 | 26 |
-| Then | `the comparison header should indicate there are no differences` | 1 | 90 |
-| Then | `the comparison header should list every changed field, not just the top 3` | 1 | 65 |
-| Then | `the comparison header should reflect the new left pane version` | 1 | 80 |
-| Then | `the left pane should show version {int}` | 5 | 54 |
-| Given | `the left pane shows version {int}` | 2 | 46 |
-| Then | `the right pane should show version {int}` | 4 | 58 |
-| Given | `the right pane shows version {int}` | 1 | 50 |
-
-## version-comparison-setup.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Given | `comparison view is enabled in settings` | 23 | 19 |
-| Then | `comparison view should show as enabled in settings` | 1 | 35 |
-| Given | `I am viewing the comparison view` | 19 | 39 |
-| When | `I close the settings panel` | 2 | 30 |
-| When | `I enable comparison view in settings` | 2 | 23 |
-| Given | `the character has a version where a cypher was renamed` | 1 | 111 |
-| Given | `the character has a version with a modified cypher effect` | 1 | 92 |
-| Given | `the character has a version with a name change` | 2 | 57 |
-| Given | `the character has a version with a removed cypher` | 1 | 81 |
-| Given | `the character has a version with an added cypher` | 1 | 67 |
-| Then | `the comparison view should be visible` | 3 | 44 |
-| Then | `the comparison view should not be visible` | 3 | 48 |
-
-## version-history-assertions.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Then | `a new version should be created with description {string}` | 2 | 11 |
-| Then | `I should be viewing the latest version` | 1 | 4 |
-| Then | `the oldest version should have been removed` | 1 | 19 |
-
-## version-history-given-basic.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Given | `the character has {int} versions in history` | 16 | 17 |
-| Given | `the character has a version with multiple basic info changes` | 1 | 42 |
-| Given | `the character has no version history yet` | 2 | 5 |
-
-## version-history-given-data.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Given | `the character has {int} versions with different data` | 1 | 5 |
-
-## version-history-navigation.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| When | `I click the backward navigation arrow` | 5 | 5 |
-| When | `I refresh the browser` | 1 | 9 |
-
-## version-history-navigator-state.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Then | `all edit controls should be enabled` | 1 | 9 |
-| Then | `the version counter should show {string}` | 3 | 14 |
-| Then | `the version navigator should not be visible` | 1 | 4 |
+| Then | `comparison view is still switched on in settings` | 1 | 45 |
+| Given | `comparison view is switched on in settings` | 23 | 4 |
+| Given | `I am viewing the comparison view` | 19 | 12 |
+| When | `I move the {pane} pane to version {int}` | 4 | 30 |
+| When | `I restore the version in the {pane} pane` | 3 | 37 |
+| When | `I return to editing` | 2 | 41 |
+| When | `I step the {pane} pane back to the previous version` | 4 | 16 |
+| When | `I step the {pane} pane forward to the next version` | 1 | 23 |
+| When | `I switch on comparison view in settings` | 2 | 8 |
+| Then | `my history gains a version restored from version {int}` | 2 | 79 |
+| Then | `nothing in the comparison view can be edited` | 1 | 132 |
+| Then | `the {pane} pane can restore its version` | 1 | 71 |
+| Then | `the {pane} pane cannot restore its version` | 1 | 75 |
+| Then | `the {pane} pane does not show the cypher {string}` | 4 | 125 |
+| Then | `the {pane} pane shows my character as it was in version {int}` | 1 | 64 |
+| Then | `the {pane} pane shows version {int}` | 10 | 57 |
+| Then | `the {word} is highlighted yellow in both panes` | 1 | 97 |
+| Then | `the {word} is not highlighted in either pane` | 1 | 104 |
+| Then | `the comparison header lists exactly these changes` | 4 | 86 |
+| Then | `the comparison header says there are no differences` | 1 | 93 |
+| Then | `the comparison view is not shown` | 3 | 53 |
+| Then | `the comparison view is shown` | 3 | 49 |
+| Then | `the cypher {string} is highlighted {colour} in both panes` | 1 | 118 |
+| Then | `the cypher {string} is highlighted {colour} in the {pane} pane` | 4 | 111 |
 
 ## version-history.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `I am not warned about an old version` | 5 | 163 |
-| Then | `I am on the latest version` | 2 | 171 |
-| Then | `I am warned that I am viewing an old version` | 7 | 159 |
-| Then | `I can edit my character` | 1 | 132 |
-| Then | `I can import a character` | 2 | 117 |
-| Then | `I can restore this version` | 1 | 167 |
-| Then | `I cannot import a character` | 1 | 121 |
-| When | `I export what I am viewing` | 1 | 109 |
-| When | `I go to the oldest version` | 1 | 54 |
-| When | `I go to version {int}` | 15 | 50 |
-| When | `I redo with Ctrl+Shift+Z` | 1 | 101 |
-| When | `I redo with Ctrl+Y` | 8 | 97 |
-| When | `I reopen my character` | 9 | 105 |
-| When | `I restore this version` | 3 | 73 |
-| When | `I return to the latest version` | 1 | 77 |
-| Then | `I see my character as it was in version {int}` | 12 | 197 |
-| When | `I step back {int} times in quick succession` | 1 | 66 |
-| When | `I step back to the previous version` | 19 | 58 |
-| When | `I step forward to the next version` | 4 | 62 |
-| When | `I undo with Ctrl+Z` | 19 | 93 |
-| Given | `my character has a history of {int} versions` | 28 | 7 |
-| Given | `my character has a history of {int} versions with different data` | 1 | 14 |
-| Given | `my character has a portrait` | 3 | 46 |
-| Given | `my character has no history yet` | 4 | 3 |
-| Then | `my character sheet shows the name it had before my edits` | 3 | 125 |
-| When | `my edits have settled into a version` | 26 | 81 |
-| When | `my edits start to be saved as a version` | 1 | 85 |
-| Given | `my history holds an old version recorded as {string} for a name change and an added ability` | 1 | 35 |
-| Given | `my history holds an old version recorded as {string} for an added cypher` | 2 | 28 |
-| Given | `my Might pool went from {int} to {int} to {int}` | 1 | 21 |
-| Then | `my portrait is unchanged` | 3 | 208 |
-| Given | `saving a version is held up` | 1 | 42 |
-| Then | `the back control is available` | 4 | 143 |
-| Then | `the back control is unavailable` | 1 | 147 |
-| Then | `the export carries no version history` | 1 | 219 |
-| Then | `the export holds version {int} of my character` | 1 | 212 |
-| Then | `the export keeps my current portrait` | 1 | 223 |
-| Then | `the forward control is available` | 3 | 151 |
-| Then | `the forward control is unavailable` | 3 | 155 |
-| When | `the held-up save goes through` | 1 | 89 |
-| Then | `the navigator dates this version` | 1 | 186 |
-| Then | `the navigator describes this version` | 1 | 175 |
-| Then | `the navigator describes this version as {string}` | 15 | 179 |
-| Then | `the navigator gives the age of this version in relative terms` | 1 | 190 |
-| Then | `the navigator is hidden` | 1 | 113 |
-| Then | `the navigator shows version {int} of {int}` | 25 | 136 |
-| Then | `the original version has been dropped` | 1 | 204 |
+| Then | `I am not warned about an old version` | 5 | 167 |
+| Then | `I am on the latest version` | 3 | 175 |
+| Then | `I am warned that I am viewing an old version` | 7 | 163 |
+| Then | `I can edit my character` | 2 | 136 |
+| Then | `I can import a character` | 2 | 121 |
+| Then | `I can restore this version` | 1 | 171 |
+| Then | `I cannot import a character` | 1 | 125 |
+| When | `I export what I am viewing` | 1 | 113 |
+| When | `I go to the oldest version` | 1 | 58 |
+| When | `I go to version {int}` | 15 | 54 |
+| When | `I redo with Ctrl+Shift+Z` | 1 | 105 |
+| When | `I redo with Ctrl+Y` | 8 | 101 |
+| When | `I reopen my character` | 10 | 109 |
+| When | `I restore this version` | 3 | 77 |
+| When | `I return to the latest version` | 1 | 81 |
+| Then | `I see my character as it was in version {int}` | 12 | 201 |
+| When | `I step back {int} times in quick succession` | 1 | 70 |
+| When | `I step back to the previous version` | 24 | 62 |
+| When | `I step forward to the next version` | 4 | 66 |
+| When | `I undo with Ctrl+Z` | 19 | 97 |
+| Given | `my character has a history of {int} versions` | 46 | 11 |
+| Given | `my character has a history of {int} versions with different data` | 1 | 18 |
+| Given | `my character has a portrait` | 3 | 50 |
+| Given | `my character has no history yet` | 5 | 4 |
+| Then | `my character sheet shows the name it had before my edits` | 3 | 129 |
+| When | `my edits have settled into a version` | 26 | 85 |
+| When | `my edits start to be saved as a version` | 1 | 89 |
+| Given | `my history has a version in which I added the cypher {string}` | 1 | 245 |
+| Given | `my history has a version in which I changed` | 1 | 231 |
+| Given | `my history has a version in which I changed my name to {string}, followed by one in which I changed my tier to {int}` | 1 | 238 |
+| Given | `my history has a version in which I changed the effect of the cypher {string}` | 1 | 259 |
+| Given | `my history has a version in which I removed the cypher {string}` | 1 | 252 |
+| Given | `my history has a version in which I renamed the cypher {string} to {string}` | 1 | 266 |
+| Given | `my history holds an old version recorded as {string} for a name change and an added ability` | 1 | 39 |
+| Given | `my history holds an old version recorded as {string} for an added cypher` | 2 | 32 |
+| Given | `my Might pool went from {int} to {int} to {int}` | 1 | 25 |
+| Then | `my portrait is unchanged` | 3 | 212 |
+| Given | `saving a version is held up` | 1 | 46 |
+| Then | `the back control is available` | 4 | 147 |
+| Then | `the back control is unavailable` | 1 | 151 |
+| Then | `the export carries no version history` | 1 | 223 |
+| Then | `the export holds version {int} of my character` | 1 | 216 |
+| Then | `the export keeps my current portrait` | 1 | 227 |
+| Then | `the forward control is available` | 3 | 155 |
+| Then | `the forward control is unavailable` | 3 | 159 |
+| When | `the held-up save goes through` | 1 | 93 |
+| Then | `the navigator dates this version` | 1 | 190 |
+| Then | `the navigator describes this version` | 1 | 179 |
+| Then | `the navigator describes this version as {string}` | 15 | 183 |
+| Then | `the navigator gives the age of this version in relative terms` | 1 | 194 |
+| Then | `the navigator is hidden` | 2 | 117 |
+| Then | `the navigator shows version {int} of {int}` | 28 | 140 |
+| Then | `the original version has been dropped` | 2 | 208 |
 
 ## viewport.steps.ts
 

@@ -1,11 +1,16 @@
 import { FULL_CHARACTER } from "@/data/mockCharacters";
-import type { Character } from "@/types/character";
+import type { Character, Cypher } from "@/types/character";
+import { sampleCard } from "./cardTestFixtures.js";
+import { intCell } from "./tableRows.js";
 import type { CharacterDsl } from "./character.js";
 import type { SetupDsl } from "./setup.js";
 import type { ExportedView, VersionHistoryDriver, VersionSeed } from "./versionHistoryDriver.js";
 
 // Descriptions as the app stores them: i18n keys, rendered in the viewer's language.
 const NAME_CHANGE = "versionHistory.changes.basicInfo.name";
+const INITIAL_STATE = "versionHistory.changes.initialState";
+const TIER_CHANGE = "versionHistory.changes.basicInfo.tier";
+const CYPHER_CHANGE = "versionHistory.changes.collections.cypher";
 const ORIGINAL_NAME = "Original";
 const PORTRAIT =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
@@ -16,6 +21,7 @@ type OldChange = "added cypher" | "name change and added ability";
 /** What the sheet shows for one version; only what a scenario set up is checked. */
 interface VersionFacts {
   name: string;
+  description?: string;
   tier?: number;
   equipment?: string;
   mightPool?: number;
@@ -26,7 +32,7 @@ function mightPool(pool: number): VersionSeed["changes"] {
 }
 
 export class VersionHistoryDsl {
-  private versions: VersionFacts[] = [{ name: ORIGINAL_NAME }];
+  private versions: VersionFacts[] = [{ name: ORIGINAL_NAME, description: INITIAL_STATE }];
   private exported?: ExportedView;
 
   constructor(
@@ -36,8 +42,7 @@ export class VersionHistoryDsl {
   ) {}
 
   async startsWithNoHistory(): Promise<void> {
-    this.versions = [{ name: ORIGINAL_NAME }];
-    await this.setup.newCharacter({ name: ORIGINAL_NAME });
+    await this.restart({});
   }
 
   async hasVersions(count: number): Promise<void> {
@@ -97,6 +102,68 @@ export class VersionHistoryDsl {
             },
           }
     );
+  }
+
+  async hasVersionChangingBasicInfo(fields: Record<string, string>): Promise<void> {
+    const changes = Object.fromEntries(
+      Object.entries(fields).map(([field, value]) => [
+        field,
+        field === "tier" ? intCell(value, "Tier") : value,
+      ])
+    );
+    await this.restart({});
+    await this.store(2, () => ({
+      facts: { name: fields.name ?? ORIGINAL_NAME },
+      seed: { description: NAME_CHANGE, changes },
+    }));
+  }
+
+  async hasVersionsChangingNameThenTier(name: string, tier: number): Promise<void> {
+    await this.restart({});
+    await this.store(3, (number) =>
+      number === 2
+        ? { facts: { name }, seed: { description: NAME_CHANGE, changes: { name } } }
+        : {
+            facts: { name },
+            seed: { description: TIER_CHANGE, changes: { name, tier } },
+          }
+    );
+  }
+
+  async hasVersionAddingCypher(name: string): Promise<void> {
+    await this.hasCypherChange([], [sampleCard("cypher", name)], `${CYPHER_CHANGE}.added`);
+  }
+
+  async hasVersionRemovingCypher(name: string): Promise<void> {
+    await this.hasCypherChange([sampleCard("cypher", name)], [], `${CYPHER_CHANGE}.removed`);
+  }
+
+  async hasVersionChangingCypherEffect(name: string): Promise<void> {
+    const cypher = sampleCard("cypher", name) as Cypher;
+    await this.hasCypherChange(
+      [cypher],
+      [{ ...cypher, effect: "A completely different effect" }],
+      `${CYPHER_CHANGE}.modified`
+    );
+  }
+
+  async hasVersionRenamingCypher(name: string, newName: string): Promise<void> {
+    const cypher = sampleCard("cypher", name) as Cypher;
+    await this.hasCypherChange(
+      [cypher],
+      [{ ...cypher, name: newName }],
+      `${CYPHER_CHANGE}.removed, ${CYPHER_CHANGE}.added`
+    );
+  }
+
+  nameOfVersion(version: number): string {
+    return this.versions[version - 1].name;
+  }
+
+  descriptionOfVersion(version: number): string {
+    const { description } = this.versions[version - 1];
+    if (description === undefined) throw new Error(`Version ${version} has no description`);
+    return description;
   }
 
   async hasPortrait(): Promise<void> {
@@ -267,6 +334,23 @@ export class VersionHistoryDsl {
     return this.exported;
   }
 
+  private async restart(character: Record<string, unknown>): Promise<void> {
+    this.versions = [{ name: ORIGINAL_NAME, description: INITIAL_STATE }];
+    await this.setup.newCharacter({ name: ORIGINAL_NAME, ...character });
+  }
+
+  private async hasCypherChange(
+    before: unknown[],
+    after: unknown[],
+    description: string
+  ): Promise<void> {
+    await this.restart({ cyphers: before });
+    await this.store(2, () => ({
+      facts: { name: ORIGINAL_NAME },
+      seed: { description, changes: { cyphers: after as Cypher[] } },
+    }));
+  }
+
   private async store(
     count: number,
     version: (number: number) => { facts: VersionFacts; seed: VersionSeed }
@@ -274,7 +358,7 @@ export class VersionHistoryDsl {
     const seeds: VersionSeed[] = [];
     for (let number = 2; number <= count; number++) {
       const { facts, seed } = version(number);
-      this.versions.push(facts);
+      this.versions.push({ description: seed.description, ...facts });
       seeds.push(seed);
     }
     await this.driver.storeVersions(seeds);

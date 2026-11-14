@@ -75,7 +75,7 @@ export async function startNewCharacter(page: Page, baseUrl: string): Promise<vo
  * Wait until the app's bootstrap has saved its initial version and rendered
  * the version navigator (initVersionHistory in src/app/bootstrap.ts).
  *
- * Steps that add versions through storageHelper.createVersion would otherwise
+ * Steps that add versions through storageHelper.createVersions would otherwise
  * race that initial save for the same IndexedDB "versions" store. The
  * bootstrap saves Version 1 whenever the store is empty, so after a
  * navigation at least one version always appears.

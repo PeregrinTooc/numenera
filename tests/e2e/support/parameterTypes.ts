@@ -49,3 +49,17 @@ defineParameterType({
   regexp: /top edge|bottom edge|middle left|middle right/,
   transformer: (s: string) => s as SectionZone,
 });
+
+// One of the two panes of the version comparison view.
+defineParameterType({
+  name: "pane",
+  regexp: /left|right/,
+  transformer: (s: string) => s as "left" | "right",
+});
+
+// The colour the comparison view highlights a difference in.
+defineParameterType({
+  name: "colour",
+  regexp: /yellow|green|red/,
+  transformer: (s: string) => s as "yellow" | "green" | "red",
+});

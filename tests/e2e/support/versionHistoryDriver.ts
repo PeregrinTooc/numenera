@@ -120,10 +120,13 @@ export class PlaywrightVersionHistoryDriver implements VersionHistoryDriver {
     const base = await this.storage.getCharacter();
     const [initial] = await this.storage.getAllVersions();
     await this.storage.clearVersions();
-    await this.storage.createVersion(base, initial.description);
-    for (const { description, changes } of seeds) {
-      await this.storage.createVersion({ ...base, ...changes }, description);
-    }
+    await this.storage.createVersions([
+      { character: base, description: initial.description },
+      ...seeds.map(({ description, changes }) => ({
+        character: { ...base, ...changes },
+        description,
+      })),
+    ]);
     await this.reopen();
     await this.expectPosition(seeds.length + 1, seeds.length + 1);
   }

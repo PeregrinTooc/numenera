@@ -18,6 +18,8 @@ import { MouseInput, TouchInput } from "./sectionInput.js";
 import { ScreenDsl } from "./screen.js";
 import { PlaywrightViewportDriver } from "./viewportDriver.js";
 import { VersionHistoryDsl } from "./versionHistory.js";
+import { ComparisonDsl } from "./comparison.js";
+import { PlaywrightComparisonDriver } from "./comparisonDriver.js";
 import { waitForInitialVersionSaved } from "./app-ready.js";
 import { PlaywrightVersionHistoryDriver } from "./versionHistoryDriver.js";
 import { BASE_URL } from "./serverUrl.js";
@@ -77,6 +79,10 @@ Before(async function (this: CustomWorld, { pickle }) {
     new PlaywrightVersionHistoryDriver(this.page, this.storageHelper),
     this.setup,
     this.character
+  );
+  this.comparison = new ComparisonDsl(
+    new PlaywrightComparisonDriver(this.page, this.storageHelper),
+    this.history
   );
 
   this.page.on("console", (msg) => {
