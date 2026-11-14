@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **512** in 51 files
-- Feature step lines: **1820**
+- Step definitions: **506** in 52 files
+- Feature step lines: **1785**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -49,7 +49,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [collection-reordering.steps.ts](#collectionreorderingstepsts) | 4 | 0 |
 | [combat.steps.ts](#combatstepsts) | 13 | 0 |
-| [common-steps.ts](#commonstepsts) | 10 | 0 |
+| [common-steps.ts](#commonstepsts) | 5 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
 | [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 7 | 0 |
@@ -74,15 +74,16 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [version-comparison-highlighting.steps.ts](#versioncomparisonhighlightingstepsts) | 17 | 0 |
 | [version-comparison-navigation.steps.ts](#versioncomparisonnavigationstepsts) | 12 | 0 |
 | [version-comparison-setup.steps.ts](#versioncomparisonsetupstepsts) | 12 | 0 |
-| [version-history-assertions.steps.ts](#versionhistoryassertionsstepsts) | 22 | 0 |
+| [version-history-assertions.steps.ts](#versionhistoryassertionsstepsts) | 9 | 0 |
 | [version-history-buffer-undo-redo.steps.ts](#versionhistorybufferundoredostepsts) | 8 | 0 |
-| [version-history-given-basic.steps.ts](#versionhistorygivenbasicstepsts) | 9 | 0 |
-| [version-history-given-data.steps.ts](#versionhistorygivendatastepsts) | 5 | 0 |
+| [version-history-given-basic.steps.ts](#versionhistorygivenbasicstepsts) | 4 | 0 |
+| [version-history-given-data.steps.ts](#versionhistorygivendatastepsts) | 4 | 0 |
 | [version-history-mixed-undo-redo.steps.ts](#versionhistorymixedundoredostepsts) | 5 | 0 |
-| [version-history-navigation.steps.ts](#versionhistorynavigationstepsts) | 13 | 0 |
-| [version-history-navigator-state.steps.ts](#versionhistorynavigatorstatestepsts) | 16 | 0 |
-| [version-history-shortcuts.steps.ts](#versionhistoryshortcutsstepsts) | 4 | 0 |
+| [version-history-navigation.steps.ts](#versionhistorynavigationstepsts) | 5 | 0 |
+| [version-history-navigator-state.steps.ts](#versionhistorynavigatorstatestepsts) | 6 | 0 |
+| [version-history-shortcuts.steps.ts](#versionhistoryshortcutsstepsts) | 3 | 0 |
 | [version-history-squash-race.steps.ts](#versionhistorysquashracestepsts) | 3 | 0 |
+| [version-history.steps.ts](#versionhistorystepsts) | 37 | 0 |
 | [viewport.steps.ts](#viewportstepsts) | 2 | 0 |
 
 ## ⚠️ Feature lines with no matching step definition
@@ -160,13 +161,13 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I change my {word} to {string}` | 17 | 14 |
+| When | `I change my {word} to {string}` | 24 | 14 |
 | When | `I change my {word} to {string} without waiting for the auto-save` | 1 | 40 |
 | When | `I change my tier to {int}` | 4 | 21 |
 | When | `I try to change my {word} to nothing` | 1 | 25 |
 | Then | `my {word} looks clickable` | 1 | 62 |
 | Given | `my character has no {word}` | 2 | 51 |
-| Then | `my character sheet shows my {word} as {string}` | 15 | 33 |
+| Then | `my character sheet shows my {word} as {string}` | 16 | 33 |
 | Then | `my character sheet shows my tier as {int}` | 4 | 47 |
 | Then | `my character sheet shows the placeholder for my {word}` | 1 | 55 |
 | Given | `my character's {word} is {string}` | 11 | 3 |
@@ -241,7 +242,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am on the character sheet page` | 29 | 14 |
+| Given | `I am on the character sheet page` | 28 | 14 |
 | Given | `my character has every kind of entry` | 1 | 29 |
 | Given | `my character has these stats:` | 1 | 25 |
 | Given | `my character has this basic information:` | 1 | 18 |
@@ -257,7 +258,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `a file export should be triggered` | 1 | 27 |
-| When | `I export the character` | 6 | 19 |
+| When | `I export the character` | 5 | 19 |
 | Given | `the character has name {string}` | 3 | 5 |
 | Then | `the exported file should contain all character properties` | 2 | 39 |
 | Then | `the exported file should have an exportDate` | 2 | 88 |
@@ -319,16 +320,11 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I clear the input field` | 1 | 24 |
-| When | `I click on the {string} value` | 1 | 7 |
-| When | `I click the "Confirm" button` | 1 | 18 |
-| When | `I click the "New" button` | 3 | 19 |
-| When | `I edit the {string} field to {string}` | 22 | 54 |
-| When | `I press the Escape key` | 2 | 63 |
-| When | `I reload the page` | 21 | 67 |
-| When | `I reload the page immediately` | 1 | 80 |
-| When | `I type {string} in the modal input` | 1 | 28 |
-| Then | `the {string} value should display {string}` | 1 | 87 |
+| When | `I click the "New" button` | 3 | 7 |
+| When | `I edit the {string} field to {string}` | 18 | 34 |
+| When | `I press the Escape key` | 2 | 43 |
+| When | `I reload the page` | 21 | 47 |
+| When | `I reload the page immediately` | 1 | 60 |
 
 ## data-validation.steps.ts
 
@@ -603,7 +599,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I change my {stat} {word} to {int}` | 5 | 10 |
+| When | `I change my {stat} {word} to {int}` | 6 | 10 |
 | Then | `my character sheet shows my {stat} {word} as {int}` | 9 | 17 |
 | Given | `my character's {stat} {word} is {int}` | 6 | 3 |
 
@@ -716,7 +712,7 @@ pattern this script does not understand):
 | When | `I enable comparison view in settings` | 2 | 23 |
 | Given | `the character has a version where a cypher was renamed` | 1 | 111 |
 | Given | `the character has a version with a modified cypher effect` | 1 | 92 |
-| Given | `the character has a version with a name change` | 3 | 57 |
+| Given | `the character has a version with a name change` | 2 | 57 |
 | Given | `the character has a version with a removed cypher` | 1 | 81 |
 | Given | `the character has a version with an added cypher` | 1 | 67 |
 | Then | `the comparison view should be visible` | 3 | 44 |
@@ -726,28 +722,15 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a new version should be created` | 1 | 109 |
-| Then | `a new version should be created with description {string}` | 3 | 150 |
-| Then | `I click the backward navigation arrow {int} times` | 1 | 176 |
-| Then | `I should be viewing the latest version` | 3 | 114 |
-| Then | `I should navigate to version {int}` | 2 | 121 |
-| Then | `the character data should be correct for version {int}` | 1 | 130 |
-| Then | `the character equipment should match version {int} equipment` | 2 | 54 |
-| Then | `the character name should match version {int} name` | 4 | 31 |
-| Then | `the character stats should match version {int} stats` | 2 | 42 |
-| Then | `the exported file should contain version {int} data` | 1 | 86 |
-| Then | `the exported file should not contain version history` | 1 | 96 |
-| Then | `the exported file should use the current portrait` | 1 | 102 |
-| Then | `the import button should be disabled` | 1 | 190 |
-| Then | `the import button should be enabled` | 2 | 185 |
-| Then | `the oldest version should have been removed` | 2 | 171 |
-| Then | `the portrait should remain unchanged` | 3 | 74 |
-| Then | `the timestamp should be in human-readable format` | 1 | 13 |
-| Then | `the timestamp should show a relative time like {string}` | 1 | 21 |
-| Then | `the UI should remain responsive` | 2 | 142 |
-| Then | `the version description should contain {string}` | 14 | 5 |
-| Then | `the version description should contain the tier change` | 1 | 163 |
-| Then | `the warning banner should not be visible` | 2 | 158 |
+| Then | `a new version should be created with description {string}` | 2 | 39 |
+| Then | `I should be viewing the latest version` | 1 | 23 |
+| Then | `I should navigate to version {int}` | 2 | 30 |
+| Then | `the character name should match version {int} name` | 2 | 12 |
+| Then | `the import button should be disabled` | 1 | 62 |
+| Then | `the import button should be enabled` | 2 | 57 |
+| Then | `the oldest version should have been removed` | 1 | 52 |
+| Then | `the version description should contain {string}` | 12 | 4 |
+| Then | `the warning banner should not be visible` | 1 | 47 |
 
 ## version-history-buffer-undo-redo.steps.ts
 
@@ -759,30 +742,24 @@ pattern this script does not understand):
 | Then | `I should see {int} versions in history` | 4 | 128 |
 | Then | `no new version should be created yet` | 2 | 114 |
 | Then | `the changes should be reapplied` | 2 | 136 |
-| Then | `the character name should be {string}` | 10 | 106 |
+| Then | `the character name should be {string}` | 9 | 106 |
 | Then | `the character name should revert to the original value` | 2 | 120 |
 
 ## version-history-given-basic.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am viewing that version` | 3 | 133 |
-| Given | `I am viewing the latest version` | 6 | 47 |
-| Given | `I am viewing version {int}` | 8 | 51 |
-| Given | `the character has {int} versions in history` | 45 | 18 |
-| Given | `the character has a later version` | 1 | 62 |
-| Given | `the character has a portrait image` | 2 | 103 |
-| Given | `the character has a version from {int} minutes ago` | 1 | 112 |
-| Given | `the character has a version with multiple basic info changes` | 2 | 73 |
-| Given | `the character has no version history yet` | 7 | 6 |
+| Given | `I am viewing the latest version` | 3 | 46 |
+| Given | `the character has {int} versions in history` | 30 | 17 |
+| Given | `the character has a version with multiple basic info changes` | 1 | 50 |
+| Given | `the character has no version history yet` | 6 | 5 |
 
 ## version-history-given-data.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I have made buffered edits that were undone` | 2 | 117 |
-| Given | `the character has {int} versions with different data` | 3 | 63 |
-| Given | `the character has {int} versions with different names` | 2 | 95 |
+| Given | `I have made buffered edits that were undone` | 2 | 95 |
+| Given | `the character has {int} versions with different data` | 1 | 63 |
 | Given | `the character has a legacy version with a {string} description for a name change and an added ability` | 1 | 34 |
 | Given | `the character has a legacy version with an {string} description for an added cypher` | 2 | 5 |
 
@@ -794,54 +771,35 @@ pattern this script does not understand):
 | When | `I press {string} to navigate to previous version` | 1 | 62 |
 | When | `I press {string} to undo buffered changes` | 1 | 25 |
 | Then | `I should be viewing version {int}` | 1 | 97 |
-| When | `I wait for squash timer to complete` | 19 | 58 |
+| When | `I wait for squash timer to complete` | 17 | 58 |
 
 ## version-history-navigation.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the backward navigation arrow` | 20 | 11 |
-| When | `I click the backward navigation arrow again` | 1 | 15 |
-| When | `I click the forward navigation arrow` | 3 | 23 |
-| When | `I click the forward navigation arrow again` | 1 | 27 |
-| When | `I click the restore button in the warning banner` | 3 | 31 |
-| When | `I click the return to latest button` | 1 | 19 |
-| When | `I create a new version by editing the name` | 1 | 74 |
-| When | `I navigate backward` | 1 | 46 |
-| When | `I navigate forward twice` | 1 | 50 |
-| When | `I navigate to version {int}` | 8 | 35 |
-| When | `I rapidly click the backward arrow {int} times` | 1 | 55 |
-| When | `I refresh the browser` | 10 | 69 |
-| When | `I view the character sheet` | 4 | 6 |
+| When | `I click the backward navigation arrow` | 17 | 10 |
+| When | `I click the forward navigation arrow` | 1 | 14 |
+| When | `I click the restore button in the warning banner` | 1 | 18 |
+| When | `I refresh the browser` | 9 | 22 |
+| When | `I view the character sheet` | 2 | 5 |
 
 ## version-history-navigator-state.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all edit controls should be enabled` | 2 | 9 |
-| Then | `both navigation arrows should be enabled` | 2 | 71 |
-| Then | `no warning banner should be visible` | 6 | 27 |
-| Then | `the backward arrow should be disabled` | 1 | 83 |
-| Then | `the backward arrow should be enabled` | 3 | 32 |
-| Then | `the change description should be displayed` | 1 | 57 |
-| Then | `the character data should match version {int}` | 5 | 42 |
-| Then | `the forward arrow should be disabled` | 4 | 37 |
-| Then | `the forward arrow should be enabled` | 1 | 88 |
-| Then | `the timestamp should be displayed` | 1 | 64 |
-| Then | `the version counter should show {string}` | 25 | 19 |
-| Then | `the version navigator should be visible` | 5 | 14 |
-| Then | `the version navigator should not be visible` | 2 | 4 |
-| Then | `the warning banner should be visible` | 7 | 78 |
-| Then | `the warning banner should contain text {string}` | 1 | 93 |
-| Then | `the warning banner should have a restore button` | 1 | 101 |
+| Then | `all edit controls should be enabled` | 1 | 9 |
+| Then | `no warning banner should be visible` | 1 | 27 |
+| Then | `the version counter should show {string}` | 9 | 19 |
+| Then | `the version navigator should be visible` | 3 | 14 |
+| Then | `the version navigator should not be visible` | 1 | 4 |
+| Then | `the warning banner should be visible` | 3 | 32 |
 
 ## version-history-shortcuts.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I press {string}` | 5 | 24 |
-| When | `I wait for {int} milliseconds` | 4 | 16 |
-| When | `the squash timer has completed` | 2 | 20 |
+| When | `I press {string}` | 5 | 20 |
+| When | `the squash timer has completed` | 2 | 16 |
 | Then | `the undo buffer should contain exactly {int} changes` | 1 | 5 |
 
 ## version-history-squash-race.steps.ts
@@ -851,6 +809,48 @@ pattern this script does not understand):
 | When | `the held version save is released` | 1 | 42 |
 | When | `the squash starts while version saves are held` | 1 | 31 |
 | Given | `version saves are held` | 1 | 16 |
+
+## version-history.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| Then | `I am not warned about an old version` | 3 | 117 |
+| Then | `I am on the latest version` | 2 | 125 |
+| Then | `I am warned that I am viewing an old version` | 4 | 113 |
+| Then | `I can edit my character` | 1 | 86 |
+| Then | `I can restore this version` | 1 | 121 |
+| When | `I export what I am viewing` | 1 | 78 |
+| When | `I go to the oldest version` | 1 | 43 |
+| When | `I go to version {int}` | 15 | 39 |
+| When | `I reopen my character` | 1 | 74 |
+| When | `I restore this version` | 2 | 62 |
+| When | `I return to the latest version` | 1 | 66 |
+| Then | `I see my character as it was in version {int}` | 9 | 151 |
+| When | `I step back {int} times in quick succession` | 1 | 55 |
+| When | `I step back to the previous version` | 6 | 47 |
+| When | `I step forward to the next version` | 3 | 51 |
+| Given | `my character has a combined basic info change in its history` | 1 | 28 |
+| Given | `my character has a history of {int} versions` | 15 | 7 |
+| Given | `my character has a history of {int} versions with different data` | 1 | 14 |
+| Given | `my character has a portrait` | 3 | 35 |
+| Given | `my character has no history yet` | 1 | 3 |
+| When | `my edits have settled into a version` | 7 | 70 |
+| Given | `my Might pool went from {int} to {int} to {int}` | 1 | 21 |
+| Then | `my portrait is unchanged` | 3 | 162 |
+| Then | `the back control is available` | 4 | 97 |
+| Then | `the back control is unavailable` | 1 | 101 |
+| Then | `the export carries no version history` | 1 | 173 |
+| Then | `the export holds version {int} of my character` | 1 | 166 |
+| Then | `the export keeps my current portrait` | 1 | 177 |
+| Then | `the forward control is available` | 3 | 105 |
+| Then | `the forward control is unavailable` | 3 | 109 |
+| Then | `the navigator dates this version` | 1 | 140 |
+| Then | `the navigator describes this version` | 1 | 129 |
+| Then | `the navigator describes this version as {string}` | 3 | 133 |
+| Then | `the navigator gives the age of this version in relative terms` | 1 | 144 |
+| Then | `the navigator is hidden` | 1 | 82 |
+| Then | `the navigator shows version {int} of {int}` | 10 | 90 |
+| Then | `the original version has been dropped` | 1 | 158 |
 
 ## viewport.steps.ts
 

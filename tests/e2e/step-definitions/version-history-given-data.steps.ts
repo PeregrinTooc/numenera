@@ -93,28 +93,6 @@ Given(
   }
 );
 
-Given(
-  "the character has {int} versions with different names",
-  async function (this: CustomWorld, versionCount: number) {
-    await waitForInitialVersionSaved(this.page);
-
-    const baseCharacter = await this.storageHelper.getCharacter();
-
-    for (let i = 1; i < versionCount; i++) {
-      const versionCharacter = {
-        ...baseCharacter,
-        name: `Name ${i + 1}`,
-      };
-      await this.storageHelper.createVersion(versionCharacter, `Changed name`);
-    }
-
-    const versionCounter = this.page.locator('[data-testid="version-counter"]');
-    await expect(versionCounter).toContainText(`Version ${versionCount} of ${versionCount}`, {
-      timeout: 10000,
-    });
-  }
-);
-
 Given("I have made buffered edits that were undone", async function (this: CustomWorld) {
   const testId = "character-name";
   const field = this.page.locator(`[data-testid="${testId}"]`);

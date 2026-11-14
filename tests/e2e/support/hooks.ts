@@ -4,8 +4,6 @@ import { CustomWorld } from "./world";
 import { resolveDevice } from "./device.js";
 import { TestStorageHelper } from "./testStorageHelper.js";
 import { DOMHelpers } from "./dom-helpers.js";
-import { ModalDsl } from "./modal.js";
-import { FieldsDsl } from "./fields.js";
 import { SetupDsl } from "./setup.js";
 import { CharacterDsl } from "./character.js";
 import { PlaywrightSheetDriver } from "./sheetDriver.js";
@@ -19,6 +17,8 @@ import { LayoutDsl } from "./layout.js";
 import { MouseInput, TouchInput } from "./sectionInput.js";
 import { ScreenDsl } from "./screen.js";
 import { PlaywrightViewportDriver } from "./viewportDriver.js";
+import { VersionHistoryDsl } from "./versionHistory.js";
+import { PlaywrightVersionHistoryDriver } from "./versionHistoryDriver.js";
 import { BASE_URL } from "./serverUrl.js";
 
 let browser: Browser;
@@ -54,8 +54,6 @@ Before(async function (this: CustomWorld, { pickle }) {
   });
   this.page = await this.context.newPage();
   this.dom = new DOMHelpers(this.page);
-  this.modal = new ModalDsl(this.page);
-  this.fields = new FieldsDsl(this.page);
   this.setup = new SetupDsl(this);
   const valueEditor = new PlaywrightValueEditorDriver(this.page);
   this.character = new CharacterDsl(new PlaywrightSheetDriver(this.page), this.setup, valueEditor);
@@ -74,6 +72,11 @@ Before(async function (this: CustomWorld, { pickle }) {
   // storage clearing goes through the same adapter-backed helper every step
   // uses, instead of a one-off inline page.evaluate.
   this.storageHelper = new TestStorageHelper(this.page);
+  this.history = new VersionHistoryDsl(
+    new PlaywrightVersionHistoryDriver(this.page, this.storageHelper),
+    this.setup,
+    this.character
+  );
 
   this.page.on("console", (msg) => {
     const text = msg.text();

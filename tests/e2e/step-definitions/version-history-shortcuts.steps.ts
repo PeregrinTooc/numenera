@@ -14,10 +14,6 @@ Then(
   }
 );
 
-When("I wait for {int} milliseconds", async function (this: CustomWorld, _ms: number) {
-  await forceSquash(this.page);
-});
-
 When("the squash timer has completed", async function (this: CustomWorld) {
   await forceSquash(this.page);
 });

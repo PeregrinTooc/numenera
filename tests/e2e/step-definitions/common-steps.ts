@@ -1,33 +1,13 @@
-import { When, Then } from "@cucumber/cucumber";
+import { When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { waitForSaveComplete } from "../support/save.js";
 import { getTestId } from "../support/fields.js";
 import { waitForCharacterSheetReady, waitForNewCharacterPersisted } from "../support/app-ready.js";
 
-When("I click on the {string} value", async function (this: CustomWorld, fieldName: string) {
-  await this.fields.click(fieldName);
-  if (!["background", "notes", "type"].includes(fieldName)) {
-    await this.page.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-  }
-});
-
-async function confirmModal(this: CustomWorld): Promise<void> {
-  await this.modal.confirm();
-}
-When('I click the "Confirm" button', confirmModal);
-
 When('I click the "New" button', async function (this: CustomWorld) {
   await this.page.locator('[data-testid="new-button"]').click();
   await waitForNewCharacterPersisted(this.page);
-});
-
-When("I clear the input field", async function (this: CustomWorld) {
-  await this.modal.clearInput();
-});
-
-When("I type {string} in the modal input", async function (this: CustomWorld, value: string) {
-  await this.modal.type(value);
 });
 
 async function editFieldViaModal(
@@ -84,12 +64,3 @@ When("I reload the page immediately", async function (this: CustomWorld) {
   await this.page.reload();
   await waitForCharacterSheetReady(this.page);
 });
-
-Then(
-  "the {string} value should display {string}",
-  async function (this: CustomWorld, fieldName: string, expectedValue: string) {
-    const testId = getTestId(fieldName);
-    const element = this.page.locator(`[data-testid="${testId}"]`);
-    await expect(element).toHaveText(expectedValue);
-  }
-);

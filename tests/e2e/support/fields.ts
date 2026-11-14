@@ -1,5 +1,3 @@
-import { Page } from "@playwright/test";
-
 export const FIELD_TEST_IDS: Record<string, string> = {
   "character name": "character-name",
   "character name value": "character-name",
@@ -47,12 +45,4 @@ export function getTestId(fieldName: string): string {
     throw new Error(`Unknown field name: "${fieldName}". Add it to FIELD_TEST_IDS mapping.`);
   }
   return testId;
-}
-
-export class FieldsDsl {
-  constructor(private page: Page) {}
-
-  async click(fieldName: string): Promise<void> {
-    await this.page.locator(`[data-testid="${getTestId(fieldName)}"]`).click();
-  }
 }
