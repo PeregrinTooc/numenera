@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **536** in 51 files
-- Feature step lines: **1840**
+- Step definitions: **534** in 51 files
+- Feature step lines: **1837**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -37,7 +37,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 5 | 0 |
 | [additional-fields-textarea.steps.ts](#additionalfieldstextareastepsts) | 13 | 0 |
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
-| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 14 | 0 |
+| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 12 | 0 |
 | [card-deletion.steps.ts](#carddeletionstepsts) | 6 | 0 |
 | [card-editing.steps.ts](#cardeditingstepsts) | 12 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 8 | 0 |
@@ -163,17 +163,15 @@ pattern this script does not understand):
 | When | `I change my {word} to {string}` | 17 | 14 |
 | When | `I change my {word} to {string} without waiting for the auto-save` | 1 | 40 |
 | When | `I change my tier to {int}` | 4 | 21 |
-| When | `I open my {word} for editing` | 1 | 55 |
 | When | `I try to change my {word} to nothing` | 1 | 25 |
-| Then | `my {word} looks clickable` | 1 | 66 |
+| Then | `my {word} looks clickable` | 1 | 62 |
 | Given | `my character has no {word}` | 2 | 51 |
 | Then | `my character sheet shows my {word} as {string}` | 9 | 33 |
 | Then | `my character sheet shows my tier as {int}` | 3 | 47 |
-| Then | `my character sheet shows the placeholder for my {word}` | 1 | 59 |
-| Given | `my character's {word} is {string}` | 11 | 3 |
+| Then | `my character sheet shows the placeholder for my {word}` | 1 | 55 |
+| Given | `my character's {word} is {string}` | 10 | 3 |
 | Given | `my character's tier is {int}` | 2 | 10 |
 | Then | `the change is refused` | 2 | 29 |
-| Then | `the value editor is open showing {string}` | 1 | 70 |
 
 ## card-deletion.steps.ts
 

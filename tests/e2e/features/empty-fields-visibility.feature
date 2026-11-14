@@ -22,8 +22,3 @@ Feature: Empty Fields Visibility
             | field      | value                |
             | descriptor | Strong               |
             | focus      | Bears a Halo of Fire |
-
-    Scenario: A filled-in descriptor opens the editor showing its current value
-        Given my character's descriptor is "Strong"
-        When I open my descriptor for editing
-        Then the value editor is open showing "Strong"

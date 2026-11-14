@@ -102,14 +102,6 @@ export class CharacterDsl {
     await this.change(basicInfoLabel(field), value);
   }
 
-  async openBasicInfoForEditing(field: string): Promise<void> {
-    await this.valueEditor.open(basicInfoLabel(field));
-  }
-
-  async expectEditorShowing(value: string): Promise<void> {
-    await this.valueEditor.expectOpenShowing(value);
-  }
-
   async expectBasicInfoLooksClickable(field: string): Promise<void> {
     await this.valueEditor.expectValueLooksClickable(basicInfoLabel(field));
   }

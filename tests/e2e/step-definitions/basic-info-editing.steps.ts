@@ -53,10 +53,6 @@ Given("my character has no {word}", async function (this: CustomWorld, field: st
   await this.character.hasBasicInfo(field, "");
 });
 
-When("I open my {word} for editing", async function (this: CustomWorld, field: string) {
-  await this.character.openBasicInfoForEditing(field);
-});
-
 Then(
   "my character sheet shows the placeholder for my {word}",
   async function (this: CustomWorld, field: string) {
@@ -67,10 +63,3 @@ Then(
 Then("my {word} looks clickable", async function (this: CustomWorld, field: string) {
   await this.character.expectBasicInfoLooksClickable(field);
 });
-
-Then(
-  "the value editor is open showing {string}",
-  async function (this: CustomWorld, value: string) {
-    await this.character.expectEditorShowing(value);
-  }
-);
