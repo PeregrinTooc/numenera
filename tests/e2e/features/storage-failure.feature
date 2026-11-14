@@ -35,11 +35,11 @@ Feature: Storage failure is reported
 
     Scenario: Adding a card on a full storage is reported
         Given the browser storage is full
-        When I click the add cypher button
-        And I fill in the cypher name with "Fire Bomb"
-        And I fill in the cypher level with "1d6+2"
-        And I fill in the cypher effect with "Explodes in a short range"
-        And I confirm the card edit modal
+        When I start a new cypher
+        And I set its name to "Fire Bomb"
+        And I set its level to "1d6+2"
+        And I set its effect to "Explodes in a short range"
+        And I save the card
         Then the save indicator should report that storage is full
 
     Scenario: The report does not cover the card controls

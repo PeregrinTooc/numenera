@@ -34,11 +34,11 @@ Feature: Version History Undo and Redo
         Given the character has 3 versions in history
         When I edit the "character name" field to "Edit 1"
         And I edit the "character name" field to "Edit 2"
-        And I click the add cypher button
-        And I fill in the cypher name with "Test Cypher"
-        And I fill in the cypher level with "1d6"
-        And I fill in the cypher effect with "Test effect"
-        And I confirm the card edit modal
+        And I start a new cypher
+        And I set its name to "Test Cypher"
+        And I set its level to "1d6"
+        And I set its effect to "Test effect"
+        And I save the card
         Then the undo buffer should contain exactly 3 changes
         And no new version should be created yet
 
@@ -63,43 +63,42 @@ Feature: Version History Undo and Redo
         And the warning banner should not be visible
 
     Scenario: Card operations work with buffer undo/redo
-        Given I am on the character sheet page
-        And I should see 7 ability cards
-        When I click the add ability button
-        And I fill in the ability name with "Test Ability"
-        And I fill in the ability cost with "3"
-        And I fill in the ability pool with "Might"
-        And I fill in the ability description with "A test ability"
-        And I confirm the card edit modal
-        Then I should see 8 ability cards
+        Given my character has 2 abilities
+        When I start a new ability
+        And I set its name to "Test Ability"
+        And I set its cost to "3"
+        And I set its pool to "Might"
+        And I set its description to "A test ability"
+        And I save the card
+        Then my character carries 3 abilities
         When I press "Control+Z" before the squash timer expires
-        Then I should see 7 ability cards
+        Then my character carries 2 abilities
         When I press "Control+Y" before the squash timer expires
-        Then I should see 8 ability cards
-        And I should see an ability card with name "Test Ability"
+        Then my character carries 3 abilities
+        And my character carries the ability "Test Ability"
         When I press "Control+Z" before the squash timer expires
-        Then I should see 7 ability cards
+        Then my character carries 2 abilities
         When I press "Control+Y" before the squash timer expires
-        Then I should see 8 ability cards
-        And I should see an ability card with name "Test Ability"
+        Then my character carries 3 abilities
+        And my character carries the ability "Test Ability"
 
     Scenario: Deleting a card creates a version
         Given my character has the cyphers "Detonation (Cell)" and "Stim (Injector)"
         When I discard "Detonation (Cell)"
         Then my character's cyphers are only "Stim (Injector)"
         When I press "Control+Z" before the squash timer expires
-        Then I should see 2 cypher cards
+        Then my character carries 2 cyphers
         When I press "Control+Y" before the squash timer expires
-        Then I should see 1 cypher card
+        Then my character's cyphers are only "Stim (Injector)"
         When I wait for squash timer to complete
         Then the version navigator should be visible
         And the version counter should show "Version 2 of 2"
         When I click the backward navigation arrow
         Then the version counter should show "Version 1 of 2"
         And the warning banner should be visible
-        And I should see 2 cypher cards
+        And my character carries 2 cyphers
         When I click the restore button in the warning banner
-        Then I should see 2 cypher cards
+        Then my character carries 2 cyphers
         And the version counter should show "Version 3 of 3"
         And no warning banner should be visible
 

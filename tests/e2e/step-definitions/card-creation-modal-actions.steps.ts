@@ -1,11 +1,6 @@
-import { Then, When } from "@cucumber/cucumber";
+import { Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
-
-When("I confirm the card edit modal", async function (this: CustomWorld) {
-  await this.page.locator('[data-testid="card-modal-confirm"]').click();
-  await expect(this.page.locator('[data-testid="card-edit-modal"]')).toBeHidden();
-});
 
 Then("the card edit modal should be open", async function (this: CustomWorld) {
   await expect(this.page.locator('[data-testid="card-edit-modal"]')).toBeVisible();
