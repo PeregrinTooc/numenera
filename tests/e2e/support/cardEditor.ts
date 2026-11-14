@@ -56,6 +56,10 @@ export class CardEditorDsl {
     await this.editor.expectFirstFieldFocused();
   }
 
+  async expectLastControlFocused(): Promise<void> {
+    await this.editor.expectLastControlFocused();
+  }
+
   async expectFieldFocused(field: string): Promise<void> {
     if (this.kind === undefined) throw new Error("No card is being edited; start one first");
     await this.editor.expectFieldFocused(this.kind, field);

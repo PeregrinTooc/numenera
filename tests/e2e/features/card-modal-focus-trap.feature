@@ -12,15 +12,17 @@ Feature: Card Modal Focus Trap
 
     Scenario: Tab key traps focus within ability card modal - forward navigation
         When I start a new ability
-        And I press the Tab key 1 time
-        Then focus stays within the card editor
+        And I press Shift+Tab 1 time
+        Then the last control of the card editor has focus
+        When I press the Tab key 1 time
+        Then the first field of the card editor has focus
         When I press the Tab key 10 times
         Then focus stays within the card editor
 
     Scenario: Shift+Tab key traps focus within ability card modal - backward navigation
         When I start a new ability
         And I press Shift+Tab 1 time
-        Then focus stays within the card editor
+        Then the last control of the card editor has focus
         When I press Shift+Tab 10 times
         Then focus stays within the card editor
 

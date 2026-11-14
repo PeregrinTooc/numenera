@@ -25,6 +25,10 @@ Then("the first field of the card editor has focus", async function (this: Custo
   await this.cardEditor.expectFirstFieldFocused();
 });
 
+Then("the last control of the card editor has focus", async function (this: CustomWorld) {
+  await this.cardEditor.expectLastControlFocused();
+});
+
 Then("the {word} field has focus", async function (this: CustomWorld, field: string) {
   await this.cardEditor.expectFieldFocused(field);
 });

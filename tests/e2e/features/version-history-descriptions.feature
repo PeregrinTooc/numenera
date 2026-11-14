@@ -13,7 +13,6 @@ Feature: Version History Descriptions
     # warning banner, per "Version description shows what changed" above.
 
     Scenario: Adding a card shows a specific description
-        Given I am on the character sheet page
         When I start a new cypher
         And I set its name to "Test Cypher"
         And I set its level to "1d6"
@@ -46,7 +45,6 @@ Feature: Version History Descriptions
         Then the version description should contain "Modified cypher"
 
     Scenario: Different collection changes in one squash window list individually
-        Given I am on the character sheet page
         When I start a new cypher
         And I set its name to "Test Cypher"
         And I set its level to "1d6"
@@ -102,15 +100,13 @@ Feature: Version History Descriptions
         Then the version description should contain "Cypher hinzugefügt"
 
     Scenario: Reloading the app upgrades an old "Updated character" description
-        Given I am on the character sheet page
-        And the character has a legacy version with an "Updated character" description for an added cypher
+        Given the character has a legacy version with an "Updated character" description for an added cypher
         When I refresh the browser
         And I click the backward navigation arrow
         Then the version description should contain "Added cypher"
 
     Scenario: Reloading the app upgrades a squashed description containing "Updated character"
-        Given I am on the character sheet page
-        And the character has a legacy version with a "Changed name, Updated character" description for a name change and an added ability
+        Given the character has a legacy version with a "Changed name, Updated character" description for a name change and an added ability
         When I refresh the browser
         And I click the backward navigation arrow
         Then the version description should contain "Changed name"

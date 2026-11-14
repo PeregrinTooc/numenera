@@ -14,6 +14,7 @@ export interface CardEditorDriver {
   expectClosed(): Promise<void>;
   expectFocusWithin(): Promise<void>;
   expectFirstFieldFocused(): Promise<void>;
+  expectLastControlFocused(): Promise<void>;
   expectFieldFocused(kind: string, field: string): Promise<void>;
 }
 
@@ -26,6 +27,10 @@ const INITIAL_VALUES: Record<string, Record<string, string>> = {
 const FIELD_ALIASES: Record<string, Record<string, string>> = {
   oddity: { text: "oddity" },
 };
+
+// The controls the app's focus trap cycles through (src/services/focusTrappingBehavior.ts).
+const FOCUSABLE_CONTROLS =
+  'input:not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])';
 
 export class PlaywrightCardEditorDriver implements CardEditorDriver {
   constructor(private page: Page) {}
@@ -109,7 +114,11 @@ export class PlaywrightCardEditorDriver implements CardEditorDriver {
   }
 
   async expectFirstFieldFocused(): Promise<void> {
-    await expect(this.editor.locator("input").first()).toBeFocused();
+    await expect(this.editor.locator(FOCUSABLE_CONTROLS).first()).toBeFocused();
+  }
+
+  async expectLastControlFocused(): Promise<void> {
+    await expect(this.editor.locator(FOCUSABLE_CONTROLS).last()).toBeFocused();
   }
 
   async expectFieldFocused(kind: string, field: string): Promise<void> {

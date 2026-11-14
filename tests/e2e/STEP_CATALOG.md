@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **616** in 52 files
-- Feature step lines: **2198**
+- Step definitions: **617** in 52 files
+- Feature step lines: **2196**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -41,7 +41,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 16 | 0 |
 | [card-deletion.steps.ts](#carddeletionstepsts) | 6 | 0 |
 | [card-editing.steps.ts](#cardeditingstepsts) | 12 | 0 |
-| [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 7 | 0 |
+| [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 8 | 0 |
 | [card-reordering-abilities.steps.ts](#cardreorderingabilitiesstepsts) | 5 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 8 | 0 |
 | [character-display.steps.ts](#characterdisplaystepsts) | 33 | 0 |
@@ -251,13 +251,14 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `focus stays within the card editor` | 7 | 19 |
+| Then | `focus stays within the card editor` | 5 | 19 |
 | When | `I press Escape in the card editor` | 1 | 11 |
-| When | `I press Shift+Tab {int} time(s)` | 2 | 7 |
+| When | `I press Shift+Tab {int} time(s)` | 3 | 7 |
 | When | `I press the Tab key {int} time(s)` | 6 | 3 |
-| Then | `the {word} field has focus` | 1 | 27 |
+| Then | `the {word} field has focus` | 1 | 31 |
 | Then | `the card editor closes` | 1 | 15 |
-| Then | `the first field of the card editor has focus` | 1 | 23 |
+| Then | `the first field of the card editor has focus` | 2 | 23 |
+| Then | `the last control of the card editor has focus` | 2 | 27 |
 
 ## card-reordering-abilities.steps.ts
 
@@ -287,7 +288,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 51 | 27 |
+| Given | `I am on the character sheet page` | 47 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 147 |
 | Then | `I should see {int} cyphers displayed` | 1 | 110 |
 | Then | `I should see {int} oddities displayed` | 1 | 160 |
