@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import { Character } from "@/types/character";
 import { setupTestContainer } from "./helpers/testSetup.js";
+import { ManualClock } from "@/services/manualClock";
 
 describe("CharacterSheet - Version History Integration", () => {
   const getContainer = setupTestContainer();
@@ -57,6 +58,7 @@ describe("CharacterSheet - Version History Integration", () => {
 
     characterSheet = new CharacterSheet(
       mockCharacter,
+      new ManualClock(),
       vi.fn(), // onLoad
       vi.fn(), // onNew
       vi.fn(), // onImport
@@ -146,6 +148,7 @@ describe("CharacterSheet - Version History Integration", () => {
     it("keeps the recovery section's DOM and ticked state across re-mounts", () => {
       const sheet = new CharacterSheet(
         mockCharacter,
+        new ManualClock(),
         vi.fn(),
         vi.fn(),
         vi.fn(),

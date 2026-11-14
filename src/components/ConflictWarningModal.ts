@@ -1,4 +1,5 @@
 import { t } from "@/i18n/index";
+import type { Clock } from "@/services/clock";
 import type { ConflictDetail, ConflictResolution } from "@/services/conflictDetectionService";
 
 export class ConflictWarningModal {
@@ -6,7 +7,10 @@ export class ConflictWarningModal {
   private modal: HTMLElement | null = null;
   private currentConflict: ConflictDetail | null = null;
 
-  constructor(container: HTMLElement) {
+  constructor(
+    container: HTMLElement,
+    private readonly clock: Clock
+  ) {
     this.container = container;
 
     window.addEventListener("version-conflict", this.handleConflict.bind(this) as EventListener);
@@ -144,7 +148,7 @@ export class ConflictWarningModal {
 
     this.container.insertBefore(banner, this.container.firstChild);
 
-    setTimeout(() => {
+    this.clock.setTimeout(() => {
       banner.remove();
     }, 10000);
   }

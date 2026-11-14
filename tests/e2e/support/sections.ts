@@ -52,28 +52,6 @@ export function zonePoint(
 }
 
 /**
- * Run `action` with the page's clock paused, so timers (the 300 ms live preview,
- * the 250 ms long-press) fire only when the action advances the clock.
- *
- * On a busy machine the preview's delay could otherwise run out between the
- * last move and the release. Its re-render detaches the element the last
- * dragover reached, which is where the browser sends the drop, so the drop is
- * lost and the drag just ends.
- */
-export async function withPausedClock<T>(page: Page, action: () => Promise<T>): Promise<T> {
-  await page.clock.install();
-  // Ahead of the page's time, which runs on while the call travels: pausing
-  // in the page's past throws
-  const pageNow = await page.evaluate(() => Date.now());
-  await page.clock.pauseAt(pageNow + 1000);
-  try {
-    return await action();
-  } finally {
-    await page.clock.resume();
-  }
-}
-
-/**
  * Press on the source's heading (a card inside it would start the card's own
  * drag instead, as for a user) and drag onto `point`, leaving the button held.
  */

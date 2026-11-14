@@ -1,9 +1,71 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { DEFAULT_START_MS, ManualClock } from "@/services/manualClock";
 import { VersionWarningBanner } from "@/components/VersionWarningBanner";
+import { changeLanguage } from "@/i18n/index";
 import { setupTestContainer } from "./helpers/testSetup.js";
 
 describe("VersionWarningBanner", () => {
   const getContainer = setupTestContainer();
+  let clock: ManualClock;
+
+  beforeEach(() => {
+    clock = new ManualClock();
+  });
+
+  function ageText(ageMs: number): string | null | undefined {
+    const banner = new VersionWarningBanner({
+      description: "Changed name",
+      timestamp: new Date(DEFAULT_START_MS - ageMs),
+      clock,
+      onReturn: vi.fn(),
+      onRestore: vi.fn(),
+    });
+    const container = getContainer();
+    banner.mount(container);
+    return container.querySelector('[data-testid="version-timestamp"]')?.textContent;
+  }
+
+  it.each([
+    [30_000, "just now"],
+    [60_000, "1 minute ago"],
+    [5 * 60_000, "5 minutes ago"],
+    [3 * 3_600_000, "3 hours ago"],
+    [2 * 86_400_000, "2 days ago"],
+  ])("shows a version saved %i ms ago as %s", (ageMs, expected) => {
+    expect(ageText(ageMs)).toContain(expected);
+  });
+
+  it.each([
+    [30_000, "gerade eben"],
+    [60_000, "vor 1 Minute"],
+    [5 * 60_000, "vor 5 Minuten"],
+    [3_600_000, "vor 1 Stunde"],
+    [3 * 3_600_000, "vor 3 Stunden"],
+    [86_400_000, "vor 1 Tag"],
+    [2 * 86_400_000, "vor 2 Tagen"],
+  ])("shows a version saved %i ms ago in German as %s", async (ageMs, expected) => {
+    await changeLanguage("de");
+    try {
+      expect(ageText(ageMs)).toContain(expected);
+    } finally {
+      await changeLanguage("en");
+    }
+  });
+
+  it("measures the age against the clock", () => {
+    const banner = new VersionWarningBanner({
+      description: "Changed name",
+      timestamp: new Date(DEFAULT_START_MS),
+      clock,
+      onReturn: vi.fn(),
+      onRestore: vi.fn(),
+    });
+    clock.advance(10 * 60_000);
+    const container = getContainer();
+    banner.mount(container);
+
+    expect(container.textContent).toContain("10 minutes ago");
+  });
 
   it("should render banner with warning message", () => {
     const onReturn = vi.fn();
@@ -11,6 +73,7 @@ describe("VersionWarningBanner", () => {
     const banner = new VersionWarningBanner({
       description: "Changed name",
       timestamp: new Date("2024-01-15T10:30:00"),
+      clock,
       onReturn,
       onRestore,
     });
@@ -26,6 +89,7 @@ describe("VersionWarningBanner", () => {
     const banner = new VersionWarningBanner({
       description: "versionHistory.changes.basicInfo.name",
       timestamp: new Date("2024-01-15T10:30:00"),
+      clock,
       onReturn: vi.fn(),
       onRestore: vi.fn(),
     });
@@ -43,6 +107,7 @@ describe("VersionWarningBanner", () => {
     const banner = new VersionWarningBanner({
       description: "Changed name to Aria",
       timestamp: new Date("2024-01-15T10:30:00"),
+      clock,
       onReturn,
       onRestore,
     });
@@ -60,6 +125,7 @@ describe("VersionWarningBanner", () => {
     const banner = new VersionWarningBanner({
       description: "Changed name",
       timestamp: new Date("2024-01-15T10:30:00"),
+      clock,
       onReturn,
       onRestore,
     });
@@ -78,6 +144,7 @@ describe("VersionWarningBanner", () => {
     const banner = new VersionWarningBanner({
       description: "Changed name",
       timestamp: new Date("2024-01-15T10:30:00"),
+      clock,
       onReturn,
       onRestore,
     });
@@ -101,6 +168,7 @@ describe("VersionWarningBanner", () => {
     const banner = new VersionWarningBanner({
       description: "Changed name",
       timestamp: new Date("2024-01-15T10:30:00"),
+      clock,
       onReturn,
       onRestore,
     });
@@ -124,6 +192,7 @@ describe("VersionWarningBanner", () => {
     const banner = new VersionWarningBanner({
       description: "Changed name",
       timestamp: new Date("2024-01-15T10:30:00"),
+      clock,
       onReturn,
       onRestore,
     });
@@ -141,6 +210,7 @@ describe("VersionWarningBanner", () => {
     const banner = new VersionWarningBanner({
       description: "Changed name",
       timestamp: new Date("2024-01-15T10:30:00"),
+      clock,
       onReturn,
       onRestore,
     });
@@ -162,6 +232,7 @@ describe("VersionWarningBanner", () => {
     const banner = new VersionWarningBanner({
       description: "Changed name",
       timestamp: new Date("2024-01-15T10:30:00"),
+      clock,
       onReturn,
       onRestore,
     });
@@ -174,6 +245,7 @@ describe("VersionWarningBanner", () => {
     banner.update({
       description: "Changed tier to 2",
       timestamp: new Date("2024-01-15T11:00:00"),
+      clock,
       onReturn: newOnReturn,
       onRestore: newOnRestore,
     });
@@ -188,6 +260,7 @@ describe("VersionWarningBanner", () => {
     const banner = new VersionWarningBanner({
       description: "Changed name",
       timestamp: new Date("2024-01-15T10:30:00"),
+      clock,
       onReturn,
       onRestore,
     });

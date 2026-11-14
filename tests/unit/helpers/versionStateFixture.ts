@@ -1,3 +1,4 @@
+import { ManualClock } from "@/services/manualClock";
 import { beforeEach } from "vitest";
 import { VersionState } from "@/services/versionState";
 import type { VersionHistoryManager } from "@/storage/versionHistory";
@@ -24,7 +25,7 @@ export function setupVersionState(): VersionStateFixture {
 
   beforeEach(() => {
     mockCharacter = createMockCharacter("Test Character");
-    versionState = new VersionState(mockCharacter, history.manager);
+    versionState = new VersionState(mockCharacter, history.manager, new ManualClock());
   });
 
   return {

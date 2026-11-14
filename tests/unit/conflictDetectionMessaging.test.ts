@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { ManualClock } from "@/services/manualClock";
 import { ConflictDetectionService } from "@/services/conflictDetectionService";
 import { createTestCharacter } from "../factories/character";
 import {
@@ -7,9 +8,11 @@ import {
 } from "../factories/mockBroadcastChannel";
 
 describe("ConflictDetectionService messaging", () => {
+  let clock: ManualClock;
   let restoreBroadcastChannel: () => void;
 
   beforeEach(() => {
+    clock = new ManualClock();
     restoreBroadcastChannel = installMockBroadcastChannel();
   });
 
@@ -20,7 +23,7 @@ describe("ConflictDetectionService messaging", () => {
 
   describe("conflict detection", () => {
     it("should emit version-conflict when receiving version-saved with dirty state", async () => {
-      const service = new ConflictDetectionService();
+      const service = new ConflictDetectionService(clock);
       const mockChannel = MockBroadcastChannel.latest();
       const conflictHandler = vi.fn();
 
@@ -33,7 +36,7 @@ describe("ConflictDetectionService messaging", () => {
         type: "version-saved",
         tabId: "other-tab-123",
         etag: "different-etag",
-        timestamp: Date.now(),
+        timestamp: clock.now(),
         characterName: "Remote Character",
       };
 
@@ -46,7 +49,7 @@ describe("ConflictDetectionService messaging", () => {
     });
 
     it("should emit newer-version-available when receiving version-saved without dirty state", async () => {
-      const service = new ConflictDetectionService();
+      const service = new ConflictDetectionService(clock);
       const mockChannel = MockBroadcastChannel.latest();
       const newerVersionHandler = vi.fn();
 
@@ -58,7 +61,7 @@ describe("ConflictDetectionService messaging", () => {
         type: "version-saved",
         tabId: "other-tab-123",
         etag: "different-etag",
-        timestamp: Date.now(),
+        timestamp: clock.now(),
         characterName: "Remote Character",
       };
 
@@ -71,7 +74,7 @@ describe("ConflictDetectionService messaging", () => {
     });
 
     it("should ignore messages from same tab", async () => {
-      const service = new ConflictDetectionService();
+      const service = new ConflictDetectionService(clock);
       const mockChannel = MockBroadcastChannel.latest();
       const tabId = mockChannel.tabId;
       const conflictHandler = vi.fn();
@@ -87,7 +90,7 @@ describe("ConflictDetectionService messaging", () => {
         type: "version-saved",
         tabId: tabId,
         etag: "different-etag",
-        timestamp: Date.now(),
+        timestamp: clock.now(),
         characterName: "Same Tab Character",
       };
 
@@ -102,7 +105,7 @@ describe("ConflictDetectionService messaging", () => {
     });
 
     it("should emit conflict when marking dirty with stale remote ETag", async () => {
-      const service = new ConflictDetectionService();
+      const service = new ConflictDetectionService(clock);
       const mockChannel = MockBroadcastChannel.latest();
       const conflictHandler = vi.fn();
 
@@ -114,7 +117,7 @@ describe("ConflictDetectionService messaging", () => {
         type: "version-saved",
         tabId: "other-tab-123",
         etag: "remote-etag",
-        timestamp: Date.now(),
+        timestamp: clock.now(),
         characterName: "Remote Character",
       };
 
@@ -133,7 +136,7 @@ describe("ConflictDetectionService messaging", () => {
 
   describe("close", () => {
     it("should broadcast tab-closed message on close", () => {
-      const service = new ConflictDetectionService();
+      const service = new ConflictDetectionService(clock);
       const mockChannel = MockBroadcastChannel.latest();
 
       mockChannel.postMessage.mockClear();
@@ -149,7 +152,7 @@ describe("ConflictDetectionService messaging", () => {
     });
 
     it("should close the BroadcastChannel", () => {
-      const service = new ConflictDetectionService();
+      const service = new ConflictDetectionService(clock);
       const mockChannel = MockBroadcastChannel.latest();
 
       service.close();

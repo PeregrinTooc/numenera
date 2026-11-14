@@ -1,9 +1,16 @@
+import type { Clock } from "@/services/clock";
+
 /**
  * Offers `content` to the user as a file download through a temporary
  * object-URL link. Works in every browser (the File System Access API is not
  * needed), including WebKit.
  */
-export function downloadTextFile(filename: string, content: string, mimeType: string): void {
+export function downloadTextFile(
+  filename: string,
+  content: string,
+  mimeType: string,
+  clock: Clock
+): void {
   const blob = new Blob([content], { type: mimeType });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -15,5 +22,5 @@ export function downloadTextFile(filename: string, content: string, mimeType: st
 
   // Revoke on the next tick, not synchronously - Firefox needs the object
   // URL to still be valid when it starts the download after click().
-  setTimeout(() => URL.revokeObjectURL(url), 0);
+  clock.setTimeout(() => URL.revokeObjectURL(url), 0);
 }

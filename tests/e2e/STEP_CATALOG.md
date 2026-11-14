@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **457** in 41 files
-- Feature step lines: **1780**
+- Step definitions: **458** in 42 files
+- Feature step lines: **1788**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -47,6 +47,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
+| [clock.steps.ts](#clockstepsts) | 1 | 0 |
 | [collection-reordering.steps.ts](#collectionreorderingstepsts) | 4 | 0 |
 | [combat.steps.ts](#combatstepsts) | 13 | 0 |
 | [common-steps.ts](#commonstepsts) | 4 | 0 |
@@ -132,19 +133,19 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I note the current save timestamp` | 1 | 9 |
-| When | `I rapidly edit the character name multiple times` | 1 | 19 |
-| When | `I wait for {int} second(s)` | 1 | 15 |
-| Given | `the character sheet is displayed` | 6 | 4 |
-| Then | `the character should be saved only once after changes stop` | 1 | 96 |
-| Then | `the save indicator should be in the lower-right corner` | 1 | 119 |
-| Then | `the save indicator should be visible` | 2 | 66 |
-| Then | `the save indicator should contain {string}` | 3 | 79 |
-| Then | `the save indicator should have subtle styling` | 1 | 138 |
-| Then | `the save indicator should show a single timestamp` | 1 | 106 |
-| Then | `the save indicator should show a timestamp` | 1 | 71 |
-| Then | `the save indicator should still be visible` | 1 | 114 |
-| Then | `the save timestamp should be updated` | 2 | 87 |
+| When | `I note the current save timestamp` | 1 | 10 |
+| When | `I rapidly edit the character name multiple times` | 1 | 20 |
+| When | `I wait for {int} second(s)` | 1 | 16 |
+| Given | `the character sheet is displayed` | 6 | 5 |
+| Then | `the character should be saved only once after changes stop` | 1 | 97 |
+| Then | `the save indicator should be in the lower-right corner` | 1 | 120 |
+| Then | `the save indicator should be visible` | 2 | 67 |
+| Then | `the save indicator should contain {string}` | 3 | 80 |
+| Then | `the save indicator should have subtle styling` | 1 | 139 |
+| Then | `the save indicator should show a single timestamp` | 1 | 107 |
+| Then | `the save indicator should show a timestamp` | 1 | 72 |
+| Then | `the save indicator should still be visible` | 1 | 115 |
+| Then | `the save timestamp should be updated` | 2 | 88 |
 
 ## basic-info-editing.steps.ts
 
@@ -231,7 +232,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am on the character sheet page` | 23 | 14 |
+| Given | `I am on the character sheet page` | 24 | 14 |
 | Given | `my character has every kind of entry` | 1 | 29 |
 | Given | `my character has these stats:` | 1 | 25 |
 | Given | `my character has this basic information:` | 1 | 18 |
@@ -278,6 +279,12 @@ pattern this script does not understand):
 | Then | `the character should be displayed` | 1 | 57 |
 | Then | `the same character should still be displayed` | 1 | 63 |
 
+## clock.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `{int} minute(s) pass` | 2 | 5 |
+
 ## collection-reordering.steps.ts
 
 | Keyword | Phrase | Uses | Line |
@@ -318,13 +325,13 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all character data should be correctly displayed` | 1 | 66 |
-| When | `I import a character file with tier {int}` | 1 | 48 |
+| Then | `all character data should be correctly displayed` | 1 | 76 |
+| When | `I import a character file with tier {int}` | 1 | 53 |
 | When | `I import a valid character file with matching schema version` | 3 | 40 |
-| Then | `the character name should still be {string}` | 1 | 77 |
-| Then | `the character should be imported successfully` | 1 | 60 |
-| Then | `the tier should have been adjusted to {string}` | 1 | 53 |
-| Then | `the tier should still be {string}` | 1 | 85 |
+| Then | `the character name should still be {string}` | 1 | 87 |
+| Then | `the character should be imported successfully` | 1 | 70 |
+| Then | `the tier should have been adjusted to {string}` | 1 | 63 |
+| Then | `the tier should still be {string}` | 1 | 95 |
 
 ## export-enhancement.steps.ts
 
@@ -502,17 +509,17 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 49 |
-| When | `I hold the {string} section over the {zone} of the {string} section as the window shows it` | 1 | 58 |
-| When | `I keep still for a moment` | 9 | 87 |
-| When | `I release the section outside the sheet` | 2 | 92 |
-| When | `I release the section where it is` | 1 | 105 |
-| Then | `no drop preview should be shown` | 1 | 142 |
-| Given | `the {string} section is at the top of the window` | 1 | 65 |
-| Then | `the {string} section should not have moved up or down on screen` | 1 | 74 |
-| Then | `the {string} section should preview {string} in its place` | 1 | 121 |
-| Then | `the {string} section should preview {string} on its right` | 1 | 111 |
-| Then | `the row of {string} should preview {string} below it` | 1 | 131 |
+| When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 48 |
+| When | `I hold the {string} section over the {zone} of the {string} section as the window shows it` | 1 | 57 |
+| When | `I keep still for a moment` | 9 | 86 |
+| When | `I release the section outside the sheet` | 2 | 90 |
+| When | `I release the section where it is` | 1 | 103 |
+| Then | `no drop preview should be shown` | 1 | 140 |
+| Given | `the {string} section is at the top of the window` | 1 | 64 |
+| Then | `the {string} section should not have moved up or down on screen` | 1 | 73 |
+| Then | `the {string} section should preview {string} in its place` | 1 | 119 |
+| Then | `the {string} section should preview {string} on its right` | 1 | 109 |
+| Then | `the row of {string} should preview {string} below it` | 1 | 129 |
 
 ## section-reordering.steps.ts
 
@@ -558,9 +565,9 @@ pattern this script does not understand):
 | Given | `I am viewing the character sheet` | 1 | 5 |
 | When | `I click outside the settings panel` | 1 | 53 |
 | When | `I click the British flag icon` | 1 | 78 |
-| When | `I click the German flag icon` | 4 | 74 |
+| When | `I click the German flag icon` | 5 | 74 |
 | When | `I click the settings gear icon` | 2 | 37 |
-| Given | `I have opened the settings panel` | 8 | 49 |
+| Given | `I have opened the settings panel` | 9 | 49 |
 | Then | `I should be able to click the settings gear icon` | 1 | 30 |
 | Then | `I should see a {string} option` | 1 | 109 |
 | Then | `I should see a settings gear icon in the header` | 1 | 22 |
@@ -700,10 +707,10 @@ pattern this script does not understand):
 | When | `I return to the latest version` | 1 | 81 |
 | Then | `I see my character as it was in version {int}` | 12 | 201 |
 | When | `I step back {int} times in quick succession` | 1 | 70 |
-| When | `I step back to the previous version` | 24 | 62 |
+| When | `I step back to the previous version` | 25 | 62 |
 | When | `I step forward to the next version` | 4 | 66 |
 | When | `I undo with Ctrl+Z` | 19 | 97 |
-| Given | `my character has a history of {int} versions` | 46 | 11 |
+| Given | `my character has a history of {int} versions` | 47 | 11 |
 | Given | `my character has a history of {int} versions with different data` | 1 | 18 |
 | Given | `my character has a portrait` | 3 | 50 |
 | Given | `my character has no history yet` | 5 | 4 |
@@ -732,7 +739,7 @@ pattern this script does not understand):
 | Then | `the navigator dates this version` | 1 | 190 |
 | Then | `the navigator describes this version` | 1 | 179 |
 | Then | `the navigator describes this version as {string}` | 15 | 183 |
-| Then | `the navigator gives the age of this version in relative terms` | 1 | 194 |
+| Then | `the navigator gives the age of this version as {string}` | 2 | 194 |
 | Then | `the navigator is hidden` | 2 | 117 |
 | Then | `the navigator shows version {int} of {int}` | 28 | 140 |
 | Then | `the original version has been dropped` | 2 | 208 |

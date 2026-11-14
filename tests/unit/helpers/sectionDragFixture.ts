@@ -2,6 +2,7 @@ import { vi } from "vitest";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import type { Character } from "@/types/character";
 import { SECTION_IDS } from "@/types/layout";
+import { ManualClock } from "@/services/manualClock";
 
 type TouchType = "touchstart" | "touchmove" | "touchend" | "touchcancel";
 
@@ -108,18 +109,24 @@ export function mouseDrag(
   );
 }
 
-export function mountSheet(character: Character): CharacterSheet {
+export function mountSheet(character: Character, clock: ManualClock): CharacterSheet {
   document.body.innerHTML = '<div id="app"></div>';
-  const sheet = new CharacterSheet(character, vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
+  const sheet = new CharacterSheet(character, clock, vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
   sheet.mount(document.getElementById("app") as HTMLElement);
   sheet.toggleLayoutEditMode();
   return sheet;
 }
 
 /** Long-press `sourceId`, then move the finger to (x, y) over `targetId`. */
-export function touchDragOver(sourceId: string, targetId: string, x: number, y: number): void {
+export function touchDragOver(
+  clock: ManualClock,
+  sourceId: string,
+  targetId: string,
+  x: number,
+  y: number
+): void {
   vi.spyOn(document, "elementFromPoint").mockImplementation(() => section(targetId));
   touch(section(sourceId), "touchstart", [{ x: 20, y: 500 }]);
-  vi.advanceTimersByTime(250);
+  clock.advance(250);
   touch(section(sourceId), "touchmove", [{ x, y }]);
 }

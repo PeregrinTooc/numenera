@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from "vite
 import { CharacterSheet } from "@/components/CharacterSheet";
 import { createTestCharacter } from "../factories/character.js";
 import { layOutByRows, ROW_HEIGHT, section, touch } from "./helpers/sectionDragFixture.js";
+import { ManualClock } from "@/services/manualClock";
 
 function pairGrid(): Element | null {
   return document.querySelector('[data-testid="layout-grid-items-cyphers"]');
@@ -48,6 +49,8 @@ function negate(transform: string): string {
   return transform.replace(/(-?[\d.]+)px/g, (_, n: string) => `${-Number(n)}px`);
 }
 
+let clock: ManualClock;
+
 describe("CharacterSheet sections slide into a live preview", () => {
   let sheet: CharacterSheet;
   let animate: Mock;
@@ -57,7 +60,7 @@ describe("CharacterSheet sections slide into a live preview", () => {
   function holdCyphersOverItems(): void {
     vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("items"));
     touch(section("cyphers"), "touchstart", [{ x: 20, y: 1020 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
     const items = section("items").getBoundingClientRect();
     touch(section("cyphers"), "touchmove", [
       { x: items.left + 600, y: items.top + ROW_HEIGHT * 0.6 },
@@ -77,7 +80,7 @@ describe("CharacterSheet sections slide into a live preview", () => {
   }
 
   beforeEach(() => {
-    vi.useFakeTimers();
+    clock = new ManualClock();
     localStorage.clear();
     stubMedia(false);
     layOutByRows();
@@ -96,13 +99,20 @@ describe("CharacterSheet sections slide into a live preview", () => {
     // jsdom does not implement elementFromPoint; tests spy on this stub.
     document.elementFromPoint = (): Element | null => null;
     document.body.innerHTML = '<div id="app"></div>';
-    sheet = new CharacterSheet(createTestCharacter(), vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
+    sheet = new CharacterSheet(
+      createTestCharacter(),
+      clock,
+      vi.fn(),
+      vi.fn(),
+      vi.fn(),
+      vi.fn(),
+      vi.fn()
+    );
     sheet.mount(document.getElementById("app") as HTMLElement);
     sheet.toggleLayoutEditMode();
   });
 
   afterEach(() => {
-    vi.useRealTimers();
     vi.restoreAllMocks();
     delete (HTMLElement.prototype as Partial<HTMLElement>).animate;
     delete (HTMLElement.prototype as Partial<HTMLElement>).getAnimations;
@@ -110,7 +120,7 @@ describe("CharacterSheet sections slide into a live preview", () => {
 
   it("slides the moved sections when the live preview appears", () => {
     holdCyphersOverItems();
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
 
     expect(pairGrid()).not.toBeNull();
     // Cyphers and Items now share one row. Items, under the finger, stays where
@@ -134,7 +144,7 @@ describe("CharacterSheet sections slide into a live preview", () => {
 
   it("slides the sections back when a cancel restores the saved layout", () => {
     holdCyphersOverItems();
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
     const there = cyphersSlides()[0];
     touch(section("cyphers"), "touchcancel");
 
@@ -146,7 +156,7 @@ describe("CharacterSheet sections slide into a live preview", () => {
   it("slides nothing when reduced motion is preferred", () => {
     stubMedia(true);
     holdCyphersOverItems();
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
 
     expect(pairGrid()).not.toBeNull();
     expect(animate).not.toHaveBeenCalled();
@@ -157,10 +167,10 @@ describe("CharacterSheet sections slide into a live preview", () => {
     // so lit reuses the row elements, still sliding, for the restored layout
     vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("abilities"));
     touch(section("cyphers"), "touchstart", [{ x: 20, y: 1020 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
     const abilities = section("abilities").getBoundingClientRect();
     touch(section("cyphers"), "touchmove", [{ x: 400, y: abilities.top + ROW_HEIGHT * 0.1 }]);
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
     const sliding = [...animations];
     touch(section("cyphers"), "touchcancel");
 
@@ -171,7 +181,7 @@ describe("CharacterSheet sections slide into a live preview", () => {
 
   it("leaving layout edit mode during a live preview does not slide", () => {
     holdCyphersOverItems();
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
     const slides = animate.mock.calls.length;
     sheet.toggleLayoutEditMode();
 
@@ -186,27 +196,27 @@ describe("CharacterSheet sections slide into a live preview", () => {
 
   it("ignores hovers until the slide into the live preview has finished", async () => {
     holdCyphersOverItems();
-    vi.advanceTimersByTime(300); // Cyphers paired with Items, still sliding
+    clock.advance(300); // Cyphers paired with Items, still sliding
     moveOverTopEdgeOfItems(200);
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
     expect(pairGrid()).not.toBeNull();
 
     animations.forEach((a) => a.finish());
     await flushPromises();
     moveOverTopEdgeOfItems(201);
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
     expect(pairGrid()).toBeNull();
   });
 
   it("a finger that stopped over a new zone while sections slid gets it once they arrive", async () => {
     holdCyphersOverItems();
-    vi.advanceTimersByTime(300); // Cyphers paired with Items, still sliding
+    clock.advance(300); // Cyphers paired with Items, still sliding
     // The finger reaches the top edge of Items and stays there
     moveOverTopEdgeOfItems(200);
 
     animations.forEach((a) => a.finish());
     await flushPromises();
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
 
     expect(pairGrid()).toBeNull();
   });
@@ -214,26 +224,26 @@ describe("CharacterSheet sections slide into a live preview", () => {
   it("does not ignore hovers when nothing slides", () => {
     stubMedia(true);
     holdCyphersOverItems();
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
     moveOverTopEdgeOfItems(200);
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
 
     expect(pairGrid()).toBeNull();
   });
 
   it("a slide from an ended drag does not lift the gate of the next one", async () => {
     holdCyphersOverItems();
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
     const firstSlide = [...animations];
     touch(section("cyphers"), "touchcancel"); // its slide still running
 
     holdCyphersOverItems();
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
     expect(pairGrid()).not.toBeNull();
     firstSlide.forEach((a) => a.finish());
     await flushPromises();
     moveOverTopEdgeOfItems(200);
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
 
     expect(pairGrid()).not.toBeNull();
   });
@@ -243,10 +253,10 @@ describe("CharacterSheet sections slide into a live preview", () => {
     // elements, still sliding, for the sheet outside edit mode
     vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("abilities"));
     touch(section("cyphers"), "touchstart", [{ x: 20, y: 1020 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
     const abilities = section("abilities").getBoundingClientRect();
     touch(section("cyphers"), "touchmove", [{ x: 400, y: abilities.top + ROW_HEIGHT * 0.1 }]);
-    vi.advanceTimersByTime(300);
+    clock.advance(300);
     const sliding = [...animations];
     sheet.toggleLayoutEditMode();
 

@@ -41,13 +41,23 @@ const VALID_CHARACTER = {
 When(
   "I import a valid character file with matching schema version",
   async function (this: CustomWorld) {
-    await importFile(this.page, "imported-hero.numenera", numeneraFile(VALID_CHARACTER));
+    await importFile(
+      this.page,
+      this.clock,
+      "imported-hero.numenera",
+      numeneraFile(VALID_CHARACTER)
+    );
     await expect(this.page.getByTestId("character-name")).toHaveText("Imported Hero");
   }
 );
 
 When("I import a character file with tier {int}", async function (this: CustomWorld, tier: number) {
-  await importFile(this.page, "imported-hero.numenera", numeneraFile({ ...VALID_CHARACTER, tier }));
+  await importFile(
+    this.page,
+    this.clock,
+    "imported-hero.numenera",
+    numeneraFile({ ...VALID_CHARACTER, tier })
+  );
   await expect(this.page.getByTestId("character-name")).toHaveText("Imported Hero");
 });
 

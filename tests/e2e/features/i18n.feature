@@ -77,3 +77,12 @@ Feature: Internationalization (i18n)
         And I have opened the settings panel
         When I click the German flag icon
         Then the page should declare its language as "de"
+
+    Scenario: The age of an old version is given in German
+        Given I am on the character sheet page
+        And my character has a history of 2 versions
+        And 5 minutes pass
+        And I have opened the settings panel
+        And I click the German flag icon
+        When I step back to the previous version
+        Then the navigator gives the age of this version as "vor 5 Minuten"

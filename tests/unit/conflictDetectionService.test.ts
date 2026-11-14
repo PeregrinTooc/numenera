@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { DEFAULT_START_MS, ManualClock } from "@/services/manualClock";
 import { ConflictDetectionService, type ConflictDetail } from "@/services/conflictDetectionService";
 import { createTestCharacter } from "../factories/character";
 import {
@@ -7,6 +8,7 @@ import {
 } from "../factories/mockBroadcastChannel";
 
 describe("ConflictDetectionService", () => {
+  let clock: ManualClock;
   let restoreBroadcastChannel: () => void;
   let conflicts: ConflictDetail[];
   const onConflict = (event: Event): void => {
@@ -14,6 +16,7 @@ describe("ConflictDetectionService", () => {
   };
 
   beforeEach(() => {
+    clock = new ManualClock();
     restoreBroadcastChannel = installMockBroadcastChannel();
     conflicts = [];
     window.addEventListener("version-conflict", onConflict);
@@ -26,7 +29,7 @@ describe("ConflictDetectionService", () => {
   });
 
   function openService(): { service: ConflictDetectionService; channel: MockBroadcastChannel } {
-    const service = new ConflictDetectionService();
+    const service = new ConflictDetectionService(clock);
     return { service, channel: MockBroadcastChannel.latest() };
   }
 
@@ -35,7 +38,7 @@ describe("ConflictDetectionService", () => {
       type: "version-saved",
       tabId: "other-tab-123",
       etag,
-      timestamp: Date.now(),
+      timestamp: clock.now(),
       characterName: "Remote Character",
     });
   }
@@ -155,6 +158,17 @@ describe("ConflictDetectionService", () => {
       service.close();
     });
 
+    it("stamps its answer with the time it was asked", async () => {
+      const { service, channel } = openService();
+      await service.setCurrentEtag(createTestCharacter({ name: "Test Character" }));
+      clock.advance(5_000);
+
+      otherTabRequestsLatest(channel);
+
+      expect(channel.posted("respond-latest")[0].timestamp).toBe(DEFAULT_START_MS + 5_000);
+      service.close();
+    });
+
     it("should generate different ETags for different characters", async () => {
       const { service, channel } = openService();
 
@@ -181,7 +195,7 @@ describe("ConflictDetectionService", () => {
           type: "version-saved",
           tabId: expect.any(String),
           etag: expect.any(String),
-          timestamp: expect.any(Number),
+          timestamp: DEFAULT_START_MS,
           characterName: "Test Character",
         })
       );
@@ -202,6 +216,19 @@ describe("ConflictDetectionService", () => {
       const [response] = channel.posted("respond-latest");
       expect(response.etag).toBe(saved.etag);
 
+      service.close();
+    });
+
+    it("reports the remote save time when editing starts after a remote save", async () => {
+      const { service, channel } = openService();
+      await service.setCurrentEtag(createTestCharacter({ name: "Original" }));
+      otherTabSavesVersion(channel);
+      clock.advance(60_000);
+
+      service.markDirty(createTestCharacter({ name: "Local Changes" }));
+
+      expect(conflicts).toHaveLength(1);
+      expect(conflicts[0].remoteTimestamp).toBe(DEFAULT_START_MS);
       service.close();
     });
 

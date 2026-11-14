@@ -2,6 +2,7 @@
 // sheet shows its result without saving it.
 
 import { Layout, type SectionId } from "@/types/layout";
+import type { Clock, TimerHandle } from "@/services/clock";
 
 /** How long a drop intent must hold before the sheet shows its result. */
 export const LIVE_PREVIEW_DELAY_MS = 300;
@@ -25,7 +26,7 @@ export class LivePreview {
    */
   private shown: { layout: Layout; keptStill: SectionId } | null = null;
   /** Pending switch to the live preview of the current intent. */
-  private dwell: { timer: ReturnType<typeof setTimeout>; onHold: () => void } | null = null;
+  private dwell: { timer: TimerHandle; onHold: () => void } | null = null;
   /** Where the pointer was at the last hover. */
   private lastPointer: Point | null = null;
   /** Where the pointer was when the live preview appeared, until it moves on. */
@@ -37,6 +38,8 @@ export class LivePreview {
   private slide: Promise<void> | null = null;
   /** The last hover ignored while the sections slid, handed on once they arrive. */
   private heldBackHover: Point | null = null;
+
+  constructor(private readonly clock: Clock) {}
 
   /** The layout shown by the live preview; null when none is shown. */
   shownLayout(): Layout | null {
@@ -81,7 +84,7 @@ export class LivePreview {
   restartDwell(armed: boolean, onHold: () => void): void {
     this.cancelDwell();
     if (!armed) return;
-    const timer = setTimeout(() => {
+    const timer = this.clock.setTimeout(() => {
       this.dwell = null;
       onHold();
     }, LIVE_PREVIEW_DELAY_MS);
@@ -134,7 +137,7 @@ export class LivePreview {
   }
 
   private cancelDwell(): void {
-    if (this.dwell) clearTimeout(this.dwell.timer);
+    if (this.dwell) this.clock.clearTimeout(this.dwell.timer);
     this.dwell = null;
   }
 }

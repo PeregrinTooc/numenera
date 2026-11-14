@@ -1,3 +1,4 @@
+import { DEFAULT_START_MS, ManualClock } from "@/services/manualClock";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { CompareView } from "@/components/CompareView";
 import { VersionState } from "@/services/versionState";
@@ -25,7 +26,11 @@ describe("CompareView", () => {
   }
 
   beforeEach(() => {
-    versionState = new VersionState(createMockCharacter("Latest"), history.manager);
+    versionState = new VersionState(
+      createMockCharacter("Latest"),
+      history.manager,
+      new ManualClock()
+    );
   });
 
   it("seeds the right pane with the given index and the left pane one before it", async () => {
@@ -169,7 +174,8 @@ describe("CompareView", () => {
     await seedVersions(history.manager, [{ name: "Version 1", description: "Initial" }]);
     await history.manager.saveVersion(
       { ...createMockCharacter("Version 2"), tier: 2, shins: 99, armor: 3 },
-      "Edit 1"
+      "Edit 1",
+      DEFAULT_START_MS
     );
     await versionState.init();
 

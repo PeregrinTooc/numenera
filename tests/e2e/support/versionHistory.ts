@@ -134,8 +134,8 @@ export class VersionHistoryDsl {
     await this.driver.expectTimestampShown();
   }
 
-  async expectAgeInRelativeTerms(): Promise<void> {
-    await this.driver.expectTimestampRelative();
+  async expectAge(age: string): Promise<void> {
+    await this.driver.expectTimestampReads(age);
   }
 
   async expectCharacterAsOfVersion(version: number): Promise<void> {

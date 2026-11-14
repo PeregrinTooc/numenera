@@ -19,6 +19,7 @@ import {
   withColumnChoices,
   withColumns,
 } from "@/types/sectionColumns";
+import type { Clock } from "@/services/clock";
 import { SectionDragController } from "@/components/helpers/SectionDragController";
 import { renderEditLayoutButton } from "@/components/helpers/layoutEditButton";
 import { renderSectionColumnsButton } from "@/components/helpers/sectionColumnsButton";
@@ -37,16 +38,11 @@ export class CharacterSheet {
   private isLayoutEditMode: boolean = false;
   private container: HTMLElement | null = null;
 
-  private readonly drag = new SectionDragController({
-    isEditMode: () => this.isLayoutEditMode,
-    requestRender: () => this.rerender(),
-    renderWithSlide: (keepStill) => this.rerenderWithSlide(keepStill),
-    getLayout: () => this.layout,
-    commitLayout: (layout) => this.applyLayout(layout),
-  });
+  private readonly drag: SectionDragController;
 
   constructor(
     private character: Character,
+    clock: Clock,
     private onLoad: () => void,
     private onNew: () => void,
     private onImport: () => void,
@@ -55,6 +51,16 @@ export class CharacterSheet {
     private onQuickExport?: () => void,
     private onSaveAs?: () => void
   ) {
+    this.drag = new SectionDragController(
+      {
+        isEditMode: () => this.isLayoutEditMode,
+        requestRender: () => this.rerender(),
+        renderWithSlide: (keepStill) => this.rerenderWithSlide(keepStill),
+        getLayout: () => this.layout,
+        commitLayout: (layout) => this.applyLayout(layout),
+      },
+      clock
+    );
     // Create stateful components once to preserve their state across re-renders
     this.header = new Header(
       this.onLoad,

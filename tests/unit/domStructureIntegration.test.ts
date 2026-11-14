@@ -8,6 +8,7 @@ import {
   createTestCharacter as createMockCharacter,
   createEmptyCharacter,
 } from "../factories/character.js";
+import { ManualClock } from "@/services/manualClock";
 
 describe("DOM Structure Tests - empty states and integration", () => {
   const getContainer = setupTestContainer();
@@ -60,7 +61,15 @@ describe("DOM Structure Tests - empty states and integration", () => {
   describe("CharacterSheet Full Integration", () => {
     it("should render all major sections", () => {
       const character = createMockCharacter();
-      const sheet = new CharacterSheet(character, vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
+      const sheet = new CharacterSheet(
+        character,
+        new ManualClock(),
+        vi.fn(),
+        vi.fn(),
+        vi.fn(),
+        vi.fn(),
+        vi.fn()
+      );
       sheet.mount(getContainer());
 
       const container = getContainer();
@@ -79,7 +88,15 @@ describe("DOM Structure Tests - empty states and integration", () => {
 
     it("should render edit layout button", () => {
       const character = createMockCharacter();
-      const sheet = new CharacterSheet(character, vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
+      const sheet = new CharacterSheet(
+        character,
+        new ManualClock(),
+        vi.fn(),
+        vi.fn(),
+        vi.fn(),
+        vi.fn(),
+        vi.fn()
+      );
       sheet.mount(getContainer());
 
       expect(getContainer().querySelector('[data-testid="edit-layout-button"]')).toBeTruthy();
@@ -87,7 +104,15 @@ describe("DOM Structure Tests - empty states and integration", () => {
 
     it("should render layout sections with data-section-id attributes", () => {
       const character = createMockCharacter();
-      const sheet = new CharacterSheet(character, vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
+      const sheet = new CharacterSheet(
+        character,
+        new ManualClock(),
+        vi.fn(),
+        vi.fn(),
+        vi.fn(),
+        vi.fn(),
+        vi.fn()
+      );
       sheet.mount(getContainer());
 
       const container = getContainer();

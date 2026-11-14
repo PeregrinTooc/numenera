@@ -193,9 +193,9 @@ Then("the navigator dates this version", async function (this: CustomWorld) {
 });
 
 Then(
-  "the navigator gives the age of this version in relative terms",
-  async function (this: CustomWorld) {
-    await this.history.expectAgeInRelativeTerms();
+  "the navigator gives the age of this version as {string}",
+  async function (this: CustomWorld, age: string) {
+    await this.history.expectAge(age);
   }
 );
 

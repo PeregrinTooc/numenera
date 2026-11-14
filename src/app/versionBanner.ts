@@ -21,6 +21,7 @@ export function syncVersionWarning(ctx: AppContext): void {
       const options = {
         description: metadata.description,
         timestamp: metadata.timestamp,
+        clock: ctx.clock,
         onReturn: async (): Promise<void> => {
           if (!ctx.versionState) return;
           ctx.versionState.restoreToLatest();

@@ -2,11 +2,13 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import { getAllSectionIds, DEFAULT_LAYOUT } from "@/types/layout";
 import { createCharacterWithItems } from "../factories/character.js";
+import { ManualClock } from "@/services/manualClock";
 
 function mountSheet(): void {
   document.body.innerHTML = '<div id="app"></div>';
   const sheet = new CharacterSheet(
     createCharacterWithItems(),
+    new ManualClock(),
     vi.fn(),
     vi.fn(),
     vi.fn(),

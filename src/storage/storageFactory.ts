@@ -6,6 +6,7 @@ import { VersionHistoryManager } from "./versionHistory.js";
 import { CHARACTER_DB_NAME } from "./storageConstants.js";
 import { sanitizeCharacter } from "@/utils/characterSanitizer";
 import { logger } from "@/utils/logger";
+import { SystemClock } from "@/services/clock";
 import { reportStorageWriteFailure } from "./storageWriteFailure";
 
 let storageInstance: ICharacterStorage | null = null;
@@ -37,7 +38,7 @@ async function deleteCorruptedIndexedDB(): Promise<void> {
  * and recreated once.
  */
 async function openVerifiedIndexedDB(): Promise<IndexedDBStorageImpl> {
-  let storage = new IndexedDBStorageImpl();
+  let storage = new IndexedDBStorageImpl(new SystemClock());
   await storage.init();
 
   try {
@@ -47,7 +48,7 @@ async function openVerifiedIndexedDB(): Promise<IndexedDBStorageImpl> {
     storage.close();
     await deleteCorruptedIndexedDB();
 
-    storage = new IndexedDBStorageImpl();
+    storage = new IndexedDBStorageImpl(new SystemClock());
     await storage.init();
     await storage.load();
     logger.info("IndexedDB recreated successfully");
@@ -57,7 +58,7 @@ async function openVerifiedIndexedDB(): Promise<IndexedDBStorageImpl> {
 
 /** A ready IndexedDB storage (with localStorage data migrated in), or null when unavailable or failing. */
 async function tryInitIndexedDB(): Promise<ICharacterStorage | null> {
-  if (!(await new IndexedDBStorageImpl().isAvailable())) {
+  if (!(await new IndexedDBStorageImpl(new SystemClock()).isAvailable())) {
     return null;
   }
   try {

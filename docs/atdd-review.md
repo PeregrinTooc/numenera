@@ -42,7 +42,7 @@ DSL that's already there and move everything onto it.
   merges `FULL_CHARACTER` with only the fields a test cares about. That is
   Dave's point that a DSL should provide defaults so tests specify only what
   matters.
-- **Time is controlled.** The injected `TestTimer` and the held-save gate in
+- **Time is controlled.** The app runs on a `ManualClock` that scenarios advance through the clock driver, and the held-save gate in
   `version-history-squash-race.steps.ts` make a real race reproducible, which is
   the right way to handle concurrency.
 - **The suite reports its state honestly.** No feature file carries `@skip`,
@@ -146,11 +146,9 @@ Examples:
   calls.
 - `card-modal-focus-trap.steps.ts`: sleeps of 30 to 100 ms around focus
   changes.
-- `auto-save-indicator.steps.ts:17`: `waitForTimeout(seconds * 1000)` waits in
-  real time. The injected `TestTimer` cannot help here: `AutoSaveService`
-  deliberately always uses a `RealTimer`, and `TestTimer` only drives the
-  version-history squash. `page.clock`, installed before the app boots, is what
-  advances time there now.
+- `auto-save-indicator.steps.ts:17`: `waitForTimeout(seconds * 1000)` waited in
+  real time. The app now runs on a `ManualClock` installed before boot, and
+  the step advances it through the clock driver.
 
 Before and after, using `CardsDsl` as the example:
 
@@ -283,7 +281,7 @@ their own, and write the other stat-edit scenarios at the intent level.
    on the flakiness being fixed now. Every `waitForTimeout` is gone except the
    long-press hold, which is the gesture itself. Flush-based save waits,
    bootstrap and initial-version readiness helpers, a navigation helper on the
-   version counter, outcome assertions and `page.clock` replaced them, and a
+   version counter, outcome assertions and clock advances replaced them, and a
    lint rule now forbids new ones. Removing them surfaced and fixed real races
    (the layout-choice Escape pressed before focus arrived, an auto-save reload
    racing a squash).

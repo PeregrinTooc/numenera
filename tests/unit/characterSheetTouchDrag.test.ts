@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import { createTestCharacter } from "../factories/character.js";
 import { mountSheet } from "./helpers/sectionDragFixture";
+import { ManualClock } from "@/services/manualClock";
 
 type TouchType = "touchstart" | "touchmove" | "touchend" | "touchcancel";
 
@@ -35,29 +36,38 @@ function sectionOrder(): string[] {
   );
 }
 
+let clock: ManualClock;
+
 describe("CharacterSheet touch long-press drag", () => {
   let sheet: CharacterSheet;
 
   beforeEach(() => {
-    vi.useFakeTimers();
+    clock = new ManualClock();
     localStorage.clear();
     // jsdom does not implement elementFromPoint; tests spy on this stub.
     document.elementFromPoint = (): Element | null => null;
     document.body.innerHTML = '<div id="app"></div>';
     const container = document.getElementById("app") as HTMLElement;
-    sheet = new CharacterSheet(createTestCharacter(), vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
+    sheet = new CharacterSheet(
+      createTestCharacter(),
+      clock,
+      vi.fn(),
+      vi.fn(),
+      vi.fn(),
+      vi.fn(),
+      vi.fn()
+    );
     sheet.mount(container);
     sheet.toggleLayoutEditMode();
   });
 
   afterEach(() => {
-    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
   it("marks a section as dragging after a 250ms long-press", () => {
     touch(section("cyphers"), "touchstart", [{ x: 20, y: 500 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
 
     expect(section("cyphers").classList.contains("dragging")).toBe(true);
   });
@@ -65,7 +75,7 @@ describe("CharacterSheet touch long-press drag", () => {
   it("a touch that moves before the hold elapses never activates and is not prevented", () => {
     touch(section("cyphers"), "touchstart", [{ x: 20, y: 500 }]);
     const move = touch(section("cyphers"), "touchmove", [{ x: 20, y: 450 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
 
     expect(move.defaultPrevented).toBe(false);
     expect(section("cyphers").classList.contains("dragging")).toBe(false);
@@ -73,7 +83,7 @@ describe("CharacterSheet touch long-press drag", () => {
 
   it("prevents the page from scrolling once the long-press is active", () => {
     touch(section("cyphers"), "touchstart", [{ x: 20, y: 500 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
     vi.spyOn(document, "elementFromPoint").mockReturnValue(null);
     const move = touch(section("cyphers"), "touchmove", [{ x: 20, y: 450 }]);
 
@@ -84,7 +94,7 @@ describe("CharacterSheet touch long-press drag", () => {
     sheet.toggleLayoutEditMode();
 
     touch(section("cyphers"), "touchstart", [{ x: 20, y: 500 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
 
     expect(section("cyphers").classList.contains("dragging")).toBe(false);
   });
@@ -98,7 +108,7 @@ describe("CharacterSheet touch long-press drag", () => {
     );
 
     touch(cyphers, "touchstart", [{ x: 20, y: 500 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
     touch(cyphers, "touchmove", [{ x: 20, y: 120 }]);
     expect(section("abilities").classList.contains("drop-line-before")).toBe(true);
     touch(cyphers, "touchend");
@@ -114,7 +124,7 @@ describe("CharacterSheet touch long-press drag", () => {
     vi.spyOn(document, "elementFromPoint").mockReturnValue(document.body);
 
     touch(cyphers, "touchstart", [{ x: 20, y: 500 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
     touch(cyphers, "touchmove", [{ x: 20, y: 5 }]);
     touch(cyphers, "touchend");
 
@@ -128,13 +138,13 @@ describe("CharacterSheet touch long-press drag", () => {
     vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("abilities"));
 
     touch(cyphers, "touchstart", [{ x: 20, y: 500 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
     touch(cyphers, "touchstart", [
       { x: 20, y: 500 },
       { x: 200, y: 500 },
     ]);
     // Keep both fingers down past the hold time: a restarted gesture would re-activate.
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
 
     expect(section("cyphers").classList.contains("dragging")).toBe(false);
     touch(cyphers, "touchend");
@@ -143,7 +153,7 @@ describe("CharacterSheet touch long-press drag", () => {
 
   it("exiting edit mode cancels an active touch drag (Review Focus 2)", () => {
     touch(section("cyphers"), "touchstart", [{ x: 20, y: 500 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
 
     sheet.toggleLayoutEditMode();
     sheet.toggleLayoutEditMode();
@@ -153,7 +163,7 @@ describe("CharacterSheet touch long-press drag", () => {
 
   it("native dragstart is blocked during a touch drag (Review Focus 4)", () => {
     touch(section("cyphers"), "touchstart", [{ x: 20, y: 500 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
 
     const dragStart = new Event("dragstart", { bubbles: true, cancelable: true });
     section("cyphers").dispatchEvent(dragStart);
@@ -163,7 +173,7 @@ describe("CharacterSheet touch long-press drag", () => {
 
   it("contextmenu is blocked during a touch drag (Review Focus 4)", () => {
     touch(section("cyphers"), "touchstart", [{ x: 20, y: 500 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
 
     const contextMenu = new Event("contextmenu", { bubbles: true, cancelable: true });
     section("cyphers").dispatchEvent(contextMenu);
@@ -184,7 +194,7 @@ describe("CharacterSheet touch long-press drag", () => {
     vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("abilities"));
 
     touch(cyphers, "touchstart", [{ x: 20, y: 500 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
     touch(cyphers, "touchmove", [{ x: 20, y: 120 }]);
     touch(cyphers, "touchcancel");
 
@@ -198,7 +208,7 @@ describe("CharacterSheet touch long-press drag", () => {
     vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("abilities"));
 
     touch(cyphers, "touchstart", [{ x: 20, y: 500 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
     touch(cyphers, "touchmove", [{ x: 20, y: 120 }], { cancelable: false });
     touch(cyphers, "touchend");
 
@@ -212,7 +222,7 @@ describe("CharacterSheet touch long-press drag", () => {
     vi.spyOn(document, "elementFromPoint").mockImplementation(() => section("abilities"));
 
     touch(cyphers, "touchstart", [{ x: 20, y: 500 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
     touch(cyphers, "touchmove", [
       { x: 20, y: 120 },
       { x: 200, y: 120 },
@@ -228,6 +238,7 @@ describe("CharacterSheet touch long-press drag", () => {
       createTestCharacter({
         abilities: [{ name: "Trained in Defense", description: "Reduces difficulty by 1" }],
       }),
+      clock,
       vi.fn(),
       vi.fn(),
       vi.fn(),
@@ -238,7 +249,7 @@ describe("CharacterSheet touch long-press drag", () => {
     withAbilities.toggleLayoutEditMode();
 
     touch(section("abilities"), "touchstart", [{ x: 20, y: 500 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
 
     const card = document.querySelector<HTMLElement>("[data-testid^='ability-item']");
     if (!card) throw new Error("No ability card rendered");
@@ -255,10 +266,11 @@ describe("CharacterSheet touch drag edge auto-scroll", () => {
   let scrolledY = 0;
 
   beforeEach(() => {
-    vi.useFakeTimers();
+    vi.useFakeTimers(); // EdgeAutoScroll steps on animation frames
+    clock = new ManualClock();
     localStorage.clear();
     document.elementFromPoint = (): Element | null => null;
-    mountSheet(createTestCharacter());
+    mountSheet(createTestCharacter(), clock);
     // jsdom does not scroll; record what the drag asks the window to scroll.
     scrolledY = 0;
     vi.spyOn(window, "scrollBy").mockImplementation(((_x: number, y: number) => {
@@ -271,35 +283,43 @@ describe("CharacterSheet touch drag edge auto-scroll", () => {
     vi.restoreAllMocks();
   });
 
+  /** The hold timers and the animation frames move on together, millisecond by millisecond. */
+  function elapse(ms: number): void {
+    for (let elapsed = 0; elapsed < ms; elapsed++) {
+      clock.advance(1);
+      vi.advanceTimersByTime(1);
+    }
+  }
+
   function dragTo(y: number): void {
     touch(section("cyphers"), "touchstart", [{ x: 20, y: 400 }]);
-    vi.advanceTimersByTime(250);
+    elapse(250);
     touch(section("cyphers"), "touchmove", [{ x: 20, y }]);
   }
 
   it("scrolls the page up while the drag is held at the top edge", () => {
     dragTo(5);
-    vi.advanceTimersByTime(500);
+    elapse(500);
 
     expect(scrolledY).toBeLessThan(-100);
   });
 
   it("scrolls the page down while the drag is held at the bottom edge", () => {
     dragTo(window.innerHeight - 5);
-    vi.advanceTimersByTime(500);
+    elapse(500);
 
     expect(scrolledY).toBeGreaterThan(100);
   });
 
   it("scrolls faster the closer the finger is to the edge", () => {
     dragTo(50);
-    vi.advanceTimersByTime(500);
+    elapse(500);
     touch(section("cyphers"), "touchend");
     const nearZoneStart = scrolledY;
     scrolledY = 0;
 
     dragTo(5);
-    vi.advanceTimersByTime(500);
+    elapse(500);
 
     expect(scrolledY).toBeLessThan(nearZoneStart * 2);
   });
@@ -314,7 +334,7 @@ describe("CharacterSheet touch drag edge auto-scroll", () => {
     );
 
     dragTo(5);
-    vi.advanceTimersByTime(200);
+    elapse(200);
 
     expect(section("stats").classList.contains("drop-line-before")).toBe(true);
   });
@@ -327,7 +347,7 @@ describe("CharacterSheet touch drag edge auto-scroll", () => {
     );
 
     dragTo(5);
-    vi.advanceTimersByTime(1000);
+    elapse(1000);
 
     expect(sectionOrder()).toEqual(before);
     expect(section("stats").classList.contains("drop-line-before")).toBe(true);
@@ -335,20 +355,20 @@ describe("CharacterSheet touch drag edge auto-scroll", () => {
 
   it("stops scrolling when the drag is released", () => {
     dragTo(5);
-    vi.advanceTimersByTime(100);
+    elapse(100);
     touch(section("cyphers"), "touchend");
     const atRelease = scrolledY;
-    vi.advanceTimersByTime(500);
+    elapse(500);
 
     expect(scrolledY).toBe(atRelease);
   });
 
   it("stops scrolling when the finger moves away from the edge", () => {
     dragTo(5);
-    vi.advanceTimersByTime(100);
+    elapse(100);
     touch(section("cyphers"), "touchmove", [{ x: 20, y: 300 }]);
     const atLeave = scrolledY;
-    vi.advanceTimersByTime(500);
+    elapse(500);
 
     expect(scrolledY).toBe(atLeave);
   });
@@ -358,23 +378,30 @@ describe("CharacterSheet touch scrolling outside and inside edit mode", () => {
   let sheet: CharacterSheet;
 
   beforeEach(() => {
-    vi.useFakeTimers();
+    clock = new ManualClock();
     localStorage.clear();
     document.elementFromPoint = (): Element | null => null;
     document.body.innerHTML = '<div id="app"></div>';
     const container = document.getElementById("app") as HTMLElement;
-    sheet = new CharacterSheet(createTestCharacter(), vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
+    sheet = new CharacterSheet(
+      createTestCharacter(),
+      clock,
+      vi.fn(),
+      vi.fn(),
+      vi.fn(),
+      vi.fn(),
+      vi.fn()
+    );
     sheet.mount(container);
   });
 
   afterEach(() => {
-    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
   function longPressThenMove(): TouchEvent {
     touch(section("cyphers"), "touchstart", [{ x: 20, y: 500 }]);
-    vi.advanceTimersByTime(250);
+    clock.advance(250);
     return touch(section("cyphers"), "touchmove", [{ x: 20, y: 450 }]);
   }
 
