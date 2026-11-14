@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **703** in 55 files
-- Feature step lines: **2331**
+- Step definitions: **612** in 53 files
+- Feature step lines: **2177**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -39,12 +39,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
 | [basic-info-editing-accessibility.steps.ts](#basicinfoeditingaccessibilitystepsts) | 18 | 0 |
 | [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 16 | 0 |
-| [card-creation-modal-actions.steps.ts](#cardcreationmodalactionsstepsts) | 10 | 0 |
-| [card-creation-modal-fields.steps.ts](#cardcreationmodalfieldsstepsts) | 33 | 0 |
-| [card-creation-setup.steps.ts](#cardcreationsetupstepsts) | 22 | 0 |
-| [card-creation-verification.steps.ts](#cardcreationverificationstepsts) | 24 | 0 |
-| [card-deletion.steps.ts](#carddeletionstepsts) | 7 | 0 |
-| [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
+| [card-deletion.steps.ts](#carddeletionstepsts) | 6 | 0 |
+| [card-editing.steps.ts](#cardeditingstepsts) | 12 | 0 |
+| [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 8 | 0 |
 | [card-reordering-abilities.steps.ts](#cardreorderingabilitiesstepsts) | 5 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 8 | 0 |
 | [character-display.steps.ts](#characterdisplaystepsts) | 33 | 0 |
@@ -52,10 +49,10 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [collection-reordering.steps.ts](#collectionreorderingstepsts) | 4 | 0 |
-| [combat.steps.ts](#combatstepsts) | 24 | 0 |
-| [common-steps.ts](#commonstepsts) | 36 | 0 |
+| [combat.steps.ts](#combatstepsts) | 13 | 0 |
+| [common-steps.ts](#commonstepsts) | 31 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
-| [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 12 | 0 |
+| [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 13 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
 | [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 7 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 30 | 0 |
@@ -71,7 +68,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 7 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 18 | 0 |
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
-| [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
+| [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 3 | 0 |
+| [stat-value-editor.steps.ts](#statvalueeditorstepsts) | 8 | 0 |
 | [storage-failure.steps.ts](#storagefailurestepsts) | 8 | 0 |
 | [third-party-requests.steps.ts](#thirdpartyrequestsstepsts) | 3 | 0 |
 | [unreadable-character.steps.ts](#unreadablecharacterstepsts) | 10 | 0 |
@@ -222,147 +220,46 @@ pattern this script does not understand):
 | Then | `the tier should display {string}` | 6 | 60 |
 | Then | `the tier should show a hover state indicating it's editable` | 1 | 133 |
 
-## card-creation-modal-actions.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| When | `I cancel the card edit modal` | 7 | 9 |
-| When | `I click the edit button on ability {string}` | 1 | 71 |
-| When | `I click the edit button on artifact {string}` | 1 | 50 |
-| When | `I click the edit button on attack {string}` | 1 | 64 |
-| When | `I click the edit button on cypher {string}` | 2 | 36 |
-| When | `I click the edit button on equipment {string}` | 1 | 43 |
-| When | `I click the edit button on oddity {string}` | 1 | 57 |
-| When | `I click the edit button on special ability {string}` | 1 | 78 |
-| When | `I confirm the card edit modal` | 52 | 4 |
-| Then | `the card edit modal should be open` | 15 | 19 |
-
-## card-creation-modal-fields.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Then | `all ability fields should be empty` | 1 | 79 |
-| Then | `all artifact fields should be empty` | 1 | 38 |
-| Then | `all attack fields should be empty` | 1 | 63 |
-| Then | `all cypher fields should be empty` | 1 | 12 |
-| Then | `all equipment fields should be empty` | 1 | 25 |
-| Then | `all oddity fields should be empty` | 1 | 50 |
-| Then | `all special ability fields should be empty` | 1 | 94 |
-| When | `I fill in the ability cost with {string}` | 6 | 177 |
-| When | `I fill in the ability description with {string}` | 9 | 185 |
-| When | `I fill in the ability name with {string}` | 9 | 173 |
-| When | `I fill in the ability pool with {string}` | 6 | 181 |
-| When | `I fill in the artifact effect with {string}` | 7 | 144 |
-| When | `I fill in the artifact level with {string}` | 7 | 137 |
-| When | `I fill in the artifact name with {string}` | 7 | 130 |
-| When | `I fill in the attack damage with {string}` | 7 | 159 |
-| When | `I fill in the attack modifier with {string}` | 7 | 166 |
-| When | `I fill in the attack name with {string}` | 7 | 155 |
-| When | `I fill in the cypher effect with {string}` | 13 | 109 |
-| When | `I fill in the cypher level with {string}` | 13 | 105 |
-| When | `I fill in the cypher name with {string}` | 13 | 101 |
-| When | `I fill in the equipment description with {string}` | 7 | 123 |
-| When | `I fill in the equipment name with {string}` | 8 | 116 |
-| When | `I fill in the oddity text with {string}` | 7 | 151 |
-| When | `I fill in the special ability description with {string}` | 7 | 206 |
-| When | `I fill in the special ability name with {string}` | 7 | 192 |
-| When | `I fill in the special ability source with {string}` | 7 | 199 |
-| Then | `the modal should show ability fields` | 1 | 71 |
-| Then | `the modal should show artifact fields` | 1 | 31 |
-| Then | `the modal should show attack fields` | 1 | 55 |
-| Then | `the modal should show cypher fields` | 1 | 5 |
-| Then | `the modal should show equipment fields` | 1 | 19 |
-| Then | `the modal should show oddity fields` | 1 | 45 |
-| Then | `the modal should show special ability fields` | 1 | 87 |
-
-## card-creation-setup.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| When | `I click the add ability button` | 15 | 110 |
-| When | `I click the add artifact button` | 7 | 98 |
-| When | `I click the add attack button` | 7 | 106 |
-| When | `I click the add cypher button` | 14 | 90 |
-| When | `I click the add equipment button` | 9 | 94 |
-| When | `I click the add oddity button` | 7 | 102 |
-| When | `I click the add special ability button` | 7 | 114 |
-| Then | `I should see an add ability button` | 1 | 82 |
-| Then | `I should see an add artifact button` | 1 | 53 |
-| Then | `I should see an add attack button` | 1 | 61 |
-| Then | `I should see an add cypher button` | 1 | 45 |
-| Then | `I should see an add equipment button` | 1 | 49 |
-| Then | `I should see an add oddity button` | 1 | 57 |
-| Then | `I should see an add special ability button` | 1 | 86 |
-| Then | `the add attack button should have a non-transparent background` | 1 | 65 |
-| Given | `the character has {int} ability cards` | 5 | 34 |
-| Given | `the character has {int} artifact cards` | 5 | 22 |
-| Given | `the character has {int} attack cards` | 5 | 30 |
-| Given | `the character has {int} cypher cards` | 5 | 14 |
-| Given | `the character has {int} equipment cards` | 5 | 18 |
-| Given | `the character has {int} oddity cards` | 5 | 26 |
-| Given | `the character has {int} special ability cards` | 5 | 38 |
-
-## card-creation-verification.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Then | `I should see {int} ability cards` | 14 | 25 |
-| Then | `I should see {int} artifact cards` | 8 | 13 |
-| Then | `I should see {int} attack cards` | 8 | 21 |
-| Then | `I should see {int} cypher card(s)` | 15 | 5 |
-| Then | `I should see {int} equipment cards` | 8 | 9 |
-| Then | `I should see {int} oddity cards` | 8 | 17 |
-| Then | `I should see {int} special ability cards` | 8 | 29 |
-| Then | `I should see a cypher card with name {string}` | 5 | 33 |
-| Then | `I should see a special ability card with name {string}` | 5 | 153 |
-| Then | `I should see an ability card with name {string}` | 7 | 129 |
-| Then | `I should see an artifact card with name {string}` | 5 | 73 |
-| Then | `I should see an attack card with name {string}` | 5 | 105 |
-| Then | `I should see an equipment card with name {string}` | 5 | 57 |
-| Then | `I should see an oddity card with text {string}` | 6 | 97 |
-| Then | `the ability {string} should have cost {string}` | 1 | 137 |
-| Then | `the ability {string} should have pool {string}` | 1 | 145 |
-| Then | `the artifact {string} should have effect {string}` | 1 | 89 |
-| Then | `the artifact {string} should have level {string}` | 1 | 81 |
-| Then | `the attack {string} should have damage {string}` | 1 | 121 |
-| Then | `the attack {string} should have modifier {string}` | 1 | 113 |
-| Then | `the cypher {string} should have effect {string}` | 1 | 49 |
-| Then | `the cypher {string} should have level {string}` | 1 | 41 |
-| Then | `the equipment {string} should have description {string}` | 1 | 65 |
-| Then | `the special ability {string} should have source {string}` | 1 | 163 |
-
 ## card-deletion.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `{string} is still gone the next time I open my character` | 1 | 25 |
-| When | `I click the delete button on the first cypher` | 2 | 3 |
-| When | `I discard {string}` | 2 | 14 |
-| Then | `it was discarded without my being asked to confirm` | 1 | 32 |
-| Given | `my character has the {cardKind} {string} and {string}` | 3 | 7 |
-| Then | `my character's {cardKind} are only {string}` | 1 | 18 |
-| Then | `the discard control of {string} is in the top-left corner of its entry` | 1 | 36 |
+| Then | `{string} is still gone the next time I open my character` | 1 | 21 |
+| When | `I discard {string}` | 4 | 10 |
+| Then | `it was discarded without my being asked to confirm` | 1 | 28 |
+| Given | `my character has the {cardKind} {string} and {string}` | 6 | 3 |
+| Then | `my character's {cardKind} are only {string}` | 3 | 14 |
+| Then | `the discard control of {string} is in the top-left corner of its entry` | 1 | 32 |
+
+## card-editing.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I cancel the card` | 7 | 32 |
+| When | `I open my character again` | 15 | 36 |
+| When | `I save the card` | 38 | 28 |
+| When | `I set its {word} to {string}` | 120 | 21 |
+| When | `I start a new {cardType}` | 52 | 10 |
+| When | `I start editing the {cardType} {string}` | 8 | 14 |
+| Then | `my character carries {int} {cardKind}` | 36 | 54 |
+| Then | `my character carries the {cardType} {string}` | 27 | 61 |
+| Given | `my character has {int} {cardKind}` | 47 | 3 |
+| Then | `the {cardType} {string} shows {string}` | 10 | 68 |
+| Then | `the add {cardType} button has a themed background colour` | 7 | 47 |
+| Then | `the card editor opens with empty {cardType} fields` | 7 | 40 |
 
 ## card-modal-focus-trap.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `focus should be on the description textarea` | 1 | 119 |
-| Then | `focus should eventually wrap back to the first input field` | 1 | 57 |
-| Then | `focus should eventually wrap back to the last focusable element` | 1 | 75 |
-| Then | `focus should move to the last focusable element in the modal` | 1 | 48 |
-| Then | `focus should move to the next focusable element in the modal` | 1 | 39 |
-| Then | `focus should never escape to the page body or address bar` | 4 | 84 |
-| Then | `focus should still be within the card modal` | 3 | 103 |
-| When | `I press Shift+Tab` | 1 | 12 |
-| When | `I press Shift+Tab repeatedly` | 1 | 27 |
-| When | `I press the Tab key` | 1 | 8 |
-| When | `I press the Tab key {int} times` | 4 | 33 |
-| When | `I press the Tab key repeatedly` | 1 | 21 |
-| Then | `the active element should not be the browser chrome` | 1 | 124 |
-| Then | `the active element should not be the document body` | 1 | 112 |
-| Then | `the card edit modal should be closed` | 1 | 3 |
-| Then | `the first input field in the modal should be automatically focused` | 1 | 16 |
+| Then | `focus stays within the card editor` | 5 | 19 |
+| When | `I press Escape in the card editor` | 1 | 11 |
+| When | `I press Shift+Tab {int} time(s)` | 3 | 7 |
+| When | `I press the Tab key {int} time(s)` | 6 | 3 |
+| Then | `the {word} field has focus` | 1 | 31 |
+| Then | `the card editor closes` | 1 | 15 |
+| Then | `the first field of the card editor has focus` | 2 | 23 |
+| Then | `the last control of the card editor has focus` | 2 | 27 |
 
 ## card-reordering-abilities.steps.ts
 
@@ -392,11 +289,11 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 59 | 27 |
+| Given | `I am on the character sheet page` | 44 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 147 |
 | Then | `I should see {int} cyphers displayed` | 1 | 110 |
 | Then | `I should see {int} oddities displayed` | 1 | 160 |
-| Then | `I should see an empty {cardTypes} section` | 6 | 173 |
+| Then | `I should see an empty {cardTypes} section` | 4 | 173 |
 | Then | `I should see artifact {string} with level {string}` | 1 | 152 |
 | Then | `I should see cypher {string} with level {string}` | 2 | 115 |
 | Then | `I should see descriptor {string} displayed` | 1 | 45 |
@@ -415,7 +312,7 @@ pattern this script does not understand):
 | Then | `no untranslated text keys should be visible` | 6 | 53 |
 | Given | `the character has a {int}-character name without spaces` | 1 | 257 |
 | Given | `the character has empty text fields` | 1 | 180 |
-| Given | `the character has no {cardTypes}` | 6 | 169 |
+| Given | `the character has no {cardTypes}` | 4 | 169 |
 | Given | `the character has the following artifacts:` | 1 | 123 |
 | Given | `the character has the following cyphers:` | 1 | 96 |
 | Given | `the character has the following oddities:` | 1 | 137 |
@@ -474,71 +371,55 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `I should see the armor badge in the attacks section` | 1 | 188 |
-| Then | `I should see the attack {string}` | 2 | 33 |
-| Then | `I should see the special ability {string}` | 1 | 138 |
-| Then | `the attack {string} should have red combat theme styling` | 1 | 96 |
-| Then | `the attack {string} should not show notes` | 1 | 88 |
-| Then | `the attack {string} should show damage {string}` | 2 | 40 |
-| Then | `the attack {string} should show modifier {string}` | 2 | 52 |
-| Then | `the attack {string} should show notes {string}` | 1 | 76 |
-| Then | `the attack {string} should show range {string}` | 2 | 64 |
-| Then | `the attack badges should sit at the right edge of their card` | 1 | 223 |
-| Then | `the attacks section should be in the right column` | 1 | 204 |
-| Given | `the character has a special ability {string}` | 1 | 127 |
-| Given | `the character has a special ability {string} with:` | 1 | 113 |
-| Given | `the character has an attack {string}` | 1 | 25 |
-| Given | `the character has an attack {string} with:` | 1 | 8 |
-| Given | `the character has an attack with a {int}-character name without spaces` | 1 | 214 |
-| Given | `the character has special abilities and attacks` | 1 | 192 |
-| Then | `the empty attacks state should use translation keys` | 1 | 107 |
-| Then | `the empty special abilities state should use translation keys` | 1 | 182 |
-| Then | `the sections should stack vertically on mobile` | 1 | 209 |
-| Then | `the special abilities section should be in the left column` | 1 | 199 |
-| Then | `the special ability {string} should have teal theme styling` | 1 | 171 |
-| Then | `the special ability {string} should show description {string}` | 1 | 145 |
-| Then | `the special ability {string} should show source {string}` | 1 | 159 |
+| Given | `I view my character on a phone` | 1 | 30 |
+| Given | `I view my character on a wide screen` | 1 | 26 |
+| Given | `my character has an attack whose name is {int} characters long without spaces` | 1 | 19 |
+| Given | `my character has the {cardType} {string}` | 2 | 12 |
+| Given | `my character has the {cardType} {string} with:` | 3 | 5 |
+| Then | `my character's {cardKind} section says it is empty` | 2 | 55 |
+| Then | `my character's attack keeps its badges at the right edge of its card` | 1 | 83 |
+| Then | `the {cardKind} section sits above the {cardKind} section` | 1 | 76 |
+| Then | `the {cardKind} section sits left of the {cardKind} section` | 1 | 69 |
+| Then | `the {cardType} {string} is themed {word}` | 2 | 48 |
+| Then | `the {cardType} {string} shows {word} {string}` | 9 | 34 |
+| Then | `the {cardType} {string} shows no {word}` | 1 | 41 |
+| Then | `the attacks section shows my character's armor of {int}` | 1 | 62 |
 
 ## common-steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 10 | 236 |
-| When | `I clear the input field` | 18 | 105 |
-| When | `I click on the {string} value` | 9 | 22 |
-| When | `I click on the character name {string}` | 12 | 63 |
-| When | `I click on the descriptor {string}` | 2 | 73 |
-| When | `I click on the focus {string}` | 2 | 78 |
-| When | `I click on the tier {string}` | 5 | 68 |
-| When | `I click outside the modal on the backdrop` | 1 | 151 |
-| When | `I click the "Cancel" button` | 3 | 45 |
-| When | `I click the "Confirm" button` | 27 | 40 |
-| When | `I click the "New" button` | 7 | 46 |
-| When | `I click the {badge} badge` | 23 | 54 |
-| When | `I edit the {string} field to {string}` | 35 | 135 |
-| When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 144 |
-| When | `I hover over the character name {string}` | 1 | 93 |
-| When | `I hover over the tier {string}` | 1 | 97 |
-| When | `I press the Enter key` | 2 | 173 |
-| When | `I press the Escape key` | 5 | 169 |
-| When | `I reload the page` | 51 | 177 |
-| When | `I reload the page immediately` | 1 | 190 |
-| Then | `I should see the {string} value displayed` | 1 | 197 |
-| When | `I tap on the {string} value` | 1 | 29 |
-| When | `I tap on the character name {string}` | 4 | 83 |
-| When | `I tap on the tier {string}` | 1 | 88 |
-| When | `I tap outside the modal on the backdrop` | 1 | 160 |
-| When | `I tap the {badge} badge` | 2 | 58 |
-| When | `I tap the modal confirm button` | 3 | 101 |
-| When | `I type {string} in the modal input` | 40 | 109 |
-| Then | `the {string} value should display {string}` | 6 | 206 |
-| Then | `the {string} value should not have changed` | 2 | 215 |
-| Then | `the edit modal should open` | 9 | 237 |
-| Then | `the input field should be focused` | 1 | 253 |
-| Then | `the input field should contain the current {string} value` | 1 | 255 |
-| Then | `the input field should receive focus automatically` | 1 | 252 |
-| Then | `the modal input should contain {string}` | 11 | 243 |
-| Then | `the modal should close` | 21 | 244 |
+| Then | `an edit modal should appear` | 8 | 188 |
+| When | `I clear the input field` | 11 | 83 |
+| When | `I click on the {string} value` | 1 | 7 |
+| When | `I click on the character name {string}` | 12 | 41 |
+| When | `I click on the descriptor {string}` | 2 | 51 |
+| When | `I click on the focus {string}` | 2 | 56 |
+| When | `I click on the tier {string}` | 5 | 46 |
+| When | `I click outside the modal on the backdrop` | 1 | 129 |
+| When | `I click the "Cancel" button` | 2 | 23 |
+| When | `I click the "Confirm" button` | 23 | 18 |
+| When | `I click the "New" button` | 7 | 24 |
+| When | `I click the {badge} badge` | 23 | 32 |
+| When | `I edit the {string} field to {string}` | 35 | 113 |
+| When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 122 |
+| When | `I hover over the character name {string}` | 1 | 71 |
+| When | `I hover over the tier {string}` | 1 | 75 |
+| When | `I press the Enter key` | 1 | 151 |
+| When | `I press the Escape key` | 3 | 147 |
+| When | `I reload the page` | 36 | 155 |
+| When | `I reload the page immediately` | 1 | 168 |
+| When | `I tap on the character name {string}` | 4 | 61 |
+| When | `I tap on the tier {string}` | 1 | 66 |
+| When | `I tap outside the modal on the backdrop` | 1 | 138 |
+| When | `I tap the {badge} badge` | 2 | 36 |
+| When | `I tap the modal confirm button` | 3 | 79 |
+| When | `I type {string} in the modal input` | 33 | 87 |
+| Then | `the {string} value should display {string}` | 1 | 175 |
+| Then | `the edit modal should open` | 9 | 189 |
+| Then | `the input field should receive focus automatically` | 1 | 204 |
+| Then | `the modal input should contain {string}` | 11 | 195 |
+| Then | `the modal should close` | 15 | 196 |
 
 ## data-validation.steps.ts
 
@@ -556,18 +437,19 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear with value {string}` | 1 | 89 |
-| When | `I click on the descriptor field` | 2 | 56 |
-| When | `I click on the focus field` | 1 | 62 |
-| When | `I enter {string} in the edit field` | 2 | 68 |
-| Then | `the descriptor field should be clickable` | 1 | 28 |
-| Then | `the descriptor field should be visible` | 1 | 18 |
-| Then | `the descriptor field should display placeholder text` | 1 | 4 |
-| Then | `the descriptor field should not show placeholder text` | 1 | 73 |
-| Then | `the focus field should be clickable` | 1 | 42 |
-| Then | `the focus field should be visible` | 1 | 23 |
-| Then | `the focus field should display placeholder text` | 1 | 11 |
-| Then | `the focus field should not show placeholder text` | 1 | 81 |
+| Then | `an edit modal should appear with value {string}` | 1 | 93 |
+| When | `I click on the descriptor field` | 2 | 60 |
+| When | `I click on the focus field` | 1 | 66 |
+| When | `I enter {string} in the edit field` | 2 | 72 |
+| Given | `the character data is loaded` | 1 | 4 |
+| Then | `the descriptor field should be clickable` | 1 | 32 |
+| Then | `the descriptor field should be visible` | 1 | 22 |
+| Then | `the descriptor field should display placeholder text` | 1 | 8 |
+| Then | `the descriptor field should not show placeholder text` | 1 | 77 |
+| Then | `the focus field should be clickable` | 1 | 46 |
+| Then | `the focus field should be visible` | 1 | 27 |
+| Then | `the focus field should display placeholder text` | 1 | 15 |
+| Then | `the focus field should not show placeholder text` | 1 | 85 |
 
 ## export-enhancement.steps.ts
 
@@ -723,7 +605,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `the Armor badge should show {string}` | 5 | 127 |
+| Then | `the Armor badge should show {string}` | 4 | 127 |
 | Then | `the character data should have armor {int}` | 1 | 181 |
 | Then | `the character data should have currentXp {int}` | 1 | 151 |
 | Then | `the character data should have effort {int}` | 1 | 201 |
@@ -844,7 +726,22 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the character data is loaded` | 2 | 3 |
+| When | `I change my {word} {word} to {int}` | 4 | 10 |
+| Then | `my character sheet shows my {word} {word} as {int}` | 8 | 17 |
+| Given | `my character's {word} {word} is {int}` | 6 | 3 |
+
+## stat-value-editor.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I cancel the value editor` | 1 | 19 |
+| When | `I click my {word} {word}` | 4 | 3 |
+| When | `I enter {int} in the value editor` | 3 | 7 |
+| When | `I press Enter in the value editor` | 1 | 11 |
+| When | `I press Escape in the value editor` | 1 | 15 |
+| Then | `the value editor has the keyboard focus` | 1 | 27 |
+| Then | `the value editor is closed` | 3 | 31 |
+| Then | `the value editor is open showing {int}` | 1 | 23 |
 
 ## storage-failure.steps.ts
 

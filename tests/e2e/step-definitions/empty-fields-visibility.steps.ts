@@ -1,6 +1,10 @@
-import { When, Then } from "@cucumber/cucumber";
+import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world.js";
+
+Given("the character data is loaded", async function (this: CustomWorld) {
+  await this.page.waitForLoadState("domcontentloaded");
+});
 
 Then("the descriptor field should display placeholder text", async function (this: CustomWorld) {
   const descriptorField = this.dom.getByTestId("character-descriptor");

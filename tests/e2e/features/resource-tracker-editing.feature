@@ -119,9 +119,9 @@ Feature: Resource Tracker Fields Editing
 
     Scenario: Editing Shins still updates the badge after an item card was added
         Given the character has 100 shins
-        When I click the add equipment button
-        And I fill in the equipment name with "Sword"
-        And I confirm the card edit modal
+        When I start a new equipment
+        And I set its name to "Sword"
+        And I save the card
         And I click the Shins badge
         And I type "250" in the modal input
         And I click the "Confirm" button
