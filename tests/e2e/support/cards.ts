@@ -13,12 +13,6 @@ export class CardsDsl {
     return this.world.page;
   }
 
-  private deleteButtonSelector(cardType: string, index?: number): string {
-    return index === undefined
-      ? `[data-testid^="${cardType}-delete-button-"]`
-      : `[data-testid="${cardType}-delete-button-${index}"]`;
-  }
-
   async setupWithCount(cardType: string, count: number): Promise<void> {
     const config = CARD_CONFIGS[cardType];
     if (!config) {
@@ -64,27 +58,10 @@ export class CardsDsl {
     await this.page.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
   }
 
-  /** Records the pre-delete count on the World, clicks delete and waits for the card to go. */
   async clickDeleteButton(cardType: string, index = 0): Promise<void> {
-    const before = await this.count(cardType);
-    this.world.previousCardCount = before;
-    await this.page.locator(this.deleteButtonSelector(cardType, index)).click();
-    await expect(this.page.locator(this.deleteButtonSelector(cardType))).toHaveCount(before - 1);
-  }
-
-  async count(cardType: string): Promise<number> {
-    return this.page.locator(this.deleteButtonSelector(cardType)).count();
-  }
-
-  /** The delete button for a specific card (index 0 is the first/only one in most scenarios). */
-  deleteButtonLocator(cardType: string, index = 0) {
-    return this.page.locator(this.deleteButtonSelector(cardType, index));
-  }
-
-  async expectRemoved(cardType: string): Promise<void> {
-    const previousCount = this.world.previousCardCount ?? 0;
-    await expect(this.page.locator(this.deleteButtonSelector(cardType))).toHaveCount(
-      previousCount - 1
-    );
+    const deleteButtons = this.page.locator(`[data-testid^="${cardType}-delete-button-"]`);
+    const before = await deleteButtons.count();
+    await this.page.locator(`[data-testid="${cardType}-delete-button-${index}"]`).click();
+    await expect(deleteButtons).toHaveCount(before - 1);
   }
 }

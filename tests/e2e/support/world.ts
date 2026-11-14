@@ -6,10 +6,11 @@ import { ModalDsl } from "./modal.js";
 import { FieldsDsl } from "./fields.js";
 import { CardsDsl } from "./cards.js";
 import { SetupDsl } from "./setup.js";
+import type { CharacterDsl } from "./character.js";
+import type { LayoutDsl } from "./layout.js";
 import { BASE_URL } from "./serverUrl.js";
 import type { Layout } from "@/types/layout";
 import type { SectionColumns } from "@/types/sectionColumns";
-import type { TouchGesture } from "./sections.js";
 
 setDefaultTimeout(30000);
 
@@ -32,13 +33,12 @@ export interface CustomWorld extends World {
   fields: FieldsDsl;
   cards: CardsDsl;
   setup: SetupDsl;
-  previousCardCount?: number;
+  character: CharacterDsl;
+  layout: LayoutDsl;
   // card-reordering.steps.ts
   draggedCypherName?: string;
   // layout-import-export.steps.ts
   importedFile?: { layout?: Layout; sectionColumns?: SectionColumns };
-  scrollYBeforeSwipe?: number;
-  heldTouchGesture?: TouchGesture;
   heldDropTarget?: {
     name: string;
     box: { x: number; y: number; width: number; height: number };
@@ -70,12 +70,11 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   fields!: FieldsDsl;
   cards!: CardsDsl;
   setup!: SetupDsl;
-  previousCardCount?: number;
+  character!: CharacterDsl;
+  layout!: LayoutDsl;
   // card-reordering.steps.ts
   draggedCypherName?: string;
   importedFile?: { layout?: Layout; sectionColumns?: SectionColumns };
-  scrollYBeforeSwipe?: number;
-  heldTouchGesture?: TouchGesture;
   heldDropTarget?: {
     name: string;
     box: { x: number; y: number; width: number; height: number };

@@ -62,15 +62,6 @@ export async function growViewportToFullHeight(
   return original;
 }
 
-/** How long E2E long-presses hold — safely above the app's 250ms threshold. */
-const LONG_PRESS_HOLD_MS = 300;
-
-/** Keeps the finger down for the long-press duration. */
-export async function holdForLongPress(page: Page): Promise<void> {
-  // eslint-disable-next-line no-restricted-properties -- holding the touch IS the long-press gesture
-  await page.waitForTimeout(LONG_PRESS_HOLD_MS);
-}
-
 export interface Point {
   x: number;
   y: number;
@@ -101,40 +92,25 @@ export function zonePoint(
 }
 
 /**
- * Drag `sourceName` onto `zone` of `targetName` and drop it straight away,
- * before the live preview appears (the preview has its own steps, which hold
- * the drag and advance the clock).
+ * Run `action` with the page's clock paused, so timers (the 300 ms live preview,
+ * the 250 ms long-press) fire only when the action advances the clock.
  *
- * The page's clock is paused for the drag: on a busy machine the preview's
- * delay could otherwise run out between the last move and the release. Its
- * re-render detaches the element the last dragover reached, which is where
- * the browser sends the drop, so the drop is lost and the drag just ends.
+ * On a busy machine the preview's delay could otherwise run out between the
+ * last move and the release. Its re-render detaches the element the last
+ * dragover reached, which is where the browser sends the drop, so the drop is
+ * lost and the drag just ends.
  */
-export async function dragSectionTo(
-  page: Page,
-  sourceName: string,
-  targetName: string,
-  zone: SectionZone = "top edge"
-): Promise<void> {
-  await withFullHeightViewport(page, async () => {
-    const target = sectionLocator(page, targetName);
-    const box = await target.boundingBox();
-    if (!box) {
-      throw new Error(`Section ${targetName} has no bounding box (not visible?)`);
-    }
-    const point = zonePoint(box, zone);
-    await page.clock.install();
-    // Ahead of the page's time, which runs on while the call travels: pausing
-    // in the page's past throws
-    const pageNow = await page.evaluate(() => Date.now());
-    await page.clock.pauseAt(pageNow + 1000);
-    try {
-      await holdSectionOver(page, sourceName, point);
-      await releaseSectionDrag(page, point);
-    } finally {
-      await page.clock.resume();
-    }
-  });
+export async function withPausedClock<T>(page: Page, action: () => Promise<T>): Promise<T> {
+  await page.clock.install();
+  // Ahead of the page's time, which runs on while the call travels: pausing
+  // in the page's past throws
+  const pageNow = await page.evaluate(() => Date.now());
+  await page.clock.pauseAt(pageNow + 1000);
+  try {
+    return await action();
+  } finally {
+    await page.clock.resume();
+  }
 }
 
 /**

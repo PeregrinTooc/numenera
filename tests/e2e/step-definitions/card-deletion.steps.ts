@@ -1,219 +1,42 @@
 import { Given, When, Then } from "@cucumber/cucumber";
-import { expect } from "@playwright/test";
-import { CustomWorld } from "../support/world.js";
+import type { CustomWorld } from "../support/world.js";
 
-When("I look at a cypher card", async function (this: CustomWorld) {
-  await expect(this.page.locator('[data-testid="cyphers-section"]')).toBeVisible();
-});
-
-When("I look at an equipment card", async function (this: CustomWorld) {
-  await expect(this.page.locator('[data-testid="items-section"]')).toBeVisible();
-});
-
-When("I look at an artifact card", async function (this: CustomWorld) {
-  await expect(this.page.locator('[data-testid="items-section"]')).toBeVisible();
-});
-
-When("I look at an oddity card", async function (this: CustomWorld) {
-  await expect(this.page.locator('[data-testid="items-section"]')).toBeVisible();
-});
-
-When("I look at an attack card", async function (this: CustomWorld) {
-  await expect(this.page.locator('[data-testid="attacks-section"]')).toBeVisible();
-});
-
-When("I look at an ability card", async function (this: CustomWorld) {
-  await expect(this.page.locator('[data-testid="abilities-section"]')).toBeVisible();
-});
-
-When("I look at a special ability card", async function (this: CustomWorld) {
-  await expect(this.page.locator('[data-testid="special-abilities-section"]')).toBeVisible();
-});
-
-// The fixed " card" suffix is uniform across all 7 types (unlike "removed
-// from the DOM" and "remaining" below, where "equipment item" and irregular
-// plurals break a single {cardType} pattern), so this family collapses cleanly.
-Then(
-  "I should see a delete button on the {cardType} card",
-  async function (this: CustomWorld, cardType: string) {
-    await expect(this.cards.deleteButtonLocator(cardType)).toBeVisible();
-  }
-);
-
-// Setup steps for multiple cards. Each phrasing pluralises differently
-// ("equipment items", "abilities", "special abilities" vs. plain "artifact")
-// so this stays 7 registrations.
-Given("I have {int} cyphers", async function (this: CustomWorld, count: number) {
-  const actualCount = await this.cards.count("cypher");
-  if (actualCount < count) {
-    throw new Error(`Expected ${count} cyphers but found ${actualCount}`);
-  }
-});
-
-Given("I have {int} equipment items", async function (this: CustomWorld, count: number) {
-  const actualCount = await this.cards.count("equipment");
-  if (actualCount < count) {
-    throw new Error(`Expected ${count} equipment items but found ${actualCount}`);
-  }
-});
-
-Given("I have {int} artifact", async function (this: CustomWorld, count: number) {
-  const actualCount = await this.cards.count("artifact");
-  if (actualCount < count) {
-    throw new Error(`Expected ${count} artifact but found ${actualCount}`);
-  }
-});
-
-Given("I have {int} oddities", async function (this: CustomWorld, count: number) {
-  const actualCount = await this.cards.count("oddity");
-  if (actualCount < count) {
-    throw new Error(`Expected ${count} oddities but found ${actualCount}`);
-  }
-});
-
-Given("I have {int} attacks", async function (this: CustomWorld, count: number) {
-  const actualCount = await this.cards.count("attack");
-  if (actualCount < count) {
-    throw new Error(`Expected ${count} attacks but found ${actualCount}`);
-  }
-});
-
-Given("I have {int} abilities", async function (this: CustomWorld, count: number) {
-  const actualCount = await this.cards.count("ability");
-  if (actualCount < count) {
-    throw new Error(`Expected ${count} abilities but found ${actualCount}`);
-  }
-});
-
-Given("I have {int} special abilities", async function (this: CustomWorld, count: number) {
-  const actualCount = await this.cards.count("special-ability");
-  if (actualCount < count) {
-    throw new Error(`Expected ${count} special abilities but found ${actualCount}`);
-  }
-});
-
-async function clickFirstCypherDelete(this: CustomWorld): Promise<void> {
+When("I click the delete button on the first cypher", async function (this: CustomWorld) {
   await this.cards.clickDeleteButton("cypher");
-}
-When("I click the delete button on the first cypher", clickFirstCypherDelete);
-When("I click the delete button on the first cypher again", clickFirstCypherDelete);
-
-When("I click the delete button on the first equipment item", async function (this: CustomWorld) {
-  await this.cards.clickDeleteButton("equipment");
 });
 
-When("I click the delete button on the first artifact", async function (this: CustomWorld) {
-  await this.cards.clickDeleteButton("artifact");
-});
+Given(
+  "my character has the {cardKind} {string} and {string}",
+  async function (this: CustomWorld, kind: string, first: string, second: string) {
+    await this.character.has(kind, [first, second]);
+  }
+);
 
-When("I click the delete button on the first oddity", async function (this: CustomWorld) {
-  await this.cards.clickDeleteButton("oddity");
-});
-
-When("I click the delete button on the first attack", async function (this: CustomWorld) {
-  await this.cards.clickDeleteButton("attack");
-});
-
-When("I click the delete button on the first ability", async function (this: CustomWorld) {
-  await this.cards.clickDeleteButton("ability");
-});
-
-When("I click the delete button on the first special ability", async function (this: CustomWorld) {
-  await this.cards.clickDeleteButton("special-ability");
-});
-
-// Verification steps. "equipment item" carries an extra word {cardType}
-// doesn't, so this stays 7 registrations.
-Then("the cypher should be removed from the DOM", async function (this: CustomWorld) {
-  await this.cards.expectRemoved("cypher");
-});
-
-Then("the equipment item should be removed from the DOM", async function (this: CustomWorld) {
-  await this.cards.expectRemoved("equipment");
-});
-
-Then("the artifact should be removed from the DOM", async function (this: CustomWorld) {
-  await this.cards.expectRemoved("artifact");
-});
-
-Then("the oddity should be removed from the DOM", async function (this: CustomWorld) {
-  await this.cards.expectRemoved("oddity");
-});
-
-Then("the attack should be removed from the DOM", async function (this: CustomWorld) {
-  await this.cards.expectRemoved("attack");
-});
-
-Then("the ability should be removed from the DOM", async function (this: CustomWorld) {
-  await this.cards.expectRemoved("ability");
-});
-
-Then("the special ability should be removed from the DOM", async function (this: CustomWorld) {
-  await this.cards.expectRemoved("special-ability");
-});
-
-// Irregular plurals (oddities, abilities) and the "equipment item(s)" extra
-// word mean {cardType} can't cover every phrasing here, so these stay
-// individually registered.
-Then("I should have {int} cypher(s) remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await this.cards.count("cypher");
-  expect(actualCount).toBe(count);
-});
-
-Then("I should have {int} oddity remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await this.cards.count("oddity");
-  expect(actualCount).toBe(count);
-});
-
-Then("I should have {int} attack remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await this.cards.count("attack");
-  expect(actualCount).toBe(count);
+When("I discard {string}", async function (this: CustomWorld, name: string) {
+  await this.character.discard(name);
 });
 
 Then(
-  "I should have {int} special ability remaining",
-  async function (this: CustomWorld, count: number) {
-    const actualCount = await this.cards.count("special-ability");
-    expect(actualCount).toBe(count);
+  "my character's {cardKind} are only {string}",
+  async function (this: CustomWorld, kind: string, name: string) {
+    await this.character.carriesOnly(kind, [name]);
   }
 );
 
 Then(
-  "I should have {int} equipment items remaining",
-  async function (this: CustomWorld, count: number) {
-    const actualCount = await this.cards.count("equipment");
-    expect(actualCount).toBe(count);
+  "{string} is still gone the next time I open my character",
+  async function (this: CustomWorld, name: string) {
+    await this.character.expectGoneAfterReopening(name);
   }
 );
 
-Then("I should have {int} artifacts remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await this.cards.count("artifact");
-  expect(actualCount).toBe(count);
-});
-
-Then("I should have {int} abilities remaining", async function (this: CustomWorld, count: number) {
-  const actualCount = await this.cards.count("ability");
-  expect(actualCount).toBe(count);
+Then("it was discarded without my being asked to confirm", async function (this: CustomWorld) {
+  await this.character.expectDiscardedWithoutConfirmation();
 });
 
 Then(
-  "the delete button should be in the top-left corner of the card",
-  async function (this: CustomWorld) {
-    const deleteButton = this.cards.deleteButtonLocator("cypher");
-    await expect(deleteButton).toBeVisible();
-
-    const classes = await deleteButton.getAttribute("class");
-    expect(classes).toContain("absolute");
-    expect(classes).toContain("top-2");
-    expect(classes).toContain("left-2");
+  "the discard control of {string} is in the top-left corner of its entry",
+  async function (this: CustomWorld, name: string) {
+    await this.character.expectDiscardControlInTopLeftCorner(name);
   }
 );
-
-Then("the cypher should be removed immediately", async function (this: CustomWorld) {
-  await this.cards.expectRemoved("cypher");
-});
-
-Then("I should not see a confirmation dialog", async function (this: CustomWorld) {
-  const modal = this.page.locator('[data-testid="card-modal-backdrop"]');
-  await expect(modal).not.toBeVisible();
-});

@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **739** in 55 files
-- Feature step lines: **2402**
+- Step definitions: **703** in 55 files
+- Feature step lines: **2331**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -43,7 +43,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [card-creation-modal-fields.steps.ts](#cardcreationmodalfieldsstepsts) | 33 | 0 |
 | [card-creation-setup.steps.ts](#cardcreationsetupstepsts) | 22 | 0 |
 | [card-creation-verification.steps.ts](#cardcreationverificationstepsts) | 24 | 0 |
-| [card-deletion.steps.ts](#carddeletionstepsts) | 40 | 0 |
+| [card-deletion.steps.ts](#carddeletionstepsts) | 7 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
 | [card-reordering-abilities.steps.ts](#cardreorderingabilitiesstepsts) | 5 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 8 | 0 |
@@ -66,9 +66,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
 | [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 11 | 0 |
-| [section-reordering.steps.ts](#sectionreorderingstepsts) | 8 | 0 |
+| [section-reordering.steps.ts](#sectionreorderingstepsts) | 7 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
-| [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 9 | 0 |
+| [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 7 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 18 | 0 |
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 1 | 0 |
@@ -335,46 +335,13 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the delete button on the first ability` | 1 | 116 |
-| When | `I click the delete button on the first artifact` | 1 | 104 |
-| When | `I click the delete button on the first attack` | 1 | 112 |
-| When | `I click the delete button on the first cypher` | 6 | 98 |
-| When | `I click the delete button on the first cypher again` | 1 | 99 |
-| When | `I click the delete button on the first equipment item` | 1 | 100 |
-| When | `I click the delete button on the first oddity` | 1 | 108 |
-| When | `I click the delete button on the first special ability` | 1 | 120 |
-| Given | `I have {int} abilities` | 1 | 80 |
-| Given | `I have {int} artifact` | 1 | 59 |
-| Given | `I have {int} attacks` | 1 | 73 |
-| Given | `I have {int} cyphers` | 4 | 46 |
-| Given | `I have {int} equipment items` | 1 | 52 |
-| Given | `I have {int} oddities` | 1 | 66 |
-| Given | `I have {int} special abilities` | 1 | 87 |
-| When | `I look at a cypher card` | 2 | 4 |
-| When | `I look at a special ability card` | 1 | 28 |
-| When | `I look at an ability card` | 1 | 24 |
-| When | `I look at an artifact card` | 1 | 12 |
-| When | `I look at an attack card` | 1 | 20 |
-| When | `I look at an equipment card` | 1 | 8 |
-| When | `I look at an oddity card` | 1 | 16 |
-| Then | `I should have {int} abilities remaining` | 2 | 193 |
-| Then | `I should have {int} artifacts remaining` | 2 | 188 |
-| Then | `I should have {int} attack remaining` | 2 | 167 |
-| Then | `I should have {int} cypher(s) remaining` | 4 | 158 |
-| Then | `I should have {int} equipment items remaining` | 2 | 180 |
-| Then | `I should have {int} oddity remaining` | 2 | 162 |
-| Then | `I should have {int} special ability remaining` | 2 | 172 |
-| Then | `I should not see a confirmation dialog` | 1 | 215 |
-| Then | `I should see a delete button on the {cardType} card` | 7 | 36 |
-| Then | `the ability should be removed from the DOM` | 1 | 146 |
-| Then | `the artifact should be removed from the DOM` | 1 | 134 |
-| Then | `the attack should be removed from the DOM` | 1 | 142 |
-| Then | `the cypher should be removed from the DOM` | 1 | 127 |
-| Then | `the cypher should be removed immediately` | 1 | 211 |
-| Then | `the delete button should be in the top-left corner of the card` | 1 | 198 |
-| Then | `the equipment item should be removed from the DOM` | 1 | 130 |
-| Then | `the oddity should be removed from the DOM` | 1 | 138 |
-| Then | `the special ability should be removed from the DOM` | 1 | 150 |
+| Then | `{string} is still gone the next time I open my character` | 1 | 25 |
+| When | `I click the delete button on the first cypher` | 2 | 3 |
+| When | `I discard {string}` | 2 | 14 |
+| Then | `it was discarded without my being asked to confirm` | 1 | 32 |
+| Given | `my character has the {cardKind} {string} and {string}` | 3 | 7 |
+| Then | `my character's {cardKind} are only {string}` | 1 | 18 |
+| Then | `the discard control of {string} is in the top-left corner of its entry` | 1 | 36 |
 
 ## card-modal-focus-trap.steps.ts
 
@@ -425,7 +392,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 60 | 27 |
+| Given | `I am on the character sheet page` | 59 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 147 |
 | Then | `I should see {int} cyphers displayed` | 1 | 110 |
 | Then | `I should see {int} oddities displayed` | 1 | 160 |
@@ -487,7 +454,7 @@ pattern this script does not understand):
 | Then | `all character data should be preserved` | 2 | 68 |
 | Then | `all character sections should show data` | 2 | 38 |
 | Then | `all sections should display empty state messages` | 2 | 14 |
-| When | `I click the "Load" button` | 3 | 28 |
+| When | `I click the "Load" button` | 2 | 28 |
 | Then | `the character {string} should be displayed` | 3 | 33 |
 | Given | `the character sheet is empty` | 3 | 24 |
 | Then | `the character sheet should show empty states` | 2 | 8 |
@@ -554,7 +521,7 @@ pattern this script does not understand):
 | When | `I hover over the tier {string}` | 1 | 97 |
 | When | `I press the Enter key` | 2 | 173 |
 | When | `I press the Escape key` | 5 | 169 |
-| When | `I reload the page` | 59 | 177 |
+| When | `I reload the page` | 51 | 177 |
 | When | `I reload the page immediately` | 1 | 190 |
 | Then | `I should see the {string} value displayed` | 1 | 197 |
 | When | `I tap on the {string} value` | 1 | 29 |
@@ -634,9 +601,9 @@ pattern this script does not understand):
 | --- | --- | ---: | ---: |
 | Given | `{string} and {string} are in a grid` | 4 | 58 |
 | Then | `{string} should be in its own row` | 9 | 77 |
-| When | `I drag the {string} section onto the {zone} of the {string} section` | 9 | 7 |
+| When | `I drag the {string} section onto the {zone} of the {string} section` | 10 | 7 |
 | Then | `the {string} section should be the last section` | 2 | 48 |
-| Then | `the grid should show {string} on the left and {string} on the right` | 8 | 14 |
+| Then | `the grid should show {string} on the left and {string} on the right` | 7 | 14 |
 | Then | `the layout should still be the default layout` | 3 | 32 |
 | Then | `the saved layout should pair {string} on the left and {string} on the right` | 1 | 40 |
 
@@ -696,7 +663,7 @@ pattern this script does not understand):
 | Then | `I should see the {string} button` | 1 | 67 |
 | Then | `I should see visual indicators on rearrangeable sections` | 1 | 30 |
 | Then | `it should be touch-friendly` | 1 | 78 |
-| Given | `layout edit mode is active` | 36 | 41 |
+| Given | `layout edit mode is active` | 34 | 41 |
 | Then | `layout edit mode should be inactive` | 1 | 50 |
 | Then | `the {string} option should be enabled` | 1 | 118 |
 | Then | `the layout should return to the default arrangement` | 1 | 108 |
@@ -808,12 +775,11 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag the {string} section above the {string} section` | 1 | 44 |
-| When | `I exit layout edit mode` | 2 | 108 |
-| Given | `I have moved the {string} section to the top` | 1 | 81 |
+| When | `I exit layout edit mode` | 2 | 101 |
+| Given | `I have moved the {string} section to the top` | 1 | 74 |
 | Given | `I have reordered sections` | 1 | 6 |
-| Then | `the {string} section should appear before the {string} section` | 20 | 51 |
-| Then | `the {string} section should still be at the top` | 1 | 116 |
+| Then | `the {string} section should appear before the {string} section` | 19 | 44 |
+| Then | `the {string} section should still be at the top` | 1 | 109 |
 | Then | `the layout should be saved` | 1 | 26 |
 | Then | `the sections should remain in the new order` | 1 | 36 |
 
@@ -833,15 +799,13 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag it above the {string} section and release it` | 2 | 132 |
-| When | `I long-press the {string} section` | 1 | 21 |
-| When | `I long-press the {string} section and drag it above the {string} section` | 1 | 36 |
-| When | `I long-press the {string} section and drag it onto the {zone} of the {string} section` | 1 | 66 |
-| When | `I long-press the {string} section and hold it at the top edge until the {string} section is on screen` | 1 | 85 |
-| When | `I long-press the {string} section and hold it over the {zone} of the {string} section until the sheet shows the result` | 1 | 109 |
-| When | `I swipe from the {string} section towards the {string} section` | 1 | 145 |
-| Then | `the {string} section should be in drag mode` | 1 | 29 |
-| Then | `the page should have scrolled` | 1 | 170 |
+| When | `I drag it above the {string} section and release it` | 2 | 29 |
+| When | `I long-press the {string} section` | 1 | 4 |
+| When | `I long-press the {string} section and hold it at the top edge until the {string} section is on screen` | 1 | 15 |
+| When | `I long-press the {string} section and hold it over the {zone} of the {string} section until the sheet shows the result` | 1 | 22 |
+| When | `I swipe from the {string} section towards the {string} section` | 1 | 36 |
+| Then | `the {string} section should be in drag mode` | 1 | 8 |
+| Then | `the page should have scrolled` | 1 | 43 |
 
 ## settings-gear.steps.ts
 
@@ -1108,5 +1072,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 51 | 9 |
+| Given | `the viewport is {int} pixels wide` | 49 | 9 |
 

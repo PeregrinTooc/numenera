@@ -287,12 +287,20 @@ their own, and write the other stat-edit scenarios at the intent level.
    lint rule now forbids new ones. Removing them surfaced and fixed real races
    (the layout-choice Escape pressed before focus arrived, an auto-save reload
    racing a squash).
-2. **Use `card-deletion.feature` as a pilot.** Rewrite it at the intent level,
-   add a small `CharacterDsl` and `SheetDriver` behind it, and shrink its steps
-   file to thin parsing. That gives the rest of the suite a template to follow.
+2. **Use `card-deletion.feature` as a pilot.** Done. The feature is now one
+   intent-level outline ("a discarded entry is gone for good") per card kind,
+   plus the two genuine requirements (no confirmation, control in the top-left
+   corner, checked by geometry rather than CSS classes). Its steps call
+   `CharacterDsl` (`support/character.ts`), which talks to a `SheetDriver`
+   interface whose only implementation, `PlaywrightSheetDriver`, is the one
+   place that knows selectors. Follow this template.
 3. **Merge mouse and touch section dragging** behind one DSL call with two
-   drivers. It's the clearest payoff from the four-layer model in this app, and
-   it's the area under active work on the current branch.
+   drivers. Done. `LayoutDsl.moveSection(name, { target, edge })` drives a
+   `SectionInput` (`MouseInput` or `TouchInput`, `support/sectionInput.ts`)
+   picked by `DeviceProfile.sectionInput`: only Pixel 5 uses touch, because
+   Playwright offers real touch input only through Chromium's CDP. The
+   duplicated touch scenarios are gone, and the touch-only ones are tagged
+   `@touch`.
 4. **Move the rest over one feature file at a time,** whenever a file is already
    being touched for other work. Don't do it as one big rewrite.
    `card-creation-*` and `combat` have the most direct browser calls and gain

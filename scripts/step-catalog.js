@@ -114,7 +114,7 @@ function readCustomParamTypes() {
   let m;
   while ((m = re.exec(src))) {
     const [, name, pattern] = m;
-    custom[name] = `(?:${pattern})`;
+    custom[name] = `(?:${pattern}|${OUTLINE})`;
   }
   return custom;
 }

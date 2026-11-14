@@ -26,7 +26,7 @@ Feature: Section Re-arrangement
 
   Scenario: Reorder sections by dragging
     Given layout edit mode is active
-    When I drag the "Cyphers" section above the "Abilities" section
+    When I drag the "Cyphers" section onto the top edge of the "Abilities" section
     Then the "Cyphers" section should appear before the "Abilities" section
 
   Scenario: Drop a section below another by its bottom edge
@@ -235,32 +235,16 @@ Feature: Section Re-arrangement
     Then I should see the "Edit Layout" button
     And it should be touch-friendly
 
-  # The gesture helper uses CDP touch input, which Playwright offers only on Chromium; covered on Pixel 5.
-  @chromium-only
+  # Needs a finger on the screen, which only the touch profile (Pixel 5) provides.
+  @touch
   Scenario: Long-press puts a section into drag mode
     Given the viewport is 768 pixels wide
     And layout edit mode is active
     When I long-press the "Cyphers" section
     Then the "Cyphers" section should be in drag mode
 
-  # The gesture helper uses CDP touch input, which Playwright offers only on Chromium; covered on Pixel 5.
-  @chromium-only
-  Scenario: Reorder sections by long-press dragging on a touch device
-    Given the viewport is 768 pixels wide
-    And layout edit mode is active
-    When I long-press the "Cyphers" section and drag it above the "Abilities" section
-    Then the "Cyphers" section should appear before the "Abilities" section
-
-  # The gesture helper uses CDP touch input, which Playwright offers only on Chromium.
-  @chromium-only
-  Scenario: Pair two sections by long-press dragging on a wide touch screen
-    Given the viewport is 1280 pixels wide
-    And layout edit mode is active
-    When I long-press the "Cyphers" section and drag it onto the middle right of the "Items" section
-    Then the grid should show "Items" on the left and "Cyphers" on the right
-
-  # The gesture helper uses CDP touch input, which Playwright offers only on Chromium; covered on Pixel 5.
-  @chromium-only
+  # Needs a finger on the screen, which only the touch profile (Pixel 5) provides.
+  @touch
   Scenario: Holding a touch drag at the top edge scrolls to a section that was off screen
     Given the viewport is 768 pixels wide
     And layout edit mode is active
@@ -268,8 +252,8 @@ Feature: Section Re-arrangement
     And I drag it above the "Stats" section and release it
     Then the "Items" section should appear before the "Stats" section
 
-  # The gesture helper uses CDP touch input, which Playwright offers only on Chromium; covered on Pixel 5.
-  @chromium-only
+  # Needs a finger on the screen, which only the touch profile (Pixel 5) provides.
+  @touch
   Scenario: A touch drag carries on after holding still has rearranged the sheet
     Given the viewport is 768 pixels wide
     And layout edit mode is active
@@ -277,8 +261,8 @@ Feature: Section Re-arrangement
     And I drag it above the "Abilities" section and release it
     Then the "Cyphers" section should appear before the "Abilities" section
 
-  # The gesture helper uses CDP touch input, which Playwright offers only on Chromium; covered on Pixel 5.
-  @chromium-only
+  # Needs a finger on the screen, which only the touch profile (Pixel 5) provides.
+  @touch
   Scenario: A quick swipe does not start a section drag
     Given the viewport is 768 pixels wide
     And layout edit mode is active
