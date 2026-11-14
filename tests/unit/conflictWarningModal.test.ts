@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { ManualClock } from "@/services/manualClock";
 import { ConflictWarningModal } from "@/components/ConflictWarningModal";
 import type { ConflictDetail } from "@/services/conflictDetectionService";
 import { t } from "@/i18n/index";
@@ -21,14 +22,14 @@ describe("ConflictWarningModal", () => {
 
   describe("initialization", () => {
     it("should create without showing modal", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       expect(modal.isVisible()).toBe(false);
       expect(container.querySelector('[data-testid="conflict-modal"]')).toBeNull();
     });
 
     it("should react to version-conflict events dispatched on window", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
       expect(modal.isVisible()).toBe(false);
 
       window.dispatchEvent(
@@ -47,7 +48,7 @@ describe("ConflictWarningModal", () => {
     });
 
     it("should show a newer-version banner, not the conflict modal, on newer-version-available", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent("newer-version-available", {
@@ -63,7 +64,7 @@ describe("ConflictWarningModal", () => {
 
   describe("conflict modal", () => {
     it("should show modal when version-conflict event is dispatched", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
       const resolveHandler = vi.fn();
 
       const conflictEvent = new CustomEvent<ConflictDetail>("version-conflict", {
@@ -83,7 +84,7 @@ describe("ConflictWarningModal", () => {
     });
 
     it("should have correct modal structure", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
       const resolveHandler = vi.fn();
 
       window.dispatchEvent(
@@ -106,7 +107,7 @@ describe("ConflictWarningModal", () => {
     });
 
     it("should have load remote button", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent<ConflictDetail>("version-conflict", {
@@ -125,7 +126,7 @@ describe("ConflictWarningModal", () => {
     });
 
     it("should have save local button", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent<ConflictDetail>("version-conflict", {
@@ -144,7 +145,7 @@ describe("ConflictWarningModal", () => {
     });
 
     it("should call resolve with load-remote when load button clicked", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
       const resolveHandler = vi.fn();
 
       window.dispatchEvent(
@@ -168,7 +169,7 @@ describe("ConflictWarningModal", () => {
     });
 
     it("should call resolve with save-local when save button clicked", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
       const resolveHandler = vi.fn();
 
       window.dispatchEvent(
@@ -192,7 +193,7 @@ describe("ConflictWarningModal", () => {
     });
 
     it("should close modal after resolving conflict", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent<ConflictDetail>("version-conflict", {
@@ -217,7 +218,7 @@ describe("ConflictWarningModal", () => {
     });
 
     it("should resolve with load-remote on Escape key", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
       const resolveHandler = vi.fn();
 
       window.dispatchEvent(
@@ -240,7 +241,7 @@ describe("ConflictWarningModal", () => {
     });
 
     it("should focus first button when modal opens", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent<ConflictDetail>("version-conflict", {
@@ -259,7 +260,7 @@ describe("ConflictWarningModal", () => {
     });
 
     it("should remove existing modal before showing new one", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent<ConflictDetail>("version-conflict", {

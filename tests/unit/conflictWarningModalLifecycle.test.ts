@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { ManualClock } from "@/services/manualClock";
 import { ConflictWarningModal } from "@/components/ConflictWarningModal";
 import type { ConflictDetail } from "@/services/conflictDetectionService";
 import { createTestCharacter } from "../factories/character";
@@ -20,7 +21,7 @@ describe("ConflictWarningModal lifecycle", () => {
 
   describe("close", () => {
     it("should remove modal from DOM", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent<ConflictDetail>("version-conflict", {
@@ -42,7 +43,7 @@ describe("ConflictWarningModal lifecycle", () => {
     });
 
     it("should update isVisible state", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent<ConflictDetail>("version-conflict", {
@@ -64,7 +65,7 @@ describe("ConflictWarningModal lifecycle", () => {
     });
 
     it("should be safe to call close multiple times", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent<ConflictDetail>("version-conflict", {
@@ -88,13 +89,13 @@ describe("ConflictWarningModal lifecycle", () => {
 
   describe("isVisible", () => {
     it("should return false when modal is not shown", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       expect(modal.isVisible()).toBe(false);
     });
 
     it("should return true when modal is shown", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent<ConflictDetail>("version-conflict", {
@@ -112,7 +113,7 @@ describe("ConflictWarningModal lifecycle", () => {
     });
 
     it("should return false after modal is closed", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent<ConflictDetail>("version-conflict", {

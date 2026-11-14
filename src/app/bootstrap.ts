@@ -40,7 +40,7 @@ async function initConflictDetection(ctx: AppContext, initialCharacter: Characte
 
   const appEl = document.getElementById("app");
   if (appEl) {
-    new ConflictWarningModal(appEl);
+    new ConflictWarningModal(appEl, ctx.clock);
   }
 
   window.addEventListener("conflict-resolved", async (event: Event) => {

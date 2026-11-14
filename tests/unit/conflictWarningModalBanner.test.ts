@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { ManualClock } from "@/services/manualClock";
 import { ConflictWarningModal } from "@/components/ConflictWarningModal";
 import { createTestCharacter } from "../factories/character";
 import { setupTestContainer } from "./helpers/testSetup.js";
@@ -19,7 +20,7 @@ describe("ConflictWarningModal newer version banner", () => {
 
   describe("newer version banner", () => {
     it("should show banner when newer-version-available event is dispatched", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent("newer-version-available", {
@@ -37,7 +38,7 @@ describe("ConflictWarningModal newer version banner", () => {
     });
 
     it("should have correct banner structure", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent("newer-version-available", {
@@ -55,7 +56,7 @@ describe("ConflictWarningModal newer version banner", () => {
     });
 
     it("should have reload button", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent("newer-version-available", {
@@ -72,7 +73,7 @@ describe("ConflictWarningModal newer version banner", () => {
     });
 
     it("should have dismiss button", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent("newer-version-available", {
@@ -89,7 +90,7 @@ describe("ConflictWarningModal newer version banner", () => {
     });
 
     it("should remove banner when dismiss button clicked", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent("newer-version-available", {
@@ -112,7 +113,7 @@ describe("ConflictWarningModal newer version banner", () => {
     });
 
     it("should reload page when reload button clicked", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
       const reloadMock = vi.fn();
       Object.defineProperty(window, "location", {
         value: { reload: reloadMock },
@@ -138,7 +139,7 @@ describe("ConflictWarningModal newer version banner", () => {
     });
 
     it("should remove existing banner before showing new one", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
 
       window.dispatchEvent(
         new CustomEvent("newer-version-available", {
@@ -166,8 +167,8 @@ describe("ConflictWarningModal newer version banner", () => {
     });
 
     it("should auto-dismiss banner after 10 seconds", () => {
-      vi.useFakeTimers();
-      modal = new ConflictWarningModal(container);
+      const clock = new ManualClock();
+      modal = new ConflictWarningModal(container, clock);
 
       window.dispatchEvent(
         new CustomEvent("newer-version-available", {
@@ -181,15 +182,15 @@ describe("ConflictWarningModal newer version banner", () => {
 
       expect(container.querySelector('[data-testid="newer-version-banner"]')).not.toBeNull();
 
-      vi.advanceTimersByTime(10000);
+      clock.advance(9999);
+      expect(container.querySelector('[data-testid="newer-version-banner"]')).not.toBeNull();
 
+      clock.advance(1);
       expect(container.querySelector('[data-testid="newer-version-banner"]')).toBeNull();
-
-      vi.useRealTimers();
     });
 
     it("should insert banner at top of container", () => {
-      modal = new ConflictWarningModal(container);
+      modal = new ConflictWarningModal(container, new ManualClock());
       const existingChild = document.createElement("div");
       existingChild.textContent = "Existing content";
       container.appendChild(existingChild);
