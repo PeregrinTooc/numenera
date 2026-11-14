@@ -1,5 +1,5 @@
 import { intCell } from "./tableRows.js";
-import { CARD_CONFIGS, CARD_TYPE_TO_PROPERTY } from "./cardTestFixtures.js";
+import { CARD_CONFIGS, CARD_TYPE_TO_PROPERTY, EMPTY_ARRAYS } from "./cardTestFixtures.js";
 import { FULL_CHARACTER } from "@/data/mockCharacters";
 import type { SetupDsl } from "./setup.js";
 import { statLabel } from "./valueEditor.js";
@@ -26,6 +26,15 @@ function cardWith(name: string, properties: Record<string, string>): Record<stri
   return card;
 }
 
+const RESOURCE_PROPERTIES: Record<string, string> = {
+  "Current XP": "currentXp",
+  "Total XP": "totalXp",
+  Shins: "shins",
+  Armor: "armor",
+  "Max Cyphers": "maxCyphers",
+  Effort: "effort",
+};
+
 function basicInfoLabel(field: string): string {
   return field === "name" ? "character name" : field;
 }
@@ -51,6 +60,23 @@ export class CharacterDsl {
     await this.setup.newCharacter({ [field]: value });
   }
 
+  async hasResource(resource: string, value: number): Promise<void> {
+    await this.setup.newCharacter({ [RESOURCE_PROPERTIES[resource]]: value });
+  }
+
+  async hasXp(current: number, total: number): Promise<void> {
+    await this.setup.newCharacter({ currentXp: current, totalXp: total });
+  }
+
+  async hasLegacyXp(xp: number): Promise<void> {
+    const {
+      currentXp: _currentXp,
+      totalXp: _totalXp,
+      ...rest
+    } = { ...FULL_CHARACTER, ...EMPTY_ARRAYS };
+    await this.setup.replaceCharacter({ ...rest, xp });
+  }
+
   async change(valueName: string, value: string): Promise<void> {
     await this.valueEditor.open(valueName);
     await this.valueEditor.setValue(value);
@@ -65,9 +91,21 @@ export class CharacterDsl {
     await this.change(basicInfoLabel(field), value);
   }
 
+  async tryToChange(valueName: string, value: string): Promise<void> {
+    await this.valueEditor.open(valueName);
+    await this.valueEditor.setValue(value);
+  }
+
   async tryToChangeBasicInfoToNothing(field: string): Promise<void> {
-    await this.valueEditor.open(basicInfoLabel(field));
-    await this.valueEditor.setValue("");
+    await this.tryToChange(basicInfoLabel(field), "");
+  }
+
+  async expectRefusalExplained(): Promise<void> {
+    await this.valueEditor.expectExplanation();
+  }
+
+  async expectResourceShows(resource: string, value: number): Promise<void> {
+    await this.sheet.expectValueShows(resource, String(value));
   }
 
   async expectChangeRefused(): Promise<void> {

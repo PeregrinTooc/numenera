@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **586** in 52 files
-- Feature step lines: **2057**
+- Step definitions: **572** in 52 files
+- Feature step lines: **1943**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -49,7 +49,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [collection-reordering.steps.ts](#collectionreorderingstepsts) | 4 | 0 |
 | [combat.steps.ts](#combatstepsts) | 13 | 0 |
-| [common-steps.ts](#commonstepsts) | 18 | 0 |
+| [common-steps.ts](#commonstepsts) | 15 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 13 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
@@ -59,7 +59,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 15 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 25 | 0 |
-| [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 18 | 0 |
+| [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 7 | 0 |
 | [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 11 | 0 |
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 7 | 0 |
@@ -179,14 +179,14 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I change my {word} to {string}` | 4 | 14 |
+| When | `I change my {word} to {string}` | 5 | 14 |
 | When | `I change my tier to {int}` | 3 | 21 |
 | When | `I try to change my {word} to nothing` | 1 | 25 |
-| Then | `my character sheet shows my {word} as {string}` | 5 | 33 |
+| Then | `my character sheet shows my {word} as {string}` | 7 | 33 |
 | Then | `my character sheet shows my tier as {int}` | 3 | 40 |
-| Given | `my character's {word} is {string}` | 4 | 3 |
+| Given | `my character's {word} is {string}` | 7 | 3 |
 | Given | `my character's tier is {int}` | 2 | 10 |
-| Then | `the change is refused` | 1 | 29 |
+| Then | `the change is refused` | 2 | 29 |
 | Then | `the character name should display {string}` | 1 | 44 |
 | Then | `the descriptor should display {string}` | 2 | 51 |
 | Then | `the focus should display {string}` | 2 | 58 |
@@ -207,7 +207,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I cancel the card` | 7 | 32 |
-| When | `I open my character again` | 16 | 36 |
+| When | `I open my character again` | 17 | 36 |
 | When | `I save the card` | 38 | 28 |
 | When | `I set its {word} to {string}` | 120 | 21 |
 | When | `I start a new {cardType}` | 52 | 10 |
@@ -260,7 +260,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 1 | 9 |
-| Given | `I am on the character sheet page` | 42 | 27 |
+| Given | `I am on the character sheet page` | 41 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 147 |
 | Then | `I should see {int} cyphers displayed` | 1 | 110 |
 | Then | `I should see {int} oddities displayed` | 1 | 160 |
@@ -360,24 +360,21 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 2 | 128 |
-| When | `I clear the input field` | 1 | 45 |
+| Then | `an edit modal should appear` | 2 | 114 |
+| When | `I clear the input field` | 1 | 31 |
 | When | `I click on the {string} value` | 1 | 7 |
-| When | `I click the "Cancel" button` | 1 | 23 |
-| When | `I click the "Confirm" button` | 15 | 18 |
-| When | `I click the "New" button` | 7 | 24 |
-| When | `I click the {badge} badge` | 23 | 32 |
-| When | `I edit the {string} field to {string}` | 35 | 75 |
-| When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 84 |
-| When | `I press the Escape key` | 2 | 91 |
-| When | `I reload the page` | 29 | 95 |
-| When | `I reload the page immediately` | 1 | 108 |
-| When | `I tap the {badge} badge` | 2 | 36 |
-| When | `I tap the modal confirm button` | 1 | 41 |
-| When | `I type {string} in the modal input` | 18 | 49 |
-| Then | `the {string} value should display {string}` | 1 | 115 |
-| Then | `the edit modal should open` | 9 | 129 |
-| Then | `the modal input should contain {string}` | 7 | 135 |
+| When | `I click the "Confirm" button` | 1 | 18 |
+| When | `I click the "New" button` | 7 | 19 |
+| When | `I click the {badge} badge` | 1 | 27 |
+| When | `I edit the {string} field to {string}` | 35 | 61 |
+| When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 70 |
+| When | `I press the Escape key` | 2 | 77 |
+| When | `I reload the page` | 24 | 81 |
+| When | `I reload the page immediately` | 1 | 94 |
+| When | `I type {string} in the modal input` | 1 | 35 |
+| Then | `the {string} value should display {string}` | 1 | 101 |
+| Then | `the edit modal should open` | 1 | 115 |
+| Then | `the modal input should contain {string}` | 1 | 121 |
 
 ## data-validation.steps.ts
 
@@ -563,24 +560,13 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `the Armor badge should show {string}` | 4 | 127 |
-| Then | `the character data should have armor {int}` | 1 | 181 |
-| Then | `the character data should have currentXp {int}` | 1 | 151 |
-| Then | `the character data should have effort {int}` | 1 | 201 |
-| Then | `the character data should have maxCyphers {int}` | 1 | 191 |
-| Then | `the character data should have shins {int}` | 1 | 171 |
-| Then | `the character data should have totalXp {int}` | 1 | 161 |
-| Given | `the character has {int} {resource}` | 13 | 88 |
-| Given | `the character has {int} current XP and {int} total XP` | 9 | 6 |
-| Given | `the character has {resource} {int}` | 9 | 95 |
-| Given | `the character was saved with a single legacy XP value of {int}` | 1 | 30 |
-| Then | `the Current XP badge should show {string}` | 7 | 103 |
-| Then | `the Effort badge should show {string}` | 3 | 143 |
-| Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 135 |
-| Then | `the modal confirm button should be disabled` | 1 | 211 |
-| Then | `the modal should show a real validation error, not a raw translation key` | 1 | 216 |
-| Then | `the Shins badge should show {string}` | 5 | 119 |
-| Then | `the Total XP badge should show {string}` | 5 | 111 |
+| Then | `I am told why` | 1 | 45 |
+| When | `I change my {resourceName} to {int}` | 6 | 24 |
+| When | `I try to change my {resourceName} to {string}` | 1 | 31 |
+| Given | `my character has {int} current XP and {int} total XP` | 3 | 3 |
+| Then | `my character sheet shows my {resourceName} as {int}` | 11 | 38 |
+| Given | `my character was saved with a single legacy XP value of {int}` | 1 | 10 |
+| Given | `my character's {resourceName} is {int}` | 7 | 17 |
 
 ## section-columns.steps.ts
 
@@ -684,9 +670,9 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I change my {word} {word} to {int}` | 4 | 10 |
-| Then | `my character sheet shows my {word} {word} as {int}` | 9 | 17 |
-| Given | `my character's {word} {word} is {int}` | 6 | 3 |
+| When | `I change my {stat} {word} to {int}` | 4 | 10 |
+| Then | `my character sheet shows my {stat} {word} as {int}` | 9 | 17 |
+| Given | `my character's {stat} {word} is {int}` | 6 | 3 |
 
 ## storage-failure.steps.ts
 
@@ -937,5 +923,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 43 | 9 |
+| Given | `the viewport is {int} pixels wide` | 41 | 9 |
 

@@ -38,7 +38,7 @@ Feature: Combat & Special Abilities
         And the special ability "Lightning Bolt" shows source "Storm Lens artifact"
 
     Scenario: Display armor badge in attacks section
-        Given the character has 2 armor
+        Given my character's Armor is 2
         Then the attacks section shows my character's armor of 2
 
     Scenario: Empty attacks section shows empty state

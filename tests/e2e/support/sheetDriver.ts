@@ -53,6 +53,14 @@ const ANY_ENTRY = Object.values(CARD_CONFIGS)
   .map((config) => config.itemTestId)
   .join(", ");
 
+// Badges whose value sits in a nested element, and badges that mark their value with its own id.
+const BADGES_WITH_LABEL = ["Current XP", "Total XP", "Shins"];
+const VALUE_DISPLAY_TEST_IDS: Record<string, string> = {
+  Armor: "armor-value",
+  "Max Cyphers": "max-cyphers-value",
+  Effort: "effort-value",
+};
+
 export class PlaywrightSheetDriver implements SheetDriver {
   constructor(private page: Page) {}
 
@@ -202,7 +210,14 @@ export class PlaywrightSheetDriver implements SheetDriver {
     expect(cardBox.x + cardBox.width - (badgeBox.x + badgeBox.width)).toBeLessThanOrEqual(56);
   }
 
+  private valueLocator(valueName: string): Locator {
+    const displayTestId = VALUE_DISPLAY_TEST_IDS[valueName];
+    if (displayTestId) return this.page.getByTestId(displayTestId);
+    const element = this.page.getByTestId(getTestId(valueName));
+    return BADGES_WITH_LABEL.includes(valueName) ? element.locator(".stat-badge-value") : element;
+  }
+
   async expectValueShows(valueName: string, value: string): Promise<void> {
-    await expect(this.page.getByTestId(getTestId(valueName))).toHaveText(value);
+    await expect(this.valueLocator(valueName)).toHaveText(value);
   }
 }

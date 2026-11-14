@@ -17,11 +17,6 @@ async function confirmModal(this: CustomWorld): Promise<void> {
 }
 When('I click the "Confirm" button', confirmModal);
 
-async function cancelModal(this: CustomWorld): Promise<void> {
-  await this.modal.cancel();
-}
-When('I click the "Cancel" button', cancelModal);
-
 When('I click the "New" button', async function (this: CustomWorld) {
   await this.page.locator('[data-testid="new-button"]').click();
   await waitForNewCharacterPersisted(this.page);
@@ -32,15 +27,6 @@ When('I click the "New" button', async function (this: CustomWorld) {
 When("I click the {badge} badge", async function (this: CustomWorld, testId: string) {
   await this.dom.getByTestId(testId).click();
   await this.page.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-});
-
-When("I tap the {badge} badge", async function (this: CustomWorld, testId: string) {
-  await this.dom.getByTestId(testId).tap();
-  await this.page.waitForSelector('[data-testid="edit-modal"]', { state: "visible" });
-});
-
-When("I tap the modal confirm button", async function (this: CustomWorld) {
-  await this.modal.tapConfirm();
 });
 
 When("I clear the input field", async function (this: CustomWorld) {

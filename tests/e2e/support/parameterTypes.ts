@@ -3,15 +3,6 @@ import { CARD_CONFIGS } from "./cardTestFixtures.js";
 import { FIELD_TEST_IDS } from "./fields.js";
 import type { SectionZone } from "./sections.js";
 
-// Maps the Gherkin word for a character resource to its field name on
-// Character.
-const RESOURCE_FIELDS: Record<string, string> = {
-  shins: "shins",
-  armor: "armor",
-  effort: "effort",
-  "max cyphers": "maxCyphers",
-};
-
 defineParameterType({
   name: "cardType",
   regexp: /cypher|equipment|artifact|oddity|attack|ability|special ability/,
@@ -31,9 +22,15 @@ defineParameterType({
 });
 
 defineParameterType({
-  name: "resource",
-  regexp: /shins|armor|effort|max cyphers/,
-  transformer: (s: string) => RESOURCE_FIELDS[s],
+  name: "resourceName",
+  regexp: /Current XP|Total XP|Shins|Armor|Max Cyphers|Effort/,
+  transformer: (s: string) => s,
+});
+
+defineParameterType({
+  name: "stat",
+  regexp: /Might|Speed|Intellect/,
+  transformer: (s: string) => s,
 });
 
 // Plural card words as written in empty-state steps, mapped to the

@@ -14,8 +14,8 @@ Feature: Sheet Toolbar
         And the Edit Layout button should not overlap the character sheet
 
     Scenario: Effort badge stays editable when version history exists
-        Given the character has 2 versions in history
-        And the character has effort 1
+        Given my character's Effort is 1
+        And the character has 2 versions in history
         When I click the Effort badge
         Then the edit modal should open
         And the modal input should contain "1"

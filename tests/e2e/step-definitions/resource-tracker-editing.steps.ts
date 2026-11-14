@@ -1,225 +1,48 @@
-import { Given, Then } from "@cucumber/cucumber";
-import { expect } from "@playwright/test";
-import { CustomWorld } from "../support/world.js";
-import { waitForSaveComplete } from "../support/save.js";
-import { FULL_CHARACTER, EMPTY_ARRAYS } from "../support/cardTestFixtures.js";
+import { Given, When, Then } from "@cucumber/cucumber";
+import type { CustomWorld } from "../support/world.js";
 
 Given(
-  "the character has {int} current XP and {int} total XP",
-  async function (this: CustomWorld, currentXp: number, totalXp: number) {
-    await this.setup.character({ currentXp, totalXp });
-
-    await this.page.waitForFunction(
-      ({ expectedCurrent, expectedTotal }) => {
-        const currentCell = document.querySelector(
-          '[data-testid="xp-badge-current"] .stat-badge-value'
-        );
-        const totalCell = document.querySelector(
-          '[data-testid="xp-badge-total"] .stat-badge-value'
-        );
-        return (
-          currentCell?.textContent === String(expectedCurrent) &&
-          totalCell?.textContent === String(expectedTotal)
-        );
-      },
-      { expectedCurrent: currentXp, expectedTotal: totalXp },
-      { timeout: 10000 }
-    );
+  "my character has {int} current XP and {int} total XP",
+  async function (this: CustomWorld, current: number, total: number) {
+    await this.character.hasXp(current, total);
   }
 );
 
 Given(
-  "the character was saved with a single legacy XP value of {int}",
-  async function (this: CustomWorld, legacyXp: number) {
-    const {
-      currentXp: _currentXp,
-      totalXp: _totalXp,
-      ...rest
-    } = {
-      ...FULL_CHARACTER,
-      ...EMPTY_ARRAYS,
-    };
-    await this.setup.replaceCharacter({ ...rest, xp: legacyXp });
-
-    await this.page.waitForFunction(
-      ({ expectedCurrent, expectedTotal }) => {
-        const currentCell = document.querySelector(
-          '[data-testid="xp-badge-current"] .stat-badge-value'
-        );
-        const totalCell = document.querySelector(
-          '[data-testid="xp-badge-total"] .stat-badge-value'
-        );
-        return (
-          currentCell?.textContent === String(expectedCurrent) &&
-          totalCell?.textContent === String(expectedTotal)
-        );
-      },
-      { expectedCurrent: legacyXp, expectedTotal: legacyXp },
-      { timeout: 10000 }
-    );
-  }
-);
-
-// Selector for each {resource} field's rendered value, used to wait for the
-// reload in this.setup.character() to actually reflect the new value.
-const RESOURCE_VALUE_SELECTORS: Record<string, string> = {
-  shins: '[data-testid="shins-badge"] .stat-badge-value',
-  armor: '[data-testid="armor-value"]',
-  maxCyphers: '[data-testid="max-cyphers-value"]',
-  effort: '[data-testid="effort-value"]',
-};
-
-async function waitForResourceValue(
-  world: CustomWorld,
-  field: string,
-  value: number
-): Promise<void> {
-  const selector = RESOURCE_VALUE_SELECTORS[field];
-  await world.page.waitForSelector(selector, { timeout: 10000 });
-  await world.page.waitForFunction(
-    ({ sel, expected }) => document.querySelector(sel)?.textContent === String(expected),
-    { sel: selector, expected: value },
-    { timeout: 10000 }
-  );
-}
-
-// The feature files use both word orders: "{int} shins/armor" but
-// "max cyphers/effort {int}" — two registrations, one shared body.
-Given(
-  "the character has {int} {resource}",
-  async function (this: CustomWorld, value: number, field: string) {
-    await this.setup.character({ [field]: value });
-    await waitForResourceValue(this, field, value);
+  "my character was saved with a single legacy XP value of {int}",
+  async function (this: CustomWorld, xp: number) {
+    await this.character.hasLegacyXp(xp);
   }
 );
 
 Given(
-  "the character has {resource} {int}",
-  async function (this: CustomWorld, field: string, value: number) {
-    await this.setup.character({ [field]: value });
-    await waitForResourceValue(this, field, value);
+  "my character's {resourceName} is {int}",
+  async function (this: CustomWorld, resource: string, value: number) {
+    await this.character.hasResource(resource, value);
+  }
+);
+
+When(
+  "I change my {resourceName} to {int}",
+  async function (this: CustomWorld, resource: string, value: number) {
+    await this.character.change(resource, String(value));
+  }
+);
+
+When(
+  "I try to change my {resourceName} to {string}",
+  async function (this: CustomWorld, resource: string, value: string) {
+    await this.character.tryToChange(resource, value);
   }
 );
 
 Then(
-  "the Current XP badge should show {string}",
-  async function (this: CustomWorld, expectedValue: string) {
-    const currentXpValue = this.page.locator('[data-testid="xp-badge-current"] .stat-badge-value');
-    await expect(currentXpValue).toHaveText(expectedValue);
+  "my character sheet shows my {resourceName} as {int}",
+  async function (this: CustomWorld, resource: string, value: number) {
+    await this.character.expectResourceShows(resource, value);
   }
 );
 
-Then(
-  "the Total XP badge should show {string}",
-  async function (this: CustomWorld, expectedValue: string) {
-    const totalXpValue = this.page.locator('[data-testid="xp-badge-total"] .stat-badge-value');
-    await expect(totalXpValue).toHaveText(expectedValue);
-  }
-);
-
-Then(
-  "the Shins badge should show {string}",
-  async function (this: CustomWorld, expectedValue: string) {
-    const shinsBadgeValue = this.page.locator('[data-testid="shins-badge"] .stat-badge-value');
-    await expect(shinsBadgeValue).toHaveText(expectedValue);
-  }
-);
-
-Then(
-  "the Armor badge should show {string}",
-  async function (this: CustomWorld, expectedValue: string) {
-    const armorValue = this.page.locator('[data-testid="armor-value"]');
-    await expect(armorValue).toHaveText(expectedValue);
-  }
-);
-
-Then(
-  "the Max Cyphers portion of the badge should show {string}",
-  async function (this: CustomWorld, expectedValue: string) {
-    const maxCyphersValue = this.page.locator('[data-testid="max-cyphers-value"]');
-    await expect(maxCyphersValue).toHaveText(expectedValue);
-  }
-);
-
-Then(
-  "the Effort badge should show {string}",
-  async function (this: CustomWorld, expectedValue: string) {
-    const effortValue = this.page.locator('[data-testid="effort-value"]');
-    await expect(effortValue).toHaveText(expectedValue);
-  }
-);
-
-Then(
-  "the character data should have currentXp {int}",
-  async function (this: CustomWorld, expectedCurrentXp: number) {
-    await waitForSaveComplete(this.page);
-    const storedData = await this.storageHelper.getCharacter();
-    expect(storedData).toBeTruthy();
-    expect(storedData.currentXp).toBe(expectedCurrentXp);
-  }
-);
-
-Then(
-  "the character data should have totalXp {int}",
-  async function (this: CustomWorld, expectedTotalXp: number) {
-    await waitForSaveComplete(this.page);
-    const storedData = await this.storageHelper.getCharacter();
-    expect(storedData).toBeTruthy();
-    expect(storedData.totalXp).toBe(expectedTotalXp);
-  }
-);
-
-Then(
-  "the character data should have shins {int}",
-  async function (this: CustomWorld, expectedShins: number) {
-    await waitForSaveComplete(this.page);
-    const storedData = await this.storageHelper.getCharacter();
-    expect(storedData).toBeTruthy();
-    expect(storedData.shins).toBe(expectedShins);
-  }
-);
-
-Then(
-  "the character data should have armor {int}",
-  async function (this: CustomWorld, expectedArmor: number) {
-    await waitForSaveComplete(this.page);
-    const storedData = await this.storageHelper.getCharacter();
-    expect(storedData).toBeTruthy();
-    expect(storedData.armor).toBe(expectedArmor);
-  }
-);
-
-Then(
-  "the character data should have maxCyphers {int}",
-  async function (this: CustomWorld, expectedMaxCyphers: number) {
-    await waitForSaveComplete(this.page);
-    const storedData = await this.storageHelper.getCharacter();
-    expect(storedData).toBeTruthy();
-    expect(storedData.maxCyphers).toBe(expectedMaxCyphers);
-  }
-);
-
-Then(
-  "the character data should have effort {int}",
-  async function (this: CustomWorld, expectedEffort: number) {
-    await waitForSaveComplete(this.page);
-    const storedData = await this.storageHelper.getCharacter();
-    expect(storedData).toBeTruthy();
-    expect(storedData.effort).toBe(expectedEffort);
-  }
-);
-
-Then("the modal confirm button should be disabled", async function (this: CustomWorld) {
-  const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
-  await expect(confirmButton).toBeDisabled();
+Then("I am told why", async function (this: CustomWorld) {
+  await this.character.expectRefusalExplained();
 });
-
-Then(
-  "the modal should show a real validation error, not a raw translation key",
-  async function (this: CustomWorld) {
-    const errorElement = this.page.locator(".edit-modal-error");
-    const errorText = await errorElement.textContent();
-    expect(errorText).toBeTruthy();
-    expect(errorText).not.toMatch(/^validation\./);
-  }
-);

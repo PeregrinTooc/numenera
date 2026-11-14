@@ -15,6 +15,7 @@ export interface ValueEditorDriver {
   expectClosed(): Promise<void>;
   expectStillOpen(): Promise<void>;
   expectCannotConfirm(): Promise<void>;
+  expectExplanation(): Promise<void>;
   dismissByClickingOutside(): Promise<void>;
   expectFocusStaysInside(): Promise<void>;
   expectNumericKeypad(): Promise<void>;
@@ -47,6 +48,12 @@ export class PlaywrightValueEditorDriver implements ValueEditorDriver {
   }
 
   async setValue(value: string): Promise<void> {
+    if ((await this.input.getAttribute("type")) === "number" && !/^-?\d*$/.test(value)) {
+      // A number field refuses fill(); typing is what a person does, and the field keeps what it accepts.
+      await this.input.clear();
+      await this.input.pressSequentially(value);
+      return;
+    }
     await this.input.fill(value);
     await expect(this.input).toHaveValue(value);
   }
@@ -90,6 +97,12 @@ export class PlaywrightValueEditorDriver implements ValueEditorDriver {
 
   async expectCannotConfirm(): Promise<void> {
     await expect(this.page.getByTestId("modal-confirm-button")).toBeDisabled();
+  }
+
+  async expectExplanation(): Promise<void> {
+    const explanation = this.page.locator(".edit-modal-error");
+    await expect(explanation).toBeVisible();
+    await expect(explanation).not.toHaveText(/^validation\./);
   }
 
   async dismissByClickingOutside(): Promise<void> {
