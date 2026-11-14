@@ -3,22 +3,23 @@ import { STORAGE_KEY, CHARACTER_DB_NAME } from "./storageConstants.js";
 import { openDatabase, requireDatabase, runRequest, transactionDone } from "./idb.js";
 import type { Character } from "@/types/character";
 import { logger } from "@/utils/logger";
+import type { Clock } from "@/services/clock";
 
 const DB_NAME = CHARACTER_DB_NAME;
 const STORE_NAME = "characters";
 const DB_VERSION = 1;
 const CHARACTER_KEY = "current";
 const UNREADABLE_BACKUP_KEY = "unreadable-backup";
-const DEFAULT_AVAILABILITY_TIMEOUT_MS = 1000;
+const AVAILABILITY_TIMEOUT_MS = 1000;
 
 export class IndexedDBStorageImpl implements ICharacterStorage {
   private db: IDBDatabase | null = null;
 
   /**
-   * @param availabilityTimeoutMs How long isAvailable() waits for the probe database to
-   *   open before reporting IndexedDB as unusable (some browsers hang in private mode).
+   * @param clock Times the wait in isAvailable() for the probe database to open
+   *   before reporting IndexedDB as unusable (some browsers hang in private mode).
    */
-  constructor(private readonly availabilityTimeoutMs: number = DEFAULT_AVAILABILITY_TIMEOUT_MS) {}
+  constructor(private readonly clock: Clock) {}
 
   async init(): Promise<void> {
     this.db = await openDatabase(
@@ -141,7 +142,7 @@ export class IndexedDBStorageImpl implements ICharacterStorage {
           resolve(false);
         };
 
-        setTimeout(() => resolve(false), this.availabilityTimeoutMs);
+        this.clock.setTimeout(() => resolve(false), AVAILABILITY_TIMEOUT_MS);
       });
     } catch {
       return false;

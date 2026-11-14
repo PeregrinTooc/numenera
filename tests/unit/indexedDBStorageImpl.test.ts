@@ -17,9 +17,15 @@ describe("IndexedDBStorageImpl", () => {
         .spyOn(indexedDB, "open")
         .mockReturnValue({} as unknown as IDBOpenDBRequest);
 
-      const result = await ctx.storage.isAvailable();
+      let reported: boolean | undefined;
+      const availability = ctx.storage.isAvailable().then((available) => (reported = available));
 
-      expect(result).toBe(false);
+      ctx.clock.advance(999);
+      await Promise.resolve();
+      expect(reported).toBeUndefined();
+      ctx.clock.advance(1);
+
+      expect(await availability).toBe(false);
       openSpy.mockRestore();
     });
 
@@ -77,14 +83,14 @@ describe("IndexedDBStorageImpl", () => {
     });
 
     it("should throw error when saving without initialization", async () => {
-      const uninitializedStorage = new IndexedDBStorageImpl();
+      const uninitializedStorage = new IndexedDBStorageImpl(ctx.clock);
       await expect(uninitializedStorage.save(mockCharacter)).rejects.toThrow(
         "IndexedDB not initialized"
       );
     });
 
     it("should throw error when loading without initialization", async () => {
-      const uninitializedStorage = new IndexedDBStorageImpl();
+      const uninitializedStorage = new IndexedDBStorageImpl(ctx.clock);
       await expect(uninitializedStorage.load()).rejects.toThrow("IndexedDB not initialized");
     });
   });
@@ -102,7 +108,7 @@ describe("IndexedDBStorageImpl", () => {
     });
 
     it("should throw error when clearing without initialization", async () => {
-      const uninitializedStorage = new IndexedDBStorageImpl();
+      const uninitializedStorage = new IndexedDBStorageImpl(ctx.clock);
       await expect(uninitializedStorage.clear()).rejects.toThrow("IndexedDB not initialized");
     });
   });
