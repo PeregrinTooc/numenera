@@ -4,11 +4,6 @@ import { waitForCharacterSheetReady, waitForInitialVersionSaved } from "./app-re
 import { installExportCapture, waitForExportCapture } from "./exportCapture.js";
 import { englishText } from "./i18nKeys.js";
 import type { TestStorageHelper } from "./testStorageHelper.js";
-import {
-  clickAndAwaitNavigation,
-  forceSquash,
-  readVersionPosition,
-} from "./versionHistoryHelpers.js";
 import type { ExportedCharacterFile } from "./world.js";
 
 /** A version to store: what changed, and the description the history records for it. */
@@ -24,26 +19,9 @@ export interface ExportedView {
   expectPortrait(portrait: string): void;
 }
 
-declare global {
-  interface Window {
-    __releaseVersionSave?: () => void;
-    __heldSquash?: Promise<void>;
-  }
-}
-
-// The service keeps its VersionHistoryManager private; the race needs a save
-// that stays pending, so the driver reaches in and gates saveVersion.
-interface GatedManager {
-  saveVersion: (...args: unknown[]) => Promise<unknown>;
-}
-
 /** The version navigator, its warning banner, and the stored history behind them. */
 export interface VersionHistoryDriver {
   storeVersions(seeds: VersionSeed[]): Promise<void>;
-  settleEdits(): Promise<void>;
-  holdVersionSaves(): Promise<void>;
-  beginSavingVersion(): Promise<void>;
-  releaseHeldVersionSave(): Promise<void>;
   undo(): Promise<void>;
   redo(): Promise<void>;
   redoWithShift(): Promise<void>;
@@ -69,6 +47,39 @@ export interface VersionHistoryDriver {
   expectTimestampRelative(): Promise<void>;
   expectOriginalVersionDropped(originalName: string): Promise<void>;
   expectPortraitShows(portrait: string): Promise<void>;
+}
+
+const VERSION_COUNTER = '[data-testid="version-counter"]';
+const COMPARISON_VIEW = '[data-testid="comparison-view"]';
+
+interface VersionPosition {
+  current: number;
+  total: number;
+}
+
+async function readVersionPosition(page: Page): Promise<VersionPosition> {
+  const text = (await page.locator(VERSION_COUNTER).textContent()) ?? "";
+  const match = text.match(/(\d+)\D+(\d+)/);
+  if (!match) {
+    throw new Error(`Version counter has unexpected text: "${text}"`);
+  }
+  return { current: parseInt(match[1], 10), total: parseInt(match[2], 10) };
+}
+
+/**
+ * Click a version-navigator or banner button and wait until the app has
+ * navigated: the counter shows a different position, or (with the opt-in
+ * Comparison View enabled) the comparison view has opened instead.
+ */
+async function clickAndAwaitNavigation(page: Page, buttonTestId: string): Promise<void> {
+  const before = await page.locator(VERSION_COUNTER).textContent();
+  await page.locator(`[data-testid="${buttonTestId}"]`).click();
+  await page.waitForFunction(
+    ({ counter, comparison, previous }) =>
+      document.querySelector(comparison) !== null ||
+      document.querySelector(counter)?.textContent !== previous,
+    { counter: VERSION_COUNTER, comparison: COMPARISON_VIEW, previous: before }
+  );
 }
 
 const BACK = "version-nav-backward";
@@ -129,43 +140,6 @@ export class PlaywrightVersionHistoryDriver implements VersionHistoryDriver {
     ]);
     await this.reopen();
     await this.expectPosition(seeds.length + 1, seeds.length + 1);
-  }
-
-  async settleEdits(): Promise<void> {
-    await forceSquash(this.page);
-  }
-
-  async holdVersionSaves(): Promise<void> {
-    await this.page.evaluate(() => {
-      const service = window.__versionHistoryService as unknown as { manager: GatedManager };
-      const manager = service.manager;
-      const save = manager.saveVersion.bind(manager);
-      const gate = new Promise<void>((resolve) => {
-        window.__releaseVersionSave = resolve;
-      });
-      manager.saveVersion = async (...args: unknown[]) => {
-        await gate;
-        return save(...args);
-      };
-    });
-  }
-
-  async beginSavingVersion(): Promise<void> {
-    await this.page.evaluate(() => {
-      const service = window.__versionHistoryService;
-      if (!service) {
-        throw new Error("Version history service not available. Make sure the app has loaded.");
-      }
-      // Deliberately not awaited: the squash stays suspended on the held save.
-      window.__heldSquash = service.forceSquash();
-    });
-  }
-
-  async releaseHeldVersionSave(): Promise<void> {
-    await this.page.evaluate(async () => {
-      window.__releaseVersionSave?.();
-      await window.__heldSquash;
-    });
   }
 
   async undo(): Promise<void> {

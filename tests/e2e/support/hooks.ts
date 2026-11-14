@@ -22,6 +22,7 @@ import { ComparisonDsl } from "./comparison.js";
 import { PlaywrightComparisonDriver } from "./comparisonDriver.js";
 import { waitForInitialVersionSaved } from "./app-ready.js";
 import { PlaywrightVersionHistoryDriver } from "./versionHistoryDriver.js";
+import { PlaywrightVersionSaveDriver } from "./versionSaveDriver.js";
 import { BASE_URL } from "./serverUrl.js";
 
 let browser: Browser;
@@ -77,6 +78,7 @@ Before(async function (this: CustomWorld, { pickle }) {
   this.storageHelper = new TestStorageHelper(this.page);
   this.history = new VersionHistoryDsl(
     new PlaywrightVersionHistoryDriver(this.page, this.storageHelper),
+    new PlaywrightVersionSaveDriver(this.page),
     this.setup,
     this.character
   );

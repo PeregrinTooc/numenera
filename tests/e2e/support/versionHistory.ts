@@ -5,6 +5,7 @@ import { intCell } from "./tableRows.js";
 import type { CharacterDsl } from "./character.js";
 import type { SetupDsl } from "./setup.js";
 import type { ExportedView, VersionHistoryDriver, VersionSeed } from "./versionHistoryDriver.js";
+import type { VersionSaveDriver } from "./versionSaveDriver.js";
 
 // Descriptions as the app stores them: i18n keys, rendered in the viewer's language.
 const NAME_CHANGE = "versionHistory.changes.basicInfo.name";
@@ -37,6 +38,7 @@ export class VersionHistoryDsl {
 
   constructor(
     private driver: VersionHistoryDriver,
+    private saves: VersionSaveDriver,
     private setup: SetupDsl,
     private character: CharacterDsl
   ) {}
@@ -201,19 +203,19 @@ export class VersionHistoryDsl {
   }
 
   async editsHaveSettled(): Promise<void> {
-    await this.driver.settleEdits();
+    await this.saves.settleEdits();
   }
 
   async holdsVersionSaves(): Promise<void> {
-    await this.driver.holdVersionSaves();
+    await this.saves.holdVersionSaves();
   }
 
   async beginsSavingVersion(): Promise<void> {
-    await this.driver.beginSavingVersion();
+    await this.saves.beginSavingVersion();
   }
 
   async releasesHeldVersionSave(): Promise<void> {
-    await this.driver.releaseHeldVersionSave();
+    await this.saves.releaseHeldVersionSave();
   }
 
   async undoes(): Promise<void> {
