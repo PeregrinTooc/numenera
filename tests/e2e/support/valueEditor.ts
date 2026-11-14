@@ -47,4 +47,44 @@ export class ValueEditorDsl {
   async expectClosed(): Promise<void> {
     await this.editor.expectClosed();
   }
+
+  async dismissByClickingOutside(): Promise<void> {
+    await this.editor.dismissByClickingOutside();
+  }
+
+  async expectFocusStaysInside(): Promise<void> {
+    await this.editor.expectFocusStaysInside();
+  }
+
+  async expectNumericKeypad(): Promise<void> {
+    await this.editor.expectNumericKeypad();
+  }
+
+  async expectButtonsHaveIcons(): Promise<void> {
+    await this.editor.expectButtonsHaveIcons();
+  }
+
+  async expectSheetDimmed(): Promise<void> {
+    await this.editor.expectSheetDimmed();
+  }
+
+  async expectDialogSemantics(): Promise<void> {
+    await this.editor.expectDialogSemantics();
+  }
+
+  async expectFitsScreen(): Promise<void> {
+    await this.editor.expectFitsScreen();
+  }
+
+  async expectTouchFriendlyControls(): Promise<void> {
+    await this.editor.expectTouchFriendlyControls();
+  }
+
+  async expectStatLooksClickable(stat: string, field: string): Promise<void> {
+    await this.editor.expectValueLooksClickable(statLabel(stat, field));
+  }
+
+  async expectStatTouchFriendly(stat: string, field: string): Promise<void> {
+    await this.editor.expectValueTouchFriendly(statLabel(stat, field));
+  }
 }

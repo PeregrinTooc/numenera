@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **612** in 53 files
-- Feature step lines: **2177**
+- Step definitions: **622** in 53 files
+- Feature step lines: **2197**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -69,10 +69,10 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [settings-gear.steps.ts](#settingsgearstepsts) | 18 | 0 |
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 3 | 0 |
-| [stat-value-editor.steps.ts](#statvalueeditorstepsts) | 8 | 0 |
 | [storage-failure.steps.ts](#storagefailurestepsts) | 8 | 0 |
 | [third-party-requests.steps.ts](#thirdpartyrequestsstepsts) | 3 | 0 |
 | [unreadable-character.steps.ts](#unreadablecharacterstepsts) | 10 | 0 |
+| [value-editor.steps.ts](#valueeditorstepsts) | 18 | 0 |
 | [version-comparison-highlighting.steps.ts](#versioncomparisonhighlightingstepsts) | 17 | 0 |
 | [version-comparison-navigation.steps.ts](#versioncomparisonnavigationstepsts) | 12 | 0 |
 | [version-comparison-setup.steps.ts](#versioncomparisonsetupstepsts) | 12 | 0 |
@@ -727,21 +727,8 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I change my {word} {word} to {int}` | 4 | 10 |
-| Then | `my character sheet shows my {word} {word} as {int}` | 8 | 17 |
+| Then | `my character sheet shows my {word} {word} as {int}` | 9 | 17 |
 | Given | `my character's {word} {word} is {int}` | 6 | 3 |
-
-## stat-value-editor.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| When | `I cancel the value editor` | 1 | 19 |
-| When | `I click my {word} {word}` | 4 | 3 |
-| When | `I enter {int} in the value editor` | 3 | 7 |
-| When | `I press Enter in the value editor` | 1 | 11 |
-| When | `I press Escape in the value editor` | 1 | 15 |
-| Then | `the value editor has the keyboard focus` | 1 | 27 |
-| Then | `the value editor is closed` | 3 | 31 |
-| Then | `the value editor is open showing {int}` | 1 | 23 |
 
 ## storage-failure.steps.ts
 
@@ -778,6 +765,29 @@ pattern this script does not understand):
 | Then | `the downloaded file should contain exactly {string}` | 1 | 63 |
 | Then | `the kept unreadable data should be {string}` | 4 | 72 |
 | Given | `the stored character data is the unreadable text {string}` | 4 | 9 |
+
+## value-editor.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| When | `I cancel the value editor` | 1 | 19 |
+| When | `I click my {word} {word}` | 11 | 3 |
+| When | `I click outside the value editor` | 1 | 35 |
+| When | `I enter {int} in the value editor` | 4 | 7 |
+| When | `I press Enter in the value editor` | 1 | 11 |
+| When | `I press Escape in the value editor` | 1 | 15 |
+| Then | `my {word} {word} is big enough to tap` | 1 | 77 |
+| Then | `my {word} {word} looks clickable` | 1 | 70 |
+| Then | `the value editor dims the sheet behind it` | 1 | 54 |
+| Then | `the value editor fits the screen` | 1 | 62 |
+| Then | `the value editor has an icon on its confirm and cancel buttons` | 1 | 47 |
+| Then | `the value editor has the keyboard focus` | 1 | 27 |
+| Then | `the value editor is a dialog` | 1 | 58 |
+| Then | `the value editor is closed` | 4 | 31 |
+| Then | `the value editor is open showing {int}` | 1 | 23 |
+| Then | `the value editor keeps the keyboard focus inside itself` | 1 | 43 |
+| Then | `the value editor shows a numeric keypad` | 1 | 39 |
+| Then | `the value editor's controls are big enough to tap` | 1 | 66 |
 
 ## version-comparison-highlighting.steps.ts
 

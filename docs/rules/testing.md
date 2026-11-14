@@ -37,6 +37,7 @@ Everything else must pass on all four.
 | --------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | `@desktop-only` | every non-desktop profile  | behaviour only a desktop has (e.g. mouse hover)                                                                                    |
 | `@not-phone`    | `pixel5`, `iphone12`       | features unavailable below 768px (e.g. the version comparison view)                                                                |
+| `@phone-only`   | `desktop`, `ipadpro`       | layout that exists only on a phone (e.g. the edit modal sized to the screen)                                                       |
 | `@touch`        | every non-`pixel5` profile | gestures that need a finger (e.g. long-press); real touch input exists only on Chromium, so only `pixel5` drives sections by touch |
 
 A scenario that needs a width no profile has (e.g. 320px) uses

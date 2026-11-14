@@ -320,7 +320,7 @@ their own, and write the other stat-edit scenarios at the intent level.
    - **`combat`.** Display, empty states, theming and the wide-screen/phone
      arrangement go through `CharacterDsl` and `SheetDriver`.
    - **`stat-pool-editing`.** A `ValueEditorDriver` owns the generic edit-value
-     modal. `stat-value-editor.feature` is the one spec of the modal's
+     modal. `value-editor.feature` is the one spec of the modal's
      interaction; stat edits are written as "I change my Might pool to 12".
 
    Still to move: the remaining users of the generic value-editor steps
