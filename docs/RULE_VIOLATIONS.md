@@ -48,7 +48,9 @@ editing the rule to match the code.
 
 ## Open
 
-None.
+| Rule                                | Violation                                                                                                                                                                                            |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| #4 i18n everything � hardcoded text | `src/components/VersionWarningBanner.ts` hardcodes the relative-time strings ("just now", "N minute(s)/hour(s)/day(s) ago") in English, so German users see English timestamps in the version banner |
 
 ## Plan — a sequence of commits on `main`
 

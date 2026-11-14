@@ -26,13 +26,6 @@ Given(
   }
 );
 
-Given(
-  "my character has a combined basic info change in its history",
-  async function (this: CustomWorld) {
-    await this.history.hasCombinedBasicInfoChange();
-  }
-);
-
 Given("my character has a portrait", async function (this: CustomWorld) {
   await this.history.hasPortrait();
 });

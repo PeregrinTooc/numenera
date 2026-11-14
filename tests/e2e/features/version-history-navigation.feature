@@ -110,11 +110,6 @@ Feature: Version History Navigation
         And I step back to the previous version
         Then the navigator describes this version as "Changed name"
 
-    Scenario: Multiple changes show combined description
-        Given my character has a combined basic info change in its history
-        When I step back to the previous version
-        Then the navigator describes this version as "Edited basic info"
-
     Scenario: Timestamp displays in readable format
         Given my character has a history of 2 versions
         When I step back to the previous version

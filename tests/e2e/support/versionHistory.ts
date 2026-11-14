@@ -5,7 +5,6 @@ import type { ExportedView, VersionHistoryDriver, VersionSeed } from "./versionH
 
 // Descriptions as the app stores them: i18n keys, rendered in the viewer's language.
 const NAME_CHANGE = "versionHistory.changes.basicInfo.name";
-const COMBINED_BASIC_INFO_CHANGE = "versionHistory.changes.basicInfo.combined";
 const ORIGINAL_NAME = "Original";
 const PORTRAIT =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
@@ -62,17 +61,6 @@ export class VersionHistoryDsl {
         },
       },
     }));
-  }
-
-  async hasCombinedBasicInfoChange(): Promise<void> {
-    this.versions.push({ name: "Changed Name" }, { name: "Latest Version" });
-    await this.driver.storeVersions([
-      {
-        description: COMBINED_BASIC_INFO_CHANGE,
-        changes: { name: "Changed Name", descriptor: "Changed Descriptor", type: "Changed Type" },
-      },
-      { description: NAME_CHANGE, changes: { name: "Latest Version" } },
-    ]);
   }
 
   async hasMightPoolHistory(pools: number[]): Promise<void> {

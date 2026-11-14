@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **506** in 52 files
-- Feature step lines: **1785**
+- Step definitions: **505** in 52 files
+- Feature step lines: **1782**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -83,7 +83,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [version-history-navigator-state.steps.ts](#versionhistorynavigatorstatestepsts) | 6 | 0 |
 | [version-history-shortcuts.steps.ts](#versionhistoryshortcutsstepsts) | 3 | 0 |
 | [version-history-squash-race.steps.ts](#versionhistorysquashracestepsts) | 3 | 0 |
-| [version-history.steps.ts](#versionhistorystepsts) | 37 | 0 |
+| [version-history.steps.ts](#versionhistorystepsts) | 36 | 0 |
 | [viewport.steps.ts](#viewportstepsts) | 2 | 0 |
 
 ## ⚠️ Feature lines with no matching step definition
@@ -814,43 +814,42 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `I am not warned about an old version` | 3 | 117 |
-| Then | `I am on the latest version` | 2 | 125 |
-| Then | `I am warned that I am viewing an old version` | 4 | 113 |
-| Then | `I can edit my character` | 1 | 86 |
-| Then | `I can restore this version` | 1 | 121 |
-| When | `I export what I am viewing` | 1 | 78 |
-| When | `I go to the oldest version` | 1 | 43 |
-| When | `I go to version {int}` | 15 | 39 |
-| When | `I reopen my character` | 1 | 74 |
-| When | `I restore this version` | 2 | 62 |
-| When | `I return to the latest version` | 1 | 66 |
-| Then | `I see my character as it was in version {int}` | 9 | 151 |
-| When | `I step back {int} times in quick succession` | 1 | 55 |
-| When | `I step back to the previous version` | 6 | 47 |
-| When | `I step forward to the next version` | 3 | 51 |
-| Given | `my character has a combined basic info change in its history` | 1 | 28 |
+| Then | `I am not warned about an old version` | 3 | 110 |
+| Then | `I am on the latest version` | 2 | 118 |
+| Then | `I am warned that I am viewing an old version` | 4 | 106 |
+| Then | `I can edit my character` | 1 | 79 |
+| Then | `I can restore this version` | 1 | 114 |
+| When | `I export what I am viewing` | 1 | 71 |
+| When | `I go to the oldest version` | 1 | 36 |
+| When | `I go to version {int}` | 15 | 32 |
+| When | `I reopen my character` | 1 | 67 |
+| When | `I restore this version` | 2 | 55 |
+| When | `I return to the latest version` | 1 | 59 |
+| Then | `I see my character as it was in version {int}` | 9 | 144 |
+| When | `I step back {int} times in quick succession` | 1 | 48 |
+| When | `I step back to the previous version` | 5 | 40 |
+| When | `I step forward to the next version` | 3 | 44 |
 | Given | `my character has a history of {int} versions` | 15 | 7 |
 | Given | `my character has a history of {int} versions with different data` | 1 | 14 |
-| Given | `my character has a portrait` | 3 | 35 |
+| Given | `my character has a portrait` | 3 | 28 |
 | Given | `my character has no history yet` | 1 | 3 |
-| When | `my edits have settled into a version` | 7 | 70 |
+| When | `my edits have settled into a version` | 7 | 63 |
 | Given | `my Might pool went from {int} to {int} to {int}` | 1 | 21 |
-| Then | `my portrait is unchanged` | 3 | 162 |
-| Then | `the back control is available` | 4 | 97 |
-| Then | `the back control is unavailable` | 1 | 101 |
-| Then | `the export carries no version history` | 1 | 173 |
-| Then | `the export holds version {int} of my character` | 1 | 166 |
-| Then | `the export keeps my current portrait` | 1 | 177 |
-| Then | `the forward control is available` | 3 | 105 |
-| Then | `the forward control is unavailable` | 3 | 109 |
-| Then | `the navigator dates this version` | 1 | 140 |
-| Then | `the navigator describes this version` | 1 | 129 |
-| Then | `the navigator describes this version as {string}` | 3 | 133 |
-| Then | `the navigator gives the age of this version in relative terms` | 1 | 144 |
-| Then | `the navigator is hidden` | 1 | 82 |
-| Then | `the navigator shows version {int} of {int}` | 10 | 90 |
-| Then | `the original version has been dropped` | 1 | 158 |
+| Then | `my portrait is unchanged` | 3 | 155 |
+| Then | `the back control is available` | 4 | 90 |
+| Then | `the back control is unavailable` | 1 | 94 |
+| Then | `the export carries no version history` | 1 | 166 |
+| Then | `the export holds version {int} of my character` | 1 | 159 |
+| Then | `the export keeps my current portrait` | 1 | 170 |
+| Then | `the forward control is available` | 3 | 98 |
+| Then | `the forward control is unavailable` | 3 | 102 |
+| Then | `the navigator dates this version` | 1 | 133 |
+| Then | `the navigator describes this version` | 1 | 122 |
+| Then | `the navigator describes this version as {string}` | 2 | 126 |
+| Then | `the navigator gives the age of this version in relative terms` | 1 | 137 |
+| Then | `the navigator is hidden` | 1 | 75 |
+| Then | `the navigator shows version {int} of {int}` | 10 | 83 |
+| Then | `the original version has been dropped` | 1 | 151 |
 
 ## viewport.steps.ts
 
