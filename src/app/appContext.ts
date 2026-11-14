@@ -8,7 +8,8 @@ import type { VersionWarningBanner } from "@/components/VersionWarningBanner";
 import type { CompareView } from "@/components/CompareView";
 import type { VersionState } from "@/services/versionState";
 import type { VersionHistoryService } from "@/services/versionHistoryService";
-import { SystemClock, type Clock } from "@/services/clock";
+import type { Clock } from "@/services/clock";
+import { createAppClock } from "./testHooks";
 import type { Character } from "@/types/character";
 
 /**
@@ -42,8 +43,6 @@ export interface AppContext {
   readonly clock: Clock;
   readonly autoSaveService: AutoSaveService;
   readonly saveIndicator: SaveIndicator;
-  /** E2E-installed clock for the squash timer only, so it never fires on its own. */
-  readonly testTimer: Clock | undefined;
   actions: AppActions;
 }
 
@@ -52,9 +51,7 @@ function notWired(): Promise<void> {
 }
 
 export function createAppContext(): AppContext {
-  // Tests can set window.__testTimer before DOMContentLoaded
-  const testTimer = window.__testTimer;
-  const clock = new SystemClock();
+  const clock = createAppClock();
 
   const ctx: AppContext = {
     currentSheet: null,
@@ -73,7 +70,6 @@ export function createAppContext(): AppContext {
       }
     }, clock),
     saveIndicator: new SaveIndicator(),
-    testTimer,
     actions: { renderCharacterSheet: notWired, updateVersionNavigator: notWired },
   };
   return ctx;

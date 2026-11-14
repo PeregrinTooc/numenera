@@ -6,7 +6,7 @@ let lastAlertMessage = "";
 
 When("I import a file without character data", async function () {
   const dialogPromise = this.page.waitForEvent("dialog");
-  await importFile(this.page, "broken.numenera", { version: "1.0" });
+  await importFile(this.page, this.clock, "broken.numenera", { version: "1.0" });
   const dialog = await dialogPromise;
   lastAlertMessage = dialog.message();
   await dialog.dismiss();

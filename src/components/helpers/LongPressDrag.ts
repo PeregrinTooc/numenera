@@ -8,7 +8,7 @@
 
 import type { Clock, TimerHandle } from "@/services/clock";
 
-const HOLD_MS = 250;
+export const HOLD_MS = 250;
 const MOVE_TOLERANCE_PX = 10;
 
 export interface LongPressDragOptions<Id extends string> {

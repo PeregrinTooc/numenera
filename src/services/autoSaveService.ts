@@ -16,6 +16,8 @@ export interface AutoSaveEvents {
 type EventType = keyof AutoSaveEvents;
 type EventListener<E extends EventType> = (event: AutoSaveEvents[E]) => void;
 
+export const AUTO_SAVE_DEBOUNCE_MS = 300;
+
 export class AutoSaveService {
   private saveCallback: SaveCallback;
   private debounceMs: number;
@@ -27,7 +29,11 @@ export class AutoSaveService {
   };
   private savePromise: Promise<void> | null = null;
 
-  constructor(saveCallback: SaveCallback, clock: Clock, debounceMs: number = 300) {
+  constructor(
+    saveCallback: SaveCallback,
+    clock: Clock,
+    debounceMs: number = AUTO_SAVE_DEBOUNCE_MS
+  ) {
     this.saveCallback = saveCallback;
     this.debounceMs = debounceMs;
     this.clock = clock;

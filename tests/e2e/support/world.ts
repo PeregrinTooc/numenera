@@ -3,6 +3,7 @@ import { Browser, BrowserContext, Page } from "@playwright/test";
 import { TestStorageHelper } from "./testStorageHelper.js";
 import { DOMHelpers } from "./dom-helpers.js";
 import { SetupDsl } from "./setup.js";
+import type { ClockDriver } from "./clockDriver.js";
 import type { CharacterDsl } from "./character.js";
 import type { CardEditorDsl } from "./cardEditor.js";
 import type { ValueEditorDsl } from "./valueEditor.js";
@@ -33,6 +34,7 @@ export interface CustomWorld extends World {
   page: Page;
   storageHelper: TestStorageHelper;
   dom: DOMHelpers;
+  clock: ClockDriver;
   setup: SetupDsl;
   character: CharacterDsl;
   cardEditor: CardEditorDsl;
@@ -69,6 +71,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   page!: Page;
   storageHelper!: TestStorageHelper;
   dom!: DOMHelpers;
+  clock!: ClockDriver;
   setup!: SetupDsl;
   character!: CharacterDsl;
   cardEditor!: CardEditorDsl;

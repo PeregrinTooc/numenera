@@ -24,6 +24,7 @@ import { PlaywrightComparisonDriver } from "./comparisonDriver.js";
 import { waitForInitialVersionSaved } from "./app-ready.js";
 import { PlaywrightVersionHistoryDriver } from "./versionHistoryDriver.js";
 import { PlaywrightVersionSaveDriver } from "./versionSaveDriver.js";
+import { PlaywrightClockDriver } from "./clockDriver.js";
 import { BASE_URL } from "./serverUrl.js";
 
 let browser: Browser;
@@ -43,7 +44,7 @@ BeforeAll({ timeout: 60000 }, async function () {
   });
 });
 
-Before(async function (this: CustomWorld, { pickle }) {
+Before(async function (this: CustomWorld) {
   // Locale is pinned to en-US: i18next's LanguageDetector falls back to
   // navigator.language, which otherwise inherits the host OS locale. Step
   // definitions assert on hardcoded English strings, so an unpinned locale
@@ -59,6 +60,7 @@ Before(async function (this: CustomWorld, { pickle }) {
   });
   this.page = await this.context.newPage();
   this.dom = new DOMHelpers(this.page);
+  this.clock = new PlaywrightClockDriver(this.page);
   this.setup = new SetupDsl(this);
   const valueEditor = new PlaywrightValueEditorDriver(this.page);
   this.character = new CharacterDsl(new PlaywrightSheetDriver(this.page), this.setup, valueEditor);
@@ -69,7 +71,7 @@ Before(async function (this: CustomWorld, { pickle }) {
   this.screen = new ScreenDsl(viewport);
   this.layout = new LayoutDsl(
     DEVICE.sectionInput === "touch"
-      ? new TouchInput(this.page, viewport)
+      ? new TouchInput(this.page, viewport, this.clock)
       : new MouseInput(this.page, viewport)
   );
 
@@ -81,7 +83,7 @@ Before(async function (this: CustomWorld, { pickle }) {
   this.historySeed = new HistorySeedDsl(historyDriver, this.setup);
   this.history = new VersionHistoryDsl(
     historyDriver,
-    new PlaywrightVersionSaveDriver(this.page),
+    new PlaywrightVersionSaveDriver(this.page, this.clock),
     this.historySeed,
     this.character
   );
@@ -115,69 +117,9 @@ Before(async function (this: CustomWorld, { pickle }) {
   // shim itself is never transformed.
   await this.page.addInitScript("globalThis.__name = (fn) => fn;");
 
-  // Scenarios tagged @fake-clock drive the app's real timers and Date with page.clock;
-  // it only fakes timers created after install, so it must precede navigation.
-  if (pickle.tags.some((tag) => tag.name === "@fake-clock")) {
-    await this.page.clock.install();
-  }
-
-  // Inject test configuration and TestTimer BEFORE navigation
+  // Before the app boots, so it creates its ManualClock instead of the system clock.
   await this.page.addInitScript(() => {
-    class TestTimer {
-      private timers = new Map<number, () => void>();
-      private nextHandle = 1;
-
-      now(): number {
-        return Date.now();
-      }
-
-      setTimeout(callback: () => void, _delay: number): number {
-        const handle = this.nextHandle++;
-        this.timers.set(handle, callback);
-
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(
-            new CustomEvent("test-timer-scheduled", {
-              detail: { handle },
-            })
-          );
-        }
-
-        return handle;
-      }
-
-      clearTimeout(handle: number): void {
-        this.timers.delete(handle);
-      }
-
-      trigger(handle: number): void {
-        const callback = this.timers.get(handle);
-        if (callback) {
-          this.timers.delete(handle);
-          callback();
-        }
-      }
-
-      triggerAll(): void {
-        const callbacks = Array.from(this.timers.values());
-        this.timers.clear();
-        callbacks.forEach((cb) => cb());
-      }
-
-      getPendingCount(): number {
-        return this.timers.size;
-      }
-
-      clearAll(): void {
-        this.timers.clear();
-      }
-    }
-
-    // Structurally a Clock whose timers fire only when a driver triggers them; it has to be
-    // self-contained because evaluate() serialises it into the page.
-    window.__testTimer = new TestTimer() as unknown as typeof window.__testTimer;
-
-    window.__SQUASH_DELAY_MS__ = 1000;
+    window.__useManualClock = true;
   });
 
   // Clears through the app's own test APIs (window.__testStorage /

@@ -13,7 +13,6 @@ Feature: Auto-Save Indicator
         And the save indicator should show a timestamp
         And the save indicator should contain "Last saved:"
 
-    @fake-clock
     Scenario: Save indicator updates timestamp on subsequent edits
         Given the character sheet is displayed
         And I change my name to "Test Hero"
@@ -22,7 +21,6 @@ Feature: Auto-Save Indicator
         And I change my tier to 2
         Then the save timestamp should be updated
 
-    @fake-clock
     Scenario: Save indicator is debounced
         Given the character sheet is displayed
         When I rapidly edit the character name multiple times

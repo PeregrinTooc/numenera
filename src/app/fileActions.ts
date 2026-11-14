@@ -12,6 +12,8 @@ export interface FileActions {
   handleSaveAs: () => Promise<void>;
 }
 
+export const IMPORT_FEEDBACK_DELAY_MS = 100;
+
 /**
  * Show a character from a file. Warnings and the layout prompt wait until it
  * has rendered; alert() blocks, so the prompt opens once the warning is closed.
@@ -26,7 +28,7 @@ async function importCharacter(ctx: AppContext): Promise<void> {
   ctx.clock.setTimeout(() => {
     showImportWarnings(result.warnings);
     if (result.hasLayoutDifference) offerImportedLayout(ctx, result);
-  }, 100);
+  }, IMPORT_FEEDBACK_DELAY_MS);
 }
 
 function showImportWarnings(warnings: string[]): void {

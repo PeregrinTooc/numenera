@@ -72,7 +72,7 @@ When("I import the character file", async function (this: CustomWorld) {
     ...numeneraFile({ ...FULL_CHARACTER, name: IMPORTED_NAME }),
     ...this.importedFile,
   };
-  await importFile(this.page, "imported.numenera", file);
+  await importFile(this.page, this.clock, "imported.numenera", file);
 });
 
 Then("I should see a layout choice prompt", async function (this: CustomWorld) {

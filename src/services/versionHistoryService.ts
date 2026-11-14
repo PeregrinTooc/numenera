@@ -16,6 +16,8 @@ function emit(name: string): void {
   window.dispatchEvent(new CustomEvent(name));
 }
 
+export const SQUASH_DELAY_MS = 5000;
+
 export class VersionHistoryService {
   private manager: VersionHistoryManager;
   private squashDelayMs: number;
@@ -24,7 +26,11 @@ export class VersionHistoryService {
   private buffer = new ChangeBuffer();
   private isSquashInProgress: boolean = false;
 
-  constructor(manager: VersionHistoryManager, clock: Clock, squashDelayMs: number = 5000) {
+  constructor(
+    manager: VersionHistoryManager,
+    clock: Clock,
+    squashDelayMs: number = SQUASH_DELAY_MS
+  ) {
     this.manager = manager;
     this.squashDelayMs = squashDelayMs;
     this.clock = clock;

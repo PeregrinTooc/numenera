@@ -10,7 +10,8 @@ import type { Character } from "@/types/character";
 import type { CharacterVersion } from "@/types/versionHistory";
 import type { VersionHistoryService } from "@/services/versionHistoryService";
 import type { ConflictDetectionService } from "@/services/conflictDetectionService";
-import type { Clock } from "@/services/clock";
+import { SystemClock, type Clock } from "@/services/clock";
+import { ManualClock } from "@/services/manualClock";
 import type { AutoSaveService } from "@/services/autoSaveService";
 
 declare global {
@@ -28,11 +29,20 @@ declare global {
     };
     __versionHistoryService?: VersionHistoryService | null;
     __conflictDetectionService?: ConflictDetectionService | null;
-    __testTimer?: Clock;
+    /** E2E flag, set before boot: run the app on a clock that moves only when advanced. */
+    __useManualClock?: boolean;
+    /** The app's clock when `__useManualClock` is set; E2E drivers advance it. */
+    __manualClock?: ManualClock;
     __autoSaveService?: AutoSaveService;
-    /** E2E hook: overrides the version-history squash delay (ms). */
-    __SQUASH_DELAY_MS__?: number;
   }
+}
+
+/** The clock the app runs on: a manual one under E2E (exposed for drivers), else the system's. */
+export function createAppClock(): Clock {
+  if (!window.__useManualClock) return new SystemClock();
+  const clock = new ManualClock();
+  window.__manualClock = clock;
+  return clock;
 }
 
 /** Expose storage, version-history and auto-save APIs for E2E tests (dev and production). */

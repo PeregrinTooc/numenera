@@ -8,10 +8,12 @@ import {
   sectionLocator,
   sectionOrder,
   TouchGesture,
-  withPausedClock,
   zonePoint,
   type SectionZone,
 } from "./sections.js";
+import { LIVE_PREVIEW_DELAY_MS } from "@/components/helpers/LivePreview";
+import { HOLD_MS } from "@/components/helpers/LongPressDrag";
+import type { ClockDriver } from "./clockDriver.js";
 import type { ViewportDriver } from "./viewportDriver.js";
 
 export interface DropPlace {
@@ -53,10 +55,8 @@ export class MouseInput implements SectionInput {
     const page = this.page;
     await this.viewport.withFullHeight(async () => {
       const point = zonePoint(await boxOf(page, target), edge);
-      await withPausedClock(page, async () => {
-        await holdSectionOver(page, source, point);
-        await releaseSectionDrag(page, point);
-      });
+      await holdSectionOver(page, source, point);
+      await releaseSectionDrag(page, point);
     });
     await expectDragEnded(page, source);
   }
@@ -65,23 +65,19 @@ export class MouseInput implements SectionInput {
 /** Comfortably below the top auto-scroll zone. */
 const EDGE_CLEARANCE_PX = 2 * EDGE_ZONE_PX;
 
-/** The app's long-press delay, advanced on the paused page clock. */
-const LONG_PRESS_MS = 250;
-
 export class TouchInput implements SectionInput {
   constructor(
     private page: Page,
-    private viewport: ViewportDriver
+    private viewport: ViewportDriver,
+    private clock: ClockDriver
   ) {}
 
   async dragSection(source: string, { target, edge }: DropPlace): Promise<void> {
     const page = this.page;
     await this.viewport.withFullHeight(async () => {
-      await withPausedClock(page, async () => {
-        const gesture = await this.pressAndHold(source);
-        await gesture.moveTo(zonePoint(await boxOf(page, target), edge));
-        await gesture.end();
-      });
+      const gesture = await this.pressAndHold(source);
+      await gesture.moveTo(zonePoint(await boxOf(page, target), edge));
+      await gesture.end();
     });
     await expectDragEnded(page, source);
   }
@@ -89,7 +85,7 @@ export class TouchInput implements SectionInput {
   /** Leaves the finger down on the section once it is in drag mode. */
   async longPress(source: string): Promise<void> {
     await sectionLocator(this.page, source).scrollIntoViewIfNeeded();
-    await withPausedClock(this.page, () => this.pressAndHold(source));
+    await this.pressAndHold(source);
   }
 
   async expectInDragMode(name: string): Promise<void> {
@@ -110,7 +106,7 @@ export class TouchInput implements SectionInput {
     await expect(destination).not.toBeInViewport();
 
     const from = await nearTopOf(section);
-    const gesture = await withPausedClock(page, () => this.pressAndHold(source));
+    const gesture = await this.pressAndHold(source);
     await gesture.moveTo({ x: from.x, y: 4 });
     await expect
       .poll(async () => (await destination.boundingBox())?.y ?? -Infinity, { timeout: 10000 })
@@ -124,9 +120,16 @@ export class TouchInput implements SectionInput {
     // Not restored: the drag stays held into the next step
     await this.viewport.growToFullHeight();
     const orderBefore = await sectionOrder(page);
-    const gesture = await withPausedClock(page, () => this.pressAndHold(source));
+    const gesture = await this.pressAndHold(source);
     await gesture.moveTo(zonePoint(await boxOf(page, target), edge));
-    await expect.poll(() => sectionOrder(page)).not.toEqual(orderBefore);
+    // The dwell starts once the browser reports the finger over the place, so keep
+    // letting time pass until the preview has rearranged the sheet.
+    await expect
+      .poll(async () => {
+        await this.clock.advance(LIVE_PREVIEW_DELAY_MS);
+        return sectionOrder(page);
+      })
+      .not.toEqual(orderBefore);
     await finishSectionSlides(page);
     return new HeldTouchDrag(page, source, gesture);
   }
@@ -160,7 +163,7 @@ export class TouchInput implements SectionInput {
   private async pressAndHold(source: string): Promise<TouchGesture> {
     const section = sectionLocator(this.page, source);
     const gesture = await TouchGesture.start(this.page, await nearTopOf(section));
-    await this.page.clock.runFor(LONG_PRESS_MS);
+    await this.clock.advance(HOLD_MS);
     await expect(section).toHaveClass(/\bdragging\b/);
     return gesture;
   }

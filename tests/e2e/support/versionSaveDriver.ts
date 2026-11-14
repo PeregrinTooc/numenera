@@ -1,4 +1,6 @@
 import type { Page } from "@playwright/test";
+import { SQUASH_DELAY_MS } from "@/services/versionHistoryService";
+import type { ClockDriver } from "./clockDriver.js";
 import { waitForSaveComplete } from "./save.js";
 
 const VERSION_COUNTER = '[data-testid="version-counter"]';
@@ -25,11 +27,14 @@ export interface VersionSaveDriver {
 }
 
 export class PlaywrightVersionSaveDriver implements VersionSaveDriver {
-  constructor(private page: Page) {}
+  constructor(
+    private page: Page,
+    private clock: ClockDriver
+  ) {}
 
   /**
-   * Resolves once a forced squash has been persisted and the app has finished
-   * reacting to it. The app rebuilds the version navigator as the last step of
+   * Lets the squash delay pass and resolves once the app has finished reacting
+   * to the squash. The app rebuilds the version navigator as the last step of
    * handling "version-squashed", so a counter element without the pre-squash
    * mark means that handling is done. An empty buffer squashes nothing and
    * emits no event. A still-pending auto-save is flushed first: its completion
@@ -38,17 +43,16 @@ export class PlaywrightVersionSaveDriver implements VersionSaveDriver {
    */
   async settleEdits(): Promise<void> {
     await waitForSaveComplete(this.page);
-    const squashes = await this.page.evaluate(async (counterSelector) => {
+    const squashes = await this.page.evaluate((counterSelector) => {
       const service = window.__versionHistoryService;
       if (!service) {
         throw new Error("Version history service not available. Make sure the app has loaded.");
       }
-      const hasBufferedChanges = service.getBufferLength() > 0;
       document.querySelector(counterSelector)?.setAttribute("data-pre-squash", "");
-      await service.forceSquash();
-      return hasBufferedChanges;
+      return service.getBufferLength() > 0;
     }, VERSION_COUNTER);
     if (squashes) {
+      await this.clock.advance(SQUASH_DELAY_MS);
       await this.page.waitForSelector(`${VERSION_COUNTER}:not([data-pre-squash])`);
     }
   }

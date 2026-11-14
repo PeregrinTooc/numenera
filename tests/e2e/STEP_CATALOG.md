@@ -132,19 +132,19 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I note the current save timestamp` | 1 | 9 |
-| When | `I rapidly edit the character name multiple times` | 1 | 19 |
-| When | `I wait for {int} second(s)` | 1 | 15 |
-| Given | `the character sheet is displayed` | 6 | 4 |
-| Then | `the character should be saved only once after changes stop` | 1 | 96 |
-| Then | `the save indicator should be in the lower-right corner` | 1 | 119 |
-| Then | `the save indicator should be visible` | 2 | 66 |
-| Then | `the save indicator should contain {string}` | 3 | 79 |
-| Then | `the save indicator should have subtle styling` | 1 | 138 |
-| Then | `the save indicator should show a single timestamp` | 1 | 106 |
-| Then | `the save indicator should show a timestamp` | 1 | 71 |
-| Then | `the save indicator should still be visible` | 1 | 114 |
-| Then | `the save timestamp should be updated` | 2 | 87 |
+| When | `I note the current save timestamp` | 1 | 10 |
+| When | `I rapidly edit the character name multiple times` | 1 | 20 |
+| When | `I wait for {int} second(s)` | 1 | 16 |
+| Given | `the character sheet is displayed` | 6 | 5 |
+| Then | `the character should be saved only once after changes stop` | 1 | 97 |
+| Then | `the save indicator should be in the lower-right corner` | 1 | 120 |
+| Then | `the save indicator should be visible` | 2 | 67 |
+| Then | `the save indicator should contain {string}` | 3 | 80 |
+| Then | `the save indicator should have subtle styling` | 1 | 139 |
+| Then | `the save indicator should show a single timestamp` | 1 | 107 |
+| Then | `the save indicator should show a timestamp` | 1 | 72 |
+| Then | `the save indicator should still be visible` | 1 | 115 |
+| Then | `the save timestamp should be updated` | 2 | 88 |
 
 ## basic-info-editing.steps.ts
 
@@ -318,13 +318,13 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all character data should be correctly displayed` | 1 | 66 |
-| When | `I import a character file with tier {int}` | 1 | 48 |
+| Then | `all character data should be correctly displayed` | 1 | 76 |
+| When | `I import a character file with tier {int}` | 1 | 53 |
 | When | `I import a valid character file with matching schema version` | 3 | 40 |
-| Then | `the character name should still be {string}` | 1 | 77 |
-| Then | `the character should be imported successfully` | 1 | 60 |
-| Then | `the tier should have been adjusted to {string}` | 1 | 53 |
-| Then | `the tier should still be {string}` | 1 | 85 |
+| Then | `the character name should still be {string}` | 1 | 87 |
+| Then | `the character should be imported successfully` | 1 | 70 |
+| Then | `the tier should have been adjusted to {string}` | 1 | 63 |
+| Then | `the tier should still be {string}` | 1 | 95 |
 
 ## export-enhancement.steps.ts
 
@@ -502,17 +502,17 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 49 |
-| When | `I hold the {string} section over the {zone} of the {string} section as the window shows it` | 1 | 58 |
-| When | `I keep still for a moment` | 9 | 87 |
-| When | `I release the section outside the sheet` | 2 | 92 |
-| When | `I release the section where it is` | 1 | 105 |
-| Then | `no drop preview should be shown` | 1 | 142 |
-| Given | `the {string} section is at the top of the window` | 1 | 65 |
-| Then | `the {string} section should not have moved up or down on screen` | 1 | 74 |
-| Then | `the {string} section should preview {string} in its place` | 1 | 121 |
-| Then | `the {string} section should preview {string} on its right` | 1 | 111 |
-| Then | `the row of {string} should preview {string} below it` | 1 | 131 |
+| When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 48 |
+| When | `I hold the {string} section over the {zone} of the {string} section as the window shows it` | 1 | 57 |
+| When | `I keep still for a moment` | 9 | 86 |
+| When | `I release the section outside the sheet` | 2 | 90 |
+| When | `I release the section where it is` | 1 | 103 |
+| Then | `no drop preview should be shown` | 1 | 140 |
+| Given | `the {string} section is at the top of the window` | 1 | 64 |
+| Then | `the {string} section should not have moved up or down on screen` | 1 | 73 |
+| Then | `the {string} section should preview {string} in its place` | 1 | 119 |
+| Then | `the {string} section should preview {string} on its right` | 1 | 109 |
+| Then | `the row of {string} should preview {string} below it` | 1 | 129 |
 
 ## section-reordering.steps.ts
 
