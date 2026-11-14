@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **482** in 48 files
-- Feature step lines: **1790**
+- Step definitions: **480** in 48 files
+- Feature step lines: **1788**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -77,8 +77,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [version-history-assertions.steps.ts](#versionhistoryassertionsstepsts) | 3 | 0 |
 | [version-history-given-basic.steps.ts](#versionhistorygivenbasicstepsts) | 3 | 0 |
 | [version-history-given-data.steps.ts](#versionhistorygivendatastepsts) | 1 | 0 |
-| [version-history-navigation.steps.ts](#versionhistorynavigationstepsts) | 3 | 0 |
-| [version-history-navigator-state.steps.ts](#versionhistorynavigatorstatestepsts) | 4 | 0 |
+| [version-history-navigation.steps.ts](#versionhistorynavigationstepsts) | 2 | 0 |
+| [version-history-navigator-state.steps.ts](#versionhistorynavigatorstatestepsts) | 3 | 0 |
 | [version-history.steps.ts](#versionhistorystepsts) | 47 | 0 |
 | [viewport.steps.ts](#viewportstepsts) | 2 | 0 |
 
@@ -725,7 +725,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the character has {int} versions in history` | 19 | 17 |
+| Given | `the character has {int} versions in history` | 16 | 17 |
 | Given | `the character has a version with multiple basic info changes` | 1 | 42 |
 | Given | `the character has no version history yet` | 2 | 5 |
 
@@ -739,17 +739,15 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the backward navigation arrow` | 5 | 10 |
-| When | `I refresh the browser` | 3 | 14 |
-| When | `I view the character sheet` | 2 | 5 |
+| When | `I click the backward navigation arrow` | 5 | 5 |
+| When | `I refresh the browser` | 1 | 9 |
 
 ## version-history-navigator-state.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `all edit controls should be enabled` | 1 | 9 |
-| Then | `the version counter should show {string}` | 3 | 19 |
-| Then | `the version navigator should be visible` | 1 | 14 |
+| Then | `the version counter should show {string}` | 3 | 14 |
 | Then | `the version navigator should not be visible` | 1 | 4 |
 
 ## version-history.steps.ts
@@ -768,7 +766,7 @@ pattern this script does not understand):
 | When | `I go to version {int}` | 15 | 50 |
 | When | `I redo with Ctrl+Shift+Z` | 1 | 101 |
 | When | `I redo with Ctrl+Y` | 8 | 97 |
-| When | `I reopen my character` | 7 | 105 |
+| When | `I reopen my character` | 9 | 105 |
 | When | `I restore this version` | 3 | 73 |
 | When | `I return to the latest version` | 1 | 77 |
 | Then | `I see my character as it was in version {int}` | 12 | 197 |
@@ -776,7 +774,7 @@ pattern this script does not understand):
 | When | `I step back to the previous version` | 19 | 58 |
 | When | `I step forward to the next version` | 4 | 62 |
 | When | `I undo with Ctrl+Z` | 19 | 93 |
-| Given | `my character has a history of {int} versions` | 25 | 7 |
+| Given | `my character has a history of {int} versions` | 28 | 7 |
 | Given | `my character has a history of {int} versions with different data` | 1 | 14 |
 | Given | `my character has a portrait` | 3 | 46 |
 | Given | `my character has no history yet` | 4 | 3 |
@@ -801,7 +799,7 @@ pattern this script does not understand):
 | Then | `the navigator describes this version as {string}` | 15 | 179 |
 | Then | `the navigator gives the age of this version in relative terms` | 1 | 190 |
 | Then | `the navigator is hidden` | 1 | 113 |
-| Then | `the navigator shows version {int} of {int}` | 24 | 136 |
+| Then | `the navigator shows version {int} of {int}` | 25 | 136 |
 | Then | `the original version has been dropped` | 1 | 204 |
 
 ## viewport.steps.ts

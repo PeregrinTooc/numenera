@@ -12,11 +12,6 @@ Then("all edit controls should be enabled", async function (this: CustomWorld) {
   expect(readOnlyIndicator).toBe(0);
 });
 
-Then("the version navigator should be visible", async function (this: CustomWorld) {
-  const versionNavigator = this.page.locator('[data-testid="version-navigator"]');
-  await expect(versionNavigator).toBeVisible();
-});
-
 Then(
   "the version counter should show {string}",
   async function (this: CustomWorld, counterText: string) {
