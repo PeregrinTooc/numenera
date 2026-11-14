@@ -304,7 +304,33 @@ their own, and write the other stat-edit scenarios at the intent level.
 4. **Move the rest over one feature file at a time,** whenever a file is already
    being touched for other work. Don't do it as one big rewrite.
    `card-creation-*` and `combat` have the most direct browser calls and gain
-   the most.
+   the most. In progress. Moved so far:
+   - **Card deletion leftovers.** The version-history specs discard cyphers by
+     name; the index-based delete step is gone. `SetupDsl.newCharacter` seeds a
+     character whose history starts at its own initial version, so a data
+     `Given` does not add a phantom version.
+   - **`card-creation-*`.** A `CardEditorDriver` (interface + Playwright) owns
+     the card edit modal, behind a `CardEditorDsl` that holds the kind being
+     edited. Scenarios say "I start a new attack", "I set its name to …",
+     "I save the card". `CardsDsl` and four step files are deleted. Card steps
+     in the version-history, storage-failure, resource-tracker and
+     data-validation specs use the same vocabulary. The focus-trap spec stays
+     gesture-level through the driver and now really asserts that focus wraps
+     at both ends.
+   - **`combat`.** Display, empty states, theming and the wide-screen/phone
+     arrangement go through `CharacterDsl` and `SheetDriver`.
+   - **`stat-pool-editing`.** A `ValueEditorDriver` owns the generic edit-value
+     modal. `stat-value-editor.feature` is the one spec of the modal's
+     interaction; stat edits are written as "I change my Might pool to 12".
+
+   Still to move: the remaining users of the generic value-editor steps
+   (`basic-info-editing`, `resource-tracker-editing`,
+   `additional-fields-editing`), `empty-fields-visibility` (still uses the
+   no-op "the character data is loaded"), `character-display` (its shared
+   "the page should not scroll horizontally" step calls the page directly),
+   the version-history step vocabulary, and the remaining feature files.
+   Viewport switching currently sits on `CharacterDsl`/`SheetDriver`; it
+   belongs in its own place once a second area needs it.
 
 ---
 
