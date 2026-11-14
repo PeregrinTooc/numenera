@@ -31,7 +31,7 @@ describe("ExportManager", () => {
       const mockHandle = createMockHandle();
       await ctx.seedPersistedHandle(mockHandle);
 
-      ctx.exportManager = new ExportManager();
+      ctx.exportManager = new ExportManager(ctx.clock);
 
       await vi.waitFor(() => expect(ctx.exportManager.hasRememberedLocation()).toBe(true));
     });
@@ -153,18 +153,13 @@ describe("ExportManager", () => {
     });
 
     it("revokes the object URL asynchronously, so Firefox has time to start the download", async () => {
-      vi.useFakeTimers({ toFake: ["setTimeout"] });
-      try {
-        const { downloads, revokeSpy } = setupDownloadTest();
+      const { downloads, revokeSpy } = setupDownloadTest();
 
-        await ctx.exportManager.export(mockCharacter);
+      await ctx.exportManager.export(mockCharacter);
 
-        expect(revokeSpy).not.toHaveBeenCalledWith(downloads[0].href);
-        vi.runAllTimers();
-        expect(revokeSpy).toHaveBeenCalledWith(downloads[0].href);
-      } finally {
-        vi.useRealTimers();
-      }
+      expect(revokeSpy).not.toHaveBeenCalledWith(downloads[0].href);
+      ctx.clock.advance(0);
+      expect(revokeSpy).toHaveBeenCalledWith(downloads[0].href);
     });
   });
 });

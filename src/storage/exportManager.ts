@@ -1,4 +1,5 @@
 import { downloadTextFile } from "@/utils/downloadFile";
+import type { Clock } from "@/services/clock";
 import type { Character } from "@/types/character";
 import { SCHEMA_VERSION } from "./storageConstants";
 import { characterFileTypes, type CharacterFileData } from "./fileStorage";
@@ -15,7 +16,7 @@ export class ExportManager {
   private fileHandle: FileSystemFileHandle | null = null;
   private initPromise: Promise<void>;
 
-  constructor() {
+  constructor(private readonly clock: Clock) {
     // Start loading persisted handle but don't block constructor
     this.initPromise = this.loadPersistedHandle().catch((error) => {
       console.warn("Failed to load persisted handle during init:", error);
@@ -127,7 +128,7 @@ export class ExportManager {
 
   private async downloadFile(character: Character): Promise<void> {
     const filename = this.generateFilename(character);
-    downloadTextFile(filename, this.serialize(character), "application/json");
+    downloadTextFile(filename, this.serialize(character), "application/json", this.clock);
   }
 
   private serialize(character: Character): string {

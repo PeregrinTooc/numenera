@@ -108,11 +108,12 @@ async function loadInitialCharacter(): Promise<{ character: Character; stored: C
 }
 
 /** While a kept copy of unreadable data exists, ask what to do with it on every load. */
-async function offerKeptUnreadableBackup(): Promise<void> {
+async function offerKeptUnreadableBackup(ctx: AppContext): Promise<void> {
   await offerUnreadableBackup({
     loadBackup: loadCorruptedCharacterBackup,
     deleteBackup: deleteCorruptedCharacterBackup,
-    download: (filename, content) => downloadTextFile(filename, content, "application/json"),
+    download: (filename, content) =>
+      downloadTextFile(filename, content, "application/json", ctx.clock),
     showChoice: (handlers) => ModalService.openUnreadableCharacterModal(handlers),
     now: () => new Date(),
   });
@@ -176,7 +177,7 @@ export async function bootstrap(ctx: AppContext): Promise<void> {
   }
 
   await ctx.actions.renderCharacterSheet(initialCharacter);
-  await offerKeptUnreadableBackup();
+  await offerKeptUnreadableBackup(ctx);
   await initVersionHistory(ctx, initialCharacter, stored);
   await initConflictDetection(ctx, initialCharacter);
   registerVersionKeyboardShortcuts(ctx);

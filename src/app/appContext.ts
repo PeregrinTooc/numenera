@@ -65,7 +65,7 @@ export function createAppContext(): AppContext {
     versionNavigator: null,
     versionWarningBanner: null,
     compareView: null,
-    exportManager: new ExportManager(),
+    exportManager: new ExportManager(clock),
     clock,
     autoSaveService: new AutoSaveService(async () => {
       if (ctx.currentCharacter) {
