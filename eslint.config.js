@@ -195,7 +195,7 @@ export default [
       "build",
       "coverage",
       "*.config.js",
-      "scripts",
+      "scripts/**/*.js",
       "stryker-tmp",
       ".claude",
     ],
