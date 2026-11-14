@@ -12,8 +12,59 @@ permissions:
   contents: read
 
 jobs:
+  # Fingerprints the commit (scripts/change-inputs.js) and looks up whether
+  # those inputs already passed every job, and whether that app is already
+  # deployed: a push of documentation alone, or a revert, then runs nothing.
+  # The cache entries are only markers. A manual run always verifies and deploys.
+  changes:
+    name: Find what changed
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    outputs:
+      inputs: ${{ steps.fingerprint.outputs.inputs }}
+      app: ${{ steps.fingerprint.outputs.app }}
+      verify: ${{ github.event_name == 'workflow_dispatch' || steps.verified.outputs.cache-hit != 'true' }}
+      deploy: >-
+        ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        && (github.event_name == 'workflow_dispatch' || steps.deployed.outputs.cache-hit != 'true') }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Fingerprint the inputs
+        id: fingerprint
+        run: |
+          echo "inputs=$(node scripts/change-inputs.js fingerprint)" >> "$GITHUB_OUTPUT"
+          echo "app=$(node scripts/change-inputs.js fingerprint --app)" >> "$GITHUB_OUTPUT"
+
+      - name: Look up a green run of these inputs
+        id: verified
+        uses: actions/cache/restore@v6
+        with:
+          path: .ci-marker
+          key: verified-${{ steps.fingerprint.outputs.inputs }}
+          lookup-only: true
+
+      - name: Look up a deployment of this app
+        id: deployed
+        uses: actions/cache/restore@v6
+        with:
+          path: .ci-marker
+          key: deployed-${{ steps.fingerprint.outputs.app }}
+          lookup-only: true
+
+  # Also runs, checks and all, when only a deployment is missing: the checks
+  # are cheap next to the E2E jobs, which that case skips.
   build-test:
     name: Build and test
+    needs: changes
+    if: needs.changes.outputs.verify == 'true' || needs.changes.outputs.deploy == 'true'
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -58,11 +109,11 @@ jobs:
         run: npm run build
 
       - name: Setup Pages
-        if: github.event_name != 'pull_request'
+        if: needs.changes.outputs.deploy == 'true'
         uses: actions/configure-pages@v6
 
       - name: Upload artifact
-        if: github.event_name != 'pull_request'
+        if: needs.changes.outputs.deploy == 'true'
         uses: actions/upload-pages-artifact@v5
         with:
           path: "./dist"
@@ -72,6 +123,8 @@ jobs:
   # slowest shard: the WebKit profiles take about three times as long.
   e2e:
     name: E2E (${{ matrix.device }}, ${{ matrix.shard }}/4)
+    needs: changes
+    if: needs.changes.outputs.verify == 'true'
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -123,13 +176,33 @@ jobs:
         env:
           E2E_SHARD: ${{ matrix.shard }}/4
 
+  # Marks these inputs as green, so the next run of the same content skips.
+  record:
+    name: Record the green inputs
+    needs: [changes, build-test, e2e]
+    if: needs.changes.outputs.verify == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - run: touch .ci-marker
+
+      - uses: actions/cache/save@v6
+        with:
+          path: .ci-marker
+          key: verified-${{ needs.changes.outputs.inputs }}
+
   deploy:
     name: Deploy to GitHub Pages
-    needs: [build-test, e2e]
+    needs: [changes, build-test, e2e]
     runs-on: ubuntu-24.04
-    # Only ever publish the default branch. Pull requests run the full test
-    # suite above but must never reach production.
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    # Only ever publish the default branch, which the changes job decides.
+    # Pull requests run the full test suite above but must never reach
+    # production. The E2E jobs are skipped when these inputs passed before.
+    if: >-
+      !cancelled() && needs.changes.outputs.deploy == 'true'
+      && needs.build-test.result == 'success'
+      && contains(fromJSON('["success", "skipped"]'), needs.e2e.result)
     permissions:
       pages: write
       id-token: write
@@ -143,3 +216,11 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+
+      - run: touch .ci-marker
+
+      - name: Record the deployed app
+        uses: actions/cache/save@v6
+        with:
+          path: .ci-marker
+          key: deployed-${{ needs.changes.outputs.app }}
