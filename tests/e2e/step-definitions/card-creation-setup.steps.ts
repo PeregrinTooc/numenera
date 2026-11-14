@@ -12,14 +12,6 @@ async function givenCharacterHasCards(
   await world.cards.expectHasCount(cardType, count);
 }
 
-Given("the character has {int} cypher cards", async function (this: CustomWorld, count: number) {
-  await givenCharacterHasCards(this, "cypher", count);
-});
-
-Given("the character has {int} equipment cards", async function (this: CustomWorld, count: number) {
-  await givenCharacterHasCards(this, "equipment", count);
-});
-
 Given("the character has {int} artifact cards", async function (this: CustomWorld, count: number) {
   await givenCharacterHasCards(this, "artifact", count);
 });
@@ -38,14 +30,6 @@ Given(
     await givenCharacterHasCards(this, "special-ability", count);
   }
 );
-
-Then("I should see an add cypher button", async function (this: CustomWorld) {
-  await expect(this.page.locator(CARD_CONFIGS.cypher.addButtonTestId)).toBeVisible();
-});
-
-Then("I should see an add equipment button", async function (this: CustomWorld) {
-  await expect(this.page.locator(CARD_CONFIGS.equipment.addButtonTestId)).toBeVisible();
-});
 
 Then("I should see an add artifact button", async function (this: CustomWorld) {
   await expect(this.page.locator(CARD_CONFIGS.artifact.addButtonTestId)).toBeVisible();

@@ -3,32 +3,6 @@ import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { CARD_CONFIGS } from "../support/cardTestFixtures.js";
 
-Then("the modal should show cypher fields", async function (this: CustomWorld) {
-  const fields = CARD_CONFIGS.cypher.fieldTestIds;
-  await expect(this.page.locator(fields.name)).toBeVisible();
-  await expect(this.page.locator(fields.level)).toBeVisible();
-  await expect(this.page.locator(fields.effect)).toBeVisible();
-});
-
-Then("all cypher fields should be empty", async function (this: CustomWorld) {
-  const fields = CARD_CONFIGS.cypher.fieldTestIds;
-  await expect(this.page.locator(fields.name)).toHaveValue("");
-  await expect(this.page.locator(fields.level)).toHaveValue("");
-  await expect(this.page.locator(fields.effect)).toHaveValue("");
-});
-
-Then("the modal should show equipment fields", async function (this: CustomWorld) {
-  const fields = CARD_CONFIGS.equipment.fieldTestIds;
-  await expect(this.page.locator(fields.name)).toBeVisible();
-  await expect(this.page.locator(fields.description)).toBeVisible();
-});
-
-Then("all equipment fields should be empty", async function (this: CustomWorld) {
-  const fields = CARD_CONFIGS.equipment.fieldTestIds;
-  await expect(this.page.locator(fields.name)).toHaveValue("");
-  await expect(this.page.locator(fields.description)).toHaveValue("");
-});
-
 Then("the modal should show artifact fields", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.artifact.fieldTestIds;
   await expect(this.page.locator(fields.name)).toBeVisible();
@@ -102,13 +76,6 @@ When(
   "I fill in the equipment name with {string}",
   async function (this: CustomWorld, value: string) {
     await this.page.locator(CARD_CONFIGS.equipment.fieldTestIds.name).fill(value);
-  }
-);
-
-When(
-  "I fill in the equipment description with {string}",
-  async function (this: CustomWorld, value: string) {
-    await this.page.locator(CARD_CONFIGS.equipment.fieldTestIds.description).fill(value);
   }
 );
 

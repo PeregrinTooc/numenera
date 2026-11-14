@@ -7,10 +7,6 @@ Then("I should see {int} cypher card(s)", async function (this: CustomWorld, cou
   await this.cards.expectHasCount("cypher", count);
 });
 
-Then("I should see {int} equipment cards", async function (this: CustomWorld, count: number) {
-  await this.cards.expectHasCount("equipment", count);
-});
-
 Then("I should see {int} artifact cards", async function (this: CustomWorld, count: number) {
   await this.cards.expectHasCount("artifact", count);
 });
@@ -26,46 +22,6 @@ Then("I should see {int} ability cards", async function (this: CustomWorld, coun
 Then("I should see {int} special ability cards", async function (this: CustomWorld, count: number) {
   await this.cards.expectHasCount("special-ability", count);
 });
-
-Then(
-  "I should see a cypher card with name {string}",
-  async function (this: CustomWorld, name: string) {
-    const card = this.page.locator(CARD_CONFIGS.cypher.itemTestId).filter({ hasText: name });
-    await expect(card).toBeVisible();
-  }
-);
-
-Then(
-  "the cypher {string} should have level {string}",
-  async function (this: CustomWorld, name: string, level: string) {
-    const card = this.page.locator(CARD_CONFIGS.cypher.itemTestId).filter({ hasText: name });
-    await expect(card).toContainText(level);
-  }
-);
-
-Then(
-  "the cypher {string} should have effect {string}",
-  async function (this: CustomWorld, name: string, effect: string) {
-    const card = this.page.locator(CARD_CONFIGS.cypher.itemTestId).filter({ hasText: name });
-    await expect(card).toContainText(effect);
-  }
-);
-
-Then(
-  "I should see an equipment card with name {string}",
-  async function (this: CustomWorld, name: string) {
-    const card = this.page.locator(CARD_CONFIGS.equipment.itemTestId).filter({ hasText: name });
-    await expect(card).toBeVisible();
-  }
-);
-
-Then(
-  "the equipment {string} should have description {string}",
-  async function (this: CustomWorld, name: string, description: string) {
-    const card = this.page.locator(CARD_CONFIGS.equipment.itemTestId).filter({ hasText: name });
-    await expect(card).toContainText(description);
-  }
-);
 
 Then(
   "I should see an artifact card with name {string}",
