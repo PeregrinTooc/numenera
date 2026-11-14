@@ -26,10 +26,10 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **511** in 51 files
-- Feature step lines: **1825**
+- Step definitions: **512** in 51 files
+- Feature step lines: **1820**
 - Definitions with no feature usage: **0**
-- Feature lines matching no definition: **3**
+- Feature lines matching no definition: **1**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
@@ -43,7 +43,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 8 | 0 |
 | [card-reordering-abilities.steps.ts](#cardreorderingabilitiesstepsts) | 5 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 8 | 0 |
-| [character-display.steps.ts](#characterdisplaystepsts) | 9 | 0 |
+| [character-display.steps.ts](#characterdisplaystepsts) | 10 | 0 |
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
@@ -90,8 +90,6 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 These would be reported as *undefined* by Cucumber (or are matched by a
 pattern this script does not understand):
 
-- `character-display.feature:81` — my character's name is "Kael <The Swift> & \"Red\" O'Connor"
-- `character-display.feature:82` — my character sheet shows my name as "Kael <The Swift> & \"Red\" O'Connor"
 - `section-rearrangement.feature:52` — I drag the "Cyphers" section onto the middle <side> of the "Items" section
 
 ## ability-enhancements.steps.ts
@@ -168,10 +166,10 @@ pattern this script does not understand):
 | When | `I try to change my {word} to nothing` | 1 | 25 |
 | Then | `my {word} looks clickable` | 1 | 62 |
 | Given | `my character has no {word}` | 2 | 51 |
-| Then | `my character sheet shows my {word} as {string}` | 14 | 33 |
+| Then | `my character sheet shows my {word} as {string}` | 15 | 33 |
 | Then | `my character sheet shows my tier as {int}` | 4 | 47 |
 | Then | `my character sheet shows the placeholder for my {word}` | 1 | 55 |
-| Given | `my character's {word} is {string}` | 10 | 3 |
+| Given | `my character's {word} is {string}` | 11 | 3 |
 | Given | `my character's tier is {int}` | 2 | 10 |
 | Then | `the change is refused` | 2 | 29 |
 
@@ -244,14 +242,15 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `I am on the character sheet page` | 29 | 14 |
+| Given | `my character has every kind of entry` | 1 | 29 |
 | Given | `my character has these stats:` | 1 | 25 |
 | Given | `my character has this basic information:` | 1 | 18 |
-| Then | `my character sheet lists its sections in this order:` | 1 | 58 |
-| Then | `my character sheet shows no untranslated text` | 7 | 40 |
-| Then | `my character sheet shows these stats:` | 1 | 36 |
-| Then | `my character sheet's editable values and add controls have translated accessible labels` | 1 | 44 |
-| Given | `my character's name is {int} characters long without spaces` | 1 | 29 |
-| Then | `my character's name is shown as plain text, not as markup` | 1 | 51 |
+| Then | `my character sheet lists its sections in this order:` | 1 | 62 |
+| Then | `my character sheet shows these stats:` | 1 | 40 |
+| Then | `my character sheet's editable values and add controls have translated accessible labels` | 1 | 48 |
+| Given | `my character's name is {int} characters long without spaces` | 1 | 33 |
+| Then | `my character's name is shown as plain text, not as markup` | 1 | 55 |
+| Then | `nothing on my character sheet is left untranslated` | 1 | 44 |
 
 ## character-file-export.steps.ts
 

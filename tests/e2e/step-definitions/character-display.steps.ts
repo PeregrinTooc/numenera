@@ -27,6 +27,10 @@ Given("my character has these stats:", async function (this: CustomWorld, table:
   await this.character.hasStats(statRows(table));
 });
 
+Given("my character has every kind of entry", async function (this: CustomWorld) {
+  await this.character.hasEveryKindOfEntry();
+});
+
 Given(
   "my character's name is {int} characters long without spaces",
   async function (this: CustomWorld, length: number) {
@@ -38,7 +42,7 @@ Then("my character sheet shows these stats:", async function (this: CustomWorld,
   await this.character.expectStatsShow(statRows(table));
 });
 
-Then("my character sheet shows no untranslated text", async function (this: CustomWorld) {
+Then("nothing on my character sheet is left untranslated", async function (this: CustomWorld) {
   await this.character.expectNoUntranslatedText();
 });
 

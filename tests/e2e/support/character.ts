@@ -80,6 +80,17 @@ export class CharacterDsl {
     });
   }
 
+  async hasEveryKindOfEntry(): Promise<void> {
+    await this.setup.newCharacter(
+      Object.fromEntries(
+        Object.keys(EMPTY_ARRAYS).map((collection) => [
+          collection,
+          FULL_CHARACTER[collection as keyof typeof EMPTY_ARRAYS],
+        ])
+      )
+    );
+  }
+
   async hasNameWithoutSpaces(length: number): Promise<void> {
     await this.hasBasicInfo("name", "W".repeat(length));
   }

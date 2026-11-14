@@ -16,7 +16,6 @@ Feature: Single Character Display
         And my character type shows as "Nano"
         And my character sheet shows my descriptor as "Clever"
         And my character sheet shows my focus as "Talks to Machines"
-        And my character sheet shows no untranslated text
 
     Scenario: View character stat pools
         Given my character has these stats:
@@ -29,7 +28,10 @@ Feature: Single Character Display
             | Might     | 18   | 3    | 14      |
             | Speed     | 9    | 0    | 7       |
             | Intellect | 11   | 1    | 11      |
-        And my character sheet shows no untranslated text
+
+    Scenario: Nothing on a fully filled-in character sheet is left untranslated
+        Given my character has every kind of entry
+        Then nothing on my character sheet is left untranslated
 
     Scenario: Editable and add controls carry translated accessible labels
         Given I am on the character sheet page
@@ -40,25 +42,21 @@ Feature: Single Character Display
         Then my character carries 2 cyphers
         And the cypher "Detonation (Cell)" shows level "1d6+2"
         And the cypher "Stim (Injector)" shows level "1d6"
-        And my character sheet shows no untranslated text
 
     Scenario: View character items - Artifacts
         Given my character has the artifact "Lightning Rod"
         Then my character carries the artifact "Lightning Rod"
         And the artifact "Lightning Rod" shows level "6"
-        And my character sheet shows no untranslated text
 
     Scenario: View character items - Oddities
         Given my character has the oddities "A glowing cube that hums when near water" and "A piece of transparent metal that's always cold"
         Then my character carries 2 oddities
         And my character carries the oddity "A glowing cube that hums when near water"
         And my character carries the oddity "A piece of transparent metal that's always cold"
-        And my character sheet shows no untranslated text
 
     Scenario Outline: View character text fields - <field>
         Given my character's <field> reads "<text>"
         Then my <field> reads "<text>"
-        And my character sheet shows no untranslated text
 
         Examples:
             | field      | text                                           |
@@ -74,7 +72,6 @@ Feature: Single Character Display
         And my character's abilities section says it is empty
         And my background reads ""
         And my notes reads ""
-        And my character sheet shows no untranslated text
 
     @validation
     Scenario: Text with quotes, ampersands and angle brackets is shown verbatim in the name
