@@ -3,30 +3,6 @@ import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world.js";
 import { CARD_CONFIGS } from "../support/cardTestFixtures.js";
 
-Then("the modal should show artifact fields", async function (this: CustomWorld) {
-  const fields = CARD_CONFIGS.artifact.fieldTestIds;
-  await expect(this.page.locator(fields.name)).toBeVisible();
-  await expect(this.page.locator(fields.level)).toBeVisible();
-  await expect(this.page.locator(fields.effect)).toBeVisible();
-});
-
-Then("all artifact fields should be empty", async function (this: CustomWorld) {
-  const fields = CARD_CONFIGS.artifact.fieldTestIds;
-  await expect(this.page.locator(fields.name)).toHaveValue("");
-  await expect(this.page.locator(fields.level)).toHaveValue("");
-  await expect(this.page.locator(fields.effect)).toHaveValue("");
-});
-
-Then("the modal should show oddity fields", async function (this: CustomWorld) {
-  const fields = CARD_CONFIGS.oddity.fieldTestIds;
-  await expect(this.page.locator(fields.oddity)).toBeVisible();
-});
-
-Then("all oddity fields should be empty", async function (this: CustomWorld) {
-  const fields = CARD_CONFIGS.oddity.fieldTestIds;
-  await expect(this.page.locator(fields.oddity)).toHaveValue("");
-});
-
 Then("the modal should show ability fields", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.ability.fieldTestIds;
   await expect(this.page.locator(fields.name)).toBeVisible();
@@ -78,31 +54,6 @@ When(
     await this.page.locator(CARD_CONFIGS.equipment.fieldTestIds.name).fill(value);
   }
 );
-
-When(
-  "I fill in the artifact name with {string}",
-  async function (this: CustomWorld, value: string) {
-    await this.page.locator(CARD_CONFIGS.artifact.fieldTestIds.name).fill(value);
-  }
-);
-
-When(
-  "I fill in the artifact level with {string}",
-  async function (this: CustomWorld, value: string) {
-    await this.page.locator(CARD_CONFIGS.artifact.fieldTestIds.level).fill(value);
-  }
-);
-
-When(
-  "I fill in the artifact effect with {string}",
-  async function (this: CustomWorld, value: string) {
-    await this.page.locator(CARD_CONFIGS.artifact.fieldTestIds.effect).fill(value);
-  }
-);
-
-When("I fill in the oddity text with {string}", async function (this: CustomWorld, value: string) {
-  await this.page.locator(CARD_CONFIGS.oddity.fieldTestIds.oddity).fill(value);
-});
 
 When("I fill in the ability name with {string}", async function (this: CustomWorld, value: string) {
   await this.page.locator(CARD_CONFIGS.ability.fieldTestIds.name).fill(value);

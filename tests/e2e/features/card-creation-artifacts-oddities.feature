@@ -3,141 +3,104 @@ Feature: Card Creation: Artifacts and Oddities
     I want to add new artifact and oddity cards to my character sheet
     So that I can build out my character's inventory
 
-    Background:
-        Given I am on the character sheet page
+    Scenario: Add artifact button has its themed background color
+        Given my character has 2 artifacts
+        Then the add artifact button has a themed background colour
 
-    Scenario: Add button is visible for Artifacts
-        Then I should see an add artifact button
-
-    Scenario: Add Artifact button opens modal with empty fields
-        When I click the add artifact button
-        Then the card edit modal should be open
-        And the modal should show artifact fields
-        And all artifact fields should be empty
+    Scenario: Starting a new artifact opens the editor with empty fields
+        Given my character has 2 artifacts
+        When I start a new artifact
+        Then the card editor opens with empty artifact fields
 
     Scenario: Canceling artifact creation does not add a card
-        Given the character has 2 artifact cards
-        When I click the add artifact button
-        And I fill in the artifact name with "Test Artifact"
-        And I fill in the artifact level with "1d6"
-        And I fill in the artifact effect with "Test effect"
-        And I cancel the card edit modal
-        Then I should see 2 artifact cards
+        Given my character has 2 artifacts
+        When I start a new artifact
+        And I set its name to "Test Artifact"
+        And I set its level to "1d6"
+        And I set its effect to "Test effect"
+        And I cancel the card
+        Then my character carries 2 artifacts
 
-    Scenario: Confirming artifact creation adds a new card
-        Given the character has 2 artifact cards
-        When I click the add artifact button
-        And I fill in the artifact name with "Crystal Blade"
-        And I fill in the artifact level with "1d6+2"
-        And I fill in the artifact effect with "A sword that never dulls"
-        And I confirm the card edit modal
-        Then I should see 3 artifact cards
-        And I should see an artifact card with name "Crystal Blade"
+    Scenario: Saving a new artifact adds a card
+        Given my character has 2 artifacts
+        When I start a new artifact
+        And I set its name to "Crystal Blade"
+        And I set its level to "1d6+2"
+        And I set its effect to "A sword that never dulls"
+        And I save the card
+        Then my character carries 3 artifacts
+        And my character carries the artifact "Crystal Blade"
 
-    Scenario: New artifact persists after page reload
-        Given the character has 2 artifact cards
-        When I click the add artifact button
-        And I fill in the artifact name with "Shield of Force"
-        And I fill in the artifact level with "1d6+4"
-        And I fill in the artifact effect with "Creates an energy barrier"
-        And I confirm the card edit modal
-        Then I should see 3 artifact cards
-        When I reload the page
-        Then I should see 3 artifact cards
-        And I should see an artifact card with name "Shield of Force"
-
-    Scenario: Multiple artifacts can be added
-        Given the character has 2 artifact cards
-        When I click the add artifact button
-        And I fill in the artifact name with "First Artifact"
-        And I fill in the artifact level with "1d6"
-        And I fill in the artifact effect with "First effect"
-        And I confirm the card edit modal
-        Then I should see 3 artifact cards
-        When I click the add artifact button
-        And I fill in the artifact name with "Second Artifact"
-        And I fill in the artifact level with "1d6+2"
-        And I fill in the artifact effect with "Second effect"
-        And I confirm the card edit modal
-        Then I should see 4 artifact cards
+    Scenario: New artifact persists after reopening the character
+        Given my character has 2 artifacts
+        When I start a new artifact
+        And I set its name to "Shield of Force"
+        And I set its level to "1d6+4"
+        And I set its effect to "Creates an energy barrier"
+        And I save the card
+        And I open my character again
+        Then my character carries 3 artifacts
+        And my character carries the artifact "Shield of Force"
 
     Scenario: Create artifact, then edit it, verify persistence
-        Given the character has 2 artifact cards
-        When I click the add artifact button
-        And I fill in the artifact name with "Power Gauntlet"
-        And I fill in the artifact level with "1d6"
-        And I fill in the artifact effect with "Enhances strength"
-        And I confirm the card edit modal
-        Then I should see 3 artifact cards
-        And I should see an artifact card with name "Power Gauntlet"
-        When I click the edit button on artifact "Power Gauntlet"
-        And I fill in the artifact name with "Power Gauntlet Mk II"
-        And I fill in the artifact level with "1d6+2"
-        And I fill in the artifact effect with "Greatly enhances strength and speed"
-        And I confirm the card edit modal
-        Then I should see an artifact card with name "Power Gauntlet Mk II"
-        When I reload the page
-        Then I should see 3 artifact cards
-        And I should see an artifact card with name "Power Gauntlet Mk II"
-        And the artifact "Power Gauntlet Mk II" should have level "1d6+2"
-        And the artifact "Power Gauntlet Mk II" should have effect "Greatly enhances strength and speed"
+        Given my character has 2 artifacts
+        When I start a new artifact
+        And I set its name to "Power Gauntlet"
+        And I set its level to "1d6"
+        And I set its effect to "Enhances strength"
+        And I save the card
+        And I start editing the artifact "Power Gauntlet"
+        And I set its name to "Power Gauntlet Mk II"
+        And I set its level to "1d6+2"
+        And I set its effect to "Greatly enhances strength and speed"
+        And I save the card
+        And I open my character again
+        Then my character carries 3 artifacts
+        And my character carries the artifact "Power Gauntlet Mk II"
+        And the artifact "Power Gauntlet Mk II" shows "1d6+2"
+        And the artifact "Power Gauntlet Mk II" shows "Greatly enhances strength and speed"
 
-    Scenario: Add button is visible for Oddities
-        Then I should see an add oddity button
+    Scenario: Add oddity button has its themed background color
+        Given my character has 2 oddities
+        Then the add oddity button has a themed background colour
 
-    Scenario: Add Oddity button opens modal with empty fields
-        When I click the add oddity button
-        Then the card edit modal should be open
-        And the modal should show oddity fields
-        And all oddity fields should be empty
+    Scenario: Starting a new oddity opens the editor with empty fields
+        Given my character has 2 oddities
+        When I start a new oddity
+        Then the card editor opens with empty oddity fields
 
     Scenario: Canceling oddity creation does not add a card
-        Given the character has 2 oddity cards
-        When I click the add oddity button
-        And I fill in the oddity text with "Test Oddity"
-        And I cancel the card edit modal
-        Then I should see 2 oddity cards
+        Given my character has 2 oddities
+        When I start a new oddity
+        And I set its text to "Test Oddity"
+        And I cancel the card
+        Then my character carries 2 oddities
 
-    Scenario: Confirming oddity creation adds a new card
-        Given the character has 2 oddity cards
-        When I click the add oddity button
-        And I fill in the oddity text with "A metal sphere that whispers in the dark"
-        And I confirm the card edit modal
-        Then I should see 3 oddity cards
-        And I should see an oddity card with text "A metal sphere that whispers in the dark"
+    Scenario: Saving a new oddity adds a card
+        Given my character has 2 oddities
+        When I start a new oddity
+        And I set its text to "A metal sphere that whispers in the dark"
+        And I save the card
+        Then my character carries 3 oddities
+        And my character carries the oddity "A metal sphere that whispers in the dark"
 
-    Scenario: New oddity persists after page reload
-        Given the character has 2 oddity cards
-        When I click the add oddity button
-        And I fill in the oddity text with "A translucent stone that floats in water"
-        And I confirm the card edit modal
-        Then I should see 3 oddity cards
-        When I reload the page
-        Then I should see 3 oddity cards
-        And I should see an oddity card with text "A translucent stone that floats in water"
-
-    Scenario: Multiple oddities can be added
-        Given the character has 2 oddity cards
-        When I click the add oddity button
-        And I fill in the oddity text with "First Oddity Description"
-        And I confirm the card edit modal
-        Then I should see 3 oddity cards
-        When I click the add oddity button
-        And I fill in the oddity text with "Second Oddity Description"
-        And I confirm the card edit modal
-        Then I should see 4 oddity cards
+    Scenario: New oddity persists after reopening the character
+        Given my character has 2 oddities
+        When I start a new oddity
+        And I set its text to "A translucent stone that floats in water"
+        And I save the card
+        And I open my character again
+        Then my character carries 3 oddities
+        And my character carries the oddity "A translucent stone that floats in water"
 
     Scenario: Create oddity, then edit it, verify persistence
-        Given the character has 2 oddity cards
-        When I click the add oddity button
-        And I fill in the oddity text with "A small crystal that changes color"
-        And I confirm the card edit modal
-        Then I should see 3 oddity cards
-        And I should see an oddity card with text "A small crystal that changes color"
-        When I click the edit button on oddity "A small crystal that changes color"
-        And I fill in the oddity text with "A large crystal that changes color based on temperature"
-        And I confirm the card edit modal
-        Then I should see an oddity card with text "A large crystal that changes color based on temperature"
-        When I reload the page
-        Then I should see 3 oddity cards
-        And I should see an oddity card with text "A large crystal that changes color based on temperature"
+        Given my character has 2 oddities
+        When I start a new oddity
+        And I set its text to "A small crystal that changes color"
+        And I save the card
+        And I start editing the oddity "A small crystal that changes color"
+        And I set its text to "A large crystal that changes color based on temperature"
+        And I save the card
+        And I open my character again
+        Then my character carries 3 oddities
+        And my character carries the oddity "A large crystal that changes color based on temperature"

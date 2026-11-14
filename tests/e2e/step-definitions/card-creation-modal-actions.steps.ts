@@ -42,20 +42,6 @@ When(
 );
 
 When(
-  "I click the edit button on artifact {string}",
-  async function (this: CustomWorld, name: string) {
-    await this.cards.clickEditButton("artifact", name);
-  }
-);
-
-When(
-  "I click the edit button on oddity {string}",
-  async function (this: CustomWorld, text: string) {
-    await this.cards.clickEditButton("oddity", text);
-  }
-);
-
-When(
   "I click the edit button on ability {string}",
   async function (this: CustomWorld, name: string) {
     await this.cards.clickEditButton("ability", name);

@@ -12,14 +12,6 @@ async function givenCharacterHasCards(
   await world.cards.expectHasCount(cardType, count);
 }
 
-Given("the character has {int} artifact cards", async function (this: CustomWorld, count: number) {
-  await givenCharacterHasCards(this, "artifact", count);
-});
-
-Given("the character has {int} oddity cards", async function (this: CustomWorld, count: number) {
-  await givenCharacterHasCards(this, "oddity", count);
-});
-
 Given("the character has {int} ability cards", async function (this: CustomWorld, count: number) {
   await givenCharacterHasCards(this, "ability", count);
 });
@@ -30,14 +22,6 @@ Given(
     await givenCharacterHasCards(this, "special-ability", count);
   }
 );
-
-Then("I should see an add artifact button", async function (this: CustomWorld) {
-  await expect(this.page.locator(CARD_CONFIGS.artifact.addButtonTestId)).toBeVisible();
-});
-
-Then("I should see an add oddity button", async function (this: CustomWorld) {
-  await expect(this.page.locator(CARD_CONFIGS.oddity.addButtonTestId)).toBeVisible();
-});
 
 Then("I should see an add ability button", async function (this: CustomWorld) {
   await expect(this.page.locator(CARD_CONFIGS.ability.addButtonTestId)).toBeVisible();
@@ -53,14 +37,6 @@ When("I click the add cypher button", async function (this: CustomWorld) {
 
 When("I click the add equipment button", async function (this: CustomWorld) {
   await this.cards.clickAddButton("equipment");
-});
-
-When("I click the add artifact button", async function (this: CustomWorld) {
-  await this.cards.clickAddButton("artifact");
-});
-
-When("I click the add oddity button", async function (this: CustomWorld) {
-  await this.cards.clickAddButton("oddity");
 });
 
 When("I click the add ability button", async function (this: CustomWorld) {
