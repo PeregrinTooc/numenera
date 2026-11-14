@@ -247,6 +247,12 @@ All features listed below have full BDD test coverage and are verified working.
   - CI runs all four profiles; a deploy needs every one green
   - Device-specific exclusions are tagged (`@not-phone`, `@touch`)
     with a comment explaining why
+- **No Reruns for Unchanged Inputs** ([DEPLOYMENT.md](./DEPLOYMENT.md))
+  - A content fingerprint that leaves out documentation decides whether
+    anything needs testing: docs-only commits skip the pre-commit tests, the
+    pre-push E2E run and every CI job
+  - A second fingerprint that also leaves out tests and tooling skips the
+    redeploy when the app itself did not change
 
 ### File Management
 
