@@ -47,9 +47,9 @@ describe("LayoutChoiceModal", () => {
     expect(handlers.onKeep).toHaveBeenCalledOnce();
   });
 
-  it("focuses keeping the current layout", async () => {
+  it("focuses keeping the current layout as soon as it opens", () => {
     open();
 
-    await vi.waitFor(() => expect(document.activeElement).toBe(byId("keep-current-layout")));
+    expect(document.activeElement).toBe(byId("keep-current-layout"));
   });
 });
