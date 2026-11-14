@@ -18,6 +18,7 @@ import { MouseInput, TouchInput } from "./sectionInput.js";
 import { ScreenDsl } from "./screen.js";
 import { PlaywrightViewportDriver } from "./viewportDriver.js";
 import { VersionHistoryDsl } from "./versionHistory.js";
+import { HistorySeedDsl } from "./historySeed.js";
 import { ComparisonDsl } from "./comparison.js";
 import { PlaywrightComparisonDriver } from "./comparisonDriver.js";
 import { waitForInitialVersionSaved } from "./app-ready.js";
@@ -76,15 +77,18 @@ Before(async function (this: CustomWorld, { pickle }) {
   // storage clearing goes through the same adapter-backed helper every step
   // uses, instead of a one-off inline page.evaluate.
   this.storageHelper = new TestStorageHelper(this.page);
+  const historyDriver = new PlaywrightVersionHistoryDriver(this.page, this.storageHelper);
+  this.historySeed = new HistorySeedDsl(historyDriver, this.setup);
   this.history = new VersionHistoryDsl(
-    new PlaywrightVersionHistoryDriver(this.page, this.storageHelper),
+    historyDriver,
     new PlaywrightVersionSaveDriver(this.page),
-    this.setup,
+    this.historySeed,
     this.character
   );
   this.comparison = new ComparisonDsl(
     new PlaywrightComparisonDriver(this.page, this.storageHelper),
-    this.history
+    this.history,
+    this.historySeed
   );
 
   this.page.on("console", (msg) => {

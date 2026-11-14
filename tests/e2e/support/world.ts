@@ -10,6 +10,7 @@ import type { AdditionalFieldsDsl } from "./additionalFields.js";
 import type { LayoutDsl } from "./layout.js";
 import type { ScreenDsl } from "./screen.js";
 import type { VersionHistoryDsl } from "./versionHistory.js";
+import type { HistorySeedDsl } from "./historySeed.js";
 import type { ComparisonDsl } from "./comparison.js";
 import { BASE_URL } from "./serverUrl.js";
 import type { Layout } from "@/types/layout";
@@ -40,6 +41,7 @@ export interface CustomWorld extends World {
   valueEditor: ValueEditorDsl;
   additionalFields: AdditionalFieldsDsl;
   history: VersionHistoryDsl;
+  historySeed: HistorySeedDsl;
   comparison: ComparisonDsl;
   // card-reordering.steps.ts
   draggedCypherName?: string;
@@ -75,6 +77,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   valueEditor!: ValueEditorDsl;
   additionalFields!: AdditionalFieldsDsl;
   history!: VersionHistoryDsl;
+  historySeed!: HistorySeedDsl;
   comparison!: ComparisonDsl;
   // card-reordering.steps.ts
   draggedCypherName?: string;

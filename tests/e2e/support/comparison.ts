@@ -1,4 +1,5 @@
 import type { ComparisonDriver, Highlight, Pane } from "./comparisonDriver.js";
+import type { HistorySeedDsl } from "./historySeed.js";
 import type { VersionHistoryDsl } from "./versionHistory.js";
 
 const BOTH_PANES: Pane[] = ["left", "right"];
@@ -7,7 +8,8 @@ const BOTH_PANES: Pane[] = ["left", "right"];
 export class ComparisonDsl {
   constructor(
     private driver: ComparisonDriver,
-    private history: VersionHistoryDsl
+    private history: VersionHistoryDsl,
+    private seed: HistorySeedDsl
   ) {}
 
   async switchesOn(): Promise<void> {
@@ -52,7 +54,7 @@ export class ComparisonDsl {
   }
 
   async expectShowsCharacterOfVersion(pane: Pane, version: number): Promise<void> {
-    await this.driver.expectPaneShowsCharacterNamed(pane, this.history.nameOfVersion(version));
+    await this.driver.expectPaneShowsCharacterNamed(pane, this.seed.nameOfVersion(version));
   }
 
   async expectRestoreAvailable(pane: Pane, available: boolean): Promise<void> {
@@ -60,7 +62,7 @@ export class ComparisonDsl {
   }
 
   async expectNewestVersionRestoredFrom(version: number): Promise<void> {
-    await this.driver.expectNewestVersionRestoredFrom(this.history.descriptionOfVersion(version));
+    await this.driver.expectNewestVersionRestoredFrom(this.seed.descriptionOfVersion(version));
   }
 
   async expectHeaderLists(changes: string[]): Promise<void> {

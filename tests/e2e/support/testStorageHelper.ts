@@ -73,9 +73,7 @@ export class TestStorageHelper {
       if (!window.__testVersionHistory) {
         throw new Error("Test version history API not available. Make sure the app has loaded.");
       }
-      for (const { character, description } of entries) {
-        await window.__testVersionHistory.createVersion(character, description);
-      }
+      await window.__testVersionHistory.createVersions(entries);
     }, versions);
     await this.setCharacter(versions[versions.length - 1].character);
   }

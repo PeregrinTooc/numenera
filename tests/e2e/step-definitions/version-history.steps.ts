@@ -3,44 +3,44 @@ import type { CustomWorld } from "../support/world.js";
 import { propertyTable } from "../support/tableRows.js";
 
 Given("my character has no history yet", async function (this: CustomWorld) {
-  await this.history.startsWithNoHistory();
+  await this.historySeed.startsWithNoHistory();
 });
 
-// The app re-reads the whole history on every save, so a history at the 99-version
-// cap takes long enough to outlast the default step timeout on a loaded machine.
+// Every version is saved through the app, which re-reads the whole history per save:
+// 99 versions take about 6 s alone on WebKit and several times that on a loaded machine.
 Given(
   "my character has a history of {int} versions",
   { timeout: 120000 },
   async function (this: CustomWorld, count: number) {
-    await this.history.hasVersions(count);
+    await this.historySeed.hasVersions(count);
   }
 );
 
 Given(
   "my character has a history of {int} versions with different data",
   async function (this: CustomWorld, count: number) {
-    await this.history.hasVersionsWithDifferentData(count);
+    await this.historySeed.hasVersionsWithDifferentData(count);
   }
 );
 
 Given(
   "my Might pool went from {int} to {int} to {int}",
   async function (this: CustomWorld, first: number, second: number, third: number) {
-    await this.history.hasMightPoolHistory([first, second, third]);
+    await this.historySeed.hasMightPoolHistory([first, second, third]);
   }
 );
 
 Given(
   "my history holds an old version recorded as {string} for an added cypher",
   async function (this: CustomWorld, description: string) {
-    await this.history.hasOldVersionRecordedAs(description, "added cypher");
+    await this.historySeed.hasOldVersionRecordedAs(description, "added cypher");
   }
 );
 
 Given(
   "my history holds an old version recorded as {string} for a name change and an added ability",
   async function (this: CustomWorld, description: string) {
-    await this.history.hasOldVersionRecordedAs(description, "name change and added ability");
+    await this.historySeed.hasOldVersionRecordedAs(description, "name change and added ability");
   }
 );
 
@@ -49,7 +49,7 @@ Given("saving a version is held up", async function (this: CustomWorld) {
 });
 
 Given("my character has a portrait", async function (this: CustomWorld) {
-  await this.history.hasPortrait();
+  await this.historySeed.hasPortrait();
 });
 
 When("I go to version {int}", async function (this: CustomWorld, version: number) {
@@ -232,41 +232,41 @@ Then("the export keeps my current portrait", function (this: CustomWorld) {
 Given(
   "my history has a version in which I changed",
   async function (this: CustomWorld, changes: DataTable) {
-    await this.history.hasVersionChangingBasicInfo(propertyTable(changes));
+    await this.historySeed.hasVersionChangingBasicInfo(propertyTable(changes));
   }
 );
 
 Given(
   "my history has a version in which I changed my name to {string}, followed by one in which I changed my tier to {int}",
   async function (this: CustomWorld, name: string, tier: number) {
-    await this.history.hasVersionsChangingNameThenTier(name, tier);
+    await this.historySeed.hasVersionsChangingNameThenTier(name, tier);
   }
 );
 
 Given(
   "my history has a version in which I added the cypher {string}",
   async function (this: CustomWorld, name: string) {
-    await this.history.hasVersionAddingCypher(name);
+    await this.historySeed.hasVersionAddingCypher(name);
   }
 );
 
 Given(
   "my history has a version in which I removed the cypher {string}",
   async function (this: CustomWorld, name: string) {
-    await this.history.hasVersionRemovingCypher(name);
+    await this.historySeed.hasVersionRemovingCypher(name);
   }
 );
 
 Given(
   "my history has a version in which I changed the effect of the cypher {string}",
   async function (this: CustomWorld, name: string) {
-    await this.history.hasVersionChangingCypherEffect(name);
+    await this.historySeed.hasVersionChangingCypherEffect(name);
   }
 );
 
 Given(
   "my history has a version in which I renamed the cypher {string} to {string}",
   async function (this: CustomWorld, name: string, newName: string) {
-    await this.history.hasVersionRenamingCypher(name, newName);
+    await this.historySeed.hasVersionRenamingCypher(name, newName);
   }
 );
