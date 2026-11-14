@@ -19,10 +19,6 @@ Then("I should see {int} oddity cards", async function (this: CustomWorld, count
   await this.cards.expectHasCount("oddity", count);
 });
 
-Then("I should see {int} attack cards", async function (this: CustomWorld, count: number) {
-  await this.cards.expectHasCount("attack", count);
-});
-
 Then("I should see {int} ability cards", async function (this: CustomWorld, count: number) {
   await this.cards.expectHasCount("ability", count);
 });
@@ -100,30 +96,6 @@ Then(
   async function (this: CustomWorld, text: string) {
     const card = this.page.locator(CARD_CONFIGS.oddity.itemTestId).filter({ hasText: text });
     await expect(card).toBeVisible();
-  }
-);
-
-Then(
-  "I should see an attack card with name {string}",
-  async function (this: CustomWorld, name: string) {
-    const card = this.page.locator(CARD_CONFIGS.attack.itemTestId).filter({ hasText: name });
-    await expect(card).toBeVisible();
-  }
-);
-
-Then(
-  "the attack {string} should have modifier {string}",
-  async function (this: CustomWorld, name: string, modifier: string) {
-    const card = this.page.locator(CARD_CONFIGS.attack.itemTestId).filter({ hasText: name });
-    await expect(card).toContainText(modifier);
-  }
-);
-
-Then(
-  "the attack {string} should have damage {string}",
-  async function (this: CustomWorld, name: string, damage: string) {
-    const card = this.page.locator(CARD_CONFIGS.attack.itemTestId).filter({ hasText: name });
-    await expect(card).toContainText(damage);
   }
 );
 

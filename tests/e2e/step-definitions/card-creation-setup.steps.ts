@@ -28,10 +28,6 @@ Given("the character has {int} oddity cards", async function (this: CustomWorld,
   await givenCharacterHasCards(this, "oddity", count);
 });
 
-Given("the character has {int} attack cards", async function (this: CustomWorld, count: number) {
-  await givenCharacterHasCards(this, "attack", count);
-});
-
 Given("the character has {int} ability cards", async function (this: CustomWorld, count: number) {
   await givenCharacterHasCards(this, "ability", count);
 });
@@ -59,27 +55,6 @@ Then("I should see an add oddity button", async function (this: CustomWorld) {
   await expect(this.page.locator(CARD_CONFIGS.oddity.addButtonTestId)).toBeVisible();
 });
 
-Then("I should see an add attack button", async function (this: CustomWorld) {
-  await expect(this.page.locator(CARD_CONFIGS.attack.addButtonTestId)).toBeVisible();
-});
-
-Then(
-  "the add attack button should have a non-transparent background",
-  async function (this: CustomWorld) {
-    // Tailwind only generates CSS for class names it finds as literal text
-    // during its build-time scan, so a `bg-${colorTheme}-100`-style
-    // interpolated class silently produces no rule and the button renders
-    // fully transparent - a plain "is the class present" check can't catch
-    // this, only the actual computed style can.
-    const button = this.page.locator(CARD_CONFIGS.attack.addButtonTestId);
-    const bgColor = await button.evaluate(
-      (el: HTMLElement) => window.getComputedStyle(el).backgroundColor
-    );
-    expect(bgColor).not.toBe("rgba(0, 0, 0, 0)");
-    expect(bgColor).not.toBe("transparent");
-  }
-);
-
 Then("I should see an add ability button", async function (this: CustomWorld) {
   await expect(this.page.locator(CARD_CONFIGS.ability.addButtonTestId)).toBeVisible();
 });
@@ -102,10 +77,6 @@ When("I click the add artifact button", async function (this: CustomWorld) {
 
 When("I click the add oddity button", async function (this: CustomWorld) {
   await this.cards.clickAddButton("oddity");
-});
-
-When("I click the add attack button", async function (this: CustomWorld) {
-  await this.cards.clickAddButton("attack");
 });
 
 When("I click the add ability button", async function (this: CustomWorld) {

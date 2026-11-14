@@ -24,6 +24,36 @@ export class CharacterDsl {
     });
   }
 
+  async hasCount(kind: string, count: number): Promise<void> {
+    const samples = CARD_CONFIGS[kind].sampleCards;
+    if (count > samples.length) {
+      throw new Error(
+        `Only ${samples.length} sample ${kind} entries available, asked for ${count}`
+      );
+    }
+    await this.setup.newCharacter({ [CARD_TYPE_TO_PROPERTY[kind]]: samples.slice(0, count) });
+  }
+
+  async reopen(): Promise<void> {
+    await this.sheet.reopen();
+  }
+
+  async expectCount(kind: string, count: number): Promise<void> {
+    await this.sheet.expectEntryCount(kind, count);
+  }
+
+  async expectEntry(kind: string, name: string): Promise<void> {
+    await this.sheet.expectEntry(kind, name);
+  }
+
+  async expectEntryShows(kind: string, name: string, value: string): Promise<void> {
+    await this.sheet.expectEntryShows(kind, name, value);
+  }
+
+  async expectAddControlThemed(kind: string): Promise<void> {
+    await this.sheet.expectAddControlThemed(kind);
+  }
+
   async discard(name: string): Promise<void> {
     await this.sheet.discard(name);
   }

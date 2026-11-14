@@ -10,6 +10,8 @@ import { CardsDsl } from "./cards.js";
 import { SetupDsl } from "./setup.js";
 import { CharacterDsl } from "./character.js";
 import { PlaywrightSheetDriver } from "./sheetDriver.js";
+import { CardEditorDsl } from "./cardEditor.js";
+import { PlaywrightCardEditorDriver } from "./cardEditorDriver.js";
 import { LayoutDsl } from "./layout.js";
 import { MouseInput, TouchInput } from "./sectionInput.js";
 import { BASE_URL } from "./serverUrl.js";
@@ -52,6 +54,7 @@ Before(async function (this: CustomWorld, { pickle }) {
   this.cards = new CardsDsl(this);
   this.setup = new SetupDsl(this);
   this.character = new CharacterDsl(new PlaywrightSheetDriver(this.page), this.setup);
+  this.cardEditor = new CardEditorDsl(new PlaywrightCardEditorDriver(this.page));
   this.layout = new LayoutDsl(
     DEVICE.sectionInput === "touch" ? new TouchInput(this.page) : new MouseInput(this.page)
   );

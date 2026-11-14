@@ -7,6 +7,7 @@ import { FieldsDsl } from "./fields.js";
 import { CardsDsl } from "./cards.js";
 import { SetupDsl } from "./setup.js";
 import type { CharacterDsl } from "./character.js";
+import type { CardEditorDsl } from "./cardEditor.js";
 import type { LayoutDsl } from "./layout.js";
 import { BASE_URL } from "./serverUrl.js";
 import type { Layout } from "@/types/layout";
@@ -34,6 +35,7 @@ export interface CustomWorld extends World {
   cards: CardsDsl;
   setup: SetupDsl;
   character: CharacterDsl;
+  cardEditor: CardEditorDsl;
   layout: LayoutDsl;
   // card-reordering.steps.ts
   draggedCypherName?: string;
@@ -71,6 +73,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   cards!: CardsDsl;
   setup!: SetupDsl;
   character!: CharacterDsl;
+  cardEditor!: CardEditorDsl;
   layout!: LayoutDsl;
   // card-reordering.steps.ts
   draggedCypherName?: string;

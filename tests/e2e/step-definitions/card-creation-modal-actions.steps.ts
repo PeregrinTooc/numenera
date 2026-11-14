@@ -63,13 +63,6 @@ When(
 );
 
 When(
-  "I click the edit button on attack {string}",
-  async function (this: CustomWorld, name: string) {
-    await this.cards.clickEditButton("attack", name);
-  }
-);
-
-When(
   "I click the edit button on ability {string}",
   async function (this: CustomWorld, name: string) {
     await this.cards.clickEditButton("ability", name);

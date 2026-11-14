@@ -53,22 +53,6 @@ Then("all oddity fields should be empty", async function (this: CustomWorld) {
   await expect(this.page.locator(fields.oddity)).toHaveValue("");
 });
 
-Then("the modal should show attack fields", async function (this: CustomWorld) {
-  const fields = CARD_CONFIGS.attack.fieldTestIds;
-  await expect(this.page.locator(fields.name)).toBeVisible();
-  await expect(this.page.locator(fields.damage)).toBeVisible();
-  await expect(this.page.locator(fields.modifier)).toBeVisible();
-  await expect(this.page.locator(fields.range)).toBeVisible();
-});
-
-Then("all attack fields should be empty", async function (this: CustomWorld) {
-  const fields = CARD_CONFIGS.attack.fieldTestIds;
-  await expect(this.page.locator(fields.name)).toHaveValue("");
-  await expect(this.page.locator(fields.damage)).toHaveValue("0");
-  await expect(this.page.locator(fields.modifier)).toHaveValue("0");
-  await expect(this.page.locator(fields.range)).toHaveValue("");
-});
-
 Then("the modal should show ability fields", async function (this: CustomWorld) {
   const fields = CARD_CONFIGS.ability.fieldTestIds;
   await expect(this.page.locator(fields.name)).toBeVisible();
@@ -152,24 +136,6 @@ When(
 When("I fill in the oddity text with {string}", async function (this: CustomWorld, value: string) {
   await this.page.locator(CARD_CONFIGS.oddity.fieldTestIds.oddity).fill(value);
 });
-
-When("I fill in the attack name with {string}", async function (this: CustomWorld, value: string) {
-  await this.page.locator(CARD_CONFIGS.attack.fieldTestIds.name).fill(value);
-});
-
-When(
-  "I fill in the attack damage with {string}",
-  async function (this: CustomWorld, value: string) {
-    await this.page.locator(CARD_CONFIGS.attack.fieldTestIds.damage).fill(value);
-  }
-);
-
-When(
-  "I fill in the attack modifier with {string}",
-  async function (this: CustomWorld, value: string) {
-    await this.page.locator(CARD_CONFIGS.attack.fieldTestIds.modifier).fill(value);
-  }
-);
 
 When("I fill in the ability name with {string}", async function (this: CustomWorld, value: string) {
   await this.page.locator(CARD_CONFIGS.ability.fieldTestIds.name).fill(value);

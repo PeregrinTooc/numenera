@@ -8,6 +8,10 @@ export interface SheetDriver {
   discard(name: string): Promise<void>;
   expectEntries(kind: string, names: string[]): Promise<void>;
   expectNoEntry(name: string): Promise<void>;
+  expectEntryCount(kind: string, count: number): Promise<void>;
+  expectEntry(kind: string, name: string): Promise<void>;
+  expectEntryShows(kind: string, name: string, value: string): Promise<void>;
+  expectAddControlThemed(kind: string): Promise<void>;
   reopen(): Promise<void>;
   expectNoConfirmationAsked(): Promise<void>;
   expectDiscardControlInTopLeftCorner(name: string): Promise<void>;
@@ -22,6 +26,10 @@ export class PlaywrightSheetDriver implements SheetDriver {
 
   private entry(name: string): Locator {
     return this.page.locator(ANY_ENTRY).filter({ hasText: name });
+  }
+
+  private kindEntry(kind: string, name: string): Locator {
+    return this.page.locator(CARD_CONFIGS[kind].itemTestId).filter({ hasText: name });
   }
 
   private discardControl(name: string): Locator {
@@ -43,6 +51,27 @@ export class PlaywrightSheetDriver implements SheetDriver {
 
   async expectNoEntry(name: string): Promise<void> {
     await expect(this.entry(name)).toHaveCount(0);
+  }
+
+  async expectEntryCount(kind: string, count: number): Promise<void> {
+    await expect(this.page.locator(CARD_CONFIGS[kind].itemTestId)).toHaveCount(count);
+  }
+
+  async expectEntry(kind: string, name: string): Promise<void> {
+    await expect(this.kindEntry(kind, name)).toBeVisible();
+  }
+
+  async expectEntryShows(kind: string, name: string, value: string): Promise<void> {
+    await expect(this.kindEntry(kind, name)).toContainText(value);
+  }
+
+  // Tailwind only generates CSS for class names it finds as literal text, so
+  // an interpolated theme class renders fully transparent. Only the computed
+  // style catches that.
+  async expectAddControlThemed(kind: string): Promise<void> {
+    const control = this.page.locator(CARD_CONFIGS[kind].addButtonTestId);
+    await expect(control).not.toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+    await expect(control).not.toHaveCSS("background-color", "transparent");
   }
 
   async reopen(): Promise<void> {
