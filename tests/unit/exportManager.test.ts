@@ -90,6 +90,17 @@ describe("ExportManager", () => {
       expect(writableMock.close).toHaveBeenCalled();
     });
 
+    it("stamps the file with the time of the export", async () => {
+      const { mockHandle } = setupExportTest();
+      const writableMock = await mockHandle.createWritable();
+      ctx.clock.advance(90_000);
+
+      await ctx.exportManager.export(mockCharacter);
+
+      const writtenData = vi.mocked(writableMock.write).mock.calls[0][0] as string;
+      expect(expectValidFileStructure(writtenData).exportDate).toBe("2026-01-15T10:01:30.000Z");
+    });
+
     it("writes the stored column choices into the file", async () => {
       saveSectionColumns({ cyphers: 1 });
       const { mockHandle } = setupExportTest();

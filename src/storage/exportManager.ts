@@ -135,7 +135,7 @@ export class ExportManager {
     const fileData: CharacterFileData = {
       version: "1.0",
       schemaVersion: SCHEMA_VERSION,
-      exportDate: new Date().toISOString(),
+      exportDate: new Date(this.clock.now()).toISOString(),
       character: character,
       layout: loadLayout(),
       sectionColumns: loadSectionColumns(),
