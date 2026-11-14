@@ -6,20 +6,20 @@ import { LAYOUT_STORAGE_KEY, SECTION_COLUMNS_STORAGE_KEY } from "@/storage/stora
 import { waitForCharacterSheetReady, waitForInitialVersionSaved } from "./app-ready.js";
 import { FULL_CHARACTER, EMPTY_ARRAYS } from "./cardTestFixtures.js";
 
+function fullCharacter(overrides: Record<string, unknown>): Record<string, unknown> {
+  return { ...FULL_CHARACTER, ...EMPTY_ARRAYS, ...overrides };
+}
+
 export class SetupDsl {
   constructor(private world: CustomWorld) {}
 
   async character(overrides: Record<string, unknown> = {}): Promise<void> {
-    await this.replaceCharacter({ ...FULL_CHARACTER, ...EMPTY_ARRAYS, ...overrides });
+    await this.replaceCharacter(fullCharacter(overrides));
   }
 
   /** Like `character`, but the history starts over: only the new character's initial version. */
   async newCharacter(overrides: Record<string, unknown> = {}): Promise<void> {
-    await this.world.storageHelper.setCharacter({
-      ...FULL_CHARACTER,
-      ...EMPTY_ARRAYS,
-      ...overrides,
-    });
+    await this.world.storageHelper.setCharacter(fullCharacter(overrides));
     await this.world.storageHelper.clearVersions();
     await this.world.page.reload();
     await waitForCharacterSheetReady(this.world.page);
