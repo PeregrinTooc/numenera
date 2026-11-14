@@ -23,7 +23,7 @@ async function importCharacter(ctx: AppContext): Promise<void> {
   activeHistoryService(ctx)?.bufferChange(result.character, "versionHistory.changes.imported");
   void ctx.actions.renderCharacterSheet(result.character);
 
-  setTimeout(() => {
+  ctx.clock.setTimeout(() => {
     showImportWarnings(result.warnings);
     if (result.hasLayoutDifference) offerImportedLayout(ctx, result);
   }, 100);
