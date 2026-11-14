@@ -76,8 +76,10 @@ Build what a current feature or test needs, nothing more.
 - code is kept "for later" or "just in case".
 
 Weigh this one carefully. **Not the smell:** an interface that marks an
-identified architectural boundary — for example the E2E suite's DSL ↔ protocol
-driver split (`SheetDriver`, `SectionInput`). Once a boundary has been
+identified architectural boundary — for example the persistence layer behind
+`src/storage/storageFactory.ts`, which would be abstracted even with a single
+storage backend, or the E2E suite's DSL ↔ protocol driver split
+(`SheetDriver`, `SectionInput`). Once a boundary has been
 identified, it needs a clear interface, even while only one implementation
 exists. The smell is an interface _inside_ a layer that no boundary calls for.
 
