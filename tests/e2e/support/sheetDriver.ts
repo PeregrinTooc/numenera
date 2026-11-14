@@ -2,8 +2,10 @@ import { expect, type Locator, type Page } from "@playwright/test";
 import { waitForCharacterSheetReady } from "./app-ready.js";
 import { CARD_CONFIGS, CARD_TYPE_TO_PROPERTY } from "./cardTestFixtures.js";
 import { getTestId } from "./fields.js";
-import { englishText } from "./i18nKeys.js";
+import { assertNoRawI18nKeys, englishText } from "./i18nKeys.js";
+import { BASE_URL } from "./serverUrl.js";
 import { waitForSaveComplete } from "./save.js";
+import { sectionId, sectionOrder } from "./sections.js";
 
 interface Box {
   x: number;
@@ -43,6 +45,11 @@ export interface SheetDriver {
   expectSectionAbove(kind: string, other: string): Promise<void>;
   expectFirstEntryBadgesAtRightEdge(kind: string): Promise<void>;
   expectValueShows(valueName: string, value: string): Promise<void>;
+  open(): Promise<void>;
+  expectValueIsPlainText(valueName: string): Promise<void>;
+  expectNoUntranslatedText(): Promise<void>;
+  expectControlsLabelled(): Promise<void>;
+  expectSectionsInOrder(names: string[]): Promise<void>;
 }
 
 const ANY_ENTRY = Object.values(CARD_CONFIGS)
@@ -56,6 +63,35 @@ const VALUE_DISPLAY_TEST_IDS: Record<string, string> = {
   "Max Cyphers": "max-cyphers-value",
   Effort: "effort-value",
 };
+
+interface LabelledControl {
+  testId: string;
+  labelKey: string;
+  nameKey?: string;
+}
+
+// The editable values and add controls, each with the i18n key of the label a screen reader announces.
+const LABELLED_CONTROLS: LabelledControl[] = [
+  { testId: "character-name", labelKey: "character.editName" },
+  { testId: "character-tier", labelKey: "character.editTier" },
+  { testId: "character-descriptor", labelKey: "character.editDescriptor" },
+  { testId: "character-focus", labelKey: "character.editFocus" },
+  { testId: "effort-badge", labelKey: "stats.editEffort" },
+  { testId: "stat-might-pool", labelKey: "stats.editPool", nameKey: "stats.might" },
+  { testId: "stat-speed-edge", labelKey: "stats.editEdge", nameKey: "stats.speed" },
+  { testId: "stat-intellect-current", labelKey: "stats.editCurrent", nameKey: "stats.intellect" },
+  { testId: "armor-badge", labelKey: "resourceTracker.editArmor" },
+  { testId: "shins-badge", labelKey: "resourceTracker.editShins" },
+  { testId: "max-cyphers-badge", labelKey: "cyphers.editMax" },
+  { testId: "recovery-modifier-display", labelKey: "recovery.editModifier" },
+  { testId: "add-ability-button", labelKey: "abilities.add" },
+  { testId: "add-special-ability-button", labelKey: "specialAbilities.add" },
+  { testId: "add-attack-button", labelKey: "attacks.add" },
+  { testId: "add-cypher-button", labelKey: "cyphers.add" },
+  { testId: "add-equipment-button", labelKey: "equipment.add" },
+  { testId: "add-artifact-button", labelKey: "artifacts.add" },
+  { testId: "add-oddity-button", labelKey: "oddities.add" },
+];
 
 export class PlaywrightSheetDriver implements SheetDriver {
   constructor(private page: Page) {}
@@ -207,7 +243,34 @@ export class PlaywrightSheetDriver implements SheetDriver {
     return BADGES_WITH_LABEL.includes(valueName) ? element.locator(".stat-badge-value") : element;
   }
 
+  async open(): Promise<void> {
+    await this.page.goto(BASE_URL);
+    await waitForCharacterSheetReady(this.page);
+  }
+
   async expectValueShows(valueName: string, value: string): Promise<void> {
     await expect(this.valueLocator(valueName)).toHaveText(value);
+  }
+
+  // A text node: any child element means the text was parsed as HTML.
+  async expectValueIsPlainText(valueName: string): Promise<void> {
+    await expect(this.valueLocator(valueName).locator("*")).toHaveCount(0);
+  }
+
+  async expectNoUntranslatedText(): Promise<void> {
+    await assertNoRawI18nKeys(this.page.locator("body"));
+  }
+
+  async expectControlsLabelled(): Promise<void> {
+    for (const { testId, labelKey, nameKey } of LABELLED_CONTROLS) {
+      await expect(this.page.getByTestId(testId)).toHaveAttribute(
+        "aria-label",
+        englishText(labelKey, nameKey)
+      );
+    }
+  }
+
+  async expectSectionsInOrder(names: string[]): Promise<void> {
+    await expect.poll(() => sectionOrder(this.page)).toEqual(names.map(sectionId));
   }
 }

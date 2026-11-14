@@ -26,10 +26,10 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **534** in 51 files
-- Feature step lines: **1837**
+- Step definitions: **511** in 51 files
+- Feature step lines: **1825**
 - Definitions with no feature usage: **0**
-- Feature lines matching no definition: **1**
+- Feature lines matching no definition: **3**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
@@ -43,7 +43,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 8 | 0 |
 | [card-reordering-abilities.steps.ts](#cardreorderingabilitiesstepsts) | 5 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 8 | 0 |
-| [character-display.steps.ts](#characterdisplaystepsts) | 32 | 0 |
+| [character-display.steps.ts](#characterdisplaystepsts) | 9 | 0 |
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
@@ -90,6 +90,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 These would be reported as *undefined* by Cucumber (or are matched by a
 pattern this script does not understand):
 
+- `character-display.feature:81` — my character's name is "Kael <The Swift> & \"Red\" O'Connor"
+- `character-display.feature:82` — my character sheet shows my name as "Kael <The Swift> & \"Red\" O'Connor"
 - `section-rearrangement.feature:52` — I drag the "Cyphers" section onto the middle <side> of the "Items" section
 
 ## ability-enhancements.steps.ts
@@ -115,8 +117,8 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I choose {string} as my character type` | 2 | 10 |
-| Then | `my character type shows as {string}` | 4 | 14 |
-| Given | `my character's {textarea} reads {string}` | 10 | 3 |
+| Then | `my character type shows as {string}` | 5 | 14 |
+| Given | `my character's {textarea} reads {string}` | 12 | 3 |
 | Then | `the character type is labelled {string}` | 1 | 25 |
 | Then | `the character types to choose from are {string}, {string}, {string}` | 1 | 18 |
 
@@ -134,7 +136,7 @@ pattern this script does not understand):
 | When | `I write {string} as my {textarea}` | 3 | 3 |
 | Then | `my {textarea} cannot be edited yet and looks clickable` | 3 | 57 |
 | Then | `my {textarea} holds all {int} characters` | 2 | 24 |
-| Then | `my {textarea} reads {string}` | 10 | 17 |
+| Then | `my {textarea} reads {string}` | 14 | 17 |
 | Then | `my empty {textarea} invites me to write with {string}` | 1 | 31 |
 | Then | `the on-screen keyboard comes up` | 1 | 72 |
 
@@ -166,8 +168,8 @@ pattern this script does not understand):
 | When | `I try to change my {word} to nothing` | 1 | 25 |
 | Then | `my {word} looks clickable` | 1 | 62 |
 | Given | `my character has no {word}` | 2 | 51 |
-| Then | `my character sheet shows my {word} as {string}` | 9 | 33 |
-| Then | `my character sheet shows my tier as {int}` | 3 | 47 |
+| Then | `my character sheet shows my {word} as {string}` | 14 | 33 |
+| Then | `my character sheet shows my tier as {int}` | 4 | 47 |
 | Then | `my character sheet shows the placeholder for my {word}` | 1 | 55 |
 | Given | `my character's {word} is {string}` | 10 | 3 |
 | Given | `my character's tier is {int}` | 2 | 10 |
@@ -180,7 +182,7 @@ pattern this script does not understand):
 | Then | `{string} is still gone the next time I open my character` | 1 | 21 |
 | When | `I discard {string}` | 4 | 10 |
 | Then | `it was discarded without my being asked to confirm` | 1 | 28 |
-| Given | `my character has the {cardKind} {string} and {string}` | 6 | 3 |
+| Given | `my character has the {cardKind} {string} and {string}` | 8 | 3 |
 | Then | `my character's {cardKind} are only {string}` | 3 | 14 |
 | Then | `the discard control of {string} is in the top-left corner of its entry` | 1 | 32 |
 
@@ -194,9 +196,9 @@ pattern this script does not understand):
 | When | `I set its {word} to {string}` | 120 | 21 |
 | When | `I start a new {cardType}` | 52 | 10 |
 | When | `I start editing the {cardType} {string}` | 8 | 14 |
-| Then | `my character carries {int} {cardKind}` | 36 | 54 |
-| Then | `my character carries the {cardType} {string}` | 27 | 61 |
-| Given | `my character has {int} {cardKind}` | 47 | 3 |
+| Then | `my character carries {int} {cardKind}` | 38 | 54 |
+| Then | `my character carries the {cardType} {string}` | 30 | 61 |
+| Given | `my character has {int} {cardKind}` | 48 | 3 |
 | Then | `the {cardType} {string} shows {string}` | 10 | 68 |
 | Then | `the add {cardType} button has a themed background colour` | 7 | 47 |
 | Then | `the card editor opens with empty {cardType} fields` | 7 | 40 |
@@ -241,38 +243,15 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `a character exists with the following data:` | 1 | 9 |
-| Given | `I am on the character sheet page` | 39 | 27 |
-| Then | `I should see {int} artifact displayed` | 1 | 147 |
-| Then | `I should see {int} cyphers displayed` | 1 | 110 |
-| Then | `I should see {int} oddities displayed` | 1 | 160 |
-| Then | `I should see an empty {cardTypes} section` | 4 | 173 |
-| Then | `I should see artifact {string} with level {string}` | 1 | 152 |
-| Then | `I should see cypher {string} with level {string}` | 2 | 115 |
-| Then | `I should see descriptor {string} displayed` | 1 | 45 |
-| Then | `I should see empty state for abilities` | 1 | 202 |
-| Then | `I should see empty state for background` | 1 | 184 |
-| Then | `I should see empty state for equipment` | 1 | 198 |
-| Then | `I should see empty state for notes` | 1 | 191 |
-| Then | `I should see focus {string} displayed` | 1 | 49 |
-| Then | `I should see oddity {string}` | 2 | 165 |
-| Then | `I should see sections in this order:` | 1 | 266 |
-| Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 85 |
-| Then | `I should see the character name {string}` | 3 | 32 |
-| Then | `I should see tier {string} displayed` | 1 | 36 |
-| Then | `I should see type {string} displayed` | 1 | 40 |
-| Then | `no markup from the text should be rendered as HTML` | 1 | 252 |
-| Then | `no untranslated text keys should be visible` | 6 | 53 |
-| Given | `the character has a {int}-character name without spaces` | 1 | 257 |
-| Given | `the character has empty text fields` | 1 | 180 |
-| Given | `the character has no {cardTypes}` | 4 | 169 |
-| Given | `the character has the following artifacts:` | 1 | 123 |
-| Given | `the character has the following cyphers:` | 1 | 96 |
-| Given | `the character has the following oddities:` | 1 | 137 |
-| Given | `the character has the following stats:` | 1 | 67 |
-| Given | `the character has the following text:` | 2 | 220 |
-| Then | `the character text should read exactly:` | 2 | 234 |
-| Then | `these controls should have their translated accessible label:` | 1 | 57 |
+| Given | `I am on the character sheet page` | 29 | 14 |
+| Given | `my character has these stats:` | 1 | 25 |
+| Given | `my character has this basic information:` | 1 | 18 |
+| Then | `my character sheet lists its sections in this order:` | 1 | 58 |
+| Then | `my character sheet shows no untranslated text` | 7 | 40 |
+| Then | `my character sheet shows these stats:` | 1 | 36 |
+| Then | `my character sheet's editable values and add controls have translated accessible labels` | 1 | 44 |
+| Given | `my character's name is {int} characters long without spaces` | 1 | 29 |
+| Then | `my character's name is shown as plain text, not as markup` | 1 | 51 |
 
 ## character-file-export.steps.ts
 
@@ -305,7 +284,7 @@ pattern this script does not understand):
 | Then | `all sections should display empty state messages` | 2 | 14 |
 | When | `I click the "Load" button` | 2 | 28 |
 | Then | `the character {string} should be displayed` | 3 | 33 |
-| Given | `the character sheet is empty` | 3 | 24 |
+| Given | `the character sheet is empty` | 4 | 24 |
 | Then | `the character sheet should show empty states` | 2 | 8 |
 | Then | `the character should be displayed` | 1 | 57 |
 | Then | `the same character should still be displayed` | 1 | 63 |
@@ -326,14 +305,14 @@ pattern this script does not understand):
 | Given | `I view my character on a phone` | 1 | 30 |
 | Given | `I view my character on a wide screen` | 1 | 26 |
 | Given | `my character has an attack whose name is {int} characters long without spaces` | 1 | 19 |
-| Given | `my character has the {cardType} {string}` | 2 | 12 |
+| Given | `my character has the {cardType} {string}` | 3 | 12 |
 | Given | `my character has the {cardType} {string} with:` | 3 | 5 |
-| Then | `my character's {cardKind} section says it is empty` | 2 | 55 |
+| Then | `my character's {cardKind} section says it is empty` | 8 | 55 |
 | Then | `my character's attack keeps its badges at the right edge of its card` | 1 | 83 |
 | Then | `the {cardKind} section sits above the {cardKind} section` | 1 | 76 |
 | Then | `the {cardKind} section sits left of the {cardKind} section` | 1 | 69 |
 | Then | `the {cardType} {string} is themed {word}` | 2 | 48 |
-| Then | `the {cardType} {string} shows {word} {string}` | 9 | 34 |
+| Then | `the {cardType} {string} shows {word} {string}` | 12 | 34 |
 | Then | `the {cardType} {string} shows no {word}` | 1 | 41 |
 | Then | `the attacks section shows my character's armor of {int}` | 1 | 62 |
 

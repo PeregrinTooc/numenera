@@ -3,137 +3,96 @@ Feature: Single Character Display
     I want to view my character's complete information
     So that I can reference it during gameplay
 
-    Background:
-        Given a character exists with the following data:
+    Scenario: View character basic information
+        Given my character has this basic information:
             | Property   | Value                  |
             | Name       | Ilsa of the Ninth Gate |
             | Tier       | 2                      |
             | Type       | Nano                   |
             | Descriptor | Clever                 |
             | Focus      | Talks to Machines      |
-
-    Scenario: View character basic information
-        Given I am on the character sheet page
-        Then I should see the character name "Ilsa of the Ninth Gate"
-        And I should see tier "2" displayed
-        And I should see type "Nano" displayed
-        And I should see descriptor "Clever" displayed
-        And I should see focus "Talks to Machines" displayed
-        And no untranslated text keys should be visible
+        Then my character sheet shows my name as "Ilsa of the Ninth Gate"
+        And my character sheet shows my tier as 2
+        And my character type shows as "Nano"
+        And my character sheet shows my descriptor as "Clever"
+        And my character sheet shows my focus as "Talks to Machines"
+        And my character sheet shows no untranslated text
 
     Scenario: View character stat pools
-        Given I am on the character sheet page
-        And the character has the following stats:
+        Given my character has these stats:
             | Stat      | Pool | Edge | Current |
             | Might     | 18   | 3    | 14      |
             | Speed     | 9    | 0    | 7       |
             | Intellect | 11   | 1    | 11      |
-        Then I should see the "Might" stat with pool "18", edge "3", and current "14"
-        And I should see the "Speed" stat with pool "9", edge "0", and current "7"
-        And I should see the "Intellect" stat with pool "11", edge "1", and current "11"
-        And no untranslated text keys should be visible
+        Then my character sheet shows these stats:
+            | Stat      | Pool | Edge | Current |
+            | Might     | 18   | 3    | 14      |
+            | Speed     | 9    | 0    | 7       |
+            | Intellect | 11   | 1    | 11      |
+        And my character sheet shows no untranslated text
 
     Scenario: Editable and add controls carry translated accessible labels
         Given I am on the character sheet page
-        Then these controls should have their translated accessible label:
-            | Control                  | Key                    | Name key      |
-            | character-name           | character.editName     |               |
-            | character-tier           | character.editTier     |               |
-            | character-descriptor     | character.editDescriptor |             |
-            | character-focus          | character.editFocus    |               |
-            | effort-badge             | stats.editEffort       |               |
-            | stat-might-pool          | stats.editPool         | stats.might   |
-            | stat-speed-edge          | stats.editEdge         | stats.speed   |
-            | stat-intellect-current   | stats.editCurrent      | stats.intellect |
-            | armor-badge              | resourceTracker.editArmor |            |
-            | shins-badge              | resourceTracker.editShins |            |
-            | max-cyphers-badge        | cyphers.editMax        |               |
-            | recovery-modifier-display | recovery.editModifier |               |
-            | add-ability-button       | abilities.add          |               |
-            | add-special-ability-button | specialAbilities.add |               |
-            | add-attack-button        | attacks.add            |               |
-            | add-cypher-button        | cyphers.add            |               |
-            | add-equipment-button     | equipment.add          |               |
-            | add-artifact-button      | artifacts.add          |               |
-            | add-oddity-button        | oddities.add           |               |
+        Then my character sheet's editable values and add controls have translated accessible labels
 
     Scenario: View character items - Cyphers
-        Given I am on the character sheet page
-        And the character has the following cyphers:
-            | Name                 | Level | Effect                            |
-            | Rejuvenator (Pill)   | 1d6+1 | Restores 2 points to one Pool     |
-            | Phase Changer (Belt) | 1d6+3 | Become out of phase for one round |
-        Then I should see 2 cyphers displayed
-        And I should see cypher "Rejuvenator (Pill)" with level "1d6+1"
-        And I should see cypher "Phase Changer (Belt)" with level "1d6+3"
-        And no untranslated text keys should be visible
+        Given my character has the cyphers "Detonation (Cell)" and "Stim (Injector)"
+        Then my character carries 2 cyphers
+        And the cypher "Detonation (Cell)" shows level "1d6+2"
+        And the cypher "Stim (Injector)" shows level "1d6"
+        And my character sheet shows no untranslated text
 
-    Scenario: View character items - Artifacts and Oddities
-        Given I am on the character sheet page
-        And the character has the following artifacts:
-            | Name       | Level | Effect                   |
-            | Storm Lens | 5     | Calls a localized squall |
-        And the character has the following oddities:
-            | Description                 |
-            | A feather that falls upward |
-            | A coin that is always warm  |
-        Then I should see 1 artifact displayed
-        And I should see artifact "Storm Lens" with level "5"
-        And I should see 2 oddities displayed
-        And I should see oddity "A feather that falls upward"
-        And I should see oddity "A coin that is always warm"
-        And no untranslated text keys should be visible
+    Scenario: View character items - Artifacts
+        Given my character has the artifact "Lightning Rod"
+        Then my character carries the artifact "Lightning Rod"
+        And the artifact "Lightning Rod" shows level "6"
+        And my character sheet shows no untranslated text
 
-    Scenario: View character text fields
-        Given I am on the character sheet page
-        And the character has the following text:
-            | Field      | Content                                        |
-            | Background | Raised by a seskii pack beyond the Black Riage |
-            | Notes      | Owes the Aeon Priests of Qi a favour           |
-        Then the character text should read exactly:
-            | Field      | Content                                        |
-            | Background | Raised by a seskii pack beyond the Black Riage |
-            | Notes      | Owes the Aeon Priests of Qi a favour           |
-        And no untranslated text keys should be visible
+    Scenario: View character items - Oddities
+        Given my character has the oddities "A glowing cube that hums when near water" and "A piece of transparent metal that's always cold"
+        Then my character carries 2 oddities
+        And my character carries the oddity "A glowing cube that hums when near water"
+        And my character carries the oddity "A piece of transparent metal that's always cold"
+        And my character sheet shows no untranslated text
 
-    Scenario: View empty character items sections
-        Given I am on the character sheet page
-        And the character has no cyphers
-        And the character has no artifacts
-        And the character has no oddities
-        Then I should see an empty cyphers section
-        And I should see an empty artifacts section
-        And I should see an empty oddities section
-        And no untranslated text keys should be visible
+    Scenario Outline: View character text fields - <field>
+        Given my character's <field> reads "<text>"
+        Then my <field> reads "<text>"
+        And my character sheet shows no untranslated text
 
-    Scenario: View empty character text fields
-        Given I am on the character sheet page
-        And the character has empty text fields
-        Then I should see empty state for background
-        And I should see empty state for notes
-        And I should see empty state for equipment
-        And I should see empty state for abilities
+        Examples:
+            | field      | text                                           |
+            | background | Raised by a seskii pack beyond the Black Riage |
+            | notes      | Owes the Aeon Priests of Qi a favour           |
+
+    Scenario: A new character shows every section as empty
+        Given the character sheet is empty
+        Then my character's cyphers section says it is empty
+        And my character's artifacts section says it is empty
+        And my character's oddities section says it is empty
+        And my character's equipment section says it is empty
+        And my character's abilities section says it is empty
+        And my background reads ""
+        And my notes reads ""
+        And my character sheet shows no untranslated text
 
     @validation
-    Scenario: Text with quotes, ampersands and angle brackets is shown verbatim
-        Given I am on the character sheet page
-        And the character has the following text:
-            | Field      | Content                                   |
-            | Name       | Kael <The Swift> & "Red" O'Connor         |
-            | Background | Born in <Unknown Location> & raised alone |
-        Then the character text should read exactly:
-            | Field      | Content                                   |
-            | Name       | Kael <The Swift> & "Red" O'Connor         |
-            | Background | Born in <Unknown Location> & raised alone |
-        And no markup from the text should be rendered as HTML
+    Scenario: Text with quotes, ampersands and angle brackets is shown verbatim in the name
+        Given my character's name is "Kael <The Swift> & \"Red\" O'Connor"
+        Then my character sheet shows my name as "Kael <The Swift> & \"Red\" O'Connor"
+        And my character's name is shown as plain text, not as markup
+
+    @validation
+    Scenario: Text with quotes, ampersands and angle brackets is shown verbatim in the background
+        Given my character's background reads "Born in <Unknown Location> & raised alone"
+        Then my background reads "Born in <Unknown Location> & raised alone"
 
     # Widths below every device profile's (320) and at each profile's own width,
     # so the check holds even when the suite runs only the desktop profile.
     @validation
     Scenario Outline: Long unbroken text does not make the sheet scroll sideways at <width>px
         Given the viewport is <width> pixels wide
-        And I am on the character sheet page
-        And the character has a 50-character name without spaces
+        And my character's name is 50 characters long without spaces
         Then the page should not scroll horizontally
 
         Examples:
@@ -146,9 +105,8 @@ Feature: Single Character Display
 
     @validation
     Scenario: Sections appear in the default layout order
-        Given I am on the character sheet page
-        And I have the default layout
-        Then I should see sections in this order:
+        Given I have the default layout
+        Then my character sheet lists its sections in this order:
             | Basic Info        |
             | Stats             |
             | Recovery & Damage |

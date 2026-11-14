@@ -40,6 +40,13 @@ function basicInfoLabel(field: string): string {
   return field === "name" ? "character name" : field;
 }
 
+export interface StatRow {
+  stat: string;
+  pool: string;
+  edge: string;
+  current: string;
+}
+
 export class CharacterDsl {
   constructor(
     private sheet: SheetDriver,
@@ -59,6 +66,58 @@ export class CharacterDsl {
 
   async hasBasicInfo(field: string, value: string | number): Promise<void> {
     await this.setup.newCharacter({ [field]: value });
+  }
+
+  async openSheet(): Promise<void> {
+    await this.sheet.open();
+  }
+
+  async hasBasicInformation(fields: Record<string, string>): Promise<void> {
+    const { tier, ...rest } = fields;
+    await this.setup.newCharacter({
+      ...rest,
+      ...(tier === undefined ? {} : { tier: intCell(tier, "Tier") }),
+    });
+  }
+
+  async hasNameWithoutSpaces(length: number): Promise<void> {
+    await this.hasBasicInfo("name", "W".repeat(length));
+  }
+
+  async hasStats(rows: StatRow[]): Promise<void> {
+    const stats = { ...FULL_CHARACTER.stats } as Record<string, unknown>;
+    for (const { stat, pool, edge, current } of rows) {
+      stats[stat.toLowerCase()] = {
+        pool: intCell(pool, `${stat} pool`),
+        edge: intCell(edge, `${stat} edge`),
+        current: intCell(current, `${stat} current`),
+      };
+    }
+    await this.setup.newCharacter({ stats });
+  }
+
+  async expectStatsShow(rows: StatRow[]): Promise<void> {
+    for (const { stat, pool, edge, current } of rows) {
+      await this.expectStatShows(stat, "Pool", intCell(pool, `${stat} pool`));
+      await this.expectStatShows(stat, "Edge", intCell(edge, `${stat} edge`));
+      await this.expectStatShows(stat, "Current", intCell(current, `${stat} current`));
+    }
+  }
+
+  async expectBasicInfoIsPlainText(field: string): Promise<void> {
+    await this.sheet.expectValueIsPlainText(basicInfoLabel(field));
+  }
+
+  async expectNoUntranslatedText(): Promise<void> {
+    await this.sheet.expectNoUntranslatedText();
+  }
+
+  async expectControlsAccessiblyLabelled(): Promise<void> {
+    await this.sheet.expectControlsLabelled();
+  }
+
+  async expectSectionsInOrder(names: string[]): Promise<void> {
+    await this.sheet.expectSectionsInOrder(names);
   }
 
   async hasText(field: string, text: string): Promise<void> {

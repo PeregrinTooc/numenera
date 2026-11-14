@@ -54,6 +54,6 @@ Feature: Ability Enhancements
         And the ability "Scan" should have intellect pool styling
 
     Scenario: Empty abilities section shows empty state
-        Given the character has no abilities
-        Then I should see an empty abilities section
+        Given my character has 0 abilities
+        Then my character's abilities section says it is empty
         And the empty state should use translation keys
