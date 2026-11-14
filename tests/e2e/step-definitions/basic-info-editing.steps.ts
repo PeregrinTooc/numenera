@@ -1,143 +1,61 @@
-import { When, Then } from "@cucumber/cucumber";
-import { expect } from "@playwright/test";
-import type { CustomWorld } from "../support/world";
-import { getFieldSelector } from "../support/basicInfoHelpers.js";
+import { Given, When, Then } from "@cucumber/cucumber";
+import type { CustomWorld } from "../support/world.js";
 
-When("I press Tab repeatedly", async function (this: CustomWorld) {
-  const validElements = ["edit-modal-input", "modal-confirm-button", "modal-cancel-button"];
-
-  for (let i = 0; i < 3; i++) {
-    await this.page.keyboard.press("Tab");
-    await this.page.waitForFunction(
-      (elements) => {
-        const testId = document.activeElement?.getAttribute("data-testid");
-        return testId && elements.includes(testId);
-      },
-      validElements,
-      { timeout: 1000 }
-    );
+Given(
+  "my character's {word} is {string}",
+  async function (this: CustomWorld, field: string, value: string) {
+    await this.character.hasBasicInfo(field, value);
   }
+);
+
+Given("my character's tier is {int}", async function (this: CustomWorld, tier: number) {
+  await this.character.hasBasicInfo("tier", tier);
 });
 
-Then("the modal should have a confirm button with icon", async function (this: CustomWorld) {
-  const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
-  await expect(confirmButton).toBeVisible();
-  const icon = confirmButton.locator("svg");
-  await expect(icon).toBeVisible();
+When(
+  "I change my {word} to {string}",
+  async function (this: CustomWorld, field: string, value: string) {
+    await this.character.changeBasicInfo(field, value);
+  }
+);
+
+When("I change my tier to {int}", async function (this: CustomWorld, tier: number) {
+  await this.character.changeBasicInfo("tier", String(tier));
 });
 
-Then("the modal should have a cancel button with icon", async function (this: CustomWorld) {
-  const cancelButton = this.page.locator('[data-testid="modal-cancel-button"]');
-  await expect(cancelButton).toBeVisible();
-  const icon = cancelButton.locator("svg");
-  await expect(icon).toBeVisible();
+When("I try to change my {word} to nothing", async function (this: CustomWorld, field: string) {
+  await this.character.tryToChangeBasicInfoToNothing(field);
+});
+
+Then("the change is refused", async function (this: CustomWorld) {
+  await this.character.expectChangeRefused();
 });
 
 Then(
-  "the input field should be of type {string}",
-  async function (this: CustomWorld, inputType: string) {
-    const input = this.page.locator('[data-testid="edit-modal-input"]');
-    const type = await input.getAttribute("type");
-    expect(type).toBe(inputType);
+  "my character sheet shows my {word} as {string}",
+  async function (this: CustomWorld, field: string, value: string) {
+    await this.character.expectBasicInfoShows(field, value);
   }
 );
+
+Then("my character sheet shows my tier as {int}", async function (this: CustomWorld, tier: number) {
+  await this.character.expectBasicInfoShows("tier", tier);
+});
 
 Then(
   "the character name should display {string}",
   async function (this: CustomWorld, name: string) {
-    const nameElement = this.page.locator(getFieldSelector("name"));
-    await expect(nameElement).toHaveText(name);
+    await this.character.expectBasicInfoShows("name", name);
   }
 );
-
-Then(
-  "the character name should still display {string}",
-  async function (this: CustomWorld, name: string) {
-    const nameElement = this.page.locator(getFieldSelector("name"));
-    await expect(nameElement).toHaveText(name);
-  }
-);
-
-Then("the tier should display {string}", async function (this: CustomWorld, tier: string) {
-  const tierElement = this.page.locator(getFieldSelector("tier"));
-  const text = await tierElement.textContent();
-  expect(text).toContain(tier);
-});
 
 Then(
   "the descriptor should display {string}",
   async function (this: CustomWorld, descriptor: string) {
-    const descriptorElement = this.page.locator(getFieldSelector("descriptor"));
-    await expect(descriptorElement).toHaveText(descriptor);
+    await this.character.expectBasicInfoShows("descriptor", descriptor);
   }
 );
 
 Then("the focus should display {string}", async function (this: CustomWorld, focus: string) {
-  const focusElement = this.page.locator(getFieldSelector("focus"));
-  await expect(focusElement).toHaveText(focus);
+  await this.character.expectBasicInfoShows("focus", focus);
 });
-
-Then("the modal should not close", async function (this: CustomWorld) {
-  const modal = this.page.locator('[data-testid="edit-modal"]');
-  await expect(modal).toBeVisible();
-});
-
-Then("the modal should have Numenera-themed styling", async function (this: CustomWorld) {
-  const modal = this.page.locator('[data-testid="edit-modal"]');
-  const bgColor = await modal.evaluate(
-    (el: HTMLElement) => window.getComputedStyle(el).backgroundColor
-  );
-  expect(bgColor).toBeTruthy();
-});
-
-Then("the confirm button should have a checkmark icon", async function (this: CustomWorld) {
-  const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
-  const icon = confirmButton.locator("svg");
-  await expect(icon).toBeVisible();
-});
-
-Then("the cancel button should have an X icon", async function (this: CustomWorld) {
-  const cancelButton = this.page.locator('[data-testid="modal-cancel-button"]');
-  const icon = cancelButton.locator("svg");
-  await expect(icon).toBeVisible();
-});
-
-Then("the modal backdrop should be semi-transparent", async function (this: CustomWorld) {
-  const backdrop = this.page.locator('[data-testid="modal-backdrop"]');
-  await expect(backdrop).toBeVisible();
-
-  // Check the background-color's alpha channel, not the element's opacity property
-  const bgColor = await backdrop.evaluate(
-    (el: HTMLElement) => window.getComputedStyle(el).backgroundColor
-  );
-
-  // Parse rgba(r, g, b, alpha) or rgb(r, g, b) format
-  // rgba format has alpha as the 4th value, rgb format is fully opaque (alpha = 1)
-  const rgbaMatch = bgColor.match(/rgba?\([\d\s]+,[\d\s]+,[\d\s]+(?:,\s*([\d.]+))?\)/);
-  const alpha = rgbaMatch?.[1] ? parseFloat(rgbaMatch[1]) : 1;
-
-  expect(alpha).toBeGreaterThan(0);
-  expect(alpha).toBeLessThan(1);
-});
-
-Then(
-  "the name should show a hover state indicating it's editable",
-  async function (this: CustomWorld) {
-    const nameElement = this.page.locator(getFieldSelector("name"));
-    const cursor = await nameElement.evaluate(
-      (el: HTMLElement) => window.getComputedStyle(el).cursor
-    );
-    expect(cursor).toBe("pointer");
-  }
-);
-
-Then(
-  "the tier should show a hover state indicating it's editable",
-  async function (this: CustomWorld) {
-    const tierElement = this.page.locator(getFieldSelector("tier"));
-    const cursor = await tierElement.evaluate(
-      (el: HTMLElement) => window.getComputedStyle(el).cursor
-    );
-    expect(cursor).toBe("pointer");
-  }
-);

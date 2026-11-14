@@ -26,6 +26,10 @@ function cardWith(name: string, properties: Record<string, string>): Record<stri
   return card;
 }
 
+function basicInfoLabel(field: string): string {
+  return field === "name" ? "character name" : field;
+}
+
 export class CharacterDsl {
   constructor(
     private sheet: SheetDriver,
@@ -43,10 +47,36 @@ export class CharacterDsl {
     });
   }
 
-  async changeStat(stat: string, field: string, value: number): Promise<void> {
-    await this.valueEditor.open(statLabel(stat, field));
-    await this.valueEditor.setValue(String(value));
+  async hasBasicInfo(field: string, value: string | number): Promise<void> {
+    await this.setup.newCharacter({ [field]: value });
+  }
+
+  async change(valueName: string, value: string): Promise<void> {
+    await this.valueEditor.open(valueName);
+    await this.valueEditor.setValue(value);
     await this.valueEditor.confirm();
+  }
+
+  async changeStat(stat: string, field: string, value: number): Promise<void> {
+    await this.change(statLabel(stat, field), String(value));
+  }
+
+  async changeBasicInfo(field: string, value: string): Promise<void> {
+    await this.change(basicInfoLabel(field), value);
+  }
+
+  async tryToChangeBasicInfoToNothing(field: string): Promise<void> {
+    await this.valueEditor.open(basicInfoLabel(field));
+    await this.valueEditor.setValue("");
+  }
+
+  async expectChangeRefused(): Promise<void> {
+    await this.valueEditor.expectCannotConfirm();
+    await this.valueEditor.expectStillOpen();
+  }
+
+  async expectBasicInfoShows(field: string, value: string | number): Promise<void> {
+    await this.sheet.expectValueShows(basicInfoLabel(field), String(value));
   }
 
   async expectStatShows(stat: string, field: string, value: number): Promise<void> {

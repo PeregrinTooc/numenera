@@ -56,18 +56,8 @@ export class ModalDsl {
     await expect(modal).toBeVisible();
   }
 
-  async expectClosed(): Promise<void> {
-    const modal = this.page.locator('[data-testid="edit-modal"]');
-    await expect(modal).not.toBeVisible();
-  }
-
   async expectInputValue(value: string): Promise<void> {
     const input = this.page.locator('[data-testid="edit-modal-input"]');
     await expect(input).toHaveValue(value);
-  }
-
-  async expectInputFocused(): Promise<void> {
-    const input = this.page.locator('[data-testid="edit-modal-input"]');
-    await expect(input).toBeFocused();
   }
 }

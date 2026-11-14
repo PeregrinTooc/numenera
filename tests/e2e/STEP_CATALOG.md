@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **622** in 53 files
-- Feature step lines: **2197**
+- Step definitions: **586** in 52 files
+- Feature step lines: **2057**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -37,8 +37,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 8 | 0 |
 | [additional-fields-textarea.steps.ts](#additionalfieldstextareastepsts) | 28 | 0 |
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
-| [basic-info-editing-accessibility.steps.ts](#basicinfoeditingaccessibilitystepsts) | 18 | 0 |
-| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 16 | 0 |
+| [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 11 | 0 |
 | [card-deletion.steps.ts](#carddeletionstepsts) | 6 | 0 |
 | [card-editing.steps.ts](#cardeditingstepsts) | 12 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 8 | 0 |
@@ -50,7 +49,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [collection-reordering.steps.ts](#collectionreorderingstepsts) | 4 | 0 |
 | [combat.steps.ts](#combatstepsts) | 13 | 0 |
-| [common-steps.ts](#commonstepsts) | 31 | 0 |
+| [common-steps.ts](#commonstepsts) | 18 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [empty-fields-visibility.steps.ts](#emptyfieldsvisibilitystepsts) | 13 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
@@ -176,49 +175,21 @@ pattern this script does not understand):
 | Then | `the save indicator should still be visible` | 1 | 114 |
 | Then | `the save timestamp should be updated` | 2 | 87 |
 
-## basic-info-editing-accessibility.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Then | `focus should cycle between input field, confirm button, and cancel button` | 1 | 5 |
-| Then | `focus should not leave the modal` | 1 | 18 |
-| Then | `I can cancel with Escape key` | 1 | 42 |
-| Then | `I can confirm with Enter key` | 1 | 35 |
-| Then | `I can navigate with Tab key` | 1 | 27 |
-| Then | `the backdrop should have aria-hidden={string}` | 1 | 55 |
-| Then | `the buttons should be touch-friendly size \(min 44x44px)` | 1 | 106 |
-| Then | `the character name should be large enough for touch \(min 44x44px)` | 1 | 132 |
-| Then | `the descriptor should be large enough for touch \(min 44x44px)` | 1 | 152 |
-| Then | `the focus should be large enough for touch \(min 44x44px)` | 1 | 162 |
-| Then | `the input field should be large enough for touch input` | 1 | 125 |
-| Then | `the input field should have inputmode={string} for mobile` | 1 | 78 |
-| Then | `the mobile keyboard should appear` | 1 | 72 |
-| Then | `the modal should be sized appropriately for mobile` | 1 | 64 |
-| Then | `the modal should fill most of the screen width` | 1 | 87 |
-| Then | `the modal should have role={string}` | 1 | 49 |
-| Then | `the modal should not overflow the viewport` | 1 | 96 |
-| Then | `the tier should be large enough for touch \(min 44x44px)` | 1 | 142 |
-
 ## basic-info-editing.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I press Tab repeatedly` | 1 | 5 |
-| Then | `the cancel button should have an X icon` | 1 | 98 |
-| Then | `the character name should display {string}` | 7 | 44 |
-| Then | `the character name should still display {string}` | 6 | 52 |
-| Then | `the confirm button should have a checkmark icon` | 1 | 92 |
-| Then | `the descriptor should display {string}` | 4 | 66 |
-| Then | `the focus should display {string}` | 4 | 74 |
-| Then | `the input field should be of type {string}` | 1 | 35 |
-| Then | `the modal backdrop should be semi-transparent` | 1 | 104 |
-| Then | `the modal should have a cancel button with icon` | 1 | 28 |
-| Then | `the modal should have a confirm button with icon` | 1 | 21 |
-| Then | `the modal should have Numenera-themed styling` | 1 | 84 |
-| Then | `the modal should not close` | 1 | 79 |
-| Then | `the name should show a hover state indicating it's editable` | 1 | 122 |
-| Then | `the tier should display {string}` | 6 | 60 |
-| Then | `the tier should show a hover state indicating it's editable` | 1 | 133 |
+| When | `I change my {word} to {string}` | 4 | 14 |
+| When | `I change my tier to {int}` | 3 | 21 |
+| When | `I try to change my {word} to nothing` | 1 | 25 |
+| Then | `my character sheet shows my {word} as {string}` | 5 | 33 |
+| Then | `my character sheet shows my tier as {int}` | 3 | 40 |
+| Given | `my character's {word} is {string}` | 4 | 3 |
+| Given | `my character's tier is {int}` | 2 | 10 |
+| Then | `the change is refused` | 1 | 29 |
+| Then | `the character name should display {string}` | 1 | 44 |
+| Then | `the descriptor should display {string}` | 2 | 51 |
+| Then | `the focus should display {string}` | 2 | 58 |
 
 ## card-deletion.steps.ts
 
@@ -236,7 +207,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I cancel the card` | 7 | 32 |
-| When | `I open my character again` | 15 | 36 |
+| When | `I open my character again` | 16 | 36 |
 | When | `I save the card` | 38 | 28 |
 | When | `I set its {word} to {string}` | 120 | 21 |
 | When | `I start a new {cardType}` | 52 | 10 |
@@ -288,8 +259,8 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 44 | 27 |
+| Given | `a character exists with the following data:` | 1 | 9 |
+| Given | `I am on the character sheet page` | 42 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 147 |
 | Then | `I should see {int} cyphers displayed` | 1 | 110 |
 | Then | `I should see {int} oddities displayed` | 1 | 160 |
@@ -389,37 +360,24 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `an edit modal should appear` | 8 | 188 |
-| When | `I clear the input field` | 11 | 83 |
+| Then | `an edit modal should appear` | 2 | 128 |
+| When | `I clear the input field` | 1 | 45 |
 | When | `I click on the {string} value` | 1 | 7 |
-| When | `I click on the character name {string}` | 12 | 41 |
-| When | `I click on the descriptor {string}` | 2 | 51 |
-| When | `I click on the focus {string}` | 2 | 56 |
-| When | `I click on the tier {string}` | 5 | 46 |
-| When | `I click outside the modal on the backdrop` | 1 | 129 |
-| When | `I click the "Cancel" button` | 2 | 23 |
-| When | `I click the "Confirm" button` | 23 | 18 |
+| When | `I click the "Cancel" button` | 1 | 23 |
+| When | `I click the "Confirm" button` | 15 | 18 |
 | When | `I click the "New" button` | 7 | 24 |
 | When | `I click the {badge} badge` | 23 | 32 |
-| When | `I edit the {string} field to {string}` | 35 | 113 |
-| When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 122 |
-| When | `I hover over the character name {string}` | 1 | 71 |
-| When | `I hover over the tier {string}` | 1 | 75 |
-| When | `I press the Enter key` | 1 | 151 |
-| When | `I press the Escape key` | 3 | 147 |
-| When | `I reload the page` | 36 | 155 |
-| When | `I reload the page immediately` | 1 | 168 |
-| When | `I tap on the character name {string}` | 4 | 61 |
-| When | `I tap on the tier {string}` | 1 | 66 |
-| When | `I tap outside the modal on the backdrop` | 1 | 138 |
+| When | `I edit the {string} field to {string}` | 35 | 75 |
+| When | `I edit the {string} field to {string} without waiting for the auto-save` | 1 | 84 |
+| When | `I press the Escape key` | 2 | 91 |
+| When | `I reload the page` | 29 | 95 |
+| When | `I reload the page immediately` | 1 | 108 |
 | When | `I tap the {badge} badge` | 2 | 36 |
-| When | `I tap the modal confirm button` | 3 | 79 |
-| When | `I type {string} in the modal input` | 33 | 87 |
-| Then | `the {string} value should display {string}` | 1 | 175 |
-| Then | `the edit modal should open` | 9 | 189 |
-| Then | `the input field should receive focus automatically` | 1 | 204 |
-| Then | `the modal input should contain {string}` | 11 | 195 |
-| Then | `the modal should close` | 15 | 196 |
+| When | `I tap the modal confirm button` | 1 | 41 |
+| When | `I type {string} in the modal input` | 18 | 49 |
+| Then | `the {string} value should display {string}` | 1 | 115 |
+| Then | `the edit modal should open` | 9 | 129 |
+| Then | `the modal input should contain {string}` | 7 | 135 |
 
 ## data-validation.steps.ts
 
@@ -619,7 +577,7 @@ pattern this script does not understand):
 | Then | `the Current XP badge should show {string}` | 7 | 103 |
 | Then | `the Effort badge should show {string}` | 3 | 143 |
 | Then | `the Max Cyphers portion of the badge should show {string}` | 3 | 135 |
-| Then | `the modal confirm button should be disabled` | 2 | 211 |
+| Then | `the modal confirm button should be disabled` | 1 | 211 |
 | Then | `the modal should show a real validation error, not a raw translation key` | 1 | 216 |
 | Then | `the Shins badge should show {string}` | 5 | 119 |
 | Then | `the Total XP badge should show {string}` | 5 | 111 |
@@ -979,5 +937,5 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the viewport is {int} pixels wide` | 49 | 9 |
+| Given | `the viewport is {int} pixels wide` | 43 | 9 |
 
