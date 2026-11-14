@@ -84,10 +84,9 @@ Feature: Version History Undo and Redo
         And I should see an ability card with name "Test Ability"
 
     Scenario: Deleting a card creates a version
-        Given I am on the character sheet page
-        And I should see 2 cypher cards
-        When I click the delete button on the first cypher
-        Then I should see 1 cypher card
+        Given my character has the cyphers "Detonation (Cell)" and "Stim (Injector)"
+        When I discard "Detonation (Cell)"
+        Then my character's cyphers are only "Stim (Injector)"
         When I press "Control+Z" before the squash timer expires
         Then I should see 2 cypher cards
         When I press "Control+Y" before the squash timer expires

@@ -19,7 +19,7 @@ export class CharacterDsl {
   ) {}
 
   async has(kind: string, names: string[]): Promise<void> {
-    await this.setup.character({
+    await this.setup.newCharacter({
       [CARD_TYPE_TO_PROPERTY[kind]]: names.map((name) => sampleCard(kind, name)),
     });
   }

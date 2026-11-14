@@ -3,7 +3,7 @@ import type { Character } from "@/types/character";
 import type { Layout } from "@/types/layout";
 import type { SectionColumns } from "@/types/sectionColumns";
 import { LAYOUT_STORAGE_KEY, SECTION_COLUMNS_STORAGE_KEY } from "@/storage/storageConstants";
-import { waitForCharacterSheetReady } from "./app-ready.js";
+import { waitForCharacterSheetReady, waitForInitialVersionSaved } from "./app-ready.js";
 import { FULL_CHARACTER, EMPTY_ARRAYS } from "./cardTestFixtures.js";
 
 export class SetupDsl {
@@ -11,6 +11,19 @@ export class SetupDsl {
 
   async character(overrides: Record<string, unknown> = {}): Promise<void> {
     await this.replaceCharacter({ ...FULL_CHARACTER, ...EMPTY_ARRAYS, ...overrides });
+  }
+
+  /** Like `character`, but the history starts over: only the new character's initial version. */
+  async newCharacter(overrides: Record<string, unknown> = {}): Promise<void> {
+    await this.world.storageHelper.setCharacter({
+      ...FULL_CHARACTER,
+      ...EMPTY_ARRAYS,
+      ...overrides,
+    });
+    await this.world.storageHelper.clearVersions();
+    await this.world.page.reload();
+    await waitForCharacterSheetReady(this.world.page);
+    await waitForInitialVersionSaved(this.world.page);
   }
 
   /**

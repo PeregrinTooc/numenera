@@ -57,11 +57,4 @@ export class CardsDsl {
     await editButton.click();
     await this.page.waitForSelector('[data-testid="card-edit-modal"]', { timeout: 5000 });
   }
-
-  async clickDeleteButton(cardType: string, index = 0): Promise<void> {
-    const deleteButtons = this.page.locator(`[data-testid^="${cardType}-delete-button-"]`);
-    const before = await deleteButtons.count();
-    await this.page.locator(`[data-testid="${cardType}-delete-button-${index}"]`).click();
-    await expect(deleteButtons).toHaveCount(before - 1);
-  }
 }

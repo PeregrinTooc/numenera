@@ -1,10 +1,6 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import type { CustomWorld } from "../support/world.js";
 
-When("I click the delete button on the first cypher", async function (this: CustomWorld) {
-  await this.cards.clickDeleteButton("cypher");
-});
-
 Given(
   "my character has the {cardKind} {string} and {string}",
   async function (this: CustomWorld, kind: string, first: string, second: string) {

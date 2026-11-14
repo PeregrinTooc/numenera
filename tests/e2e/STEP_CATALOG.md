@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **703** in 55 files
-- Feature step lines: **2330**
+- Step definitions: **702** in 55 files
+- Feature step lines: **2329**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -43,7 +43,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [card-creation-modal-fields.steps.ts](#cardcreationmodalfieldsstepsts) | 33 | 0 |
 | [card-creation-setup.steps.ts](#cardcreationsetupstepsts) | 22 | 0 |
 | [card-creation-verification.steps.ts](#cardcreationverificationstepsts) | 24 | 0 |
-| [card-deletion.steps.ts](#carddeletionstepsts) | 7 | 0 |
+| [card-deletion.steps.ts](#carddeletionstepsts) | 6 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 16 | 0 |
 | [card-reordering-abilities.steps.ts](#cardreorderingabilitiesstepsts) | 5 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 8 | 0 |
@@ -309,7 +309,7 @@ pattern this script does not understand):
 | Then | `I should see {int} ability cards` | 14 | 25 |
 | Then | `I should see {int} artifact cards` | 8 | 13 |
 | Then | `I should see {int} attack cards` | 8 | 21 |
-| Then | `I should see {int} cypher card(s)` | 14 | 5 |
+| Then | `I should see {int} cypher card(s)` | 12 | 5 |
 | Then | `I should see {int} equipment cards` | 8 | 9 |
 | Then | `I should see {int} oddity cards` | 8 | 17 |
 | Then | `I should see {int} special ability cards` | 8 | 29 |
@@ -335,13 +335,12 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `{string} is still gone the next time I open my character` | 1 | 25 |
-| When | `I click the delete button on the first cypher` | 1 | 3 |
-| When | `I discard {string}` | 3 | 14 |
-| Then | `it was discarded without my being asked to confirm` | 1 | 32 |
-| Given | `my character has the {cardKind} {string} and {string}` | 4 | 7 |
-| Then | `my character's {cardKind} are only {string}` | 1 | 18 |
-| Then | `the discard control of {string} is in the top-left corner of its entry` | 1 | 36 |
+| Then | `{string} is still gone the next time I open my character` | 1 | 21 |
+| When | `I discard {string}` | 4 | 10 |
+| Then | `it was discarded without my being asked to confirm` | 1 | 28 |
+| Given | `my character has the {cardKind} {string} and {string}` | 5 | 3 |
+| Then | `my character's {cardKind} are only {string}` | 2 | 14 |
+| Then | `the discard control of {string} is in the top-left corner of its entry` | 1 | 32 |
 
 ## card-modal-focus-trap.steps.ts
 
@@ -392,7 +391,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Given | `a character exists with the following data:` | 2 | 9 |
-| Given | `I am on the character sheet page` | 58 | 27 |
+| Given | `I am on the character sheet page` | 57 | 27 |
 | Then | `I should see {int} artifact displayed` | 1 | 147 |
 | Then | `I should see {int} cyphers displayed` | 1 | 110 |
 | Then | `I should see {int} oddities displayed` | 1 | 160 |
