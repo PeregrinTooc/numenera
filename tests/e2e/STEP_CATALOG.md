@@ -43,7 +43,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 8 | 0 |
 | [card-reordering-abilities.steps.ts](#cardreorderingabilitiesstepsts) | 5 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 8 | 0 |
-| [character-display.steps.ts](#characterdisplaystepsts) | 33 | 0 |
+| [character-display.steps.ts](#characterdisplaystepsts) | 32 | 0 |
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
@@ -83,7 +83,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [version-history-navigator-state.steps.ts](#versionhistorynavigatorstatestepsts) | 16 | 0 |
 | [version-history-shortcuts.steps.ts](#versionhistoryshortcutsstepsts) | 4 | 0 |
 | [version-history-squash-race.steps.ts](#versionhistorysquashracestepsts) | 3 | 0 |
-| [viewport.steps.ts](#viewportstepsts) | 1 | 0 |
+| [viewport.steps.ts](#viewportstepsts) | 2 | 0 |
 
 ## ⚠️ Feature lines with no matching step definition
 
@@ -218,24 +218,24 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag ability {string} before ability {string}` | 2 | 28 |
-| When | `I drag ability {string} onto cypher {string}` | 1 | 80 |
-| When | `I drag cypher {string} into the abilities section` | 1 | 64 |
-| Then | `the abilities should be in order {string}` | 5 | 49 |
-| Given | `the character has {int} abilities named {string}` | 5 | 5 |
+| When | `I drag ability {string} before ability {string}` | 2 | 27 |
+| When | `I drag ability {string} onto cypher {string}` | 1 | 79 |
+| When | `I drag cypher {string} into the abilities section` | 1 | 63 |
+| Then | `the abilities should be in order {string}` | 5 | 48 |
+| Given | `the character has {int} abilities named {string}` | 5 | 4 |
 
 ## card-reordering.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag cypher {string} after cypher {string}` | 1 | 41 |
-| When | `I drag cypher {string} before cypher {string}` | 3 | 21 |
-| When | `I hover over cypher {string}` | 1 | 91 |
-| When | `I start dragging cypher {string}` | 2 | 66 |
-| Given | `the character has {int} cyphers named {string}` | 9 | 5 |
-| Then | `the cypher {string} should have a dragging visual state` | 1 | 127 |
-| Then | `the cyphers should be in order {string}` | 7 | 110 |
-| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 138 |
+| When | `I drag cypher {string} after cypher {string}` | 1 | 40 |
+| When | `I drag cypher {string} before cypher {string}` | 3 | 20 |
+| When | `I hover over cypher {string}` | 1 | 90 |
+| When | `I start dragging cypher {string}` | 2 | 65 |
+| Given | `the character has {int} cyphers named {string}` | 9 | 4 |
+| Then | `the cypher {string} should have a dragging visual state` | 1 | 126 |
+| Then | `the cyphers should be in order {string}` | 7 | 109 |
+| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 137 |
 
 ## character-display.steps.ts
 
@@ -256,7 +256,7 @@ pattern this script does not understand):
 | Then | `I should see empty state for notes` | 1 | 191 |
 | Then | `I should see focus {string} displayed` | 1 | 49 |
 | Then | `I should see oddity {string}` | 2 | 165 |
-| Then | `I should see sections in this order:` | 1 | 274 |
+| Then | `I should see sections in this order:` | 1 | 266 |
 | Then | `I should see the {string} stat with pool {string}, edge {string}, and current {string}` | 3 | 85 |
 | Then | `I should see the character name {string}` | 3 | 32 |
 | Then | `I should see tier {string} displayed` | 1 | 36 |
@@ -272,7 +272,6 @@ pattern this script does not understand):
 | Given | `the character has the following stats:` | 1 | 67 |
 | Given | `the character has the following text:` | 2 | 220 |
 | Then | `the character text should read exactly:` | 2 | 234 |
-| Then | `the page should not scroll horizontally` | 2 | 266 |
 | Then | `these controls should have their translated accessible label:` | 1 | 57 |
 
 ## character-file-export.steps.ts
@@ -315,10 +314,10 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag {string} after {string} in the {string} collection` | 1 | 78 |
-| When | `I drag {string} before {string} in the {string} collection` | 1 | 66 |
-| Given | `the {string} collection holds {string}` | 2 | 54 |
-| Then | `the {string} collection should be in order {string}` | 2 | 94 |
+| When | `I drag {string} after {string} in the {string} collection` | 1 | 77 |
+| When | `I drag {string} before {string} in the {string} collection` | 1 | 65 |
+| Given | `the {string} collection holds {string}` | 2 | 53 |
+| Then | `the {string} collection should be in order {string}` | 2 | 93 |
 
 ## combat.steps.ts
 
@@ -541,17 +540,17 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 50 |
-| When | `I hold the {string} section over the {zone} of the {string} section as the window shows it` | 1 | 59 |
-| When | `I keep still for a moment` | 9 | 88 |
-| When | `I release the section outside the sheet` | 2 | 93 |
-| When | `I release the section where it is` | 1 | 106 |
-| Then | `no drop preview should be shown` | 1 | 143 |
-| Given | `the {string} section is at the top of the window` | 1 | 66 |
-| Then | `the {string} section should not have moved up or down on screen` | 1 | 75 |
-| Then | `the {string} section should preview {string} in its place` | 1 | 122 |
-| Then | `the {string} section should preview {string} on its right` | 1 | 112 |
-| Then | `the row of {string} should preview {string} below it` | 1 | 132 |
+| When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 49 |
+| When | `I hold the {string} section over the {zone} of the {string} section as the window shows it` | 1 | 58 |
+| When | `I keep still for a moment` | 9 | 87 |
+| When | `I release the section outside the sheet` | 2 | 92 |
+| When | `I release the section where it is` | 1 | 105 |
+| Then | `no drop preview should be shown` | 1 | 142 |
+| Given | `the {string} section is at the top of the window` | 1 | 65 |
+| Then | `the {string} section should not have moved up or down on screen` | 1 | 74 |
+| Then | `the {string} section should preview {string} in its place` | 1 | 121 |
+| Then | `the {string} section should preview {string} on its right` | 1 | 111 |
+| Then | `the row of {string} should preview {string} below it` | 1 | 131 |
 
 ## section-reordering.steps.ts
 
@@ -879,5 +878,6 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
+| Then | `the page should not scroll horizontally` | 2 | 12 |
 | Given | `the viewport is {int} pixels wide` | 38 | 9 |
 

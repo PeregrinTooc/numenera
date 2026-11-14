@@ -17,6 +17,8 @@ import { AdditionalFieldsDsl } from "./additionalFields.js";
 import { PlaywrightInlineFieldsDriver } from "./inlineFieldsDriver.js";
 import { LayoutDsl } from "./layout.js";
 import { MouseInput, TouchInput } from "./sectionInput.js";
+import { ScreenDsl } from "./screen.js";
+import { PlaywrightViewportDriver } from "./viewportDriver.js";
 import { BASE_URL } from "./serverUrl.js";
 
 let browser: Browser;
@@ -60,8 +62,12 @@ Before(async function (this: CustomWorld, { pickle }) {
   this.valueEditor = new ValueEditorDsl(valueEditor);
   this.additionalFields = new AdditionalFieldsDsl(new PlaywrightInlineFieldsDriver(this.page));
   this.cardEditor = new CardEditorDsl(new PlaywrightCardEditorDriver(this.page));
+  const viewport = new PlaywrightViewportDriver(this.page);
+  this.screen = new ScreenDsl(viewport);
   this.layout = new LayoutDsl(
-    DEVICE.sectionInput === "touch" ? new TouchInput(this.page) : new MouseInput(this.page)
+    DEVICE.sectionInput === "touch"
+      ? new TouchInput(this.page, viewport)
+      : new MouseInput(this.page, viewport)
   );
 
   // Initialize storage helper before navigation, so the Before hook's own

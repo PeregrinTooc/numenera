@@ -12,10 +12,7 @@ interface Box {
   height: number;
 }
 
-export type Screen = "wide screen" | "phone";
 export type CardTheme = "red" | "teal";
-
-const SCREEN_WIDTH: Record<Screen, number> = { "wide screen": 1280, phone: 390 };
 
 // Tailwind gradient class that carries each theme's colour on a card.
 const THEME_CLASS: Record<CardTheme, RegExp> = { red: /from-red-50/, teal: /from-cyan-50/ };
@@ -42,7 +39,6 @@ export interface SheetDriver {
   expectEntryThemed(kind: string, name: string, theme: CardTheme): Promise<void>;
   expectEmptyState(kind: string): Promise<void>;
   expectArmorInAttacksSection(armor: number): Promise<void>;
-  viewOn(screen: Screen): Promise<void>;
   expectSectionLeftOf(kind: string, other: string): Promise<void>;
   expectSectionAbove(kind: string, other: string): Promise<void>;
   expectFirstEntryBadgesAtRightEdge(kind: string): Promise<void>;
@@ -167,12 +163,6 @@ export class PlaywrightSheetDriver implements SheetDriver {
   async expectArmorInAttacksSection(armor: number): Promise<void> {
     const armorValue = this.section("attack").getByTestId("armor-badge").getByTestId("armor-value");
     await expect(armorValue).toHaveText(String(armor));
-  }
-
-  async viewOn(screen: Screen): Promise<void> {
-    const width = SCREEN_WIDTH[screen];
-    await this.page.setViewportSize({ width, height: 800 });
-    await expect.poll(() => this.page.evaluate(() => window.innerWidth)).toBe(width);
   }
 
   async expectSectionLeftOf(kind: string, other: string): Promise<void> {

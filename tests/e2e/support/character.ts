@@ -5,7 +5,7 @@ import type { SetupDsl } from "./setup.js";
 import { englishText } from "./i18nKeys.js";
 import { statLabel } from "./valueEditor.js";
 import type { ValueEditorDriver } from "./valueEditorDriver.js";
-import type { CardTheme, Screen, SheetDriver } from "./sheetDriver.js";
+import type { CardTheme, SheetDriver } from "./sheetDriver.js";
 
 function nameOf(card: unknown): string {
   return typeof card === "string" ? card : (card as { name: string }).name;
@@ -194,10 +194,6 @@ export class CharacterDsl {
 
   async expectArmorBesideAttacks(armor: number): Promise<void> {
     await this.sheet.expectArmorInAttacksSection(armor);
-  }
-
-  async viewOn(screen: Screen): Promise<void> {
-    await this.sheet.viewOn(screen);
   }
 
   async expectSectionLeftOf(kind: string, other: string): Promise<void> {

@@ -264,14 +264,6 @@ Given(
   }
 );
 
-Then("the page should not scroll horizontally", async function (this: CustomWorld) {
-  const { scrollWidth, clientWidth } = await this.page.evaluate(() => ({
-    scrollWidth: document.documentElement.scrollWidth,
-    clientWidth: document.documentElement.clientWidth,
-  }));
-  expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
-});
-
 Then("I should see sections in this order:", async function (this: CustomWorld, table: DataTable) {
   const expected = table.raw().map(([name]) => sectionId(name));
   const actual = await this.page

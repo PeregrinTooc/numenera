@@ -1,7 +1,6 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
-import { withFullHeightViewport } from "../support/sections.js";
 
 Given(
   "the character has {int} abilities named {string}",
@@ -37,7 +36,7 @@ When(
       .locator("xpath=ancestor::div[starts-with(@data-testid,'ability-item')]");
 
     // Full-height viewport: on phones the stacked cards don't all fit on screen.
-    await withFullHeightViewport(this.page, () =>
+    await this.screen.withFullHeight(() =>
       sourceCard.dragTo(targetCard, {
         targetPosition: { x: 10, y: 5 },
       })
@@ -89,7 +88,7 @@ When(
       .locator("xpath=ancestor::div[@data-testid='cypher-item']");
 
     // Full-height viewport: on phones the two sections don't both fit on screen.
-    await withFullHeightViewport(this.page, () =>
+    await this.screen.withFullHeight(() =>
       sourceCard.dragTo(targetCard, {
         targetPosition: { x: 10, y: 5 },
       })

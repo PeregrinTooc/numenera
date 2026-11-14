@@ -10,6 +10,7 @@ import type { CardEditorDsl } from "./cardEditor.js";
 import type { ValueEditorDsl } from "./valueEditor.js";
 import type { AdditionalFieldsDsl } from "./additionalFields.js";
 import type { LayoutDsl } from "./layout.js";
+import type { ScreenDsl } from "./screen.js";
 import { BASE_URL } from "./serverUrl.js";
 import type { Layout } from "@/types/layout";
 import type { SectionColumns } from "@/types/sectionColumns";
@@ -37,6 +38,7 @@ export interface CustomWorld extends World {
   character: CharacterDsl;
   cardEditor: CardEditorDsl;
   layout: LayoutDsl;
+  screen: ScreenDsl;
   valueEditor: ValueEditorDsl;
   additionalFields: AdditionalFieldsDsl;
   // card-reordering.steps.ts
@@ -74,6 +76,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   character!: CharacterDsl;
   cardEditor!: CardEditorDsl;
   layout!: LayoutDsl;
+  screen!: ScreenDsl;
   valueEditor!: ValueEditorDsl;
   additionalFields!: AdditionalFieldsDsl;
   // card-reordering.steps.ts

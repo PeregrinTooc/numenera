@@ -4,7 +4,6 @@ import { CustomWorld } from "../support/world";
 import { englishText } from "../support/i18nKeys.js";
 import {
   finishSectionSlides,
-  growViewportToFullHeight,
   holdSectionOver,
   releaseSectionDrag,
   sectionId,
@@ -52,7 +51,7 @@ When(
   "I hold the {string} section over the {zone} of the {string} section",
   async function (this: CustomWorld, source: string, zone: SectionZone, target: string) {
     // Not restored: the drag stays held into the Then steps.
-    await growViewportToFullHeight(this.page);
+    await this.screen.growToFullHeight();
     await holdOver(this, source, zone, target);
   }
 );

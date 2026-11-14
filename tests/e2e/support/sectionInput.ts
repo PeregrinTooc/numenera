@@ -2,18 +2,17 @@ import { expect, type Page } from "@playwright/test";
 import { EDGE_ZONE_PX } from "@/components/helpers/EdgeAutoScroll";
 import {
   finishSectionSlides,
-  growViewportToFullHeight,
   holdSectionOver,
   nearTopOf,
   releaseSectionDrag,
   sectionLocator,
   sectionOrder,
   TouchGesture,
-  withFullHeightViewport,
   withPausedClock,
   zonePoint,
   type SectionZone,
 } from "./sections.js";
+import type { ViewportDriver } from "./viewportDriver.js";
 
 export interface DropPlace {
   target: string;
@@ -45,11 +44,14 @@ async function expectDragEnded(page: Page, source: string): Promise<void> {
 
 /** Drops the section straight away, before the live preview appears. */
 export class MouseInput implements SectionInput {
-  constructor(private page: Page) {}
+  constructor(
+    private page: Page,
+    private viewport: ViewportDriver
+  ) {}
 
   async dragSection(source: string, { target, edge }: DropPlace): Promise<void> {
     const page = this.page;
-    await withFullHeightViewport(page, async () => {
+    await this.viewport.withFullHeight(async () => {
       const point = zonePoint(await boxOf(page, target), edge);
       await withPausedClock(page, async () => {
         await holdSectionOver(page, source, point);
@@ -67,11 +69,14 @@ const EDGE_CLEARANCE_PX = 2 * EDGE_ZONE_PX;
 const LONG_PRESS_MS = 250;
 
 export class TouchInput implements SectionInput {
-  constructor(private page: Page) {}
+  constructor(
+    private page: Page,
+    private viewport: ViewportDriver
+  ) {}
 
   async dragSection(source: string, { target, edge }: DropPlace): Promise<void> {
     const page = this.page;
-    await withFullHeightViewport(page, async () => {
+    await this.viewport.withFullHeight(async () => {
       await withPausedClock(page, async () => {
         const gesture = await this.pressAndHold(source);
         await gesture.moveTo(zonePoint(await boxOf(page, target), edge));
@@ -117,7 +122,7 @@ export class TouchInput implements SectionInput {
   async holdOver(source: string, { target, edge }: DropPlace): Promise<HeldDrag> {
     const page = this.page;
     // Not restored: the drag stays held into the next step
-    await growViewportToFullHeight(page);
+    await this.viewport.growToFullHeight();
     const orderBefore = await sectionOrder(page);
     const gesture = await withPausedClock(page, () => this.pressAndHold(source));
     await gesture.moveTo(zonePoint(await boxOf(page, target), edge));
