@@ -127,6 +127,7 @@ in `Before`, so every step definition has them from the first line:
 
 | On `this`       | Class (file)                                         | For                                                                                                |
 | --------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `clock`         | `ClockDriver` (`support/clockDriver.ts`)             | Let time pass: advances the app's `ManualClock`, the only way timers fire under test.              |
 | `dom`           | `DOMHelpers` (`support/dom-helpers.ts`)              | Generic `data-testid` locators and waits.                                                          |
 | `storageHelper` | `TestStorageHelper` (`support/testStorageHelper.ts`) | Seed or clear character/version storage.                                                           |
 | `modal`         | `ModalDsl` (`support/modal.ts`)                      | Confirm/cancel/type/clear/expectOpen/expectClosed on the edit modal.                               |
@@ -138,6 +139,10 @@ Gherkin vocabulary comes in through parameter types
 (`support/parameterTypes.ts`): `{cardType}`, `{badge}`, `{textarea}`,
 `{resource}`. An unrecognised word is a compile-time undefined step, not a
 runtime lookup failure inside the step body.
+
+Every scenario runs the app on a `ManualClock` that `hooks.ts` requests before
+boot; nothing fires until a step or driver advances it by the app's own
+duration (import the constant from `src`). Never fake time in the browser any other way, and never sleep.
 
 ESLint enforces the DSL rather than leaving it as convention: instantiating
 `DOMHelpers`/`TestStorageHelper` directly, or one step-definitions file
