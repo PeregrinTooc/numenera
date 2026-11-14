@@ -65,6 +65,18 @@ When("my edits have settled into a version", async function (this: CustomWorld) 
   await this.history.editsHaveSettled();
 });
 
+When("I undo with Ctrl+Z", async function (this: CustomWorld) {
+  await this.history.undoes();
+});
+
+When("I redo with Ctrl+Y", async function (this: CustomWorld) {
+  await this.history.redoes();
+});
+
+When("I redo with Ctrl+Shift+Z", async function (this: CustomWorld) {
+  await this.history.redoesWithShift();
+});
+
 When("I reopen my character", async function (this: CustomWorld) {
   await this.history.reopens();
 });
@@ -75,6 +87,18 @@ When("I export what I am viewing", async function (this: CustomWorld) {
 
 Then("the navigator is hidden", async function (this: CustomWorld) {
   await this.history.expectNavigatorHidden();
+});
+
+Then("I can import a character", async function (this: CustomWorld) {
+  await this.history.expectImportAvailable(true);
+});
+
+Then("I cannot import a character", async function (this: CustomWorld) {
+  await this.history.expectImportAvailable(false);
+});
+
+Then("my character sheet shows my original name", async function (this: CustomWorld) {
+  await this.history.expectOriginalName();
 });
 
 Then("I can edit my character", async function (this: CustomWorld) {

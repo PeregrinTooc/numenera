@@ -111,6 +111,18 @@ export class VersionHistoryDsl {
     await this.driver.settleEdits();
   }
 
+  async undoes(): Promise<void> {
+    await this.driver.undo();
+  }
+
+  async redoes(): Promise<void> {
+    await this.driver.redo();
+  }
+
+  async redoesWithShift(): Promise<void> {
+    await this.driver.redoWithShift();
+  }
+
   async reopens(): Promise<void> {
     await this.driver.reopen();
   }
@@ -121,6 +133,14 @@ export class VersionHistoryDsl {
 
   async expectNavigatorHidden(): Promise<void> {
     await this.driver.expectNavigatorHidden();
+  }
+
+  async expectImportAvailable(available: boolean): Promise<void> {
+    await this.driver.expectImportAvailable(available);
+  }
+
+  async expectOriginalName(): Promise<void> {
+    await this.character.expectBasicInfoShows("name", ORIGINAL_NAME);
   }
 
   async expectEditable(): Promise<void> {

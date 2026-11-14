@@ -48,8 +48,6 @@ export interface CustomWorld extends World {
     box: { x: number; y: number; width: number; height: number };
     point: { x: number; y: number };
   };
-  // version-history.steps.ts
-  originalCharacterName?: string;
   // auto-save-indicator.steps.ts
   savedTimestamp?: string | null;
   saveCount?: number;
@@ -83,7 +81,6 @@ export class CustomWorldConstructor extends World implements CustomWorld {
     box: { x: number; y: number; width: number; height: number };
     point: { x: number; y: number };
   };
-  originalCharacterName?: string;
   savedTimestamp?: string | null;
   saveCount?: number;
   exportedFileData?: ExportedCharacterFile | null;

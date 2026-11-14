@@ -20,10 +20,6 @@ Given(
   async function (this: CustomWorld, versionCount: number) {
     await waitForInitialVersionSaved(this.page);
 
-    const nameField = this.page.locator('[data-testid="character-name"]');
-    const originalName = await nameField.textContent();
-    this.originalCharacterName = originalName?.trim();
-
     const baseCharacter = await this.storageHelper.getCharacter();
 
     for (let i = 1; i < versionCount; i++) {
@@ -43,10 +39,6 @@ Given(
     }
   }
 );
-
-Given("I am viewing the latest version", async function (this: CustomWorld) {
-  await expect(this.page.getByTestId("version-nav-forward")).toBeDisabled();
-});
 
 Given(
   "the character has a version with multiple basic info changes",

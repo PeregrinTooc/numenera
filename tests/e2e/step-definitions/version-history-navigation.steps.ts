@@ -12,14 +12,6 @@ When("I click the backward navigation arrow", async function (this: CustomWorld)
   await clickAndAwaitNavigation(this.page, "version-nav-backward");
 });
 
-When("I click the forward navigation arrow", async function (this: CustomWorld) {
-  await clickAndAwaitNavigation(this.page, "version-nav-forward");
-});
-
-When("I click the restore button in the warning banner", async function (this: CustomWorld) {
-  await clickAndAwaitNavigation(this.page, "version-restore-button");
-});
-
 When("I refresh the browser", async function (this: CustomWorld) {
   await this.page.reload();
   await waitForCharacterSheetReady(this.page);

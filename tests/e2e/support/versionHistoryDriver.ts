@@ -28,6 +28,9 @@ export interface ExportedView {
 export interface VersionHistoryDriver {
   storeVersions(seeds: VersionSeed[]): Promise<void>;
   settleEdits(): Promise<void>;
+  undo(): Promise<void>;
+  redo(): Promise<void>;
+  redoWithShift(): Promise<void>;
   reopen(): Promise<void>;
   stepBack(): Promise<void>;
   stepForward(): Promise<void>;
@@ -37,6 +40,7 @@ export interface VersionHistoryDriver {
   returnToLatest(): Promise<void>;
   exportWhatIsShown(): Promise<ExportedView>;
   expectNavigatorHidden(): Promise<void>;
+  expectImportAvailable(available: boolean): Promise<void>;
   expectEditable(): Promise<void>;
   expectPosition(current: number, total: number): Promise<void>;
   expectCanStepBack(possible: boolean): Promise<void>;
@@ -55,6 +59,17 @@ const BACK = "version-nav-backward";
 const FORWARD = "version-nav-forward";
 const RESTORE = "version-restore-button";
 const LATEST = "version-return-button";
+
+interface Chord {
+  key: string;
+  code: string;
+  shiftKey: boolean;
+}
+
+const UNDO: Chord = { key: "z", code: "KeyZ", shiftKey: false };
+const REDO: Chord = { key: "y", code: "KeyY", shiftKey: false };
+// Browsers report the key as "Z" while Shift is held.
+const REDO_WITH_SHIFT: Chord = { key: "Z", code: "KeyZ", shiftKey: true };
 
 class CapturedExportedView implements ExportedView {
   constructor(private file: ExportedCharacterFile) {}
@@ -89,6 +104,18 @@ export class PlaywrightVersionHistoryDriver implements VersionHistoryDriver {
 
   async settleEdits(): Promise<void> {
     await forceSquash(this.page);
+  }
+
+  async undo(): Promise<void> {
+    await this.pressWithControl(UNDO);
+  }
+
+  async redo(): Promise<void> {
+    await this.pressWithControl(REDO);
+  }
+
+  async redoWithShift(): Promise<void> {
+    await this.pressWithControl(REDO_WITH_SHIFT);
   }
 
   async reopen(): Promise<void> {
@@ -137,6 +164,10 @@ export class PlaywrightVersionHistoryDriver implements VersionHistoryDriver {
 
   async expectNavigatorHidden(): Promise<void> {
     await expect(this.page.getByTestId("version-navigator")).toHaveCount(0);
+  }
+
+  async expectImportAvailable(available: boolean): Promise<void> {
+    await this.expectEnabled("import-button", available);
   }
 
   async expectEditable(): Promise<void> {
@@ -198,6 +229,25 @@ export class PlaywrightVersionHistoryDriver implements VersionHistoryDriver {
     await expect(this.page.getByTestId("portrait-image-clickable")).toHaveAttribute(
       "src",
       portrait
+    );
+  }
+
+  /** Dispatched on the body, as a key press outside any input would arrive. */
+  private async pressWithControl(chord: Chord): Promise<void> {
+    await this.page.evaluate(
+      ({ key, code, shiftKey }) =>
+        document.body.dispatchEvent(
+          new KeyboardEvent("keydown", {
+            key,
+            code,
+            shiftKey,
+            ctrlKey: true,
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+          })
+        ),
+      chord
     );
   }
 
