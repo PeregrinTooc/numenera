@@ -6,21 +6,6 @@
   box-shadow: 0 2px 4px rgba(180, 83, 9, 0.1);
 }
 
-.text-content {
-  font-family: "Caveat", "Patrick Hand", cursive;
-  font-size: 1.125rem;
-  line-height: 1.7;
-  color: #78350f;
-  white-space: pre-wrap;
-}
-
-.empty-text-content {
-  color: #92400e;
-  font-family: serif;
-  font-size: 0.875rem;
-  font-style: italic;
-}
-
 .bottom-text-fields {
   display: grid;
   grid-template-columns: 1fr 1fr;

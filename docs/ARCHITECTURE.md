@@ -225,7 +225,6 @@ src/
 │   ├── CypherItem.ts
 │   ├── ArtifactItem.ts
 │   ├── OddityItem.ts
-│   ├── TextField.ts
 │   ├── Stats.ts               # Container components (compose items)
 │   ├── Cyphers.ts
 │   ├── Artifacts.ts
