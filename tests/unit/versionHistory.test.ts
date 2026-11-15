@@ -6,7 +6,7 @@ import { createTestCharacter as createMockCharacter } from "../factories/charact
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-describe.sequential("VersionHistoryManager", () => {
+describe("VersionHistoryManager", () => {
   let manager: VersionHistoryManager;
   let mockCharacter: Character;
   const testDbName = "test-version-history-suite";
@@ -97,8 +97,8 @@ describe.sequential("VersionHistoryManager", () => {
     });
   });
 
-  describe.sequential("FIFO Queue (Max 99 Versions)", () => {
-    it.sequential("should allow up to 99 versions", async () => {
+  describe("FIFO Queue (Max 99 Versions)", () => {
+    it("should allow up to 99 versions", async () => {
       for (let i = 1; i <= 99; i++) {
         await manager.saveVersion(mockCharacter, `Version ${i}`, DEFAULT_START_MS);
       }
@@ -107,7 +107,7 @@ describe.sequential("VersionHistoryManager", () => {
       expect(versions).toHaveLength(99);
     });
 
-    it.sequential("should remove oldest version when exceeding 99", async () => {
+    it("should remove oldest version when exceeding 99", async () => {
       for (let i = 1; i <= 99; i++) {
         await manager.saveVersion(mockCharacter, `Version ${i}`, DEFAULT_START_MS);
       }
@@ -120,7 +120,7 @@ describe.sequential("VersionHistoryManager", () => {
       expect(versions[98].description).toBe("Version 100");
     });
 
-    it.sequential("should maintain FIFO order when removing old versions", async () => {
+    it("should maintain FIFO order when removing old versions", async () => {
       for (let i = 1; i <= 101; i++) {
         await manager.saveVersion(mockCharacter, `Version ${i}`, DEFAULT_START_MS);
       }
@@ -132,7 +132,7 @@ describe.sequential("VersionHistoryManager", () => {
     });
   });
 
-  describe.sequential("Loading Versions", () => {
+  describe("Loading Versions", () => {
     it("should retrieve all versions in chronological order", async () => {
       await manager.saveVersion(mockCharacter, "Version 1", DEFAULT_START_MS);
       await manager.saveVersion(mockCharacter, "Version 2", DEFAULT_START_MS);

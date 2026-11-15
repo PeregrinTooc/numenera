@@ -102,7 +102,9 @@ async function reportingSlides(world: CustomWorld, check: () => Promise<void>): 
       before,
       after: await progress(),
     };
-    throw new Error(`${(error as Error).message}\nSlides: ${JSON.stringify(report)}`);
+    throw new Error(`${(error as Error).message}\nSlides: ${JSON.stringify(report)}`, {
+      cause: error,
+    });
   }
 }
 

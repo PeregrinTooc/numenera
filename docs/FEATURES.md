@@ -411,24 +411,6 @@ All features listed below have full BDD test coverage and are verified working.
   - Unavailable on phone-width viewports (falls back to single-pane
     navigation); available from tablet width up
 
-### Time
-
-- **One Injectable Clock** ([version-history-navigation.feature](../tests/e2e/features/version-history-navigation.feature), [auto-save-indicator.feature](../tests/e2e/features/auto-save-indicator.feature))
-  - All app time goes through `Clock` (`src/services/clock.ts`: `now`, `setTimeout`,
-    `clearTimeout`), created once in `createAppContext` and passed by constructor injection;
-    `SystemClock` is the one production implementation
-  - `ManualClock` (`src/services/manualClock.ts`) is the one controllable clock, shared by unit
-    tests and E2E: it starts at a fixed time and fires timers only when advanced, in due order
-  - ESLint bans `setTimeout`, `setInterval`, `Date.now()` and zero-argument `new Date()` in
-    `src/` outside `clock.ts`
-  - E2E: every scenario runs on a `ManualClock` the app creates when a pre-boot flag is set
-    (real class, also in the production build); the World's `clock` driver advances it by the
-    app's own durations (auto-save debounce, squash delay, long-press hold, live-preview dwell,
-    import feedback). `page.clock`, `@fake-clock`, `__testTimer` and `__SQUASH_DELAY_MS__` are gone
-  - The timestamp scenario asserts a concrete "5 minutes ago"
-  - Not on the clock: `requestAnimationFrame` (edge auto-scroll); the IndexedDB availability
-    watchdog uses a `SystemClock` from `storageFactory`
-
 ---
 
 ## Related Documentation

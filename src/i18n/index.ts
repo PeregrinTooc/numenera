@@ -25,7 +25,7 @@ export async function initI18n(): Promise<void> {
   });
 }
 
-export const t = (key: string, options?: Record<string, unknown>): string => {
+export const t = (key: string, options: Record<string, unknown> = {}): string => {
   return i18next.t(key, options);
 };
 

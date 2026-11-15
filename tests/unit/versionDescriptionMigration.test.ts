@@ -10,7 +10,7 @@ const KEY = "versionHistory.changes";
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-describe.sequential("migrateLegacyVersionDescriptions", () => {
+describe("migrateLegacyVersionDescriptions", () => {
   let manager: VersionHistoryManager;
   let mockCharacter: Character;
   const testDbName = "test-version-description-migration-suite";
