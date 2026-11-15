@@ -63,13 +63,15 @@ export class DiffCharacterSheet {
           </div>
         </div>
         <div class="character-portrait" data-testid="character-portrait">
-          ${c.portrait
-            ? html`<img
-                src="${c.portrait}"
-                alt="${t("character.portrait")}"
-                class="portrait-image"
-              />`
-            : html`<span class="character-portrait-text">${t("character.portrait")}</span>`}
+          ${
+            c.portrait
+              ? html`<img
+                  src="${c.portrait}"
+                  alt="${t("character.portrait")}"
+                  class="portrait-image"
+                />`
+              : html`<span class="character-portrait-text">${t("character.portrait")}</span>`
+          }
         </div>
       </div>
     `;

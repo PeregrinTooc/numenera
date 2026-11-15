@@ -1,5 +1,6 @@
 import { beforeEach, afterEach, vi } from "vitest";
 import { VersionHistoryService } from "@/services/versionHistoryService";
+import { ManualClock } from "@/services/manualClock";
 import type { Character } from "@/types/character";
 import type { VersionHistoryManager } from "@/storage/versionHistory";
 import { setupRealVersionHistory } from "./realVersionHistory";
@@ -9,22 +10,21 @@ export interface VersionHistoryServiceFixture {
   readonly service: VersionHistoryService;
   readonly manager: VersionHistoryManager;
   readonly mockCharacter: Character;
+  readonly clock: ManualClock;
 }
 
 /**
  * Registers hooks that give each test a VersionHistoryService (1000ms squash
- * delay) over a real manager, with fake timers. Returns live accessors.
+ * delay) over a real manager, on a ManualClock. Returns live accessors.
  */
 export function setupVersionHistoryService(): VersionHistoryServiceFixture {
   const history = setupRealVersionHistory();
   let service: VersionHistoryService;
   let mockCharacter: Character;
+  let clock: ManualClock;
 
   beforeEach(() => {
-    vi.useFakeTimers({
-      shouldAdvanceTime: true,
-      toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval", "Date"],
-    });
+    clock = new ManualClock();
 
     mockCharacter = createTestCharacter({
       descriptor: "Swift",
@@ -37,12 +37,11 @@ export function setupVersionHistoryService(): VersionHistoryServiceFixture {
       },
     });
 
-    service = new VersionHistoryService(history.manager, 1000);
+    service = new VersionHistoryService(history.manager, clock, 1000);
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
-    vi.useRealTimers();
   });
 
   return {
@@ -51,6 +50,9 @@ export function setupVersionHistoryService(): VersionHistoryServiceFixture {
     },
     get manager() {
       return history.manager;
+    },
+    get clock() {
+      return clock;
     },
     get mockCharacter() {
       return mockCharacter;

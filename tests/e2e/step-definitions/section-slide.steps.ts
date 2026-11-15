@@ -1,7 +1,13 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
-import { sectionId, sectionLocator, zonePoint, type SectionZone } from "../support/sections.js";
+import {
+  finishSectionSlides,
+  sectionId,
+  sectionLocator,
+  zonePoint,
+  type SectionZone,
+} from "../support/sections.js";
 import type { SectionSlideRecord } from "../support/windowGlobals";
 
 /** The slides recorded for one section, oldest first. */
@@ -96,7 +102,9 @@ async function reportingSlides(world: CustomWorld, check: () => Promise<void>): 
       before,
       after: await progress(),
     };
-    throw new Error(`${(error as Error).message}\nSlides: ${JSON.stringify(report)}`);
+    throw new Error(`${(error as Error).message}\nSlides: ${JSON.stringify(report)}`, {
+      cause: error,
+    });
   }
 }
 
@@ -114,12 +122,7 @@ async function finishSlidesOnceStarted(
   await expect
     .poll(async () => (await slidesOf(world, name)).length)
     .toBeGreaterThanOrEqual(startedSlides);
-  await world.page.evaluate(() =>
-    document
-      .getAnimations()
-      .filter((animation) => animation.id === "section-slide")
-      .forEach((animation) => animation.finish())
-  );
+  await finishSectionSlides(world.page);
 }
 
 Then(

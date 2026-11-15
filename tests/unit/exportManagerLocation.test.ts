@@ -42,7 +42,7 @@ describe("ExportManager", () => {
       await vi.waitFor(async () => expect(await ctx.hasPersistedHandle()).toBe(false));
 
       // A fresh manager reloading from IndexedDB should no longer see it.
-      const reloaded = new ExportManager();
+      const reloaded = new ExportManager(ctx.clock);
       await new Promise((resolve) => setTimeout(resolve, 0));
       expect(reloaded.hasRememberedLocation()).toBe(false);
     });

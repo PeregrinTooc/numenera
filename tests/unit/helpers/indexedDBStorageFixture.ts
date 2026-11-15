@@ -1,4 +1,5 @@
 import { beforeEach, afterEach } from "vitest";
+import { ManualClock } from "@/services/manualClock";
 import { IndexedDBStorageImpl } from "@/storage/indexedDBStorageImpl";
 import { CHARACTER_DB_NAME } from "@/storage/storageConstants";
 import { createTestCharacter } from "../../factories/character";
@@ -19,10 +20,9 @@ export const oldVersionedFormat = {
   data: mockCharacter,
 };
 
-const TEST_AVAILABILITY_TIMEOUT_MS = 50;
-
 export interface IndexedDBStorageFixture {
   readonly storage: IndexedDBStorageImpl;
+  readonly clock: ManualClock;
 }
 
 function deleteDatabase(name: string): Promise<void> {
@@ -57,7 +57,7 @@ export async function withDatabaseLackingObjectStore(
   fixture.storage.close();
   await deleteDatabase(CHARACTER_DB_NAME);
   await createEmptyDatabase(CHARACTER_DB_NAME);
-  const storage = new IndexedDBStorageImpl(TEST_AVAILABILITY_TIMEOUT_MS);
+  const storage = new IndexedDBStorageImpl(new ManualClock());
   await storage.init();
   try {
     await run(storage);
@@ -69,15 +69,16 @@ export async function withDatabaseLackingObjectStore(
 
 /**
  * Registers hooks that give each test an initialised, empty
- * IndexedDBStorageImpl (short availability timeout) and clean up afterwards.
+ * IndexedDBStorageImpl (on a ManualClock) and clean up afterwards.
  * Returns a live accessor.
  */
 export function setupIndexedDBStorage(): IndexedDBStorageFixture {
-  const fixture = {} as { storage: IndexedDBStorageImpl };
+  const fixture = {} as { storage: IndexedDBStorageImpl; clock: ManualClock };
 
   beforeEach(async () => {
     localStorage.clear();
-    fixture.storage = new IndexedDBStorageImpl(TEST_AVAILABILITY_TIMEOUT_MS);
+    fixture.clock = new ManualClock();
+    fixture.storage = new IndexedDBStorageImpl(fixture.clock);
     await fixture.storage.init();
     await fixture.storage.clear();
   });

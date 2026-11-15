@@ -3,12 +3,12 @@ import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
 import { DEFAULT_LAYOUT, getAllSectionIds, type Layout, type LayoutItem } from "@/types/layout";
 import { LAYOUT_STORAGE_KEY } from "@/storage/storageConstants";
-import { dragSectionTo, sectionId, sectionLocator, type SectionZone } from "../support/sections.js";
+import { sectionId, sectionLocator, type SectionZone } from "../support/sections.js";
 
 When(
   "I drag the {string} section onto the {zone} of the {string} section",
   async function (this: CustomWorld, source: string, zone: SectionZone, target: string) {
-    await dragSectionTo(this.page, source, target, zone);
+    await this.layout.moveSection(source, { target, edge: zone });
   }
 );
 

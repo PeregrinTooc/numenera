@@ -33,14 +33,14 @@ import type { Character } from "@/types/character";
 
 /** Multi-tab conflict detection: service, modal, and the events that feed it. */
 async function initConflictDetection(ctx: AppContext, initialCharacter: Character): Promise<void> {
-  const conflictDetectionService = new ConflictDetectionService();
+  const conflictDetectionService = new ConflictDetectionService(ctx.clock);
   window.__conflictDetectionService = conflictDetectionService;
 
   await conflictDetectionService.setCurrentEtag(initialCharacter);
 
   const appEl = document.getElementById("app");
   if (appEl) {
-    new ConflictWarningModal(appEl);
+    new ConflictWarningModal(appEl, ctx.clock);
   }
 
   window.addEventListener("conflict-resolved", async (event: Event) => {
@@ -108,13 +108,14 @@ async function loadInitialCharacter(): Promise<{ character: Character; stored: C
 }
 
 /** While a kept copy of unreadable data exists, ask what to do with it on every load. */
-async function offerKeptUnreadableBackup(): Promise<void> {
+async function offerKeptUnreadableBackup(ctx: AppContext): Promise<void> {
   await offerUnreadableBackup({
     loadBackup: loadCorruptedCharacterBackup,
     deleteBackup: deleteCorruptedCharacterBackup,
-    download: (filename, content) => downloadTextFile(filename, content, "application/json"),
+    download: (filename, content) =>
+      downloadTextFile(filename, content, "application/json", ctx.clock),
     showChoice: (handlers) => ModalService.openUnreadableCharacterModal(handlers),
-    now: () => new Date(),
+    now: () => new Date(ctx.clock.now()),
   });
 }
 
@@ -137,23 +138,22 @@ async function initVersionHistory(
   // Recover a squash lost to the last unload. Only a stored character counts:
   // the default character was never edited, so it has nothing to recover.
   if (initialCharacter === stored) {
-    await reconcileVersionHistory(versionHistory, initialCharacter);
+    await reconcileVersionHistory(versionHistory, initialCharacter, ctx.clock);
   }
 
-  const squashDelay = window.__SQUASH_DELAY_MS__ || 5000;
-  ctx.versionHistoryService = new VersionHistoryService(
-    versionHistory,
-    squashDelay,
-    ctx.testTimer || undefined
-  );
+  ctx.versionHistoryService = new VersionHistoryService(versionHistory, ctx.clock);
 
   window.__versionHistoryService = ctx.versionHistoryService;
 
   if (versions.length === 0) {
-    await versionHistory.saveVersion(initialCharacter, "versionHistory.changes.initialState");
+    await versionHistory.saveVersion(
+      initialCharacter,
+      "versionHistory.changes.initialState",
+      ctx.clock.now()
+    );
   }
 
-  ctx.versionState = new VersionState(initialCharacter, versionHistory);
+  ctx.versionState = new VersionState(initialCharacter, versionHistory, ctx.clock);
   await ctx.versionState.init();
 
   await ctx.actions.updateVersionNavigator(true);
@@ -176,7 +176,7 @@ export async function bootstrap(ctx: AppContext): Promise<void> {
   }
 
   await ctx.actions.renderCharacterSheet(initialCharacter);
-  await offerKeptUnreadableBackup();
+  await offerKeptUnreadableBackup(ctx);
   await initVersionHistory(ctx, initialCharacter, stored);
   await initConflictDetection(ctx, initialCharacter);
   registerVersionKeyboardShortcuts(ctx);

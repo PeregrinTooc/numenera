@@ -38,10 +38,12 @@ export function renderSectionColumnsButton(
       }}
     >
       <svg class="section-columns-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        ${columns === 2
-          ? svg`<rect x="4" y="4" width="7" height="16" rx="1"></rect>
+        ${
+          columns === 2
+            ? svg`<rect x="4" y="4" width="7" height="16" rx="1"></rect>
               <rect x="13" y="4" width="7" height="16" rx="1"></rect>`
-          : svg`<rect x="6" y="4" width="12" height="16" rx="1"></rect>`}
+            : svg`<rect x="6" y="4" width="12" height="16" rx="1"></rect>`
+        }
       </svg>
     </button>
   `;

@@ -167,21 +167,43 @@ export class BasicInfo {
         </div>
 
         <div class="character-portrait" data-testid="character-portrait">
-          ${this.character.portrait
-            ? html`
-                <img
-                  src="${this.character.portrait}"
-                  alt="${t("character.portrait")}"
-                  class="portrait-image"
-                  @click=${this.handlePortraitClick.bind(this)}
-                  style="cursor: pointer;"
-                  role="button"
-                  tabindex="0"
-                  aria-label="${t("character.portraitView")}"
-                  data-testid="portrait-image-clickable"
-                />
-                <div class="portrait-overlay">
-                  <label class="portrait-button portrait-change">
+          ${
+            this.character.portrait
+              ? html`
+                  <img
+                    src="${this.character.portrait}"
+                    alt="${t("character.portrait")}"
+                    class="portrait-image"
+                    @click=${this.handlePortraitClick.bind(this)}
+                    style="cursor: pointer;"
+                    role="button"
+                    tabindex="0"
+                    aria-label="${t("character.portraitView")}"
+                    data-testid="portrait-image-clickable"
+                  />
+                  <div class="portrait-overlay">
+                    <label class="portrait-button portrait-change">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        @change=${this.handlePortraitUpload.bind(this)}
+                        style="display: none;"
+                        data-testid="portrait-file-input"
+                      />
+                      ${t("character.portraitChange")}
+                    </label>
+                    <button
+                      class="portrait-button portrait-remove"
+                      @click=${this.handlePortraitRemove.bind(this)}
+                      data-testid="portrait-remove-button"
+                    >
+                      ${t("character.portraitRemove")}
+                    </button>
+                  </div>
+                `
+              : html`
+                  <span class="character-portrait-text">${t("character.portrait")}</span>
+                  <label class="portrait-button portrait-upload">
                     <input
                       type="file"
                       accept="image/*"
@@ -189,30 +211,10 @@ export class BasicInfo {
                       style="display: none;"
                       data-testid="portrait-file-input"
                     />
-                    ${t("character.portraitChange")}
+                    ${t("character.portraitUpload")}
                   </label>
-                  <button
-                    class="portrait-button portrait-remove"
-                    @click=${this.handlePortraitRemove.bind(this)}
-                    data-testid="portrait-remove-button"
-                  >
-                    ${t("character.portraitRemove")}
-                  </button>
-                </div>
-              `
-            : html`
-                <span class="character-portrait-text">${t("character.portrait")}</span>
-                <label class="portrait-button portrait-upload">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    @change=${this.handlePortraitUpload.bind(this)}
-                    style="display: none;"
-                    data-testid="portrait-file-input"
-                  />
-                  ${t("character.portraitUpload")}
-                </label>
-              `}
+                `
+          }
         </div>
       </div>
     `;

@@ -13,6 +13,7 @@ import { Layout } from "@/types/layout";
 import { loadLayout } from "@/storage/layoutStorage";
 import { LAYOUT_STORAGE_KEY } from "@/storage/storageConstants";
 import { createTestCharacter as createMockCharacter } from "../factories/character.js";
+import { ManualClock } from "@/services/manualClock";
 
 const REORDERED_LAYOUT: Layout = [
   { type: "single", id: "cyphers" },
@@ -33,6 +34,7 @@ describe("CharacterSheet layout persistence", () => {
   it("does not clobber a layout written to storage during an edit session", () => {
     const characterSheet = new CharacterSheet(
       createMockCharacter(),
+      new ManualClock(),
       () => {},
       () => {},
       () => {},

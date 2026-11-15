@@ -62,21 +62,20 @@ export class TestStorageHelper {
   }
 
   /**
-   * Also stores the character, as the app does: its latest version always
-   * matches the stored character, and on boot reconcileVersionHistory would
-   * otherwise rebuild a phantom version from the mismatch.
+   * Creates the versions in order, in one browser round trip (a history of 99
+   * would otherwise take 200 and can outlast a step timeout). Also stores the
+   * last character, as the app does: its latest version always matches the
+   * stored character, and on boot reconcileVersionHistory would otherwise
+   * rebuild a phantom version from the mismatch.
    */
-  async createVersion(character: Character, description: string): Promise<void> {
-    await this.page.evaluate(
-      async ({ char, desc }) => {
-        if (!window.__testVersionHistory) {
-          throw new Error("Test version history API not available. Make sure the app has loaded.");
-        }
-        await window.__testVersionHistory.createVersion(char, desc);
-      },
-      { char: character, desc: description }
-    );
-    await this.setCharacter(character);
+  async createVersions(versions: { character: Character; description: string }[]): Promise<void> {
+    await this.page.evaluate(async (entries) => {
+      if (!window.__testVersionHistory) {
+        throw new Error("Test version history API not available. Make sure the app has loaded.");
+      }
+      await window.__testVersionHistory.createVersions(entries);
+    }, versions);
+    await this.setCharacter(versions[versions.length - 1].character);
   }
 
   async getAllVersions(): Promise<CharacterVersion[]> {

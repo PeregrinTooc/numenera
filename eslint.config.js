@@ -12,6 +12,27 @@ const TESTS_SRC_IMPORT_PATTERN = {
   message: "Import src modules through the @/ alias, not a relative path into src/ (Rule 5).",
 };
 
+const CLOCK_MESSAGE =
+  "Use the injected Clock (@/services/clock) instead (docs/rules/architecture.md, Time).";
+const TIMER_NAMES = ["setTimeout", "clearTimeout", "setInterval", "clearInterval"];
+const GLOBAL_OBJECTS = ["window", "globalThis", "self"];
+
+const NO_DIRECT_TIME_GLOBALS = TIMER_NAMES.map((name) => ({ name, message: CLOCK_MESSAGE }));
+
+const NO_DIRECT_TIME_PROPERTIES = [
+  ...GLOBAL_OBJECTS.flatMap((object) =>
+    TIMER_NAMES.map((property) => ({ object, property, message: CLOCK_MESSAGE }))
+  ),
+  { object: "Date", property: "now", message: CLOCK_MESSAGE },
+];
+
+const NO_DIRECT_TIME_SYNTAX = [
+  {
+    selector: "NewExpression[callee.name='Date'][arguments.length=0]",
+    message: CLOCK_MESSAGE,
+  },
+];
+
 export default [
   js.configs.recommended,
   {
@@ -124,6 +145,16 @@ export default [
     },
   },
   {
+    // Only SystemClock may read real time or schedule real timers.
+    files: ["src/**/*.ts"],
+    ignores: ["src/services/clock.ts"],
+    rules: {
+      "no-restricted-globals": ["error", ...NO_DIRECT_TIME_GLOBALS],
+      "no-restricted-properties": ["error", ...NO_DIRECT_TIME_PROPERTIES],
+      "no-restricted-syntax": ["error", ...NO_DIRECT_TIME_SYNTAX],
+    },
+  },
+  {
     files: ["tests/**/*.ts"],
     rules: {
       "no-restricted-imports": ["error", { patterns: [TESTS_SRC_IMPORT_PATTERN] }],
@@ -140,6 +171,13 @@ export default [
     files: ["tests/e2e/**/*.ts"],
     rules: {
       "@typescript-eslint/no-non-null-assertion": "error",
+      "no-restricted-properties": [
+        "error",
+        {
+          property: "waitForTimeout",
+          message: "Wait for an observable outcome instead of sleeping (see docs/atdd-review.md).",
+        },
+      ],
     },
   },
   {
@@ -188,7 +226,7 @@ export default [
       "build",
       "coverage",
       "*.config.js",
-      "scripts",
+      "scripts/**/*.js",
       "stryker-tmp",
       ".claude",
     ],

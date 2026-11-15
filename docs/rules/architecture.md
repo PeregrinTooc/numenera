@@ -57,6 +57,19 @@ localStorage.setItem("character", JSON.stringify(character));
 
 ---
 
+## Time
+
+All time goes through the injected `Clock` (`@/services/clock`): `now()`,
+`setTimeout()` and `clearTimeout()`. The app creates one clock in
+`createAppContext` and passes it to whatever needs it. Tests use `ManualClock`
+(`@/services/manualClock`) and move time with `advance(ms)`.
+
+ESLint enforces this in `src/`: direct `setTimeout`, `clearTimeout`,
+`setInterval`, `clearInterval` (also via `window`, `globalThis`, `self`),
+`Date.now()` and zero-argument `new Date()` are errors. Only
+`src/services/clock.ts` is exempt. `new Date(timestamp)` and `Date.UTC()` are
+fine.
+
 ## Mobile-First Design & Tailwind CSS
 
 ### Approach:

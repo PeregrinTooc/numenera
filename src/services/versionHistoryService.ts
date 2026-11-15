@@ -10,41 +10,42 @@ import type { Character } from "@/types/character";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import { squashDescriptions } from "@/utils/squashDescriptions";
 import { ChangeBuffer } from "./changeBuffer.js";
-import type { ITimer, TimerHandle } from "./timer.js";
-import { RealTimer } from "./timer.js";
+import type { Clock, TimerHandle } from "@/services/clock";
 
 function emit(name: string): void {
   window.dispatchEvent(new CustomEvent(name));
 }
 
+export const SQUASH_DELAY_MS = 5000;
+
 export class VersionHistoryService {
   private manager: VersionHistoryManager;
   private squashDelayMs: number;
-  private timer: ITimer;
+  private clock: Clock;
   private globalTimer: TimerHandle | null = null;
   private buffer = new ChangeBuffer();
   private isSquashInProgress: boolean = false;
 
   constructor(
     manager: VersionHistoryManager,
-    squashDelayMs: number = 5000,
-    timer: ITimer = new RealTimer()
+    clock: Clock,
+    squashDelayMs: number = SQUASH_DELAY_MS
   ) {
     this.manager = manager;
     this.squashDelayMs = squashDelayMs;
-    this.timer = timer;
+    this.clock = clock;
   }
 
   resetTimer(): void {
     this.cancelTimer();
-    this.globalTimer = this.timer.setTimeout(() => {
+    this.globalTimer = this.clock.setTimeout(() => {
       this.performSquash();
     }, this.squashDelayMs);
   }
 
   private cancelTimer(): void {
     if (this.globalTimer !== null) {
-      this.timer.clearTimeout(this.globalTimer);
+      this.clock.clearTimeout(this.globalTimer);
       this.globalTimer = null;
     }
   }
@@ -58,7 +59,7 @@ export class VersionHistoryService {
   /** Save the buffered changes as one squashed version and mark it with its metadata. */
   private async persistSquash(latest: Character, squashedCount: number): Promise<void> {
     const combinedDescription = squashDescriptions(this.buffer.descriptions());
-    const version = await this.manager.saveVersion(latest, combinedDescription);
+    const version = await this.manager.saveVersion(latest, combinedDescription, this.clock.now());
     await this.manager.updateVersionMetadata(version.id, {
       isSquashed: true,
       squashedCount,

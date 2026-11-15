@@ -44,7 +44,11 @@ export class VersionHistoryManager {
   /**
    * Automatically excludes portrait data and generates etag
    */
-  async saveVersion(character: Character, description: string): Promise<CharacterVersion> {
+  async saveVersion(
+    character: Character,
+    description: string,
+    savedAt: number
+  ): Promise<CharacterVersion> {
     this.requireDb();
 
     const { portrait: _portrait, ...characterWithoutPortrait } = character;
@@ -55,8 +59,8 @@ export class VersionHistoryManager {
 
     const etag = await generateETag(character);
 
-    // Use Date.now() but ensure uniqueness by adding a small increment if needed
-    let timestamp = Date.now();
+    // Versions are ordered by timestamp, so it must be unique and increasing
+    let timestamp = savedAt;
     const existingVersions = await this.getAllVersionsInternal();
     if (existingVersions.length > 0) {
       const lastTimestamp = existingVersions[existingVersions.length - 1].timestamp;

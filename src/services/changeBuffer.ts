@@ -9,7 +9,6 @@ import type { Character } from "@/types/character";
 export interface BufferedChange {
   character: Character;
   description: string;
-  timestamp: number;
 }
 
 export class ChangeBuffer {
@@ -22,7 +21,6 @@ export class ChangeBuffer {
     this.buffer.push({
       character: globalThis.structuredClone(character),
       description,
-      timestamp: Date.now(),
     });
     this.redoStack = [];
   }

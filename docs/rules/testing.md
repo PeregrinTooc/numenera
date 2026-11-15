@@ -33,11 +33,12 @@ comparison view on a phone) carry a device tag and a `#` comment above it
 saying why; the affected runs skip them. The filter lives in `cucumber.cjs`.
 Everything else must pass on all four.
 
-| Tag              | Skipped on                | Use for                                                             |
-| ---------------- | ------------------------- | ------------------------------------------------------------------- |
-| `@desktop-only`  | every non-desktop profile | behaviour only a desktop has (e.g. mouse hover)                     |
-| `@not-phone`     | `pixel5`, `iphone12`      | features unavailable below 768px (e.g. the version comparison view) |
-| `@chromium-only` | `iphone12`, `ipadpro`     | helpers that need Chromium-only APIs (e.g. CDP touch gestures)      |
+| Tag             | Skipped on                 | Use for                                                                                                                            |
+| --------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `@desktop-only` | every non-desktop profile  | behaviour only a desktop has (e.g. mouse hover)                                                                                    |
+| `@not-phone`    | `pixel5`, `iphone12`       | features unavailable below 768px (e.g. the version comparison view)                                                                |
+| `@phone-only`   | `desktop`, `ipadpro`       | layout that exists only on a phone (e.g. the edit modal sized to the screen)                                                       |
+| `@touch`        | every non-`pixel5` profile | gestures that need a finger (e.g. long-press); real touch input exists only on Chromium, so only `pixel5` drives sections by touch |
 
 A scenario that needs a width no profile has (e.g. 320px) uses
 `the viewport is N pixels wide`.
@@ -126,6 +127,7 @@ in `Before`, so every step definition has them from the first line:
 
 | On `this`       | Class (file)                                         | For                                                                                                |
 | --------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `clock`         | `ClockDriver` (`support/clockDriver.ts`)             | Let time pass: advances the app's `ManualClock`, the only way timers fire under test.              |
 | `dom`           | `DOMHelpers` (`support/dom-helpers.ts`)              | Generic `data-testid` locators and waits.                                                          |
 | `storageHelper` | `TestStorageHelper` (`support/testStorageHelper.ts`) | Seed or clear character/version storage.                                                           |
 | `modal`         | `ModalDsl` (`support/modal.ts`)                      | Confirm/cancel/type/clear/expectOpen/expectClosed on the edit modal.                               |
@@ -137,6 +139,10 @@ Gherkin vocabulary comes in through parameter types
 (`support/parameterTypes.ts`): `{cardType}`, `{badge}`, `{textarea}`,
 `{resource}`. An unrecognised word is a compile-time undefined step, not a
 runtime lookup failure inside the step body.
+
+Every scenario runs the app on a `ManualClock` that `hooks.ts` requests before
+boot; nothing fires until a step or driver advances it by the app's own
+duration (import the constant from `src`). Never fake time in the browser any other way, and never sleep.
 
 ESLint enforces the DSL rather than leaving it as convention: instantiating
 `DOMHelpers`/`TestStorageHelper` directly, or one step-definitions file

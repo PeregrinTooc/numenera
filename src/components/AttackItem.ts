@@ -145,16 +145,18 @@ export class AttackItem {
             ${t("attacks.range")}: ${this.attack.range}
           </span>
         </div>
-        ${this.attack.notes
-          ? html`
-              <p
-                data-testid="attack-notes-${this.index}"
-                class="attack-notes text-gray-700 text-sm leading-relaxed"
-              >
-                ${this.attack.notes}
-              </p>
-            `
-          : ""}
+        ${
+          this.attack.notes
+            ? html`
+                <p
+                  data-testid="attack-notes-${this.index}"
+                  class="attack-notes text-gray-700 text-sm leading-relaxed"
+                >
+                  ${this.attack.notes}
+                </p>
+              `
+            : ""
+        }
       </div>
     `;
   }

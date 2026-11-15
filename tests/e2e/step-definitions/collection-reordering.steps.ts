@@ -2,7 +2,6 @@ import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { Locator } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
-import { withFullHeightViewport } from "../support/sections.js";
 
 interface CollectionSpec {
   itemTestId: string;
@@ -68,12 +67,11 @@ When(
   "I drag {string} before {string} in the {string} collection",
   async function (this: CustomWorld, source: string, target: string, collection: string) {
     // Full-height viewport: on phones the stacked cards do not all fit on screen.
-    await withFullHeightViewport(this.page, () =>
+    await this.screen.withFullHeight(() =>
       card(this, collection, source).dragTo(card(this, collection, target), {
         targetPosition: { x: 10, y: 5 },
       })
     );
-    await this.page.waitForTimeout(200);
   }
 );
 
@@ -81,7 +79,7 @@ When(
   "I drag {string} after {string} in the {string} collection",
   async function (this: CustomWorld, source: string, target: string, collection: string) {
     const targetCard = card(this, collection, target);
-    await withFullHeightViewport(this.page, async () => {
+    await this.screen.withFullHeight(async () => {
       const box = await targetCard.boundingBox();
       if (!box) {
         throw new Error(`Could not find card: ${target}`);
@@ -90,7 +88,6 @@ When(
         targetPosition: { x: box.width / 2, y: box.height - 5 },
       });
     });
-    await this.page.waitForTimeout(200);
   }
 );
 

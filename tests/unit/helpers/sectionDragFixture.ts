@@ -2,20 +2,30 @@ import { vi } from "vitest";
 import { CharacterSheet } from "@/components/CharacterSheet";
 import type { Character } from "@/types/character";
 import { SECTION_IDS } from "@/types/layout";
+import { ManualClock } from "@/services/manualClock";
 
 type TouchType = "touchstart" | "touchmove" | "touchend" | "touchcancel";
 
-/** jsdom has TouchEvent but no Touch constructor, so `touches` is stubbed. */
+/** The element the current one-finger touch started on. */
+let startedOn: Element | null = null;
+
+/**
+ * jsdom has TouchEvent but no Touch constructor, so `touches` is stubbed.
+ * As in browsers, the rest of a touch goes to the element it started on,
+ * whatever `target` is now: a re-render may have replaced that element.
+ */
 export function touch(
   target: Element,
   type: TouchType,
   points: { x: number; y: number }[] = []
 ): void {
+  if (type === "touchstart" && points.length === 1) startedOn = target;
   const event = new TouchEvent(type, { bubbles: true, cancelable: true });
   Object.defineProperty(event, "touches", {
     value: points.map((p) => ({ clientX: p.x, clientY: p.y })),
   });
-  target.dispatchEvent(event);
+  (type === "touchstart" ? target : (startedOn ?? target)).dispatchEvent(event);
+  if (type === "touchend" || type === "touchcancel") startedOn = null;
 }
 
 export function section(id: string): HTMLElement {
@@ -99,18 +109,24 @@ export function mouseDrag(
   );
 }
 
-export function mountSheet(character: Character): CharacterSheet {
+export function mountSheet(character: Character, clock: ManualClock): CharacterSheet {
   document.body.innerHTML = '<div id="app"></div>';
-  const sheet = new CharacterSheet(character, vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
+  const sheet = new CharacterSheet(character, clock, vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn());
   sheet.mount(document.getElementById("app") as HTMLElement);
   sheet.toggleLayoutEditMode();
   return sheet;
 }
 
 /** Long-press `sourceId`, then move the finger to (x, y) over `targetId`. */
-export function touchDragOver(sourceId: string, targetId: string, x: number, y: number): void {
+export function touchDragOver(
+  clock: ManualClock,
+  sourceId: string,
+  targetId: string,
+  x: number,
+  y: number
+): void {
   vi.spyOn(document, "elementFromPoint").mockImplementation(() => section(targetId));
   touch(section(sourceId), "touchstart", [{ x: 20, y: 500 }]);
-  vi.advanceTimersByTime(250);
+  clock.advance(250);
   touch(section(sourceId), "touchmove", [{ x, y }]);
 }

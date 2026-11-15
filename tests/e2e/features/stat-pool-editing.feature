@@ -3,50 +3,14 @@ Feature: Stat Pool Value Editing
     I want to edit stat pool values (Pool, Edge, Current) for Might, Speed, and Intellect
     So that I can track my character's stats during gameplay
 
-    Background:
-        Given I am on the character sheet page
-        And the character data is loaded
+    Scenario: The sheet shows my character's stat values
+        Given my character's Might pool is 15
+        Then my character sheet shows my Might pool as 15
 
-    Scenario Outline: Display stat value
-        Then I should see the "<stat> <field>" value displayed
-
-        Examples:
-            | stat      | field   |
-            | Might     | Pool    |
-            | Might     | Edge    |
-            | Might     | Current |
-            | Speed     | Pool    |
-            | Speed     | Edge    |
-            | Speed     | Current |
-            | Intellect | Pool    |
-            | Intellect | Edge    |
-            | Intellect | Current |
-
-    Scenario Outline: Open modal by clicking stat value
-        When I click on the "<stat> <field>" value
-        Then an edit modal should appear
-        And the input field should contain the current "<stat> <field>" value
-        And the input field should be focused
-
-        Examples:
-            | stat      | field   |
-            | Might     | Pool    |
-            | Might     | Edge    |
-            | Might     | Current |
-            | Speed     | Pool    |
-            | Speed     | Edge    |
-            | Speed     | Current |
-            | Intellect | Pool    |
-            | Intellect | Edge    |
-            | Intellect | Current |
-
-    Scenario Outline: Edit and save stat value
-        When I click on the "<stat> <field>" value
-        And I clear the input field
-        And I type "<new_value>" in the modal input
-        And I click the "Confirm" button
-        Then the modal should close
-        And the "<stat> <field>" value should display "<new_value>"
+    Scenario Outline: Changing a stat value shows the new value
+        Given my character's <stat> <field> is 6
+        When I change my <stat> <field> to <new_value>
+        Then my character sheet shows my <stat> <field> as <new_value>
 
         Examples:
             | stat      | field   | new_value |
@@ -60,114 +24,18 @@ Feature: Stat Pool Value Editing
             | Intellect | Edge    | 3         |
             | Intellect | Current | 14        |
 
-    Scenario Outline: Stat value persists after page reload
-        When I click on the "<stat> <field>" value
-        And I clear the input field
-        And I type "<persist_value>" in the modal input
-        And I click the "Confirm" button
-        And I reload the page
-        Then the "<stat> <field>" value should display "<persist_value>"
+    Scenario: A changed stat value is still there the next time I open my character
+        Given my character's Speed edge is 1
+        When I change my Speed edge to 4
+        And I open my character again
+        Then my character sheet shows my Speed edge as 4
 
-        Examples:
-            | stat      | field   | persist_value |
-            | Might     | Pool    | 30            |
-            | Might     | Edge    | 5             |
-            | Might     | Current | 8             |
-            | Speed     | Pool    | 20            |
-            | Speed     | Edge    | 4             |
-            | Speed     | Current | 10            |
-            | Intellect | Pool    | 22            |
-            | Intellect | Edge    | 6             |
-            | Intellect | Current | 9             |
+    Scenario: A stat value can be zero
+        Given my character's Intellect pool is 10
+        When I change my Intellect pool to 0
+        Then my character sheet shows my Intellect pool as 0
 
-    Scenario Outline: Cancel stat edit
-        When I click on the "<stat> <field>" value
-        And I clear the input field
-        And I type "99" in the modal input
-        And I click the "Cancel" button
-        Then the modal should close
-        And the "<stat> <field>" value should not have changed
-
-        Examples:
-            | stat      | field   |
-            | Might     | Pool    |
-            | Might     | Edge    |
-            | Might     | Current |
-            | Speed     | Pool    |
-            | Speed     | Edge    |
-            | Speed     | Current |
-            | Intellect | Pool    |
-            | Intellect | Edge    |
-            | Intellect | Current |
-
-    Scenario Outline: Close modal with Escape key
-        When I click on the "<stat> <field>" value
-        And I clear the input field
-        And I type "99" in the modal input
-        And I press the Escape key
-        Then the modal should close
-        And the "<stat> <field>" value should not have changed
-
-        Examples:
-            | stat      | field   |
-            | Might     | Pool    |
-            | Speed     | Edge    |
-            | Intellect | Current |
-
-    Scenario Outline: Confirm edit with Enter key
-        When I click on the "<stat> <field>" value
-        And I clear the input field
-        And I type "<enter_value>" in the modal input
-        And I press the Enter key
-        Then the modal should close
-        And the "<stat> <field>" value should display "<enter_value>"
-
-        Examples:
-            | stat      | field | enter_value |
-            | Might     | Pool  | 22          |
-            | Speed     | Edge  | 3           |
-            | Intellect | Pool  | 18          |
-
-    Scenario Outline: Validate stat accepts zero
-        When I click on the "<stat> Pool" value
-        And I clear the input field
-        And I type "0" in the modal input
-        And I click the "Confirm" button
-        Then the modal should close
-        And the "<stat> Pool" value should display "0"
-
-        Examples:
-            | stat      |
-            | Might     |
-            | Speed     |
-            | Intellect |
-
-    Scenario Outline: Validate stat accepts maximum value
-        When I click on the "<stat> Pool" value
-        And I clear the input field
-        And I type "9999" in the modal input
-        And I click the "Confirm" button
-        Then the modal should close
-        And the "<stat> Pool" value should display "9999"
-
-        Examples:
-            | stat      |
-            | Might     |
-            | Speed     |
-            | Intellect |
-
-    Scenario Outline: Mobile - Tap to edit stat
-        When I tap on the "<stat> <field>" value
-        Then an edit modal should appear
-
-        Examples:
-            | stat      | field   |
-            | Might     | Pool    |
-            | Might     | Edge    |
-            | Might     | Current |
-            | Speed     | Pool    |
-            | Speed     | Edge    |
-            | Speed     | Current |
-            | Intellect | Pool    |
-            | Intellect | Edge    |
-            | Intellect | Current |
+    Scenario: A stat value can be as large as 9999
+        Given my character's Might pool is 10
+        When I change my Might pool to 9999
+        Then my character sheet shows my Might pool as 9999

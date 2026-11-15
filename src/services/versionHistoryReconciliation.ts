@@ -1,5 +1,6 @@
 import type { Character } from "@/types/character";
 import type { VersionHistoryManager } from "@/storage/versionHistory";
+import type { Clock } from "@/services/clock";
 import { generateETag } from "@/utils/etag";
 import { sanitizeCharacter } from "@/utils/characterSanitizer";
 import { describeCharacterChange } from "@/services/versionDescriptions";
@@ -21,7 +22,8 @@ import { describeCharacterChange } from "@/services/versionDescriptions";
  */
 export async function reconcileVersionHistory(
   versionHistory: VersionHistoryManager,
-  character: Character
+  character: Character,
+  clock: Clock
 ): Promise<void> {
   const versions = await versionHistory.getAllVersions();
   const latest = versions[versions.length - 1];
@@ -30,5 +32,9 @@ export async function reconcileVersionHistory(
   }
 
   const { character: previous } = sanitizeCharacter(latest.character);
-  await versionHistory.saveVersion(character, describeCharacterChange(previous, character));
+  await versionHistory.saveVersion(
+    character,
+    describeCharacterChange(previous, character),
+    clock.now()
+  );
 }

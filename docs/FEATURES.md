@@ -122,6 +122,10 @@ All features listed below have full BDD test coverage and are verified working.
   - Edit state indicators
   - Focus and hover states
 
+- **Self-Hosted Fonts** ([third-party-requests.feature](../tests/e2e/features/third-party-requests.feature))
+  - Cinzel, Caveat and Patrick Hand served from `public/fonts/` with their OFL licences
+  - Opening the sheet requests nothing from another site (no visitor IP goes to Google)
+
 > **Testing Notes.** DOM structure and visual styling were originally covered by
 > five E2E feature files. They were migrated to `tests/unit/domStructure.test.ts`
 > and `tests/unit/visualStyling.test.ts` to
@@ -244,8 +248,14 @@ All features listed below have full BDD test coverage and are verified working.
   - The Cucumber suite runs once per device profile via `DEVICE`:
     desktop, Pixel 5, iPhone 12 and iPad Pro (the last two on WebKit)
   - CI runs all four profiles; a deploy needs every one green
-  - Device-specific exclusions are tagged (`@not-phone`, `@chromium-only`)
+  - Device-specific exclusions are tagged (`@not-phone`, `@touch`)
     with a comment explaining why
+- **No Reruns for Unchanged Inputs** ([DEPLOYMENT.md](./DEPLOYMENT.md))
+  - A content fingerprint that leaves out documentation decides whether
+    anything needs testing: docs-only commits skip the pre-commit tests, the
+    pre-push E2E run and every CI job
+  - A second fingerprint that also leaves out tests and tooling skips the
+    redeploy when the app itself did not change
 
 ### File Management
 
@@ -368,7 +378,9 @@ All features listed below have full BDD test coverage and are verified working.
     description) is recomputed from the version's snapshot diff instead.
     Safe to re-run every load, no migration flag
   - Version Navigator UI (version counter, navigation buttons)
-  - Warning banner when viewing old versions
+  - Warning banner when viewing old versions; the version's age ("5 minutes ago",
+    "vor 5 Minuten") follows the language (scenario "The age of an old version is
+    given in German")
   - Edit from old version creates new version (no read-only mode)
   - Portrait excluded from versioning
   - Export from old version works

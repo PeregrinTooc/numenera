@@ -1,17 +1,19 @@
 Feature: Version History Squash Race
     As a user editing my character
-    I want edits made while a version is being saved to get their own version
+    I want an edit made while a version is being saved to be kept
     So that no change silently drops out of my history
 
     Background:
-        Given I am on the character sheet page
-        And the character has no version history yet
+        Given my character has no history yet
 
-    Scenario: Edit made while a squash is saving gets its own version
-        Given version saves are held
-        When I edit the "character name" field to "Squashing Hero"
-        And the squash starts while version saves are held
-        And I edit the "character name" field to "Late Hero"
-        And the held version save is released
-        And I wait for squash timer to complete
-        Then I should see 3 versions in history
+    Scenario: An edit made while a version is being saved is not lost
+        Given saving a version is held up
+        When I change my name to "Squashing Hero"
+        And my edits start to be saved as a version
+        And I change my name to "Late Hero"
+        And the held-up save goes through
+        And my edits have settled into a version
+        Then the navigator shows version 3 of 3
+        And my character sheet shows my name as "Late Hero"
+        When I step back to the previous version
+        Then my character sheet shows my name as "Squashing Hero"

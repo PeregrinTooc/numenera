@@ -1,3 +1,4 @@
+import { DEFAULT_START_MS } from "@/services/manualClock";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import type { Character } from "@/types/character";
@@ -5,7 +6,7 @@ import { createTestCharacter as createMockCharacter } from "../factories/charact
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-describe.sequential("VersionHistoryManager", () => {
+describe("VersionHistoryManager", () => {
   let manager: VersionHistoryManager;
   let mockCharacter: Character;
   const testDbName = "test-version-history-suite";
@@ -51,11 +52,11 @@ describe.sequential("VersionHistoryManager", () => {
 
   describe("Saving Versions", () => {
     it("should save a version excluding portrait", async () => {
-      const version = await manager.saveVersion(mockCharacter, "Initial version");
+      const version = await manager.saveVersion(mockCharacter, "Initial version", DEFAULT_START_MS);
 
       expect(version).toBeDefined();
       expect(version.id).toBeDefined();
-      expect(version.timestamp).toBeGreaterThan(0);
+      expect(version.timestamp).toBe(DEFAULT_START_MS);
       expect(version.description).toBe("Initial version");
       expect(version.etag).toBeDefined();
       // @ts-expect-error - checking portrait is excluded
@@ -64,14 +65,21 @@ describe.sequential("VersionHistoryManager", () => {
     });
 
     it("should generate unique IDs for each version", async () => {
-      const version1 = await manager.saveVersion(mockCharacter, "Version 1");
-      const version2 = await manager.saveVersion(mockCharacter, "Version 2");
+      const version1 = await manager.saveVersion(mockCharacter, "Version 1", DEFAULT_START_MS);
+      const version2 = await manager.saveVersion(mockCharacter, "Version 2", DEFAULT_START_MS);
 
       expect(version1.id).not.toBe(version2.id);
     });
 
+    it("should keep timestamps strictly increasing when saved at the same instant", async () => {
+      const first = await manager.saveVersion(mockCharacter, "Version 1", DEFAULT_START_MS);
+      const second = await manager.saveVersion(mockCharacter, "Version 2", DEFAULT_START_MS);
+
+      expect(second.timestamp).toBe(first.timestamp + 1);
+    });
+
     it("should deep clone character data to prevent reference bugs", async () => {
-      const version = await manager.saveVersion(mockCharacter, "Initial");
+      const version = await manager.saveVersion(mockCharacter, "Initial", DEFAULT_START_MS);
 
       mockCharacter.name = "Modified Name";
       mockCharacter.stats.might.pool = 20;
@@ -81,7 +89,7 @@ describe.sequential("VersionHistoryManager", () => {
     });
 
     it("should store versions in IndexedDB", async () => {
-      await manager.saveVersion(mockCharacter, "Version 1");
+      await manager.saveVersion(mockCharacter, "Version 1", DEFAULT_START_MS);
 
       const versions = await manager.getAllVersions();
       expect(versions).toHaveLength(1);
@@ -89,22 +97,22 @@ describe.sequential("VersionHistoryManager", () => {
     });
   });
 
-  describe.sequential("FIFO Queue (Max 99 Versions)", () => {
-    it.sequential("should allow up to 99 versions", async () => {
+  describe("FIFO Queue (Max 99 Versions)", () => {
+    it("should allow up to 99 versions", async () => {
       for (let i = 1; i <= 99; i++) {
-        await manager.saveVersion(mockCharacter, `Version ${i}`);
+        await manager.saveVersion(mockCharacter, `Version ${i}`, DEFAULT_START_MS);
       }
 
       const versions = await manager.getAllVersions();
       expect(versions).toHaveLength(99);
     });
 
-    it.sequential("should remove oldest version when exceeding 99", async () => {
+    it("should remove oldest version when exceeding 99", async () => {
       for (let i = 1; i <= 99; i++) {
-        await manager.saveVersion(mockCharacter, `Version ${i}`);
+        await manager.saveVersion(mockCharacter, `Version ${i}`, DEFAULT_START_MS);
       }
 
-      await manager.saveVersion(mockCharacter, "Version 100");
+      await manager.saveVersion(mockCharacter, "Version 100", DEFAULT_START_MS);
 
       const versions = await manager.getAllVersions();
       expect(versions).toHaveLength(99);
@@ -112,9 +120,9 @@ describe.sequential("VersionHistoryManager", () => {
       expect(versions[98].description).toBe("Version 100");
     });
 
-    it.sequential("should maintain FIFO order when removing old versions", async () => {
+    it("should maintain FIFO order when removing old versions", async () => {
       for (let i = 1; i <= 101; i++) {
-        await manager.saveVersion(mockCharacter, `Version ${i}`);
+        await manager.saveVersion(mockCharacter, `Version ${i}`, DEFAULT_START_MS);
       }
 
       const versions = await manager.getAllVersions();
@@ -124,11 +132,11 @@ describe.sequential("VersionHistoryManager", () => {
     });
   });
 
-  describe.sequential("Loading Versions", () => {
+  describe("Loading Versions", () => {
     it("should retrieve all versions in chronological order", async () => {
-      await manager.saveVersion(mockCharacter, "Version 1");
-      await manager.saveVersion(mockCharacter, "Version 2");
-      await manager.saveVersion(mockCharacter, "Version 3");
+      await manager.saveVersion(mockCharacter, "Version 1", DEFAULT_START_MS);
+      await manager.saveVersion(mockCharacter, "Version 2", DEFAULT_START_MS);
+      await manager.saveVersion(mockCharacter, "Version 3", DEFAULT_START_MS);
 
       const versions = await manager.getAllVersions();
       expect(versions).toHaveLength(3);
@@ -138,8 +146,8 @@ describe.sequential("VersionHistoryManager", () => {
     });
 
     it("should retrieve a specific version by ID", async () => {
-      const version1 = await manager.saveVersion(mockCharacter, "Version 1");
-      await manager.saveVersion(mockCharacter, "Version 2");
+      const version1 = await manager.saveVersion(mockCharacter, "Version 1", DEFAULT_START_MS);
+      await manager.saveVersion(mockCharacter, "Version 2", DEFAULT_START_MS);
 
       const retrieved = await manager.getVersionById(version1.id);
       expect(retrieved).toBeDefined();
@@ -160,8 +168,8 @@ describe.sequential("VersionHistoryManager", () => {
 
   describe("Clearing Versions", () => {
     it("should clear all versions", async () => {
-      await manager.saveVersion(mockCharacter, "Version 1");
-      await manager.saveVersion(mockCharacter, "Version 2");
+      await manager.saveVersion(mockCharacter, "Version 1", DEFAULT_START_MS);
+      await manager.saveVersion(mockCharacter, "Version 2", DEFAULT_START_MS);
 
       await manager.clear();
 
@@ -170,10 +178,10 @@ describe.sequential("VersionHistoryManager", () => {
     });
 
     it("should allow saving versions after clearing", async () => {
-      await manager.saveVersion(mockCharacter, "Version 1");
+      await manager.saveVersion(mockCharacter, "Version 1", DEFAULT_START_MS);
       await manager.clear();
 
-      const version = await manager.saveVersion(mockCharacter, "New version");
+      const version = await manager.saveVersion(mockCharacter, "New version", DEFAULT_START_MS);
       expect(version).toBeDefined();
 
       const versions = await manager.getAllVersions();
@@ -185,7 +193,7 @@ describe.sequential("VersionHistoryManager", () => {
     it("should exclude portrait from saved version", async () => {
       mockCharacter.portrait = "data:image/png;base64,very-long-image-data-string";
 
-      const version = await manager.saveVersion(mockCharacter, "Test");
+      const version = await manager.saveVersion(mockCharacter, "Test", DEFAULT_START_MS);
 
       // @ts-expect-error - checking portrait is excluded
       expect(version.character.portrait).toBeUndefined();
@@ -198,7 +206,7 @@ describe.sequential("VersionHistoryManager", () => {
     it("should handle character without portrait", async () => {
       delete mockCharacter.portrait;
 
-      const version = await manager.saveVersion(mockCharacter, "No portrait");
+      const version = await manager.saveVersion(mockCharacter, "No portrait", DEFAULT_START_MS);
 
       expect(version).toBeDefined();
       // @ts-expect-error - checking portrait is excluded
@@ -210,13 +218,13 @@ describe.sequential("VersionHistoryManager", () => {
     it("should throw error if not initialized", async () => {
       const uninitializedManager = new VersionHistoryManager();
 
-      await expect(uninitializedManager.saveVersion(mockCharacter, "Test")).rejects.toThrow(
-        "VersionHistoryManager not initialized"
-      );
+      await expect(
+        uninitializedManager.saveVersion(mockCharacter, "Test", DEFAULT_START_MS)
+      ).rejects.toThrow("VersionHistoryManager not initialized");
     });
 
     it("should handle IndexedDB errors gracefully", async () => {
-      const version = await manager.saveVersion(mockCharacter, "Test");
+      const version = await manager.saveVersion(mockCharacter, "Test", DEFAULT_START_MS);
       expect(version).toBeDefined();
     });
   });

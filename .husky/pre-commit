@@ -5,6 +5,11 @@ echo "🔍 Running Pre-Commit Hook..."
 echo "📝 Running lint-staged (auto-format staged files)..."
 npx lint-staged || exit 1
 
+if node scripts/change-inputs.js staged-inert; then
+  echo "📄 Only inert files (docs) staged: skipping tests and checks."
+  exit 0
+fi
+
 # Run unit tests to ensure no breaking changes
 echo "🧪 Running unit tests..."
 npm run test:unit || exit 1

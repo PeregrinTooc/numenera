@@ -1,3 +1,4 @@
+import { DEFAULT_START_MS } from "@/services/manualClock";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import { migrateLegacyVersionDescriptions } from "@/services/versionDescriptionMigration";
@@ -9,7 +10,7 @@ const KEY = "versionHistory.changes";
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-describe.sequential("migrateLegacyVersionDescriptions", () => {
+describe("migrateLegacyVersionDescriptions", () => {
   let manager: VersionHistoryManager;
   let mockCharacter: Character;
   const testDbName = "test-version-description-migration-suite";
@@ -43,8 +44,12 @@ describe.sequential("migrateLegacyVersionDescriptions", () => {
   });
 
   async function migrateSecondVersionDescribedAs(description: string): Promise<string> {
-    await manager.saveVersion(mockCharacter, "Initial state");
-    await manager.saveVersion({ ...mockCharacter, name: "New Name" }, description);
+    await manager.saveVersion(mockCharacter, "Initial state", DEFAULT_START_MS);
+    await manager.saveVersion(
+      { ...mockCharacter, name: "New Name" },
+      description,
+      DEFAULT_START_MS
+    );
 
     await migrateLegacyVersionDescriptions(manager, await manager.getAllVersions());
 
@@ -52,12 +57,12 @@ describe.sequential("migrateLegacyVersionDescriptions", () => {
   }
 
   it("rewrites a bare legacy literal using the diff against the previous version", async () => {
-    await manager.saveVersion(mockCharacter, "Initial state");
+    await manager.saveVersion(mockCharacter, "Initial state", DEFAULT_START_MS);
     const withCypher = {
       ...mockCharacter,
       cyphers: [{ name: "Detonation", level: "3", effect: "Explodes" }],
     };
-    await manager.saveVersion(withCypher, "Updated character");
+    await manager.saveVersion(withCypher, "Updated character", DEFAULT_START_MS);
 
     const versions = await manager.getAllVersions();
     await migrateLegacyVersionDescriptions(manager, versions);
@@ -67,7 +72,7 @@ describe.sequential("migrateLegacyVersionDescriptions", () => {
   });
 
   it("fully replaces a compound description containing the legacy literal", async () => {
-    await manager.saveVersion(mockCharacter, "Initial state");
+    await manager.saveVersion(mockCharacter, "Initial state", DEFAULT_START_MS);
     const changed = {
       ...mockCharacter,
       name: "New Name",
@@ -75,7 +80,7 @@ describe.sequential("migrateLegacyVersionDescriptions", () => {
     };
     // Real squashDescriptions() output: a field edit and a card op that still
     // had the old generic literal, combined into one compound description.
-    await manager.saveVersion(changed, "Changed name, Updated character");
+    await manager.saveVersion(changed, "Changed name, Updated character", DEFAULT_START_MS);
 
     const versions = await manager.getAllVersions();
     await migrateLegacyVersionDescriptions(manager, versions);
@@ -87,8 +92,8 @@ describe.sequential("migrateLegacyVersionDescriptions", () => {
   });
 
   it("falls back to the generic key when a legacy literal has no detectable diff", async () => {
-    await manager.saveVersion(mockCharacter, "Initial state");
-    await manager.saveVersion({ ...mockCharacter }, "Updated character");
+    await manager.saveVersion(mockCharacter, "Initial state", DEFAULT_START_MS);
+    await manager.saveVersion({ ...mockCharacter }, "Updated character", DEFAULT_START_MS);
 
     const versions = await manager.getAllVersions();
     await migrateLegacyVersionDescriptions(manager, versions);
@@ -134,7 +139,7 @@ describe.sequential("migrateLegacyVersionDescriptions", () => {
   });
 
   it("rewrites the first version's text without recomputing it", async () => {
-    await manager.saveVersion(mockCharacter, "Initial state");
+    await manager.saveVersion(mockCharacter, "Initial state", DEFAULT_START_MS);
 
     const versions = await manager.getAllVersions();
     await migrateLegacyVersionDescriptions(manager, versions);
@@ -152,12 +157,12 @@ describe.sequential("migrateLegacyVersionDescriptions", () => {
       totalXp: undefined,
       xp: 15,
     } as unknown as Character;
-    await manager.saveVersion(legacySnapshot, "Initial state");
+    await manager.saveVersion(legacySnapshot, "Initial state", DEFAULT_START_MS);
     const withCypher = {
       ...mockCharacter,
       cyphers: [{ name: "Detonation", level: "3", effect: "Explodes" }],
     };
-    await manager.saveVersion(withCypher, "Updated character");
+    await manager.saveVersion(withCypher, "Updated character", DEFAULT_START_MS);
 
     const versions = await manager.getAllVersions();
     await expect(migrateLegacyVersionDescriptions(manager, versions)).resolves.not.toThrow();

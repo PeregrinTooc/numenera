@@ -1,5 +1,6 @@
 import { beforeEach, afterEach, expect, vi } from "vitest";
 import { ExportManager } from "@/storage/exportManager";
+import { ManualClock } from "@/services/manualClock";
 import {
   deleteFileHandle,
   loadPersistedFileHandle,
@@ -131,6 +132,7 @@ export function expectValidFileStructure(data: string) {
 
 export interface ExportManagerFixture {
   exportManager: ExportManager;
+  clock: ManualClock;
   hasPersistedHandle(): Promise<boolean>;
   seedPersistedHandle(handle: FileSystemFileHandle): Promise<void>;
 }
@@ -151,7 +153,8 @@ export function setupExportManager(): ExportManagerFixture {
 
     delete window.showSaveFilePicker;
 
-    fixture.exportManager = new ExportManager();
+    fixture.clock = new ManualClock();
+    fixture.exportManager = new ExportManager(fixture.clock);
   });
 
   afterEach(() => {

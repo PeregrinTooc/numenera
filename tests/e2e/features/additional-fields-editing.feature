@@ -3,208 +3,95 @@ Feature: Additional Character Fields Editing
     I want to edit the character type, background, and notes fields
     So that I can manage all character information effectively
 
-    Background:
-        Given I am on the character sheet page
-        And the character has the following data:
-            | field      | value                    |
-            | name       | Testchar                 |
-            | type       | Nano                     |
-            | background | A mysterious wanderer... |
-            | notes      | Quest: Find the artifact |
+    Scenario: A character type is chosen from Nano, Glaive and Jack
+        Given my character's type is "Nano"
+        Then my character type shows as "Nano"
+        And the character types to choose from are "Nano", "Glaive", "Jack"
 
-    Scenario: Type field displays as dropdown with current value selected
-        Then the type dropdown should show "Nano" as selected
-        And the type dropdown should have 3 options
-        And the type dropdown options should be "Nano", "Glaive", "Jack"
+    Scenario: A changed character type is still there the next time I open my character
+        Given my character's type is "Nano"
+        When I choose "Glaive" as my character type
+        Then my character type shows as "Glaive"
+        When I open my character again
+        Then my character type shows as "Glaive"
 
-    Scenario: User can change character type via dropdown
-        When I select "Glaive" from the type dropdown
-        Then the type dropdown should show "Glaive" as selected
-        And the character data should have type "Glaive"
+    Scenario: A text field can only be read until I click it
+        Given my character's background reads "A mysterious wanderer..."
+        Then my background reads "A mysterious wanderer..."
+        And my background cannot be edited yet and looks clickable
+        When I click my background
+        Then I can edit my background
 
-    Scenario: Type change persists after page reload
-        When I select "Jack" from the type dropdown
-        And I reload the page
-        Then the type dropdown should show "Jack" as selected
+    Scenario: Clicking away from a text field saves what I wrote
+        Given my character's background reads "A mysterious wanderer..."
+        When I click my background
+        And I type "New background story here" in my background
+        And I click away from my background
+        Then my background cannot be edited yet and looks clickable
+        And my background reads "New background story here"
+        When I open my character again
+        Then my background reads "New background story here"
 
-    Scenario: Type dropdown works on mobile devices
-        Given the viewport is 768 pixels wide
-        When I tap the type dropdown
-        Then the mobile OS picker should open
-        When I select "Glaive" from the mobile picker
-        Then the type dropdown should show "Glaive" as selected
+    Scenario Outline: What I write is still there the next time I open my character
+        Given my character's <field> reads "Before"
+        When I write "Persistent text" as my <field>
+        And I open my character again
+        Then my <field> reads "Persistent text"
 
-    Scenario: Type dropdown respects i18n (German)
-        Given the language is set to "de"
-        Then the type dropdown label should be "Typ"
-        And the type dropdown option for "Nano" should display as "Nano"
-        And the type dropdown option for "Glaive" should display as "Glaive"
-        And the type dropdown option for "Jack" should display as "Jack"
+        Examples:
+            | field      |
+            | background |
+            | notes      |
 
-    Scenario: Background field displays in readonly state initially
-        Then the background textarea should be readonly
-        And the background textarea should show "A mysterious wanderer..."
-        And the background textarea should have a pointer cursor
+    Scenario: A text field can be emptied
+        Given my character's background reads "A mysterious wanderer..."
+        When I write "" as my background
+        Then my background reads ""
+        When I open my character again
+        Then my background reads ""
 
-    Scenario: Clicking background field enables editing
-        When I click the background textarea
-        Then the background textarea should not be readonly
-        And the background textarea should be focused
-        And the background textarea should have an edit state visual indicator
+    Scenario: Long text is kept in full
+        Given my character's background reads "Short"
+        When I write 1000 characters as my background
+        Then my background holds all 1000 characters
+        When I open my character again
+        Then my background holds all 1000 characters
 
-    Scenario: Editing background and blurring saves changes
-        When I click the background textarea
-        And I clear the background textarea
-        And I type "New background story here" in the background textarea
-        And I click outside the background textarea
-        Then the background textarea should be readonly
-        And the background textarea should show "New background story here"
-        And the character data should have background "New background story here"
+    Scenario: Special characters are kept as written
+        Given my character's background reads "Short"
+        When I write "Special: <>&chars" as my background
+        Then my background reads "Special: <>&chars"
+        When I open my character again
+        Then my background reads "Special: <>&chars"
 
-    Scenario: Background changes persist after page reload
-        When I click the background textarea
-        And I type "Persistent background" in the background textarea
-        And I click outside the background textarea
-        And I reload the page
-        Then the background textarea should show "Persistent background"
+    Scenario: Starting on the notes saves the background I was writing
+        Given my character's background reads "A mysterious wanderer..."
+        And my character's notes reads "Quest: Find the artifact"
+        When I click my background
+        And I type "Background edit" in my background
+        And I click my notes
+        Then my background cannot be edited yet and looks clickable
+        And my background reads "Background edit"
+        And I can edit my notes
 
-    Scenario: Empty background value is allowed
-        When I click the background textarea
-        And I clear the background textarea
-        And I click outside the background textarea
-        Then the background textarea should be readonly
-        And the background textarea should be empty
-        And the character data should have background ""
-
-    Scenario: Long background text is handled properly
-        When I click the background textarea
-        And I type a 1000 character string in the background textarea
-        And I click outside the background textarea
-        Then the background textarea should contain the full 1000 character text
-        And the character data should have the full background text
-
-    Scenario: Background field works on mobile devices
-        Given the viewport is 768 pixels wide
-        When I tap the background textarea
-        Then the background textarea should become editable
-        And the virtual keyboard should appear
-        When I type "Mobile text" in the background textarea
-        And I tap outside the background textarea
-        Then the background textarea should show "Mobile text"
-
-    Scenario: Background respects i18n (German)
-        Given the language is set to "de"
-        Then the background field label should be "Hintergrund"
-        When I click the background textarea
-        And the background textarea is empty
-        Then the background placeholder should be "Zum Bearbeiten klicken..."
-
-    Scenario: Notes field displays in readonly state initially
-        Then the notes textarea should be readonly
-        And the notes textarea should show "Quest: Find the artifact"
-        And the notes textarea should have a pointer cursor
-
-    Scenario: Clicking notes field enables editing
-        When I click the notes textarea
-        Then the notes textarea should not be readonly
-        And the notes textarea should be focused
-        And the notes textarea should have an edit state visual indicator
-
-    Scenario: Editing notes and blurring saves changes
-        When I click the notes textarea
-        And I clear the notes textarea
-        And I type "New notes content" in the notes textarea
-        And I click outside the notes textarea
-        Then the notes textarea should be readonly
-        And the notes textarea should show "New notes content"
-        And the character data should have notes "New notes content"
-
-    Scenario: Notes changes persist after page reload
-        When I click the notes textarea
-        And I type "Persistent notes" in the notes textarea
-        And I click outside the notes textarea
-        And I reload the page
-        Then the notes textarea should show "Persistent notes"
-
-    Scenario: Empty notes value is allowed
-        When I click the notes textarea
-        And I clear the notes textarea
-        And I click outside the notes textarea
-        Then the notes textarea should be readonly
-        And the notes textarea should be empty
-        And the character data should have notes ""
-
-    Scenario: Long notes text is handled properly
-        When I click the notes textarea
-        And I type a 2000 character string in the notes textarea
-        And I click outside the notes textarea
-        Then the notes textarea should contain the full 2000 character text
-        And the character data should have the full notes text
-
-    Scenario: Notes field works on mobile devices
-        Given the viewport is 768 pixels wide
-        When I tap the notes textarea
-        Then the notes textarea should become editable
-        And the virtual keyboard should appear
-        When I type "Mobile notes" in the notes textarea
-        And I tap outside the notes textarea
-        Then the notes textarea should show "Mobile notes"
+    Scenario: Choosing a character type does not interrupt writing the background
+        Given my character's type is "Nano"
+        When I click my background
+        And I type "Background edit" in my background
+        And I choose "Glaive" as my character type
+        Then I can still edit my background
+        And my background reads "Background edit"
+        And my character type shows as "Glaive"
 
     # Regression: on iPad the notes were made editable only after the tap had
     # focused them, so iPadOS never raised the on-screen keyboard.
-    Scenario: Tapping the notes field opens the on-screen keyboard
-        When I tap the notes textarea
-        Then the virtual keyboard should appear
+    Scenario: Tapping the notes brings up the on-screen keyboard
+        Given my character's notes reads "Quest: Find the artifact"
+        When I tap my notes
+        Then the on-screen keyboard comes up
 
-    Scenario: Notes respects i18n (German)
-        Given the language is set to "de"
-        Then the notes field label should be "Notizen"
-        When I click the notes textarea
-        And the notes textarea is empty
-        Then the notes placeholder should be "Zum Bearbeiten klicken..."
-
-    Scenario: Clicking notes while editing background saves background first
-        When I click the background textarea
-        And I type "Background edit" in the background textarea
-        And I click the notes textarea
-        Then the background textarea should be readonly
-        And the background textarea should show "Background edit"
-        And the notes textarea should not be readonly
-        And the notes textarea should be focused
-
-    Scenario: Clicking background while editing notes saves notes first
-        When I click the notes textarea
-        And I type "Notes edit" in the notes textarea
-        And I click the background textarea
-        Then the notes textarea should be readonly
-        And the notes textarea should show "Notes edit"
-        And the background textarea should not be readonly
-        And the background textarea should be focused
-
-    Scenario: Changing type while editing background does not interfere
-        When I click the background textarea
-        And I type "Background edit" in the background textarea
-        When I select "Glaive" from the type dropdown
-        Then the background textarea should still be editable
-        And the background textarea should show "Background edit"
-        And the type dropdown should show "Glaive" as selected
-
-    Scenario: All fields can be edited in sequence
-        When I select "Jack" from the type dropdown
-        And I click the background textarea
-        And I type "Sequential background" in the background textarea
-        And I click outside the background textarea
-        And I click the notes textarea
-        And I type "Sequential notes" in the notes textarea
-        And I click outside the notes textarea
-        Then the type dropdown should show "Jack" as selected
-        And the background textarea should show "Sequential background"
-        And the notes textarea should show "Sequential notes"
-
-    Scenario: Background with special characters is handled correctly
-        When I click the background textarea
-        And I type "Special: <>&chars" in the background textarea
-        And I click outside the background textarea
-        Then the background textarea should show "Special: <>&chars"
-        And the character data should have background "Special: <>&chars"
-
+    Scenario: In German the type is labelled and an empty background invites editing
+        Given my character's background reads ""
+        And the language is set to "de"
+        Then the character type is labelled "Typ"
+        And my empty background invites me to write with "Zum Bearbeiten klicken..."

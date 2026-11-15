@@ -1,9 +1,11 @@
+import type { Clock } from "@/services/clock";
 import { t } from "@/i18n/index";
 import { versionDescriptionText } from "@/services/versionDescriptionText";
 
 export interface VersionWarningBannerProps {
   description: string;
   timestamp: Date;
+  clock: Clock;
   onReturn: () => void;
   onRestore: () => void;
 }
@@ -17,21 +19,20 @@ export class VersionWarningBanner {
   }
 
   private formatTimestamp(date: Date): string {
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
+    const diffMs = this.props.clock.now() - date.getTime();
     const diffSec = Math.floor(diffMs / 1000);
     const diffMin = Math.floor(diffSec / 60);
     const diffHour = Math.floor(diffMin / 60);
     const diffDay = Math.floor(diffHour / 24);
 
     if (diffSec < 60) {
-      return "just now";
+      return t("versionHistory.age.justNow");
     } else if (diffMin < 60) {
-      return `${diffMin} minute${diffMin !== 1 ? "s" : ""} ago`;
+      return t("versionHistory.age.minutes", { count: diffMin });
     } else if (diffHour < 24) {
-      return `${diffHour} hour${diffHour !== 1 ? "s" : ""} ago`;
+      return t("versionHistory.age.hours", { count: diffHour });
     } else if (diffDay < 7) {
-      return `${diffDay} day${diffDay !== 1 ? "s" : ""} ago`;
+      return t("versionHistory.age.days", { count: diffDay });
     } else {
       return date.toLocaleDateString();
     }

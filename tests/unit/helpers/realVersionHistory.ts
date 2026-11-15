@@ -1,3 +1,4 @@
+import { DEFAULT_START_MS } from "@/services/manualClock";
 import { afterEach, beforeEach } from "vitest";
 import { VersionHistoryManager } from "@/storage/versionHistory";
 import type { Character } from "@/types/character";
@@ -49,7 +50,11 @@ export async function seedVersions(
   seeds: readonly VersionSeed[]
 ): Promise<void> {
   for (const seed of seeds) {
-    await manager.saveVersion(createTestCharacter({ name: seed.name }), seed.description);
+    await manager.saveVersion(
+      createTestCharacter({ name: seed.name }),
+      seed.description,
+      DEFAULT_START_MS
+    );
   }
 }
 
@@ -59,5 +64,5 @@ export async function seedRawVersion(
   snapshot: unknown,
   description: string
 ): Promise<void> {
-  await manager.saveVersion(snapshot as Character, description);
+  await manager.saveVersion(snapshot as Character, description, DEFAULT_START_MS);
 }

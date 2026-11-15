@@ -1,6 +1,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { waitForSaveComplete } from "../support/save.js";
+import { waitForNewCharacterPersisted } from "../support/app-ready.js";
 import type { CustomWorld } from "../support/world.js";
 import type { DamageTrack } from "@/types/character";
 
@@ -139,7 +140,7 @@ Given("the character is new", async function () {
   const newButton = this.page.locator('[data-testid="new-button"]');
   await newButton.click();
   await this.page.waitForSelector('[data-testid="recovery-rolls-section"]', { state: "visible" });
-  await this.page.waitForTimeout(500);
+  await waitForNewCharacterPersisted(this.page);
 });
 
 Then("all recovery checkboxes should be unchecked", async function () {
@@ -152,26 +153,8 @@ Then("all recovery checkboxes should be unchecked", async function () {
   }
 });
 
-When("I click on the recovery modifier display", async function () {
-  const modifierDisplay = this.dom.getByTestId("recovery-modifier-display");
-  await modifierDisplay.click();
-  await this.page.waitForTimeout(200);
-});
-
-When("I enter {string} in the modifier field", async function (value: string) {
-  const input = this.page.locator('[data-testid="edit-modal-input"]');
-  await input.fill(value);
-});
-
-Then("I should see an edit modal", async function () {
-  const modal = this.page.locator('[data-testid="edit-modal"]');
-  await expect(modal).toBeVisible();
-});
-
-When("I confirm the edit", async function () {
-  const confirmButton = this.page.locator('[data-testid="modal-confirm-button"]');
-  await confirmButton.click();
-  await this.page.waitForTimeout(200);
+When("I change my recovery modifier to {int}", async function (this: CustomWorld, value: number) {
+  await this.character.change("recovery modifier", String(value));
 });
 
 When("I click the {string} recovery checkbox", async function (rollType: string) {

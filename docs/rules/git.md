@@ -179,10 +179,20 @@ break automation. Use one `-m` flag per paragraph instead.
 - Check i18n translation keys
 - Block commit if any fail
 
+When every staged file is inert, meaning documentation (`docs/**`, root-level
+`*.md`), the hook only runs lint-staged. `scripts/changeInputs.ts` decides what
+counts as inert, for the hooks and CI alike. Any path it does not list is an
+input, so a forgotten rule costs a test run, never a skipped one.
+
 ### Pre-push (Automatically runs):
 
-- Run E2E tests
+- Build the production bundle and run the E2E tests against it
 - Block push if tests fail
+
+The hook skips the run when every pushed commit has the same input fingerprint
+as the last green run (recorded in `.git/verified-inputs`, shared by all
+worktrees). It records a run only when the working tree matches `HEAD`, since
+that is what the tests actually ran on.
 
 ### You Cannot Bypass These
 

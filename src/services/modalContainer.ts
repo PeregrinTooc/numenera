@@ -17,14 +17,12 @@ export class ModalContainer {
   }
 
   focusElement(selector: string, select = false): void {
-    setTimeout(() => {
-      const element = this.container.querySelector<HTMLElement>(selector);
-      if (element) {
-        element.focus();
-        if (select && element instanceof HTMLInputElement) {
-          element.select();
-        }
+    const element = this.container.querySelector<HTMLElement>(selector);
+    if (element) {
+      element.focus();
+      if (select && element instanceof HTMLInputElement) {
+        element.select();
       }
-    }, 0);
+    }
   }
 }

@@ -44,7 +44,7 @@ _Note: Detailed planning (Architecture, Implementation Steps, Unit Tests, Edge C
 
 ## 🚨 Must-Have (Technical Debt)
 
-None open.
+_None._
 
 ---
 

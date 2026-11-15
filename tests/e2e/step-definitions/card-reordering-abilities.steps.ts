@@ -1,7 +1,6 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
-import { withFullHeightViewport } from "../support/sections.js";
 
 Given(
   "the character has {int} abilities named {string}",
@@ -37,13 +36,13 @@ When(
       .locator("xpath=ancestor::div[starts-with(@data-testid,'ability-item')]");
 
     // Full-height viewport: on phones the stacked cards don't all fit on screen.
-    await withFullHeightViewport(this.page, () =>
+    await this.screen.withFullHeight(() =>
       sourceCard.dragTo(targetCard, {
         targetPosition: { x: 10, y: 5 },
       })
     );
 
-    await this.page.waitForTimeout(200);
+    await expect(sourceCard).not.toHaveAttribute("data-dragging", "true");
   }
 );
 
@@ -56,16 +55,10 @@ Then(
 );
 
 async function verifyAbilityOrder(world: CustomWorld, expectedOrder: string[]): Promise<void> {
-  const abilityItems = world.page.locator('[data-testid^="ability-item"]');
-  const count = await abilityItems.count();
-
-  expect(count).toBe(expectedOrder.length);
-
-  for (let i = 0; i < expectedOrder.length; i++) {
-    const abilityName = abilityItems.nth(i).locator('[data-testid^="ability-name-"]');
-    const nameText = await abilityName.textContent();
-    expect(nameText?.trim()).toBe(expectedOrder[i]);
-  }
+  const abilityNames = world.page.locator(
+    '[data-testid^="ability-item"] [data-testid^="ability-name-"]'
+  );
+  await expect(abilityNames).toHaveText(expectedOrder);
 }
 
 When(
@@ -80,7 +73,7 @@ When(
       targetPosition: { x: 50, y: 50 },
     });
 
-    await this.page.waitForTimeout(200);
+    await expect(sourceCard).not.toHaveAttribute("data-dragging", "true");
   }
 );
 
@@ -95,12 +88,12 @@ When(
       .locator("xpath=ancestor::div[@data-testid='cypher-item']");
 
     // Full-height viewport: on phones the two sections don't both fit on screen.
-    await withFullHeightViewport(this.page, () =>
+    await this.screen.withFullHeight(() =>
       sourceCard.dragTo(targetCard, {
         targetPosition: { x: 10, y: 5 },
       })
     );
 
-    await this.page.waitForTimeout(200);
+    await expect(sourceCard).not.toHaveAttribute("data-dragging", "true");
   }
 );

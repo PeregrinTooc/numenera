@@ -9,7 +9,7 @@ Feature: An unreadable saved character is kept, not destroyed
     Scenario: Download the unreadable data
         Given the stored character data is the unreadable text "garbled save"
         When I reload the page
-        Then I should see the character name "Kael the Wanderer"
+        Then my character sheet shows my name as "Kael the Wanderer"
         And I should be asked what to do with the unreadable character
         And the kept unreadable data should be "garbled save"
         When I download the unreadable character
@@ -48,6 +48,6 @@ Feature: An unreadable saved character is kept, not destroyed
     Scenario: Browser text that is not valid JSON is kept as it was written
         Given the browser holds the unparseable character text "{not valid json"
         When I reload the page
-        Then I should see the character name "Kael the Wanderer"
+        Then my character sheet shows my name as "Kael the Wanderer"
         And I should be asked what to do with the unreadable character
         And the kept unreadable data should be "{not valid json"

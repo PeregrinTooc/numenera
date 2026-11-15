@@ -216,28 +216,6 @@ Plain classes + lit-html is better than Lit Element because:
 
 **Hierarchical component structure with clear separation of concerns.**
 
-```
-src/
-├── types/character.ts          # Type definitions
-├── data/mockCharacters.ts      # Test data
-├── components/
-│   ├── StatPool.ts            # Item components (render single items)
-│   ├── CypherItem.ts
-│   ├── ArtifactItem.ts
-│   ├── OddityItem.ts
-│   ├── TextField.ts
-│   ├── Stats.ts               # Container components (compose items)
-│   ├── Cyphers.ts
-│   ├── Artifacts.ts
-│   ├── Oddities.ts
-│   ├── TextFields.ts
-│   ├── BasicInfo.ts
-│   ├── Header.ts              # Top-level components
-│   └── CharacterSheet.ts
-├── app/                        # Bootstrap, rendering, version navigation (see below)
-└── main.ts                     # Thin entry point: creates AppContext, wires modules
-```
-
 ### Application Bootstrap (`src/app/`)
 
 `main.ts` only creates one `AppContext` (all mutable app state: current sheet,
@@ -262,70 +240,39 @@ import `main.ts`; rendering and version navigation call each other through
 ### Component Hierarchy
 
 ```
-CharacterSheet
-├── Header
-├── BasicInfo
-├── Stats
-│   ├── StatPool (Might)
-│   ├── StatPool (Speed)
-│   └── StatPool (Intellect)
-├── Cyphers
-│   └── CypherItem (list)
-├── Artifacts
-│   └── ArtifactItem (list)
-├── Oddities
-│   └── OddityItem (list)
-└── TextFields
-    ├── TextField (Background)
-    ├── TextField (Notes)
-    ├── TextField (Equipment)
-    └── TextField (Abilities)
+Character sheet
+├── Header: sheet-wide actions (files, settings)
+├── Sections, arranged and reordered by the user
+│   ├── Field sections: single values edited in place
+│   │   └── Fields (a value, a pool, a track, free text)
+│   └── Collection sections: lists the user adds to and reorders
+│       └── Cards: one entry each, edited in a card editor
+└── Overlays: modals, version navigation, comparison view
 ```
 
 ### Component Types
 
-1. **Item Components** (smallest units)
-   - Render a single item (stat pool, cypher, artifact, oddity, text field)
-   - 10-25 lines each
-   - Highly reusable
-   - Examples: `StatPool`, `CypherItem`, `TextField`
-
-2. **Container Components** (compose items)
-   - Manage lists/collections of items
-   - Handle empty states
-   - 20-40 lines each
-   - Examples: `Stats`, `Cyphers`, `Artifacts`
-
-3. **Top-Level Components** (page structure)
-   - Compose containers into full page
-   - Handle application-wide concerns (buttons, layout)
-   - Examples: `Header`, `CharacterSheet`
+1. **Fields** render one value of the character (a stat pool, a damage track,
+   free text), edit it in place and report each change upward.
+2. **Cards** render one entry of a collection; editing one opens the card editor.
+3. **Sections** group fields, or a collection, under a heading. A collection
+   section owns adding, removing and reordering its cards and its empty state.
+   The user arranges sections in the sheet's layout.
+4. **The sheet** composes the header and the sections and owns their layout and
+   the dragging of whole sections.
+5. **Overlays** (modals, version navigation, comparison view) sit above the
+   sheet and are driven by the app layer.
+6. **Behaviours** (`components/helpers/`) hold logic several components share,
+   such as card editing, collection reordering and section dragging.
 
 ### Benefits of This Structure
 
-1. **Single Responsibility**
-   - Each component has one clear purpose
-   - Easy to locate and modify code
-
-2. **Reusability**
-   - `StatPool` used 3 times (Might, Speed, Intellect)
-   - `TextField` used 4 times (Background, Notes, Equipment, Abilities)
-   - Item components can be reused anywhere
-
-3. **Testability**
-   - Small components are easy to test
-   - Clear boundaries for unit tests
-   - E2E tests target composed behavior
-
-4. **Maintainability**
-   - Most files are 10-40 lines
-   - Easy to understand at a glance
-   - Changes are localized
-
-5. **Scalability**
-   - Clear pattern for adding new components
-   - Easy to extract reusable patterns
-   - Room to grow (forms, validation, etc.)
+1. **Single responsibility**: each kind of component has one job, so a change to
+   how cards are edited touches the card editing behaviour, not every collection.
+2. **Reuse**: all collections share one section, reordering and editing
+   implementation; a new collection is a new card type.
+3. **Testability**: components are plain classes rendering `lit-html`
+   templates, unit-tested in jsdom; E2E scenarios cover the composed sheet.
 
 ### Alternatives Considered
 

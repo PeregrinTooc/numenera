@@ -12,16 +12,7 @@ Given("the character has name {string}", async function (this: CustomWorld, name
 
   await this.page.click('[data-testid="modal-confirm-button"]');
 
-  await this.page
-    .waitForSelector('[data-testid="edit-modal"]', {
-      state: "hidden",
-      timeout: 2000,
-    })
-    .catch(() => {
-      // Modal might already be hidden
-    });
-
-  await this.page.waitForTimeout(500);
+  await expect(this.page.locator('[data-testid="edit-modal"]')).toBeHidden();
 
   await expect(nameElement).toHaveText(name, { timeout: 5000 });
 });

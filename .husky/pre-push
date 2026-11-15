@@ -1,15 +1,8 @@
-echo "🔍 Running TypeScript build check before push..."
+echo "🔍 Building and running the end-to-end tests before push..."
 
-npm run build
-
-if [ $? -ne 0 ]; then
-  echo "❌ Build failed! Fix TypeScript errors before pushing."
-  exit 1
-fi
-
-npm run test:e2e:prod || {
-  echo "❌ End-to-end tests failed! Fix the issues before pushing."
+node scripts/change-inputs.js pre-push || {
+  echo "❌ Build or end-to-end tests failed! Fix the issues before pushing."
   exit 1
 }
 
-echo "✅ Build successful! Proceeding with push..."
+echo "✅ Proceeding with push..."

@@ -1,19 +1,20 @@
 import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from "vitest";
 import { AutoSaveService } from "@/services/autoSaveService";
+import { ManualClock } from "@/services/manualClock";
 
 describe("AutoSaveService", () => {
+  let clock: ManualClock;
   let service: AutoSaveService;
   let mockSaveCallback: Mock<() => Promise<void>>;
 
   beforeEach(() => {
-    vi.useFakeTimers();
+    clock = new ManualClock();
     mockSaveCallback = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
-    service = new AutoSaveService(mockSaveCallback, 300);
+    service = new AutoSaveService(mockSaveCallback, clock, 300);
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
-    vi.useRealTimers();
   });
 
   describe("requestSave", () => {
@@ -24,7 +25,7 @@ describe("AutoSaveService", () => {
 
       expect(mockSaveCallback).not.toHaveBeenCalled();
 
-      vi.advanceTimersByTime(300);
+      clock.advance(300);
 
       expect(mockSaveCallback).toHaveBeenCalledTimes(1);
     });
@@ -32,16 +33,16 @@ describe("AutoSaveService", () => {
     it("should reset debounce timer on new requests", () => {
       service.requestSave();
 
-      vi.advanceTimersByTime(200);
+      clock.advance(200);
       expect(mockSaveCallback).not.toHaveBeenCalled();
 
       service.requestSave();
 
       // Advance another 200ms (total 400ms from first, but only 200ms from second)
-      vi.advanceTimersByTime(200);
+      clock.advance(200);
       expect(mockSaveCallback).not.toHaveBeenCalled();
 
-      vi.advanceTimersByTime(100);
+      clock.advance(100);
       expect(mockSaveCallback).toHaveBeenCalledTimes(1);
     });
   });
@@ -60,7 +61,8 @@ describe("AutoSaveService", () => {
       await service.flush();
       expect(mockSaveCallback).toHaveBeenCalledTimes(1);
 
-      await vi.advanceTimersByTimeAsync(300);
+      clock.advance(300);
+      await service.flush();
       expect(mockSaveCallback).toHaveBeenCalledTimes(1);
     });
   });
@@ -68,13 +70,13 @@ describe("AutoSaveService", () => {
   describe("custom debounce time", () => {
     it("should use custom debounce time", () => {
       const customCallback = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
-      const customService = new AutoSaveService(customCallback, 500);
+      const customService = new AutoSaveService(customCallback, clock, 500);
 
       customService.requestSave();
-      vi.advanceTimersByTime(300);
+      clock.advance(300);
       expect(customCallback).not.toHaveBeenCalled();
 
-      vi.advanceTimersByTime(200);
+      clock.advance(200);
       expect(customCallback).toHaveBeenCalledTimes(1);
     });
   });
@@ -85,14 +87,11 @@ describe("AutoSaveService", () => {
       service.on("save-completed", eventHandler);
 
       service.requestSave();
-      await vi.runAllTimersAsync();
+      clock.advance(300);
+      await service.flush();
 
       expect(eventHandler).toHaveBeenCalledTimes(1);
-      expect(eventHandler).toHaveBeenCalledWith(
-        expect.objectContaining({
-          timestamp: expect.any(Number),
-        })
-      );
+      expect(eventHandler).toHaveBeenCalledWith({ timestamp: clock.now() });
     });
 
     it("should allow multiple event listeners", async () => {
@@ -103,7 +102,8 @@ describe("AutoSaveService", () => {
       service.on("save-completed", handler2);
 
       service.requestSave();
-      await vi.runAllTimersAsync();
+      clock.advance(300);
+      await service.flush();
 
       expect(handler1).toHaveBeenCalledTimes(1);
       expect(handler2).toHaveBeenCalledTimes(1);

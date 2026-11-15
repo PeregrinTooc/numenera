@@ -75,9 +75,11 @@ export class EquipmentItem {
         <div class="flex justify-between items-start pr-8 pl-8">
           <div class="flex-1">
             <div class="equipment-name">${this.item.name}</div>
-            ${this.item.description
-              ? html`<div class="equipment-description">${this.item.description}</div>`
-              : ""}
+            ${
+              this.item.description
+                ? html`<div class="equipment-description">${this.item.description}</div>`
+                : ""
+            }
           </div>
         </div>
       </div>

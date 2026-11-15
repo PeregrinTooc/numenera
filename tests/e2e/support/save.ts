@@ -1,6 +1,12 @@
 import type { Page } from "@playwright/test";
 
-/** The auto-save debounce is 300ms; a fixed wait just past it is faster than polling state. */
-export async function waitForSaveComplete(page: Page, timeoutMs: number = 400): Promise<void> {
-  await page.waitForTimeout(timeoutMs);
+/** Resolves once any pending or in-flight auto-save has been written to storage. */
+export async function waitForSaveComplete(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    const service = window.__autoSaveService;
+    if (!service) {
+      throw new Error("waitForSaveComplete: window.__autoSaveService is not available");
+    }
+    await service.flush();
+  });
 }

@@ -1,13 +1,31 @@
+import { performance } from "node:perf_hooks";
 import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
 import { chromium, webkit, devices, Browser } from "@playwright/test";
 import { CustomWorld } from "./world";
 import { resolveDevice } from "./device.js";
 import { TestStorageHelper } from "./testStorageHelper.js";
 import { DOMHelpers } from "./dom-helpers.js";
-import { ModalDsl } from "./modal.js";
-import { FieldsDsl } from "./fields.js";
-import { CardsDsl } from "./cards.js";
 import { SetupDsl } from "./setup.js";
+import { CharacterDsl } from "./character.js";
+import { PlaywrightSheetDriver } from "./sheetDriver.js";
+import { CardEditorDsl } from "./cardEditor.js";
+import { PlaywrightCardEditorDriver } from "./cardEditorDriver.js";
+import { ValueEditorDsl } from "./valueEditor.js";
+import { PlaywrightValueEditorDriver } from "./valueEditorDriver.js";
+import { AdditionalFieldsDsl } from "./additionalFields.js";
+import { PlaywrightInlineFieldsDriver } from "./inlineFieldsDriver.js";
+import { LayoutDsl } from "./layout.js";
+import { MouseInput, TouchInput } from "./sectionInput.js";
+import { ScreenDsl } from "./screen.js";
+import { PlaywrightViewportDriver } from "./viewportDriver.js";
+import { VersionHistoryDsl } from "./versionHistory.js";
+import { HistorySeedDsl } from "./historySeed.js";
+import { ComparisonDsl } from "./comparison.js";
+import { PlaywrightComparisonDriver } from "./comparisonDriver.js";
+import { waitForInitialVersionSaved } from "./app-ready.js";
+import { PlaywrightVersionHistoryDriver } from "./versionHistoryDriver.js";
+import { PlaywrightVersionSaveDriver } from "./versionSaveDriver.js";
+import { PlaywrightClockDriver } from "./clockDriver.js";
 import { BASE_URL } from "./serverUrl.js";
 
 let browser: Browser;
@@ -43,15 +61,38 @@ Before(async function (this: CustomWorld) {
   });
   this.page = await this.context.newPage();
   this.dom = new DOMHelpers(this.page);
-  this.modal = new ModalDsl(this.page);
-  this.fields = new FieldsDsl(this.page);
-  this.cards = new CardsDsl(this);
+  this.clock = new PlaywrightClockDriver(this.page);
   this.setup = new SetupDsl(this);
+  const valueEditor = new PlaywrightValueEditorDriver(this.page);
+  this.character = new CharacterDsl(new PlaywrightSheetDriver(this.page), this.setup, valueEditor);
+  this.valueEditor = new ValueEditorDsl(valueEditor);
+  this.additionalFields = new AdditionalFieldsDsl(new PlaywrightInlineFieldsDriver(this.page));
+  this.cardEditor = new CardEditorDsl(new PlaywrightCardEditorDriver(this.page));
+  const viewport = new PlaywrightViewportDriver(this.page);
+  this.screen = new ScreenDsl(viewport);
+  this.layout = new LayoutDsl(
+    DEVICE.sectionInput === "touch"
+      ? new TouchInput(this.page, viewport, this.clock)
+      : new MouseInput(this.page, viewport)
+  );
 
   // Initialize storage helper before navigation, so the Before hook's own
   // storage clearing goes through the same adapter-backed helper every step
   // uses, instead of a one-off inline page.evaluate.
   this.storageHelper = new TestStorageHelper(this.page);
+  const historyDriver = new PlaywrightVersionHistoryDriver(this.page, this.storageHelper);
+  this.historySeed = new HistorySeedDsl(historyDriver, this.setup);
+  this.history = new VersionHistoryDsl(
+    historyDriver,
+    new PlaywrightVersionSaveDriver(this.page, this.clock),
+    this.historySeed,
+    this.character
+  );
+  this.comparison = new ComparisonDsl(
+    new PlaywrightComparisonDriver(this.page, this.storageHelper),
+    this.history,
+    this.historySeed
+  );
 
   this.page.on("console", (msg) => {
     const text = msg.text();
@@ -77,59 +118,9 @@ Before(async function (this: CustomWorld) {
   // shim itself is never transformed.
   await this.page.addInitScript("globalThis.__name = (fn) => fn;");
 
-  // Inject test configuration and TestTimer BEFORE navigation
+  // Before the app boots, so it creates its ManualClock instead of the system clock.
   await this.page.addInitScript(() => {
-    class TestTimer {
-      private timers = new Map<number, () => void>();
-      private nextHandle = 1;
-
-      setTimeout(callback: () => void, _delay: number): number {
-        const handle = this.nextHandle++;
-        this.timers.set(handle, callback);
-
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(
-            new CustomEvent("test-timer-scheduled", {
-              detail: { handle },
-            })
-          );
-        }
-
-        return handle;
-      }
-
-      clearTimeout(handle: number): void {
-        this.timers.delete(handle);
-      }
-
-      trigger(handle: number): void {
-        const callback = this.timers.get(handle);
-        if (callback) {
-          this.timers.delete(handle);
-          callback();
-        }
-      }
-
-      triggerAll(): void {
-        const callbacks = Array.from(this.timers.values());
-        this.timers.clear();
-        callbacks.forEach((cb) => cb());
-      }
-
-      getPendingCount(): number {
-        return this.timers.size;
-      }
-
-      clearAll(): void {
-        this.timers.clear();
-      }
-    }
-
-    // Structurally the same API as the app's TestTimer; this class has to be
-    // self-contained because evaluate() serialises it into the page.
-    window.__testTimer = new TestTimer() as unknown as typeof window.__testTimer;
-
-    window.__SQUASH_DELAY_MS__ = 1000;
+    window.__useManualClock = true;
   });
 
   // Clears through the app's own test APIs (window.__testStorage /
@@ -138,7 +129,13 @@ Before(async function (this: CustomWorld) {
   // opened its own connections to these exact databases. A delete request
   // against a database the same page holds open fires "blocked" instead of
   // succeeding; clearing through the already-open connections avoids that.
+  //
+  // On a fresh store the app saves its initial version at the end of its
+  // asynchronous boot, which page.goto can return before. Clearing before that
+  // save lands lets it arrive afterwards as a stale version, which the next boot
+  // then reconciles into an extra one.
   await this.page.goto(BASE_URL);
+  await waitForInitialVersionSaved(this.page);
   await this.storageHelper.clearStorage();
   await this.storageHelper.clearVersions();
 
@@ -150,6 +147,14 @@ After(async function (this: CustomWorld) {
   await this.context?.close();
 });
 
-AfterAll(async function () {
+// WebKit occasionally fails to exit after every scenario has passed. Playwright
+// then force-kills it once its own 30 s close timeout runs out, so this hook
+// must outlast that window instead of failing at the same moment.
+const SLOW_CLOSE_MS = 5000;
+
+AfterAll({ timeout: 60000 }, async function () {
+  const started = performance.now();
   await browser?.close();
+  const elapsed = Math.round(performance.now() - started);
+  if (elapsed > SLOW_CLOSE_MS) console.warn(`Closing ${DEVICE.engine} took ${elapsed} ms`);
 });

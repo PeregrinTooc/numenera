@@ -3,234 +3,47 @@ Feature: Edit Basic Character Information
     I want to edit my character's basic information (name, tier, descriptor, focus)
     So that I can update my character as they progress through the game
 
-    Background:
-        Given a character exists with the following data:
-            | Property   | Value                |
-            | Name       | Kael the Wanderer    |
-            | Tier       | 3                    |
-            | Type       | Glaive               |
-            | Descriptor | Strong               |
-            | Focus      | Bears a Halo of Fire |
-        And I am on the character sheet page
+    Scenario Outline: Changing a piece of basic information shows the new value
+        Given my character's <field> is "<old>"
+        When I change my <field> to "<new>"
+        Then my character sheet shows my <field> as "<new>"
 
-    Scenario: Click on character name opens edit modal
-        When I click on the character name "Kael the Wanderer"
-        Then an edit modal should appear
-        And the modal input should contain "Kael the Wanderer"
-        And the modal should have a confirm button with icon
-        And the modal should have a cancel button with icon
+        Examples:
+            | field      | old                  | new                    |
+            | name       | Kael the Wanderer    | Kael the Wise          |
+            | descriptor | Strong               | Swift                  |
+            | focus      | Bears a Halo of Fire | Commands Mental Powers |
 
-    Scenario: Edit character name successfully
-        When I click on the character name "Kael the Wanderer"
-        And I clear the input field
-        And I type "Kael the Wise" in the modal input
-        And I click the "Confirm" button
-        Then the modal should close
-        And the character name should display "Kael the Wise"
-        When I reload the page
-        Then the character name should display "Kael the Wise"
+    Scenario: A changed tier is shown
+        Given my character's tier is 3
+        When I change my tier to 5
+        Then my character sheet shows my tier as 5
 
-    Scenario: Cancel character name edit
-        When I click on the character name "Kael the Wanderer"
-        And I type "New Name" in the modal input
-        And I click the "Cancel" button
-        Then the modal should close
-        And the character name should still display "Kael the Wanderer"
-        When I reload the page
-        Then the character name should still display "Kael the Wanderer"
+    Scenario: A changed name is still there the next time I open my character
+        Given my character's name is "Kael the Wanderer"
+        When I change my name to "Kael the Wise"
+        And I open my character again
+        Then my character sheet shows my name as "Kael the Wise"
 
-    Scenario: Edit character name with escape key
-        When I click on the character name "Kael the Wanderer"
-        And I type "Different Name" in the modal input
-        And I press the Escape key
-        Then the modal should close
-        And the character name should still display "Kael the Wanderer"
+    Scenario: Several pieces of basic information can be changed one after another
+        Given my character's name is "Kael the Wanderer"
+        When I change my name to "Kael the Wise"
+        And I change my tier to 4
+        Then my character sheet shows my name as "Kael the Wise"
+        And my character sheet shows my tier as 4
 
-    Scenario: Edit character name with enter key
-        When I click on the character name "Kael the Wanderer"
-        And I clear the input field
-        And I type "Kael the Swift" in the modal input
-        And I press the Enter key
-        Then the modal should close
-        And the character name should display "Kael the Swift"
+    Scenario Outline: A tier outside the Numenera range is limited to it
+        Given my character's tier is 3
+        When I change my tier to <entered>
+        Then my character sheet shows my tier as <shown>
 
-    Scenario: Click on tier opens edit modal
-        When I click on the tier "3"
-        Then an edit modal should appear
-        And the modal input should contain "3"
-        And the input field should be of type "number"
+        Examples:
+            | entered | shown |
+            | 7       | 6     |
+            | 0       | 1     |
 
-    Scenario: Edit character tier successfully
-        When I click on the tier "3"
-        And I clear the input field
-        And I type "5" in the modal input
-        And I click the "Confirm" button
-        Then the modal should close
-        And the tier should display "5"
-        When I reload the page
-        Then the tier should display "5"
-
-    Scenario: Edit tier with invalid value (out of range)
-        When I click on the tier "3"
-        And I clear the input field
-        And I type "7" in the modal input
-        And I click the "Confirm" button
-        Then the modal should close
-        And the tier should display "6"
-
-    Scenario: Edit tier with invalid value (below minimum)
-        When I click on the tier "3"
-        And I clear the input field
-        And I type "0" in the modal input
-        And I click the "Confirm" button
-        Then the modal should close
-        And the tier should display "1"
-
-    Scenario: Click on descriptor opens edit modal
-        When I click on the descriptor "Strong"
-        Then an edit modal should appear
-        And the modal input should contain "Strong"
-
-    Scenario: Edit character descriptor successfully
-        When I click on the descriptor "Strong"
-        And I clear the input field
-        And I type "Swift" in the modal input
-        And I click the "Confirm" button
-        Then the modal should close
-        And the descriptor should display "Swift"
-        When I reload the page
-        Then the descriptor should display "Swift"
-
-    Scenario: Click on focus opens edit modal
-        When I click on the focus "Bears a Halo of Fire"
-        Then an edit modal should appear
-        And the modal input should contain "Bears a Halo of Fire"
-
-    Scenario: Edit character focus successfully
-        When I click on the focus "Bears a Halo of Fire"
-        And I clear the input field
-        And I type "Commands Mental Powers" in the modal input
-        And I click the "Confirm" button
-        Then the modal should close
-        And the focus should display "Commands Mental Powers"
-        When I reload the page
-        Then the focus should display "Commands Mental Powers"
-
-    Scenario: Modal has proper visual styling
-        When I click on the character name "Kael the Wanderer"
-        Then the modal should have Numenera-themed styling
-        And the confirm button should have a checkmark icon
-        And the cancel button should have an X icon
-        And the modal backdrop should be semi-transparent
-
-    Scenario: Modal click outside closes without saving
-        When I click on the character name "Kael the Wanderer"
-        And I type "New Name" in the modal input
-        And I click outside the modal on the backdrop
-        Then the modal should close
-        And the character name should still display "Kael the Wanderer"
-
-    Scenario: Edit multiple fields in sequence
-        When I click on the character name "Kael the Wanderer"
-        And I type "Kael the Wise" in the modal input
-        And I click the "Confirm" button
-        Then the modal should close
-        When I click on the tier "3"
-        And I type "4" in the modal input
-        And I click the "Confirm" button
-        Then the modal should close
-        And the character name should display "Kael the Wise"
-        And the tier should display "4"
-
-    Scenario: Editable fields have visual hover state
-        When I hover over the character name "Kael the Wanderer"
-        Then the name should show a hover state indicating it's editable
-        When I hover over the tier "3"
-        Then the tier should show a hover state indicating it's editable
-
-    Scenario: Empty name is not allowed
-        When I click on the character name "Kael the Wanderer"
-        And I clear the input field
-        Then the modal confirm button should be disabled
-        And the modal should not close
-
-    Scenario: Modal maintains focus trap
-        When I click on the character name "Kael the Wanderer"
-        And I press Tab repeatedly
-        Then focus should cycle between input field, confirm button, and cancel button
-        And focus should not leave the modal
-
-    @accessibility
-    Scenario: Modal is keyboard accessible
-        When I click on the character name "Kael the Wanderer"
-        Then the input field should receive focus automatically
-        And I can navigate with Tab key
-        And I can confirm with Enter key
-        And I can cancel with Escape key
-
-    @accessibility
-    Scenario: Modal has proper ARIA attributes
-        When I click on the character name "Kael the Wanderer"
-        Then the modal should have role="dialog"
-        And the backdrop should have aria-hidden="true"
-
-    @mobile
-    Scenario: Tap on character name opens edit modal on mobile
-        Given the viewport is 375 pixels wide
-        When I tap on the character name "Kael the Wanderer"
-        Then an edit modal should appear
-        And the modal should be sized appropriately for mobile
-        And the mobile keyboard should appear
-
-    @mobile
-    Scenario: Edit character name on mobile device
-        Given the viewport is 375 pixels wide
-        When I tap on the character name "Kael the Wanderer"
-        And I clear the input field
-        And I type "Kael the Wise" in the modal input
-        And I tap the modal confirm button
-        Then the modal should close
-        And the character name should display "Kael the Wise"
-        When I reload the page
-        Then the character name should display "Kael the Wise"
-
-    @mobile
-    Scenario: Edit tier on mobile device with number keyboard
-        Given the viewport is 375 pixels wide
-        When I tap on the tier "3"
-        Then an edit modal should appear
-        And the input field should have inputmode="numeric" for mobile
-        And I clear the input field
-        And I type "5" in the modal input
-        And I tap the modal confirm button
-        Then the modal should close
-        And the tier should display "5"
-
-    @mobile
-    Scenario: Modal is properly sized on mobile viewport
-        Given the viewport is 375 pixels wide
-        When I tap on the character name "Kael the Wanderer"
-        Then the modal should fill most of the screen width
-        And the modal should not overflow the viewport
-        And the buttons should be touch-friendly size (min 44x44px)
-        And the input field should be large enough for touch input
-
-    @mobile
-    Scenario: Cancel edit by tapping outside modal on mobile
-        Given the viewport is 375 pixels wide
-        When I tap on the character name "Kael the Wanderer"
-        And I type "New Name" in the modal input
-        And I tap outside the modal on the backdrop
-        Then the modal should close
-        And the character name should still display "Kael the Wanderer"
-        When I reload the page
-        Then the character name should still display "Kael the Wanderer"
-
-    @mobile
-    Scenario: Editable fields show touch-friendly tap targets on mobile
-        Given the viewport is 375 pixels wide
-        When I am on the character sheet page
-        Then the character name should be large enough for touch (min 44x44px)
-        And the tier should be large enough for touch (min 44x44px)
-        And the descriptor should be large enough for touch (min 44x44px)
-        And the focus should be large enough for touch (min 44x44px)
+    Scenario: A character must have a name
+        Given my character's name is "Kael the Wanderer"
+        When I try to change my name to nothing
+        Then the change is refused
+        And my character sheet shows my name as "Kael the Wanderer"

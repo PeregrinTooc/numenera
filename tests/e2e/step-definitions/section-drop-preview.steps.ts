@@ -1,9 +1,10 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/world";
+import { LIVE_PREVIEW_DELAY_MS } from "@/components/helpers/LivePreview";
 import { englishText } from "../support/i18nKeys.js";
 import {
-  growViewportToFullHeight,
+  finishSectionSlides,
   holdSectionOver,
   releaseSectionDrag,
   sectionId,
@@ -28,7 +29,7 @@ async function expectHeldTargetUnmoved(world: CustomWorld): Promise<void> {
 
 /**
  * Hold `source` over `zone` of `target`, leaving the drag held. The live
- * preview appears after the pointer has been still for a while; a paused
+ * preview appears after the pointer has been still for a while; the app's
  * clock keeps it from appearing until a step advances time.
  */
 async function holdOver(
@@ -38,8 +39,6 @@ async function holdOver(
   target: string
 ): Promise<void> {
   const page = world.page;
-  await page.clock.install();
-  await page.clock.pauseAt(Date.now() + 1000);
   const box = await sectionLocator(page, target).boundingBox();
   if (!box) throw new Error(`Section ${target} has no bounding box (not visible?)`);
   const point = zonePoint(box, zone);
@@ -51,7 +50,7 @@ When(
   "I hold the {string} section over the {zone} of the {string} section",
   async function (this: CustomWorld, source: string, zone: SectionZone, target: string) {
     // Not restored: the drag stays held into the Then steps.
-    await growViewportToFullHeight(this.page);
+    await this.screen.growToFullHeight();
     await holdOver(this, source, zone, target);
   }
 );
@@ -78,12 +77,7 @@ Then(
     const held = this.heldDropTarget;
     if (!held) throw new Error("No section is being held over a target");
     // Where it ends up: a slide starts each section at its old place
-    await this.page.evaluate(() =>
-      document
-        .getAnimations()
-        .filter((animation) => animation.id === "section-slide")
-        .forEach((animation) => animation.finish())
-    );
+    await finishSectionSlides(this.page);
     const box = await sectionLocator(this.page, name).boundingBox();
     if (!box) throw new Error(`Section ${name} has no bounding box (not visible?)`);
     expect(Math.abs(box.y - held.box.y)).toBeLessThanOrEqual(1);
@@ -91,8 +85,7 @@ Then(
 );
 
 When("I keep still for a moment", async function (this: CustomWorld) {
-  // Past the app's 300 ms live-preview delay
-  await this.page.clock.runFor(350);
+  await this.clock.advance(LIVE_PREVIEW_DELAY_MS);
 });
 
 When("I release the section outside the sheet", async function (this: CustomWorld) {

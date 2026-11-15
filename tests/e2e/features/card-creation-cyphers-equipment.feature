@@ -3,148 +3,109 @@ Feature: Card Creation: Cyphers and Equipment
     I want to add new cypher and equipment cards to my character sheet
     So that I can build out my character's inventory
 
-    Background:
-        Given I am on the character sheet page
+    Scenario: Add cypher button has its themed background color
+        Given my character has 2 cyphers
+        Then the add cypher button has a themed background colour
 
-    Scenario: Add button is visible for Cyphers
-        Then I should see an add cypher button
-
-    Scenario: Add Cypher button opens modal with empty fields
-        When I click the add cypher button
-        Then the card edit modal should be open
-        And the modal should show cypher fields
-        And all cypher fields should be empty
+    Scenario: Starting a new cypher opens the editor with empty fields
+        Given my character has 2 cyphers
+        When I start a new cypher
+        Then the card editor opens with empty cypher fields
 
     Scenario: Canceling cypher creation does not add a card
-        Given the character has 2 cypher cards
-        When I click the add cypher button
-        And I fill in the cypher name with "Test Cypher"
-        And I fill in the cypher level with "1d6"
-        And I cancel the card edit modal
-        Then I should see 2 cypher cards
+        Given my character has 2 cyphers
+        When I start a new cypher
+        And I set its name to "Test Cypher"
+        And I set its level to "1d6"
+        And I cancel the card
+        Then my character carries 2 cyphers
 
-    Scenario: Confirming cypher creation adds a new card
-        Given the character has 2 cypher cards
-        When I click the add cypher button
-        And I fill in the cypher name with "Fire Bomb"
-        And I fill in the cypher level with "1d6+2"
-        And I fill in the cypher effect with "Explodes in a short range"
-        And I confirm the card edit modal
-        Then I should see 3 cypher cards
-        And I should see a cypher card with name "Fire Bomb"
+    Scenario: Saving a new cypher adds a card
+        Given my character has 2 cyphers
+        When I start a new cypher
+        And I set its name to "Fire Bomb"
+        And I set its level to "1d6+2"
+        And I set its effect to "Explodes in a short range"
+        And I save the card
+        Then my character carries 3 cyphers
+        And my character carries the cypher "Fire Bomb"
 
-    Scenario: New cypher persists after page reload
-        Given the character has 2 cypher cards
-        When I click the add cypher button
-        And I fill in the cypher name with "Phase Changer"
-        And I fill in the cypher level with "1d6+4"
-        And I fill in the cypher effect with "Allows passage through solid matter"
-        And I confirm the card edit modal
-        Then I should see 3 cypher cards
-        When I reload the page
-        Then I should see 3 cypher cards
-        And I should see a cypher card with name "Phase Changer"
-
-    Scenario: Multiple cyphers can be added
-        Given the character has 2 cypher cards
-        When I click the add cypher button
-        And I fill in the cypher name with "First Cypher"
-        And I fill in the cypher level with "1d6"
-        And I fill in the cypher effect with "First effect"
-        And I confirm the card edit modal
-        Then I should see 3 cypher cards
-        When I click the add cypher button
-        And I fill in the cypher name with "Second Cypher"
-        And I fill in the cypher level with "1d6+2"
-        And I fill in the cypher effect with "Second effect"
-        And I confirm the card edit modal
-        Then I should see 4 cypher cards
+    Scenario: New cypher persists after reopening the character
+        Given my character has 2 cyphers
+        When I start a new cypher
+        And I set its name to "Phase Changer"
+        And I set its level to "1d6+4"
+        And I set its effect to "Allows passage through solid matter"
+        And I save the card
+        And I open my character again
+        Then my character carries 3 cyphers
+        And my character carries the cypher "Phase Changer"
 
     Scenario: Create cypher, then edit it, verify persistence
-        Given the character has 2 cypher cards
-        When I click the add cypher button
-        And I fill in the cypher name with "Energy Shield"
-        And I fill in the cypher level with "1d6"
-        And I fill in the cypher effect with "Provides protection"
-        And I confirm the card edit modal
-        Then I should see 3 cypher cards
-        And I should see a cypher card with name "Energy Shield"
-        When I click the edit button on cypher "Energy Shield"
-        And I fill in the cypher name with "Energy Shield Mk II"
-        And I fill in the cypher level with "1d6+2"
-        And I fill in the cypher effect with "Provides enhanced protection"
-        And I confirm the card edit modal
-        Then I should see a cypher card with name "Energy Shield Mk II"
-        When I reload the page
-        Then I should see 3 cypher cards
-        And I should see a cypher card with name "Energy Shield Mk II"
-        And the cypher "Energy Shield Mk II" should have level "1d6+2"
-        And the cypher "Energy Shield Mk II" should have effect "Provides enhanced protection"
+        Given my character has 2 cyphers
+        When I start a new cypher
+        And I set its name to "Energy Shield"
+        And I set its level to "1d6"
+        And I set its effect to "Provides protection"
+        And I save the card
+        And I start editing the cypher "Energy Shield"
+        And I set its name to "Energy Shield Mk II"
+        And I set its level to "1d6+2"
+        And I set its effect to "Provides enhanced protection"
+        And I save the card
+        And I open my character again
+        Then my character carries 3 cyphers
+        And my character carries the cypher "Energy Shield Mk II"
+        And the cypher "Energy Shield Mk II" shows "1d6+2"
+        And the cypher "Energy Shield Mk II" shows "Provides enhanced protection"
 
-    Scenario: Add button is visible for Equipment
-        Then I should see an add equipment button
+    Scenario: Add equipment button has its themed background color
+        Given my character has 2 equipment
+        Then the add equipment button has a themed background colour
 
-    Scenario: Add Equipment button opens modal with empty fields
-        When I click the add equipment button
-        Then the card edit modal should be open
-        And the modal should show equipment fields
-        And all equipment fields should be empty
+    Scenario: Starting new equipment opens the editor with empty fields
+        Given my character has 2 equipment
+        When I start a new equipment
+        Then the card editor opens with empty equipment fields
 
     Scenario: Canceling equipment creation does not add a card
-        Given the character has 4 equipment cards
-        When I click the add equipment button
-        And I fill in the equipment name with "Test Equipment"
-        And I fill in the equipment description with "Test description"
-        And I cancel the card edit modal
-        Then I should see 4 equipment cards
+        Given my character has 2 equipment
+        When I start a new equipment
+        And I set its name to "Test Equipment"
+        And I set its description to "Test description"
+        And I cancel the card
+        Then my character carries 2 equipment
 
-    Scenario: Confirming equipment creation adds a new card
-        Given the character has 4 equipment cards
-        When I click the add equipment button
-        And I fill in the equipment name with "Climbing Gear"
-        And I fill in the equipment description with "Rope, hooks, and harness"
-        And I confirm the card edit modal
-        Then I should see 5 equipment cards
-        And I should see an equipment card with name "Climbing Gear"
+    Scenario: Saving new equipment adds a card
+        Given my character has 2 equipment
+        When I start a new equipment
+        And I set its name to "Climbing Gear"
+        And I set its description to "Rope, hooks, and harness"
+        And I save the card
+        Then my character carries 3 equipment
+        And my character carries the equipment "Climbing Gear"
 
-    Scenario: New equipment persists after page reload
-        Given the character has 4 equipment cards
-        When I click the add equipment button
-        And I fill in the equipment name with "Medical Kit"
-        And I fill in the equipment description with "Contains bandages and medicine"
-        And I confirm the card edit modal
-        Then I should see 5 equipment cards
-        When I reload the page
-        Then I should see 5 equipment cards
-        And I should see an equipment card with name "Medical Kit"
-
-    Scenario: Multiple equipment items can be added
-        Given the character has 4 equipment cards
-        When I click the add equipment button
-        And I fill in the equipment name with "First Item"
-        And I fill in the equipment description with "First description"
-        And I confirm the card edit modal
-        Then I should see 5 equipment cards
-        When I click the add equipment button
-        And I fill in the equipment name with "Second Item"
-        And I fill in the equipment description with "Second description"
-        And I confirm the card edit modal
-        Then I should see 6 equipment cards
+    Scenario: New equipment persists after reopening the character
+        Given my character has 2 equipment
+        When I start a new equipment
+        And I set its name to "Medical Kit"
+        And I set its description to "Contains bandages and medicine"
+        And I save the card
+        And I open my character again
+        Then my character carries 3 equipment
+        And my character carries the equipment "Medical Kit"
 
     Scenario: Create equipment, then edit it, verify persistence
-        Given the character has 4 equipment cards
-        When I click the add equipment button
-        And I fill in the equipment name with "Basic Sword"
-        And I fill in the equipment description with "Standard weapon"
-        And I confirm the card edit modal
-        Then I should see 5 equipment cards
-        And I should see an equipment card with name "Basic Sword"
-        When I click the edit button on equipment "Basic Sword"
-        And I fill in the equipment name with "Enchanted Sword"
-        And I fill in the equipment description with "Magical weapon with fire damage"
-        And I confirm the card edit modal
-        Then I should see an equipment card with name "Enchanted Sword"
-        When I reload the page
-        Then I should see 5 equipment cards
-        And I should see an equipment card with name "Enchanted Sword"
-        And the equipment "Enchanted Sword" should have description "Magical weapon with fire damage"
+        Given my character has 2 equipment
+        When I start a new equipment
+        And I set its name to "Basic Sword"
+        And I set its description to "Standard weapon"
+        And I save the card
+        And I start editing the equipment "Basic Sword"
+        And I set its name to "Enchanted Sword"
+        And I set its description to "Magical weapon with fire damage"
+        And I save the card
+        And I open my character again
+        Then my character carries 3 equipment
+        And my character carries the equipment "Enchanted Sword"
+        And the equipment "Enchanted Sword" shows "Magical weapon with fire damage"

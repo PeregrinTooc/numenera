@@ -31,7 +31,7 @@ describe("ExportManager", () => {
       const mockHandle = createMockHandle();
       await ctx.seedPersistedHandle(mockHandle);
 
-      ctx.exportManager = new ExportManager();
+      ctx.exportManager = new ExportManager(ctx.clock);
 
       await vi.waitFor(() => expect(ctx.exportManager.hasRememberedLocation()).toBe(true));
     });
@@ -88,6 +88,17 @@ describe("ExportManager", () => {
       expect(parsed.character.name).toBe("Glaive Warrior");
 
       expect(writableMock.close).toHaveBeenCalled();
+    });
+
+    it("stamps the file with the time of the export", async () => {
+      const { mockHandle } = setupExportTest();
+      const writableMock = await mockHandle.createWritable();
+      ctx.clock.advance(90_000);
+
+      await ctx.exportManager.export(mockCharacter);
+
+      const writtenData = vi.mocked(writableMock.write).mock.calls[0][0] as string;
+      expect(expectValidFileStructure(writtenData).exportDate).toBe("2026-01-15T10:01:30.000Z");
     });
 
     it("writes the stored column choices into the file", async () => {
@@ -153,18 +164,13 @@ describe("ExportManager", () => {
     });
 
     it("revokes the object URL asynchronously, so Firefox has time to start the download", async () => {
-      vi.useFakeTimers({ toFake: ["setTimeout"] });
-      try {
-        const { downloads, revokeSpy } = setupDownloadTest();
+      const { downloads, revokeSpy } = setupDownloadTest();
 
-        await ctx.exportManager.export(mockCharacter);
+      await ctx.exportManager.export(mockCharacter);
 
-        expect(revokeSpy).not.toHaveBeenCalledWith(downloads[0].href);
-        vi.runAllTimers();
-        expect(revokeSpy).toHaveBeenCalledWith(downloads[0].href);
-      } finally {
-        vi.useRealTimers();
-      }
+      expect(revokeSpy).not.toHaveBeenCalledWith(downloads[0].href);
+      ctx.clock.advance(0);
+      expect(revokeSpy).toHaveBeenCalledWith(downloads[0].href);
     });
   });
 });

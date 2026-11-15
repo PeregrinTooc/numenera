@@ -21,7 +21,7 @@ Feature: Data Validation Enhancement
 
     Scenario: Imported oddities are kept
         When I import a valid character file with matching schema version
-        Then I should see an oddity card with text "Glowing orb"
+        Then my character carries the oddity "Glowing orb"
 
     Scenario: Out-of-range values in an imported file are adjusted
         When I import a character file with tier 9

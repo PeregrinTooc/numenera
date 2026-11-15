@@ -12,7 +12,6 @@ export class SettingsGear {
   private onRerender: (() => void) | null = null;
   private boundHandleDocumentClick: ((e: MouseEvent) => void) | null = null;
   private boundHandleDocumentKeydown: ((e: KeyboardEvent) => void) | null = null;
-  private pendingListenerTimeout: ReturnType<typeof setTimeout> | null = null;
   private onResetLayout: (() => void) | null = null;
 
   constructor(private onLanguageChange: (lang: string) => void) {}
@@ -48,23 +47,13 @@ export class SettingsGear {
   }
 
   private addDocumentListeners(): void {
-    // Use setTimeout to avoid the current click event from immediately closing the panel
-    this.pendingListenerTimeout = setTimeout(() => {
-      this.pendingListenerTimeout = null;
-      this.boundHandleDocumentClick = (e: MouseEvent) => this.handleDocumentClick(e);
-      this.boundHandleDocumentKeydown = (e: KeyboardEvent) => this.handleDocumentKeydown(e);
-      document.addEventListener("click", this.boundHandleDocumentClick);
-      document.addEventListener("keydown", this.boundHandleDocumentKeydown);
-    }, 0);
+    this.boundHandleDocumentClick = (e: MouseEvent) => this.handleDocumentClick(e);
+    this.boundHandleDocumentKeydown = (e: KeyboardEvent) => this.handleDocumentKeydown(e);
+    document.addEventListener("click", this.boundHandleDocumentClick);
+    document.addEventListener("keydown", this.boundHandleDocumentKeydown);
   }
 
   private removeDocumentListeners(): void {
-    // Cancel the deferred attach if close() runs before it fires, or the
-    // listeners get attached anyway with no way left to remove them.
-    if (this.pendingListenerTimeout !== null) {
-      clearTimeout(this.pendingListenerTimeout);
-      this.pendingListenerTimeout = null;
-    }
     if (this.boundHandleDocumentClick) {
       document.removeEventListener("click", this.boundHandleDocumentClick);
       this.boundHandleDocumentClick = null;
@@ -200,20 +189,22 @@ export class SettingsGear {
               />
               <span class="settings-label">${t("settings.comparisonView")}</span>
             </label>
-            ${isPhoneViewport()
-              ? html`<span class="settings-hint" data-testid="settings-comparison-view-hint">
-                  ${t("settings.comparisonViewUnavailableOnPhone")}
-                </span>`
-              : nothing}
+            ${
+              isPhoneViewport()
+                ? html`<span class="settings-hint" data-testid="settings-comparison-view-hint">
+                    ${t("settings.comparisonViewUnavailableOnPhone")}
+                  </span>`
+                : nothing
+            }
           </div>
           <div class="settings-divider"></div>
           <button
             data-testid="settings-reset-layout"
             class="settings-reset-button"
             ?disabled=${!hasCustomLayout()}
-            title=${hasCustomLayout()
-              ? t("settings.resetLayout")
-              : t("settings.resetLayoutDisabled")}
+            title=${
+              hasCustomLayout() ? t("settings.resetLayout") : t("settings.resetLayoutDisabled")
+            }
             @click=${() => this.handleResetLayout()}
           >
             ${t("settings.resetLayout")}
