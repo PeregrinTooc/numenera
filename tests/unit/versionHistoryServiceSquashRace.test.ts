@@ -7,7 +7,7 @@ import { createTestCharacter as createMockCharacter } from "../factories/charact
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-describe.sequential("VersionHistoryService - edits during an in-flight squash", () => {
+describe("VersionHistoryService - edits during an in-flight squash", () => {
   let manager: VersionHistoryManager;
   let service: VersionHistoryService;
   let clock: ManualClock;

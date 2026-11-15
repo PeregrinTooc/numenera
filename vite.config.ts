@@ -24,10 +24,10 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: "dist",
     sourcemap: true,
-    rollupOptions: {
+    rolldownOptions: {
       output: {
-        manualChunks: {
-          i18n: ["i18next", "i18next-browser-languagedetector"],
+        codeSplitting: {
+          groups: [{ name: "i18n", test: /node_modules[\\/]i18next/ }],
         },
       },
     },

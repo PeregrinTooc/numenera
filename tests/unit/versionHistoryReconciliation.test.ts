@@ -7,7 +7,7 @@ import { createTestCharacter as createMockCharacter } from "../factories/charact
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-describe.sequential("reconcileVersionHistory", () => {
+describe("reconcileVersionHistory", () => {
   let manager: VersionHistoryManager;
   let mockCharacter: Character;
   const testDbName = "test-version-history-reconciliation-suite";
