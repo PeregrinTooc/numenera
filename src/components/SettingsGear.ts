@@ -189,20 +189,22 @@ export class SettingsGear {
               />
               <span class="settings-label">${t("settings.comparisonView")}</span>
             </label>
-            ${isPhoneViewport()
-              ? html`<span class="settings-hint" data-testid="settings-comparison-view-hint">
-                  ${t("settings.comparisonViewUnavailableOnPhone")}
-                </span>`
-              : nothing}
+            ${
+              isPhoneViewport()
+                ? html`<span class="settings-hint" data-testid="settings-comparison-view-hint">
+                    ${t("settings.comparisonViewUnavailableOnPhone")}
+                  </span>`
+                : nothing
+            }
           </div>
           <div class="settings-divider"></div>
           <button
             data-testid="settings-reset-layout"
             class="settings-reset-button"
             ?disabled=${!hasCustomLayout()}
-            title=${hasCustomLayout()
-              ? t("settings.resetLayout")
-              : t("settings.resetLayoutDisabled")}
+            title=${
+              hasCustomLayout() ? t("settings.resetLayout") : t("settings.resetLayoutDisabled")
+            }
             @click=${() => this.handleResetLayout()}
           >
             ${t("settings.resetLayout")}

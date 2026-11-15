@@ -110,7 +110,8 @@ function readCustomParamTypes() {
   const custom = {};
   if (!fs.existsSync(file)) return custom;
   const src = fs.readFileSync(file, "utf8");
-  const re = /defineParameterType\(\{\s*name:\s*["'`]([^"'`]+)["'`][\s\S]*?regexp:\s*\/((?:\\.|[^\\/])*)\//g;
+  const re =
+    /defineParameterType\(\{\s*name:\s*["'`]([^"'`]+)["'`][\s\S]*?regexp:\s*\/((?:\\.|[^\\/])*)\//g;
   let m;
   while ((m = re.exec(src))) {
     const [, name, pattern] = m;

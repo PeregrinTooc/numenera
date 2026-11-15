@@ -149,9 +149,11 @@ export class EditFieldModal extends ModalBehavior {
             data-testid="edit-modal-input"
           />
 
-          ${this.validationError
-            ? html`<div class="edit-modal-error">${this.validationError}</div>`
-            : ""}
+          ${
+            this.validationError
+              ? html`<div class="edit-modal-error">${this.validationError}</div>`
+              : ""
+          }
           ${renderModalButtons({
             onConfirm: this.handleConfirm,
             onCancel: this.handleCancel,

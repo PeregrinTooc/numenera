@@ -120,9 +120,11 @@ export class CharacterSheet {
         data-columns=${columns}
         data-testid="section-columns-${sectionId}"
       >
-        ${this.isLayoutEditMode
-          ? renderSectionColumnsButton(columns, () => this.toggleSectionColumns(sectionId))
-          : nothing}
+        ${
+          this.isLayoutEditMode
+            ? renderSectionColumnsButton(columns, () => this.toggleSectionColumns(sectionId))
+            : nothing
+        }
         ${template}
       </div>
     `;
@@ -260,9 +262,9 @@ export class CharacterSheet {
           ${renderEditLayoutButton(this.isLayoutEditMode, () => this.toggleLayoutEditMode())}
         </div>
         <div
-          class="max-w-6xl mx-auto shadow rounded-lg p-6 parchment-container ${this.isLayoutEditMode
-            ? "layout-edit-mode"
-            : ""}"
+          class="max-w-6xl mx-auto shadow rounded-lg p-6 parchment-container ${
+            this.isLayoutEditMode ? "layout-edit-mode" : ""
+          }"
           @dragover=${(e: DragEvent) => this.drag.handleDragOver(e)}
           @drop=${(e: DragEvent) => this.drag.handleDrop(e)}
         >

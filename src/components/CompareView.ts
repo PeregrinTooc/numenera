@@ -139,16 +139,18 @@ export class CompareView {
             <div class="comparison-view-changes-title">
               ${t("versionHistory.compareView.changesSummaryTitle")}
             </div>
-            ${changeLines.length === 0
-              ? html`<div
-                  data-testid="comparison-view-no-changes"
-                  class="comparison-view-no-changes"
-                >
-                  ${t("versionHistory.compareView.noDifferences")}
-                </div>`
-              : html`<ul class="comparison-view-changes-list">
-                  ${changeLines.map((line) => html`<li>${line}</li>`)}
-                </ul>`}
+            ${
+              changeLines.length === 0
+                ? html`<div
+                    data-testid="comparison-view-no-changes"
+                    class="comparison-view-no-changes"
+                  >
+                    ${t("versionHistory.compareView.noDifferences")}
+                  </div>`
+                : html`<ul class="comparison-view-changes-list">
+                    ${changeLines.map((line) => html`<li>${line}</li>`)}
+                  </ul>`
+            }
           </div>
           <button
             data-testid="comparison-exit-button"
