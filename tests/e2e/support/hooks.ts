@@ -146,6 +146,12 @@ After(async function (this: CustomWorld) {
   await this.context?.close();
 });
 
-AfterAll(async function () {
+AfterAll({ timeout: 120000 }, async function () {
+  const t0 = Date.now();
+  const contexts = browser.contexts();
+  console.log(
+    `[DIAG] contexts=${contexts.length} pages=${contexts.map((c) => c.pages().length).join(",")}`
+  );
   await browser?.close();
+  console.log(`[DIAG] close took ${Date.now() - t0}ms`);
 });
