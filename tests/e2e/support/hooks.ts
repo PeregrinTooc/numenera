@@ -1,3 +1,4 @@
+import { performance } from "node:perf_hooks";
 import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
 import { chromium, webkit, devices, Browser } from "@playwright/test";
 import { CustomWorld } from "./world";
@@ -146,6 +147,14 @@ After(async function (this: CustomWorld) {
   await this.context?.close();
 });
 
-AfterAll(async function () {
+// WebKit occasionally fails to exit after every scenario has passed. Playwright
+// then force-kills it once its own 30 s close timeout runs out, so this hook
+// must outlast that window instead of failing at the same moment.
+const SLOW_CLOSE_MS = 5000;
+
+AfterAll({ timeout: 60000 }, async function () {
+  const started = performance.now();
   await browser?.close();
+  const elapsed = Math.round(performance.now() - started);
+  if (elapsed > SLOW_CLOSE_MS) console.warn(`Closing ${DEVICE.engine} took ${elapsed} ms`);
 });
