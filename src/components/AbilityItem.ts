@@ -135,40 +135,47 @@ export class AbilityItem {
             ${this.ability.name}
           </h4>
           <div class="ability-badges flex gap-2">
-            ${this.ability.cost !== undefined
-              ? html`
-                  <span
-                    data-testid="ability-cost-${testIdBase}"
-                    class="ability-badge ability-cost px-2 py-1 bg-amber-100 border border-amber-300 rounded text-xs font-semibold text-amber-900"
-                    title="${t("abilities.cost")}"
-                  >
-                    ${t("abilities.cost")}: ${this.ability.cost}
-                  </span>
-                `
-              : ""}
-            ${this.ability.pool
-              ? html`
-                  <span
-                    data-testid="ability-pool-${testIdBase}"
-                    class="ability-badge ability-pool pool-${this.ability
-                      .pool} px-2 py-1 rounded text-xs font-semibold"
-                  >
-                    ${t(`stats.${this.ability.pool}`)}
-                  </span>
-                `
-              : ""}
+            ${
+              this.ability.cost !== undefined
+                ? html`
+                    <span
+                      data-testid="ability-cost-${testIdBase}"
+                      class="ability-badge ability-cost px-2 py-1 bg-amber-100 border border-amber-300 rounded text-xs font-semibold text-amber-900"
+                      title="${t("abilities.cost")}"
+                    >
+                      ${t("abilities.cost")}: ${this.ability.cost}
+                    </span>
+                  `
+                : ""
+            }
+            ${
+              this.ability.pool
+                ? html`
+                    <span
+                      data-testid="ability-pool-${testIdBase}"
+                      class="ability-badge ability-pool pool-${
+                        this.ability.pool
+                      } px-2 py-1 rounded text-xs font-semibold"
+                    >
+                      ${t(`stats.${this.ability.pool}`)}
+                    </span>
+                  `
+                : ""
+            }
           </div>
         </div>
-        ${this.ability.action
-          ? html`
-              <div
-                data-testid="ability-action-${testIdBase}"
-                class="ability-action text-xs text-indigo-600 italic mb-2"
-              >
-                ${this.ability.action}
-              </div>
-            `
-          : ""}
+        ${
+          this.ability.action
+            ? html`
+                <div
+                  data-testid="ability-action-${testIdBase}"
+                  class="ability-action text-xs text-indigo-600 italic mb-2"
+                >
+                  ${this.ability.action}
+                </div>
+              `
+            : ""
+        }
         <p
           data-testid="ability-description-${this.index}"
           class="ability-description text-gray-700 text-sm leading-relaxed"

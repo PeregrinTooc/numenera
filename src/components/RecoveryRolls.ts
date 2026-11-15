@@ -42,9 +42,9 @@ export class RecoveryRolls {
           <span class="font-serif text-sm text-green-900">${t("recovery.modifier")}:</span>
           <span
             data-testid="recovery-modifier-display"
-            class="font-handwritten text-lg text-green-900 ${this.onFieldUpdate
-              ? "editable-field cursor-pointer"
-              : ""}"
+            class="font-handwritten text-lg text-green-900 ${
+              this.onFieldUpdate ? "editable-field cursor-pointer" : ""
+            }"
             @click=${this.onFieldUpdate ? () => this.openEditModal() : null}
             role="${this.onFieldUpdate ? "button" : ""}"
             tabindex="${this.onFieldUpdate ? "0" : ""}"

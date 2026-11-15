@@ -94,9 +94,11 @@ export function renderEquipmentDiff(
     renderItem: (entry) => html`
       <div data-testid="equipment-item" class="equipment-item-card ${diffClass(entry.status)}">
         <div class="equipment-name">${entry.item.name}</div>
-        ${entry.item.description
-          ? html`<div class="equipment-description">${entry.item.description}</div>`
-          : nothing}
+        ${
+          entry.item.description
+            ? html`<div class="equipment-description">${entry.item.description}</div>`
+            : nothing
+        }
       </div>
     `,
   });
@@ -148,9 +150,11 @@ export function renderAbilitiesDiff(
       <div data-testid="ability-item" class="ability-item-card ${diffClass(entry.status)}">
         <h4 class="ability-name font-bold text-lg">${entry.item.name}</h4>
         <div class="text-sm text-gray-700">${entry.item.description}</div>
-        ${entry.item.cost !== undefined
-          ? html`<span>${t("abilities.cost")}: ${entry.item.cost}</span>`
-          : nothing}
+        ${
+          entry.item.cost !== undefined
+            ? html`<span>${t("abilities.cost")}: ${entry.item.cost}</span>`
+            : nothing
+        }
         ${entry.item.pool ? html`<span>${t(`stats.${entry.item.pool}`)}</span>` : nothing}
       </div>
     `,

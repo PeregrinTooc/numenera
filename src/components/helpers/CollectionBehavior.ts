@@ -5,13 +5,7 @@ import { notifyCollectionUpdated } from "./characterEvents.js";
 import { readCollection, writeCollection } from "./characterCollections";
 
 export type CharacterCollectionKey =
-  | "cyphers"
-  | "artifacts"
-  | "oddities"
-  | "equipment"
-  | "abilities"
-  | "attacks"
-  | "specialAbilities";
+  "cyphers" | "artifacts" | "oddities" | "equipment" | "abilities" | "attacks" | "specialAbilities";
 
 type ItemComponentConstructor<T, ItemComponent> = new (
   item: T,
