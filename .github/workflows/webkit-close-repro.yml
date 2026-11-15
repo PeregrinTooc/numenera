@@ -36,8 +36,10 @@ jobs:
         run: npm run test:e2e:prod 2>&1 | tee e2e.log
         env:
           E2E_SHARD: ${{ matrix.shard }}/4
-      - name: Close summary
+      - name: Close summary (fails on a slow or force-killed close)
         if: always()
         run: |
-          grep -h "\[DIAG\]" e2e.log || true
-          grep -hE "gracefully close|<kill>|will force kill|process did exit" e2e.log | tail -20 || true
+          grep -hE "\[DIAG\]|gracefully close|<kill>|will force kill|process did exit" e2e.log || true
+          ms=$(grep -oP 'close took \K[0-9]+' e2e.log || echo 999999)
+          echo "::notice::browser.close took ${ms}ms"
+          if grep -q "<kill>" e2e.log || [ "$ms" -gt 5000 ]; then echo "::error::slow or force-killed close (${ms}ms)"; exit 1; fi
