@@ -44,6 +44,11 @@ Feature: Card columns follow the section's width
     And I reload the page
     Then the "Cyphers" section should show its cards in 1 column(s)
 
+  Scenario: A saved choice for a section the app does not know leaves the others intact
+    Given the viewport is 1280 pixels wide
+    And I have saved the "Cyphers" section as 1 column and an unknown section as 2 columns
+    Then the "Cyphers" section should show its cards in 1 column(s)
+
   Scenario: The switch is only offered where it can do something
     Given the viewport is 1280 pixels wide
     And layout edit mode is active
@@ -69,3 +74,8 @@ Feature: Card columns follow the section's width
     Given the language is set to "de"
     And the viewport is 360 pixels wide
     Then the "Items" heading row should stay inside its frame
+
+  Scenario: On a narrow phone the German ability badges stay inside their card
+    Given the language is set to "de"
+    And the viewport is 360 pixels wide
+    Then every ability card's badges should stay inside the card

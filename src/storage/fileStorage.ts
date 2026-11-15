@@ -2,7 +2,12 @@
 
 import { Character } from "@/types/character";
 import { Layout, isValidLayout } from "@/types/layout";
-import { SectionColumns, columnChoicesDiffer, isValidSectionColumns } from "@/types/sectionColumns";
+import {
+  SectionColumns,
+  columnChoicesDiffer,
+  isValidSectionColumns,
+  knownSectionColumns,
+} from "@/types/sectionColumns";
 import { SCHEMA_VERSION } from "./storageConstants.js";
 import { sanitizeCharacter } from "@/utils/characterSanitizer";
 import { loadLayout, loadSectionColumns } from "./layoutStorage.js";
@@ -87,17 +92,16 @@ function layoutDiffers(layout?: Layout, sectionColumns?: SectionColumns): boolea
   return arrangementDiffers || columnsDiffer;
 }
 
-/** The file's column choices, if present and valid. */
+/** The file's valid column choices, if present, with a warning when any were dropped. */
 function importSectionColumns(
   fileData: Record<string, unknown>,
   warnings: string[]
 ): SectionColumns | undefined {
   if (fileData.sectionColumns === undefined) return undefined;
   if (!isValidSectionColumns(fileData.sectionColumns)) {
-    warnings.push(t("fileOperations.invalidLayout"));
-    return undefined;
+    warnings.push(t("fileOperations.invalidSectionColumns"));
   }
-  return fileData.sectionColumns;
+  return knownSectionColumns(fileData.sectionColumns);
 }
 
 /**

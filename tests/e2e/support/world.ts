@@ -15,7 +15,6 @@ import type { HistorySeedDsl } from "./historySeed.js";
 import type { ComparisonDsl } from "./comparison.js";
 import { BASE_URL } from "./serverUrl.js";
 import type { Layout } from "@/types/layout";
-import type { SectionColumns } from "@/types/sectionColumns";
 
 setDefaultTimeout(30000);
 
@@ -48,7 +47,8 @@ export interface CustomWorld extends World {
   // card-reordering.steps.ts
   draggedCypherName?: string;
   // layout-import-export.steps.ts
-  importedFile?: { layout?: Layout; sectionColumns?: SectionColumns };
+  importedFile?: { layout?: Layout; sectionColumns?: Record<string, number> };
+  importNote?: string;
   heldDropTarget?: {
     name: string;
     box: { x: number; y: number; width: number; height: number };
@@ -84,7 +84,8 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   comparison!: ComparisonDsl;
   // card-reordering.steps.ts
   draggedCypherName?: string;
-  importedFile?: { layout?: Layout; sectionColumns?: SectionColumns };
+  importedFile?: { layout?: Layout; sectionColumns?: Record<string, number> };
+  importNote?: string;
   heldDropTarget?: {
     name: string;
     box: { x: number; y: number; width: number; height: number };

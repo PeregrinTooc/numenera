@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **458** in 42 files
-- Feature step lines: **1788**
+- Step definitions: **463** in 42 files
+- Feature step lines: **1809**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -57,10 +57,10 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [i18n.steps.ts](#i18nstepsts) | 30 | 0 |
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
-| [layout-import-export.steps.ts](#layoutimportexportstepsts) | 15 | 0 |
+| [layout-import-export.steps.ts](#layoutimportexportstepsts) | 18 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 22 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 7 | 0 |
-| [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
+| [section-columns.steps.ts](#sectioncolumnsstepsts) | 10 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 11 | 0 |
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 7 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
@@ -390,7 +390,7 @@ pattern this script does not understand):
 | Then | `the empty notes message should be {string}` | 1 | 144 |
 | Then | `the empty oddities message should be {string}` | 1 | 131 |
 | Then | `the intellect stat should display {string}` | 1 | 55 |
-| Given | `the language is set to {string}` | 3 | 4 |
+| Given | `the language is set to {string}` | 4 | 4 |
 | Then | `the language should remain German` | 1 | 162 |
 | Then | `the load button should display {string}` | 3 | 29 |
 | Then | `the might stat should display {string}` | 1 | 44 |
@@ -421,7 +421,7 @@ pattern this script does not understand):
 | When | `I click the Exit Edit Layout button` | 2 | 10 |
 | When | `I click the Reset Layout button` | 1 | 15 |
 | Given | `I have customized the layout` | 8 | 91 |
-| Given | `I have the default layout` | 3 | 127 |
+| Given | `I have the default layout` | 5 | 127 |
 | Given | `I open the settings panel` | 2 | 104 |
 | Then | `I should see layout edit mode is active` | 1 | 20 |
 | Then | `I should see the {string} button` | 1 | 67 |
@@ -437,21 +437,24 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I choose to {string}` | 4 | 103 |
-| When | `I dismiss the layout choice prompt with the Escape key` | 1 | 81 |
+| When | `I choose to {string}` | 5 | 131 |
+| When | `I dismiss the layout choice prompt with the Escape key` | 1 | 109 |
 | Given | `I have a character file with a different layout` | 5 | 38 |
 | Given | `I have a character file with the default layout` | 1 | 42 |
 | Given | `I have a character file with the default layout that sets the {string} section to {int} column(s)` | 1 | 50 |
+| Given | `I have a character file with the default layout that sets the {string} section to {int} column(s) and an unknown section to {int} column(s)` | 2 | 60 |
 | Given | `I have a character file without a layout` | 1 | 46 |
-| Given | `I have set the {string} section to {int} column(s)` | 1 | 60 |
-| When | `I import the character file` | 8 | 69 |
-| Then | `I should not see a layout choice prompt` | 5 | 87 |
-| Then | `I should see a layout choice prompt` | 1 | 77 |
-| Then | `I should see options to {string} or {string}` | 1 | 91 |
-| Then | `the {string} option should have focus` | 1 | 99 |
-| Then | `the {string} section should be set to {int} column(s)` | 2 | 111 |
+| Given | `I have saved the {string} section as {int} column(s) and an unknown section as {int} column(s)` | 1 | 79 |
+| Given | `I have set the {string} section to {int} column(s)` | 2 | 70 |
+| When | `I import the character file` | 10 | 89 |
+| Then | `I should not see a layout choice prompt` | 5 | 115 |
+| Then | `I should see a layout choice prompt` | 1 | 105 |
+| Then | `I should see options to {string} or {string}` | 1 | 119 |
+| Then | `the {string} option should have focus` | 1 | 127 |
+| Then | `the {string} section should be set to {int} column(s)` | 3 | 139 |
 | Then | `the exported file should contain the layout configuration` | 1 | 25 |
-| Then | `the imported character should be shown` | 5 | 107 |
+| Then | `the import note should read {string}` | 1 | 101 |
+| Then | `the imported character should be shown` | 5 | 135 |
 
 ## recovery-damage-track.steps.ts
 
@@ -496,14 +499,16 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I switch the {string} section to {int} column\(s)` | 1 | 22 |
-| Then | `the {string} heading row should stay inside its frame` | 1 | 95 |
-| Then | `the {string} section should offer a column switch` | 1 | 36 |
-| Then | `the {string} section should offer no column switch` | 3 | 44 |
-| Then | `the {string} section should show its cards in {int} column\(s)` | 7 | 9 |
-| Then | `the armor badge should not cover the add attack button` | 1 | 81 |
-| Then | `the max cyphers badge should be left of the {string} heading` | 1 | 67 |
-| Then | `the shins badge should be left of the {string} heading` | 1 | 74 |
+| Then | `every ability card's badges should stay inside the card` | 1 | 137 |
+| When | `I switch the {string} section to {int} column\(s)` | 1 | 41 |
+| Then | `the {string} heading row should stay inside its frame` | 1 | 114 |
+| Then | `the {string} section should offer a column switch` | 1 | 55 |
+| Then | `the {string} section should offer no column switch` | 3 | 63 |
+| Then | `the {string} section should show its cards in {int} column\(s)` | 8 | 18 |
+| Then | `the {word} pane should show its cyphers in {int} column\(s)` | 1 | 28 |
+| Then | `the armor badge should not cover the add attack button` | 1 | 100 |
+| Then | `the max cyphers badge should be left of the {string} heading` | 1 | 86 |
+| Then | `the shins badge should be left of the {string} heading` | 1 | 93 |
 
 ## section-drop-preview.steps.ts
 
@@ -662,8 +667,8 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `comparison view is still switched on in settings` | 1 | 45 |
-| Given | `comparison view is switched on in settings` | 23 | 4 |
-| Given | `I am viewing the comparison view` | 19 | 12 |
+| Given | `comparison view is switched on in settings` | 24 | 4 |
+| Given | `I am viewing the comparison view` | 20 | 12 |
 | When | `I move the {pane} pane to version {int}` | 4 | 30 |
 | When | `I restore the version in the {pane} pane` | 3 | 37 |
 | When | `I return to editing` | 2 | 41 |
@@ -717,7 +722,7 @@ pattern this script does not understand):
 | Then | `my character sheet shows the name it had before my edits` | 3 | 129 |
 | When | `my edits have settled into a version` | 26 | 85 |
 | When | `my edits start to be saved as a version` | 1 | 89 |
-| Given | `my history has a version in which I added the cypher {string}` | 1 | 245 |
+| Given | `my history has a version in which I added the cypher {string}` | 2 | 245 |
 | Given | `my history has a version in which I changed` | 1 | 231 |
 | Given | `my history has a version in which I changed my name to {string}, followed by one in which I changed my tier to {int}` | 1 | 238 |
 | Given | `my history has a version in which I changed the effect of the cypher {string}` | 1 | 259 |
@@ -749,5 +754,5 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `the page should not scroll horizontally` | 2 | 12 |
-| Given | `the viewport is {int} pixels wide` | 38 | 9 |
+| Given | `the viewport is {int} pixels wide` | 41 | 9 |
 

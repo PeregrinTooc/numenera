@@ -67,6 +67,19 @@ Feature: Choosing the layout when importing a character
         And I choose to "Use imported layout"
         Then the "Items" section should be set to 1 column
 
+    Scenario: Column choices for a section the app does not know leave the others intact
+        Given I have the default layout
+        And I have a character file with the default layout that sets the "Items" section to 1 column and an unknown section to 2 columns
+        When I import the character file
+        And I choose to "Use imported layout"
+        Then the "Items" section should be set to 1 column
+
+    Scenario: Column choices the app cannot use get their own note
+        Given I have the default layout
+        And I have a character file with the default layout that sets the "Items" section to 1 column and an unknown section to 2 columns
+        When I import the character file
+        Then the import note should read "Note: Some column choices in the imported file could not be used and were ignored."
+
     Scenario: Using a layout from a file without column choices keeps mine
         Given I have customized the layout
         And I have set the "Items" section to 1 column

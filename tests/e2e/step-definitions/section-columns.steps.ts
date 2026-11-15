@@ -1,22 +1,41 @@
 import { Then, When } from "@cucumber/cucumber";
-import { expect } from "@playwright/test";
+import { expect, type Locator } from "@playwright/test";
 import type { CustomWorld } from "../support/world.js";
 import { sectionLocator } from "../support/sections.js";
 
 // Column counts come from the browser's computed grid: container queries
 // decide them, so only a real layout can tell. Polled, because a section that
 // changed width (resize, pairing) re-lays out a frame later.
+async function expectColumns(grid: Locator, columns: number): Promise<void> {
+  await expect
+    .poll(() =>
+      grid.evaluate(
+        (el) => window.getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length
+      )
+    )
+    .toBe(columns);
+}
+
 Then(
   "the {string} section should show its cards in {int} column\\(s)",
   async function (this: CustomWorld, section: string, columns: number) {
-    const grid = sectionLocator(this.page, section).locator(".section-card-grid").first();
-    await expect
-      .poll(() =>
-        grid.evaluate(
-          (el) => window.getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length
-        )
-      )
-      .toBe(columns);
+    await expectColumns(
+      sectionLocator(this.page, section).locator(".section-card-grid").first(),
+      columns
+    );
+  }
+);
+
+Then(
+  "the {word} pane should show its cyphers in {int} column\\(s)",
+  async function (this: CustomWorld, side: string, columns: number) {
+    await expectColumns(
+      this.page
+        .getByTestId(`compare-pane-${side}`)
+        .getByTestId("cyphers-section")
+        .locator(".section-card-grid"),
+      columns
+    );
   }
 );
 
@@ -113,3 +132,30 @@ Then(
     expect(overflow).toBeLessThanOrEqual(0.5);
   }
 );
+
+// Inside the card's border and clear of its edit button
+Then("every ability card's badges should stay inside the card", async function (this: CustomWorld) {
+  const cards = await sectionLocator(this.page, "Abilities").locator(".ability-item-card").all();
+  expect(cards.length).toBeGreaterThan(0);
+  for (const card of cards) {
+    const misplaced = await card.evaluate((el) => {
+      const inner =
+        el.getBoundingClientRect().right - parseFloat(window.getComputedStyle(el).borderRightWidth);
+      const edit = el
+        .querySelector("[data-testid^='ability-edit-button']")
+        ?.getBoundingClientRect();
+      return Array.from(el.querySelectorAll(".ability-badge"))
+        .map((badge) => badge.getBoundingClientRect())
+        .filter(
+          (b) =>
+            b.right > inner + 0.5 ||
+            (edit !== undefined &&
+              b.left < edit.right &&
+              edit.left < b.right &&
+              b.top < edit.bottom &&
+              edit.top < b.bottom)
+        ).length;
+    });
+    expect(misplaced).toBe(0);
+  }
+});

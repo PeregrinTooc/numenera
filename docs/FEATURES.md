@@ -194,7 +194,8 @@ All features listed below have full BDD test coverage and are verified working.
   - In layout edit mode, a card section wide enough for two columns shows a
     one/two-column switch at its top-right corner; the choice is stored with
     the layout (`numenera-section-columns`), exported with the character, and
-    cleared by Reset Layout
+    cleared by Reset Layout; a stored or imported choice for a section this
+    version does not know is dropped on its own, keeping the others
   - Defaults are the previous look: Abilities, Cyphers and Items two columns;
     Special Abilities and Attacks one
   - Every section sits in the same brown frame (`.section-box`); Background
@@ -202,7 +203,9 @@ All features listed below have full BDD test coverage and are verified working.
     boxes inside the frame
   - Cyphers' max-cyphers badge and Items' shins badge sit at the top left of
     their heading row
-  - The comparison view applies the same width rule (no switch)
+  - The comparison view applies the same width rule and each section's column
+    choice (no switch)
+  - An ability card's badges wrap under its name when the card is narrow
 
 ### Automated Section Drag/Drop Tests & Touch Long-Press Drag
 
@@ -271,7 +274,8 @@ All features listed below have full BDD test coverage and are verified working.
     or column choices differ from the sheet's, a prompt offers "Keep current
     layout" (focused; also Escape and the backdrop) or "Use imported layout"
   - Using the imported layout applies only what the file carries: a file
-    without column choices keeps the current ones
+    without column choices keeps the current ones; column choices the app
+    cannot use are dropped with their own warning
   - Import warnings are shown first, the prompt once they are closed
   - Layout is not part of version history: undoing an import restores the
     character, not the layout

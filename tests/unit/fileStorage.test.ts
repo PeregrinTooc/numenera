@@ -271,11 +271,18 @@ describe("fileStorage", () => {
       expect(result.warnings).toEqual([]);
     });
 
-    it("warns about invalid column choices and returns none", async () => {
-      const result = await importFileWith({ sectionColumns: { stats: 3 } });
+    it("keeps the valid column choices and warns about the others", async () => {
+      const result = await importFileWith({ sectionColumns: { items: 1, futureSection: 2 } });
+
+      expect(result.sectionColumns).toEqual({ items: 1 });
+      expect(result.warnings).toEqual([t("fileOperations.invalidSectionColumns")]);
+    });
+
+    it("warns about column choices that are not a map and returns none", async () => {
+      const result = await importFileWith({ sectionColumns: "two" });
 
       expect(result.sectionColumns).toBeUndefined();
-      expect(result.warnings).toEqual([t("fileOperations.invalidLayout")]);
+      expect(result.warnings).toEqual([t("fileOperations.invalidSectionColumns")]);
     });
 
     it("an old file without column choices returns none and no warning", async () => {

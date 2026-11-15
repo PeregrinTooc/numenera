@@ -81,15 +81,34 @@ export function isCardSection(id: SectionId): id is CardSectionId {
   return isCardSectionKey(id);
 }
 
+function isMap(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function isColumnCount(count: unknown): count is ColumnCount {
+  return count === 1 || count === 2;
+}
+
 /**
  * True for a plain object whose keys are card section ids and whose values
- * are 1 or 2. Used on values read from storage or an imported file.
+ * are 1 or 2, so an import can warn when any entry is dropped.
  */
 export function isValidSectionColumns(value: unknown): value is SectionColumns {
-  if (value === null || typeof value !== "object" || Array.isArray(value)) {
-    return false;
-  }
-  return Object.entries(value).every(
-    ([key, count]) => isCardSectionKey(key) && (count === 1 || count === 2)
+  return (
+    isMap(value) &&
+    Object.entries(value).every(([key, count]) => isCardSectionKey(key) && isColumnCount(count))
   );
+}
+
+/**
+ * The valid card section choices in a map read from storage or an imported
+ * file, so a section this version does not know, or a bad count, costs only
+ * its own entry. Undefined when `value` is not a map at all.
+ */
+export function knownSectionColumns(value: unknown): SectionColumns | undefined {
+  if (!isMap(value)) return undefined;
+  return CARD_SECTION_IDS.reduce<SectionColumns>((known, id) => {
+    const count = value[id];
+    return isColumnCount(count) ? { ...known, [id]: count } : known;
+  }, {});
 }
