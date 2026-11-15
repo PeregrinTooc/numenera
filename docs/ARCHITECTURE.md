@@ -216,27 +216,6 @@ Plain classes + lit-html is better than Lit Element because:
 
 **Hierarchical component structure with clear separation of concerns.**
 
-```
-src/
-├── types/character.ts          # Type definitions
-├── data/mockCharacters.ts      # Test data
-├── components/
-│   ├── StatPool.ts            # Item components (render single items)
-│   ├── CypherItem.ts
-│   ├── ArtifactItem.ts
-│   ├── OddityItem.ts
-│   ├── Stats.ts               # Container components (compose items)
-│   ├── Cyphers.ts
-│   ├── Artifacts.ts
-│   ├── Oddities.ts
-│   ├── TextFields.ts
-│   ├── BasicInfo.ts
-│   ├── Header.ts              # Top-level components
-│   └── CharacterSheet.ts
-├── app/                        # Bootstrap, rendering, version navigation (see below)
-└── main.ts                     # Thin entry point: creates AppContext, wires modules
-```
-
 ### Application Bootstrap (`src/app/`)
 
 `main.ts` only creates one `AppContext` (all mutable app state: current sheet,
