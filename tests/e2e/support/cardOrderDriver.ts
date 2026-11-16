@@ -22,27 +22,56 @@ export interface CardOrderDriver {
 
 interface CollectionLocators {
   itemSelector: string;
+  nameSelector: string;
   sectionTestId: string;
 }
 
 const COLLECTIONS: Record<string, CollectionLocators> = {
-  cyphers: { itemSelector: '[data-testid="cypher-item"]', sectionTestId: "cyphers-section" },
+  cyphers: {
+    itemSelector: '[data-testid="cypher-item"]',
+    nameSelector: '[data-testid^="cypher-name-"]',
+    sectionTestId: "cyphers-section",
+  },
   abilities: {
     itemSelector: '[data-testid^="ability-item"]',
+    nameSelector: '[data-testid^="ability-name-"]',
     sectionTestId: "abilities-section",
   },
-  attacks: { itemSelector: '[data-testid="attack-item"]', sectionTestId: "attacks-section" },
+  attacks: {
+    itemSelector: '[data-testid="attack-item"]',
+    nameSelector: '[data-testid^="attack-name-"]',
+    sectionTestId: "attacks-section",
+  },
   specialAbilities: {
     itemSelector: '[data-testid="special-ability-item"]',
+    nameSelector: '[data-testid^="special-ability-name-"]',
     sectionTestId: "special-abilities-section",
   },
-  equipment: { itemSelector: '[data-testid="equipment-item"]', sectionTestId: "items-section" },
-  artifacts: { itemSelector: '[data-testid="artifact-item"]', sectionTestId: "items-section" },
-  oddities: { itemSelector: '[data-testid="oddity-item"]', sectionTestId: "items-section" },
+  equipment: {
+    itemSelector: '[data-testid="equipment-item"]',
+    nameSelector: ".equipment-name",
+    sectionTestId: "items-section",
+  },
+  artifacts: {
+    itemSelector: '[data-testid="artifact-item"]',
+    nameSelector: '[data-testid^="artifact-name-"]',
+    sectionTestId: "items-section",
+  },
+  oddities: {
+    itemSelector: '[data-testid="oddity-item"]',
+    nameSelector: ".oddity-text",
+    sectionTestId: "items-section",
+  },
 };
 
 const NEAR_EDGE_PX = 5;
 const NEAR_LEFT_PX = 10;
+
+/** The whole name, ignoring decoration around it such as an icon. */
+function exactly(name: string): RegExp {
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`^\\W*${escaped}\\W*$`);
+}
 
 function locators(collection: string): CollectionLocators {
   const found = COLLECTIONS[collection];
@@ -63,7 +92,10 @@ export class PlaywrightCardOrderDriver implements CardOrderDriver {
   }
 
   private card({ collection, name }: CardRef): Locator {
-    return this.items(collection).filter({ hasText: name });
+    const hasName = this.page.locator(locators(collection).nameSelector, {
+      hasText: exactly(name),
+    });
+    return this.items(collection).filter({ has: hasName });
   }
 
   async waitForSection(collection: string): Promise<void> {
@@ -113,28 +145,30 @@ export class PlaywrightCardOrderDriver implements CardOrderDriver {
   }
 
   async expectOrder(collection: string, names: string[]): Promise<void> {
-    const items = this.items(collection);
-    await expect(items).toHaveCount(names.length);
-    for (const [index, name] of names.entries()) {
-      await expect(items.nth(index)).toContainText(name);
-    }
+    const shownNames = this.items(collection).locator(locators(collection).nameSelector);
+    await expect(shownNames).toHaveText(names.map(exactly));
   }
 
   async expectVisualOrder(collection: string, names: string[]): Promise<void> {
+    const { nameSelector } = locators(collection);
     const items = this.items(collection);
     await expect(items).toHaveCount(names.length);
     await expect
       .poll(async () => {
-        const shown = await items.evaluateAll((els) =>
-          els.map((el) => ({
-            text: el.textContent ?? "",
-            order:
-              (el as HTMLElement).style.order === "" ? 0 : Number((el as HTMLElement).style.order),
-          }))
+        const shown = await items.evaluateAll(
+          (els, selector) =>
+            els.map((el) => ({
+              name: el.querySelector(selector)?.textContent ?? "",
+              order:
+                (el as HTMLElement).style.order === ""
+                  ? 0
+                  : Number((el as HTMLElement).style.order),
+            })),
+          nameSelector
         );
         return shown
           .sort((a, b) => a.order - b.order)
-          .map(({ text }) => names.find((name) => text.includes(name)));
+          .map(({ name }) => name.replace(/^\W+|\W+$/g, ""));
       })
       .toEqual(names);
   }
