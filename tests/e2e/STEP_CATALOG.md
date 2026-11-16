@@ -26,14 +26,14 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **460** in 42 files
+- Step definitions: **461** in 42 files
 - Feature step lines: **1809**
 - Definitions with no feature usage: **0**
-- Feature lines matching no definition: **4**
+- Feature lines matching no definition: **1**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
-| [ability-enhancements.steps.ts](#abilityenhancementsstepsts) | 10 | 0 |
+| [ability-enhancements.steps.ts](#abilityenhancementsstepsts) | 11 | 0 |
 | [additional-fields-editing.steps.ts](#additionalfieldseditingstepsts) | 5 | 0 |
 | [additional-fields-textarea.steps.ts](#additionalfieldstextareastepsts) | 13 | 0 |
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
@@ -81,9 +81,6 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 These would be reported as *undefined* by Cucumber (or are matched by a
 pattern this script does not understand):
 
-- `ability-enhancements.feature:52` — the ability "Bash" should have might pool styling
-- `ability-enhancements.feature:53` — the ability "Fleet of Foot" should have speed pool styling
-- `ability-enhancements.feature:54` — the ability "Scan" should have intellect pool styling
 - `section-rearrangement.feature:52` — I drag the "Cyphers" section onto the middle <side> of the "Items" section
 
 ## ability-enhancements.steps.ts
@@ -91,6 +88,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `I should see the ability {string}` | 4 | 19 |
+| Then | `the ability {string} should have {pool} pool styling` | 3 | 65 |
 | Then | `the ability {string} should not show action indicator` | 1 | 58 |
 | Then | `the ability {string} should not show cost badge` | 1 | 44 |
 | Then | `the ability {string} should not show pool indicator` | 1 | 51 |

@@ -63,3 +63,10 @@ defineParameterType({
   regexp: /yellow|green|red/,
   transformer: (s: string) => s as "yellow" | "green" | "red",
 });
+
+// A pool as the ability styling classes name it, e.g. "might".
+defineParameterType({
+  name: "pool",
+  regexp: /might|speed|intellect/,
+  transformer: (s: string) => s,
+});

@@ -64,7 +64,7 @@ Then(
 );
 
 Then(
-  /^the ability "([^"]*)" should have (might|speed|intellect) pool styling$/,
+  "the ability {string} should have {pool} pool styling",
   async function (this: CustomWorld, abilityName: string, pool: string) {
     await this.abilities.expectPoolStyled(abilityName, pool);
   }
