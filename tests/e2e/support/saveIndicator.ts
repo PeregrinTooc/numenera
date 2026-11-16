@@ -45,6 +45,26 @@ export class SaveIndicatorDsl {
     await this.indicator.expectShowsText(text);
   }
 
+  async expectDoesNotShow(text: string): Promise<void> {
+    await this.indicator.expectNotShowingText(text);
+  }
+
+  async expectReportsStorageFull(): Promise<void> {
+    await this.indicator.expectAlertShowing("Storage is full");
+  }
+
+  async expectReportsSaveFailed(): Promise<void> {
+    await this.indicator.expectAlertShowing("Changes could not be saved");
+  }
+
+  async expectNoStorageProblem(): Promise<void> {
+    await this.indicator.expectNoAlert();
+  }
+
+  async expectInsideViewport(): Promise<void> {
+    await this.indicator.expectInsideViewport();
+  }
+
   async expectTimeChanged(): Promise<void> {
     expect(await this.indicator.text()).not.toBe(this.notedTime);
   }

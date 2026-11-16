@@ -46,6 +46,10 @@ import { CharacterImportDsl } from "./characterImport.js";
 import { PlaywrightCharacterImportDriver } from "./characterImportDriver.js";
 import { CardOrderDsl } from "./cardOrder.js";
 import { PlaywrightCardOrderDriver } from "./cardOrderDriver.js";
+import { StorageFailureDsl } from "./storageFailure.js";
+import { PlaywrightStorageFailureDriver } from "./storageFailureDriver.js";
+import { UnreadableCharacterDsl } from "./unreadableCharacter.js";
+import { PlaywrightUnreadableCharacterDriver } from "./unreadableCharacterDriver.js";
 import { PlaywrightClockDriver, type ClockDriver } from "./clockDriver.js";
 
 export interface Dsls {
@@ -73,6 +77,8 @@ export interface Dsls {
   abilities: AbilitiesDsl;
   characterImport: CharacterImportDsl;
   cardOrder: CardOrderDsl;
+  storageFailure: StorageFailureDsl;
+  unreadableCharacter: UnreadableCharacterDsl;
 }
 
 /** The single place where the DSLs and their drivers are wired for one scenario's page. */
@@ -145,5 +151,9 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
       additionalFields
     ),
     cardOrder: new CardOrderDsl(new PlaywrightCardOrderDriver(page, viewport), setup),
+    storageFailure: new StorageFailureDsl(new PlaywrightStorageFailureDriver(page)),
+    unreadableCharacter: new UnreadableCharacterDsl(
+      new PlaywrightUnreadableCharacterDriver(page, storageHelper)
+    ),
   };
 }

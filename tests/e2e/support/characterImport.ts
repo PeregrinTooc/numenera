@@ -1,9 +1,11 @@
+import { expect } from "@playwright/test";
 import type { Character } from "@/types/character";
 import type { AdditionalFieldsDsl } from "./additionalFields.js";
 import type { CharacterDsl } from "./character.js";
 import type { CharacterImportDriver } from "./characterImportDriver.js";
 import { FULL_CHARACTER } from "./cardTestFixtures.js";
 import { numeneraFile } from "./fileImport.js";
+import { IMPORTABLE_CHARACTERS } from "./importableCharacters.js";
 
 const IMPORTED_HERO: Character = {
   ...FULL_CHARACTER,
@@ -39,6 +41,8 @@ const IMPORTED_HERO: Character = {
 const FILENAME = "imported-hero.numenera";
 
 export class CharacterImportDsl {
+  private alert?: string;
+
   constructor(
     private imports: CharacterImportDriver,
     private character: CharacterDsl,
@@ -51,6 +55,32 @@ export class CharacterImportDsl {
 
   async importsCharacterWithTier(tier: number): Promise<void> {
     await this.imports.importFile(FILENAME, numeneraFile({ ...IMPORTED_HERO, tier }));
+  }
+
+  async importsCharacterFile(filename: string): Promise<void> {
+    const character = IMPORTABLE_CHARACTERS[filename];
+    if (character === undefined) throw new Error(`No importable character for ${filename}`);
+    await this.imports.importFile(filename, numeneraFile(character));
+    this.character.hasImported(character);
+    await this.character.expectBasicInfoShows("name", character.name);
+  }
+
+  async importsFileWithoutCharacterData(): Promise<void> {
+    this.alert = await this.imports.importFileExpectingAlert("broken.numenera", {
+      version: "1.0",
+    });
+  }
+
+  expectAlertReads(message: string): void {
+    expect(this.alert).toBe(message);
+  }
+
+  async expectCharacterNamed(name: string): Promise<void> {
+    await this.character.expectBasicInfoShows("name", name);
+  }
+
+  async expectPreviousCharacterReplaced(): Promise<void> {
+    await this.character.expectBasicInfoDoesNotShow("name", FULL_CHARACTER.name);
   }
 
   async expectImportedCharacterNamed(): Promise<void> {

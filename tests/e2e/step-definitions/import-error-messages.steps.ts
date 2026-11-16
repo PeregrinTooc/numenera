@@ -1,17 +1,10 @@
 import { When, Then } from "@cucumber/cucumber";
-import { expect } from "@playwright/test";
-import { importFile } from "../support/fileImport.js";
+import { CustomWorld } from "../support/world.js";
 
-let lastAlertMessage = "";
-
-When("I import a file without character data", async function () {
-  const dialogPromise = this.page.waitForEvent("dialog");
-  await importFile(this.page, this.clock, "broken.numenera", { version: "1.0" });
-  const dialog = await dialogPromise;
-  lastAlertMessage = dialog.message();
-  await dialog.dismiss();
+When("I import a file without character data", async function (this: CustomWorld) {
+  await this.characterImport.importsFileWithoutCharacterData();
 });
 
-Then("the alert should read {string}", async function (message: string) {
-  expect(lastAlertMessage).toBe(message);
+Then("the alert should read {string}", function (this: CustomWorld, message: string) {
+  this.characterImport.expectAlertReads(message);
 });

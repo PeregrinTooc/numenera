@@ -24,6 +24,8 @@ import type { HealthDsl } from "./health.js";
 import type { AbilitiesDsl } from "./abilities.js";
 import type { CharacterImportDsl } from "./characterImport.js";
 import type { CardOrderDsl } from "./cardOrder.js";
+import type { StorageFailureDsl } from "./storageFailure.js";
+import type { UnreadableCharacterDsl } from "./unreadableCharacter.js";
 import { BASE_URL } from "./serverUrl.js";
 
 setDefaultTimeout(30000);
@@ -56,6 +58,8 @@ export interface CustomWorld extends World {
   abilities: AbilitiesDsl;
   characterImport: CharacterImportDsl;
   cardOrder: CardOrderDsl;
+  storageFailure: StorageFailureDsl;
+  unreadableCharacter: UnreadableCharacterDsl;
   // third-party-requests.steps.ts
   requestedUrls?: string[];
   getBaseUrl(): string;
@@ -89,6 +93,8 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   abilities!: AbilitiesDsl;
   characterImport!: CharacterImportDsl;
   cardOrder!: CardOrderDsl;
+  storageFailure!: StorageFailureDsl;
+  unreadableCharacter!: UnreadableCharacterDsl;
   requestedUrls?: string[];
 
   constructor(options: IWorldOptions) {

@@ -45,6 +45,7 @@ export interface SheetDriver {
   expectSectionAbove(kind: string, other: string): Promise<void>;
   expectFirstEntryBadgesAtRightEdge(kind: string): Promise<void>;
   expectValueShows(valueName: string, value: string): Promise<void>;
+  expectValueDoesNotShow(valueName: string, value: string): Promise<void>;
   open(): Promise<void>;
   startNewCharacter(): Promise<void>;
   load(): Promise<void>;
@@ -265,6 +266,10 @@ export class PlaywrightSheetDriver implements SheetDriver {
 
   async expectValueShows(valueName: string, value: string): Promise<void> {
     await expect(this.valueLocator(valueName)).toHaveText(value);
+  }
+
+  async expectValueDoesNotShow(valueName: string, value: string): Promise<void> {
+    await expect(this.valueLocator(valueName)).not.toHaveText(value);
   }
 
   // A text node: any child element means the text was parsed as HTML.

@@ -266,6 +266,10 @@ export class CharacterDsl {
     await this.sheet.expectValueShows(basicInfoLabel(field), String(value));
   }
 
+  async expectBasicInfoDoesNotShow(field: string, value: string): Promise<void> {
+    await this.sheet.expectValueDoesNotShow(basicInfoLabel(field), value);
+  }
+
   async expectStatShows(stat: string, field: string, value: number): Promise<void> {
     await this.sheet.expectValueShows(statLabel(stat, field), String(value));
   }

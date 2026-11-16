@@ -18,6 +18,10 @@ export interface SaveIndicatorDriver {
   expectVisible(): Promise<void>;
   expectShowsText(text: string): Promise<void>;
   expectShowsTime(): Promise<void>;
+  expectNotShowingText(text: string): Promise<void>;
+  expectAlertShowing(text: string): Promise<void>;
+  expectNoAlert(): Promise<void>;
+  expectInsideViewport(): Promise<void>;
   expectInLowerRightCorner(): Promise<void>;
   expectSubtleStyling(): Promise<void>;
   startCountingUpdates(): Promise<void>;
@@ -46,6 +50,31 @@ export class PlaywrightSaveIndicatorDriver implements SaveIndicatorDriver {
 
   async expectShowsTime(): Promise<void> {
     await expect(this.indicator).toHaveText(/\d{1,2}:\d{2}:\d{2}(\s?[AP]M)?/);
+  }
+
+  async expectNotShowingText(text: string): Promise<void> {
+    await expect(this.indicator).not.toContainText(text);
+  }
+
+  async expectAlertShowing(text: string): Promise<void> {
+    const alert = this.page.locator(`${INDICATOR}[role="alert"]`);
+    await expect(alert).toBeVisible();
+    await expect(alert).toContainText(text);
+  }
+
+  async expectNoAlert(): Promise<void> {
+    await expect(this.page.locator(`${INDICATOR}[role="alert"]`)).toHaveCount(0);
+  }
+
+  async expectInsideViewport(): Promise<void> {
+    const box = await this.indicator.boundingBox();
+    const viewport = this.page.viewportSize();
+    if (!box || !viewport) {
+      throw new Error("The save indicator or the viewport has no measurable size");
+    }
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(viewport.width);
+    expect(box.y + box.height).toBeLessThanOrEqual(viewport.height);
   }
 
   async expectInLowerRightCorner(): Promise<void> {

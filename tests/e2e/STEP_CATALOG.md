@@ -258,9 +258,9 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I import a valid character file {string}` | 4 | 85 |
-| Then | `the character {string} should still be displayed` | 1 | 94 |
-| Then | `the previous character should be replaced` | 1 | 100 |
+| When | `I import a valid character file {string}` | 4 | 3 |
+| Then | `the character {string} should still be displayed` | 1 | 10 |
+| Then | `the previous character should be replaced` | 1 | 17 |
 
 ## character-storage.steps.ts
 
@@ -408,8 +408,8 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I import a file without character data` | 2 | 6 |
-| Then | `the alert should read {string}` | 2 | 14 |
+| When | `I import a file without character data` | 2 | 3 |
+| Then | `the alert should read {string}` | 2 | 7 |
 
 ## layout-edit-mode.steps.ts
 
@@ -605,14 +605,14 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `the browser storage is full` | 5 | 5 |
-| When | `the browser storage works again` | 1 | 13 |
-| Then | `the save indicator should be inside the viewport` | 1 | 43 |
-| Then | `the save indicator should not contain {string}` | 1 | 36 |
-| Then | `the save indicator should not report a storage problem` | 1 | 32 |
-| Then | `the save indicator should report that changes could not be saved` | 1 | 23 |
-| Then | `the save indicator should report that storage is full` | 5 | 17 |
-| Given | `writing to the browser storage fails` | 1 | 9 |
+| Given | `the browser storage is full` | 5 | 3 |
+| When | `the browser storage works again` | 1 | 11 |
+| Then | `the save indicator should be inside the viewport` | 1 | 37 |
+| Then | `the save indicator should not contain {string}` | 1 | 30 |
+| Then | `the save indicator should not report a storage problem` | 1 | 26 |
+| Then | `the save indicator should report that changes could not be saved` | 1 | 19 |
+| Then | `the save indicator should report that storage is full` | 5 | 15 |
+| Given | `writing to the browser storage fails` | 1 | 7 |
 
 ## third-party-requests.steps.ts
 
@@ -626,16 +626,16 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I choose {string} for the unreadable character` | 2 | 37 |
-| When | `I download the unreadable character` | 1 | 44 |
-| Then | `I should be asked what to do with the unreadable character` | 4 | 25 |
-| Then | `I should not be asked about an unreadable character` | 4 | 33 |
-| Then | `no unreadable data should be kept` | 2 | 79 |
-| Given | `the browser holds the unparseable character text {string}` | 1 | 16 |
-| Then | `the downloaded file should be named like {string}` | 1 | 50 |
-| Then | `the downloaded file should contain exactly {string}` | 1 | 63 |
-| Then | `the kept unreadable data should be {string}` | 4 | 72 |
-| Given | `the stored character data is the unreadable text {string}` | 4 | 9 |
+| When | `I choose {string} for the unreadable character` | 2 | 28 |
+| When | `I download the unreadable character` | 1 | 35 |
+| Then | `I should be asked what to do with the unreadable character` | 4 | 17 |
+| Then | `I should not be asked about an unreadable character` | 4 | 24 |
+| Then | `no unreadable data should be kept` | 2 | 60 |
+| Given | `the browser holds the unparseable character text {string}` | 1 | 10 |
+| Then | `the downloaded file should be named like {string}` | 1 | 39 |
+| Then | `the downloaded file should contain exactly {string}` | 1 | 46 |
+| Then | `the kept unreadable data should be {string}` | 4 | 53 |
+| Given | `the stored character data is the unreadable text {string}` | 4 | 3 |
 
 ## value-editor.steps.ts
 
