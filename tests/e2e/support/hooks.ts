@@ -3,29 +3,8 @@ import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
 import { chromium, webkit, devices, Browser } from "@playwright/test";
 import { CustomWorld } from "./world";
 import { resolveDevice } from "./device.js";
-import { TestStorageHelper } from "./testStorageHelper.js";
-import { DOMHelpers } from "./dom-helpers.js";
-import { SetupDsl } from "./setup.js";
-import { CharacterDsl } from "./character.js";
-import { PlaywrightSheetDriver } from "./sheetDriver.js";
-import { CardEditorDsl } from "./cardEditor.js";
-import { PlaywrightCardEditorDriver } from "./cardEditorDriver.js";
-import { ValueEditorDsl } from "./valueEditor.js";
-import { PlaywrightValueEditorDriver } from "./valueEditorDriver.js";
-import { AdditionalFieldsDsl } from "./additionalFields.js";
-import { PlaywrightInlineFieldsDriver } from "./inlineFieldsDriver.js";
-import { LayoutDsl } from "./layout.js";
-import { MouseInput, TouchInput } from "./sectionInput.js";
-import { ScreenDsl } from "./screen.js";
-import { PlaywrightViewportDriver } from "./viewportDriver.js";
-import { VersionHistoryDsl } from "./versionHistory.js";
-import { HistorySeedDsl } from "./historySeed.js";
-import { ComparisonDsl } from "./comparison.js";
-import { PlaywrightComparisonDriver } from "./comparisonDriver.js";
+import { createDsls } from "./dsls.js";
 import { waitForInitialVersionSaved } from "./app-ready.js";
-import { PlaywrightVersionHistoryDriver } from "./versionHistoryDriver.js";
-import { PlaywrightVersionSaveDriver } from "./versionSaveDriver.js";
-import { PlaywrightClockDriver } from "./clockDriver.js";
 import { BASE_URL } from "./serverUrl.js";
 
 let browser: Browser;
@@ -60,39 +39,7 @@ Before(async function (this: CustomWorld) {
     locale: "en-US",
   });
   this.page = await this.context.newPage();
-  this.dom = new DOMHelpers(this.page);
-  this.clock = new PlaywrightClockDriver(this.page);
-  this.setup = new SetupDsl(this);
-  const valueEditor = new PlaywrightValueEditorDriver(this.page);
-  this.character = new CharacterDsl(new PlaywrightSheetDriver(this.page), this.setup, valueEditor);
-  this.valueEditor = new ValueEditorDsl(valueEditor);
-  this.additionalFields = new AdditionalFieldsDsl(new PlaywrightInlineFieldsDriver(this.page));
-  this.cardEditor = new CardEditorDsl(new PlaywrightCardEditorDriver(this.page));
-  const viewport = new PlaywrightViewportDriver(this.page);
-  this.screen = new ScreenDsl(viewport);
-  this.layout = new LayoutDsl(
-    DEVICE.sectionInput === "touch"
-      ? new TouchInput(this.page, viewport, this.clock)
-      : new MouseInput(this.page, viewport)
-  );
-
-  // Initialize storage helper before navigation, so the Before hook's own
-  // storage clearing goes through the same adapter-backed helper every step
-  // uses, instead of a one-off inline page.evaluate.
-  this.storageHelper = new TestStorageHelper(this.page);
-  const historyDriver = new PlaywrightVersionHistoryDriver(this.page, this.storageHelper);
-  this.historySeed = new HistorySeedDsl(historyDriver, this.setup);
-  this.history = new VersionHistoryDsl(
-    historyDriver,
-    new PlaywrightVersionSaveDriver(this.page, this.clock),
-    this.historySeed,
-    this.character
-  );
-  this.comparison = new ComparisonDsl(
-    new PlaywrightComparisonDriver(this.page, this.storageHelper),
-    this.history,
-    this.historySeed
-  );
+  Object.assign(this, createDsls(this.page, DEVICE));
 
   this.page.on("console", (msg) => {
     const text = msg.text();

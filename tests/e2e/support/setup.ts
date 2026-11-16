@@ -1,4 +1,5 @@
-import type { CustomWorld } from "./world.js";
+import type { Page } from "@playwright/test";
+import type { TestStorageHelper } from "./testStorageHelper.js";
 import type { Character } from "@/types/character";
 import type { Layout } from "@/types/layout";
 import { LAYOUT_STORAGE_KEY, SECTION_COLUMNS_STORAGE_KEY } from "@/storage/storageConstants";
@@ -10,7 +11,10 @@ function fullCharacter(overrides: Record<string, unknown>): Record<string, unkno
 }
 
 export class SetupDsl {
-  constructor(private world: CustomWorld) {}
+  constructor(
+    private page: Page,
+    private storageHelper: TestStorageHelper
+  ) {}
 
   async character(overrides: Record<string, unknown> = {}): Promise<void> {
     await this.replaceCharacter(fullCharacter(overrides));
@@ -18,11 +22,11 @@ export class SetupDsl {
 
   /** Like `character`, but the history starts over: only the new character's initial version. */
   async newCharacter(overrides: Record<string, unknown> = {}): Promise<void> {
-    await this.world.storageHelper.setCharacter(fullCharacter(overrides));
-    await this.world.storageHelper.clearVersions();
-    await this.world.page.reload();
-    await waitForCharacterSheetReady(this.world.page);
-    await waitForInitialVersionSaved(this.world.page);
+    await this.storageHelper.setCharacter(fullCharacter(overrides));
+    await this.storageHelper.clearVersions();
+    await this.page.reload();
+    await waitForCharacterSheetReady(this.page);
+    await waitForInitialVersionSaved(this.page);
   }
 
   /**
@@ -30,9 +34,9 @@ export class SetupDsl {
    * malformed shapes a migration scenario needs — reloads, and waits.
    */
   async replaceCharacter(character: unknown): Promise<void> {
-    await this.world.storageHelper.setCharacter(character);
-    await this.world.page.reload();
-    await waitForCharacterSheetReady(this.world.page);
+    await this.storageHelper.setCharacter(character);
+    await this.page.reload();
+    await waitForCharacterSheetReady(this.page);
   }
 
   /**
@@ -41,7 +45,7 @@ export class SetupDsl {
    * step that no-ops here passes for the wrong reason.
    */
   async updateCharacter(mutate: (character: Character) => void): Promise<void> {
-    const character = await this.world.storageHelper.getCharacter();
+    const character = await this.storageHelper.getCharacter();
     mutate(character);
     await this.replaceCharacter(character);
   }
@@ -63,14 +67,14 @@ export class SetupDsl {
   }
 
   private async seedLocalStorage(key: string, value: string | null): Promise<void> {
-    await this.world.page.evaluate(
+    await this.page.evaluate(
       ({ key, value }) => {
         if (value === null) localStorage.removeItem(key);
         else localStorage.setItem(key, value);
       },
       { key, value }
     );
-    await this.world.page.reload();
-    await waitForCharacterSheetReady(this.world.page);
+    await this.page.reload();
+    await waitForCharacterSheetReady(this.page);
   }
 }
