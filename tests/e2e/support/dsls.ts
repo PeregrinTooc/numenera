@@ -44,6 +44,8 @@ import { AbilitiesDsl } from "./abilities.js";
 import { PlaywrightAbilitiesDriver } from "./abilitiesDriver.js";
 import { CharacterImportDsl } from "./characterImport.js";
 import { PlaywrightCharacterImportDriver } from "./characterImportDriver.js";
+import { CardOrderDsl } from "./cardOrder.js";
+import { PlaywrightCardOrderDriver } from "./cardOrderDriver.js";
 import { PlaywrightClockDriver, type ClockDriver } from "./clockDriver.js";
 
 export interface Dsls {
@@ -70,6 +72,7 @@ export interface Dsls {
   health: HealthDsl;
   abilities: AbilitiesDsl;
   characterImport: CharacterImportDsl;
+  cardOrder: CardOrderDsl;
 }
 
 /** The single place where the DSLs and their drivers are wired for one scenario's page. */
@@ -141,5 +144,6 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
       character,
       additionalFields
     ),
+    cardOrder: new CardOrderDsl(new PlaywrightCardOrderDriver(page, viewport), setup),
   };
 }

@@ -207,24 +207,24 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag ability {string} before ability {string}` | 2 | 27 |
-| When | `I drag ability {string} onto cypher {string}` | 1 | 79 |
-| When | `I drag cypher {string} into the abilities section` | 1 | 63 |
-| Then | `the abilities should be in order {string}` | 5 | 48 |
-| Given | `the character has {int} abilities named {string}` | 5 | 4 |
+| When | `I drag ability {string} before ability {string}` | 2 | 10 |
+| When | `I drag ability {string} onto cypher {string}` | 1 | 34 |
+| When | `I drag cypher {string} into the abilities section` | 1 | 27 |
+| Then | `the abilities should be in order {string}` | 5 | 20 |
+| Given | `the character has {int} abilities named {string}` | 5 | 3 |
 
 ## card-reordering.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag cypher {string} after cypher {string}` | 1 | 40 |
-| When | `I drag cypher {string} before cypher {string}` | 3 | 20 |
-| When | `I hover over cypher {string}` | 1 | 90 |
-| When | `I start dragging cypher {string}` | 2 | 65 |
-| Given | `the character has {int} cyphers named {string}` | 9 | 4 |
-| Then | `the cypher {string} should have a dragging visual state` | 1 | 126 |
-| Then | `the cyphers should be in order {string}` | 7 | 109 |
-| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 137 |
+| When | `I drag cypher {string} after cypher {string}` | 1 | 25 |
+| When | `I drag cypher {string} before cypher {string}` | 3 | 18 |
+| When | `I hover over cypher {string}` | 1 | 36 |
+| When | `I start dragging cypher {string}` | 2 | 32 |
+| Given | `the character has {int} cyphers named {string}` | 9 | 11 |
+| Then | `the cypher {string} should have a dragging visual state` | 1 | 47 |
+| Then | `the cyphers should be in order {string}` | 7 | 40 |
+| Then | `the cyphers should be visually in order {string}, {string}, {string}` | 1 | 54 |
 
 ## character-display.steps.ts
 
@@ -287,10 +287,10 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drag {string} after {string} in the {string} collection` | 1 | 77 |
-| When | `I drag {string} before {string} in the {string} collection` | 1 | 65 |
-| Given | `the {string} collection holds {string}` | 2 | 53 |
-| Then | `the {string} collection should be in order {string}` | 2 | 93 |
+| When | `I drag {string} after {string} in the {string} collection` | 1 | 17 |
+| When | `I drag {string} before {string} in the {string} collection` | 1 | 10 |
+| Given | `the {string} collection holds {string}` | 2 | 3 |
+| Then | `the {string} collection should be in order {string}` | 2 | 24 |
 
 ## combat.steps.ts
 

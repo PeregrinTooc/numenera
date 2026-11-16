@@ -23,6 +23,7 @@ import type { LanguageDsl } from "./language.js";
 import type { HealthDsl } from "./health.js";
 import type { AbilitiesDsl } from "./abilities.js";
 import type { CharacterImportDsl } from "./characterImport.js";
+import type { CardOrderDsl } from "./cardOrder.js";
 import { BASE_URL } from "./serverUrl.js";
 
 setDefaultTimeout(30000);
@@ -54,8 +55,7 @@ export interface CustomWorld extends World {
   health: HealthDsl;
   abilities: AbilitiesDsl;
   characterImport: CharacterImportDsl;
-  // card-reordering.steps.ts
-  draggedCypherName?: string;
+  cardOrder: CardOrderDsl;
   // third-party-requests.steps.ts
   requestedUrls?: string[];
   getBaseUrl(): string;
@@ -88,8 +88,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   health!: HealthDsl;
   abilities!: AbilitiesDsl;
   characterImport!: CharacterImportDsl;
-  // card-reordering.steps.ts
-  draggedCypherName?: string;
+  cardOrder!: CardOrderDsl;
   requestedUrls?: string[];
 
   constructor(options: IWorldOptions) {

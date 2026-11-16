@@ -1,99 +1,43 @@
 import { Given, When, Then } from "@cucumber/cucumber";
-import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
 
 Given(
   "the character has {int} abilities named {string}",
   async function (this: CustomWorld, count: number, namesList: string) {
-    const names = namesList.split(", ").slice(0, count);
-    await setupAbilitiesWithNames(this, names);
+    await this.cardOrder.collectionHolds("abilities", namesList.split(", ").slice(0, count));
   }
 );
 
-async function setupAbilitiesWithNames(world: CustomWorld, names: string[]): Promise<void> {
-  const abilities = names.map((name) => ({
-    name,
-    description: `Description of ${name}`,
-    cost: 1,
-    pool: "might" as const,
-    action: "Action",
-  }));
-
-  await world.setup.updateCharacter((character) => {
-    character.abilities = abilities;
-  });
-  await world.page.waitForSelector('[data-testid="abilities-section"]');
-}
-
 When(
   "I drag ability {string} before ability {string}",
-  async function (this: CustomWorld, sourceName: string, targetName: string) {
-    const sourceCard = this.page
-      .locator(`[data-testid="ability-name-${sourceName}"]`)
-      .locator("xpath=ancestor::div[starts-with(@data-testid,'ability-item')]");
-    const targetCard = this.page
-      .locator(`[data-testid="ability-name-${targetName}"]`)
-      .locator("xpath=ancestor::div[starts-with(@data-testid,'ability-item')]");
-
-    // Full-height viewport: on phones the stacked cards don't all fit on screen.
-    await this.screen.withFullHeight(() =>
-      sourceCard.dragTo(targetCard, {
-        targetPosition: { x: 10, y: 5 },
-      })
+  async function (this: CustomWorld, source: string, target: string) {
+    await this.cardOrder.dragBefore(
+      { collection: "abilities", name: source },
+      { collection: "abilities", name: target }
     );
-
-    await expect(sourceCard).not.toHaveAttribute("data-dragging", "true");
   }
 );
 
 Then(
   "the abilities should be in order {string}",
   async function (this: CustomWorld, namesList: string) {
-    const expectedOrder = namesList.split(", ");
-    await verifyAbilityOrder(this, expectedOrder);
+    await this.cardOrder.expectOrder("abilities", namesList.split(", "));
   }
 );
 
-async function verifyAbilityOrder(world: CustomWorld, expectedOrder: string[]): Promise<void> {
-  const abilityNames = world.page.locator(
-    '[data-testid^="ability-item"] [data-testid^="ability-name-"]'
-  );
-  await expect(abilityNames).toHaveText(expectedOrder);
-}
-
 When(
   "I drag cypher {string} into the abilities section",
-  async function (this: CustomWorld, cypherName: string) {
-    const sourceCard = this.page
-      .locator(`[data-testid="cypher-name-${cypherName}"]`)
-      .locator("xpath=ancestor::div[@data-testid='cypher-item']");
-    const abilitiesSection = this.page.locator('[data-testid="abilities-section"]');
-
-    await sourceCard.dragTo(abilitiesSection, {
-      targetPosition: { x: 50, y: 50 },
-    });
-
-    await expect(sourceCard).not.toHaveAttribute("data-dragging", "true");
+  async function (this: CustomWorld, name: string) {
+    await this.cardOrder.dragIntoSectionOf({ collection: "cyphers", name }, "abilities");
   }
 );
 
 When(
   "I drag ability {string} onto cypher {string}",
-  async function (this: CustomWorld, abilityName: string, cypherName: string) {
-    const sourceCard = this.page
-      .locator(`[data-testid="ability-name-${abilityName}"]`)
-      .locator("xpath=ancestor::div[starts-with(@data-testid,'ability-item')]");
-    const targetCard = this.page
-      .locator(`[data-testid="cypher-name-${cypherName}"]`)
-      .locator("xpath=ancestor::div[@data-testid='cypher-item']");
-
-    // Full-height viewport: on phones the two sections don't both fit on screen.
-    await this.screen.withFullHeight(() =>
-      sourceCard.dragTo(targetCard, {
-        targetPosition: { x: 10, y: 5 },
-      })
+  async function (this: CustomWorld, ability: string, cypher: string) {
+    await this.cardOrder.dragBefore(
+      { collection: "abilities", name: ability },
+      { collection: "cyphers", name: cypher }
     );
-
-    await expect(sourceCard).not.toHaveAttribute("data-dragging", "true");
   }
 );
