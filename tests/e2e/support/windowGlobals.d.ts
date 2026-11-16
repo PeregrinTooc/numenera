@@ -18,14 +18,5 @@ declare global {
     __saveCount?: number;
     __restoreStorageWrites?: () => void;
     __saveObserver?: MutationObserver;
-    _lastWrittenData?: string;
-    _exportedData?: string;
-    _cancelFilePicker?: boolean;
-    _saveDialogShown?: boolean;
-    _saveDialogCallCount?: number;
-    _writeCount?: number;
-    _suggestedFilename?: string;
-    _downloadFilename?: string;
-    _downloadData?: string;
   }
 }

@@ -13,19 +13,11 @@ import type { ScreenDsl } from "./screen.js";
 import type { VersionHistoryDsl } from "./versionHistory.js";
 import type { HistorySeedDsl } from "./historySeed.js";
 import type { ComparisonDsl } from "./comparison.js";
+import type { FileExportDsl } from "./fileExport.js";
 import { BASE_URL } from "./serverUrl.js";
 import type { Layout } from "@/types/layout";
 
 setDefaultTimeout(30000);
-
-export interface ExportedCharacterFile {
-  character: Record<string, unknown>;
-  version: string;
-  schemaVersion: number;
-  exportDate: string;
-  layout?: unknown[];
-  versionHistory?: unknown;
-}
 
 export interface CustomWorld extends World {
   browser?: Browser;
@@ -44,6 +36,7 @@ export interface CustomWorld extends World {
   history: VersionHistoryDsl;
   historySeed: HistorySeedDsl;
   comparison: ComparisonDsl;
+  fileExport: FileExportDsl;
   // card-reordering.steps.ts
   draggedCypherName?: string;
   // layout-import-export.steps.ts
@@ -57,9 +50,6 @@ export interface CustomWorld extends World {
   // auto-save-indicator.steps.ts
   savedTimestamp?: string | null;
   saveCount?: number;
-  // character-file-export.steps.ts
-  exportedFileData?: ExportedCharacterFile | null;
-  exportedFilename?: string;
   // third-party-requests.steps.ts
   requestedUrls?: string[];
   getBaseUrl(): string;
@@ -82,6 +72,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   history!: VersionHistoryDsl;
   historySeed!: HistorySeedDsl;
   comparison!: ComparisonDsl;
+  fileExport!: FileExportDsl;
   // card-reordering.steps.ts
   draggedCypherName?: string;
   importedFile?: { layout?: Layout; sectionColumns?: Record<string, number> };
@@ -93,8 +84,6 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   };
   savedTimestamp?: string | null;
   saveCount?: number;
-  exportedFileData?: ExportedCharacterFile | null;
-  exportedFilename?: string;
   requestedUrls?: string[];
 
   constructor(options: IWorldOptions) {

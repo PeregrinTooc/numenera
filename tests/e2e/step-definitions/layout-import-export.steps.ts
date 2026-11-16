@@ -23,18 +23,9 @@ const DIFFERENT_LAYOUT: Layout = [
   { type: "single", id: "notes" },
 ];
 
-Then(
-  "the exported file should contain the layout configuration",
-  async function (this: CustomWorld) {
-    const data = this.exportedFileData;
-    if (!data) {
-      throw new Error("No exported data available");
-    }
-
-    expect(data.layout).toBeDefined();
-    expect(Array.isArray(data.layout)).toBe(true);
-  }
-);
+Then("the exported file should contain the layout configuration", function (this: CustomWorld) {
+  this.fileExport.expectLayoutIncluded();
+});
 
 Given("I have a character file with a different layout", function (this: CustomWorld) {
   this.importedFile = { layout: DIFFERENT_LAYOUT };

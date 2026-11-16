@@ -21,6 +21,8 @@ import { ComparisonDsl } from "./comparison.js";
 import { PlaywrightComparisonDriver } from "./comparisonDriver.js";
 import { PlaywrightVersionHistoryDriver } from "./versionHistoryDriver.js";
 import { PlaywrightVersionSaveDriver } from "./versionSaveDriver.js";
+import { FileExportDsl } from "./fileExport.js";
+import { PlaywrightFileExportDriver } from "./exportCapture.js";
 import { PlaywrightClockDriver, type ClockDriver } from "./clockDriver.js";
 
 export interface Dsls {
@@ -37,6 +39,7 @@ export interface Dsls {
   historySeed: HistorySeedDsl;
   history: VersionHistoryDsl;
   comparison: ComparisonDsl;
+  fileExport: FileExportDsl;
 }
 
 /** The single place where the DSLs and their drivers are wired for one scenario's page. */
@@ -80,5 +83,6 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
       history,
       historySeed
     ),
+    fileExport: new FileExportDsl(new PlaywrightFileExportDriver(page)),
   };
 }

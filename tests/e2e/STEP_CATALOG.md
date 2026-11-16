@@ -247,14 +247,14 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a file export should be triggered` | 1 | 27 |
-| When | `I export the character` | 5 | 19 |
-| Given | `the character has name {string}` | 3 | 5 |
-| Then | `the exported file should contain all character properties` | 2 | 39 |
-| Then | `the exported file should have an exportDate` | 2 | 88 |
-| Then | `the exported file should have schemaVersion {string}` | 2 | 80 |
-| Then | `the exported file should have version {string}` | 2 | 72 |
-| Then | `the exported filename should be {string}` | 2 | 32 |
+| Then | `a file export should be triggered` | 1 | 11 |
+| When | `I export the character` | 5 | 7 |
+| Given | `the character has name {string}` | 3 | 3 |
+| Then | `the exported file should contain all character properties` | 2 | 22 |
+| Then | `the exported file should have an exportDate` | 2 | 40 |
+| Then | `the exported file should have schemaVersion {string}` | 2 | 33 |
+| Then | `the exported file should have version {string}` | 2 | 26 |
+| Then | `the exported filename should be {string}` | 2 | 15 |
 
 ## character-file-import.steps.ts
 
@@ -337,27 +337,27 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a file download should be triggered` | 1 | 165 |
-| When | `I cancel the file save dialog` | 1 | 94 |
-| When | `I click the Export button` | 7 | 89 |
-| When | `I click the Quick Export button` | 1 | 100 |
-| When | `I click the Save As button` | 1 | 111 |
-| Then | `I should not see an {string} button` | 1 | 132 |
-| Then | `I should see a {string} button` | 2 | 127 |
-| Then | `I should see an {string} button` | 2 | 122 |
-| When | `I view the export buttons` | 1 | 85 |
-| Given | `my browser does not support File System Access API` | 1 | 43 |
-| Given | `my browser supports File System Access API` | 7 | 5 |
-| Then | `no file should be saved` | 1 | 204 |
-| Given | `the character name is {string}` | 1 | 71 |
-| Then | `the download filename should contain {string}` | 1 | 174 |
-| Then | `the download should have correct file structure` | 1 | 182 |
-| Then | `the Export button should still be visible` | 1 | 212 |
-| Then | `the export dialog should be triggered` | 1 | 230 |
-| Then | `the export dialog should be triggered with filename containing {string}` | 1 | 138 |
-| Then | `the exported data should have correct structure` | 1 | 151 |
-| Then | `the file should be saved without prompting` | 1 | 217 |
-| Then | `the suggested filename should be {string}` | 1 | 196 |
+| Then | `a file download should be triggered` | 1 | 58 |
+| When | `I cancel the file save dialog` | 1 | 23 |
+| When | `I click the Export button` | 7 | 19 |
+| When | `I click the Quick Export button` | 1 | 27 |
+| When | `I click the Save As button` | 1 | 31 |
+| Then | `I should not see an {string} button` | 1 | 43 |
+| Then | `I should see a {string} button` | 2 | 39 |
+| Then | `I should see an {string} button` | 2 | 35 |
+| When | `I view the export buttons` | 1 | 15 |
+| Given | `my browser does not support File System Access API` | 1 | 7 |
+| Given | `my browser supports File System Access API` | 7 | 3 |
+| Then | `no file should be saved` | 1 | 80 |
+| Given | `the character name is {string}` | 1 | 11 |
+| Then | `the download filename should contain {string}` | 1 | 62 |
+| Then | `the download should have correct file structure` | 1 | 69 |
+| Then | `the Export button should still be visible` | 1 | 84 |
+| Then | `the export dialog should be triggered` | 1 | 92 |
+| Then | `the export dialog should be triggered with filename containing {string}` | 1 | 47 |
+| Then | `the exported data should have correct structure` | 1 | 54 |
+| Then | `the file should be saved without prompting` | 1 | 88 |
+| Then | `the suggested filename should be {string}` | 1 | 73 |
 
 ## grid-merge-split.steps.ts
 
@@ -437,24 +437,24 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I choose to {string}` | 5 | 131 |
-| When | `I dismiss the layout choice prompt with the Escape key` | 1 | 109 |
-| Given | `I have a character file with a different layout` | 5 | 38 |
-| Given | `I have a character file with the default layout` | 1 | 42 |
-| Given | `I have a character file with the default layout that sets the {string} section to {int} column(s)` | 1 | 50 |
-| Given | `I have a character file with the default layout that sets the {string} section to {int} column(s) and an unknown section to {int} column(s)` | 2 | 60 |
-| Given | `I have a character file without a layout` | 1 | 46 |
-| Given | `I have saved the {string} section as {int} column(s) and an unknown section as {int} column(s)` | 1 | 79 |
-| Given | `I have set the {string} section to {int} column(s)` | 2 | 70 |
-| When | `I import the character file` | 10 | 89 |
-| Then | `I should not see a layout choice prompt` | 5 | 115 |
-| Then | `I should see a layout choice prompt` | 1 | 105 |
-| Then | `I should see options to {string} or {string}` | 1 | 119 |
-| Then | `the {string} option should have focus` | 1 | 127 |
-| Then | `the {string} section should be set to {int} column(s)` | 3 | 139 |
+| When | `I choose to {string}` | 5 | 122 |
+| When | `I dismiss the layout choice prompt with the Escape key` | 1 | 100 |
+| Given | `I have a character file with a different layout` | 5 | 29 |
+| Given | `I have a character file with the default layout` | 1 | 33 |
+| Given | `I have a character file with the default layout that sets the {string} section to {int} column(s)` | 1 | 41 |
+| Given | `I have a character file with the default layout that sets the {string} section to {int} column(s) and an unknown section to {int} column(s)` | 2 | 51 |
+| Given | `I have a character file without a layout` | 1 | 37 |
+| Given | `I have saved the {string} section as {int} column(s) and an unknown section as {int} column(s)` | 1 | 70 |
+| Given | `I have set the {string} section to {int} column(s)` | 2 | 61 |
+| When | `I import the character file` | 10 | 80 |
+| Then | `I should not see a layout choice prompt` | 5 | 106 |
+| Then | `I should see a layout choice prompt` | 1 | 96 |
+| Then | `I should see options to {string} or {string}` | 1 | 110 |
+| Then | `the {string} option should have focus` | 1 | 118 |
+| Then | `the {string} section should be set to {int} column(s)` | 3 | 130 |
 | Then | `the exported file should contain the layout configuration` | 1 | 25 |
-| Then | `the import note should read {string}` | 1 | 101 |
-| Then | `the imported character should be shown` | 5 | 135 |
+| Then | `the import note should read {string}` | 1 | 92 |
+| Then | `the imported character should be shown` | 5 | 126 |
 
 ## recovery-damage-track.steps.ts
 

@@ -167,6 +167,11 @@ export class CharacterDsl {
     await this.change(basicInfoLabel(field), value);
   }
 
+  async isNamed(name: string): Promise<void> {
+    await this.changeBasicInfo("name", name);
+    await this.expectBasicInfoShows("name", name);
+  }
+
   async expectBasicInfoLooksClickable(field: string): Promise<void> {
     await this.valueEditor.expectValueLooksClickable(basicInfoLabel(field));
   }

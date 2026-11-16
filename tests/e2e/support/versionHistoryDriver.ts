@@ -1,10 +1,13 @@
 import { expect, type Page } from "@playwright/test";
 import type { Character } from "@/types/character";
 import { waitForCharacterSheetReady, waitForInitialVersionSaved } from "./app-ready.js";
-import { installExportCapture, waitForExportCapture } from "./exportCapture.js";
+import {
+  installExportCapture,
+  waitForExportCapture,
+  type ExportedCharacterFile,
+} from "./exportCapture.js";
 import { englishText } from "./i18nKeys.js";
 import type { TestStorageHelper } from "./testStorageHelper.js";
-import type { ExportedCharacterFile } from "./world.js";
 
 /** A version to store: what changed, and the description the history records for it. */
 export interface VersionSeed {
