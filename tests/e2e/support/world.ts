@@ -44,11 +44,6 @@ export interface CustomWorld extends World {
   // layout-import-export.steps.ts
   importedFile?: { layout?: Layout; sectionColumns?: Record<string, number> };
   importNote?: string;
-  heldDropTarget?: {
-    name: string;
-    box: { x: number; y: number; width: number; height: number };
-    point: { x: number; y: number };
-  };
   // auto-save-indicator.steps.ts
   savedTimestamp?: string | null;
   saveCount?: number;
@@ -80,11 +75,6 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   draggedCypherName?: string;
   importedFile?: { layout?: Layout; sectionColumns?: Record<string, number> };
   importNote?: string;
-  heldDropTarget?: {
-    name: string;
-    box: { x: number; y: number; width: number; height: number };
-    point: { x: number; y: number };
-  };
   savedTimestamp?: string | null;
   saveCount?: number;
   requestedUrls?: string[];

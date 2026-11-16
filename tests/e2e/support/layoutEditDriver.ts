@@ -1,10 +1,13 @@
 import { expect, type Page } from "@playwright/test";
+import { LAYOUT_STORAGE_KEY } from "@/storage/storageConstants";
+import { SINGLE_ONLY_SECTIONS, type Layout } from "@/types/layout";
+import { sectionId, sectionOrder } from "./sections.js";
 
 const EDIT_BUTTON = '[data-testid="edit-layout-button"]';
 const CONTAINER = ".parchment-container";
 const MIN_TOUCH_TARGET_PX = 44;
 
-/** Entering and leaving layout edit mode, and what the sheet shows while in it. */
+/** Entering and leaving layout edit mode, what the sheet shows while in it, and the layout it keeps. */
 export interface LayoutEditDriver {
   toggleEditMode(): Promise<void>;
   expectEditModeActive(): Promise<void>;
@@ -13,6 +16,10 @@ export interface LayoutEditDriver {
   expectEditButtonVisible(): Promise<void>;
   expectEditButtonTouchFriendly(): Promise<void>;
   expectNoSavedLayout(): Promise<void>;
+  expectLayoutSaved(): Promise<void>;
+  saveLayout(layout: Layout): Promise<void>;
+  expectSectionBefore(first: string, second: string): Promise<void>;
+  expectFirstRearrangeable(name: string): Promise<void>;
 }
 
 export class PlaywrightLayoutEditDriver implements LayoutEditDriver {
@@ -48,7 +55,38 @@ export class PlaywrightLayoutEditDriver implements LayoutEditDriver {
   }
 
   async expectNoSavedLayout(): Promise<void> {
-    const saved = await this.page.evaluate(() => localStorage.getItem("numenera-layout"));
-    expect(saved).toBeNull();
+    expect(await this.savedLayout()).toBeNull();
+  }
+
+  async expectLayoutSaved(): Promise<void> {
+    expect(await this.savedLayout()).not.toBeNull();
+  }
+
+  async saveLayout(layout: Layout): Promise<void> {
+    await this.page.evaluate(({ key, value }) => localStorage.setItem(key, value), {
+      key: LAYOUT_STORAGE_KEY,
+      value: JSON.stringify(layout),
+    });
+  }
+
+  async expectSectionBefore(first: string, second: string): Promise<void> {
+    const [firstId, secondId] = [sectionId(first), sectionId(second)];
+    await expect
+      .poll(async () => {
+        const order = await sectionOrder(this.page);
+        const [firstPos, secondPos] = [order.indexOf(firstId), order.indexOf(secondId)];
+        return firstPos >= 0 && firstPos < secondPos;
+      })
+      .toBe(true);
+  }
+
+  async expectFirstRearrangeable(name: string): Promise<void> {
+    const fixed: string[] = [...SINGLE_ONLY_SECTIONS];
+    const order = await sectionOrder(this.page);
+    expect(order.filter((id) => !fixed.includes(id))[0]).toBe(sectionId(name));
+  }
+
+  private savedLayout(): Promise<string | null> {
+    return this.page.evaluate((key) => localStorage.getItem(key), LAYOUT_STORAGE_KEY);
   }
 }

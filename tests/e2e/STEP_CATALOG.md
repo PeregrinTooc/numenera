@@ -514,41 +514,41 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 48 |
-| When | `I hold the {string} section over the {zone} of the {string} section as the window shows it` | 1 | 57 |
-| When | `I keep still for a moment` | 9 | 86 |
-| When | `I release the section outside the sheet` | 2 | 90 |
-| When | `I release the section where it is` | 1 | 103 |
-| Then | `no drop preview should be shown` | 1 | 140 |
-| Given | `the {string} section is at the top of the window` | 1 | 64 |
-| Then | `the {string} section should not have moved up or down on screen` | 1 | 73 |
-| Then | `the {string} section should preview {string} in its place` | 1 | 119 |
-| Then | `the {string} section should preview {string} on its right` | 1 | 109 |
-| Then | `the row of {string} should preview {string} below it` | 1 | 129 |
+| When | `I hold the {string} section over the {zone} of the {string} section` | 11 | 4 |
+| When | `I hold the {string} section over the {zone} of the {string} section as the window shows it` | 1 | 11 |
+| When | `I keep still for a moment` | 9 | 32 |
+| When | `I release the section outside the sheet` | 2 | 36 |
+| When | `I release the section where it is` | 1 | 40 |
+| Then | `no drop preview should be shown` | 1 | 65 |
+| Given | `the {string} section is at the top of the window` | 1 | 18 |
+| Then | `the {string} section should not have moved up or down on screen` | 1 | 25 |
+| Then | `the {string} section should preview {string} in its place` | 1 | 51 |
+| Then | `the {string} section should preview {string} on its right` | 1 | 44 |
+| Then | `the row of {string} should preview {string} below it` | 1 | 58 |
 
 ## section-reordering.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I exit layout edit mode` | 2 | 101 |
-| Given | `I have moved the {string} section to the top` | 1 | 74 |
-| Given | `I have reordered sections` | 1 | 6 |
-| Then | `the {string} section should appear before the {string} section` | 19 | 44 |
-| Then | `the {string} section should still be at the top` | 1 | 109 |
-| Then | `the layout should be saved` | 1 | 26 |
-| Then | `the sections should remain in the new order` | 1 | 36 |
+| When | `I exit layout edit mode` | 2 | 29 |
+| Given | `I have moved the {string} section to the top` | 1 | 22 |
+| Given | `I have reordered sections` | 1 | 3 |
+| Then | `the {string} section should appear before the {string} section` | 19 | 15 |
+| Then | `the {string} section should still be at the top` | 1 | 33 |
+| Then | `the layout should be saved` | 1 | 7 |
+| Then | `the sections should remain in the new order` | 1 | 11 |
 
 ## section-slide.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I drop the held section onto the {zone} of the {string} section` | 1 | 58 |
-| Given | `I prefer reduced motion` | 1 | 54 |
-| Then | `no section should have slid` | 1 | 199 |
-| Given | `section slides are recorded` | 4 | 28 |
-| Then | `the {string} section should be drawn above the {string} section while they slide` | 1 | 159 |
-| Then | `the {string} section should slide back to where it was` | 1 | 141 |
-| Then | `the {string} section should slide into its new place` | 4 | 127 |
+| When | `I drop the held section onto the {zone} of the {string} section` | 1 | 12 |
+| Given | `I prefer reduced motion` | 1 | 8 |
+| Then | `no section should have slid` | 1 | 40 |
+| Given | `section slides are recorded` | 4 | 4 |
+| Then | `the {string} section should be drawn above the {string} section while they slide` | 1 | 33 |
+| Then | `the {string} section should slide back to where it was` | 1 | 26 |
+| Then | `the {string} section should slide into its new place` | 4 | 19 |
 
 ## section-touch-drag.steps.ts
 

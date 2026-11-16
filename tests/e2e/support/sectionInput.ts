@@ -5,6 +5,7 @@ import {
   holdSectionOver,
   nearTopOf,
   releaseSectionDrag,
+  sectionBox,
   sectionLocator,
   sectionOrder,
   TouchGesture,
@@ -31,15 +32,6 @@ export interface HeldDrag {
   dropOnto(onto: DropPlace): Promise<void>;
 }
 
-async function boxOf(
-  page: Page,
-  name: string
-): Promise<{ x: number; y: number; width: number; height: number }> {
-  const box = await sectionLocator(page, name).boundingBox();
-  if (!box) throw new Error(`Section ${name} has no bounding box (not visible?)`);
-  return box;
-}
-
 async function expectDragEnded(page: Page, source: string): Promise<void> {
   await expect(sectionLocator(page, source)).not.toHaveClass(/\bdragging\b/);
 }
@@ -54,7 +46,7 @@ export class MouseInput implements SectionInput {
   async dragSection(source: string, { target, edge }: DropPlace): Promise<void> {
     const page = this.page;
     await this.viewport.withFullHeight(async () => {
-      const point = zonePoint(await boxOf(page, target), edge);
+      const point = zonePoint(await sectionBox(page, target), edge);
       await holdSectionOver(page, source, point);
       await releaseSectionDrag(page, point);
     });
@@ -76,7 +68,7 @@ export class TouchInput implements SectionInput {
     const page = this.page;
     await this.viewport.withFullHeight(async () => {
       const gesture = await this.pressAndHold(source);
-      await gesture.moveTo(zonePoint(await boxOf(page, target), edge));
+      await gesture.moveTo(zonePoint(await sectionBox(page, target), edge));
       await gesture.end();
     });
     await expectDragEnded(page, source);
@@ -121,7 +113,7 @@ export class TouchInput implements SectionInput {
     await this.viewport.growToFullHeight();
     const orderBefore = await sectionOrder(page);
     const gesture = await this.pressAndHold(source);
-    await gesture.moveTo(zonePoint(await boxOf(page, target), edge));
+    await gesture.moveTo(zonePoint(await sectionBox(page, target), edge));
     // The dwell starts once the browser reports the finger over the place, so keep
     // letting time pass until the preview has rearranged the sheet.
     await expect
@@ -177,7 +169,7 @@ class HeldTouchDrag implements HeldDrag {
   ) {}
 
   async dropOnto({ target, edge }: DropPlace): Promise<void> {
-    await this.gesture.moveTo(zonePoint(await boxOf(this.page, target), edge));
+    await this.gesture.moveTo(zonePoint(await sectionBox(this.page, target), edge));
     await this.gesture.end();
     await expectDragEnded(this.page, this.source);
   }

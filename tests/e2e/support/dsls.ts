@@ -13,6 +13,8 @@ import { AdditionalFieldsDsl } from "./additionalFields.js";
 import { PlaywrightInlineFieldsDriver } from "./inlineFieldsDriver.js";
 import { LayoutDsl } from "./layout.js";
 import { PlaywrightLayoutEditDriver } from "./layoutEditDriver.js";
+import { PlaywrightDropPreviewDriver } from "./dropPreviewDriver.js";
+import { PlaywrightSectionSlideDriver } from "./sectionSlideDriver.js";
 import { SettingsDsl } from "./settings.js";
 import { PlaywrightSettingsDriver } from "./settingsDriver.js";
 import { MouseInput, TouchInput } from "./sectionInput.js";
@@ -79,7 +81,10 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
       device.sectionInput === "touch"
         ? new TouchInput(page, viewport, clock)
         : new MouseInput(page, viewport),
-      new PlaywrightLayoutEditDriver(page)
+      new PlaywrightLayoutEditDriver(page),
+      setup,
+      new PlaywrightDropPreviewDriver(page, viewport, clock),
+      new PlaywrightSectionSlideDriver(page)
     ),
     settings: new SettingsDsl(new PlaywrightSettingsDriver(page)),
     historySeed,

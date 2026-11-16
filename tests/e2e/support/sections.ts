@@ -15,6 +15,19 @@ export function sectionLocator(page: Page, name: string): Locator {
   return page.locator(`[data-section-id="${sectionId(name)}"]`);
 }
 
+export interface Box {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export async function sectionBox(page: Page, name: string): Promise<Box> {
+  const box = await sectionLocator(page, name).boundingBox();
+  if (!box) throw new Error(`Section ${name} has no bounding box (not visible?)`);
+  return box;
+}
+
 /** The ids of the sections on the sheet, in document order. */
 export function sectionOrder(page: Page): Promise<string[]> {
   return page
@@ -37,10 +50,7 @@ export type SectionZone = "top edge" | "bottom edge" | "middle left" | "middle r
  * pointer positions, so a point aimed at exactly 50 % can land just above the
  * narrow layout's top/bottom split.
  */
-export function zonePoint(
-  box: { x: number; y: number; width: number; height: number },
-  zone: SectionZone
-): Point {
+export function zonePoint(box: Box, zone: SectionZone): Point {
   const fractions: Record<SectionZone, [number, number]> = {
     "top edge": [0.5, 0.1],
     "bottom edge": [0.5, 0.9],
