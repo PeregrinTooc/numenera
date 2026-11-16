@@ -34,6 +34,8 @@ import { GridDsl } from "./grid.js";
 import { PlaywrightGridDriver } from "./gridDriver.js";
 import { LayoutImportDsl } from "./layoutImport.js";
 import { PlaywrightLayoutImportDriver } from "./layoutImportDriver.js";
+import { SaveIndicatorDsl } from "./saveIndicator.js";
+import { PlaywrightSaveIndicatorDriver } from "./saveIndicatorDriver.js";
 import { PlaywrightClockDriver, type ClockDriver } from "./clockDriver.js";
 
 export interface Dsls {
@@ -55,6 +57,7 @@ export interface Dsls {
   sectionColumns: SectionColumnsDsl;
   grid: GridDsl;
   layoutImport: LayoutImportDsl;
+  saveIndicator: SaveIndicatorDsl;
 }
 
 /** The single place where the DSLs and their drivers are wired for one scenario's page. */
@@ -116,5 +119,6 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
     sectionColumns: new SectionColumnsDsl(new PlaywrightSectionColumnsDriver(page), setup),
     grid: new GridDsl(new PlaywrightGridDriver(page), setup, layout),
     layoutImport: new LayoutImportDsl(new PlaywrightLayoutImportDriver(page, clock)),
+    saveIndicator: new SaveIndicatorDsl(new PlaywrightSaveIndicatorDriver(page), character, clock),
   };
 }

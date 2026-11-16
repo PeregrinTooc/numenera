@@ -133,19 +133,19 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I note the current save timestamp` | 1 | 10 |
-| When | `I rapidly edit the character name multiple times` | 1 | 20 |
-| When | `I wait for {int} second(s)` | 1 | 16 |
-| Given | `the character sheet is displayed` | 6 | 5 |
-| Then | `the character should be saved only once after changes stop` | 1 | 97 |
-| Then | `the save indicator should be in the lower-right corner` | 1 | 120 |
-| Then | `the save indicator should be visible` | 2 | 67 |
-| Then | `the save indicator should contain {string}` | 3 | 80 |
-| Then | `the save indicator should have subtle styling` | 1 | 139 |
-| Then | `the save indicator should show a single timestamp` | 1 | 107 |
-| Then | `the save indicator should show a timestamp` | 1 | 72 |
-| Then | `the save indicator should still be visible` | 1 | 115 |
-| Then | `the save timestamp should be updated` | 2 | 88 |
+| When | `I note the current save timestamp` | 1 | 7 |
+| When | `I rapidly edit the character name multiple times` | 1 | 15 |
+| When | `I wait for {int} second(s)` | 1 | 11 |
+| Given | `the character sheet is displayed` | 6 | 3 |
+| Then | `the character should be saved only once after changes stop` | 1 | 38 |
+| Then | `the save indicator should be in the lower-right corner` | 1 | 50 |
+| Then | `the save indicator should be visible` | 2 | 19 |
+| Then | `the save indicator should contain {string}` | 3 | 27 |
+| Then | `the save indicator should have subtle styling` | 1 | 54 |
+| Then | `the save indicator should show a single timestamp` | 1 | 42 |
+| Then | `the save indicator should show a timestamp` | 1 | 23 |
+| Then | `the save indicator should still be visible` | 1 | 46 |
+| Then | `the save timestamp should be updated` | 2 | 34 |
 
 ## basic-info-editing.steps.ts
 

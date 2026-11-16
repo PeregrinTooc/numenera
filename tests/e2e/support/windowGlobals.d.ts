@@ -15,8 +15,6 @@ export interface SectionSlideRecord {
 declare global {
   interface Window {
     __sectionSlides?: SectionSlideRecord[];
-    __saveCount?: number;
     __restoreStorageWrites?: () => void;
-    __saveObserver?: MutationObserver;
   }
 }

@@ -18,6 +18,7 @@ import type { FileExportDsl } from "./fileExport.js";
 import type { SectionColumnsDsl } from "./sectionColumns.js";
 import type { GridDsl } from "./grid.js";
 import type { LayoutImportDsl } from "./layoutImport.js";
+import type { SaveIndicatorDsl } from "./saveIndicator.js";
 import { BASE_URL } from "./serverUrl.js";
 
 setDefaultTimeout(30000);
@@ -44,11 +45,9 @@ export interface CustomWorld extends World {
   sectionColumns: SectionColumnsDsl;
   grid: GridDsl;
   layoutImport: LayoutImportDsl;
+  saveIndicator: SaveIndicatorDsl;
   // card-reordering.steps.ts
   draggedCypherName?: string;
-  // auto-save-indicator.steps.ts
-  savedTimestamp?: string | null;
-  saveCount?: number;
   // third-party-requests.steps.ts
   requestedUrls?: string[];
   getBaseUrl(): string;
@@ -76,10 +75,9 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   sectionColumns!: SectionColumnsDsl;
   grid!: GridDsl;
   layoutImport!: LayoutImportDsl;
+  saveIndicator!: SaveIndicatorDsl;
   // card-reordering.steps.ts
   draggedCypherName?: string;
-  savedTimestamp?: string | null;
-  saveCount?: number;
   requestedUrls?: string[];
 
   constructor(options: IWorldOptions) {
