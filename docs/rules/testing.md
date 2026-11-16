@@ -102,7 +102,7 @@ Where a family of near-synonyms exists, use the canonical form below rather
 than adding another variant. This table is the tie-breaker; for anything not
 listed, **the phrasing with the most uses wins**, unless a generic
 parameterised pattern already exists (`{badge}`, `{cardType}`, `{textarea}`,
-`{resource}` — see E2E World DSL below), in which case the generic one wins.
+`{resource}`, `{pool}` — see E2E layers below), in which case the generic one wins.
 
 | Pattern                         | Canonical form                                                                                                                 | Not                                                                                        |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
@@ -119,34 +119,46 @@ parameterised pattern already exists (`{badge}`, `{cardType}`, `{textarea}`,
 
 ---
 
-## E2E World DSL
+## E2E layers
 
-Look here before writing a raw locator or a `new SomeHelper(this.page)` call.
-`hooks.ts` builds each of these onto `CustomWorld` (`tests/e2e/support/world.ts`)
-in `Before`, so every step definition has them from the first line:
+The suite has four layers, after Dave Farley's acceptance-testing model:
 
-| On `this`       | Class (file)                                         | For                                                                                                |
-| --------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `clock`         | `ClockDriver` (`support/clockDriver.ts`)             | Let time pass: advances the app's `ManualClock`, the only way timers fire under test.              |
-| `dom`           | `DOMHelpers` (`support/dom-helpers.ts`)              | Generic `data-testid` locators and waits.                                                          |
-| `storageHelper` | `TestStorageHelper` (`support/testStorageHelper.ts`) | Seed or clear character/version storage.                                                           |
-| `modal`         | `ModalDsl` (`support/modal.ts`)                      | Confirm/cancel/type/clear/expectOpen/expectClosed on the edit modal.                               |
-| `fields`        | `FieldsDsl` (`support/fields.ts`)                    | Click/tap/hover a named field or resource badge.                                                   |
-| `cards`         | `CardsDsl` (`support/cards.ts`)                      | Set up, add, edit, delete and count cards by type.                                                 |
-| `setup`         | `SetupDsl` (`support/setup.ts`)                      | `this.setup.character(overrides)` — seed `FULL_CHARACTER` + overrides, reload, wait for the sheet. |
+1. **Feature files** state behaviour in the user's language.
+2. **Step definitions** are thin parsing: each step calls one DSL method on
+   `this`. No locators, no `page`, no `expect`, no logic.
+3. **DSL classes** (`support/<area>.ts`) offer intent-level methods and hold
+   the scenario's state for their area.
+4. **Drivers** (`support/<area>Driver.ts`, an interface plus a `Playwright…`
+   implementation) are the only layer that knows test ids, selectors,
+   `page.evaluate` and window globals.
+
+`createDsls` in `support/dsls.ts` is the single place that wires DSLs to their
+drivers. `hooks.ts` assigns its result onto `CustomWorld`
+(`support/world.ts`), so each DSL is a field on `this`. Look at `dsls.ts` for
+the current list before adding a step. Extend the DSL that owns the area
+before creating a new one, and keep a new area in its own focused DSL rather
+than growing `CharacterDsl`. Section drag picks a mouse or touch driver by
+device profile behind the same `LayoutDsl` call.
+
+Commonly used: `setup` (`this.setup.character(overrides)` seeds
+`FULL_CHARACTER` plus overrides and reloads), `character` (sheet values),
+`clock` (advances the app's `ManualClock`, the only way timers fire under
+test), `layout`, `cardEditor`, `valueEditor`, `history`.
 
 Gherkin vocabulary comes in through parameter types
 (`support/parameterTypes.ts`): `{cardType}`, `{badge}`, `{textarea}`,
-`{resource}`. An unrecognised word is a compile-time undefined step, not a
-runtime lookup failure inside the step body.
+`{resource}`, `{pool}`. An unrecognised word is a compile-time undefined step,
+not a runtime lookup failure inside the step body. Use Cucumber expressions,
+not regular expressions: `npm run check:steps` cannot read regex steps.
 
 Every scenario runs the app on a `ManualClock` that `hooks.ts` requests before
 boot; nothing fires until a step or driver advances it by the app's own
 duration (import the constant from `src`). Never fake time in the browser any other way, and never sleep.
 
-ESLint enforces the DSL rather than leaving it as convention: instantiating
-`DOMHelpers`/`TestStorageHelper` directly, or one step-definitions file
-importing from another, are both lint errors (`eslint.config.js`).
+ESLint enforces the layering rather than leaving it as convention: a step
+definition that reads `this.page`, `this.context` or `this.storageHelper`,
+imports `@playwright/test`, or imports another step-definitions file fails
+lint (`eslint.config.js`).
 
 ---
 

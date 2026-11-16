@@ -186,14 +186,22 @@ export default [
       "no-restricted-syntax": [
         "error",
         {
-          selector: "NewExpression[callee.name=/DOMHelpers|TestStorageHelper/]",
+          selector:
+            "MemberExpression[object.type='ThisExpression'][property.name=/^(page|context|storageHelper)$/]",
           message:
-            "Use this.dom / this.storageHelper from CustomWorld instead of instantiating a new helper — see docs/rules/testing.md, E2E World DSL.",
+            "Step definitions call a DSL on this; only drivers touch the page or storage — see docs/rules/testing.md, E2E layers.",
         },
       ],
       "no-restricted-imports": [
         "error",
         {
+          paths: [
+            {
+              name: "@playwright/test",
+              message:
+                "Step definitions call a DSL; Playwright belongs in a driver — see docs/rules/testing.md, E2E layers.",
+            },
+          ],
           patterns: [
             {
               group: ["../step-definitions/*", "./*.steps"],
