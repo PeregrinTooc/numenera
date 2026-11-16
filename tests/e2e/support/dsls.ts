@@ -42,6 +42,8 @@ import { HealthDsl } from "./health.js";
 import { PlaywrightHealthDriver } from "./healthDriver.js";
 import { AbilitiesDsl } from "./abilities.js";
 import { PlaywrightAbilitiesDriver } from "./abilitiesDriver.js";
+import { CharacterImportDsl } from "./characterImport.js";
+import { PlaywrightCharacterImportDriver } from "./characterImportDriver.js";
 import { PlaywrightClockDriver, type ClockDriver } from "./clockDriver.js";
 
 export interface Dsls {
@@ -67,6 +69,7 @@ export interface Dsls {
   language: LanguageDsl;
   health: HealthDsl;
   abilities: AbilitiesDsl;
+  characterImport: CharacterImportDsl;
 }
 
 /** The single place where the DSLs and their drivers are wired for one scenario's page. */
@@ -87,6 +90,7 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
     valueEditorDriver,
     inlineFieldsDriver
   );
+  const additionalFields = new AdditionalFieldsDsl(inlineFieldsDriver);
   const historySeed = new HistorySeedDsl(historyDriver, setup);
   const history = new VersionHistoryDsl(
     historyDriver,
@@ -112,7 +116,7 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
     setup,
     character,
     valueEditor: new ValueEditorDsl(valueEditorDriver),
-    additionalFields: new AdditionalFieldsDsl(inlineFieldsDriver),
+    additionalFields,
     cardEditor: new CardEditorDsl(new PlaywrightCardEditorDriver(page)),
     screen: new ScreenDsl(viewport),
     layout,
@@ -132,5 +136,10 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
     language: new LanguageDsl(new PlaywrightLanguageDriver(page)),
     health: new HealthDsl(new PlaywrightHealthDriver(page), setup),
     abilities: new AbilitiesDsl(new PlaywrightAbilitiesDriver(page), character, setup),
+    characterImport: new CharacterImportDsl(
+      new PlaywrightCharacterImportDriver(page, clock),
+      character,
+      additionalFields
+    ),
   };
 }

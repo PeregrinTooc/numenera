@@ -1,99 +1,39 @@
 import { When, Then } from "@cucumber/cucumber";
-import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world.js";
-import { FULL_CHARACTER } from "../support/cardTestFixtures.js";
-import { importFile, numeneraFile } from "../support/fileImport.js";
-
-// Test fixture for the "import a valid character" scenarios — an override
-// of the shared demo character so only what makes this import distinctive
-// needs to be spelled out.
-const VALID_CHARACTER = {
-  ...FULL_CHARACTER,
-  name: "Imported Hero",
-  tier: 2,
-  type: "Nano",
-  descriptor: "Clever",
-  focus: "Controls Gravity",
-  currentXp: 5,
-  totalXp: 5,
-  shins: 30,
-  armor: 1,
-  effort: 2,
-  maxCyphers: 3,
-  stats: {
-    might: { pool: 10, edge: 0, current: 10 },
-    speed: { pool: 12, edge: 1, current: 12 },
-    intellect: { pool: 16, edge: 2, current: 16 },
-  },
-  cyphers: [{ name: "Test Cypher", level: "1d6", effect: "Test effect" }],
-  artifacts: [],
-  oddities: ["Glowing orb"],
-  abilities: [],
-  equipment: [],
-  attacks: [],
-  specialAbilities: [],
-  textFields: {
-    background: "Test background",
-    notes: "Test notes",
-  },
-};
 
 When(
   "I import a valid character file with matching schema version",
   async function (this: CustomWorld) {
-    await importFile(
-      this.page,
-      this.clock,
-      "imported-hero.numenera",
-      numeneraFile(VALID_CHARACTER)
-    );
-    await expect(this.page.getByTestId("character-name")).toHaveText("Imported Hero");
+    await this.characterImport.importsValidCharacter();
   }
 );
 
 When("I import a character file with tier {int}", async function (this: CustomWorld, tier: number) {
-  await importFile(
-    this.page,
-    this.clock,
-    "imported-hero.numenera",
-    numeneraFile({ ...VALID_CHARACTER, tier })
-  );
-  await expect(this.page.getByTestId("character-name")).toHaveText("Imported Hero");
+  await this.characterImport.importsCharacterWithTier(tier);
 });
 
 Then(
   "the tier should have been adjusted to {string}",
   async function (this: CustomWorld, tier: string) {
-    await expect(this.page.getByTestId("character-tier")).toHaveText(tier);
+    await this.character.expectBasicInfoShows("tier", tier);
   }
 );
 
 Then("the character should be imported successfully", async function (this: CustomWorld) {
-  const nameElement = this.page.locator('[data-testid="character-name"]');
-
-  await expect(nameElement).toHaveText("Imported Hero", { timeout: 5000 });
+  await this.characterImport.expectImportedCharacterNamed();
 });
 
 Then("all character data should be correctly displayed", async function (this: CustomWorld) {
-  const nameElement = this.page.locator('[data-testid="character-name"]');
-  await expect(nameElement).toHaveText("Imported Hero");
-
-  const tierElement = this.page.locator('[data-testid="character-tier"]');
-  await expect(tierElement).toHaveText("2");
-
-  const typeElement = this.page.locator('[data-testid="character-type-select"]');
-  await expect(typeElement).toContainText("Nano");
+  await this.characterImport.expectImportedCharacterDisplayed();
 });
 
 Then(
   "the character name should still be {string}",
   async function (this: CustomWorld, expectedName: string) {
-    const nameElement = this.page.locator('[data-testid="character-name"]');
-    await expect(nameElement).toHaveText(expectedName);
+    await this.character.expectBasicInfoShows("name", expectedName);
   }
 );
 
 Then("the tier should still be {string}", async function (this: CustomWorld, expectedTier: string) {
-  const tierElement = this.page.locator('[data-testid="character-tier"]');
-  await expect(tierElement).toHaveText(expectedTier);
+  await this.character.expectBasicInfoShows("tier", expectedTier);
 });

@@ -323,13 +323,13 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `all character data should be correctly displayed` | 1 | 76 |
-| When | `I import a character file with tier {int}` | 1 | 53 |
-| When | `I import a valid character file with matching schema version` | 3 | 40 |
-| Then | `the character name should still be {string}` | 1 | 87 |
-| Then | `the character should be imported successfully` | 1 | 70 |
-| Then | `the tier should have been adjusted to {string}` | 1 | 63 |
-| Then | `the tier should still be {string}` | 1 | 95 |
+| Then | `all character data should be correctly displayed` | 1 | 25 |
+| When | `I import a character file with tier {int}` | 1 | 10 |
+| When | `I import a valid character file with matching schema version` | 3 | 3 |
+| Then | `the character name should still be {string}` | 1 | 29 |
+| Then | `the character should be imported successfully` | 1 | 21 |
+| Then | `the tier should have been adjusted to {string}` | 1 | 14 |
+| Then | `the tier should still be {string}` | 1 | 36 |
 
 ## export-enhancement.steps.ts
 
