@@ -176,7 +176,7 @@ export const CARD_TYPE_TO_PROPERTY: Record<string, string> = {
   "special-ability": "specialAbilities",
 };
 
-function nameOf(card: unknown): string {
+export function nameOf(card: unknown): string {
   return typeof card === "string" ? card : (card as { name: string }).name;
 }
 

@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
-import { waitForCharacterSheetReady } from "./app-ready.js";
+import { startNewCharacter, waitForCharacterSheetReady } from "./app-ready.js";
 import { CARD_CONFIGS, CARD_TYPE_TO_PROPERTY } from "./cardTestFixtures.js";
 import { getTestId } from "./fields.js";
 import { assertNoRawI18nKeys, englishText } from "./i18nKeys.js";
@@ -46,6 +46,9 @@ export interface SheetDriver {
   expectFirstEntryBadgesAtRightEdge(kind: string): Promise<void>;
   expectValueShows(valueName: string, value: string): Promise<void>;
   open(): Promise<void>;
+  startNewCharacter(): Promise<void>;
+  load(): Promise<void>;
+  expectCharacterDisplayed(): Promise<void>;
   expectValueIsPlainText(valueName: string): Promise<void>;
   expectNoUntranslatedText(): Promise<void>;
   expectControlsLabelled(): Promise<void>;
@@ -246,6 +249,18 @@ export class PlaywrightSheetDriver implements SheetDriver {
   async open(): Promise<void> {
     await this.page.goto(BASE_URL);
     await waitForCharacterSheetReady(this.page);
+  }
+
+  async startNewCharacter(): Promise<void> {
+    await startNewCharacter(this.page, BASE_URL);
+  }
+
+  async load(): Promise<void> {
+    await this.page.getByTestId("load-button").click();
+  }
+
+  async expectCharacterDisplayed(): Promise<void> {
+    await expect(this.page.getByTestId("character-name")).toBeVisible();
   }
 
   async expectValueShows(valueName: string, value: string): Promise<void> {

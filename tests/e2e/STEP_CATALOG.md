@@ -261,23 +261,23 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I import a valid character file {string}` | 4 | 85 |
-| Then | `the character {string} should still be displayed` | 1 | 93 |
-| Then | `the previous character should be replaced` | 1 | 99 |
+| Then | `the character {string} should still be displayed` | 1 | 94 |
+| Then | `the previous character should be replaced` | 1 | 100 |
 
 ## character-storage.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `a character is currently displayed` | 2 | 4 |
-| Then | `all character data should be preserved` | 2 | 68 |
-| Then | `all character sections should show data` | 2 | 38 |
-| Then | `all sections should display empty state messages` | 2 | 14 |
-| When | `I click the "Load" button` | 2 | 28 |
-| Then | `the character {string} should be displayed` | 3 | 33 |
-| Given | `the character sheet is empty` | 4 | 24 |
-| Then | `the character sheet should show empty states` | 2 | 8 |
-| Then | `the character should be displayed` | 1 | 57 |
-| Then | `the same character should still be displayed` | 1 | 63 |
+| Given | `a character is currently displayed` | 2 | 3 |
+| Then | `all character data should be preserved` | 2 | 42 |
+| Then | `all character sections should show data` | 2 | 30 |
+| Then | `all sections should display empty state messages` | 2 | 11 |
+| When | `I click the "Load" button` | 2 | 19 |
+| Then | `the character {string} should be displayed` | 3 | 23 |
+| Given | `the character sheet is empty` | 4 | 15 |
+| Then | `the character sheet should show empty states` | 2 | 7 |
+| Then | `the character should be displayed` | 1 | 34 |
+| Then | `the same character should still be displayed` | 1 | 38 |
 
 ## clock.steps.ts
 

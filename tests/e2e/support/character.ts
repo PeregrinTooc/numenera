@@ -3,9 +3,12 @@ import {
   CARD_CONFIGS,
   CARD_TYPE_TO_PROPERTY,
   EMPTY_ARRAYS,
+  nameOf,
   sampleCard,
 } from "./cardTestFixtures.js";
 import { FULL_CHARACTER } from "@/data/mockCharacters";
+import type { Character } from "@/types/character";
+import type { InlineFieldsDriver } from "./inlineFieldsDriver.js";
 import type { SetupDsl } from "./setup.js";
 import { englishText } from "./i18nKeys.js";
 import { statLabel } from "./valueEditor.js";
@@ -42,12 +45,69 @@ export interface StatRow {
   current: string;
 }
 
+const SECTIONS_THAT_KEEP_THEIR_DATA = ["cypher", "artifact", "oddity"];
+const SECTIONS_WITH_DATA = [...SECTIONS_THAT_KEEP_THEIR_DATA, "equipment", "ability"];
+
 export class CharacterDsl {
+  private shown?: Character;
+
   constructor(
     private sheet: SheetDriver,
     private setup: SetupDsl,
-    private valueEditor: ValueEditorDriver
+    private valueEditor: ValueEditorDriver,
+    private fields: InlineFieldsDriver
   ) {}
+
+  async startsWithEmptySheet(): Promise<void> {
+    await this.sheet.startNewCharacter();
+  }
+
+  async loadsSampleCharacter(): Promise<void> {
+    await this.sheet.load();
+    this.shown = FULL_CHARACTER;
+  }
+
+  hasImported(character: Character): void {
+    this.shown = character;
+  }
+
+  async expectSomeCharacterDisplayed(): Promise<void> {
+    await this.sheet.expectCharacterDisplayed();
+  }
+
+  async expectSampleCharacterDisplayed(): Promise<void> {
+    await this.expectBasicInfoShows("name", FULL_CHARACTER.name);
+  }
+
+  async expectEverySectionShowsItsData(): Promise<void> {
+    await this.expectSectionsShowTheirData(SECTIONS_WITH_DATA);
+  }
+
+  async expectDataPreserved(): Promise<void> {
+    await this.expectSectionsShowTheirData(SECTIONS_THAT_KEEP_THEIR_DATA);
+  }
+
+  async expectNoCyphersArtifactsOrOddities(): Promise<void> {
+    for (const kind of ["cypher", "artifact", "oddity"]) await this.sheet.expectEmptyState(kind);
+  }
+
+  async expectNoEquipmentAbilitiesOrNotes(): Promise<void> {
+    await this.sheet.expectEmptyState("equipment");
+    await this.sheet.expectEmptyState("ability");
+    await this.fields.expectReads("background", "");
+    await this.fields.expectReads("notes", "");
+  }
+
+  private async expectSectionsShowTheirData(kinds: string[]): Promise<void> {
+    const character = this.shown;
+    if (character === undefined) throw new Error("No character was loaded or imported");
+    for (const kind of kinds) {
+      const cards = character[CARD_TYPE_TO_PROPERTY[kind] as keyof Character] as unknown[];
+      await this.sheet.expectEntries(kind, cards.map(nameOf));
+    }
+    await this.fields.expectReads("background", character.textFields.background);
+    await this.fields.expectReads("notes", character.textFields.notes);
+  }
 
   async hasStat(stat: string, field: string, value: number): Promise<void> {
     const current = FULL_CHARACTER.stats[stat.toLowerCase() as keyof typeof FULL_CHARACTER.stats];

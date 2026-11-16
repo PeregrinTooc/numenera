@@ -67,7 +67,14 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
   const valueEditorDriver = new PlaywrightValueEditorDriver(page);
   const historyDriver = new PlaywrightVersionHistoryDriver(page, storageHelper);
 
-  const character = new CharacterDsl(new PlaywrightSheetDriver(page), setup, valueEditorDriver);
+  const inlineFieldsDriver = new PlaywrightInlineFieldsDriver(page);
+
+  const character = new CharacterDsl(
+    new PlaywrightSheetDriver(page),
+    setup,
+    valueEditorDriver,
+    inlineFieldsDriver
+  );
   const historySeed = new HistorySeedDsl(historyDriver, setup);
   const history = new VersionHistoryDsl(
     historyDriver,
@@ -93,7 +100,7 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
     setup,
     character,
     valueEditor: new ValueEditorDsl(valueEditorDriver),
-    additionalFields: new AdditionalFieldsDsl(new PlaywrightInlineFieldsDriver(page)),
+    additionalFields: new AdditionalFieldsDsl(inlineFieldsDriver),
     cardEditor: new CardEditorDsl(new PlaywrightCardEditorDriver(page)),
     screen: new ScreenDsl(viewport),
     layout,

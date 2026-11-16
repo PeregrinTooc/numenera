@@ -86,6 +86,7 @@ const TEST_CHARACTERS: Record<string, Character> = {
 When("I import a valid character file {string}", async function (filename: string) {
   const character = TEST_CHARACTERS[filename];
   await importFile(this.page, this.clock, filename, numeneraFile(character));
+  this.character.hasImported(character);
 
   const nameElement = this.page.getByTestId("character-name");
   await expect(nameElement).toHaveText(character.name, { timeout: 15000 });
