@@ -24,7 +24,7 @@ Then("the page title should be in English", async function (this: CustomWorld) {
 });
 
 Then("the language should remain German", async function (this: CustomWorld) {
-  await this.language.expectTitleStaysGerman();
+  await this.language.expectTitleInGerman();
 });
 
 Then("the page title should be {string}", async function (this: CustomWorld, expectedText: string) {

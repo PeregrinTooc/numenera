@@ -298,6 +298,14 @@ export class CharacterDsl {
     await this.sheet.reopen();
   }
 
+  async reopenImmediately(): Promise<void> {
+    await this.sheet.reopenImmediately();
+  }
+
+  async createsNewCharacter(): Promise<void> {
+    await this.sheet.createNewCharacter();
+  }
+
   async expectCount(kind: string, count: number): Promise<void> {
     await this.sheet.expectEntryCount(kind, count);
   }

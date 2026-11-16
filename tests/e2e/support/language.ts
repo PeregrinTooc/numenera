@@ -23,7 +23,7 @@ export class LanguageDsl {
     await this.language.expectText("page title", englishText("app.title"));
   }
 
-  async expectTitleStaysGerman(): Promise<void> {
+  async expectTitleInGerman(): Promise<void> {
     await this.language.expectText("page title", GERMAN_TITLE);
   }
 

@@ -1,5 +1,9 @@
 import { expect, type Locator, type Page } from "@playwright/test";
-import { startNewCharacter, waitForCharacterSheetReady } from "./app-ready.js";
+import {
+  startNewCharacter,
+  waitForCharacterSheetReady,
+  waitForNewCharacterPersisted,
+} from "./app-ready.js";
 import { CARD_CONFIGS, CARD_TYPE_TO_PROPERTY } from "./cardTestFixtures.js";
 import { getTestId } from "./fields.js";
 import { assertNoRawI18nKeys, englishText } from "./i18nKeys.js";
@@ -34,6 +38,8 @@ export interface SheetDriver {
   expectEntryShows(kind: string, name: string, value: string): Promise<void>;
   expectAddControlThemed(kind: string): Promise<void>;
   reopen(): Promise<void>;
+  reopenImmediately(): Promise<void>;
+  createNewCharacter(): Promise<void>;
   expectNoConfirmationAsked(): Promise<void>;
   expectDiscardControlInTopLeftCorner(name: string): Promise<void>;
   expectEntryField(kind: string, name: string, field: string, value: string): Promise<void>;
@@ -154,6 +160,17 @@ export class PlaywrightSheetDriver implements SheetDriver {
     await waitForSaveComplete(this.page);
     await this.page.reload();
     await waitForCharacterSheetReady(this.page);
+  }
+
+  /** Deliberately does not wait out the auto-save debounce: an edit still pending when the page unloads. */
+  async reopenImmediately(): Promise<void> {
+    await this.page.reload();
+    await waitForCharacterSheetReady(this.page);
+  }
+
+  async createNewCharacter(): Promise<void> {
+    await this.page.getByTestId("new-button").click();
+    await waitForNewCharacterPersisted(this.page);
   }
 
   async expectNoConfirmationAsked(): Promise<void> {

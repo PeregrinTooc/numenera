@@ -1,7 +1,6 @@
 import { setWorldConstructor, World, IWorldOptions, setDefaultTimeout } from "@cucumber/cucumber";
-import { Browser, BrowserContext, Page } from "@playwright/test";
+import { BrowserContext, Page } from "@playwright/test";
 import { TestStorageHelper } from "./testStorageHelper.js";
-import { DOMHelpers } from "./dom-helpers.js";
 import { SetupDsl } from "./setup.js";
 import type { ClockDriver } from "./clockDriver.js";
 import type { CharacterDsl } from "./character.js";
@@ -26,16 +25,15 @@ import type { CharacterImportDsl } from "./characterImport.js";
 import type { CardOrderDsl } from "./cardOrder.js";
 import type { StorageFailureDsl } from "./storageFailure.js";
 import type { UnreadableCharacterDsl } from "./unreadableCharacter.js";
-import { BASE_URL } from "./serverUrl.js";
+import type { SheetToolbarDsl } from "./sheetToolbar.js";
+import type { RequestsDsl } from "./requests.js";
 
 setDefaultTimeout(30000);
 
 export interface CustomWorld extends World {
-  browser?: Browser;
   context?: BrowserContext;
   page: Page;
   storageHelper: TestStorageHelper;
-  dom: DOMHelpers;
   clock: ClockDriver;
   setup: SetupDsl;
   character: CharacterDsl;
@@ -60,17 +58,14 @@ export interface CustomWorld extends World {
   cardOrder: CardOrderDsl;
   storageFailure: StorageFailureDsl;
   unreadableCharacter: UnreadableCharacterDsl;
-  // third-party-requests.steps.ts
-  requestedUrls?: string[];
-  getBaseUrl(): string;
+  toolbar: SheetToolbarDsl;
+  requests: RequestsDsl;
 }
 
 export class CustomWorldConstructor extends World implements CustomWorld {
-  browser?: Browser;
   context?: BrowserContext;
   page!: Page;
   storageHelper!: TestStorageHelper;
-  dom!: DOMHelpers;
   clock!: ClockDriver;
   setup!: SetupDsl;
   character!: CharacterDsl;
@@ -95,14 +90,11 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   cardOrder!: CardOrderDsl;
   storageFailure!: StorageFailureDsl;
   unreadableCharacter!: UnreadableCharacterDsl;
-  requestedUrls?: string[];
+  toolbar!: SheetToolbarDsl;
+  requests!: RequestsDsl;
 
   constructor(options: IWorldOptions) {
     super(options);
-  }
-
-  getBaseUrl(): string {
-    return BASE_URL;
   }
 }
 

@@ -1,7 +1,6 @@
 import type { Page } from "@playwright/test";
 import type { DeviceProfile } from "./device.js";
 import { TestStorageHelper } from "./testStorageHelper.js";
-import { DOMHelpers } from "./dom-helpers.js";
 import { SetupDsl } from "./setup.js";
 import { CharacterDsl } from "./character.js";
 import { PlaywrightSheetDriver } from "./sheetDriver.js";
@@ -50,10 +49,13 @@ import { StorageFailureDsl } from "./storageFailure.js";
 import { PlaywrightStorageFailureDriver } from "./storageFailureDriver.js";
 import { UnreadableCharacterDsl } from "./unreadableCharacter.js";
 import { PlaywrightUnreadableCharacterDriver } from "./unreadableCharacterDriver.js";
+import { SheetToolbarDsl } from "./sheetToolbar.js";
+import { PlaywrightSheetToolbarDriver } from "./sheetToolbarDriver.js";
+import { RequestsDsl } from "./requests.js";
+import { PlaywrightRequestsDriver } from "./requestsDriver.js";
 import { PlaywrightClockDriver, type ClockDriver } from "./clockDriver.js";
 
 export interface Dsls {
-  dom: DOMHelpers;
   storageHelper: TestStorageHelper;
   clock: ClockDriver;
   setup: SetupDsl;
@@ -79,11 +81,12 @@ export interface Dsls {
   cardOrder: CardOrderDsl;
   storageFailure: StorageFailureDsl;
   unreadableCharacter: UnreadableCharacterDsl;
+  toolbar: SheetToolbarDsl;
+  requests: RequestsDsl;
 }
 
 /** The single place where the DSLs and their drivers are wired for one scenario's page. */
 export function createDsls(page: Page, device: DeviceProfile): Dsls {
-  const dom = new DOMHelpers(page);
   const storageHelper = new TestStorageHelper(page);
   const clock = new PlaywrightClockDriver(page);
   const setup = new SetupDsl(page, storageHelper);
@@ -118,8 +121,9 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
     new PlaywrightSectionSlideDriver(page)
   );
 
+  const language = new LanguageDsl(new PlaywrightLanguageDriver(page));
+
   return {
-    dom,
     storageHelper,
     clock,
     setup,
@@ -129,7 +133,7 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
     cardEditor: new CardEditorDsl(new PlaywrightCardEditorDriver(page)),
     screen: new ScreenDsl(viewport),
     layout,
-    settings: new SettingsDsl(new PlaywrightSettingsDriver(page)),
+    settings: new SettingsDsl(new PlaywrightSettingsDriver(page), language),
     historySeed,
     history,
     comparison: new ComparisonDsl(
@@ -142,7 +146,7 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
     grid: new GridDsl(new PlaywrightGridDriver(page), setup, layout),
     layoutImport: new LayoutImportDsl(new PlaywrightLayoutImportDriver(page, clock)),
     saveIndicator: new SaveIndicatorDsl(new PlaywrightSaveIndicatorDriver(page), character, clock),
-    language: new LanguageDsl(new PlaywrightLanguageDriver(page)),
+    language,
     health: new HealthDsl(new PlaywrightHealthDriver(page), setup),
     abilities: new AbilitiesDsl(new PlaywrightAbilitiesDriver(page), character, setup),
     characterImport: new CharacterImportDsl(
@@ -155,5 +159,7 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
     unreadableCharacter: new UnreadableCharacterDsl(
       new PlaywrightUnreadableCharacterDriver(page, storageHelper)
     ),
+    toolbar: new SheetToolbarDsl(new PlaywrightSheetToolbarDriver(page)),
+    requests: new RequestsDsl(new PlaywrightRequestsDriver(page)),
   };
 }

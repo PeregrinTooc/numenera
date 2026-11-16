@@ -50,7 +50,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [clock.steps.ts](#clockstepsts) | 1 | 0 |
 | [collection-reordering.steps.ts](#collectionreorderingstepsts) | 4 | 0 |
 | [combat.steps.ts](#combatstepsts) | 13 | 0 |
-| [common-steps.ts](#commonstepsts) | 4 | 0 |
+| [common-steps.ts](#commonstepsts) | 3 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
 | [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 7 | 0 |
@@ -65,7 +65,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 7 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
 | [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 7 | 0 |
-| [settings-gear.steps.ts](#settingsgearstepsts) | 18 | 0 |
+| [settings-gear.steps.ts](#settingsgearstepsts) | 19 | 0 |
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 3 | 0 |
 | [storage-failure.steps.ts](#storagefailurestepsts) | 8 | 0 |
@@ -314,10 +314,9 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the "New" button` | 3 | 5 |
-| When | `I press the Escape key` | 2 | 10 |
-| When | `I reload the page` | 21 | 14 |
-| When | `I reload the page immediately` | 1 | 27 |
+| When | `I click the "New" button` | 3 | 3 |
+| When | `I reload the page` | 21 | 7 |
+| When | `I reload the page immediately` | 1 | 11 |
 
 ## data-validation.steps.ts
 
@@ -564,34 +563,35 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am viewing an old version with the version navigator visible` | 1 | 101 |
-| Given | `I am viewing the character sheet` | 1 | 4 |
-| When | `I click outside the settings panel` | 1 | 52 |
-| When | `I click the British flag icon` | 1 | 77 |
-| When | `I click the German flag icon` | 5 | 73 |
-| When | `I click the settings gear icon` | 2 | 36 |
-| Given | `I have opened the settings panel` | 9 | 48 |
-| Then | `I should be able to click the settings gear icon` | 1 | 29 |
-| Then | `I should see a {string} option` | 1 | 108 |
-| Then | `I should see a settings gear icon in the header` | 1 | 21 |
-| Then | `I should see the settings panel` | 2 | 40 |
-| Then | `the {string} option should be disabled` | 1 | 114 |
-| Given | `the browser offers no secure-origin cryptography` | 1 | 9 |
-| Given | `the interface is in German` | 1 | 91 |
-| Then | `the interface should display in English` | 1 | 86 |
-| Then | `the interface should display in German` | 1 | 81 |
-| Then | `the settings gear icon should still be visible` | 1 | 25 |
-| Then | `the settings panel should close` | 4 | 44 |
+| Given | `I am viewing an old version with the version navigator visible` | 1 | 67 |
+| Given | `I am viewing the character sheet` | 1 | 3 |
+| When | `I click outside the settings panel` | 1 | 39 |
+| When | `I click the British flag icon` | 1 | 51 |
+| When | `I click the German flag icon` | 5 | 47 |
+| When | `I click the settings gear icon` | 2 | 23 |
+| Given | `I have opened the settings panel` | 9 | 35 |
+| When | `I press the Escape key` | 2 | 43 |
+| Then | `I should be able to click the settings gear icon` | 1 | 19 |
+| Then | `I should see a {string} option` | 1 | 74 |
+| Then | `I should see a settings gear icon in the header` | 1 | 11 |
+| Then | `I should see the settings panel` | 2 | 27 |
+| Then | `the {string} option should be disabled` | 1 | 78 |
+| Given | `the browser offers no secure-origin cryptography` | 1 | 7 |
+| Given | `the interface is in German` | 1 | 63 |
+| Then | `the interface should display in English` | 1 | 59 |
+| Then | `the interface should display in German` | 1 | 55 |
+| Then | `the settings gear icon should still be visible` | 1 | 15 |
+| Then | `the settings panel should close` | 4 | 31 |
 
 ## sheet-toolbar.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I scroll to the bottom of the page` | 1 | 33 |
-| Then | `the Edit Layout button should be in view` | 1 | 62 |
-| Then | `the Edit Layout button should not overlap the character sheet` | 1 | 51 |
-| Then | `the version navigator should be in view` | 1 | 58 |
-| Then | `the version navigator should not overlap the character sheet` | 1 | 44 |
+| When | `I scroll to the bottom of the page` | 1 | 3 |
+| Then | `the Edit Layout button should be in view` | 1 | 25 |
+| Then | `the Edit Layout button should not overlap the character sheet` | 1 | 14 |
+| Then | `the version navigator should be in view` | 1 | 21 |
+| Then | `the version navigator should not overlap the character sheet` | 1 | 7 |
 
 ## stat-pool-editing.steps.ts
 
@@ -618,9 +618,9 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I open the character sheet and watch its requests` | 2 | 5 |
-| Then | `nothing should have been requested from another site` | 1 | 15 |
-| Then | `the {string} and {string} fonts should be loaded` | 1 | 23 |
+| When | `I open the character sheet and watch its requests` | 2 | 3 |
+| Then | `nothing should have been requested from another site` | 1 | 7 |
+| Then | `the {string} and {string} fonts should be loaded` | 1 | 11 |
 
 ## unreadable-character.steps.ts
 

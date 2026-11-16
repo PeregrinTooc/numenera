@@ -66,7 +66,7 @@ Then("the layout should return to the default arrangement", async function (this
 });
 
 Then("the {string} option should be enabled", async function (this: CustomWorld, option: string) {
-  await this.settings.expectOptionEnabled(option);
+  await this.settings.expectOptionShown(option);
 });
 
 Given("I have the default layout", async function (this: CustomWorld) {
