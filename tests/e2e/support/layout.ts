@@ -1,10 +1,48 @@
+import type { LayoutEditDriver } from "./layoutEditDriver.js";
 import { TouchInput, type DropPlace, type HeldDrag, type SectionInput } from "./sectionInput.js";
 
 export class LayoutDsl {
   private heldDrag?: HeldDrag;
   private scrollBeforeSwipe?: number;
 
-  constructor(private input: SectionInput) {}
+  constructor(
+    private input: SectionInput,
+    private editMode: LayoutEditDriver
+  ) {}
+
+  async toggleEditMode(): Promise<void> {
+    await this.editMode.toggleEditMode();
+  }
+
+  async enterEditMode(): Promise<void> {
+    await this.editMode.toggleEditMode();
+    await this.editMode.expectEditModeActive();
+  }
+
+  async expectEditModeActive(): Promise<void> {
+    await this.editMode.expectEditModeActive();
+  }
+
+  async expectEditModeInactive(): Promise<void> {
+    await this.editMode.expectEditModeInactive();
+  }
+
+  async expectSectionsMarkedRearrangeable(): Promise<void> {
+    await this.editMode.expectSectionsMarkedRearrangeable();
+  }
+
+  async expectButton(name: string): Promise<void> {
+    if (name !== "Edit Layout") throw new Error(`Unknown button: ${name}`);
+    await this.editMode.expectEditButtonVisible();
+  }
+
+  async expectEditButtonTouchFriendly(): Promise<void> {
+    await this.editMode.expectEditButtonTouchFriendly();
+  }
+
+  async expectDefaultArrangement(): Promise<void> {
+    await this.editMode.expectNoSavedLayout();
+  }
 
   async moveSection(name: string, onto: DropPlace): Promise<void> {
     await this.input.dragSection(name, onto);

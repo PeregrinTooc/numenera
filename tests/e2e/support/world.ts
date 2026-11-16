@@ -9,6 +9,7 @@ import type { CardEditorDsl } from "./cardEditor.js";
 import type { ValueEditorDsl } from "./valueEditor.js";
 import type { AdditionalFieldsDsl } from "./additionalFields.js";
 import type { LayoutDsl } from "./layout.js";
+import type { SettingsDsl } from "./settings.js";
 import type { ScreenDsl } from "./screen.js";
 import type { VersionHistoryDsl } from "./versionHistory.js";
 import type { HistorySeedDsl } from "./historySeed.js";
@@ -30,6 +31,7 @@ export interface CustomWorld extends World {
   character: CharacterDsl;
   cardEditor: CardEditorDsl;
   layout: LayoutDsl;
+  settings: SettingsDsl;
   screen: ScreenDsl;
   valueEditor: ValueEditorDsl;
   additionalFields: AdditionalFieldsDsl;
@@ -66,6 +68,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   character!: CharacterDsl;
   cardEditor!: CardEditorDsl;
   layout!: LayoutDsl;
+  settings!: SettingsDsl;
   screen!: ScreenDsl;
   valueEditor!: ValueEditorDsl;
   additionalFields!: AdditionalFieldsDsl;

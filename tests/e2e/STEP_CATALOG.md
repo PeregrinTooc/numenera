@@ -417,21 +417,21 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the Edit Layout button` | 1 | 5 |
-| When | `I click the Exit Edit Layout button` | 2 | 10 |
-| When | `I click the Reset Layout button` | 1 | 15 |
-| Given | `I have customized the layout` | 8 | 91 |
-| Given | `I have the default layout` | 5 | 127 |
-| Given | `I open the settings panel` | 2 | 104 |
-| Then | `I should see layout edit mode is active` | 1 | 20 |
-| Then | `I should see the {string} button` | 1 | 67 |
-| Then | `I should see visual indicators on rearrangeable sections` | 1 | 30 |
-| Then | `it should be touch-friendly` | 1 | 78 |
-| Given | `layout edit mode is active` | 34 | 41 |
-| Then | `layout edit mode should be inactive` | 1 | 50 |
-| Then | `the {string} option should be enabled` | 1 | 118 |
-| Then | `the layout should return to the default arrangement` | 1 | 108 |
-| Then | `the visual indicators should be removed` | 1 | 60 |
+| When | `I click the Edit Layout button` | 1 | 3 |
+| When | `I click the Exit Edit Layout button` | 2 | 7 |
+| When | `I click the Reset Layout button` | 1 | 11 |
+| Given | `I have customized the layout` | 8 | 46 |
+| Given | `I have the default layout` | 5 | 71 |
+| Given | `I open the settings panel` | 2 | 59 |
+| Then | `I should see layout edit mode is active` | 1 | 15 |
+| Then | `I should see the {string} button` | 1 | 38 |
+| Then | `I should see visual indicators on rearrangeable sections` | 1 | 19 |
+| Then | `it should be touch-friendly` | 1 | 42 |
+| Given | `layout edit mode is active` | 34 | 26 |
+| Then | `layout edit mode should be inactive` | 1 | 30 |
+| Then | `the {string} option should be enabled` | 1 | 67 |
+| Then | `the layout should return to the default arrangement` | 1 | 63 |
+| Then | `the visual indicators should be removed` | 1 | 34 |
 
 ## layout-import-export.steps.ts
 
@@ -566,24 +566,24 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am viewing an old version with the version navigator visible` | 1 | 102 |
-| Given | `I am viewing the character sheet` | 1 | 5 |
-| When | `I click outside the settings panel` | 1 | 53 |
-| When | `I click the British flag icon` | 1 | 78 |
-| When | `I click the German flag icon` | 5 | 74 |
-| When | `I click the settings gear icon` | 2 | 37 |
-| Given | `I have opened the settings panel` | 9 | 49 |
-| Then | `I should be able to click the settings gear icon` | 1 | 30 |
-| Then | `I should see a {string} option` | 1 | 109 |
-| Then | `I should see a settings gear icon in the header` | 1 | 22 |
-| Then | `I should see the settings panel` | 2 | 41 |
-| Then | `the {string} option should be disabled` | 1 | 115 |
-| Given | `the browser offers no secure-origin cryptography` | 1 | 10 |
-| Given | `the interface is in German` | 1 | 92 |
-| Then | `the interface should display in English` | 1 | 87 |
-| Then | `the interface should display in German` | 1 | 82 |
-| Then | `the settings gear icon should still be visible` | 1 | 26 |
-| Then | `the settings panel should close` | 4 | 45 |
+| Given | `I am viewing an old version with the version navigator visible` | 1 | 101 |
+| Given | `I am viewing the character sheet` | 1 | 4 |
+| When | `I click outside the settings panel` | 1 | 52 |
+| When | `I click the British flag icon` | 1 | 77 |
+| When | `I click the German flag icon` | 5 | 73 |
+| When | `I click the settings gear icon` | 2 | 36 |
+| Given | `I have opened the settings panel` | 9 | 48 |
+| Then | `I should be able to click the settings gear icon` | 1 | 29 |
+| Then | `I should see a {string} option` | 1 | 108 |
+| Then | `I should see a settings gear icon in the header` | 1 | 21 |
+| Then | `I should see the settings panel` | 2 | 40 |
+| Then | `the {string} option should be disabled` | 1 | 114 |
+| Given | `the browser offers no secure-origin cryptography` | 1 | 9 |
+| Given | `the interface is in German` | 1 | 91 |
+| Then | `the interface should display in English` | 1 | 86 |
+| Then | `the interface should display in German` | 1 | 81 |
+| Then | `the settings gear icon should still be visible` | 1 | 25 |
+| Then | `the settings panel should close` | 4 | 44 |
 
 ## sheet-toolbar.steps.ts
 

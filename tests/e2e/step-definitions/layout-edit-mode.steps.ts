@@ -1,92 +1,47 @@
 import { Given, When, Then } from "@cucumber/cucumber";
-import { expect } from "@playwright/test";
-import { CustomWorld } from "../support/world";
-import { openSettingsPanel } from "../support/settings.js";
+import type { CustomWorld } from "../support/world";
 
 When("I click the Edit Layout button", async function (this: CustomWorld) {
-  const page = this.page;
-  await page.click('[data-testid="edit-layout-button"]');
+  await this.layout.toggleEditMode();
 });
 
 When("I click the Exit Edit Layout button", async function (this: CustomWorld) {
-  const page = this.page;
-  await page.click('[data-testid="edit-layout-button"]');
+  await this.layout.toggleEditMode();
 });
 
 When("I click the Reset Layout button", async function (this: CustomWorld) {
-  const page = this.page;
-  await page.click('[data-testid="settings-reset-layout"]');
+  await this.settings.resetLayout();
 });
 
 Then("I should see layout edit mode is active", async function (this: CustomWorld) {
-  const page = this.page;
-
-  const editButton = page.locator('[data-testid="edit-layout-button"]');
-  await expect(editButton).toHaveClass(/edit-layout-button--active/);
-
-  const container = page.locator(".parchment-container");
-  await expect(container).toHaveClass(/layout-edit-mode/);
+  await this.layout.expectEditModeActive();
 });
 
 Then(
   "I should see visual indicators on rearrangeable sections",
   async function (this: CustomWorld) {
-    const page = this.page;
-
-    const draggableSections = page.locator(".layout-draggable");
-    const count = await draggableSections.count();
-    expect(count).toBeGreaterThan(0);
+    await this.layout.expectSectionsMarkedRearrangeable();
   }
 );
 
 Given("layout edit mode is active", async function (this: CustomWorld) {
-  const page = this.page;
-
-  await page.click('[data-testid="edit-layout-button"]');
-
-  const container = page.locator(".parchment-container");
-  await expect(container).toHaveClass(/layout-edit-mode/);
+  await this.layout.enterEditMode();
 });
 
 Then("layout edit mode should be inactive", async function (this: CustomWorld) {
-  const page = this.page;
-
-  const editButton = page.locator('[data-testid="edit-layout-button"]');
-  await expect(editButton).not.toHaveClass(/edit-layout-button--active/);
-
-  const container = page.locator(".parchment-container");
-  await expect(container).not.toHaveClass(/layout-edit-mode/);
+  await this.layout.expectEditModeInactive();
 });
 
 Then("the visual indicators should be removed", async function (this: CustomWorld) {
-  const page = this.page;
-
-  const container = page.locator(".parchment-container");
-  await expect(container).not.toHaveClass(/layout-edit-mode/);
+  await this.layout.expectEditModeInactive();
 });
 
 Then("I should see the {string} button", async function (this: CustomWorld, buttonText: string) {
-  const page = this.page;
-
-  if (buttonText === "Edit Layout") {
-    const editButton = page.locator('[data-testid="edit-layout-button"]');
-    await expect(editButton).toBeVisible();
-  } else {
-    throw new Error(`Unknown button: ${buttonText}`);
-  }
+  await this.layout.expectButton(buttonText);
 });
 
 Then("it should be touch-friendly", async function (this: CustomWorld) {
-  const page = this.page;
-
-  const editButton = page.locator('[data-testid="edit-layout-button"]');
-  const boundingBox = await editButton.boundingBox();
-
-  expect(boundingBox).not.toBeNull();
-  if (boundingBox) {
-    expect(boundingBox.width).toBeGreaterThanOrEqual(44);
-    expect(boundingBox.height).toBeGreaterThanOrEqual(44);
-  }
+  await this.layout.expectEditButtonTouchFriendly();
 });
 
 Given("I have customized the layout", async function (this: CustomWorld) {
@@ -103,26 +58,15 @@ Given("I have customized the layout", async function (this: CustomWorld) {
 });
 
 Given("I open the settings panel", async function (this: CustomWorld) {
-  await openSettingsPanel(this);
+  await this.settings.openPanel();
 });
 
 Then("the layout should return to the default arrangement", async function (this: CustomWorld) {
-  const page = this.page;
-
-  const layoutData = await page.evaluate(() => {
-    return localStorage.getItem("numenera-layout");
-  });
-
-  expect(layoutData).toBeNull();
+  await this.layout.expectDefaultArrangement();
 });
 
 Then("the {string} option should be enabled", async function (this: CustomWorld, option: string) {
-  const page = this.page;
-
-  if (option === "Reset Layout") {
-    const resetButton = page.locator('[data-testid="settings-reset-layout"]');
-    await expect(resetButton).toBeVisible();
-  }
+  await this.settings.expectOptionEnabled(option);
 });
 
 Given("I have the default layout", async function (this: CustomWorld) {

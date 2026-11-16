@@ -1,7 +1,6 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import type { CustomWorld } from "../support/world";
-import { openSettingsPanel } from "../support/settings.js";
 
 Given("I am viewing the character sheet", async function (this: CustomWorld) {
   await this.page.goto(this.getBaseUrl());
@@ -48,7 +47,7 @@ Then("the settings panel should close", async function (this: CustomWorld) {
 });
 
 Given("I have opened the settings panel", async function (this: CustomWorld) {
-  await openSettingsPanel(this);
+  await this.settings.openPanel();
 });
 
 When("I click outside the settings panel", async function (this: CustomWorld) {

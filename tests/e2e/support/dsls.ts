@@ -12,6 +12,9 @@ import { PlaywrightValueEditorDriver } from "./valueEditorDriver.js";
 import { AdditionalFieldsDsl } from "./additionalFields.js";
 import { PlaywrightInlineFieldsDriver } from "./inlineFieldsDriver.js";
 import { LayoutDsl } from "./layout.js";
+import { PlaywrightLayoutEditDriver } from "./layoutEditDriver.js";
+import { SettingsDsl } from "./settings.js";
+import { PlaywrightSettingsDriver } from "./settingsDriver.js";
 import { MouseInput, TouchInput } from "./sectionInput.js";
 import { ScreenDsl } from "./screen.js";
 import { PlaywrightViewportDriver } from "./viewportDriver.js";
@@ -36,6 +39,7 @@ export interface Dsls {
   cardEditor: CardEditorDsl;
   screen: ScreenDsl;
   layout: LayoutDsl;
+  settings: SettingsDsl;
   historySeed: HistorySeedDsl;
   history: VersionHistoryDsl;
   comparison: ComparisonDsl;
@@ -74,8 +78,10 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
     layout: new LayoutDsl(
       device.sectionInput === "touch"
         ? new TouchInput(page, viewport, clock)
-        : new MouseInput(page, viewport)
+        : new MouseInput(page, viewport),
+      new PlaywrightLayoutEditDriver(page)
     ),
+    settings: new SettingsDsl(new PlaywrightSettingsDriver(page)),
     historySeed,
     history,
     comparison: new ComparisonDsl(
