@@ -1,161 +1,66 @@
 import { Then, When } from "@cucumber/cucumber";
-import { expect, type Locator } from "@playwright/test";
 import type { CustomWorld } from "../support/world.js";
-import { sectionLocator } from "../support/sections.js";
-
-// Column counts come from the browser's computed grid: container queries
-// decide them, so only a real layout can tell. Polled, because a section that
-// changed width (resize, pairing) re-lays out a frame later.
-async function expectColumns(grid: Locator, columns: number): Promise<void> {
-  await expect
-    .poll(() =>
-      grid.evaluate(
-        (el) => window.getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length
-      )
-    )
-    .toBe(columns);
-}
 
 Then(
   "the {string} section should show its cards in {int} column\\(s)",
   async function (this: CustomWorld, section: string, columns: number) {
-    await expectColumns(
-      sectionLocator(this.page, section).locator(".section-card-grid").first(),
-      columns
-    );
+    await this.sectionColumns.expectShownInColumns(section, columns);
   }
 );
 
 Then(
   "the {word} pane should show its cyphers in {int} column\\(s)",
   async function (this: CustomWorld, side: string, columns: number) {
-    await expectColumns(
-      this.page
-        .getByTestId(`compare-pane-${side}`)
-        .getByTestId("cyphers-section")
-        .locator(".section-card-grid"),
-      columns
-    );
+    await this.sectionColumns.expectComparePaneCyphersInColumns(side, columns);
   }
 );
 
 When(
   "I switch the {string} section to {int} column\\(s)",
   async function (this: CustomWorld, section: string, columns: number) {
-    const button = sectionLocator(this.page, section).getByTestId("section-columns-button");
-    const pressed = columns === 2 ? "true" : "false";
-    if ((await button.getAttribute("aria-pressed")) !== pressed) {
-      await button.click();
-    }
-    await expect(button).toHaveAttribute("aria-pressed", pressed);
+    await this.sectionColumns.switchTo(section, columns);
   }
 );
 
-// Hidden by the container query counts as not offered
 Then(
   "the {string} section should offer a column switch",
   async function (this: CustomWorld, section: string) {
-    await expect(
-      sectionLocator(this.page, section).getByTestId("section-columns-button")
-    ).toBeVisible();
+    await this.sectionColumns.expectSwitchOffered(section);
   }
 );
 
 Then(
   "the {string} section should offer no column switch",
   async function (this: CustomWorld, section: string) {
-    await expect(
-      sectionLocator(this.page, section).getByTestId("section-columns-button")
-    ).toBeHidden();
+    await this.sectionColumns.expectNoSwitchOffered(section);
   }
 );
-
-// The badge sits in the heading row, before the heading: entirely to its
-// left, with its top within the heading's height
-async function expectBadgeLeftOfHeading(
-  world: CustomWorld,
-  badgeTestId: string,
-  section: string
-): Promise<void> {
-  const badge = await world.page.getByTestId(badgeTestId).boundingBox();
-  const heading = await sectionLocator(world.page, section).locator("h2").first().boundingBox();
-  if (!badge || !heading) throw new Error(`No box for ${badgeTestId} or the ${section} heading`);
-  expect(badge.x + badge.width).toBeLessThanOrEqual(heading.x);
-  expect(badge.y).toBeLessThan(heading.y + heading.height);
-}
 
 Then(
   "the max cyphers badge should be left of the {string} heading",
   async function (this: CustomWorld, section: string) {
-    await expectBadgeLeftOfHeading(this, "max-cyphers-badge", section);
+    await this.sectionColumns.expectMaxCyphersBadgeLeftOfHeading(section);
   }
 );
 
 Then(
   "the shins badge should be left of the {string} heading",
   async function (this: CustomWorld, section: string) {
-    await expectBadgeLeftOfHeading(this, "shins-badge", section);
+    await this.sectionColumns.expectShinsBadgeLeftOfHeading(section);
   }
 );
 
 Then("the armor badge should not cover the add attack button", async function (this: CustomWorld) {
-  const badge = await this.page.getByTestId("armor-badge").boundingBox();
-  const button = await this.page.getByTestId("add-attack-button").boundingBox();
-  if (!badge || !button) throw new Error("No box for the armor badge or the add attack button");
-  const apart =
-    badge.x >= button.x + button.width ||
-    button.x >= badge.x + badge.width ||
-    badge.y >= button.y + button.height ||
-    button.y >= badge.y + badge.height;
-  expect(apart).toBe(true);
+  await this.sectionColumns.expectArmorBadgeClearOfAddAttack();
 });
 
-// Every item of the heading row ends within the frame's content box
 Then(
   "the {string} heading row should stay inside its frame",
   async function (this: CustomWorld, section: string) {
-    const overflow = await sectionLocator(this.page, section)
-      .locator(".section-box-heading-row")
-      .evaluate((row) => {
-        const frame = row.closest(".section-box");
-        if (!frame) throw new Error("heading row outside a frame");
-        const style = window.getComputedStyle(frame);
-        const contentRight =
-          frame.getBoundingClientRect().right -
-          parseFloat(style.borderRightWidth) -
-          parseFloat(style.paddingRight);
-        return Math.max(
-          0,
-          ...Array.from(row.children, (item) => item.getBoundingClientRect().right - contentRight)
-        );
-      });
-    expect(overflow).toBeLessThanOrEqual(0.5);
+    await this.sectionColumns.expectHeadingRowInsideFrame(section);
   }
 );
 
-// Inside the card's border and clear of its edit button
 Then("every ability card's badges should stay inside the card", async function (this: CustomWorld) {
-  const cards = await sectionLocator(this.page, "Abilities").locator(".ability-item-card").all();
-  expect(cards.length).toBeGreaterThan(0);
-  for (const card of cards) {
-    const misplaced = await card.evaluate((el) => {
-      const inner =
-        el.getBoundingClientRect().right - parseFloat(window.getComputedStyle(el).borderRightWidth);
-      const edit = el
-        .querySelector("[data-testid^='ability-edit-button']")
-        ?.getBoundingClientRect();
-      return Array.from(el.querySelectorAll(".ability-badge"))
-        .map((badge) => badge.getBoundingClientRect())
-        .filter(
-          (b) =>
-            b.right > inner + 0.5 ||
-            (edit !== undefined &&
-              b.left < edit.right &&
-              edit.left < b.right &&
-              b.top < edit.bottom &&
-              edit.top < b.bottom)
-        ).length;
-    });
-    expect(misplaced).toBe(0);
-  }
+  await this.sectionColumns.expectAbilityBadgesInsideCards();
 });

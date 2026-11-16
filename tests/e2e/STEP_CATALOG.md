@@ -363,13 +363,13 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `{string} and {string} are in a grid` | 4 | 58 |
-| Then | `{string} should be in its own row` | 9 | 77 |
-| When | `I drag the {string} section onto the {zone} of the {string} section` | 10 | 7 |
-| Then | `the {string} section should be the last section` | 2 | 48 |
-| Then | `the grid should show {string} on the left and {string} on the right` | 7 | 14 |
-| Then | `the layout should still be the default layout` | 3 | 32 |
-| Then | `the saved layout should pair {string} on the left and {string} on the right` | 1 | 40 |
+| Given | `{string} and {string} are in a grid` | 4 | 36 |
+| Then | `{string} should be in its own row` | 9 | 43 |
+| When | `I drag the {string} section onto the {zone} of the {string} section` | 10 | 4 |
+| Then | `the {string} section should be the last section` | 2 | 29 |
+| Then | `the grid should show {string} on the left and {string} on the right` | 7 | 11 |
+| Then | `the layout should still be the default layout` | 3 | 18 |
+| Then | `the saved layout should pair {string} on the left and {string} on the right` | 1 | 22 |
 
 ## i18n.steps.ts
 
@@ -437,24 +437,24 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I choose to {string}` | 5 | 122 |
-| When | `I dismiss the layout choice prompt with the Escape key` | 1 | 100 |
-| Given | `I have a character file with a different layout` | 5 | 29 |
-| Given | `I have a character file with the default layout` | 1 | 33 |
-| Given | `I have a character file with the default layout that sets the {string} section to {int} column(s)` | 1 | 41 |
-| Given | `I have a character file with the default layout that sets the {string} section to {int} column(s) and an unknown section to {int} column(s)` | 2 | 51 |
-| Given | `I have a character file without a layout` | 1 | 37 |
-| Given | `I have saved the {string} section as {int} column(s) and an unknown section as {int} column(s)` | 1 | 70 |
-| Given | `I have set the {string} section to {int} column(s)` | 2 | 61 |
-| When | `I import the character file` | 10 | 80 |
-| Then | `I should not see a layout choice prompt` | 5 | 106 |
-| Then | `I should see a layout choice prompt` | 1 | 96 |
-| Then | `I should see options to {string} or {string}` | 1 | 110 |
-| Then | `the {string} option should have focus` | 1 | 118 |
-| Then | `the {string} section should be set to {int} column(s)` | 3 | 130 |
-| Then | `the exported file should contain the layout configuration` | 1 | 25 |
-| Then | `the import note should read {string}` | 1 | 92 |
-| Then | `the imported character should be shown` | 5 | 126 |
+| When | `I choose to {string}` | 5 | 82 |
+| When | `I dismiss the layout choice prompt with the Escape key` | 1 | 63 |
+| Given | `I have a character file with a different layout` | 5 | 7 |
+| Given | `I have a character file with the default layout` | 1 | 11 |
+| Given | `I have a character file with the default layout that sets the {string} section to {int} column(s)` | 1 | 19 |
+| Given | `I have a character file with the default layout that sets the {string} section to {int} column(s) and an unknown section to {int} column(s)` | 2 | 26 |
+| Given | `I have a character file without a layout` | 1 | 15 |
+| Given | `I have saved the {string} section as {int} column(s) and an unknown section as {int} column(s)` | 1 | 44 |
+| Given | `I have set the {string} section to {int} column(s)` | 2 | 37 |
+| When | `I import the character file` | 10 | 51 |
+| Then | `I should not see a layout choice prompt` | 5 | 67 |
+| Then | `I should see a layout choice prompt` | 1 | 59 |
+| Then | `I should see options to {string} or {string}` | 1 | 71 |
+| Then | `the {string} option should have focus` | 1 | 78 |
+| Then | `the {string} section should be set to {int} column(s)` | 3 | 90 |
+| Then | `the exported file should contain the layout configuration` | 1 | 3 |
+| Then | `the import note should read {string}` | 1 | 55 |
+| Then | `the imported character should be shown` | 5 | 86 |
 
 ## recovery-damage-track.steps.ts
 
@@ -499,16 +499,16 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `every ability card's badges should stay inside the card` | 1 | 137 |
-| When | `I switch the {string} section to {int} column\(s)` | 1 | 41 |
-| Then | `the {string} heading row should stay inside its frame` | 1 | 114 |
-| Then | `the {string} section should offer a column switch` | 1 | 55 |
-| Then | `the {string} section should offer no column switch` | 3 | 63 |
-| Then | `the {string} section should show its cards in {int} column\(s)` | 8 | 18 |
-| Then | `the {word} pane should show its cyphers in {int} column\(s)` | 1 | 28 |
-| Then | `the armor badge should not cover the add attack button` | 1 | 100 |
-| Then | `the max cyphers badge should be left of the {string} heading` | 1 | 86 |
-| Then | `the shins badge should be left of the {string} heading` | 1 | 93 |
+| Then | `every ability card's badges should stay inside the card` | 1 | 63 |
+| When | `I switch the {string} section to {int} column\(s)` | 1 | 17 |
+| Then | `the {string} heading row should stay inside its frame` | 1 | 56 |
+| Then | `the {string} section should offer a column switch` | 1 | 24 |
+| Then | `the {string} section should offer no column switch` | 3 | 31 |
+| Then | `the {string} section should show its cards in {int} column\(s)` | 8 | 3 |
+| Then | `the {word} pane should show its cyphers in {int} column\(s)` | 1 | 10 |
+| Then | `the armor badge should not cover the add attack button` | 1 | 52 |
+| Then | `the max cyphers badge should be left of the {string} heading` | 1 | 38 |
+| Then | `the shins badge should be left of the {string} heading` | 1 | 45 |
 
 ## section-drop-preview.steps.ts
 
