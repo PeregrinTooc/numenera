@@ -20,6 +20,8 @@ import type { GridDsl } from "./grid.js";
 import type { LayoutImportDsl } from "./layoutImport.js";
 import type { SaveIndicatorDsl } from "./saveIndicator.js";
 import type { LanguageDsl } from "./language.js";
+import type { HealthDsl } from "./health.js";
+import type { AbilitiesDsl } from "./abilities.js";
 import { BASE_URL } from "./serverUrl.js";
 
 setDefaultTimeout(30000);
@@ -48,6 +50,8 @@ export interface CustomWorld extends World {
   layoutImport: LayoutImportDsl;
   saveIndicator: SaveIndicatorDsl;
   language: LanguageDsl;
+  health: HealthDsl;
+  abilities: AbilitiesDsl;
   // card-reordering.steps.ts
   draggedCypherName?: string;
   // third-party-requests.steps.ts
@@ -79,6 +83,8 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   layoutImport!: LayoutImportDsl;
   saveIndicator!: SaveIndicatorDsl;
   language!: LanguageDsl;
+  health!: HealthDsl;
+  abilities!: AbilitiesDsl;
   // card-reordering.steps.ts
   draggedCypherName?: string;
   requestedUrls?: string[];

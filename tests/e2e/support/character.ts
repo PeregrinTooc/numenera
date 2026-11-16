@@ -15,7 +15,7 @@ import { statLabel } from "./valueEditor.js";
 import type { ValueEditorDriver } from "./valueEditorDriver.js";
 import type { CardTheme, SheetDriver } from "./sheetDriver.js";
 
-const NUMERIC_PROPERTIES = ["damage", "modifier"];
+const NUMERIC_PROPERTIES = ["damage", "modifier", "cost"];
 
 function cardWith(name: string, properties: Record<string, string>): Record<string, unknown> {
   const card: Record<string, unknown> = { name };

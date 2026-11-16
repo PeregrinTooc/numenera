@@ -38,6 +38,10 @@ import { SaveIndicatorDsl } from "./saveIndicator.js";
 import { PlaywrightSaveIndicatorDriver } from "./saveIndicatorDriver.js";
 import { LanguageDsl } from "./language.js";
 import { PlaywrightLanguageDriver } from "./languageDriver.js";
+import { HealthDsl } from "./health.js";
+import { PlaywrightHealthDriver } from "./healthDriver.js";
+import { AbilitiesDsl } from "./abilities.js";
+import { PlaywrightAbilitiesDriver } from "./abilitiesDriver.js";
 import { PlaywrightClockDriver, type ClockDriver } from "./clockDriver.js";
 
 export interface Dsls {
@@ -61,6 +65,8 @@ export interface Dsls {
   layoutImport: LayoutImportDsl;
   saveIndicator: SaveIndicatorDsl;
   language: LanguageDsl;
+  health: HealthDsl;
+  abilities: AbilitiesDsl;
 }
 
 /** The single place where the DSLs and their drivers are wired for one scenario's page. */
@@ -124,5 +130,7 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
     layoutImport: new LayoutImportDsl(new PlaywrightLayoutImportDriver(page, clock)),
     saveIndicator: new SaveIndicatorDsl(new PlaywrightSaveIndicatorDriver(page), character, clock),
     language: new LanguageDsl(new PlaywrightLanguageDriver(page)),
+    health: new HealthDsl(new PlaywrightHealthDriver(page), setup),
+    abilities: new AbilitiesDsl(new PlaywrightAbilitiesDriver(page), character, setup),
   };
 }
