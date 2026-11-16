@@ -17,12 +17,12 @@ Feature: Section Re-arrangement
     Then layout edit mode should be inactive
     And the visual indicators should be removed
 
-  Scenario: Exit layout edit mode saves layout automatically
+  Scenario: Leaving layout edit mode keeps the new section order
     Given layout edit mode is active
-    And I have reordered sections
+    And I drag the "Cyphers" section onto the top edge of the "Abilities" section
     When I click the Exit Edit Layout button
-    Then the layout should be saved
-    And the sections should remain in the new order
+    And I reload the page
+    Then the "Cyphers" section should appear before the "Abilities" section
 
   Scenario: Reorder sections by dragging
     Given layout edit mode is active

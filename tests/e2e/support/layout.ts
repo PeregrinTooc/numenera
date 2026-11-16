@@ -11,19 +11,6 @@ import { TouchInput, type DropPlace, type HeldDrag, type SectionInput } from "./
 import { sectionId } from "./sections.js";
 import type { SetupDsl } from "./setup.js";
 
-const REORDERED_LAYOUT: SectionId[] = [
-  "basicInfo",
-  "stats",
-  "recoveryDamage",
-  "cyphers",
-  "abilities",
-  "specialAbilities",
-  "attacks",
-  "items",
-  "background",
-  "notes",
-];
-
 function singles(ids: readonly SectionId[]): LayoutItem[] {
   return ids.map((id): LayoutItem => ({ type: "single", id }));
 }
@@ -80,19 +67,11 @@ export class LayoutDsl {
     await this.editMode.expectNoSavedLayout();
   }
 
-  async hasReorderedSections(): Promise<void> {
-    await this.editMode.saveLayout(singles(REORDERED_LAYOUT));
-  }
-
   async hasSectionOnTopInEditMode(name: string): Promise<void> {
     const top = sectionId(name);
     const rearrangeable = GRID_ELIGIBLE_SECTIONS.filter((id) => id !== top);
     await this.setup.layout(singles([...SINGLE_ONLY_SECTIONS, top, ...rearrangeable]));
     await this.enterEditMode();
-  }
-
-  async expectLayoutSaved(): Promise<void> {
-    await this.editMode.expectLayoutSaved();
   }
 
   async expectSectionBefore(first: string, second: string): Promise<void> {

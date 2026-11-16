@@ -1,18 +1,6 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { CustomWorld } from "../support/world";
 
-Given("I have reordered sections", async function (this: CustomWorld) {
-  await this.layout.hasReorderedSections();
-});
-
-Then("the layout should be saved", async function (this: CustomWorld) {
-  await this.layout.expectLayoutSaved();
-});
-
-Then("the sections should remain in the new order", async function (this: CustomWorld) {
-  await this.layout.expectLayoutSaved();
-});
-
 Then(
   "the {string} section should appear before the {string} section",
   async function (this: CustomWorld, first: string, second: string) {

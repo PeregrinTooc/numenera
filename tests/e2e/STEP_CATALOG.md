@@ -26,7 +26,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **461** in 42 files
+- Step definitions: **458** in 42 files
 - Feature step lines: **1809**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
@@ -62,7 +62,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 7 | 0 |
 | [section-columns.steps.ts](#sectioncolumnsstepsts) | 10 | 0 |
 | [section-drop-preview.steps.ts](#sectiondroppreviewstepsts) | 11 | 0 |
-| [section-reordering.steps.ts](#sectionreorderingstepsts) | 7 | 0 |
+| [section-reordering.steps.ts](#sectionreorderingstepsts) | 4 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
 | [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 7 | 0 |
 | [settings-gear.steps.ts](#settingsgearstepsts) | 19 | 0 |
@@ -315,7 +315,7 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I click the "New" button` | 3 | 3 |
-| When | `I reload the page` | 21 | 7 |
+| When | `I reload the page` | 22 | 7 |
 | When | `I reload the page immediately` | 1 | 11 |
 
 ## data-validation.steps.ts
@@ -362,7 +362,7 @@ pattern this script does not understand):
 | --- | --- | ---: | ---: |
 | Given | `{string} and {string} are in a grid` | 4 | 36 |
 | Then | `{string} should be in its own row` | 9 | 43 |
-| When | `I drag the {string} section onto the {zone} of the {string} section` | 10 | 4 |
+| When | `I drag the {string} section onto the {zone} of the {string} section` | 11 | 4 |
 | Then | `the {string} section should be the last section` | 2 | 29 |
 | Then | `the grid should show {string} on the left and {string} on the right` | 7 | 11 |
 | Then | `the layout should still be the default layout` | 3 | 18 |
@@ -527,13 +527,10 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I exit layout edit mode` | 2 | 29 |
-| Given | `I have moved the {string} section to the top` | 1 | 22 |
-| Given | `I have reordered sections` | 1 | 3 |
-| Then | `the {string} section should appear before the {string} section` | 19 | 15 |
-| Then | `the {string} section should still be at the top` | 1 | 33 |
-| Then | `the layout should be saved` | 1 | 7 |
-| Then | `the sections should remain in the new order` | 1 | 11 |
+| When | `I exit layout edit mode` | 2 | 17 |
+| Given | `I have moved the {string} section to the top` | 1 | 10 |
+| Then | `the {string} section should appear before the {string} section` | 20 | 3 |
+| Then | `the {string} section should still be at the top` | 1 | 21 |
 
 ## section-slide.steps.ts
 

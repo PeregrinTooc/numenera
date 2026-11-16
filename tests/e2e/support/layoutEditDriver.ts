@@ -1,6 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 import { LAYOUT_STORAGE_KEY } from "@/storage/storageConstants";
-import { SINGLE_ONLY_SECTIONS, type Layout } from "@/types/layout";
+import { SINGLE_ONLY_SECTIONS } from "@/types/layout";
 import { sectionId, sectionOrder } from "./sections.js";
 
 const EDIT_BUTTON = '[data-testid="edit-layout-button"]';
@@ -16,8 +16,6 @@ export interface LayoutEditDriver {
   expectEditButtonVisible(): Promise<void>;
   expectEditButtonTouchFriendly(): Promise<void>;
   expectNoSavedLayout(): Promise<void>;
-  expectLayoutSaved(): Promise<void>;
-  saveLayout(layout: Layout): Promise<void>;
   expectSectionBefore(first: string, second: string): Promise<void>;
   expectFirstRearrangeable(name: string): Promise<void>;
 }
@@ -56,17 +54,6 @@ export class PlaywrightLayoutEditDriver implements LayoutEditDriver {
 
   async expectNoSavedLayout(): Promise<void> {
     expect(await this.savedLayout()).toBeNull();
-  }
-
-  async expectLayoutSaved(): Promise<void> {
-    expect(await this.savedLayout()).not.toBeNull();
-  }
-
-  async saveLayout(layout: Layout): Promise<void> {
-    await this.page.evaluate(({ key, value }) => localStorage.setItem(key, value), {
-      key: LAYOUT_STORAGE_KEY,
-      value: JSON.stringify(layout),
-    });
   }
 
   async expectSectionBefore(first: string, second: string): Promise<void> {
