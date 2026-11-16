@@ -182,5 +182,3 @@ Let the gamemaster prepare cards (cyphers, artifacts...) and export them as file
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Deployment and hosting setup
 
 ---
-
-**Last Updated**: October 3, 2026
