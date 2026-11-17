@@ -36,8 +36,8 @@ Then("the save timestamp should be updated", async function (this: CustomWorld) 
   await this.saveIndicator.expectTimeChanged();
 });
 
-Then("the character should be saved only once after changes stop", function (this: CustomWorld) {
-  this.saveIndicator.expectEditsWereBatched();
+Then("the character should be saved exactly once after changes stop", function (this: CustomWorld) {
+  this.saveIndicator.expectSavedExactlyOnce();
 });
 
 Then("the save indicator should show a single timestamp", async function (this: CustomWorld) {

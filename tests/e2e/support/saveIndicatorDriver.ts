@@ -7,8 +7,7 @@ const MAX_SUBTLE_FONT_SIZE_PX = 16;
 
 declare global {
   interface Window {
-    __saveIndicatorUpdates?: number;
-    __saveIndicatorObserver?: MutationObserver;
+    __saveElapsedTimes?: number[];
   }
 }
 
@@ -24,8 +23,9 @@ export interface SaveIndicatorDriver {
   expectInsideViewport(): Promise<void>;
   expectInLowerRightCorner(): Promise<void>;
   expectSubtleStyling(): Promise<void>;
-  startCountingUpdates(): Promise<void>;
-  stopCountingUpdates(): Promise<number>;
+  startRecordingSaves(): Promise<void>;
+  /** Milliseconds of app time between starting to record and each completed save. */
+  settledSaveTimes(): Promise<number[]>;
 }
 
 export class PlaywrightSaveIndicatorDriver implements SaveIndicatorDriver {
@@ -104,26 +104,27 @@ export class PlaywrightSaveIndicatorDriver implements SaveIndicatorDriver {
     expect(parseFloat(styles.opacity)).toBeLessThanOrEqual(1);
   }
 
-  async startCountingUpdates(): Promise<void> {
-    await this.page.evaluate((selector) => {
-      const indicator = document.querySelector(selector);
-      if (!indicator) {
-        throw new Error("The save indicator is not on the page");
+  async startRecordingSaves(): Promise<void> {
+    await this.page.evaluate(() => {
+      const service = window.__autoSaveService;
+      const clock = window.__manualClock;
+      if (!service || !clock) {
+        throw new Error("The auto-save service or the manual clock is not available");
       }
-      window.__saveIndicatorUpdates = 0;
-      const observer = new MutationObserver(() => {
-        window.__saveIndicatorUpdates = (window.__saveIndicatorUpdates ?? 0) + 1;
+      const startedAt = clock.now();
+      const times: number[] = [];
+      window.__saveElapsedTimes = times;
+      service.on("save-completed", ({ timestamp }) => {
+        times.push(timestamp - startedAt);
       });
-      observer.observe(indicator, { childList: true, subtree: true, characterData: true });
-      window.__saveIndicatorObserver = observer;
-    }, INDICATOR);
+    });
   }
 
-  async stopCountingUpdates(): Promise<number> {
+  async settledSaveTimes(): Promise<number[]> {
+    await expect
+      .poll(() => this.page.evaluate(() => window.__saveElapsedTimes?.length ?? 0))
+      .toBeGreaterThan(0);
     await waitForSaveComplete(this.page);
-    return this.page.evaluate(() => {
-      window.__saveIndicatorObserver?.disconnect();
-      return window.__saveIndicatorUpdates ?? 0;
-    });
+    return this.page.evaluate(() => window.__saveElapsedTimes ?? []);
   }
 }

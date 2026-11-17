@@ -135,7 +135,7 @@ pattern this script does not understand):
 | When | `I rapidly edit the character name multiple times` | 1 | 15 |
 | When | `I wait for {int} second(s)` | 1 | 11 |
 | Given | `the character sheet is displayed` | 6 | 3 |
-| Then | `the character should be saved only once after changes stop` | 1 | 38 |
+| Then | `the character should be saved exactly once after changes stop` | 1 | 38 |
 | Then | `the save indicator should be in the lower-right corner` | 1 | 50 |
 | Then | `the save indicator should be visible` | 2 | 19 |
 | Then | `the save indicator should contain {string}` | 3 | 27 |

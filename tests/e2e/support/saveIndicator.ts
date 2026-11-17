@@ -8,7 +8,7 @@ const RAPID_EDITS = 5;
 
 export class SaveIndicatorDsl {
   private notedTime?: string;
-  private updates = 0;
+  private saveTimes: number[] = [];
 
   constructor(
     private indicator: SaveIndicatorDriver,
@@ -25,12 +25,12 @@ export class SaveIndicatorDsl {
   }
 
   async renamesCharacterRapidly(): Promise<void> {
-    await this.indicator.startCountingUpdates();
+    await this.indicator.startRecordingSaves();
     for (let edit = 1; edit <= RAPID_EDITS; edit++) {
       await this.character.changeBasicInfoWithoutWaitingForSave("name", `Hero ${edit}`);
     }
-    await this.clock.advance(2 * AUTO_SAVE_DEBOUNCE_MS);
-    this.updates = await this.indicator.stopCountingUpdates();
+    await this.clock.advance(AUTO_SAVE_DEBOUNCE_MS);
+    this.saveTimes = await this.indicator.settledSaveTimes();
   }
 
   async expectVisible(): Promise<void> {
@@ -69,9 +69,8 @@ export class SaveIndicatorDsl {
     expect(await this.indicator.text()).not.toBe(this.notedTime);
   }
 
-  expectEditsWereBatched(): void {
-    expect(this.updates).toBeGreaterThanOrEqual(1);
-    expect(this.updates).toBeLessThanOrEqual(RAPID_EDITS);
+  expectSavedExactlyOnce(): void {
+    expect(this.saveTimes).toEqual([AUTO_SAVE_DEBOUNCE_MS]);
   }
 
   async expectInLowerRightCorner(): Promise<void> {

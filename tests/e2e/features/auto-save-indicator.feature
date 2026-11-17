@@ -24,7 +24,7 @@ Feature: Auto-Save Indicator
     Scenario: Save indicator is debounced
         Given the character sheet is displayed
         When I rapidly edit the character name multiple times
-        Then the character should be saved only once after changes stop
+        Then the character should be saved exactly once after changes stop
         And the save indicator should show a single timestamp
 
     Scenario: Save indicator persists across sections
