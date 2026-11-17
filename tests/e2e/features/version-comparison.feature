@@ -161,6 +161,15 @@ Feature: Version Comparison View
 
     # Comparison view is unavailable below 768px by design (isPhoneViewport); phone behaviour is covered by "Comparison view is unavailable on phone-width viewports".
     @not-phone
+    Scenario: A pane says so when background and notes are empty
+        Given comparison view is switched on in settings
+        And my history has a version in which I cleared my background and notes
+        And the language is set to "de"
+        And I am viewing the comparison view
+        Then the right pane shows the background "Kein Hintergrund"
+        And the right pane shows the notes "Keine Notizen"
+
+    @not-phone
     Scenario: Unchanged fields and cards show no highlight
         Given comparison view is switched on in settings
         And my character has a history of 2 versions

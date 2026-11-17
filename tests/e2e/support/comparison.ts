@@ -93,6 +93,14 @@ export class ComparisonDsl {
     await this.driver.expectCypherAbsent(pane, name);
   }
 
+  async expectShowsBackground(pane: Pane, text: string): Promise<void> {
+    await this.driver.expectTextField(pane, "background", text);
+  }
+
+  async expectShowsNotes(pane: Pane, text: string): Promise<void> {
+    await this.driver.expectTextField(pane, "notes", text);
+  }
+
   async expectReadOnly(): Promise<void> {
     await this.driver.expectReadOnly();
   }

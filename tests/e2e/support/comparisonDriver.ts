@@ -4,6 +4,7 @@ import { englishText } from "./i18nKeys.js";
 import type { TestStorageHelper } from "./testStorageHelper.js";
 
 export type Pane = "left" | "right";
+export type TextField = "background" | "notes";
 export type Highlight = "yellow" | "green" | "red";
 
 /** The side-by-side view of two versions, with the differences highlighted. */
@@ -25,6 +26,7 @@ export interface ComparisonDriver {
   expectBasicInfoNotHighlighted(pane: Pane, field: string): Promise<void>;
   expectCypherHighlighted(pane: Pane, name: string, colour: Highlight): Promise<void>;
   expectCypherAbsent(pane: Pane, name: string): Promise<void>;
+  expectTextField(pane: Pane, field: TextField, text: string): Promise<void>;
   expectReadOnly(): Promise<void>;
 }
 
@@ -151,6 +153,10 @@ export class PlaywrightComparisonDriver implements ComparisonDriver {
 
   async expectCypherAbsent(pane: Pane, name: string): Promise<void> {
     await expect(this.cypher(pane, name)).toHaveCount(0);
+  }
+
+  async expectTextField(pane: Pane, field: TextField, text: string): Promise<void> {
+    await expect(this.pane(pane).getByTestId(`character-${field}`)).toHaveText(text);
   }
 
   async expectReadOnly(): Promise<void> {

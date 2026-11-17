@@ -130,6 +130,20 @@ Then(
   }
 );
 
+Then(
+  "the {pane} pane shows the background {string}",
+  async function (this: CustomWorld, pane: Pane, text: string) {
+    await this.comparison.expectShowsBackground(pane, text);
+  }
+);
+
+Then(
+  "the {pane} pane shows the notes {string}",
+  async function (this: CustomWorld, pane: Pane, text: string) {
+    await this.comparison.expectShowsNotes(pane, text);
+  }
+);
+
 Then("nothing in the comparison view can be edited", async function (this: CustomWorld) {
   await this.comparison.expectReadOnly();
 });

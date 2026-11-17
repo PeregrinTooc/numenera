@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **453** in 42 files
-- Feature step lines: **1811**
+- Step definitions: **456** in 42 files
+- Feature step lines: **1817**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -72,8 +72,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [third-party-requests.steps.ts](#thirdpartyrequestsstepsts) | 3 | 0 |
 | [unreadable-character.steps.ts](#unreadablecharacterstepsts) | 10 | 0 |
 | [value-editor.steps.ts](#valueeditorstepsts) | 18 | 0 |
-| [version-comparison.steps.ts](#versioncomparisonstepsts) | 24 | 0 |
-| [version-history.steps.ts](#versionhistorystepsts) | 53 | 0 |
+| [version-comparison.steps.ts](#versioncomparisonstepsts) | 26 | 0 |
+| [version-history.steps.ts](#versionhistorystepsts) | 54 | 0 |
 | [viewport.steps.ts](#viewportstepsts) | 2 | 0 |
 
 ## ⚠️ Feature lines with no matching step definition
@@ -385,7 +385,7 @@ pattern this script does not understand):
 | Then | `the empty equipment message should be {string}` | 1 | 131 |
 | Then | `the empty oddities message should be {string}` | 1 | 124 |
 | Then | `the intellect stat should display {string}` | 1 | 68 |
-| Given | `the language is set to {string}` | 4 | 3 |
+| Given | `the language is set to {string}` | 5 | 3 |
 | Then | `the language should remain German` | 1 | 25 |
 | Then | `the load button should display {string}` | 3 | 33 |
 | Then | `the might stat should display {string}` | 1 | 54 |
@@ -657,8 +657,8 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `comparison view is still switched on in settings` | 1 | 45 |
-| Given | `comparison view is switched on in settings` | 24 | 4 |
-| Given | `I am viewing the comparison view` | 20 | 12 |
+| Given | `comparison view is switched on in settings` | 25 | 4 |
+| Given | `I am viewing the comparison view` | 21 | 12 |
 | When | `I move the {pane} pane to version {int}` | 4 | 30 |
 | When | `I restore the version in the {pane} pane` | 3 | 37 |
 | When | `I return to editing` | 2 | 41 |
@@ -666,11 +666,13 @@ pattern this script does not understand):
 | When | `I step the {pane} pane forward to the next version` | 1 | 23 |
 | When | `I switch on comparison view in settings` | 2 | 8 |
 | Then | `my history gains a version restored from version {int}` | 2 | 79 |
-| Then | `nothing in the comparison view can be edited` | 1 | 132 |
+| Then | `nothing in the comparison view can be edited` | 1 | 146 |
 | Then | `the {pane} pane can restore its version` | 1 | 71 |
 | Then | `the {pane} pane cannot restore its version` | 1 | 75 |
 | Then | `the {pane} pane does not show the cypher {string}` | 4 | 125 |
 | Then | `the {pane} pane shows my character as it was in version {int}` | 1 | 64 |
+| Then | `the {pane} pane shows the background {string}` | 1 | 132 |
+| Then | `the {pane} pane shows the notes {string}` | 1 | 139 |
 | Then | `the {pane} pane shows version {int}` | 10 | 57 |
 | Then | `the {word} is highlighted yellow in both panes` | 1 | 97 |
 | Then | `the {word} is not highlighted in either pane` | 1 | 104 |
@@ -712,12 +714,13 @@ pattern this script does not understand):
 | Then | `my character sheet shows the name it had before my edits` | 3 | 129 |
 | When | `my edits have settled into a version` | 26 | 85 |
 | When | `my edits start to be saved as a version` | 1 | 89 |
-| Given | `my history has a version in which I added the cypher {string}` | 2 | 245 |
+| Given | `my history has a version in which I added the cypher {string}` | 2 | 252 |
 | Given | `my history has a version in which I changed` | 1 | 231 |
 | Given | `my history has a version in which I changed my name to {string}, followed by one in which I changed my tier to {int}` | 1 | 238 |
-| Given | `my history has a version in which I changed the effect of the cypher {string}` | 1 | 259 |
-| Given | `my history has a version in which I removed the cypher {string}` | 1 | 252 |
-| Given | `my history has a version in which I renamed the cypher {string} to {string}` | 1 | 266 |
+| Given | `my history has a version in which I changed the effect of the cypher {string}` | 1 | 266 |
+| Given | `my history has a version in which I cleared my background and notes` | 1 | 245 |
+| Given | `my history has a version in which I removed the cypher {string}` | 1 | 259 |
+| Given | `my history has a version in which I renamed the cypher {string} to {string}` | 1 | 273 |
 | Given | `my history holds an old version recorded as {string} for a name change and an added ability` | 1 | 39 |
 | Given | `my history holds an old version recorded as {string} for an added cypher` | 2 | 32 |
 | Given | `my Might pool went from {int} to {int} to {int}` | 1 | 25 |

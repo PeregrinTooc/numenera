@@ -9,6 +9,7 @@ import type { VersionHistoryDriver, VersionSeed } from "./versionHistoryDriver.j
 const NAME_CHANGE = "versionHistory.changes.basicInfo.name";
 const INITIAL_STATE = "versionHistory.changes.initialState";
 const TIER_CHANGE = "versionHistory.changes.basicInfo.tier";
+const TEXT_FIELDS_CHANGE = "versionHistory.changes.textFields.combined";
 const CYPHER_CHANGE = "versionHistory.changes.collections.cypher";
 export const ORIGINAL_NAME = "Original";
 export const PORTRAIT =
@@ -126,6 +127,17 @@ export class HistorySeedDsl {
             seed: { description: TIER_CHANGE, changes: { name, tier } },
           }
     );
+  }
+
+  async hasVersionClearingBackgroundAndNotes(): Promise<void> {
+    await this.restart({});
+    await this.store(2, () => ({
+      facts: { name: ORIGINAL_NAME },
+      seed: {
+        description: TEXT_FIELDS_CHANGE,
+        changes: { textFields: { background: "", notes: "" } },
+      },
+    }));
   }
 
   async hasVersionAddingCypher(name: string): Promise<void> {

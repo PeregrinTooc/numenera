@@ -244,6 +244,13 @@ Given(
 );
 
 Given(
+  "my history has a version in which I cleared my background and notes",
+  async function (this: CustomWorld) {
+    await this.historySeed.hasVersionClearingBackgroundAndNotes();
+  }
+);
+
+Given(
   "my history has a version in which I added the cypher {string}",
   async function (this: CustomWorld, name: string) {
     await this.historySeed.hasVersionAddingCypher(name);
