@@ -26,7 +26,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **458** in 42 files
+- Step definitions: **456** in 42 files
 - Feature step lines: **1809**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
@@ -54,7 +54,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
 | [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 7 | 0 |
-| [i18n.steps.ts](#i18nstepsts) | 30 | 0 |
+| [i18n.steps.ts](#i18nstepsts) | 28 | 0 |
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 18 | 0 |
@@ -124,7 +124,7 @@ pattern this script does not understand):
 | Then | `my {textarea} cannot be edited yet and looks clickable` | 3 | 57 |
 | Then | `my {textarea} holds all {int} characters` | 2 | 24 |
 | Then | `my {textarea} reads {string}` | 14 | 17 |
-| Then | `my empty {textarea} invites me to write with {string}` | 1 | 31 |
+| Then | `my empty {textarea} invites me to write with {string}` | 3 | 31 |
 | Then | `the on-screen keyboard comes up` | 1 | 72 |
 
 ## auto-save-indicator.steps.ts
@@ -381,10 +381,8 @@ pattern this script does not understand):
 | Then | `the cyphers heading should be {string}` | 1 | 75 |
 | Then | `the empty abilities message should be {string}` | 1 | 138 |
 | Then | `the empty artifacts message should be {string}` | 1 | 117 |
-| Then | `the empty background message should be {string}` | 1 | 180 |
 | Then | `the empty cyphers message should be {string}` | 1 | 110 |
 | Then | `the empty equipment message should be {string}` | 1 | 131 |
-| Then | `the empty notes message should be {string}` | 1 | 187 |
 | Then | `the empty oddities message should be {string}` | 1 | 124 |
 | Then | `the intellect stat should display {string}` | 1 | 68 |
 | Given | `the language is set to {string}` | 4 | 3 |
@@ -394,7 +392,7 @@ pattern this script does not understand):
 | Then | `the new button should display {string}` | 3 | 40 |
 | Then | `the notes field label should be {string}` | 1 | 103 |
 | Then | `the oddities heading should be {string}` | 1 | 89 |
-| Then | `the page should declare its language as {string}` | 2 | 194 |
+| Then | `the page should declare its language as {string}` | 2 | 180 |
 | Then | `the page title should be {string}` | 2 | 29 |
 | Then | `the page title should be in English` | 2 | 21 |
 | Then | `the speed stat should display {string}` | 1 | 61 |

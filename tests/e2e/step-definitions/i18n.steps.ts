@@ -179,20 +179,6 @@ Then(
 );
 
 Then(
-  "the empty background message should be {string}",
-  async function (this: CustomWorld, _expectedText: string) {
-    await this.language.expectEmptyTextField("background");
-  }
-);
-
-Then(
-  "the empty notes message should be {string}",
-  async function (this: CustomWorld, _expectedText: string) {
-    await this.language.expectEmptyTextField("notes");
-  }
-);
-
-Then(
   "the page should declare its language as {string}",
   async function (this: CustomWorld, language: string) {
     await this.language.expectDeclaredLanguage(language);

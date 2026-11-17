@@ -22,7 +22,6 @@ export type TranslatedElement =
   | "empty abilities message";
 
 export type LevelLabelled = "cypher" | "artifact";
-export type TextField = "background" | "notes";
 
 /** The translated text the sheet shows and the language it declares. */
 export interface LanguageDriver {
@@ -31,7 +30,6 @@ export interface LanguageDriver {
   expectStatsSectionMentions(text: string): Promise<void>;
   expectStatsLabel(text: string): Promise<void>;
   expectLevelLabel(card: LevelLabelled, text: string): Promise<void>;
-  expectEmptyTextField(field: TextField): Promise<void>;
   expectDeclaredLanguage(language: string): Promise<void>;
 }
 
@@ -103,11 +101,6 @@ export class PlaywrightLanguageDriver implements LanguageDriver {
 
   async expectLevelLabel(card: LevelLabelled, text: string): Promise<void> {
     await expect(this.page.locator(`[data-testid^="${card}-level-"]`).first()).toContainText(text);
-  }
-
-  async expectEmptyTextField(field: TextField): Promise<void> {
-    await expect(this.page.locator(`[data-testid="character-${field}"]`)).toHaveValue("");
-    await expect(this.page.locator(`[data-testid="${field}-section"] h3`)).toBeVisible();
   }
 
   async expectDeclaredLanguage(language: string): Promise<void> {

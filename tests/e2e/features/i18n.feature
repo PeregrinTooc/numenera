@@ -50,8 +50,8 @@ Feature: Internationalization (i18n)
         Then the empty cyphers message should be "Keine Cypher"
         And the empty artifacts message should be "Keine Artefakte"
         And the empty oddities message should be "Keine Kuriositäten"
-        And the empty background message should be "Kein Hintergrund"
-        And the empty notes message should be "Keine Notizen"
+        And my empty background invites me to write with "Zum Bearbeiten klicken..."
+        And my empty notes invites me to write with "Zum Bearbeiten klicken..."
         And the empty equipment message should be "Keine Ausrüstung"
         And the empty abilities message should be "Keine Fähigkeiten vorhanden. Fügen Sie hier besondere Fähigkeiten, trainierte Fertigkeiten und andere Charaktereigenschaften hinzu."
 

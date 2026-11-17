@@ -1,10 +1,5 @@
 import { englishText } from "./i18nKeys.js";
-import type {
-  LanguageDriver,
-  LevelLabelled,
-  TextField,
-  TranslatedElement,
-} from "./languageDriver.js";
+import type { LanguageDriver, LevelLabelled, TranslatedElement } from "./languageDriver.js";
 
 const GERMAN_TITLE = "Numenera Charakterbogen";
 
@@ -41,10 +36,6 @@ export class LanguageDsl {
 
   async expectLevelLabel(card: LevelLabelled, text: string): Promise<void> {
     await this.language.expectLevelLabel(card, text);
-  }
-
-  async expectEmptyTextField(field: TextField): Promise<void> {
-    await this.language.expectEmptyTextField(field);
   }
 
   async expectDeclaredLanguage(language: string): Promise<void> {
