@@ -42,9 +42,11 @@ Feature: Settings Gear
     And the settings panel should close
 
   Scenario: Settings gear is not obscured by version navigator
-    Given I am viewing an old version with the version navigator visible
-    Then the settings gear icon should still be visible
-    And I should be able to click the settings gear icon
+    Given my character has a history of 2 versions
+    And I step back to the previous version
+    And the navigator shows version 1 of 2
+    When I click the settings gear icon
+    Then I should see the settings panel
 
   Scenario: Reset Layout option is disabled
     Given I have opened the settings panel

@@ -17,10 +17,6 @@ export class SettingsDsl {
     await this.driver.expectGearVisible();
   }
 
-  async expectGearClickable(): Promise<void> {
-    await this.driver.expectGearClickable();
-  }
-
   async clicksGear(): Promise<void> {
     await this.driver.clickGear();
   }

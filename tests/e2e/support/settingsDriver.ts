@@ -7,7 +7,6 @@ export type FlagLanguage = "de" | "en";
 /** The settings panel behind the header gear. */
 export interface SettingsDriver {
   expectGearVisible(): Promise<void>;
-  expectGearClickable(): Promise<void>;
   clickGear(): Promise<void>;
   openPanel(): Promise<void>;
   expectPanelShown(): Promise<void>;
@@ -42,12 +41,6 @@ export class PlaywrightSettingsDriver implements SettingsDriver {
 
   async expectGearVisible(): Promise<void> {
     await expect(this.page.locator(testId("settings-gear-button"))).toBeVisible();
-  }
-
-  async expectGearClickable(): Promise<void> {
-    const button = this.page.locator(testId("settings-gear-button"));
-    await expect(button).toBeEnabled();
-    await expect(button).toHaveCSS("cursor", "pointer");
   }
 
   async clickGear(): Promise<void> {

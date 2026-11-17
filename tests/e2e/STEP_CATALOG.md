@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **456** in 42 files
-- Feature step lines: **1809**
+- Step definitions: **453** in 42 files
+- Feature step lines: **1811**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -65,7 +65,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 4 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
 | [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 7 | 0 |
-| [settings-gear.steps.ts](#settingsgearstepsts) | 19 | 0 |
+| [settings-gear.steps.ts](#settingsgearstepsts) | 16 | 0 |
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 3 | 0 |
 | [storage-failure.steps.ts](#storagefailurestepsts) | 8 | 0 |
@@ -558,25 +558,22 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am viewing an old version with the version navigator visible` | 1 | 67 |
 | Given | `I am viewing the character sheet` | 1 | 3 |
-| When | `I click outside the settings panel` | 1 | 39 |
-| When | `I click the British flag icon` | 1 | 51 |
-| When | `I click the German flag icon` | 5 | 47 |
-| When | `I click the settings gear icon` | 2 | 23 |
-| Given | `I have opened the settings panel` | 9 | 35 |
-| When | `I press the Escape key` | 2 | 43 |
-| Then | `I should be able to click the settings gear icon` | 1 | 19 |
-| Then | `I should see a {string} option` | 1 | 74 |
+| When | `I click outside the settings panel` | 1 | 31 |
+| When | `I click the British flag icon` | 1 | 43 |
+| When | `I click the German flag icon` | 5 | 39 |
+| When | `I click the settings gear icon` | 3 | 15 |
+| Given | `I have opened the settings panel` | 9 | 27 |
+| When | `I press the Escape key` | 2 | 35 |
+| Then | `I should see a {string} option` | 1 | 59 |
 | Then | `I should see a settings gear icon in the header` | 1 | 11 |
-| Then | `I should see the settings panel` | 2 | 27 |
-| Then | `the {string} option should be disabled` | 1 | 78 |
+| Then | `I should see the settings panel` | 3 | 19 |
+| Then | `the {string} option should be disabled` | 1 | 63 |
 | Given | `the browser offers no secure-origin cryptography` | 1 | 7 |
-| Given | `the interface is in German` | 1 | 63 |
-| Then | `the interface should display in English` | 1 | 59 |
-| Then | `the interface should display in German` | 1 | 55 |
-| Then | `the settings gear icon should still be visible` | 1 | 15 |
-| Then | `the settings panel should close` | 4 | 31 |
+| Given | `the interface is in German` | 1 | 55 |
+| Then | `the interface should display in English` | 1 | 51 |
+| Then | `the interface should display in German` | 1 | 47 |
+| Then | `the settings panel should close` | 4 | 23 |
 
 ## sheet-toolbar.steps.ts
 
@@ -705,10 +702,10 @@ pattern this script does not understand):
 | When | `I return to the latest version` | 1 | 81 |
 | Then | `I see my character as it was in version {int}` | 12 | 201 |
 | When | `I step back {int} times in quick succession` | 1 | 70 |
-| When | `I step back to the previous version` | 25 | 62 |
+| When | `I step back to the previous version` | 26 | 62 |
 | When | `I step forward to the next version` | 4 | 66 |
 | When | `I undo with Ctrl+Z` | 19 | 97 |
-| Given | `my character has a history of {int} versions` | 47 | 11 |
+| Given | `my character has a history of {int} versions` | 48 | 11 |
 | Given | `my character has a history of {int} versions with different data` | 1 | 18 |
 | Given | `my character has a portrait` | 3 | 50 |
 | Given | `my character has no history yet` | 5 | 4 |
@@ -739,7 +736,7 @@ pattern this script does not understand):
 | Then | `the navigator describes this version as {string}` | 15 | 183 |
 | Then | `the navigator gives the age of this version as {string}` | 2 | 194 |
 | Then | `the navigator is hidden` | 2 | 117 |
-| Then | `the navigator shows version {int} of {int}` | 28 | 140 |
+| Then | `the navigator shows version {int} of {int}` | 29 | 140 |
 | Then | `the original version has been dropped` | 2 | 208 |
 
 ## viewport.steps.ts

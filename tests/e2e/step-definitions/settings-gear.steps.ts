@@ -13,14 +13,6 @@ Then("I should see a settings gear icon in the header", async function (this: Cu
   await this.settings.expectGearVisible();
 });
 
-Then("the settings gear icon should still be visible", async function (this: CustomWorld) {
-  await this.settings.expectGearVisible();
-});
-
-Then("I should be able to click the settings gear icon", async function (this: CustomWorld) {
-  await this.settings.expectGearClickable();
-});
-
 When("I click the settings gear icon", async function (this: CustomWorld) {
   await this.settings.clicksGear();
 });
@@ -64,13 +56,6 @@ Then("the interface should display in English", async function (this: CustomWorl
 Given("the interface is in German", async function (this: CustomWorld) {
   await this.settings.isInGermanWithPanelOpen();
 });
-
-Given(
-  "I am viewing an old version with the version navigator visible",
-  async function (this: CustomWorld) {
-    await this.settings.expectGearVisible();
-  }
-);
 
 Then("I should see a {string} option", async function (this: CustomWorld, option: string) {
   await this.settings.expectOptionShown(option);
