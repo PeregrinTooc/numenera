@@ -1,5 +1,18 @@
 import { englishText } from "./i18nKeys.js";
-import type { LanguageDriver, LevelLabelled, TranslatedElement } from "./languageDriver.js";
+import {
+  TRANSLATED_ELEMENTS,
+  type LanguageDriver,
+  type TranslatedElement,
+} from "./languageDriver.js";
+
+export interface ShownText {
+  part: string;
+  text: string;
+}
+
+function isTranslatedElement(part: string): part is TranslatedElement {
+  return (TRANSLATED_ELEMENTS as readonly string[]).includes(part);
+}
 
 const GERMAN_TITLE = "Numenera Charakterbogen";
 
@@ -22,20 +35,11 @@ export class LanguageDsl {
     await this.language.expectText("page title", GERMAN_TITLE);
   }
 
-  async expectShows(element: TranslatedElement, text: string): Promise<void> {
-    await this.language.expectText(element, text);
-  }
-
-  async expectStatsSectionMentions(text: string): Promise<void> {
-    await this.language.expectStatsSectionMentions(text);
-  }
-
-  async expectStatsLabel(text: string): Promise<void> {
-    await this.language.expectStatsLabel(text);
-  }
-
-  async expectLevelLabel(card: LevelLabelled, text: string): Promise<void> {
-    await this.language.expectLevelLabel(card, text);
+  async expectShowsAll(rows: ShownText[]): Promise<void> {
+    for (const { part, text } of rows) {
+      if (!isTranslatedElement(part)) throw new Error(`The sheet has no part called "${part}"`);
+      await this.language.expectText(part, text);
+    }
   }
 
   async expectDeclaredLanguage(language: string): Promise<void> {

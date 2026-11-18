@@ -6,67 +6,59 @@ Feature: Internationalization (i18n)
     Scenario: Default language detection
         Given I am on the character sheet page
         Then the page title should be in English
-        And the load button should display "Load Example"
-        And the new button should display "New"
+        And the sheet shows these texts:
+            | part        | text         |
+            | load button | Load Example |
+            | new button  | New          |
 
-    Scenario: Switch to German language via URL parameter
+    Scenario: The sheet is shown in German via URL parameter
         Given I am on the character sheet page with "?lang=de"
-        Then the page title should be "Numenera Charakterbogen"
-        And the load button should display "Beispiel laden"
-        And the new button should display "Neu"
+        Then the sheet shows these texts:
+            | part              | text                    |
+            | page title        | Numenera Charakterbogen |
+            | load button       | Beispiel laden          |
+            | new button        | Neu                     |
+            | stats heading     | Attribute               |
+            | might stat        | Kraft                   |
+            | speed stat        | Geschwindigkeit         |
+            | intellect stat    | Intellekt               |
+            | pool label        | Pool                    |
+            | edge label        | Edge:                   |
+            | current label     | Aktuell:                |
+            | cyphers heading   | Cypher                  |
+            | cypher level      | Stufe                   |
+            | artifacts heading | Artefakte               |
+            | artifact level    | Stufe                   |
+            | oddities heading  | Kuriositäten            |
+            | background label  | Hintergrund             |
+            | notes label       | Notizen                 |
 
-    Scenario: German translations for stats section
+    Scenario: The empty sheet is shown in German
         Given I am on the character sheet page with "?lang=de"
-        Then the stats heading should be "Attribute"
-        And the might stat should display "Kraft"
-        And the speed stat should display "Geschwindigkeit"
-        And the intellect stat should display "Intellekt"
-        And the stat pool label should be "Pool"
-        And the stat edge label should be "Edge"
-        And the stat current label should be "Aktuell"
-
-    Scenario: German translations for cyphers section
-        Given I am on the character sheet page with "?lang=de"
-        Then the cyphers heading should be "Cypher"
-        And cypher level labels should display "Stufe"
-
-    Scenario: German translations for artifacts section
-        Given I am on the character sheet page with "?lang=de"
-        Then the artifacts heading should be "Artefakte"
-        And artifact level labels should display "Stufe"
-
-    Scenario: German translations for oddities section
-        Given I am on the character sheet page with "?lang=de"
-        Then the oddities heading should be "Kuriositäten"
-
-    Scenario: German translations for text fields section
-        Given I am on the character sheet page with "?lang=de"
-        Then the background field label should be "Hintergrund"
-        And the notes field label should be "Notizen"
-
-    Scenario: German translations for empty states
-        Given I am on the character sheet page with "?lang=de"
-        When I click the "New" button
-        Then the empty cyphers message should be "Keine Cypher"
-        And the empty artifacts message should be "Keine Artefakte"
-        And the empty oddities message should be "Keine Kuriositäten"
+        And the character sheet is empty
+        Then the sheet shows these texts:
+            | part                    | text                                                                                                                          |
+            | empty cyphers message   | Keine Cypher                                                                                                                  |
+            | empty artifacts message | Keine Artefakte                                                                                                               |
+            | empty oddities message  | Keine Kuriositäten                                                                                                            |
+            | empty equipment message | Keine Ausrüstung                                                                                                              |
+            | empty abilities message | Keine Fähigkeiten vorhanden. Fügen Sie hier besondere Fähigkeiten, trainierte Fertigkeiten und andere Charaktereigenschaften hinzu. |
         And my empty background invites me to write with "Zum Bearbeiten klicken..."
         And my empty notes invites me to write with "Zum Bearbeiten klicken..."
-        And the empty equipment message should be "Keine Ausrüstung"
-        And the empty abilities message should be "Keine Fähigkeiten vorhanden. Fügen Sie hier besondere Fähigkeiten, trainierte Fertigkeiten und andere Charaktereigenschaften hinzu."
 
     Scenario: Language persists across page reloads
         Given I am on the character sheet page with "?lang=de"
         When I reload the page
-        Then the page title should be "Numenera Charakterbogen"
-        And the language should remain German
+        Then the language should remain German
 
     Scenario: Switch from German to English via URL parameter
         Given I am on the character sheet page with "?lang=de"
         When I navigate to the page with "?lang=en"
         Then the page title should be in English
-        And the load button should display "Load Example"
-        And the new button should display "New"
+        And the sheet shows these texts:
+            | part        | text         |
+            | load button | Load Example |
+            | new button  | New          |
 
     Scenario: The page declares the language it is shown in
         Given I am on the character sheet page with "?lang=de"
@@ -74,15 +66,13 @@ Feature: Internationalization (i18n)
 
     Scenario: The declared page language follows a language switch
         Given I am on the character sheet page with "?lang=en"
-        And I have opened the settings panel
-        When I click the German flag icon
+        When I switch to German
         Then the page should declare its language as "de"
 
     Scenario: The age of an old version is given in German
         Given I am on the character sheet page
         And my character has a history of 2 versions
         And 5 minutes pass
-        And I have opened the settings panel
-        And I click the German flag icon
+        And I switch to German
         When I step back to the previous version
         Then the navigator gives the age of this version as "vor 5 Minuten"

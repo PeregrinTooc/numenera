@@ -249,8 +249,16 @@ state. Nothing to change.
    sample character and checks that none of its entries are left. The focus-trap
    scenarios tab "through every control twice", with the driver counting the
    controls and checking focus after every press, as one outline over ability,
-   cypher and equipment. The gesture-word and i18n-outline items of issue 2
-   are still open.
+   cypher and equipment. Gesture words: "I click my Might pool" turned out to
+   live only in `value-editor.feature` and "I click my background" only in the
+   inline-field feature, where the click is the thing under test, so both
+   stay. Scenarios outside the settings feature say "I switch to German". The
+   Export button wording waits for the `export-enhancement` migration
+   (issue 1), because its assertions read a different capture than
+   "I export the character", and renaming it first would leave two phrasings
+   for one intent. The i18n per-section scenarios are now one table of
+   sheet parts and texts for the filled sheet and one for the empty sheet,
+   checked with exact locators instead of "the stats section mentions".
 3. **Move the remaining `CustomWorld` state into DSL objects** as part of each
    migration, and delete each field once its last user is gone.
 4. **Audit scenarios that a unit test could prove** (issue 3) before adding any

@@ -92,15 +92,13 @@ Feature: Version History Descriptions
         And my edits have settled into a version
         And I change my name to "Another Change"
         And my edits have settled into a version
-        And I have opened the settings panel
-        And I click the German flag icon
+        And I switch to German
         And I step back to the previous version
         Then the navigator describes this version as "Cypher hinzugefügt"
 
     Scenario: Reloading the app translates an old English description
         Given my history holds an old version recorded as "Added cypher" for an added cypher
-        And I have opened the settings panel
-        And I click the German flag icon
+        And I switch to German
         When I reopen my character
         And I step back to the previous version
         Then the navigator describes this version as "Cypher hinzugefügt"

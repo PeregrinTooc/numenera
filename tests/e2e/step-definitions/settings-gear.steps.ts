@@ -53,6 +53,10 @@ Then("the interface should display in English", async function (this: CustomWorl
   await this.language.expectTitleInEnglish();
 });
 
+When("I switch to German", async function (this: CustomWorld) {
+  await this.settings.switchesToGerman();
+});
+
 Given("the interface is in German", async function (this: CustomWorld) {
   await this.settings.isInGermanWithPanelOpen();
 });

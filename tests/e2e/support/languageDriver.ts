@@ -2,34 +2,40 @@ import { expect, type Locator, type Page } from "@playwright/test";
 import { waitForCharacterSheetReady } from "./app-ready.js";
 import { BASE_URL } from "./serverUrl.js";
 
-export type TranslatedElement =
-  | "page title"
-  | "load button"
-  | "new button"
-  | "stats heading"
-  | "might stat"
-  | "speed stat"
-  | "intellect stat"
-  | "cyphers heading"
-  | "artifacts heading"
-  | "oddities heading"
-  | "background label"
-  | "notes label"
-  | "empty cyphers message"
-  | "empty artifacts message"
-  | "empty oddities message"
-  | "empty equipment message"
-  | "empty abilities message";
+export const TRANSLATED_ELEMENTS = [
+  "page title",
+  "load button",
+  "new button",
+  "stats heading",
+  "might stat",
+  "speed stat",
+  "intellect stat",
+  "pool label",
+  "edge label",
+  "current label",
+  "cyphers heading",
+  "cypher level",
+  "artifacts heading",
+  "artifact level",
+  "oddities heading",
+  "background label",
+  "notes label",
+  "empty cyphers message",
+  "empty artifacts message",
+  "empty oddities message",
+  "empty equipment message",
+  "empty abilities message",
+] as const;
 
-export type LevelLabelled = "cypher" | "artifact";
+export type TranslatedElement = (typeof TRANSLATED_ELEMENTS)[number];
+
+// A level badge also shows the level itself, so only its start is translated text.
+const LEADING_TEXT: TranslatedElement[] = ["cypher level", "artifact level"];
 
 /** The translated text the sheet shows and the language it declares. */
 export interface LanguageDriver {
   open(queryString: string): Promise<void>;
   expectText(element: TranslatedElement, text: string): Promise<void>;
-  expectStatsSectionMentions(text: string): Promise<void>;
-  expectStatsLabel(text: string): Promise<void>;
-  expectLevelLabel(card: LevelLabelled, text: string): Promise<void>;
   expectDeclaredLanguage(language: string): Promise<void>;
 }
 
@@ -55,6 +61,16 @@ export class PlaywrightLanguageDriver implements LanguageDriver {
         return this.page.locator(STAT_LABELS).nth(1);
       case "intellect stat":
         return this.page.locator(STAT_LABELS).nth(2);
+      case "pool label":
+        return this.page.getByTestId("stat-might").locator(".stat-pool-sublabel");
+      case "edge label":
+        return byTestId("label-might-edge");
+      case "current label":
+        return byTestId("label-might-current");
+      case "cypher level":
+        return this.page.locator('[data-testid^="cypher-level-"]').first();
+      case "artifact level":
+        return this.page.locator('[data-testid^="artifact-level-"]').first();
       case "cyphers heading":
         return byTestId("cyphers-heading");
       case "artifacts heading":
@@ -84,23 +100,8 @@ export class PlaywrightLanguageDriver implements LanguageDriver {
   }
 
   async expectText(element: TranslatedElement, text: string): Promise<void> {
-    await expect(this.locatorFor(element)).toHaveText(text);
-  }
-
-  async expectStatsSectionMentions(text: string): Promise<void> {
-    await expect(
-      this.page.locator('[data-testid="stats-section"]', { hasText: text }).first()
-    ).toBeVisible();
-  }
-
-  async expectStatsLabel(text: string): Promise<void> {
-    await expect(
-      this.page.locator('[data-testid="stats-section"] label', { hasText: text }).first()
-    ).toBeVisible();
-  }
-
-  async expectLevelLabel(card: LevelLabelled, text: string): Promise<void> {
-    await expect(this.page.locator(`[data-testid^="${card}-level-"]`).first()).toContainText(text);
+    const shown = expect(this.locatorFor(element));
+    await (LEADING_TEXT.includes(element) ? shown.toContainText(text) : shown.toHaveText(text));
   }
 
   async expectDeclaredLanguage(language: string): Promise<void> {

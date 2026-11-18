@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **457** in 42 files
-- Feature step lines: **1808**
+- Step definitions: **437** in 42 files
+- Feature step lines: **1776**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -54,7 +54,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
 | [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 7 | 0 |
-| [i18n.steps.ts](#i18nstepsts) | 28 | 0 |
+| [i18n.steps.ts](#i18nstepsts) | 7 | 0 |
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 18 | 0 |
@@ -65,7 +65,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [section-reordering.steps.ts](#sectionreorderingstepsts) | 4 | 0 |
 | [section-slide.steps.ts](#sectionslidestepsts) | 7 | 0 |
 | [section-touch-drag.steps.ts](#sectiontouchdragstepsts) | 7 | 0 |
-| [settings-gear.steps.ts](#settingsgearstepsts) | 16 | 0 |
+| [settings-gear.steps.ts](#settingsgearstepsts) | 17 | 0 |
 | [sheet-toolbar.steps.ts](#sheettoolbarstepsts) | 5 | 0 |
 | [stat-pool-editing.steps.ts](#statpooleditingstepsts) | 3 | 0 |
 | [storage-failure.steps.ts](#storagefailurestepsts) | 8 | 0 |
@@ -273,7 +273,7 @@ pattern this script does not understand):
 | When | `I click the "Load" button` | 2 | 24 |
 | Given | `I have loaded the sample character` | 1 | 19 |
 | Then | `the character {string} should be displayed` | 3 | 28 |
-| Given | `the character sheet is empty` | 4 | 15 |
+| Given | `the character sheet is empty` | 5 | 15 |
 | Then | `the character sheet should show empty states` | 2 | 7 |
 | Then | `the character should be displayed` | 1 | 39 |
 | Then | `the same character should still be displayed` | 1 | 43 |
@@ -315,7 +315,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I click the "New" button` | 3 | 3 |
+| When | `I click the "New" button` | 2 | 3 |
 | When | `I reload the page` | 22 | 7 |
 | When | `I reload the page immediately` | 1 | 11 |
 
@@ -373,34 +373,13 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `artifact level labels should display {string}` | 1 | 173 |
-| Then | `cypher level labels should display {string}` | 1 | 166 |
-| Given | `I am on the character sheet page with {string}` | 13 | 7 |
+| Given | `I am on the character sheet page with {string}` | 8 | 7 |
 | When | `I navigate to the page with {string}` | 1 | 14 |
-| Then | `the artifacts heading should be {string}` | 1 | 82 |
-| Then | `the background field label should be {string}` | 1 | 96 |
-| Then | `the cyphers heading should be {string}` | 1 | 75 |
-| Then | `the empty abilities message should be {string}` | 1 | 138 |
-| Then | `the empty artifacts message should be {string}` | 1 | 117 |
-| Then | `the empty cyphers message should be {string}` | 1 | 110 |
-| Then | `the empty equipment message should be {string}` | 1 | 131 |
-| Then | `the empty oddities message should be {string}` | 1 | 124 |
-| Then | `the intellect stat should display {string}` | 1 | 68 |
 | Given | `the language is set to {string}` | 5 | 3 |
 | Then | `the language should remain German` | 1 | 25 |
-| Then | `the load button should display {string}` | 3 | 33 |
-| Then | `the might stat should display {string}` | 1 | 54 |
-| Then | `the new button should display {string}` | 3 | 40 |
-| Then | `the notes field label should be {string}` | 1 | 103 |
-| Then | `the oddities heading should be {string}` | 1 | 89 |
-| Then | `the page should declare its language as {string}` | 2 | 180 |
-| Then | `the page title should be {string}` | 2 | 29 |
+| Then | `the page should declare its language as {string}` | 2 | 33 |
 | Then | `the page title should be in English` | 2 | 21 |
-| Then | `the speed stat should display {string}` | 1 | 61 |
-| Then | `the stat current label should be {string}` | 1 | 159 |
-| Then | `the stat edge label should be {string}` | 1 | 152 |
-| Then | `the stat pool label should be {string}` | 1 | 145 |
-| Then | `the stats heading should be {string}` | 1 | 47 |
+| Then | `the sheet shows these texts:` | 4 | 29 |
 
 ## import-error-messages.steps.ts
 
@@ -562,16 +541,17 @@ pattern this script does not understand):
 | Given | `I am viewing the character sheet` | 1 | 3 |
 | When | `I click outside the settings panel` | 1 | 31 |
 | When | `I click the British flag icon` | 1 | 43 |
-| When | `I click the German flag icon` | 5 | 39 |
+| When | `I click the German flag icon` | 1 | 39 |
 | When | `I click the settings gear icon` | 3 | 15 |
-| Given | `I have opened the settings panel` | 9 | 27 |
+| Given | `I have opened the settings panel` | 5 | 27 |
 | When | `I press the Escape key` | 2 | 35 |
-| Then | `I should see a {string} option` | 1 | 59 |
+| Then | `I should see a {string} option` | 1 | 63 |
 | Then | `I should see a settings gear icon in the header` | 1 | 11 |
 | Then | `I should see the settings panel` | 3 | 19 |
-| Then | `the {string} option should be disabled` | 1 | 63 |
+| When | `I switch to German` | 4 | 55 |
+| Then | `the {string} option should be disabled` | 1 | 67 |
 | Given | `the browser offers no secure-origin cryptography` | 1 | 7 |
-| Given | `the interface is in German` | 1 | 55 |
+| Given | `the interface is in German` | 1 | 59 |
 | Then | `the interface should display in English` | 1 | 51 |
 | Then | `the interface should display in German` | 1 | 47 |
 | Then | `the settings panel should close` | 4 | 23 |

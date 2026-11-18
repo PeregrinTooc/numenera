@@ -45,6 +45,12 @@ export class SettingsDsl {
     await this.driver.chooseLanguage("de");
   }
 
+  async switchesToGerman(): Promise<void> {
+    await this.openPanel();
+    await this.choosesGerman();
+    await this.language.expectTitleInGerman();
+  }
+
   async choosesEnglish(): Promise<void> {
     await this.driver.chooseLanguage("en");
   }
