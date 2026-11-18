@@ -1,359 +1,247 @@
 # ATDD Review: `tests/e2e`
 
-Reviewed 2026-11-13 against Dave Farley's ATDD principles.
+Reviewed 2026-11-16 against Dave Farley's ATDD principles. This replaces the
+2026-11-13 review, whose first four recommendations have since been carried out.
 
 > **Source note:** this review used the free-tier summaries of Dave Farley's
-> ATDD lessons, not the full lessons. The criteria quoted come from those
-> summaries. The rewrites and judgments are the reviewer's own.
+> ATDD lessons (103b, 203, 301, 302, 303, 305, 306, 308), not the full lessons.
+> The criteria quoted come from those summaries. The judgments, rewrites and
+> anything marked _reviewer's suggestion_ are the reviewer's own.
 
 ## Context: the UI is the domain
 
 This app has almost no business logic below the UI. It is an editor over a
-character JSON. What users get from it is the interaction itself: editing values
-in place, dragging sections into a layout, moving between versions. That changes
-how Dave's "what, not how" principle applies. Where an interaction is the
-feature, describing that interaction in a spec is describing behaviour, not
-implementation. This review is written with that in mind.
+character JSON, and the interaction itself (editing in place, dragging sections,
+stepping through versions) is what users get. So where a feature _is_ an
+interaction, specifying the gesture describes behaviour, not implementation.
+Dave's "what, not how" principle is applied with that in mind.
 
 ## Overall assessment
 
-The suite has the outer layers of a four-layer suite but not the middle one.
-Each scenario gets a fresh browser context, there is a domain DSL for setup
-(`SetupDsl.character()`, `replaceCharacter()`), and time in the app is controlled
-deterministically. That is more than most suites have.
-
-The main gap is the layering. Step definitions call the browser directly about
-640 times (`page.locator`, `data-testid`), so the DSL is used in only some
-places. Because the UI is the product, it is also the part that changes most,
-and every UI change currently ripples through step files. The specs themselves
-are mostly at the right level for a UI-centred app. The problems there are
-narrower: implementation details leaking in, and gestures written out in
-scenarios that are about something else. None of this needs a rewrite. Grow the
-DSL that's already there and move everything onto it.
+This is now a recognisable four-layer suite, and a good one. Feature files speak
+mostly in the user's terms. Step definitions in the migrated areas are thin
+parsing over DSL classes (`CharacterDsl`, `CardEditorDsl`, `LayoutDsl`,
+`VersionHistoryDsl`, …). Those sit on driver interfaces with one Playwright
+implementation each, and the section-drag DSL has two drivers (mouse and touch)
+chosen by device profile. Isolation, time control and release honesty are all
+in good shape. What remains is an unfinished migration: about 25 of 42 step
+files still call the page directly, so the suite has two architectures side by
+side, and a handful of scenarios still describe mechanism rather than behaviour.
+None of this needs a redesign. Finish moving files onto the pattern you already
+have.
 
 ## Strengths
 
-- **Functional isolation is good.** `support/hooks.ts` creates a new
-  `browser.newContext()` for every scenario and clears storage through the app's
-  own adapters. Because this is a client-side app with no shared server,
-  scenarios can't affect each other, and parallel runs are safe. Dave's "each
-  test owns its own data" rule is met.
-- **There is already a DSL to build on.** `SetupDsl.character(overrides)`
-  merges `FULL_CHARACTER` with only the fields a test cares about. That is
-  Dave's point that a DSL should provide defaults so tests specify only what
-  matters.
-- **Time is controlled.** The app runs on a `ManualClock` that scenarios advance through the clock driver, and the held-save gate in
-  `version-history-squash-race.steps.ts` make a real race reproducible, which is
-  the right way to handle concurrency.
-- **The suite reports its state honestly.** No feature file carries `@skip`,
-  `@wip` or `@deprecated`, CI has no `continue-on-error`, and the device
-  exclusions in `cucumber.cjs` are listed openly in one place.
-- **It runs on several devices.** One set of specs runs against four device
-  profiles. Issue 1 shows how to build on this.
+- **Functional isolation.** `hooks.ts` creates a fresh `browser.newContext()` per
+  scenario and clears storage through the app's own adapters. Tests own their
+  data, parallel runs are safe, and nothing depends on teardown order
+  (lesson 302: each test creates and owns its data).
+- **Real protocol drivers.** `SheetDriver`, `CardEditorDriver`,
+  `ValueEditorDriver`, `ViewportDriver`, `VersionHistoryDriver`,
+  `ComparisonDriver` and others are interfaces with Playwright implementations.
+  Selectors live in one place per concern (lesson 305: drivers are the only
+  layer that knows how the system works).
+- **Mouse and touch behind one DSL call.** `LayoutDsl.moveSection` takes a
+  `SectionInput` (`MouseInput` or `TouchInput`) selected by device profile. This
+  is exactly lesson 303's "one test, several drivers".
+- **No sleeps.** There are zero `waitForTimeout` calls, an ESLint rule forbids
+  new ones, and the app runs on an injectable `ManualClock` the tests advance
+  (lesson 306: no sleeps papering over races; confirm the outcome instead).
+  The one remaining `setTimeout` (`section-slide.steps.ts:99`) is in a
+  failure-diagnostics path, not a synchronisation point.
+- **Races are reproduced, not hoped away.** The held-save gate in
+  `VersionSaveDriver` makes the squash race deterministic.
+- **The suite reports its state honestly.** No feature uses `@skip`, `@wip` or
+  `@deprecated` (the exclusion list in `cucumber.cjs` is empty in practice), CI
+  has no `continue-on-error` or `if: false` on the e2e job, and the device
+  exclusions (`@not-phone`, `@phone-only`, `@touch`, `@desktop-only`) are listed
+  openly in one place. `@not-phone` on 23 scenarios is worth a periodic look,
+  but each is a visible, greppable decision.
+- **Specs state requirements in intent language** where migrated:
+  "I change my Might pool to 12", "I start a new attack", "I save the card".
 
 ## Priority issues
 
-### 1. Step definitions talk to the browser instead of going through a DSL
+### 1. Half the step files still bypass the DSL
 
-_Lesson 308: treat step definitions as thin parsing, with no logic, calling
-straight through to a DSL. Lesson 305: protocol drivers are the only layer that
-knows how the system actually works. Lesson 303: because a DSL call goes through
-a protocol driver, one spec can run through several drivers._
+_Lesson 308: step definitions are thin parsing, no logic, calling straight
+through to a DSL. Lesson 305: the driver layer is the only one that knows how the
+system works._
 
-Step definitions use `page.locator` or `data-testid` about 640 times and
-`page.evaluate` 67 times. The heaviest files are
-`card-creation-modal-fields.steps.ts` (59) and `combat.steps.ts` (37).
-`card-deletion.steps.ts` shows two layers mixed together:
+The migrated and unmigrated styles now coexist. Step files that still reach into
+the page, by number of direct page calls:
+
+| File                                                            | Direct page calls |
+| --------------------------------------------------------------- | ----------------- |
+| `export-enhancement.steps.ts`                                   | 37                |
+| `layout-edit-mode.steps.ts`                                     | 27                |
+| `character-storage.steps.ts`                                    | 25                |
+| `i18n.steps.ts`                                                 | 21                |
+| `auto-save-indicator.steps.ts`                                  | 18                |
+| `section-drop-preview.steps.ts`                                 | 17                |
+| `recovery-damage-track.steps.ts`, `section-reordering.steps.ts` | 16 each           |
+| `section-slide`, `layout-import-export`, `section-columns`      | 11 to 12 each     |
+
+In total there are about 240 `page.locator` / `getByTestId` references and 41
+`page.evaluate` calls left in step definitions. `character-storage.steps.ts` is
+representative:
 
 ```ts
-When("I look at an artifact card", async function (this: CustomWorld) {
-  await expect(this.page.locator('[data-testid="items-section"]')).toBeVisible();
+Then("all character sections should show data", async function () {
+  await expect(this.page.locator('[data-testid^="cypher-item"]').first()).toBeVisible();
+  await expect(this.page.locator('[data-testid^="artifact-item"]').first()).toBeVisible();
+  const background = this.page.locator('[data-testid="character-background"]');
+  const backgroundValue = await background.inputValue();
+  expect(backgroundValue.length).toBeGreaterThan(0);
+  // ...
 });
 ```
 
-`CardsDsl` mixes the DSL and protocol-driver layers too.
-`clickDeleteButton(cardType)` builds selectors itself. A split along Dave's
-lines:
+This is the old shape: test ids, `inputValue`, and a vague "has some data"
+assertion in the step. The migrated version already exists in spirit. Ask the
+DSL for the fact and let the driver find it:
 
 ```ts
 // Step definition: thin parsing only
-When("I discard {string}", async function (this: CustomWorld, name: string) {
-  await this.character.discard(name);
+Then("my whole character is shown", async function (this: CustomWorld) {
+  await this.character.showsCharacter(this.setup.fullCharacter());
 });
 
-// DSL: domain vocabulary, stable as the UI changes
-class CharacterDsl {
-  constructor(private driver: SheetDriver) {}
-  discard(name: string): Promise<void> {
-    return this.driver.removeItem(name);
-  }
-  carries(names: string[]): Promise<void> {
-    return this.driver.expectItems(names);
-  }
-}
-
-// Protocol driver: the only place that knows about test ids and clicks
-class PlaywrightSheetDriver implements SheetDriver {
-  async removeItem(name: string): Promise<void> {
-    const card = this.page.getByTestId(/-card-/).filter({ hasText: name });
-    await card.getByRole("button", { name: t("card.delete") }).click();
-    await expect(card).toHaveCount(0); // confirms the action completed
-  }
+// Driver: the only place that knows ids and inputs
+async showsCharacter(expected: Character): Promise<void> {
+  await expect(this.page.getByTestId("character-name")).toHaveText(expected.name);
+  await expect(this.page.getByTestId("character-background")).toHaveValue(expected.background);
+  // one assertion per section, comparing against the data the test supplied
 }
 ```
 
-**When the UI is the business logic, this layering matters more, not less.**
-UI changes are this app's most common kind of change. With the split, a
-redesign of the delete control means one change in `PlaywrightSheetDriver`, not
-changes across many step files. One DSL call such as `discard` also serves every
-card type, which removes the seven near-identical step registrations. That fixes
-lesson 203's mistake #3, no reuse in the DSL.
+Asserting against the data the test supplied, rather than `length > 0`, also
+fixes a weak oracle: today "all sections should show data" would pass for the
+wrong data.
 
-**Mouse and touch are a direct case for multiple drivers.** Dragging sections
-with a mouse and with touch are the same user behaviour, but they're specified in
-separate step files (`section-reordering.steps.ts`,
-`section-touch-drag.steps.ts`). With one DSL call and two drivers, one spec
-covers both:
+Two areas deserve more than a mechanical move:
 
-```ts
-// DSL
-moveSection(name: string, onto: { target: string; edge: Edge }): Promise<void> {
-  return this.input.dragSection(name, onto);
-}
+- **Window globals as a test API.** `export-enhancement.steps.ts` installs a
+  `showSaveFilePicker` mock that writes to `window._lastWrittenData`,
+  `_exportedData`, `_writeCount`, `_saveDialogShown` and others (33 `window._…`
+  references in step files). That is a stub, which is fine, but lesson 303 says
+  stubs are _translators, not simulations_: a simple programmable response
+  holder. Move it into a `FilePickerDriver` (`exportCapture.ts` is the natural
+  home) exposing `lastSavedFile()`, `cancelNextSave()` and `saveDialogCount()`,
+  so steps never name a window global.
+- **Layout and section-drag steps.** These are the largest block of direct page
+  work and the area where mouse/touch driver reuse already paid off. Moving
+  `layout-edit-mode`, `section-drop-preview`, `section-reordering` and
+  `section-slide` behind `LayoutDsl` would finish what the pilot started.
 
-// Drivers, chosen by device profile
-class MouseInput implements SectionInput { /* page.mouse down/move/up */ }
-class TouchInput implements SectionInput { /* long-press, then touch move/end */ }
-```
+Migrate one feature file at a time whenever it is touched for other work, as
+planned; don't do it as one rewrite.
 
-The device profile in `support/device.ts` would choose the driver, so the Pixel 5
-and iPhone 12 runs exercise touch and the desktop run exercises the mouse. The
-device matrix then becomes part of the test architecture rather than only a tag
-filter in `cucumber.cjs`.
+### 2. A few specs still describe mechanism, not behaviour
 
-### 2. Sleeps used to cover races
+_Lesson 103b: use the language of the problem domain. Lesson 203, mistake #1:
+confusing UI interactions with behaviour. Dave's check: could a completely
+different system satisfy this spec?_
 
-_Lesson 306: using sleeps and waits to hide race conditions doesn't fix the race.
-It only makes the test slower to fail. The fix is atomic steps that confirm the
-action completed, using poll-with-timeout in the protocol driver._
+Most of the suite passes that check, and for interaction-centred features
+gesture language is legitimate. The leftovers are small and specific:
 
-There are 111 `waitForTimeout` calls in step definitions and support code.
-Examples:
+- **Storage technology in a title.** `character-file-import.feature:15`:
+  _"Imported character persists in localStorage"_. IndexedDB is the primary
+  store, so the title is wrong as well as coupled. The behaviour is that an
+  imported character is still there after reopening:
 
-- `support/cards.ts`: `clickDeleteButton` and `expectVisibleCount` each use
-  `waitForTimeout(100)` as a "settle wait".
-- `card-creation-verification.steps.ts`: seven separate `waitForTimeout(100)`
-  calls.
-- `card-modal-focus-trap.steps.ts`: sleeps of 30 to 100 ms around focus
-  changes.
-- `auto-save-indicator.steps.ts:17`: `waitForTimeout(seconds * 1000)` waited in
-  real time. The app now runs on a `ManualClock` installed before boot, and
-  the step advances it through the clock driver.
+  ```gherkin
+  Scenario: An imported character is still there next time
+      Given the character sheet is empty
+      When I import a valid character file "test-hero.numenera"
+      And I reopen the app
+      Then the character "Test Hero" is shown
+  ```
 
-Before and after, using `CardsDsl` as the example:
+- **Vague outcome steps.** "And all character data should be preserved" and
+  "And the previous character should be replaced" don't say what is checked.
+  Name the observable fact ("the name is Another Hero and none of Test Hero's
+  cyphers are listed").
+- **Repeated key presses as a proxy for "can't escape".** The focus-trap feature
+  uses "I press the Tab key 15 times" and "20 times" in several scenarios. The
+  count is an arbitrary number standing in for the real rule (_focus never
+  leaves the dialog_). Keep one scenario that tabs a full cycle (the number of
+  controls plus one) and let the driver compute that count. Say "I tab through
+  every control twice" and drop 10, 15 and 20.
+- **Gesture words in non-gesture features.** "I click my Might pool" (11),
+  "I click my background" (4), "I click the German flag icon" (5) and
+  "I click the Export button" (7) sit in features about editing, language and
+  export. Where the scenario is about the result, say "I change…",
+  "I switch to German", "I export my character". Keep the click wording in
+  `value-editor.feature` and the language-switch feature, where the control is
+  the thing under test. _(Reviewer's suggestion: the language and export
+  features should probably each keep one gesture-level scenario.)_
+- **i18n scenarios repeat one shape.** `i18n.feature` has per-section scenarios
+  (stats, cyphers, artifacts, oddities, …) that each assert a few German
+  strings. That is lesson 203's mistake #4 (scenario overload) in a mild form.
+  One outline, "the sheet is fully translated in German", over a list of
+  section/label/value rows, reads better and is cheaper to extend.
+  `check:i18n` and the unit tests already guard key coverage.
 
-```ts
-// Before
-await this.page.locator(this.deleteButtonSelector(cardType, index)).click();
-await this.page.waitForTimeout(100);
+### 3. Decide which layer proves each UI rule
 
-// After: the driver confirms the result, so no sleep is needed
-const before = await items.count();
-await deleteButton.click();
-await expect(items).toHaveCount(before - 1); // Playwright retries until timeout
-```
+_Reviewer's suggestion, not from Dave's material, and carried over from the
+previous review because it still applies._
 
-Playwright's web-first `expect` already does poll-with-timeout, so most of these
-are mechanical swaps. The current branch, `fix/touch-drag-e2e-flake`, suggests
-flakiness is already costing time. These sleeps are the first place to look.
-
-### 3. Specs mix intent, interaction design and implementation detail
-
-_Lesson 103b: specs should use the language of the problem domain, not of the
-implementation. Lesson 203, BDD mistake #1: confusing UI interactions with
-behaviour. Dave's check: imagine a different system meeting the spec. If it
-couldn't, the spec is tied to the implementation._
-
-In this app the problem domain includes the interaction design. So a better
-test than "does the step mention the UI?" is to sort each step into one of three
-levels:
-
-| Level                                                                              | Example from the suite                                                           | Belongs in a spec?               |
-| ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------- |
-| **Intent**: what the user is trying to do                                          | "I save the card", "I change my Might pool to 12"                                | Yes                              |
-| **Interaction design**: how the product lets them do it, where that is the feature | "I drag Cyphers onto the middle right of Items", "focus stays inside the dialog" | Yes, in the feature it describes |
-| **Mechanism**: how it's built                                                      | "removed from the DOM", "persists in localStorage", `data-testid`                | Never                            |
-
-**Rule of thumb:** a scenario uses gesture-level language only for the feature
-it is about, and intent-level language for everything else.
-
-By that measure, `section-rearrangement.feature` is mostly fine as it stands.
-Dragging a section onto another's edge is the feature. Three kinds of problem
-remain.
-
-**Mechanism leaking into specs.** `card-deletion.feature`:
-
-```gherkin
-Scenario: Delete a cypher card
-    Given I have 2 cyphers
-    When I click the delete button on the first cypher
-    Then the cypher should be removed from the DOM
-    And I should have 1 cypher remaining
-    When I reload the page
-    Then I should have 1 cypher remaining
-```
-
-"Removed from the DOM" and "Deletion persists in localStorage" (the scenario
-title) are implementation, and IndexedDB is the primary store anyway. Deleting
-cards is not the interaction under scrutiny here either, so intent is the right
-level:
-
-```gherkin
-Scenario Outline: A discarded item is gone for good
-    Given my character has the <kind> "<first>" and "<second>"
-    When I discard "<first>"
-    Then my character's <kind> are only "<second>"
-    And "<first>" is still gone the next time I open my character
-
-    Examples:
-      | kind      | first      | second      |
-      | cyphers   | Detonation | Rejuvenator |
-      | abilities | Ward       | Onslaught   |
-      | attacks   | Broadsword | Crossbow    |
-```
-
-The seven "delete button is visible" scenarios add nothing to this, because an
-item can't be discarded without some way to do it (lesson 203's mistake #4,
-scenario overload). "Delete button in the top-left corner" and "no confirmation
-dialog" may be genuine requirements in a UI-centred app. If so, keep them, but
-consider whether a visual check is a cheaper way to test placement.
-
-**Gestures written out in scenarios about something else.**
-"And I confirm the card edit modal" appears 52 times and "And I click the
-'Confirm' button" 27 times, mostly as setup or plumbing in scenarios about card
-content or version history. Those scenarios should say "I save the card". The
-card-modal feature itself can keep the gesture language.
-
-**Interaction design that is likely to change, repeated everywhere.**
-`stat-pool-editing.feature`:
-
-```gherkin
-When I click on the "Might Pool" value
-Then an edit modal should appear
-And the input field should be focused
-```
-
-This ties every stat-edit scenario to the modal pattern. If editing moved
-inline, all of them would break although the requirement ("I can change my
-Might pool") hasn't changed. Give the modal and focus behaviour one spec of
-their own, and write the other stat-edit scenarios at the intent level.
+With little logic below the UI, it is tempting to prove every rule end to end.
+The e2e suite is the only layer that sees real layout, drag, focus and
+persistence, and it is the most expensive. There are 114 unit test files, so a
+lower layer is available. Candidates to check for duplication between the two
+are validation rules (`data-validation.feature`), empty-field visibility, and
+the per-section German translations. If a rule needs no real browser, prove it
+in Vitest and keep one acceptance scenario for the journey.
 
 ## Further improvements
 
-- **`Given` steps that check fixtures instead of creating them.**
-  `Given I have {int} cyphers` only asserts `actualCount >= count` against the
-  default character that the "Load" button loads. The scenario depends on
-  whatever the mock data happens to contain ("7 abilities" appears because the
-  mock has 7). Use the existing `cards.setupWithCount()` so each scenario states
-  and creates its own data.
-- **`CustomWorld` holds state for each feature** (`draggedCypherName`,
-  `heldDropTarget`, `savedTimestamp`, …). That is a sign that state belonging in
-  DSL objects has leaked into the world. Each DSL class can hold its own state.
-- **`Given the character data is loaded`** only calls
-  `waitForLoadState("domcontentloaded")`. It doesn't confirm what its name
-  claims. Use `waitForCharacterSheetReady`, or remove the step.
-- **About 43 steps set the viewport to an exact pixel width** (1280, 768 or
-  375). Where a scenario tests behaviour at a breakpoint boundary, the exact
-  width is the point and should stay. Elsewhere, "on a wide screen" or "on a
-  phone" says what matters and leaves the pixels to the driver.
-- **Decide which layer each UI rule is tested at.** _(Reviewer's suggestion, not
-  from Dave's material.)_ With little logic below the UI, it's tempting to test
-  every UI rule end to end. The E2E suite is the only layer that sees real
-  layout, real drag and real focus, and it's the most expensive one. Rules that
-  don't need a real browser could move down to Vitest/jsdom, for example a stat
-  field rejecting a negative value or which fields an empty card shows. The
-  acceptance suite then covers user journeys and the interactions only a browser
-  can prove.
+- **`CustomWorld` still carries per-feature state**: `draggedCypherName`,
+  `heldDropTarget`, `savedTimestamp`, `saveCount`, `exportedFileData`,
+  `exportedFilename`, `importedFile`, `importNote`, `requestedUrls`. These are
+  state that belongs inside the DSL or driver for that area (each DSL object can
+  hold its own). It also marks which features are still unmigrated.
+- **Hook wiring is growing.** `hooks.ts` constructs about fifteen DSL/driver
+  objects by hand in `Before`. A small `createDsls(page, device)` factory in
+  `support/` would keep the hook readable and give a single place to swap
+  drivers (lesson 305: the DSL is the stable interface; drivers are swappable).
+- **`@not-phone` (23 scenarios) hides a coverage gap on two device profiles.**
+  Each exclusion is visible, which is honest. If any of them are "not yet made
+  to work on phone" rather than "not applicable on phone", track those by name
+  in `docs/TODO.md` so they don't become permanent.
+- **Fixture-checking `Given` steps are gone.** The earlier review flagged
+  `Given I have {int} cyphers` asserting `>=` against mock data. A grep of the
+  step definitions finds no such comparison now. Keep the discipline: a
+  `Given` should create the state, not observe it.
+- **Hard-coded English in assertions** is fine while the locale is pinned to
+  `en-US` in the hook, as it is. Where a driver can use the app's own
+  translation keys (`support/i18nKeys.ts` exists), prefer that, so a copy change
+  doesn't ripple through steps.
+
+## Releasability truthfulness
+
+Checked per the category list: no `@skip` / `@wip` / `@deprecated` tags in use,
+no `.skip` / `.only` / `xit`, no `--ignore` or test filters in the CI e2e job,
+no `continue-on-error`, no empty `catch` blocks in `tests/e2e`. The only
+selection filters are the device tags above. This suite is truthful about its
+state. Nothing to change.
 
 ## Suggested next steps
 
-1. **Remove the sleeps first.** Done. It's mechanical, low risk, and pays off directly
-   on the flakiness being fixed now. Every `waitForTimeout` is gone except the
-   long-press hold, which is the gesture itself. Flush-based save waits,
-   bootstrap and initial-version readiness helpers, a navigation helper on the
-   version counter, outcome assertions and clock advances replaced them, and a
-   lint rule now forbids new ones. Removing them surfaced and fixed real races
-   (the layout-choice Escape pressed before focus arrived, an auto-save reload
-   racing a squash).
-2. **Use `card-deletion.feature` as a pilot.** Done. The feature is now one
-   intent-level outline ("a discarded entry is gone for good") per card kind,
-   plus the two genuine requirements (no confirmation, control in the top-left
-   corner, checked by geometry rather than CSS classes). Its steps call
-   `CharacterDsl` (`support/character.ts`), which talks to a `SheetDriver`
-   interface whose only implementation, `PlaywrightSheetDriver`, is the one
-   place that knows selectors. Follow this template.
-3. **Merge mouse and touch section dragging** behind one DSL call with two
-   drivers. Done. `LayoutDsl.moveSection(name, { target, edge })` drives a
-   `SectionInput` (`MouseInput` or `TouchInput`, `support/sectionInput.ts`)
-   picked by `DeviceProfile.sectionInput`: only Pixel 5 uses touch, because
-   Playwright offers real touch input only through Chromium's CDP. The
-   duplicated touch scenarios are gone, and the touch-only ones are tagged
-   `@touch`.
-4. **Move the rest over one feature file at a time,** whenever a file is already
-   being touched for other work. Don't do it as one big rewrite.
-   `card-creation-*` and `combat` have the most direct browser calls and gain
-   the most. In progress. Moved so far:
-   - **Card deletion leftovers.** The version-history specs discard cyphers by
-     name; the index-based delete step is gone. `SetupDsl.newCharacter` seeds a
-     character whose history starts at its own initial version, so a data
-     `Given` does not add a phantom version.
-   - **`card-creation-*`.** A `CardEditorDriver` (interface + Playwright) owns
-     the card edit modal, behind a `CardEditorDsl` that holds the kind being
-     edited. Scenarios say "I start a new attack", "I set its name to …",
-     "I save the card". `CardsDsl` and four step files are deleted. Card steps
-     in the version-history, storage-failure, resource-tracker and
-     data-validation specs use the same vocabulary. The focus-trap spec stays
-     gesture-level through the driver and now really asserts that focus wraps
-     at both ends.
-   - **`combat`.** Display, empty states, theming and the wide-screen/phone
-     arrangement go through `CharacterDsl` and `SheetDriver`.
-   - **`stat-pool-editing`.** A `ValueEditorDriver` owns the generic edit-value
-     modal. `value-editor.feature` is the one spec of the modal's
-     interaction; stat edits are written as "I change my Might pool to 12".
-
-   Second round:
-   - **Value editing.** `basic-info-editing`, `resource-tracker-editing`,
-     `empty-fields-visibility` and the edits in `auto-save-indicator`,
-     `storage-failure`, `sheet-toolbar` and `recovery-damage-track` go through
-     `CharacterDsl` and `ValueEditorDriver`. `value-editor.feature` is the one
-     spec of the edit-value modal, including its phone-only sizing
-     (`@phone-only`). `ModalDsl`, `FieldsDsl` and the generic modal steps are
-     gone.
-   - **Inline fields.** `additional-fields-editing` has an
-     `InlineFieldsDriver` behind `AdditionalFieldsDsl` for the click-to-edit,
-     save-on-blur text fields and the type dropdown.
-   - **Viewport.** A `ViewportDriver` behind `ScreenDsl` is the only place that
-     resizes the page, grows it to full height or checks sideways scroll.
-   - **Character display.** `character-display` creates its own data and states
-     the no-untranslated-text requirement once.
-   - **Version history.** `VersionHistoryDriver` (navigator, undo/redo,
-     export), `VersionSaveDriver` (settling edits, the held-save gate) and
-     `ComparisonDriver` (the side-by-side view) sit behind `VersionHistoryDsl`,
-     `HistorySeedDsl` and `ComparisonDsl`. Edits settle "into a version"
-     rather than waiting for a squash timer, and several assertions that only
-     checked a count now check the versions' content.
-   - **Seeding fix.** The Before hook waits for the first boot's initial version
-     before clearing storage. Clearing earlier could leave a stale version that
-     the next boot reconciled into an extra one.
-
-   Still to move: step files that call the page directly, most of them in the
-   layout and section-drag specs (`layout-edit-mode`, `section-drop-preview`,
-   `section-reordering`, `section-slide`, `section-columns`,
-   `grid-merge-split`, `card-reordering*`), import and export
-   (`export-enhancement`, `layout-import-export`, `character-file-*`),
-   `character-storage`, `i18n`, `auto-save-indicator`, `recovery-damage-track`,
-   `data-validation` and `settings-gear`. App time is still read directly in
-   many places; see "One Injectable Clock for All App Time" in `docs/TODO.md`.
+1. **Finish the migration, largest first**, as each file is next touched:
+   `export-enhancement` (with a `FilePickerDriver` replacing the window
+   globals), then `layout-edit-mode` and the section-drag step files behind
+   `LayoutDsl`, then `character-storage` and `auto-save-indicator`.
+2. **Do the small spec fixes now.** They are cheap and independent: retitle the
+   localStorage scenario, replace the vague "preserved/replaced" outcomes, and
+   collapse the Tab-count scenarios.
+3. **Move the remaining `CustomWorld` state into DSL objects** as part of each
+   migration, and delete each field once its last user is gone.
+4. **Audit scenarios that a unit test could prove** (issue 3) before adding any
+   more per-field e2e scenarios.
 
 ---
 
