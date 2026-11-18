@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **456** in 42 files
-- Feature step lines: **1817**
+- Step definitions: **457** in 42 files
+- Feature step lines: **1808**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -40,7 +40,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 12 | 0 |
 | [card-deletion.steps.ts](#carddeletionstepsts) | 6 | 0 |
 | [card-editing.steps.ts](#cardeditingstepsts) | 12 | 0 |
-| [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 8 | 0 |
+| [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 9 | 0 |
 | [card-reordering-abilities.steps.ts](#cardreorderingabilitiesstepsts) | 5 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 8 | 0 |
 | [character-display.steps.ts](#characterdisplaystepsts) | 10 | 0 |
@@ -181,7 +181,7 @@ pattern this script does not understand):
 | When | `I open my character again` | 23 | 36 |
 | When | `I save the card` | 38 | 28 |
 | When | `I set its {word} to {string}` | 120 | 21 |
-| When | `I start a new {cardType}` | 52 | 10 |
+| When | `I start a new {cardType}` | 50 | 10 |
 | When | `I start editing the {cardType} {string}` | 8 | 14 |
 | Then | `my character carries {int} {cardKind}` | 39 | 54 |
 | Then | `my character carries the {cardType} {string}` | 30 | 61 |
@@ -194,14 +194,15 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `focus stays within the card editor` | 5 | 19 |
-| When | `I press Escape in the card editor` | 1 | 11 |
-| When | `I press Shift+Tab {int} time(s)` | 3 | 7 |
-| When | `I press the Tab key {int} time(s)` | 6 | 3 |
-| Then | `the {word} field has focus` | 1 | 31 |
-| Then | `the card editor closes` | 1 | 15 |
-| Then | `the first field of the card editor has focus` | 2 | 23 |
-| Then | `the last control of the card editor has focus` | 2 | 27 |
+| When | `I press Escape in the card editor` | 1 | 22 |
+| When | `I press Shift+Tab {int} time(s)` | 1 | 18 |
+| When | `I press the Tab key {int} time(s)` | 2 | 3 |
+| When | `I tab backwards through every control of the card editor twice` | 1 | 11 |
+| When | `I tab through every control of the card editor twice` | 1 | 7 |
+| Then | `the {word} field has focus` | 1 | 38 |
+| Then | `the card editor closes` | 1 | 26 |
+| Then | `the first field of the card editor has focus` | 4 | 30 |
+| Then | `the last control of the card editor has focus` | 1 | 34 |
 
 ## card-reordering-abilities.steps.ts
 
@@ -259,23 +260,23 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I import a valid character file {string}` | 4 | 3 |
+| Then | `none of the sample character's entries are left` | 1 | 17 |
 | Then | `the character {string} should still be displayed` | 1 | 10 |
-| Then | `the previous character should be replaced` | 1 | 17 |
 
 ## character-storage.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `a character is currently displayed` | 2 | 3 |
-| Then | `all character data should be preserved` | 2 | 42 |
-| Then | `all character sections should show data` | 2 | 30 |
+| Given | `a character is currently displayed` | 1 | 3 |
+| Then | `all of the character's entries and notes are shown` | 5 | 35 |
 | Then | `all sections should display empty state messages` | 2 | 11 |
-| When | `I click the "Load" button` | 2 | 19 |
-| Then | `the character {string} should be displayed` | 3 | 23 |
+| When | `I click the "Load" button` | 2 | 24 |
+| Given | `I have loaded the sample character` | 1 | 19 |
+| Then | `the character {string} should be displayed` | 3 | 28 |
 | Given | `the character sheet is empty` | 4 | 15 |
 | Then | `the character sheet should show empty states` | 2 | 7 |
-| Then | `the character should be displayed` | 1 | 34 |
-| Then | `the same character should still be displayed` | 1 | 38 |
+| Then | `the character should be displayed` | 1 | 39 |
+| Then | `the same character should still be displayed` | 1 | 43 |
 
 ## clock.steps.ts
 

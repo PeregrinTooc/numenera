@@ -40,16 +40,20 @@ export class CardEditorDsl {
     await this.editor.pressShiftTab(times);
   }
 
+  async tabsThroughEveryControlTwice(): Promise<void> {
+    await this.editor.tabThroughEveryControl(2, "Tab");
+  }
+
+  async tabsBackThroughEveryControlTwice(): Promise<void> {
+    await this.editor.tabThroughEveryControl(2, "Shift+Tab");
+  }
+
   async pressEscape(): Promise<void> {
     await this.editor.pressEscape();
   }
 
   async expectClosed(): Promise<void> {
     await this.editor.expectClosed();
-  }
-
-  async expectFocusWithin(): Promise<void> {
-    await this.editor.expectFocusWithin();
   }
 
   async expectFirstFieldFocused(): Promise<void> {

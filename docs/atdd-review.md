@@ -47,8 +47,11 @@ have.
 - **No sleeps.** There are zero `waitForTimeout` calls, an ESLint rule forbids
   new ones, and the app runs on an injectable `ManualClock` the tests advance
   (lesson 306: no sleeps papering over races; confirm the outcome instead).
-  The one remaining `setTimeout` (`section-slide.steps.ts:99`) is in a
-  failure-diagnostics path, not a synchronisation point.
+  The same rule now also forbids `setTimeout` and `setInterval`. The last two
+  uses are gone: a zero-delay flush in the settings driver that waited for a
+  listener the app already attaches synchronously, and a half-second sleep in a
+  slide-failure diagnostic that became obsolete once the driver plays slides to
+  their end.
 - **Races are reproduced, not hoped away.** The held-save gate in
   `VersionSaveDriver` makes the squash race deterministic.
 - **The suite reports its state honestly.** No feature uses `@skip`, `@wip` or
@@ -237,7 +240,17 @@ state. Nothing to change.
    `LayoutDsl`, then `character-storage` and `auto-save-indicator`.
 2. **Do the small spec fixes now.** They are cheap and independent: retitle the
    localStorage scenario, replace the vague "preserved/replaced" outcomes, and
-   collapse the Tab-count scenarios.
+   collapse the Tab-count scenarios. Done. The import scenario is now "An
+   imported character is still there next time". "All character sections should
+   show data" and "all character data should be preserved" are one step, "all
+   of the character's entries and notes are shown", which compares every
+   section with the character the test supplied (the "preserved" variant only
+   looked at three of them). Replacing a character starts from the loaded
+   sample character and checks that none of its entries are left. The focus-trap
+   scenarios tab "through every control twice", with the driver counting the
+   controls and checking focus after every press, as one outline over ability,
+   cypher and equipment. The gesture-word and i18n-outline items of issue 2
+   are still open.
 3. **Move the remaining `CustomWorld` state into DSL objects** as part of each
    migration, and delete each field once its last user is gone.
 4. **Audit scenarios that a unit test could prove** (issue 3) before adding any

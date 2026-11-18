@@ -15,6 +15,6 @@ Then(
   }
 );
 
-Then("the previous character should be replaced", async function (this: CustomWorld) {
-  await this.characterImport.expectPreviousCharacterReplaced();
+Then("none of the sample character's entries are left", async function (this: CustomWorld) {
+  await this.character.expectNoEntryOfSampleCharacter();
 });

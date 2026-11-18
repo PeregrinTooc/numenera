@@ -10,41 +10,33 @@ Feature: Card Modal Focus Trap
         When I start a new ability
         Then the first field of the card editor has focus
 
-    Scenario: Tab key traps focus within ability card modal - forward navigation
+    Scenario: Tab and Shift+Tab wrap around the ends of the ability card modal
         When I start a new ability
         And I press Shift+Tab 1 time
         Then the last control of the card editor has focus
         When I press the Tab key 1 time
         Then the first field of the card editor has focus
-        When I press the Tab key 10 times
-        Then focus stays within the card editor
 
-    Scenario: Shift+Tab key traps focus within ability card modal - backward navigation
-        When I start a new ability
-        And I press Shift+Tab 1 time
-        Then the last control of the card editor has focus
-        When I press Shift+Tab 10 times
-        Then focus stays within the card editor
+    Scenario Outline: Tabbing never leaves the <kind> card modal
+        When I start a new <kind>
+        And I tab through every control of the card editor twice
+        Then the first field of the card editor has focus
 
-    Scenario: Focus cannot escape ability card modal after many Tab presses
+        Examples:
+            | kind      |
+            | ability   |
+            | cypher    |
+            | equipment |
+
+    Scenario: Tabbing backwards never leaves the ability card modal
         When I start a new ability
-        And I press the Tab key 20 times
-        Then focus stays within the card editor
+        And I tab backwards through every control of the card editor twice
+        Then the first field of the card editor has focus
 
     Scenario: Escape key closes ability card modal
         When I start a new ability
         And I press Escape in the card editor
         Then the card editor closes
-
-    Scenario: Cypher card modal has working focus trap
-        When I start a new cypher
-        And I press the Tab key 15 times
-        Then focus stays within the card editor
-
-    Scenario: Equipment card modal has working focus trap
-        When I start a new equipment
-        And I press the Tab key 15 times
-        Then focus stays within the card editor
 
     Scenario: Tab key reaches the description textarea in the ability card modal
         When I start a new ability

@@ -1,6 +1,8 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { CARD_CONFIGS } from "./cardTestFixtures.js";
 
+export type TabKey = "Tab" | "Shift+Tab";
+
 export interface CardEditorDriver {
   startNew(kind: string): Promise<void>;
   startEditing(kind: string, name: string): Promise<void>;
@@ -10,9 +12,9 @@ export interface CardEditorDriver {
   expectEmptyFields(kind: string): Promise<void>;
   pressTab(times: number): Promise<void>;
   pressShiftTab(times: number): Promise<void>;
+  tabThroughEveryControl(rounds: number, key: TabKey): Promise<void>;
   pressEscape(): Promise<void>;
   expectClosed(): Promise<void>;
-  expectFocusWithin(): Promise<void>;
   expectFirstFieldFocused(): Promise<void>;
   expectLastControlFocused(): Promise<void>;
   expectFieldFocused(kind: string, field: string): Promise<void>;
@@ -50,7 +52,7 @@ export class PlaywrightCardEditorDriver implements CardEditorDriver {
     await expect(this.editor).toBeVisible();
     // The editor moves focus into itself in a deferred call; keyboard input
     // sent before that lands outside the editor.
-    await expect(this.editor.locator(":focus")).toHaveCount(1);
+    await this.expectFocusWithin();
   }
 
   async startNew(kind: string): Promise<void> {
@@ -101,6 +103,15 @@ export class PlaywrightCardEditorDriver implements CardEditorDriver {
     for (let i = 0; i < times; i++) await this.page.keyboard.press("Shift+Tab");
   }
 
+  /** Fails at the first press that moves focus out of the editor. */
+  async tabThroughEveryControl(rounds: number, key: TabKey): Promise<void> {
+    const presses = (await this.editor.locator(FOCUSABLE_CONTROLS).count()) * rounds;
+    for (let i = 0; i < presses; i++) {
+      await this.page.keyboard.press(key);
+      await this.expectFocusWithin();
+    }
+  }
+
   async pressEscape(): Promise<void> {
     await this.page.keyboard.press("Escape");
   }
@@ -109,7 +120,7 @@ export class PlaywrightCardEditorDriver implements CardEditorDriver {
     await expect(this.editor).toBeHidden();
   }
 
-  async expectFocusWithin(): Promise<void> {
+  private async expectFocusWithin(): Promise<void> {
     await expect(this.editor.locator(":focus")).toHaveCount(1);
   }
 

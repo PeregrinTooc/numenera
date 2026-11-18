@@ -5,6 +5,17 @@ When("I press the Tab key {int} time(s)", async function (this: CustomWorld, tim
   await this.cardEditor.pressTab(times);
 });
 
+When("I tab through every control of the card editor twice", async function (this: CustomWorld) {
+  await this.cardEditor.tabsThroughEveryControlTwice();
+});
+
+When(
+  "I tab backwards through every control of the card editor twice",
+  async function (this: CustomWorld) {
+    await this.cardEditor.tabsBackThroughEveryControlTwice();
+  }
+);
+
 When("I press Shift+Tab {int} time(s)", async function (this: CustomWorld, times: number) {
   await this.cardEditor.pressShiftTab(times);
 });
@@ -15,10 +26,6 @@ When("I press Escape in the card editor", async function (this: CustomWorld) {
 
 Then("the card editor closes", async function (this: CustomWorld) {
   await this.cardEditor.expectClosed();
-});
-
-Then("focus stays within the card editor", async function (this: CustomWorld) {
-  await this.cardEditor.expectFocusWithin();
 });
 
 Then("the first field of the card editor has focus", async function (this: CustomWorld) {

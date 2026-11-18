@@ -45,8 +45,7 @@ export interface StatRow {
   current: string;
 }
 
-const SECTIONS_THAT_KEEP_THEIR_DATA = ["cypher", "artifact", "oddity"];
-const SECTIONS_WITH_DATA = [...SECTIONS_THAT_KEEP_THEIR_DATA, "equipment", "ability"];
+const SECTIONS_WITH_DATA = ["cypher", "artifact", "oddity", "equipment", "ability"];
 
 export class CharacterDsl {
   private shown?: Character;
@@ -79,14 +78,6 @@ export class CharacterDsl {
     await this.expectBasicInfoShows("name", FULL_CHARACTER.name);
   }
 
-  async expectEverySectionShowsItsData(): Promise<void> {
-    await this.expectSectionsShowTheirData(SECTIONS_WITH_DATA);
-  }
-
-  async expectDataPreserved(): Promise<void> {
-    await this.expectSectionsShowTheirData(SECTIONS_THAT_KEEP_THEIR_DATA);
-  }
-
   async expectNoCyphersArtifactsOrOddities(): Promise<void> {
     for (const kind of ["cypher", "artifact", "oddity"]) await this.sheet.expectEmptyState(kind);
   }
@@ -98,10 +89,18 @@ export class CharacterDsl {
     await this.fields.expectReads("notes", "");
   }
 
-  private async expectSectionsShowTheirData(kinds: string[]): Promise<void> {
+  async expectNoEntryOfSampleCharacter(): Promise<void> {
+    await this.expectBasicInfoDoesNotShow("name", FULL_CHARACTER.name);
+    for (const kind of Object.keys(CARD_TYPE_TO_PROPERTY)) {
+      const cards = FULL_CHARACTER[CARD_TYPE_TO_PROPERTY[kind] as keyof Character] as unknown[];
+      for (const name of cards.map(nameOf)) await this.sheet.expectNoEntry(name);
+    }
+  }
+
+  async expectEverySectionShowsItsData(): Promise<void> {
     const character = this.shown;
     if (character === undefined) throw new Error("No character was loaded or imported");
-    for (const kind of kinds) {
+    for (const kind of SECTIONS_WITH_DATA) {
       const cards = character[CARD_TYPE_TO_PROPERTY[kind] as keyof Character] as unknown[];
       await this.sheet.expectEntries(kind, cards.map(nameOf));
     }

@@ -17,6 +17,11 @@ Given("the character sheet is empty", async function (this: CustomWorld) {
   await this.character.startsWithEmptySheet();
 });
 
+Given("I have loaded the sample character", async function (this: CustomWorld) {
+  await this.character.loadsSampleCharacter();
+  await this.character.expectSampleCharacterDisplayed();
+});
+
 When('I click the "Load" button', async function (this: CustomWorld) {
   await this.character.loadsSampleCharacter();
 });
@@ -28,7 +33,7 @@ Then(
   }
 );
 
-Then("all character sections should show data", async function (this: CustomWorld) {
+Then("all of the character's entries and notes are shown", async function (this: CustomWorld) {
   await this.character.expectEverySectionShowsItsData();
 });
 
@@ -38,8 +43,4 @@ Then("the character should be displayed", async function (this: CustomWorld) {
 
 Then("the same character should still be displayed", async function (this: CustomWorld) {
   await this.character.expectSampleCharacterDisplayed();
-});
-
-Then("all character data should be preserved", async function (this: CustomWorld) {
-  await this.character.expectDataPreserved();
 });

@@ -79,10 +79,6 @@ export class CharacterImportDsl {
     await this.character.expectBasicInfoShows("name", name);
   }
 
-  async expectPreviousCharacterReplaced(): Promise<void> {
-    await this.character.expectBasicInfoDoesNotShow("name", FULL_CHARACTER.name);
-  }
-
   async expectImportedCharacterNamed(): Promise<void> {
     await this.character.expectBasicInfoShows("name", IMPORTED_HERO.name);
   }

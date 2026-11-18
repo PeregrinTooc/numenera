@@ -8,7 +8,7 @@ Feature: Character Storage and State Management
         And the character sheet is empty
         When I click the "Load" button
         Then the character "Kael the Wanderer" should be displayed
-        And all character sections should show data
+        And all of the character's entries and notes are shown
 
     Scenario: Create new character via new button
         Given I am on the character sheet page
@@ -23,7 +23,7 @@ Feature: Character Storage and State Management
         Then the character should be displayed
         When I reload the page
         Then the same character should still be displayed
-        And all character data should be preserved
+        And all of the character's entries and notes are shown
 
     Scenario: Empty state persists across page reloads after creating new
         Given I am on the character sheet page
