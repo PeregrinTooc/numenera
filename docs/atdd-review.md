@@ -3,6 +3,12 @@
 Reviewed 2026-11-16 against Dave Farley's ATDD principles. This replaces the
 2026-11-13 review, whose first four recommendations have since been carried out.
 
+> **Status, 2026-11-18:** issues 1 and 2 are resolved, and so are the
+> `CustomWorld` and hook-wiring items under "Further improvements". The work
+> that resolved issue 1 landed the same day as this review. Issue 3 and the
+> `@not-phone` audit are open. The text below keeps the findings as they were
+> made; each section says what has changed since.
+
 > **Source note:** this review used the free-tier summaries of Dave Farley's
 > ATDD lessons (103b, 203, 301, 302, 303, 305, 306, 308), not the full lessons.
 > The criteria quoted come from those summaries. The judgments, rewrites and
@@ -24,11 +30,11 @@ parsing over DSL classes (`CharacterDsl`, `CardEditorDsl`, `LayoutDsl`,
 `VersionHistoryDsl`, …). Those sit on driver interfaces with one Playwright
 implementation each, and the section-drag DSL has two drivers (mouse and touch)
 chosen by device profile. Isolation, time control and release honesty are all
-in good shape. What remains is an unfinished migration: about 25 of 42 step
-files still call the page directly, so the suite has two architectures side by
-side, and a handful of scenarios still describe mechanism rather than behaviour.
-None of this needs a redesign. Finish moving files onto the pattern you already
-have.
+in good shape. At review time the migration was unfinished: about 25 of 42 step
+files still called the page directly, and a handful of scenarios described
+mechanism rather than behaviour. Both are done now (see issues 1 and 2). What
+remains is deciding which layer proves each UI rule (issue 3) and auditing the
+phone exclusions.
 
 ## Strengths
 
@@ -65,82 +71,33 @@ have.
 
 ## Priority issues
 
-### 1. Half the step files still bypass the DSL
+### 1. Half the step files still bypass the DSL — resolved
 
 _Lesson 308: step definitions are thin parsing, no logic, calling straight
 through to a DSL. Lesson 305: the driver layer is the only one that knows how the
 system works._
 
-The migrated and unmigrated styles now coexist. Step files that still reach into
-the page, by number of direct page calls:
+At review time about 25 of 42 step files still reached into the page (about 240
+locator references and 41 `page.evaluate` calls), led by
+`export-enhancement`, `layout-edit-mode`, `character-storage`, `i18n` and the
+section-drag steps. Assertions such as "all character sections should show
+data" checked `length > 0` instead of the data the test supplied, and
+`export-enhancement` used window globals as its test API.
 
-| File                                                            | Direct page calls |
-| --------------------------------------------------------------- | ----------------- |
-| `export-enhancement.steps.ts`                                   | 37                |
-| `layout-edit-mode.steps.ts`                                     | 27                |
-| `character-storage.steps.ts`                                    | 25                |
-| `i18n.steps.ts`                                                 | 21                |
-| `auto-save-indicator.steps.ts`                                  | 18                |
-| `section-drop-preview.steps.ts`                                 | 17                |
-| `recovery-damage-track.steps.ts`, `section-reordering.steps.ts` | 16 each           |
-| `section-slide`, `layout-import-export`, `section-columns`      | 11 to 12 each     |
+**Now:** no step definition touches the page, its context or storage. An ESLint
+rule on `tests/e2e/step-definitions/` forbids `this.page`, `this.context`,
+`this.storageHelper` and importing Playwright there. Every area has a DSL over a
+driver interface, wired in one `createDsls(page, device)` factory
+(`support/dsls.ts`). The export steps go through `FileExportDriver`
+(`support/exportCapture.ts`), whose single in-page recorder counts save dialogs,
+downloads and writes. That lets "asked where to save" and "downloaded" check
+the path the app actually took rather than only a filename, and one
+"I export my character" step serves every export scenario. Assertions compare
+against the character the test supplied.
 
-In total there are about 240 `page.locator` / `getByTestId` references and 41
-`page.evaluate` calls left in step definitions. `character-storage.steps.ts` is
-representative:
+### 2. A few specs still describe mechanism, not behaviour — resolved
 
-```ts
-Then("all character sections should show data", async function () {
-  await expect(this.page.locator('[data-testid^="cypher-item"]').first()).toBeVisible();
-  await expect(this.page.locator('[data-testid^="artifact-item"]').first()).toBeVisible();
-  const background = this.page.locator('[data-testid="character-background"]');
-  const backgroundValue = await background.inputValue();
-  expect(backgroundValue.length).toBeGreaterThan(0);
-  // ...
-});
-```
-
-This is the old shape: test ids, `inputValue`, and a vague "has some data"
-assertion in the step. The migrated version already exists in spirit. Ask the
-DSL for the fact and let the driver find it:
-
-```ts
-// Step definition: thin parsing only
-Then("my whole character is shown", async function (this: CustomWorld) {
-  await this.character.showsCharacter(this.setup.fullCharacter());
-});
-
-// Driver: the only place that knows ids and inputs
-async showsCharacter(expected: Character): Promise<void> {
-  await expect(this.page.getByTestId("character-name")).toHaveText(expected.name);
-  await expect(this.page.getByTestId("character-background")).toHaveValue(expected.background);
-  // one assertion per section, comparing against the data the test supplied
-}
-```
-
-Asserting against the data the test supplied, rather than `length > 0`, also
-fixes a weak oracle: today "all sections should show data" would pass for the
-wrong data.
-
-Two areas deserve more than a mechanical move:
-
-- **Window globals as a test API.** `export-enhancement.steps.ts` installs a
-  `showSaveFilePicker` mock that writes to `window._lastWrittenData`,
-  `_exportedData`, `_writeCount`, `_saveDialogShown` and others (33 `window._…`
-  references in step files). That is a stub, which is fine, but lesson 303 says
-  stubs are _translators, not simulations_: a simple programmable response
-  holder. Move it into a `FilePickerDriver` (`exportCapture.ts` is the natural
-  home) exposing `lastSavedFile()`, `cancelNextSave()` and `saveDialogCount()`,
-  so steps never name a window global.
-- **Layout and section-drag steps.** These are the largest block of direct page
-  work and the area where mouse/touch driver reuse already paid off. Moving
-  `layout-edit-mode`, `section-drop-preview`, `section-reordering` and
-  `section-slide` behind `LayoutDsl` would finish what the pilot started.
-
-Migrate one feature file at a time whenever it is touched for other work, as
-planned; don't do it as one rewrite.
-
-### 2. A few specs still describe mechanism, not behaviour
+See step 2 under "Suggested next steps" for what changed.
 
 _Lesson 103b: use the language of the problem domain. Lesson 203, mistake #1:
 confusing UI interactions with behaviour. Dave's check: could a completely
@@ -202,16 +159,14 @@ in Vitest and keep one acceptance scenario for the journey.
 
 ## Further improvements
 
-- **`CustomWorld` still carries per-feature state**: `draggedCypherName`,
-  `heldDropTarget`, `savedTimestamp`, `saveCount`, `exportedFileData`,
-  `exportedFilename`, `importedFile`, `importNote`, `requestedUrls`. These are
-  state that belongs inside the DSL or driver for that area (each DSL object can
-  hold its own). It also marks which features are still unmigrated.
-- **Hook wiring is growing.** `hooks.ts` constructs about fifteen DSL/driver
-  objects by hand in `Before`. A small `createDsls(page, device)` factory in
-  `support/` would keep the hook readable and give a single place to swap
+- **`CustomWorld` carried per-feature state** (`draggedCypherName`,
+  `heldDropTarget`, `savedTimestamp`, …). Resolved: the world now holds only the
+  page, the storage helper, the clock and the DSLs; each DSL keeps its own
+  state.
+- **Hook wiring was growing.** Resolved: `createDsls(page, device)` in
+  `support/dsls.ts` builds every DSL and driver, and is the one place to swap
   drivers (lesson 305: the DSL is the stable interface; drivers are swappable).
-- **`@not-phone` (23 scenarios) hides a coverage gap on two device profiles.**
+- **`@not-phone` (24 scenarios as of 2026-11-18) hides a coverage gap on two device profiles.**
   Each exclusion is visible, which is honest. If any of them are "not yet made
   to work on phone" rather than "not applicable on phone", track those by name
   in `docs/TODO.md` so they don't become permanent.
@@ -237,7 +192,9 @@ state. Nothing to change.
 1. **Finish the migration, largest first**, as each file is next touched:
    `export-enhancement` (with a `FilePickerDriver` replacing the window
    globals), then `layout-edit-mode` and the section-drag step files behind
-   `LayoutDsl`, then `character-storage` and `auto-save-indicator`.
+   `LayoutDsl`, then `character-storage` and `auto-save-indicator`. Done; see
+   issue 1. The picker sits behind `FileExportDriver` rather than a separate
+   `FilePickerDriver`.
 2. **Do the small spec fixes now.** They are cheap and independent: retitle the
    localStorage scenario, replace the vague "preserved/replaced" outcomes, and
    collapse the Tab-count scenarios. Done. The import scenario is now "An
@@ -252,17 +209,18 @@ state. Nothing to change.
    cypher and equipment. Gesture words: "I click my Might pool" turned out to
    live only in `value-editor.feature` and "I click my background" only in the
    inline-field feature, where the click is the thing under test, so both
-   stay. Scenarios outside the settings feature say "I switch to German". The
-   Export button wording waits for the `export-enhancement` migration
-   (issue 1), because its assertions read a different capture than
-   "I export the character", and renaming it first would leave two phrasings
-   for one intent. The i18n per-section scenarios are now one table of
+   stay. Scenarios outside the settings feature say "I switch to German". Export
+   scenarios say "I export my character"; only Quick Export and Save As, the
+   controls under test, are clicked by name. `export-enhancement` no longer
+   repeats the file-content and special-character scenarios of
+   `character-file-export`. The i18n per-section scenarios are now one table of
    sheet parts and texts for the filled sheet and one for the empty sheet,
    checked with exact locators instead of "the stats section mentions".
 3. **Move the remaining `CustomWorld` state into DSL objects** as part of each
-   migration, and delete each field once its last user is gone.
+   migration, and delete each field once its last user is gone. Done.
 4. **Audit scenarios that a unit test could prove** (issue 3) before adding any
-   more per-field e2e scenarios.
+   more per-field e2e scenarios. Open, as is sorting the `@not-phone`
+   scenarios into "not applicable" and "not yet working", and listing the second kind in `docs/TODO.md`.
 
 ---
 
