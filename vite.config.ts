@@ -3,7 +3,7 @@ import basicSsl from "@vitejs/plugin-basic-ssl";
 import { VitePWA } from "vite-plugin-pwa";
 import path from "path";
 import { fileURLToPath } from "url";
-import en from "./src/i18n/locales/en.json";
+import en from "./src/i18n/locales/en.json" with { type: "json" };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     ...(mode === "lan" ? [basicSsl()] : []),
     VitePWA({
+      workbox: { globPatterns: ["**/*.{html,js,css,woff2}"] },
       manifest: {
         name: en.app.title,
         short_name: "Numenera",

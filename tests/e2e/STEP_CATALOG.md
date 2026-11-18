@@ -26,10 +26,10 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **459** in 43 files
-- Feature step lines: **1805**
+- Step definitions: **462** in 43 files
+- Feature step lines: **1806**
 - Definitions with no feature usage: **0**
-- Feature lines matching no definition: **11**
+- Feature lines matching no definition: **5**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
@@ -58,7 +58,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 15 | 0 |
-| [pwa-support.steps.ts](#pwasupportstepsts) | 1 | 0 |
+| [pwa-support.steps.ts](#pwasupportstepsts) | 4 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 22 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 7 | 0 |
 | [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
@@ -82,12 +82,6 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 These would be reported as *undefined* by Cucumber (or are matched by a
 pattern this script does not understand):
 
-- `pwa-support.feature:14` — I have opened the character sheet before
-- `pwa-support.feature:15` — I lose my connection
-- `pwa-support.feature:17` — the character sheet should be displayed
-- `pwa-support.feature:21` — I have opened the character sheet before
-- `pwa-support.feature:22` — I lose my connection
-- `pwa-support.feature:29` — I have opened the character sheet before
 - `pwa-support.feature:30` — a newer version of the character sheet is published
 - `pwa-support.feature:32` — I should be told that a newer version is available
 - `pwa-support.feature:33` — I accept the newer version
@@ -468,6 +462,9 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
+| Given | `I have opened the character sheet before` | 3 | 37 |
+| When | `I lose my connection` | 2 | 42 |
+| Then | `the character sheet should be displayed` | 1 | 46 |
 | Then | `the character sheet should be installable as an app` | 1 | 17 |
 
 ## recovery-damage-track.steps.ts
@@ -634,7 +631,7 @@ pattern this script does not understand):
 | --- | --- | ---: | ---: |
 | When | `I open the character sheet and watch its requests` | 2 | 5 |
 | Then | `nothing should have been requested from another site` | 1 | 15 |
-| Then | `the {string} and {string} fonts should be loaded` | 1 | 23 |
+| Then | `the {string} and {string} fonts should be loaded` | 2 | 23 |
 
 ## unreadable-character.steps.ts
 

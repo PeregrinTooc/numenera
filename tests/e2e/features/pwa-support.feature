@@ -9,12 +9,12 @@ Feature: Installable, offline character sheet
         Given I am on the character sheet page
         Then the character sheet should be installable as an app
 
-    @wip
     Scenario: The character sheet opens without a connection
         Given I have opened the character sheet before
         When I lose my connection
         And I reload the page
         Then the character sheet should be displayed
+        And the "Cinzel" and "Caveat" fonts should be loaded
 
     @wip
     Scenario: Changes made without a connection are kept
