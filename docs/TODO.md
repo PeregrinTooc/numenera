@@ -179,18 +179,17 @@ Add Progressive Web App support for installing the app and offline functionality
 **Goals**
 
 - Enable app installation on devices
-- Support offline character sheet access
-- Cache character data locally
-- Provide app-like experience
+- Open the character sheet without a connection (character data already lives in IndexedDB)
+- Offer newer versions with a prompt rather than updating silently, so open tabs never mix old and new code
 
 **E2E Tests**
 
-- File: `tests/e2e/features/pwa-support.feature`
+- File: `tests/e2e/features/pwa-support.feature` (tagged `@prod-only`, `@wip` until implemented)
 - Scenarios:
-  - Install app on device
-  - Access app while offline
-  - Character data persists offline
-  - Sync when coming back online
+  - The character sheet can be installed as an app
+  - The character sheet opens without a connection
+  - Changes made without a connection are kept
+  - I am offered a newer version of the character sheet
 
 ### Multiple Characters
 

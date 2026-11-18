@@ -14,6 +14,10 @@ if (device !== "desktop") excludedTags.push("@desktop-only");
 if (PHONE_DEVICES.includes(device)) excludedTags.push("@not-phone");
 else excludedTags.push("@phone-only");
 if (!TOUCH_DEVICES.includes(device)) excludedTags.push("@touch");
+// Service workers only run in the production build; scripts/e2e.js sets
+// E2E_PROD for `--prod` runs.
+// eslint-disable-next-line no-undef
+if (!process.env.E2E_PROD) excludedTags.push("@prod-only");
 
 module.exports = {
   default: {

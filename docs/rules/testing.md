@@ -40,6 +40,10 @@ Everything else must pass on all four.
 | `@phone-only`   | `desktop`, `ipadpro`       | layout that exists only on a phone (e.g. the edit modal sized to the screen)                                                       |
 | `@touch`        | every non-`pixel5` profile | gestures that need a finger (e.g. long-press); real touch input exists only on Chromium, so only `pixel5` drives sections by touch |
 
+`@prod-only` is not a device tag: it marks behaviour that exists only in the
+production build (the service worker), and every run except `test:e2e:prod`
+skips it.
+
 A scenario that needs a width no profile has (e.g. 320px) uses
 `the viewport is N pixels wide`.
 

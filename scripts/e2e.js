@@ -65,6 +65,7 @@ const argv = process.argv.slice(2);
 const prod = argv[0] === "--prod";
 const shard = parseShard(process.env.E2E_SHARD);
 const cucumberArgs = prod ? argv.slice(1) : argv;
+if (prod) process.env.E2E_PROD = "1";
 const args = shard ? await shardArgs(cucumberArgs, shard) : cucumberArgs;
 const port = Number(process.env.E2E_PORT ?? (await freePort()));
 

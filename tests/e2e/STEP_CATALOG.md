@@ -27,9 +27,9 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 ## Summary
 
 - Step definitions: **458** in 42 files
-- Feature step lines: **1788**
+- Feature step lines: **1805**
 - Definitions with no feature usage: **0**
-- Feature lines matching no definition: **1**
+- Feature lines matching no definition: **12**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
@@ -81,6 +81,17 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 These would be reported as *undefined* by Cucumber (or are matched by a
 pattern this script does not understand):
 
+- `pwa-support.feature:10` — the character sheet should be installable as an app
+- `pwa-support.feature:13` — I have opened the character sheet before
+- `pwa-support.feature:14` — I lose my connection
+- `pwa-support.feature:16` — the character sheet should be displayed
+- `pwa-support.feature:19` — I have opened the character sheet before
+- `pwa-support.feature:20` — I lose my connection
+- `pwa-support.feature:26` — I have opened the character sheet before
+- `pwa-support.feature:27` — a newer version of the character sheet is published
+- `pwa-support.feature:29` — I should be told that a newer version is available
+- `pwa-support.feature:30` — I accept the newer version
+- `pwa-support.feature:31` — the newer version of the character sheet should be running
 - `section-rearrangement.feature:52` — I drag the "Cyphers" section onto the middle <side> of the "Items" section
 
 ## ability-enhancements.steps.ts
@@ -232,7 +243,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am on the character sheet page` | 24 | 14 |
+| Given | `I am on the character sheet page` | 25 | 14 |
 | Given | `my character has every kind of entry` | 1 | 29 |
 | Given | `my character has these stats:` | 1 | 25 |
 | Given | `my character has this basic information:` | 1 | 18 |
@@ -318,7 +329,7 @@ pattern this script does not understand):
 | --- | --- | ---: | ---: |
 | When | `I click the "New" button` | 3 | 5 |
 | When | `I press the Escape key` | 2 | 10 |
-| When | `I reload the page` | 21 | 14 |
+| When | `I reload the page` | 24 | 14 |
 | When | `I reload the page immediately` | 1 | 27 |
 
 ## data-validation.steps.ts
@@ -485,10 +496,10 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `I am told why` | 1 | 45 |
-| When | `I change my {resourceName} to {int}` | 7 | 24 |
+| When | `I change my {resourceName} to {int}` | 8 | 24 |
 | When | `I try to change my {resourceName} to {string}` | 1 | 31 |
 | Given | `my character has {int} current XP and {int} total XP` | 3 | 3 |
-| Then | `my character sheet shows my {resourceName} as {int}` | 12 | 38 |
+| Then | `my character sheet shows my {resourceName} as {int}` | 13 | 38 |
 | Given | `my character was saved with a single legacy XP value of {int}` | 1 | 10 |
 | Given | `my character's {resourceName} is {int}` | 7 | 17 |
 
