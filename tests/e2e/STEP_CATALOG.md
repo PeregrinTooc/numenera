@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **437** in 42 files
-- Feature step lines: **1776**
+- Step definitions: **431** in 42 files
+- Feature step lines: **1764**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -44,7 +44,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [card-reordering-abilities.steps.ts](#cardreorderingabilitiesstepsts) | 5 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 8 | 0 |
 | [character-display.steps.ts](#characterdisplaystepsts) | 10 | 0 |
-| [character-file-export.steps.ts](#characterfileexportstepsts) | 8 | 0 |
+| [character-file-export.steps.ts](#characterfileexportstepsts) | 7 | 0 |
 | [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [clock.steps.ts](#clockstepsts) | 1 | 0 |
@@ -52,7 +52,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [combat.steps.ts](#combatstepsts) | 13 | 0 |
 | [common-steps.ts](#commonstepsts) | 3 | 0 |
 | [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
-| [export-enhancement.steps.ts](#exportenhancementstepsts) | 21 | 0 |
+| [export-enhancement.steps.ts](#exportenhancementstepsts) | 16 | 0 |
 | [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 7 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 7 | 0 |
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
@@ -246,14 +246,13 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a file export should be triggered` | 1 | 11 |
-| When | `I export the character` | 5 | 7 |
+| When | `I export my character` | 10 | 7 |
 | Given | `the character has name {string}` | 3 | 3 |
-| Then | `the exported file should contain all character properties` | 2 | 22 |
-| Then | `the exported file should have an exportDate` | 2 | 40 |
-| Then | `the exported file should have schemaVersion {string}` | 2 | 33 |
-| Then | `the exported file should have version {string}` | 2 | 26 |
-| Then | `the exported filename should be {string}` | 2 | 15 |
+| Then | `the exported file should contain all character properties` | 1 | 18 |
+| Then | `the exported file should have an exportDate` | 1 | 39 |
+| Then | `the exported file should have schemaVersion {string}` | 1 | 32 |
+| Then | `the exported file should have version {string}` | 1 | 25 |
+| Then | `the exported filename should be {string}` | 2 | 11 |
 
 ## character-file-import.steps.ts
 
@@ -335,27 +334,22 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `a file download should be triggered` | 1 | 58 |
-| When | `I cancel the file save dialog` | 1 | 23 |
-| When | `I click the Export button` | 7 | 19 |
-| When | `I click the Quick Export button` | 1 | 27 |
-| When | `I click the Save As button` | 1 | 31 |
-| Then | `I should not see an {string} button` | 1 | 43 |
-| Then | `I should see a {string} button` | 2 | 39 |
-| Then | `I should see an {string} button` | 2 | 35 |
-| When | `I view the export buttons` | 1 | 15 |
+| Then | `a file named like {string} should be downloaded` | 1 | 46 |
+| When | `I cancel the file save dialog` | 1 | 15 |
+| When | `I click the Quick Export button` | 1 | 19 |
+| When | `I click the Save As button` | 1 | 23 |
+| Then | `I should be asked where to save a file named like {string}` | 1 | 39 |
+| Then | `I should not see an {string} button` | 1 | 35 |
+| Then | `I should see a {string} button` | 2 | 31 |
+| Then | `I should see an {string} button` | 2 | 27 |
+| When | `I view the export buttons` | 1 | 11 |
 | Given | `my browser does not support File System Access API` | 1 | 7 |
-| Given | `my browser supports File System Access API` | 7 | 3 |
-| Then | `no file should be saved` | 1 | 80 |
-| Given | `the character name is {string}` | 1 | 11 |
-| Then | `the download filename should contain {string}` | 1 | 62 |
-| Then | `the download should have correct file structure` | 1 | 69 |
-| Then | `the Export button should still be visible` | 1 | 84 |
-| Then | `the export dialog should be triggered` | 1 | 92 |
-| Then | `the export dialog should be triggered with filename containing {string}` | 1 | 47 |
-| Then | `the exported data should have correct structure` | 1 | 54 |
-| Then | `the file should be saved without prompting` | 1 | 88 |
-| Then | `the suggested filename should be {string}` | 1 | 73 |
+| Given | `my browser supports File System Access API` | 5 | 3 |
+| Then | `no file should be saved` | 1 | 57 |
+| Then | `the Export button should still be visible` | 1 | 61 |
+| Then | `the export dialog should be triggered` | 1 | 69 |
+| Then | `the file should be saved without prompting` | 1 | 65 |
+| Then | `the saved file should be a well-formed character file` | 2 | 53 |
 
 ## grid-merge-split.steps.ts
 
@@ -412,24 +406,24 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I choose to {string}` | 5 | 82 |
-| When | `I dismiss the layout choice prompt with the Escape key` | 1 | 63 |
-| Given | `I have a character file with a different layout` | 5 | 7 |
-| Given | `I have a character file with the default layout` | 1 | 11 |
-| Given | `I have a character file with the default layout that sets the {string} section to {int} column(s)` | 1 | 19 |
-| Given | `I have a character file with the default layout that sets the {string} section to {int} column(s) and an unknown section to {int} column(s)` | 2 | 26 |
-| Given | `I have a character file without a layout` | 1 | 15 |
-| Given | `I have saved the {string} section as {int} column(s) and an unknown section as {int} column(s)` | 1 | 44 |
-| Given | `I have set the {string} section to {int} column(s)` | 2 | 37 |
-| When | `I import the character file` | 10 | 51 |
-| Then | `I should not see a layout choice prompt` | 5 | 67 |
-| Then | `I should see a layout choice prompt` | 1 | 59 |
-| Then | `I should see options to {string} or {string}` | 1 | 71 |
-| Then | `the {string} option should have focus` | 1 | 78 |
-| Then | `the {string} section should be set to {int} column(s)` | 3 | 90 |
+| When | `I choose to {string}` | 5 | 85 |
+| When | `I dismiss the layout choice prompt with the Escape key` | 1 | 66 |
+| Given | `I have a character file with a different layout` | 5 | 10 |
+| Given | `I have a character file with the default layout` | 1 | 14 |
+| Given | `I have a character file with the default layout that sets the {string} section to {int} column(s)` | 1 | 22 |
+| Given | `I have a character file with the default layout that sets the {string} section to {int} column(s) and an unknown section to {int} column(s)` | 2 | 29 |
+| Given | `I have a character file without a layout` | 1 | 18 |
+| Given | `I have saved the {string} section as {int} column(s) and an unknown section as {int} column(s)` | 1 | 47 |
+| Given | `I have set the {string} section to {int} column(s)` | 2 | 40 |
+| When | `I import the character file` | 10 | 54 |
+| Then | `I should not see a layout choice prompt` | 5 | 70 |
+| Then | `I should see a layout choice prompt` | 1 | 62 |
+| Then | `I should see options to {string} or {string}` | 1 | 74 |
+| Then | `the {string} option should have focus` | 1 | 81 |
+| Then | `the {string} section should be set to {int} column(s)` | 3 | 93 |
 | Then | `the exported file should contain the layout configuration` | 1 | 3 |
-| Then | `the import note should read {string}` | 1 | 55 |
-| Then | `the imported character should be shown` | 5 | 86 |
+| Then | `the import note should read {string}` | 1 | 58 |
+| Then | `the imported character should be shown` | 5 | 89 |
 
 ## recovery-damage-track.steps.ts
 

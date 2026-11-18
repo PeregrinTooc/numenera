@@ -227,7 +227,7 @@ Feature: Section Re-arrangement
 
   Scenario: Layout is included in character export
     Given I have customized the layout
-    When I export the character
+    When I export my character
     Then the exported file should contain the layout configuration
 
   Scenario: Edit layout button is accessible on mobile

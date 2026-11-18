@@ -1,9 +1,12 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { CustomWorld } from "../support/world";
 
-Then("the exported file should contain the layout configuration", function (this: CustomWorld) {
-  this.fileExport.expectLayoutIncluded();
-});
+Then(
+  "the exported file should contain the layout configuration",
+  async function (this: CustomWorld) {
+    await this.fileExport.expectLayoutIncluded();
+  }
+);
 
 Given("I have a character file with a different layout", function (this: CustomWorld) {
   this.layoutImport.hasFileWithDifferentLayout();

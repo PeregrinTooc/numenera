@@ -2,8 +2,9 @@ import { expect, type Page } from "@playwright/test";
 import type { Character } from "@/types/character";
 import { waitForCharacterSheetReady, waitForInitialVersionSaved } from "./app-ready.js";
 import {
-  installExportCapture,
-  waitForExportCapture,
+  clickExport,
+  recordSavesAsTheBrowserWould,
+  savedFile,
   type ExportedCharacterFile,
 } from "./exportCapture.js";
 import { englishText } from "./i18nKeys.js";
@@ -195,10 +196,10 @@ export class PlaywrightVersionHistoryDriver implements VersionHistoryDriver {
   }
 
   async exportWhatIsShown(): Promise<ExportedView> {
-    await installExportCapture(this.page);
-    await this.page.getByTestId("export-button").click();
-    const captured = await waitForExportCapture(this.page);
-    return new CapturedExportedView(JSON.parse(captured.data) as ExportedCharacterFile);
+    await recordSavesAsTheBrowserWould(this.page);
+    await clickExport(this.page);
+    const { data } = await savedFile(this.page);
+    return new CapturedExportedView(JSON.parse(data) as ExportedCharacterFile);
   }
 
   async expectNavigatorHidden(): Promise<void> {

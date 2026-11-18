@@ -1,25 +1,24 @@
 import { expect, type Page } from "@playwright/test";
 import { waitForCharacterSheetReady } from "./app-ready.js";
 
-/** What the file-save mock records about the saves the app attempted. */
+/** What the save recorder has seen of the saves the app attempted. */
 interface FileSaveRecord {
   dialogs: number;
+  downloads: number;
   writes: number;
   cancelNext: boolean;
   filename?: string;
   data?: string;
+  error?: string;
 }
 
 declare global {
   interface Window {
-    __exportedFilename?: string;
-    __exportedData?: string;
-    __exportError?: string;
     __fileSave?: FileSaveRecord;
   }
 }
 
-export interface CapturedExport {
+export interface SavedFile {
   filename: string;
   data: string;
 }
@@ -33,10 +32,109 @@ export interface ExportedCharacterFile {
   versionHistory?: unknown;
 }
 
+/** Which save dialog the app is offered: the browser's own, one in every browser, or none. */
+type SaveDialogOffer = "browser's" | "always" | "never";
+
+/**
+ * Runs in the page. Records every save the app attempts in window.__fileSave
+ * instead of writing to disk: through the save dialog (showSaveFilePicker) or
+ * through the <a download> fallback.
+ */
+function recordSaves(offer: SaveDialogOffer): void {
+  const save: FileSaveRecord = { dialogs: 0, downloads: 0, writes: 0, cancelNext: false };
+  window.__fileSave = save;
+
+  if (offer === "never") {
+    delete window.showSaveFilePicker;
+  } else if (offer === "always" || "showSaveFilePicker" in window) {
+    window.showSaveFilePicker = async (options) => {
+      save.dialogs += 1;
+      if (save.cancelNext) throw new window.DOMException("User cancelled", "AbortError");
+      const filename = options?.suggestedName || "character.json";
+      save.filename = filename;
+      // The mock implements only the handle members the app uses.
+      return {
+        name: filename,
+        kind: "file" as const,
+        createWritable: async () => ({
+          write: async (data: string) => {
+            save.data = data;
+            save.writes += 1;
+          },
+          close: async () => {},
+        }),
+        queryPermission: async () => "granted",
+      } as unknown as FileSystemFileHandle;
+    };
+  }
+
+  // The blob is read from the object, not fetched by its URL: the app revokes
+  // the URL right after click(), and under request interception WebKit
+  // resolves a fetch of it too late.
+  const blobsByUrl = new Map<string, Blob>();
+  const originalCreateObjectURL = URL.createObjectURL.bind(URL);
+  URL.createObjectURL = (object: Parameters<typeof URL.createObjectURL>[0]) => {
+    const url = originalCreateObjectURL(object);
+    if (object instanceof Blob) blobsByUrl.set(url, object);
+    return url;
+  };
+
+  const originalCreateElement = document.createElement.bind(document);
+  document.createElement = ((tagName: string) => {
+    const element = originalCreateElement(tagName);
+    if (tagName.toLowerCase() === "a") {
+      const anchor = element as HTMLAnchorElement;
+      element.click = () => {
+        save.downloads += 1;
+        save.filename = anchor.download;
+        blobsByUrl
+          .get(anchor.href)
+          ?.text()
+          .then((data) => {
+            save.data = data;
+          })
+          .catch((error: unknown) => {
+            save.error = String(error);
+          });
+      };
+    }
+    return element;
+  }) as typeof document.createElement;
+}
+
+/** Records saves through whichever path this browser gives the app. */
+export async function recordSavesAsTheBrowserWould(page: Page): Promise<void> {
+  await page.evaluate<void, SaveDialogOffer>(recordSaves, "browser's");
+}
+
+/** Clicks Export and waits until the app has opened a save dialog or started a download. */
+export async function clickExport(page: Page): Promise<void> {
+  const attemptsBefore = await saveAttempts(page);
+  await page.getByTestId("export-button").click();
+  await expect.poll(() => saveAttempts(page)).toBeGreaterThan(attemptsBefore);
+}
+
+function saveAttempts(page: Page): Promise<number> {
+  return page.evaluate(
+    () => (window.__fileSave?.dialogs ?? 0) + (window.__fileSave?.downloads ?? 0)
+  );
+}
+
+/** The file the app saved, once both its name and its contents have arrived. */
+export async function savedFile(page: Page): Promise<SavedFile> {
+  await page.waitForFunction(
+    () => window.__fileSave?.error !== undefined || window.__fileSave?.data !== undefined
+  );
+  const save = await page.evaluate(() => window.__fileSave);
+  if (save?.error !== undefined) throw new Error(`Reading the saved file failed: ${save.error}`);
+  return { filename: save?.filename ?? "", data: save?.data ?? "" };
+}
+
 /** The export controls in the header, and the browser's save facilities behind them. */
 export interface FileExportDriver {
-  offerSavePicker(): Promise<void>;
+  offerSaveDialog(): Promise<void>;
   offerDownloadOnly(): Promise<void>;
+  recordSavesAsTheBrowserWould(): Promise<void>;
   cancelNextSave(): Promise<void>;
   waitForHeader(): Promise<void>;
   expectButton(text: string): Promise<void>;
@@ -45,173 +143,32 @@ export interface FileExportDriver {
   clickExport(): Promise<void>;
   clickQuickExport(): Promise<void>;
   clickSaveAs(): Promise<void>;
-  exportAndCapture(): Promise<CapturedExport>;
-  waitForSavedFilename(): Promise<string>;
-  waitForSavedData(): Promise<string>;
+  savedFile(): Promise<SavedFile>;
   savedData(): Promise<string | undefined>;
   saveDialogCount(): Promise<number>;
-  waitForSaveDialog(): Promise<void>;
-}
-
-/**
- * Captures an export in window.__exportedFilename / __exportedData instead of
- * writing to disk. Each browser keeps the path the app picks for it: the
- * showSaveFilePicker stub only replaces a picker the browser really has
- * (Chromium), so WebKit still runs the real <a download> blob fallback.
- */
-export async function installExportCapture(page: Page): Promise<void> {
-  await page.evaluate(() => {
-    delete window.__exportedFilename;
-    delete window.__exportedData;
-    delete window.__exportError;
-
-    const pickerWindow = window as unknown as {
-      showSaveFilePicker: (options: { suggestedName: string }) => Promise<unknown>;
-    };
-    if ("showSaveFilePicker" in window) {
-      pickerWindow.showSaveFilePicker = async (options) => {
-        window.__exportedFilename = options.suggestedName;
-        return {
-          name: options.suggestedName,
-          kind: "file",
-          createWritable: async () => ({
-            write: async (data: string) => {
-              window.__exportedData = data;
-            },
-            close: async () => {},
-          }),
-          queryPermission: async () => "granted",
-        };
-      };
-    }
-
-    // The blob is read from the object, not fetched by its URL: the app revokes
-    // the URL right after click(), and under request interception WebKit
-    // resolves a fetch of it too late.
-    const blobsByUrl = new Map<string, Blob>();
-    const originalCreateObjectURL = URL.createObjectURL.bind(URL);
-    URL.createObjectURL = (object: Parameters<typeof URL.createObjectURL>[0]) => {
-      const url = originalCreateObjectURL(object);
-      if (object instanceof Blob) blobsByUrl.set(url, object);
-      return url;
-    };
-
-    const originalCreateElement = document.createElement.bind(document);
-    document.createElement = ((tagName: string) => {
-      const element = originalCreateElement(tagName);
-      if (tagName.toLowerCase() === "a") {
-        const anchor = element as unknown as { download: string; href: string };
-        element.click = () => {
-          window.__exportedFilename = anchor.download;
-          blobsByUrl
-            .get(anchor.href)
-            ?.text()
-            .then((data) => {
-              window.__exportedData = data;
-            })
-            .catch((error: unknown) => {
-              window.__exportError = String(error);
-            });
-        };
-      }
-      return element;
-    }) as typeof document.createElement;
-  });
-}
-
-/**
- * Waits until the stubbed export has delivered both filename and data, or a
- * blob read error. Rejects with an "Export capture: ..." message on either
- * an error or a timeout, rather than hanging until the step timeout.
- */
-export async function waitForExportCapture(page: Page, timeoutMs = 5000): Promise<CapturedExport> {
-  try {
-    await page.waitForFunction(
-      () =>
-        window.__exportError !== undefined ||
-        (window.__exportedFilename !== undefined && window.__exportedData !== undefined),
-      undefined,
-      { timeout: timeoutMs }
-    );
-  } catch {
-    const seen = await page.evaluate(() => ({
-      filename: window.__exportedFilename ?? null,
-      hasData: window.__exportedData !== undefined,
-    }));
-    throw new Error(
-      `Export capture: nothing captured within ${timeoutMs}ms (filename=${seen.filename}, data=${seen.hasData})`
-    );
-  }
-  const error = await page.evaluate(() => window.__exportError);
-  if (error !== undefined) throw new Error(`Export capture: blob read failed: ${error}`);
-  return page.evaluate(() => ({
-    filename: window.__exportedFilename as string,
-    data: window.__exportedData as string,
-  }));
+  downloadCount(): Promise<number>;
 }
 
 export class PlaywrightFileExportDriver implements FileExportDriver {
   constructor(private page: Page) {}
 
   /**
-   * Installs the picker before the app boots, then reloads: the header decides
+   * Installs the dialog before the app boots, then reloads: the header decides
    * once, at construction, whether to offer Quick Export / Save As, and WebKit
-   * has no native picker a later stub could reach.
+   * has no native dialog a later stub could reach.
    */
-  async offerSavePicker(): Promise<void> {
-    await this.page.addInitScript(() => {
-      const save: FileSaveRecord = { dialogs: 0, writes: 0, cancelNext: false };
-      window.__fileSave = save;
-      window.showSaveFilePicker = async (options?: { suggestedName?: string }) => {
-        save.dialogs += 1;
-        if (save.cancelNext) throw new window.DOMException("User cancelled", "AbortError");
-        const filename = options?.suggestedName || "character.json";
-        save.filename = filename;
-        // The mock implements only the handle members the app uses.
-        return {
-          name: filename,
-          kind: "file" as const,
-          createWritable: async () => ({
-            write: async (data: string) => {
-              save.data = data;
-              save.writes += 1;
-            },
-            close: async () => {},
-          }),
-          queryPermission: async () => "granted",
-        } as unknown as FileSystemFileHandle;
-      };
-    });
+  async offerSaveDialog(): Promise<void> {
+    await this.page.addInitScript<SaveDialogOffer>(recordSaves, "always");
     await this.page.reload();
     await waitForCharacterSheetReady(this.page);
   }
 
   async offerDownloadOnly(): Promise<void> {
-    await this.page.evaluate(() => {
-      const save: FileSaveRecord = { dialogs: 0, writes: 0, cancelNext: false };
-      window.__fileSave = save;
-      delete window.showSaveFilePicker;
+    await this.page.evaluate<void, SaveDialogOffer>(recordSaves, "never");
+  }
 
-      const originalCreateElement = document.createElement.bind(document);
-      document.createElement = function (tagName: string) {
-        const element = originalCreateElement(tagName);
-        if (tagName === "a") {
-          element.click = function () {
-            const anchor = element as HTMLAnchorElement;
-            save.filename = anchor.download;
-            if (anchor.href.startsWith("blob:")) {
-              window
-                .fetch(anchor.href)
-                .then((res) => res.text())
-                .then((data) => {
-                  save.data = data;
-                });
-            }
-          };
-        }
-        return element;
-      };
-    });
+  async recordSavesAsTheBrowserWould(): Promise<void> {
+    await recordSavesAsTheBrowserWould(this.page);
   }
 
   async cancelNextSave(): Promise<void> {
@@ -238,7 +195,7 @@ export class PlaywrightFileExportDriver implements FileExportDriver {
   }
 
   async clickExport(): Promise<void> {
-    await this.page.getByTestId("export-button").click();
+    await clickExport(this.page);
   }
 
   async clickQuickExport(): Promise<void> {
@@ -246,10 +203,7 @@ export class PlaywrightFileExportDriver implements FileExportDriver {
     await expect(button).toBeVisible();
     const writesBefore = await this.countOf("writes");
     await button.click();
-    await this.page.waitForFunction(
-      (before: number) => (window.__fileSave?.writes ?? 0) > before,
-      writesBefore
-    );
+    await expect.poll(() => this.countOf("writes")).toBeGreaterThan(writesBefore);
   }
 
   async clickSaveAs(): Promise<void> {
@@ -257,26 +211,11 @@ export class PlaywrightFileExportDriver implements FileExportDriver {
     await expect(button).toBeVisible();
     const dialogsBefore = await this.countOf("dialogs");
     await button.click();
-    await this.page.waitForFunction(
-      (before: number) => (window.__fileSave?.dialogs ?? 0) > before,
-      dialogsBefore
-    );
+    await expect.poll(() => this.countOf("dialogs")).toBeGreaterThan(dialogsBefore);
   }
 
-  async exportAndCapture(): Promise<CapturedExport> {
-    await installExportCapture(this.page);
-    await this.clickExport();
-    return waitForExportCapture(this.page);
-  }
-
-  async waitForSavedFilename(): Promise<string> {
-    await this.page.waitForFunction(() => Boolean(window.__fileSave?.filename));
-    return this.page.evaluate(() => window.__fileSave?.filename as string);
-  }
-
-  async waitForSavedData(): Promise<string> {
-    await this.page.waitForFunction(() => Boolean(window.__fileSave?.data));
-    return this.page.evaluate(() => window.__fileSave?.data as string);
+  async savedFile(): Promise<SavedFile> {
+    return savedFile(this.page);
   }
 
   async savedData(): Promise<string | undefined> {
@@ -287,11 +226,11 @@ export class PlaywrightFileExportDriver implements FileExportDriver {
     return this.countOf("dialogs");
   }
 
-  async waitForSaveDialog(): Promise<void> {
-    await this.page.waitForFunction(() => (window.__fileSave?.dialogs ?? 0) >= 1);
+  async downloadCount(): Promise<number> {
+    return this.countOf("downloads");
   }
 
-  private async countOf(counter: "dialogs" | "writes"): Promise<number> {
+  private async countOf(counter: "dialogs" | "downloads" | "writes"): Promise<number> {
     return this.page.evaluate((name) => window.__fileSave?.[name] ?? 0, counter);
   }
 }

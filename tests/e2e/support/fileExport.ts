@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import type { CapturedExport, ExportedCharacterFile, FileExportDriver } from "./exportCapture.js";
+import type { ExportedCharacterFile, FileExportDriver } from "./exportCapture.js";
 
 const CHARACTER_PROPERTIES = [
   "name",
@@ -29,16 +29,18 @@ const CHARACTER_PROPERTIES = [
 const FILE_PROPERTIES = ["version", "schemaVersion", "exportDate", "character"];
 
 export class FileExportDsl {
-  private exported?: { filename: string; file: ExportedCharacterFile };
+  private savesRecorded = false;
 
   constructor(private files: FileExportDriver) {}
 
   async browserLetsMeChooseWhereToSave(): Promise<void> {
-    await this.files.offerSavePicker();
+    await this.files.offerSaveDialog();
+    this.savesRecorded = true;
   }
 
   async browserOnlyDownloads(): Promise<void> {
     await this.files.offerDownloadOnly();
+    this.savesRecorded = true;
   }
 
   async cancelTheSaveDialog(): Promise<void> {
@@ -61,7 +63,12 @@ export class FileExportDsl {
     await this.files.expectExportButtonVisible();
   }
 
-  async exportViaButton(): Promise<void> {
+  /** Saves the way the browser would, unless a step has already said how the browser saves. */
+  async exportCharacter(): Promise<void> {
+    if (!this.savesRecorded) {
+      await this.files.recordSavesAsTheBrowserWould();
+      this.savesRecorded = true;
+    }
     await this.files.clickExport();
   }
 
@@ -73,35 +80,27 @@ export class FileExportDsl {
     await this.files.clickSaveAs();
   }
 
-  async exportCharacter(): Promise<void> {
-    const captured: CapturedExport = await this.files.exportAndCapture();
-    this.exported = {
-      filename: captured.filename,
-      file: JSON.parse(captured.data) as ExportedCharacterFile,
-    };
+  async expectAskedWhereToSave(nameFragment: string): Promise<void> {
+    expect(await this.files.saveDialogCount()).toBeGreaterThanOrEqual(1);
+    await this.expectSavedAs(nameFragment);
   }
 
-  async expectSavedAs(nameFragment: string): Promise<void> {
-    const filename = await this.files.waitForSavedFilename();
-    expect(filename).toContain(nameFragment);
-    expect(filename).toMatch(/\.numenera$/);
+  async expectDownloaded(nameFragment: string): Promise<void> {
+    expect(await this.files.downloadCount()).toBeGreaterThanOrEqual(1);
+    await this.expectSavedAs(nameFragment);
   }
 
-  async expectSuggestedFilename(expected: string): Promise<void> {
-    expect(await this.files.waitForSavedFilename()).toBe(expected);
-  }
-
-  async expectSaveTriggered(): Promise<void> {
-    expect(await this.files.waitForSavedFilename()).toBeTruthy();
+  async expectFilename(expected: string): Promise<void> {
+    expect((await this.files.savedFile()).filename).toBe(expected);
   }
 
   async expectSavedFileWellFormed(): Promise<void> {
-    const parsed: unknown = JSON.parse(await this.files.waitForSavedData());
+    const parsed: unknown = JSON.parse((await this.files.savedFile()).data);
     for (const property of FILE_PROPERTIES) expect(parsed).toHaveProperty(property);
   }
 
   async expectNothingSaved(): Promise<void> {
-    await this.files.waitForSaveDialog();
+    expect(await this.files.saveDialogCount()).toBe(1);
     expect(await this.files.savedData()).toBeUndefined();
   }
 
@@ -114,38 +113,35 @@ export class FileExportDsl {
     expect(await this.files.saveDialogCount()).toBeGreaterThanOrEqual(2);
   }
 
-  expectExportTriggered(): void {
-    expect(this.theExport().filename).toContain(".numenera");
-  }
-
-  expectExportedFilename(expected: string): void {
-    expect(this.theExport().filename).toBe(expected);
-  }
-
-  expectAllCharacterProperties(): void {
-    const { character } = this.theExport().file;
+  async expectAllCharacterProperties(): Promise<void> {
+    const { character } = await this.exportedFile();
     for (const property of CHARACTER_PROPERTIES) expect(character).toHaveProperty(property);
   }
 
-  expectVersion(expected: string): void {
-    expect(this.theExport().file.version).toBe(expected);
+  async expectVersion(expected: string): Promise<void> {
+    expect((await this.exportedFile()).version).toBe(expected);
   }
 
-  expectSchemaVersion(expected: string): void {
-    expect(this.theExport().file.schemaVersion).toBe(expected);
+  async expectSchemaVersion(expected: string): Promise<void> {
+    expect((await this.exportedFile()).schemaVersion).toBe(expected);
   }
 
-  expectExportDate(): void {
-    const { exportDate } = this.theExport().file;
+  async expectExportDate(): Promise<void> {
+    const { exportDate } = await this.exportedFile();
     expect(new Date(exportDate).toISOString()).toBe(exportDate);
   }
 
-  expectLayoutIncluded(): void {
-    expect(Array.isArray(this.theExport().file.layout)).toBe(true);
+  async expectLayoutIncluded(): Promise<void> {
+    expect(Array.isArray((await this.exportedFile()).layout)).toBe(true);
   }
 
-  private theExport(): { filename: string; file: ExportedCharacterFile } {
-    if (!this.exported) throw new Error("The character has not been exported yet");
-    return this.exported;
+  private async expectSavedAs(nameFragment: string): Promise<void> {
+    const { filename } = await this.files.savedFile();
+    expect(filename).toContain(nameFragment);
+    expect(filename).toMatch(/\.numenera$/);
+  }
+
+  private async exportedFile(): Promise<ExportedCharacterFile> {
+    return JSON.parse((await this.files.savedFile()).data) as ExportedCharacterFile;
   }
 }

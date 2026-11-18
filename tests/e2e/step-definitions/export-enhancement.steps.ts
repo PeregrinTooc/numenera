@@ -9,16 +9,8 @@ Given("my browser does not support File System Access API", async function (this
   await this.fileExport.browserOnlyDownloads();
 });
 
-Given("the character name is {string}", async function (this: CustomWorld, name: string) {
-  await this.character.isNamed(name);
-});
-
 When("I view the export buttons", async function (this: CustomWorld) {
   await this.fileExport.viewExportButtons();
-});
-
-When("I click the Export button", async function (this: CustomWorld) {
-  await this.fileExport.exportViaButton();
 });
 
 When("I cancel the file save dialog", async function (this: CustomWorld) {
@@ -46,37 +38,22 @@ Then("I should not see an {string} button", async function (this: CustomWorld, b
 });
 
 Then(
-  "the export dialog should be triggered with filename containing {string}",
-  async function (this: CustomWorld, expectedName: string) {
-    await this.fileExport.expectSavedAs(expectedName);
+  "I should be asked where to save a file named like {string}",
+  async function (this: CustomWorld, nameFragment: string) {
+    await this.fileExport.expectAskedWhereToSave(nameFragment);
   }
 );
-
-Then("the exported data should have correct structure", async function (this: CustomWorld) {
-  await this.fileExport.expectSavedFileWellFormed();
-});
-
-Then("a file download should be triggered", async function (this: CustomWorld) {
-  await this.fileExport.expectSaveTriggered();
-});
 
 Then(
-  "the download filename should contain {string}",
-  async function (this: CustomWorld, expectedName: string) {
-    await this.fileExport.expectSavedAs(expectedName);
+  "a file named like {string} should be downloaded",
+  async function (this: CustomWorld, nameFragment: string) {
+    await this.fileExport.expectDownloaded(nameFragment);
   }
 );
 
-Then("the download should have correct file structure", async function (this: CustomWorld) {
+Then("the saved file should be a well-formed character file", async function (this: CustomWorld) {
   await this.fileExport.expectSavedFileWellFormed();
 });
-
-Then(
-  "the suggested filename should be {string}",
-  async function (this: CustomWorld, expectedFilename: string) {
-    await this.fileExport.expectSuggestedFilename(expectedFilename);
-  }
-);
 
 Then("no file should be saved", async function (this: CustomWorld) {
   await this.fileExport.expectNothingSaved();

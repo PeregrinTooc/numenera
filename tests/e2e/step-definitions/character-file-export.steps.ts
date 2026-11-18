@@ -5,39 +5,38 @@ Given("the character has name {string}", async function (this: CustomWorld, name
   await this.character.isNamed(name);
 });
 
-When("I export the character", async function (this: CustomWorld) {
+When("I export my character", async function (this: CustomWorld) {
   await this.fileExport.exportCharacter();
-});
-
-Then("a file export should be triggered", function (this: CustomWorld) {
-  this.fileExport.expectExportTriggered();
 });
 
 Then(
   "the exported filename should be {string}",
-  function (this: CustomWorld, expectedFilename: string) {
-    this.fileExport.expectExportedFilename(expectedFilename);
+  async function (this: CustomWorld, expectedFilename: string) {
+    await this.fileExport.expectFilename(expectedFilename);
   }
 );
 
-Then("the exported file should contain all character properties", function (this: CustomWorld) {
-  this.fileExport.expectAllCharacterProperties();
-});
+Then(
+  "the exported file should contain all character properties",
+  async function (this: CustomWorld) {
+    await this.fileExport.expectAllCharacterProperties();
+  }
+);
 
 Then(
   "the exported file should have version {string}",
-  function (this: CustomWorld, expectedVersion: string) {
-    this.fileExport.expectVersion(expectedVersion);
+  async function (this: CustomWorld, expectedVersion: string) {
+    await this.fileExport.expectVersion(expectedVersion);
   }
 );
 
 Then(
   "the exported file should have schemaVersion {string}",
-  function (this: CustomWorld, expectedSchemaVersion: string) {
-    this.fileExport.expectSchemaVersion(expectedSchemaVersion);
+  async function (this: CustomWorld, expectedSchemaVersion: string) {
+    await this.fileExport.expectSchemaVersion(expectedSchemaVersion);
   }
 );
 
-Then("the exported file should have an exportDate", function (this: CustomWorld) {
-  this.fileExport.expectExportDate();
+Then("the exported file should have an exportDate", async function (this: CustomWorld) {
+  await this.fileExport.expectExportDate();
 });
