@@ -26,10 +26,10 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **458** in 42 files
+- Step definitions: **459** in 43 files
 - Feature step lines: **1805**
 - Definitions with no feature usage: **0**
-- Feature lines matching no definition: **12**
+- Feature lines matching no definition: **11**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
@@ -58,6 +58,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 15 | 0 |
+| [pwa-support.steps.ts](#pwasupportstepsts) | 1 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 22 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 7 | 0 |
 | [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
@@ -81,17 +82,16 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 These would be reported as *undefined* by Cucumber (or are matched by a
 pattern this script does not understand):
 
-- `pwa-support.feature:10` — the character sheet should be installable as an app
-- `pwa-support.feature:13` — I have opened the character sheet before
-- `pwa-support.feature:14` — I lose my connection
-- `pwa-support.feature:16` — the character sheet should be displayed
-- `pwa-support.feature:19` — I have opened the character sheet before
-- `pwa-support.feature:20` — I lose my connection
-- `pwa-support.feature:26` — I have opened the character sheet before
-- `pwa-support.feature:27` — a newer version of the character sheet is published
-- `pwa-support.feature:29` — I should be told that a newer version is available
-- `pwa-support.feature:30` — I accept the newer version
-- `pwa-support.feature:31` — the newer version of the character sheet should be running
+- `pwa-support.feature:14` — I have opened the character sheet before
+- `pwa-support.feature:15` — I lose my connection
+- `pwa-support.feature:17` — the character sheet should be displayed
+- `pwa-support.feature:21` — I have opened the character sheet before
+- `pwa-support.feature:22` — I lose my connection
+- `pwa-support.feature:29` — I have opened the character sheet before
+- `pwa-support.feature:30` — a newer version of the character sheet is published
+- `pwa-support.feature:32` — I should be told that a newer version is available
+- `pwa-support.feature:33` — I accept the newer version
+- `pwa-support.feature:34` — the newer version of the character sheet should be running
 - `section-rearrangement.feature:52` — I drag the "Cyphers" section onto the middle <side> of the "Items" section
 
 ## ability-enhancements.steps.ts
@@ -463,6 +463,12 @@ pattern this script does not understand):
 | Then | `the {string} section should be set to {int} column(s)` | 2 | 111 |
 | Then | `the exported file should contain the layout configuration` | 1 | 25 |
 | Then | `the imported character should be shown` | 5 | 107 |
+
+## pwa-support.steps.ts
+
+| Keyword | Phrase | Uses | Line |
+| --- | --- | ---: | ---: |
+| Then | `the character sheet should be installable as an app` | 1 | 17 |
 
 ## recovery-damage-track.steps.ts
 

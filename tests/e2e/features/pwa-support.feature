@@ -1,5 +1,5 @@
 # Service workers only run in the production build, hence @prod-only.
-@prod-only @wip
+@prod-only
 Feature: Installable, offline character sheet
     As a Numenera player
     I want to install the character sheet and open it without a connection
@@ -9,12 +9,14 @@ Feature: Installable, offline character sheet
         Given I am on the character sheet page
         Then the character sheet should be installable as an app
 
+    @wip
     Scenario: The character sheet opens without a connection
         Given I have opened the character sheet before
         When I lose my connection
         And I reload the page
         Then the character sheet should be displayed
 
+    @wip
     Scenario: Changes made without a connection are kept
         Given I have opened the character sheet before
         And I lose my connection
@@ -22,6 +24,7 @@ Feature: Installable, offline character sheet
         And I reload the page
         Then my character sheet shows my Shins as 42
 
+    @wip
     Scenario: I am offered a newer version of the character sheet
         Given I have opened the character sheet before
         When a newer version of the character sheet is published

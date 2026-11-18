@@ -171,26 +171,6 @@ Share characters with other players via export links or shareable JSON.
   - Import character from shared link
   - Preview shared character
 
-### PWA Support
-
-**Overview**  
-Add Progressive Web App support for installing the app and offline functionality.
-
-**Goals**
-
-- Enable app installation on devices
-- Open the character sheet without a connection (character data already lives in IndexedDB)
-- Offer newer versions with a prompt rather than updating silently, so open tabs never mix old and new code
-
-**E2E Tests**
-
-- File: `tests/e2e/features/pwa-support.feature` (tagged `@prod-only`, `@wip` until implemented)
-- Scenarios:
-  - The character sheet can be installed as an app
-  - The character sheet opens without a connection
-  - Changes made without a connection are kept
-  - I am offered a newer version of the character sheet
-
 ### Multiple Characters
 
 **Overview**
