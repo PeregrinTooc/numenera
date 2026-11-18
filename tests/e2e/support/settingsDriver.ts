@@ -47,15 +47,9 @@ export class PlaywrightSettingsDriver implements SettingsDriver {
     await this.page.locator(testId("settings-gear-button")).click();
   }
 
-  /**
-   * Also waits for the panel's document click-outside listener, which is
-   * attached with setTimeout(0); a zero-delay timer queued afterwards runs after
-   * it, so a step immediately clicking outside the panel doesn't race it.
-   */
   async openPanel(): Promise<void> {
     await this.clickGear();
     await this.expectPanelShown();
-    await this.page.evaluate(() => new Promise<void>((resolve) => setTimeout(resolve, 0)));
   }
 
   async expectPanelShown(): Promise<void> {

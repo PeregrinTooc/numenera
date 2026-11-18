@@ -178,6 +178,13 @@ export default [
           message: "Wait for an observable outcome instead of sleeping (see docs/atdd-review.md).",
         },
       ],
+      "no-restricted-globals": [
+        "error",
+        ...["setTimeout", "setInterval"].map((name) => ({
+          name,
+          message: "Wait for an observable outcome instead of sleeping (see docs/atdd-review.md).",
+        })),
+      ],
     },
   },
   {

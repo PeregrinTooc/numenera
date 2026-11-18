@@ -53,23 +53,19 @@ export class PlaywrightSectionSlideDriver implements SectionSlideDriver {
   }
 
   async expectSlidIntoPlace(name: string): Promise<void> {
-    await this.reportingSlides(async () => {
-      await this.finishSlidesOnceStarted(name, 1);
-      await expect
-        .poll(async () =>
-          (await this.slidesOf(name)).some((slide) => slide.finished && slide.from !== "none")
-        )
-        .toBe(true);
-    });
+    await this.finishSlidesOnceStarted(name, 1);
+    await expect
+      .poll(async () =>
+        (await this.slidesOf(name)).some((slide) => slide.finished && slide.from !== "none")
+      )
+      .toBe(true);
   }
 
   async expectSlidBack(name: string): Promise<void> {
-    await this.reportingSlides(async () => {
-      await this.finishSlidesOnceStarted(name, 2);
-      await expect
-        .poll(async () => (await this.slidesOf(name)).filter((slide) => slide.finished).length)
-        .toBeGreaterThanOrEqual(2);
-    });
+    await this.finishSlidesOnceStarted(name, 2);
+    await expect
+      .poll(async () => (await this.slidesOf(name)).filter((slide) => slide.finished).length)
+      .toBeGreaterThanOrEqual(2);
     const slides = await this.slidesOf(name);
     const [there, back] = [startOffsets(slides[0]), startOffsets(slides[slides.length - 1])];
     // Back the way it came: each axis it moved along, in the other direction
@@ -125,45 +121,6 @@ export class PlaywrightSectionSlideDriver implements SectionSlideDriver {
       (id) => (window.__sectionSlides ?? []).filter((slide) => slide.sectionId === id),
       sectionId(name)
     );
-  }
-
-  /**
-   * Run `check`; if it fails, add every slide recorded so far to the error, and
-   * how far the slides still running have got. A slide that never finished was
-   * either cancelled (no longer running) or stuck (its time not moving).
-   */
-  private async reportingSlides(check: () => Promise<void>): Promise<void> {
-    try {
-      await check();
-    } catch (error) {
-      const before = await this.progress();
-      // Real time on the test's side: the page's clock may be paused
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      const report = {
-        recorded: await this.page.evaluate(() => window.__sectionSlides ?? []),
-        before,
-        after: await this.progress(),
-      };
-      throw new Error(`${(error as Error).message}\nSlides: ${JSON.stringify(report)}`, {
-        cause: error,
-      });
-    }
-  }
-
-  private progress(): Promise<unknown> {
-    return this.page.evaluate(() => ({
-      timeline: document.timeline.currentTime,
-      running: document
-        .getAnimations()
-        .filter((animation) => animation.id === "section-slide")
-        .map((animation) => ({
-          // Only the app's slides carry this id, and they are keyframe effects
-          sectionId: (animation.effect as { target: HTMLElement | null } | null)?.target?.dataset
-            .sectionId,
-          playState: animation.playState,
-          currentTime: animation.currentTime,
-        })),
-    }));
   }
 
   /**
