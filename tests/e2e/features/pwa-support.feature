@@ -16,7 +16,6 @@ Feature: Installable, offline character sheet
         Then the character sheet should be displayed
         And the "Cinzel" and "Caveat" fonts should be loaded
 
-    @wip
     Scenario: Changes made without a connection are kept
         Given I have opened the character sheet before
         And I lose my connection

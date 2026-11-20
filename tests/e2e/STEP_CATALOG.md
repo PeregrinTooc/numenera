@@ -82,10 +82,10 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 These would be reported as *undefined* by Cucumber (or are matched by a
 pattern this script does not understand):
 
-- `pwa-support.feature:30` — a newer version of the character sheet is published
-- `pwa-support.feature:32` — I should be told that a newer version is available
-- `pwa-support.feature:33` — I accept the newer version
-- `pwa-support.feature:34` — the newer version of the character sheet should be running
+- `pwa-support.feature:29` — a newer version of the character sheet is published
+- `pwa-support.feature:31` — I should be told that a newer version is available
+- `pwa-support.feature:32` — I accept the newer version
+- `pwa-support.feature:33` — the newer version of the character sheet should be running
 - `section-rearrangement.feature:52` — I drag the "Cyphers" section onto the middle <side> of the "Items" section
 
 ## ability-enhancements.steps.ts

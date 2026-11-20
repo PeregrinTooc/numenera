@@ -17,7 +17,7 @@ File: `tests/e2e/features/pwa-support.feature`
 
 - [x] The character sheet can be installed as an app
 - [x] The character sheet opens without a connection
-- [ ] Changes made without a connection are kept
+- [x] Changes made without a connection are kept
 - [ ] I am offered a newer version of the character sheet (needs i18n keys for the prompt)
 
 ## Open points
