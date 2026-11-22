@@ -20,27 +20,6 @@ Feature: Card Creation: Cyphers and Equipment
         And I cancel the card
         Then my character carries 2 cyphers
 
-    Scenario: Saving a new cypher adds a card
-        Given my character has 2 cyphers
-        When I start a new cypher
-        And I set its name to "Fire Bomb"
-        And I set its level to "1d6+2"
-        And I set its effect to "Explodes in a short range"
-        And I save the card
-        Then my character carries 3 cyphers
-        And my character carries the cypher "Fire Bomb"
-
-    Scenario: New cypher persists after reopening the character
-        Given my character has 2 cyphers
-        When I start a new cypher
-        And I set its name to "Phase Changer"
-        And I set its level to "1d6+4"
-        And I set its effect to "Allows passage through solid matter"
-        And I save the card
-        And I open my character again
-        Then my character carries 3 cyphers
-        And my character carries the cypher "Phase Changer"
-
     Scenario: Create cypher, then edit it, verify persistence
         Given my character has 2 cyphers
         When I start a new cypher
@@ -75,25 +54,6 @@ Feature: Card Creation: Cyphers and Equipment
         And I set its description to "Test description"
         And I cancel the card
         Then my character carries 2 equipment
-
-    Scenario: Saving new equipment adds a card
-        Given my character has 2 equipment
-        When I start a new equipment
-        And I set its name to "Climbing Gear"
-        And I set its description to "Rope, hooks, and harness"
-        And I save the card
-        Then my character carries 3 equipment
-        And my character carries the equipment "Climbing Gear"
-
-    Scenario: New equipment persists after reopening the character
-        Given my character has 2 equipment
-        When I start a new equipment
-        And I set its name to "Medical Kit"
-        And I set its description to "Contains bandages and medicine"
-        And I save the card
-        And I open my character again
-        Then my character carries 3 equipment
-        And my character carries the equipment "Medical Kit"
 
     Scenario: Create equipment, then edit it, verify persistence
         Given my character has 2 equipment

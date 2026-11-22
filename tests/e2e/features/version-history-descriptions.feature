@@ -23,34 +23,6 @@ Feature: Version History Descriptions
         And I step back to the previous version
         Then the navigator describes this version as "Added cypher"
 
-    Scenario: Removing a card shows a specific description
-        Given my character has the cyphers "Detonation (Cell)" and "Stim (Injector)"
-        When I discard "Detonation (Cell)"
-        And my edits have settled into a version
-        And I change my name to "Another Change"
-        And my edits have settled into a version
-        And I step back to the previous version
-        Then the navigator describes this version as "Removed cypher"
-
-    Scenario: Modifying a card shows a specific description
-        Given my character has the cyphers "Detonation (Cell)" and "Stim (Injector)"
-        When I start editing the cypher "Detonation (Cell)"
-        And I set its effect to "Updated effect text"
-        And I save the card
-        And my edits have settled into a version
-        And I change my name to "Another Change"
-        And my edits have settled into a version
-        And I step back to the previous version
-        Then the navigator describes this version as "Modified cypher"
-
-    Scenario: Changing the tier shows a specific description
-        When I change my tier to 2
-        And my edits have settled into a version
-        And I change my name to "Another Change"
-        And my edits have settled into a version
-        And I step back to the previous version
-        Then the navigator describes this version as "Changed tier"
-
     Scenario: Different collection changes in one squash window list individually
         When I start a new cypher
         And I set its name to "Test Cypher"

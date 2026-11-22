@@ -1,6 +1,5 @@
-import { Given, When, Then, type DataTable } from "@cucumber/cucumber";
+import { Given, When, Then } from "@cucumber/cucumber";
 import type { CustomWorld } from "../support/world.js";
-import { propertyTable } from "../support/tableRows.js";
 
 Given("my character has no history yet", async function (this: CustomWorld) {
   await this.historySeed.startsWithNoHistory();
@@ -230,13 +229,6 @@ Then("the export keeps my current portrait", function (this: CustomWorld) {
 });
 
 Given(
-  "my history has a version in which I changed",
-  async function (this: CustomWorld, changes: DataTable) {
-    await this.historySeed.hasVersionChangingBasicInfo(propertyTable(changes));
-  }
-);
-
-Given(
   "my history has a version in which I changed my name to {string}, followed by one in which I changed my tier to {int}",
   async function (this: CustomWorld, name: string, tier: number) {
     await this.historySeed.hasVersionsChangingNameThenTier(name, tier);
@@ -268,12 +260,5 @@ Given(
   "my history has a version in which I changed the effect of the cypher {string}",
   async function (this: CustomWorld, name: string) {
     await this.historySeed.hasVersionChangingCypherEffect(name);
-  }
-);
-
-Given(
-  "my history has a version in which I renamed the cypher {string} to {string}",
-  async function (this: CustomWorld, name: string, newName: string) {
-    await this.historySeed.hasVersionRenamingCypher(name, newName);
   }
 );

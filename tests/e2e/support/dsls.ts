@@ -151,8 +151,7 @@ export function createDsls(page: Page, device: DeviceProfile): Dsls {
     abilities: new AbilitiesDsl(new PlaywrightAbilitiesDriver(page), character, setup),
     characterImport: new CharacterImportDsl(
       new PlaywrightCharacterImportDriver(page, clock),
-      character,
-      additionalFields
+      character
     ),
     cardOrder: new CardOrderDsl(new PlaywrightCardOrderDriver(page, viewport), setup),
     storageFailure: new StorageFailureDsl(new PlaywrightStorageFailureDriver(page)),

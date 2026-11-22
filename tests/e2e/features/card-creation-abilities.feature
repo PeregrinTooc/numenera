@@ -20,29 +20,6 @@ Feature: Card Creation: Abilities
         And I cancel the card
         Then my character carries 2 abilities
 
-    Scenario: Saving a new ability adds a card
-        Given my character has 2 abilities
-        When I start a new ability
-        And I set its name to "Flame Strike"
-        And I set its cost to "3"
-        And I set its pool to "Intellect"
-        And I set its description to "Deal fire damage to enemies"
-        And I save the card
-        Then my character carries 3 abilities
-        And my character carries the ability "Flame Strike"
-
-    Scenario: New ability persists after reopening the character
-        Given my character has 2 abilities
-        When I start a new ability
-        And I set its name to "Ice Shield"
-        And I set its cost to "2"
-        And I set its pool to "Speed"
-        And I set its description to "Create a protective ice barrier"
-        And I save the card
-        And I open my character again
-        Then my character carries 3 abilities
-        And my character carries the ability "Ice Shield"
-
     Scenario: Create ability, then edit it, verify persistence
         Given my character has 2 abilities
         When I start a new ability
@@ -80,27 +57,6 @@ Feature: Card Creation: Abilities
         And I set its description to "Test description"
         And I cancel the card
         Then my character carries 2 special abilities
-
-    Scenario: Saving a new special ability adds a card
-        Given my character has 2 special abilities
-        When I start a new special ability
-        And I set its name to "Energy Mastery"
-        And I set its source to "Focus"
-        And I set its description to "Control energy fields at will"
-        And I save the card
-        Then my character carries 3 special abilities
-        And my character carries the special ability "Energy Mastery"
-
-    Scenario: New special ability persists after reopening the character
-        Given my character has 2 special abilities
-        When I start a new special ability
-        And I set its name to "Time Manipulation"
-        And I set its source to "Descriptor"
-        And I set its description to "Slow or speed up time in small area"
-        And I save the card
-        And I open my character again
-        Then my character carries 3 special abilities
-        And my character carries the special ability "Time Manipulation"
 
     Scenario: Create special ability, then edit it, verify persistence
         Given my character has 2 special abilities

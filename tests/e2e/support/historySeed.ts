@@ -1,7 +1,6 @@
 import { FULL_CHARACTER } from "@/data/mockCharacters";
 import type { Character, Cypher } from "@/types/character";
 import { sampleCard } from "./cardTestFixtures.js";
-import { intCell } from "./tableRows.js";
 import type { SetupDsl } from "./setup.js";
 import type { VersionHistoryDriver, VersionSeed } from "./versionHistoryDriver.js";
 
@@ -103,20 +102,6 @@ export class HistorySeedDsl {
     );
   }
 
-  async hasVersionChangingBasicInfo(fields: Record<string, string>): Promise<void> {
-    const changes = Object.fromEntries(
-      Object.entries(fields).map(([field, value]) => [
-        field,
-        field === "tier" ? intCell(value, "Tier") : value,
-      ])
-    );
-    await this.restart({});
-    await this.store(2, () => ({
-      facts: { name: fields.name ?? ORIGINAL_NAME },
-      seed: { description: NAME_CHANGE, changes },
-    }));
-  }
-
   async hasVersionsChangingNameThenTier(name: string, tier: number): Promise<void> {
     await this.restart({});
     await this.store(3, (number) =>
@@ -155,19 +140,6 @@ export class HistorySeedDsl {
       [{ ...cypher, effect: "A completely different effect" }],
       `${CYPHER_CHANGE}.modified`
     );
-  }
-
-  async hasVersionRenamingCypher(name: string, newName: string): Promise<void> {
-    const cypher = sampleCard("cypher", name) as Cypher;
-    await this.hasCypherChange(
-      [cypher],
-      [{ ...cypher, name: newName }],
-      `${CYPHER_CHANGE}.removed, ${CYPHER_CHANGE}.added`
-    );
-  }
-
-  nameOfVersion(version: number): string {
-    return this.factsOfVersion(version).name;
   }
 
   factsOfVersion(version: number): VersionFacts {

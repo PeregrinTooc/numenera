@@ -25,3 +25,7 @@ Feature: Character File Import
         Then the character "Another Hero" should be displayed
         And all of the character's entries and notes are shown
         And none of the sample character's entries are left
+
+    Scenario: Out-of-range values in an imported file are adjusted
+        When I import a character file with tier 9
+        Then the tier should have been adjusted to "6"

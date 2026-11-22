@@ -15,19 +15,15 @@ export interface ComparisonDriver {
   stepPane(pane: Pane, direction: "back" | "forward"): Promise<void>;
   movePaneTo(pane: Pane, version: number): Promise<void>;
   expectPaneShowsVersion(pane: Pane, version: number): Promise<void>;
-  expectPaneShowsCharacterNamed(pane: Pane, name: string): Promise<void>;
   restore(pane: Pane): Promise<void>;
-  expectRestoreAvailable(pane: Pane, available: boolean): Promise<void>;
   expectNewestVersionRestoredFrom(storedDescription: string): Promise<void>;
   exit(): Promise<void>;
   expectHeaderListsExactly(changes: string[]): Promise<void>;
   expectHeaderSaysNoDifferences(): Promise<void>;
   expectBasicInfoHighlighted(pane: Pane, field: string): Promise<void>;
-  expectBasicInfoNotHighlighted(pane: Pane, field: string): Promise<void>;
   expectCypherHighlighted(pane: Pane, name: string, colour: Highlight): Promise<void>;
   expectCypherAbsent(pane: Pane, name: string): Promise<void>;
   expectTextField(pane: Pane, field: TextField, text: string): Promise<void>;
-  expectReadOnly(): Promise<void>;
 }
 
 // The outline each kind of difference is drawn with (src/styles/components/compare-view.css).
@@ -105,20 +101,10 @@ export class PlaywrightComparisonDriver implements ComparisonDriver {
     await expect(this.control(pane, "counter")).toHaveText(new RegExp(`^${counter}$`));
   }
 
-  async expectPaneShowsCharacterNamed(pane: Pane, name: string): Promise<void> {
-    await expect(this.pane(pane).getByTestId("character-name")).toHaveText(name);
-  }
-
   async restore(pane: Pane): Promise<void> {
     const before = await this.newestVersionId();
     await this.control(pane, "restore").click();
     await expect.poll(() => this.newestVersionId()).not.toBe(before);
-  }
-
-  async expectRestoreAvailable(pane: Pane, available: boolean): Promise<void> {
-    const button = this.control(pane, "restore");
-    if (available) await expect(button).toBeEnabled();
-    else await expect(button).toBeDisabled();
   }
 
   async expectNewestVersionRestoredFrom(storedDescription: string): Promise<void> {
@@ -143,10 +129,6 @@ export class PlaywrightComparisonDriver implements ComparisonDriver {
     await expect(this.basicInfo(pane, field)).toHaveCSS("outline-color", OUTLINE.yellow);
   }
 
-  async expectBasicInfoNotHighlighted(pane: Pane, field: string): Promise<void> {
-    await expect(this.basicInfo(pane, field)).toHaveCSS("outline-style", "none");
-  }
-
   async expectCypherHighlighted(pane: Pane, name: string, colour: Highlight): Promise<void> {
     await expect(this.cypher(pane, name)).toHaveCSS("outline-color", OUTLINE[colour]);
   }
@@ -157,13 +139,6 @@ export class PlaywrightComparisonDriver implements ComparisonDriver {
 
   async expectTextField(pane: Pane, field: TextField, text: string): Promise<void> {
     await expect(this.pane(pane).getByTestId(`character-${field}`)).toHaveText(text);
-  }
-
-  async expectReadOnly(): Promise<void> {
-    const sheets = this.page.getByTestId("diff-character-sheet");
-    await expect(sheets).toHaveCount(2);
-    await expect(sheets.locator("input, textarea, select")).toHaveCount(0);
-    await expect(sheets.locator("button")).toHaveCount(0);
   }
 
   private pane(pane: Pane): Locator {

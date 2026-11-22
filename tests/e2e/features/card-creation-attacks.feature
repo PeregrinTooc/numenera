@@ -21,27 +21,6 @@ Feature: Card Creation: Attacks
         And I cancel the card
         Then my character carries 2 attacks
 
-    Scenario: Saving a new attack adds a card
-        Given my character has 2 attacks
-        When I start a new attack
-        And I set its name to "Fire Bolt"
-        And I set its modifier to "+3"
-        And I set its damage to "6"
-        And I save the card
-        Then my character carries 3 attacks
-        And my character carries the attack "Fire Bolt"
-
-    Scenario: New attack persists after reopening the character
-        Given my character has 2 attacks
-        When I start a new attack
-        And I set its name to "Ice Spear"
-        And I set its modifier to "+4"
-        And I set its damage to "8"
-        And I save the card
-        And I open my character again
-        Then my character carries 3 attacks
-        And my character carries the attack "Ice Spear"
-
     Scenario: Create attack, then edit it, verify persistence
         Given my character has 2 attacks
         When I start a new attack

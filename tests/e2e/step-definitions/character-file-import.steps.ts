@@ -18,3 +18,14 @@ Then(
 Then("none of the sample character's entries are left", async function (this: CustomWorld) {
   await this.character.expectNoEntryOfSampleCharacter();
 });
+
+When("I import a character file with tier {int}", async function (this: CustomWorld, tier: number) {
+  await this.characterImport.importsCharacterWithTier(tier);
+});
+
+Then(
+  "the tier should have been adjusted to {string}",
+  async function (this: CustomWorld, tier: string) {
+    await this.character.expectBasicInfoShows("tier", tier);
+  }
+);

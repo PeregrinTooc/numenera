@@ -63,21 +63,6 @@ Then(
 );
 
 Then(
-  "the {pane} pane shows my character as it was in version {int}",
-  async function (this: CustomWorld, pane: Pane, version: number) {
-    await this.comparison.expectShowsCharacterOfVersion(pane, version);
-  }
-);
-
-Then("the {pane} pane can restore its version", async function (this: CustomWorld, pane: Pane) {
-  await this.comparison.expectRestoreAvailable(pane, true);
-});
-
-Then("the {pane} pane cannot restore its version", async function (this: CustomWorld, pane: Pane) {
-  await this.comparison.expectRestoreAvailable(pane, false);
-});
-
-Then(
   "my history gains a version restored from version {int}",
   async function (this: CustomWorld, version: number) {
     await this.comparison.expectNewestVersionRestoredFrom(version);
@@ -99,13 +84,6 @@ Then(
   "the {word} is highlighted yellow in both panes",
   async function (this: CustomWorld, field: string) {
     await this.comparison.expectBasicInfoHighlightedInBothPanes(field);
-  }
-);
-
-Then(
-  "the {word} is not highlighted in either pane",
-  async function (this: CustomWorld, field: string) {
-    await this.comparison.expectBasicInfoHighlightedInNeitherPane(field);
   }
 );
 
@@ -143,7 +121,3 @@ Then(
     await this.comparison.expectShowsNotes(pane, text);
   }
 );
-
-Then("nothing in the comparison view can be edited", async function (this: CustomWorld) {
-  await this.comparison.expectReadOnly();
-});

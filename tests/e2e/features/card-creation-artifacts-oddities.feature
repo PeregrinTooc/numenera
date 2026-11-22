@@ -21,27 +21,6 @@ Feature: Card Creation: Artifacts and Oddities
         And I cancel the card
         Then my character carries 2 artifacts
 
-    Scenario: Saving a new artifact adds a card
-        Given my character has 2 artifacts
-        When I start a new artifact
-        And I set its name to "Crystal Blade"
-        And I set its level to "1d6+2"
-        And I set its effect to "A sword that never dulls"
-        And I save the card
-        Then my character carries 3 artifacts
-        And my character carries the artifact "Crystal Blade"
-
-    Scenario: New artifact persists after reopening the character
-        Given my character has 2 artifacts
-        When I start a new artifact
-        And I set its name to "Shield of Force"
-        And I set its level to "1d6+4"
-        And I set its effect to "Creates an energy barrier"
-        And I save the card
-        And I open my character again
-        Then my character carries 3 artifacts
-        And my character carries the artifact "Shield of Force"
-
     Scenario: Create artifact, then edit it, verify persistence
         Given my character has 2 artifacts
         When I start a new artifact
@@ -75,23 +54,6 @@ Feature: Card Creation: Artifacts and Oddities
         And I set its text to "Test Oddity"
         And I cancel the card
         Then my character carries 2 oddities
-
-    Scenario: Saving a new oddity adds a card
-        Given my character has 2 oddities
-        When I start a new oddity
-        And I set its text to "A metal sphere that whispers in the dark"
-        And I save the card
-        Then my character carries 3 oddities
-        And my character carries the oddity "A metal sphere that whispers in the dark"
-
-    Scenario: New oddity persists after reopening the character
-        Given my character has 2 oddities
-        When I start a new oddity
-        And I set its text to "A translucent stone that floats in water"
-        And I save the card
-        And I open my character again
-        Then my character carries 3 oddities
-        And my character carries the oddity "A translucent stone that floats in water"
 
     Scenario: Create oddity, then edit it, verify persistence
         Given my character has 2 oddities

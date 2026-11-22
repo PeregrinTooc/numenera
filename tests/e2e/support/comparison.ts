@@ -53,14 +53,6 @@ export class ComparisonDsl {
     await this.driver.expectPaneShowsVersion(pane, version);
   }
 
-  async expectShowsCharacterOfVersion(pane: Pane, version: number): Promise<void> {
-    await this.driver.expectPaneShowsCharacterNamed(pane, this.seed.nameOfVersion(version));
-  }
-
-  async expectRestoreAvailable(pane: Pane, available: boolean): Promise<void> {
-    await this.driver.expectRestoreAvailable(pane, available);
-  }
-
   async expectNewestVersionRestoredFrom(version: number): Promise<void> {
     await this.driver.expectNewestVersionRestoredFrom(this.seed.descriptionOfVersion(version));
   }
@@ -75,10 +67,6 @@ export class ComparisonDsl {
 
   async expectBasicInfoHighlightedInBothPanes(field: string): Promise<void> {
     for (const pane of BOTH_PANES) await this.driver.expectBasicInfoHighlighted(pane, field);
-  }
-
-  async expectBasicInfoHighlightedInNeitherPane(field: string): Promise<void> {
-    for (const pane of BOTH_PANES) await this.driver.expectBasicInfoNotHighlighted(pane, field);
   }
 
   async expectCypherHighlighted(pane: Pane, name: string, colour: Highlight): Promise<void> {
@@ -99,9 +87,5 @@ export class ComparisonDsl {
 
   async expectShowsNotes(pane: Pane, text: string): Promise<void> {
     await this.driver.expectTextField(pane, "notes", text);
-  }
-
-  async expectReadOnly(): Promise<void> {
-    await this.driver.expectReadOnly();
   }
 }

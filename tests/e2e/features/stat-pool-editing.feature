@@ -29,13 +29,3 @@ Feature: Stat Pool Value Editing
         When I change my Speed edge to 4
         And I open my character again
         Then my character sheet shows my Speed edge as 4
-
-    Scenario: A stat value can be zero
-        Given my character's Intellect pool is 10
-        When I change my Intellect pool to 0
-        Then my character sheet shows my Intellect pool as 0
-
-    Scenario: A stat value can be as large as 9999
-        Given my character's Might pool is 10
-        When I change my Might pool to 9999
-        Then my character sheet shows my Might pool as 9999

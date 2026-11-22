@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **431** in 42 files
-- Feature step lines: **1764**
+- Step definitions: **419** in 41 files
+- Feature step lines: **1575**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -45,13 +45,12 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 8 | 0 |
 | [character-display.steps.ts](#characterdisplaystepsts) | 10 | 0 |
 | [character-file-export.steps.ts](#characterfileexportstepsts) | 7 | 0 |
-| [character-file-import.steps.ts](#characterfileimportstepsts) | 3 | 0 |
+| [character-file-import.steps.ts](#characterfileimportstepsts) | 5 | 0 |
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [clock.steps.ts](#clockstepsts) | 1 | 0 |
 | [collection-reordering.steps.ts](#collectionreorderingstepsts) | 4 | 0 |
 | [combat.steps.ts](#combatstepsts) | 13 | 0 |
 | [common-steps.ts](#commonstepsts) | 3 | 0 |
-| [data-validation.steps.ts](#datavalidationstepsts) | 7 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 16 | 0 |
 | [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 7 | 0 |
 | [i18n.steps.ts](#i18nstepsts) | 7 | 0 |
@@ -72,8 +71,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [third-party-requests.steps.ts](#thirdpartyrequestsstepsts) | 3 | 0 |
 | [unreadable-character.steps.ts](#unreadablecharacterstepsts) | 10 | 0 |
 | [value-editor.steps.ts](#valueeditorstepsts) | 18 | 0 |
-| [version-comparison.steps.ts](#versioncomparisonstepsts) | 26 | 0 |
-| [version-history.steps.ts](#versionhistorystepsts) | 54 | 0 |
+| [version-comparison.steps.ts](#versioncomparisonstepsts) | 21 | 0 |
+| [version-history.steps.ts](#versionhistorystepsts) | 52 | 0 |
 | [viewport.steps.ts](#viewportstepsts) | 2 | 0 |
 
 ## ⚠️ Feature lines with no matching step definition
@@ -149,9 +148,9 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I change my {word} to {string}` | 49 | 14 |
+| When | `I change my {word} to {string}` | 46 | 14 |
 | When | `I change my {word} to {string} without waiting for the auto-save` | 1 | 40 |
-| When | `I change my tier to {int}` | 5 | 21 |
+| When | `I change my tier to {int}` | 4 | 21 |
 | When | `I try to change my {word} to nothing` | 1 | 25 |
 | Then | `my {word} looks clickable` | 1 | 62 |
 | Given | `my character has no {word}` | 2 | 51 |
@@ -167,9 +166,9 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `{string} is still gone the next time I open my character` | 1 | 21 |
-| When | `I discard {string}` | 4 | 10 |
+| When | `I discard {string}` | 3 | 10 |
 | Then | `it was discarded without my being asked to confirm` | 1 | 28 |
-| Given | `my character has the {cardKind} {string} and {string}` | 8 | 3 |
+| Given | `my character has the {cardKind} {string} and {string}` | 6 | 3 |
 | Then | `my character's {cardKind} are only {string}` | 3 | 14 |
 | Then | `the discard control of {string} is in the top-left corner of its entry` | 1 | 32 |
 
@@ -178,14 +177,14 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I cancel the card` | 7 | 32 |
-| When | `I open my character again` | 23 | 36 |
-| When | `I save the card` | 38 | 28 |
-| When | `I set its {word} to {string}` | 120 | 21 |
-| When | `I start a new {cardType}` | 50 | 10 |
-| When | `I start editing the {cardType} {string}` | 8 | 14 |
-| Then | `my character carries {int} {cardKind}` | 39 | 54 |
-| Then | `my character carries the {cardType} {string}` | 30 | 61 |
-| Given | `my character has {int} {cardKind}` | 48 | 3 |
+| When | `I open my character again` | 16 | 36 |
+| When | `I save the card` | 23 | 28 |
+| When | `I set its {word} to {string}` | 81 | 21 |
+| When | `I start a new {cardType}` | 36 | 10 |
+| When | `I start editing the {cardType} {string}` | 7 | 14 |
+| Then | `my character carries {int} {cardKind}` | 25 | 54 |
+| Then | `my character carries the {cardType} {string}` | 15 | 61 |
+| Given | `my character has {int} {cardKind}` | 34 | 3 |
 | Then | `the {cardType} {string} shows {string}` | 10 | 68 |
 | Then | `the add {cardType} button has a themed background colour` | 7 | 47 |
 | Then | `the card editor opens with empty {cardType} fields` | 7 | 40 |
@@ -231,7 +230,7 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I am on the character sheet page` | 24 | 14 |
+| Given | `I am on the character sheet page` | 23 | 14 |
 | Given | `my character has every kind of entry` | 1 | 29 |
 | Given | `my character has these stats:` | 1 | 25 |
 | Given | `my character has this basic information:` | 1 | 18 |
@@ -258,9 +257,11 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
+| When | `I import a character file with tier {int}` | 1 | 21 |
 | When | `I import a valid character file {string}` | 4 | 3 |
 | Then | `none of the sample character's entries are left` | 1 | 17 |
 | Then | `the character {string} should still be displayed` | 1 | 10 |
+| Then | `the tier should have been adjusted to {string}` | 1 | 25 |
 
 ## character-storage.steps.ts
 
@@ -315,20 +316,8 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | When | `I click the "New" button` | 2 | 3 |
-| When | `I reload the page` | 22 | 7 |
+| When | `I reload the page` | 21 | 7 |
 | When | `I reload the page immediately` | 1 | 11 |
-
-## data-validation.steps.ts
-
-| Keyword | Phrase | Uses | Line |
-| --- | --- | ---: | ---: |
-| Then | `all character data should be correctly displayed` | 1 | 25 |
-| When | `I import a character file with tier {int}` | 1 | 10 |
-| When | `I import a valid character file with matching schema version` | 3 | 3 |
-| Then | `the character name should still be {string}` | 1 | 29 |
-| Then | `the character should be imported successfully` | 1 | 21 |
-| Then | `the tier should have been adjusted to {string}` | 1 | 14 |
-| Then | `the tier should still be {string}` | 1 | 36 |
 
 ## export-enhancement.steps.ts
 
@@ -564,9 +553,9 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I change my {stat} {word} to {int}` | 6 | 10 |
-| Then | `my character sheet shows my {stat} {word} as {int}` | 9 | 17 |
-| Given | `my character's {stat} {word} is {int}` | 6 | 3 |
+| When | `I change my {stat} {word} to {int}` | 4 | 10 |
+| Then | `my character sheet shows my {stat} {word} as {int}` | 7 | 17 |
+| Given | `my character's {stat} {word} is {int}` | 4 | 3 |
 
 ## storage-failure.steps.ts
 
@@ -632,90 +621,83 @@ pattern this script does not understand):
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
 | Then | `comparison view is still switched on in settings` | 1 | 45 |
-| Given | `comparison view is switched on in settings` | 25 | 4 |
-| Given | `I am viewing the comparison view` | 21 | 12 |
+| Given | `comparison view is switched on in settings` | 18 | 4 |
+| Given | `I am viewing the comparison view` | 14 | 12 |
 | When | `I move the {pane} pane to version {int}` | 4 | 30 |
-| When | `I restore the version in the {pane} pane` | 3 | 37 |
+| When | `I restore the version in the {pane} pane` | 2 | 37 |
 | When | `I return to editing` | 2 | 41 |
-| When | `I step the {pane} pane back to the previous version` | 4 | 16 |
+| When | `I step the {pane} pane back to the previous version` | 3 | 16 |
 | When | `I step the {pane} pane forward to the next version` | 1 | 23 |
 | When | `I switch on comparison view in settings` | 2 | 8 |
-| Then | `my history gains a version restored from version {int}` | 2 | 79 |
-| Then | `nothing in the comparison view can be edited` | 1 | 146 |
-| Then | `the {pane} pane can restore its version` | 1 | 71 |
-| Then | `the {pane} pane cannot restore its version` | 1 | 75 |
-| Then | `the {pane} pane does not show the cypher {string}` | 4 | 125 |
-| Then | `the {pane} pane shows my character as it was in version {int}` | 1 | 64 |
-| Then | `the {pane} pane shows the background {string}` | 1 | 132 |
-| Then | `the {pane} pane shows the notes {string}` | 1 | 139 |
-| Then | `the {pane} pane shows version {int}` | 10 | 57 |
-| Then | `the {word} is highlighted yellow in both panes` | 1 | 97 |
-| Then | `the {word} is not highlighted in either pane` | 1 | 104 |
-| Then | `the comparison header lists exactly these changes` | 4 | 86 |
-| Then | `the comparison header says there are no differences` | 1 | 93 |
+| Then | `my history gains a version restored from version {int}` | 2 | 64 |
+| Then | `the {pane} pane does not show the cypher {string}` | 2 | 103 |
+| Then | `the {pane} pane shows the background {string}` | 1 | 110 |
+| Then | `the {pane} pane shows the notes {string}` | 1 | 117 |
+| Then | `the {pane} pane shows version {int}` | 8 | 57 |
+| Then | `the {word} is highlighted yellow in both panes` | 1 | 82 |
+| Then | `the comparison header lists exactly these changes` | 3 | 71 |
+| Then | `the comparison header says there are no differences` | 1 | 78 |
 | Then | `the comparison view is not shown` | 3 | 53 |
 | Then | `the comparison view is shown` | 3 | 49 |
-| Then | `the cypher {string} is highlighted {colour} in both panes` | 1 | 118 |
-| Then | `the cypher {string} is highlighted {colour} in the {pane} pane` | 4 | 111 |
+| Then | `the cypher {string} is highlighted {colour} in both panes` | 1 | 96 |
+| Then | `the cypher {string} is highlighted {colour} in the {pane} pane` | 2 | 89 |
 
 ## version-history.steps.ts
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Then | `I am not warned about an old version` | 5 | 167 |
-| Then | `I am on the latest version` | 3 | 175 |
-| Then | `I am warned that I am viewing an old version` | 7 | 163 |
-| Then | `I can edit my character` | 2 | 136 |
-| Then | `I can import a character` | 2 | 121 |
-| Then | `I can restore this version` | 1 | 171 |
-| Then | `I cannot import a character` | 1 | 125 |
-| When | `I export what I am viewing` | 1 | 113 |
-| When | `I go to the oldest version` | 1 | 58 |
-| When | `I go to version {int}` | 15 | 54 |
-| When | `I redo with Ctrl+Shift+Z` | 1 | 105 |
-| When | `I redo with Ctrl+Y` | 8 | 101 |
-| When | `I reopen my character` | 10 | 109 |
-| When | `I restore this version` | 3 | 77 |
-| When | `I return to the latest version` | 1 | 81 |
-| Then | `I see my character as it was in version {int}` | 12 | 201 |
-| When | `I step back {int} times in quick succession` | 1 | 70 |
-| When | `I step back to the previous version` | 26 | 62 |
-| When | `I step forward to the next version` | 4 | 66 |
-| When | `I undo with Ctrl+Z` | 19 | 97 |
-| Given | `my character has a history of {int} versions` | 48 | 11 |
-| Given | `my character has a history of {int} versions with different data` | 1 | 18 |
-| Given | `my character has a portrait` | 3 | 50 |
-| Given | `my character has no history yet` | 5 | 4 |
-| Then | `my character sheet shows the name it had before my edits` | 3 | 129 |
-| When | `my edits have settled into a version` | 26 | 85 |
-| When | `my edits start to be saved as a version` | 1 | 89 |
-| Given | `my history has a version in which I added the cypher {string}` | 2 | 252 |
-| Given | `my history has a version in which I changed` | 1 | 231 |
-| Given | `my history has a version in which I changed my name to {string}, followed by one in which I changed my tier to {int}` | 1 | 238 |
-| Given | `my history has a version in which I changed the effect of the cypher {string}` | 1 | 266 |
-| Given | `my history has a version in which I cleared my background and notes` | 1 | 245 |
-| Given | `my history has a version in which I removed the cypher {string}` | 1 | 259 |
-| Given | `my history has a version in which I renamed the cypher {string} to {string}` | 1 | 273 |
-| Given | `my history holds an old version recorded as {string} for a name change and an added ability` | 1 | 39 |
-| Given | `my history holds an old version recorded as {string} for an added cypher` | 2 | 32 |
-| Given | `my Might pool went from {int} to {int} to {int}` | 1 | 25 |
-| Then | `my portrait is unchanged` | 3 | 212 |
-| Given | `saving a version is held up` | 1 | 46 |
-| Then | `the back control is available` | 4 | 147 |
-| Then | `the back control is unavailable` | 1 | 151 |
-| Then | `the export carries no version history` | 1 | 223 |
-| Then | `the export holds version {int} of my character` | 1 | 216 |
-| Then | `the export keeps my current portrait` | 1 | 227 |
-| Then | `the forward control is available` | 3 | 155 |
-| Then | `the forward control is unavailable` | 3 | 159 |
-| When | `the held-up save goes through` | 1 | 93 |
-| Then | `the navigator dates this version` | 1 | 190 |
-| Then | `the navigator describes this version` | 1 | 179 |
-| Then | `the navigator describes this version as {string}` | 15 | 183 |
-| Then | `the navigator gives the age of this version as {string}` | 2 | 194 |
-| Then | `the navigator is hidden` | 2 | 117 |
-| Then | `the navigator shows version {int} of {int}` | 29 | 140 |
-| Then | `the original version has been dropped` | 2 | 208 |
+| Then | `I am not warned about an old version` | 5 | 166 |
+| Then | `I am on the latest version` | 3 | 174 |
+| Then | `I am warned that I am viewing an old version` | 7 | 162 |
+| Then | `I can edit my character` | 2 | 135 |
+| Then | `I can import a character` | 2 | 120 |
+| Then | `I can restore this version` | 1 | 170 |
+| Then | `I cannot import a character` | 1 | 124 |
+| When | `I export what I am viewing` | 1 | 112 |
+| When | `I go to the oldest version` | 1 | 57 |
+| When | `I go to version {int}` | 15 | 53 |
+| When | `I redo with Ctrl+Shift+Z` | 1 | 104 |
+| When | `I redo with Ctrl+Y` | 8 | 100 |
+| When | `I reopen my character` | 10 | 108 |
+| When | `I restore this version` | 3 | 76 |
+| When | `I return to the latest version` | 1 | 80 |
+| Then | `I see my character as it was in version {int}` | 12 | 200 |
+| When | `I step back {int} times in quick succession` | 1 | 69 |
+| When | `I step back to the previous version` | 23 | 61 |
+| When | `I step forward to the next version` | 4 | 65 |
+| When | `I undo with Ctrl+Z` | 19 | 96 |
+| Given | `my character has a history of {int} versions` | 43 | 10 |
+| Given | `my character has a history of {int} versions with different data` | 1 | 17 |
+| Given | `my character has a portrait` | 3 | 49 |
+| Given | `my character has no history yet` | 5 | 3 |
+| Then | `my character sheet shows the name it had before my edits` | 3 | 128 |
+| When | `my edits have settled into a version` | 20 | 84 |
+| When | `my edits start to be saved as a version` | 1 | 88 |
+| Given | `my history has a version in which I added the cypher {string}` | 2 | 244 |
+| Given | `my history has a version in which I changed my name to {string}, followed by one in which I changed my tier to {int}` | 1 | 230 |
+| Given | `my history has a version in which I changed the effect of the cypher {string}` | 1 | 258 |
+| Given | `my history has a version in which I cleared my background and notes` | 1 | 237 |
+| Given | `my history has a version in which I removed the cypher {string}` | 1 | 251 |
+| Given | `my history holds an old version recorded as {string} for a name change and an added ability` | 1 | 38 |
+| Given | `my history holds an old version recorded as {string} for an added cypher` | 2 | 31 |
+| Given | `my Might pool went from {int} to {int} to {int}` | 1 | 24 |
+| Then | `my portrait is unchanged` | 3 | 211 |
+| Given | `saving a version is held up` | 1 | 45 |
+| Then | `the back control is available` | 4 | 146 |
+| Then | `the back control is unavailable` | 1 | 150 |
+| Then | `the export carries no version history` | 1 | 222 |
+| Then | `the export holds version {int} of my character` | 1 | 215 |
+| Then | `the export keeps my current portrait` | 1 | 226 |
+| Then | `the forward control is available` | 3 | 154 |
+| Then | `the forward control is unavailable` | 3 | 158 |
+| When | `the held-up save goes through` | 1 | 92 |
+| Then | `the navigator dates this version` | 1 | 189 |
+| Then | `the navigator describes this version` | 1 | 178 |
+| Then | `the navigator describes this version as {string}` | 12 | 182 |
+| Then | `the navigator gives the age of this version as {string}` | 2 | 193 |
+| Then | `the navigator is hidden` | 2 | 116 |
+| Then | `the navigator shows version {int} of {int}` | 29 | 139 |
+| Then | `the original version has been dropped` | 1 | 207 |
 
 ## viewport.steps.ts
 
