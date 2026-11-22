@@ -62,6 +62,8 @@ export interface CustomWorld extends World {
   exportedFilename?: string;
   // third-party-requests.steps.ts
   requestedUrls?: string[];
+  // pwa-support.steps.ts
+  originalServiceWorkerScript?: string;
   getBaseUrl(): string;
 }
 
@@ -95,6 +97,7 @@ export class CustomWorldConstructor extends World implements CustomWorld {
   exportedFileData?: ExportedCharacterFile | null;
   exportedFilename?: string;
   requestedUrls?: string[];
+  originalServiceWorkerScript?: string;
 
   constructor(options: IWorldOptions) {
     super(options);

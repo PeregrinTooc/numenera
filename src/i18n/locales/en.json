@@ -460,5 +460,9 @@
   "portrait": {
     "notAnImage": "Please select an image file",
     "tooLarge": "Image file is too large. Maximum size is {{maxSize}}MB."
+  },
+  "update": {
+    "available": "A newer version is available",
+    "reload": "Reload"
   }
 }

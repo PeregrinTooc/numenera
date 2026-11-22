@@ -181,6 +181,11 @@ Add the option to have multiple characters, switch between them and also store t
 **Overview**
 Let the gamemaster prepare cards (cyphers, artifacts...) and export them as files by dragging them onto the desktop or the explorer/finder. Let players import them by dropping them into the character sheet (auto-detect type)
 
+### App Icon
+
+**Overview**
+`public/icon.svg` and the PNGs rendered from it (`icon-192.png`, `icon-512.png`, `apple-touch-icon.png`) are a placeholder. Replace them with a designed icon; keep the motif inside the central 80% so the maskable icon is not cropped.
+
 ## 🔗 Related Documentation
 
 - **[FEATURES.md](./FEATURES.md)** - Completed and documented features

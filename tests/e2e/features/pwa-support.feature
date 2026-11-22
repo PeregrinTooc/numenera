@@ -23,7 +23,6 @@ Feature: Installable, offline character sheet
         And I reload the page
         Then my character sheet shows my Shins as 42
 
-    @wip
     Scenario: I am offered a newer version of the character sheet
         Given I have opened the character sheet before
         When a newer version of the character sheet is published

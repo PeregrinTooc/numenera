@@ -353,6 +353,18 @@ All features listed below have full BDD test coverage and are verified working.
   - Scenario "Edit made immediately before reload is not lost" passed 3 of 3 runs on desktop,
     pixel5, iphone12 and ipadpro; no `@known-issue-webkit-unload` tag needed
 
+### Installable App (PWA)
+
+- **Install and Offline Use** ([pwa-support.feature](../tests/e2e/features/pwa-support.feature))
+  - `vite-plugin-pwa` generates a web app manifest and a Workbox service worker from the
+    production build; the sheet can be installed to the home screen or as a desktop app
+  - The service worker precaches the HTML, JS, CSS and fonts on the first visit, so the sheet
+    opens and edits are saved without a connection (character data was already in IndexedDB)
+  - A newer version waits instead of taking over open tabs; a banner (`UpdateBanner`) offers
+    Reload, which activates it and reloads the page
+  - Service workers exist only in the production build, so the scenarios are tagged
+    `@prod-only` and run under `test:e2e:prod`
+
 ### Version History
 
 - **Version History (Character Time Travel)** ([navigation](../tests/e2e/features/version-history-navigation.feature), [undo and redo](../tests/e2e/features/version-history-undo-redo.feature), [descriptions](../tests/e2e/features/version-history-descriptions.feature))

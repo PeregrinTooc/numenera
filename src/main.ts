@@ -5,6 +5,7 @@ import "./styles/main.css";
 import { createAppContext } from "@/app/appContext";
 import { bootstrap } from "@/app/bootstrap";
 import { registerSaveFeedback } from "@/app/saveFeedback";
+import { registerUpdatePrompt } from "@/app/updatePrompt";
 import { renderCharacterSheet } from "@/app/renderCharacterSheet";
 import { registerVersionSquashedListener, updateVersionNavigator } from "@/app/versionNavigation";
 
@@ -20,5 +21,6 @@ ctx.actions = {
 
 registerSaveFeedback(ctx);
 registerVersionSquashedListener(ctx);
+registerUpdatePrompt();
 
 document.addEventListener("DOMContentLoaded", () => bootstrap(ctx));

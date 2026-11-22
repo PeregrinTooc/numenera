@@ -26,10 +26,10 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **462** in 43 files
+- Step definitions: **466** in 43 files
 - Feature step lines: **1806**
 - Definitions with no feature usage: **0**
-- Feature lines matching no definition: **5**
+- Feature lines matching no definition: **1**
 
 | Step file | Definitions | Unused |
 | --- | ---: | ---: |
@@ -58,7 +58,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [import-error-messages.steps.ts](#importerrormessagesstepsts) | 2 | 0 |
 | [layout-edit-mode.steps.ts](#layouteditmodestepsts) | 15 | 0 |
 | [layout-import-export.steps.ts](#layoutimportexportstepsts) | 15 | 0 |
-| [pwa-support.steps.ts](#pwasupportstepsts) | 4 | 0 |
+| [pwa-support.steps.ts](#pwasupportstepsts) | 8 | 0 |
 | [recovery-damage-track.steps.ts](#recoverydamagetrackstepsts) | 22 | 0 |
 | [resource-tracker-editing.steps.ts](#resourcetrackereditingstepsts) | 7 | 0 |
 | [section-columns.steps.ts](#sectioncolumnsstepsts) | 8 | 0 |
@@ -82,10 +82,6 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 These would be reported as *undefined* by Cucumber (or are matched by a
 pattern this script does not understand):
 
-- `pwa-support.feature:29` — a newer version of the character sheet is published
-- `pwa-support.feature:31` — I should be told that a newer version is available
-- `pwa-support.feature:32` — I accept the newer version
-- `pwa-support.feature:33` — the newer version of the character sheet should be running
 - `section-rearrangement.feature:52` — I drag the "Cyphers" section onto the middle <side> of the "Items" section
 
 ## ability-enhancements.steps.ts
@@ -462,10 +458,14 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I have opened the character sheet before` | 3 | 37 |
-| When | `I lose my connection` | 2 | 42 |
-| Then | `the character sheet should be displayed` | 1 | 46 |
-| Then | `the character sheet should be installable as an app` | 1 | 17 |
+| When | `a newer version of the character sheet is published` | 1 | 56 |
+| When | `I accept the newer version` | 1 | 74 |
+| Given | `I have opened the character sheet before` | 3 | 42 |
+| When | `I lose my connection` | 2 | 47 |
+| Then | `I should be told that a newer version is available` | 1 | 70 |
+| Then | `the character sheet should be displayed` | 1 | 51 |
+| Then | `the character sheet should be installable as an app` | 1 | 22 |
+| Then | `the newer version of the character sheet should be running` | 1 | 82 |
 
 ## recovery-damage-track.steps.ts
 
