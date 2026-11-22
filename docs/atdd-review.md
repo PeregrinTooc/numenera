@@ -3,9 +3,10 @@
 Reviewed 2026-11-16 against Dave Farley's ATDD principles. This replaces the
 2026-11-13 review, whose first four recommendations have since been carried out.
 
-> **Status, 2026-11-18:** issues 1 and 2 are resolved, and so are the
+> **Status, 2026-11-20:** issues 1 and 2 are resolved, and so are the
 > `CustomWorld` and hook-wiring items under "Further improvements". The work
-> that resolved issue 1 landed the same day as this review. Issue 3 and the
+> that resolved issue 1 landed the same day as this review. Issue 3 has been
+> audited and its first two groups carried out; the third group and the
 > `@not-phone` audit are open. The text below keeps the findings as they were
 > made; each section says what has changed since.
 
@@ -157,6 +158,48 @@ are validation rules (`data-validation.feature`), empty-field visibility, and
 the per-section German translations. If a rule needs no real browser, prove it
 in Vitest and keep one acceptance scenario for the journey.
 
+**Audit, 2026-11-20.** Every scenario was sorted by whether it needs a real
+browser (layout and geometry, drag and touch, focus, computed CSS, reloads,
+files, network, timing between services) or only proves a rule one component
+or function could prove alone. Of 397 scenarios:
+
+| Group                                                           | Scenarios | Action                                              |
+| --------------------------------------------------------------- | --------- | --------------------------------------------------- |
+| **A. Redundant within e2e:** another scenario already proves it | 17        | Deleted                                             |
+| **B. Already proven by unit tests,** nothing browser-only       | 12        | Deleted                                             |
+| **C. Unit-provable, but no unit test yet**                      | about 45  | Open: write the unit test, then delete the scenario |
+| **D. Needs a browser, or is the one journey for its rule**      | the rest  | Kept                                                |
+
+- **A.** `data-validation.feature` is gone. Its first two scenarios repeated
+  `character-file-import`. Its oddity scenario was covered by the import
+  journey, which checks every section against the imported file. The
+  out-of-range scenario moved to `character-file-import` as the one journey
+  showing that imports are sanitized. In each card-creation feature, "Saving a
+  new … adds a card" and "New … persists after reopening the character" were
+  covered by that kind's "Create …, then edit it, verify persistence" journey,
+  which saves, reopens and checks the count and the content (14 scenarios).
+- **B.** Stat pools at 0 and 9999 (`fieldValidation.test.ts`); the removed,
+  modified and changed-tier version descriptions (`changeDetection*.test.ts`;
+  "Adding a card" stays as the journey); and seven comparison-view rules:
+  left-pane navigation, the full header list, renames as removed plus added,
+  no highlight when unchanged, the disabled restore button, the other pane's
+  pointer after a FIFO eviction, and read-only panes (`compareView`,
+  `characterDiff`, `diffCharacterSheet`). The comparison colours stay in e2e,
+  because only a browser computes them.
+- **C, still open.** The card editor opening with empty fields and cancelling
+  without adding a card, once per card kind (14; keep one cancel journey); the
+  display, empty-state and theme-class scenarios in `combat`,
+  `ability-enhancements`, `recovery-damage-track` and `character-display`'s
+  item views; and right-pane navigation in the comparison view, which has no
+  mirror of the left-pane unit test. The item components' unit tests cover
+  edit and delete but not what a card shows, so each needs its unit test
+  written first.
+- **D, kept on purpose.** The add-button colour checks read computed CSS, and CI
+  runs them against the production build, so they catch a Tailwind class that
+  was never generated. `empty-fields-visibility` clicks an empty field, which
+  only real layout can prove clickable. The German translation tables (two
+  scenarios) are the only check that no section hardcodes English.
+
 ## Further improvements
 
 - **`CustomWorld` carried per-feature state** (`draggedCypherName`,
@@ -219,8 +262,10 @@ state. Nothing to change.
 3. **Move the remaining `CustomWorld` state into DSL objects** as part of each
    migration, and delete each field once its last user is gone. Done.
 4. **Audit scenarios that a unit test could prove** (issue 3) before adding any
-   more per-field e2e scenarios. Open, as is sorting the `@not-phone`
-   scenarios into "not applicable" and "not yet working", and listing the second kind in `docs/TODO.md`.
+   more per-field e2e scenarios. Audited; groups A and B are done (29
+   scenarios removed), group C is open. Sorting the `@not-phone` scenarios into
+   "not applicable" and "not yet working", and listing the second kind in
+   `docs/TODO.md`, is also open.
 
 ---
 
