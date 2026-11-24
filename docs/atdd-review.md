@@ -186,8 +186,10 @@ or function could prove alone. Of 397 scenarios:
   pointer after a FIFO eviction, and read-only panes (`compareView`,
   `characterDiff`, `diffCharacterSheet`). The comparison colours stay in e2e,
   because only a browser computes them.
-- **C, still open.** The card editor opening with empty fields and cancelling
-  without adding a card, once per card kind (14; keep one cancel journey); the
+- **C, in progress.** Done: the card editor opening with empty fields and
+  cancelling without adding a card, once per card kind. `newCard.test.ts`
+  proves both for all seven kinds, and the attack cancel scenario stays as the
+  journey (13 scenarios removed). Open: the
   display, empty-state and theme-class scenarios in `combat`,
   `ability-enhancements`, `recovery-damage-track` and `character-display`'s
   item views; and right-pane navigation in the comparison view, which has no

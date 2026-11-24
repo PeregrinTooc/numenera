@@ -39,13 +39,6 @@ When("I open my character again", async function (this: CustomWorld) {
 });
 
 Then(
-  "the card editor opens with empty {cardType} fields",
-  async function (this: CustomWorld, kind: string) {
-    await this.cardEditor.expectOpenWithEmptyFields(kind);
-  }
-);
-
-Then(
   "the add {cardType} button has a themed background colour",
   async function (this: CustomWorld, kind: string) {
     await this.character.expectAddControlThemed(kind);

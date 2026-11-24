@@ -9,7 +9,6 @@ export interface CardEditorDriver {
   setField(kind: string, field: string, value: string): Promise<void>;
   save(): Promise<void>;
   cancel(): Promise<void>;
-  expectEmptyFields(kind: string): Promise<void>;
   pressTab(times: number): Promise<void>;
   pressShiftTab(times: number): Promise<void>;
   tabThroughEveryControl(rounds: number, key: TabKey): Promise<void>;
@@ -19,11 +18,6 @@ export interface CardEditorDriver {
   expectLastControlFocused(): Promise<void>;
   expectFieldFocused(kind: string, field: string): Promise<void>;
 }
-
-// What a freshly opened editor holds for fields that do not start blank.
-const INITIAL_VALUES: Record<string, Record<string, string>> = {
-  attack: { damage: "0", modifier: "0" },
-};
 
 // Domain field names that the editor labels differently.
 const FIELD_ALIASES: Record<string, Record<string, string>> = {
@@ -84,15 +78,6 @@ export class PlaywrightCardEditorDriver implements CardEditorDriver {
   async cancel(): Promise<void> {
     await this.page.getByTestId("card-modal-cancel").click();
     await expect(this.editor).toBeHidden();
-  }
-
-  async expectEmptyFields(kind: string): Promise<void> {
-    await expect(this.editor).toBeVisible();
-    for (const [field, testId] of Object.entries(CARD_CONFIGS[kind].fieldTestIds)) {
-      const input = this.page.locator(testId);
-      await expect(input).toBeVisible();
-      await expect(input).toHaveValue(INITIAL_VALUES[kind]?.[field] ?? "");
-    }
   }
 
   async pressTab(times: number): Promise<void> {

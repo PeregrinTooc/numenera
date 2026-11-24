@@ -7,11 +7,6 @@ Feature: Card Creation: Attacks
         Given my character has 2 attacks
         Then the add attack button has a themed background colour
 
-    Scenario: Starting a new attack opens the editor with empty fields
-        Given my character has 2 attacks
-        When I start a new attack
-        Then the card editor opens with empty attack fields
-
     Scenario: Canceling attack creation does not add a card
         Given my character has 2 attacks
         When I start a new attack

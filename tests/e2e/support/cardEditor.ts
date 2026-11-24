@@ -28,10 +28,6 @@ export class CardEditorDsl {
     await this.editor.cancel();
   }
 
-  async expectOpenWithEmptyFields(kind: string): Promise<void> {
-    await this.editor.expectEmptyFields(kind);
-  }
-
   async pressTab(times: number): Promise<void> {
     await this.editor.pressTab(times);
   }

@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **419** in 41 files
-- Feature step lines: **1575**
+- Step definitions: **418** in 41 files
+- Feature step lines: **1517**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -39,7 +39,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [auto-save-indicator.steps.ts](#autosaveindicatorstepsts) | 13 | 0 |
 | [basic-info-editing.steps.ts](#basicinfoeditingstepsts) | 12 | 0 |
 | [card-deletion.steps.ts](#carddeletionstepsts) | 6 | 0 |
-| [card-editing.steps.ts](#cardeditingstepsts) | 12 | 0 |
+| [card-editing.steps.ts](#cardeditingstepsts) | 11 | 0 |
 | [card-modal-focus-trap.steps.ts](#cardmodalfocustrapstepsts) | 9 | 0 |
 | [card-reordering-abilities.steps.ts](#cardreorderingabilitiesstepsts) | 5 | 0 |
 | [card-reordering.steps.ts](#cardreorderingstepsts) | 8 | 0 |
@@ -176,18 +176,17 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| When | `I cancel the card` | 7 | 32 |
+| When | `I cancel the card` | 1 | 32 |
 | When | `I open my character again` | 16 | 36 |
 | When | `I save the card` | 23 | 28 |
-| When | `I set its {word} to {string}` | 81 | 21 |
-| When | `I start a new {cardType}` | 36 | 10 |
+| When | `I set its {word} to {string}` | 68 | 21 |
+| When | `I start a new {cardType}` | 23 | 10 |
 | When | `I start editing the {cardType} {string}` | 7 | 14 |
-| Then | `my character carries {int} {cardKind}` | 25 | 54 |
-| Then | `my character carries the {cardType} {string}` | 15 | 61 |
-| Given | `my character has {int} {cardKind}` | 34 | 3 |
-| Then | `the {cardType} {string} shows {string}` | 10 | 68 |
-| Then | `the add {cardType} button has a themed background colour` | 7 | 47 |
-| Then | `the card editor opens with empty {cardType} fields` | 7 | 40 |
+| Then | `my character carries {int} {cardKind}` | 19 | 47 |
+| Then | `my character carries the {cardType} {string}` | 15 | 54 |
+| Given | `my character has {int} {cardKind}` | 21 | 3 |
+| Then | `the {cardType} {string} shows {string}` | 10 | 61 |
+| Then | `the add {cardType} button has a themed background colour` | 7 | 40 |
 
 ## card-modal-focus-trap.steps.ts
 

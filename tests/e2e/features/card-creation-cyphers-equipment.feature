@@ -7,19 +7,6 @@ Feature: Card Creation: Cyphers and Equipment
         Given my character has 2 cyphers
         Then the add cypher button has a themed background colour
 
-    Scenario: Starting a new cypher opens the editor with empty fields
-        Given my character has 2 cyphers
-        When I start a new cypher
-        Then the card editor opens with empty cypher fields
-
-    Scenario: Canceling cypher creation does not add a card
-        Given my character has 2 cyphers
-        When I start a new cypher
-        And I set its name to "Test Cypher"
-        And I set its level to "1d6"
-        And I cancel the card
-        Then my character carries 2 cyphers
-
     Scenario: Create cypher, then edit it, verify persistence
         Given my character has 2 cyphers
         When I start a new cypher
@@ -41,19 +28,6 @@ Feature: Card Creation: Cyphers and Equipment
     Scenario: Add equipment button has its themed background color
         Given my character has 2 equipment
         Then the add equipment button has a themed background colour
-
-    Scenario: Starting new equipment opens the editor with empty fields
-        Given my character has 2 equipment
-        When I start a new equipment
-        Then the card editor opens with empty equipment fields
-
-    Scenario: Canceling equipment creation does not add a card
-        Given my character has 2 equipment
-        When I start a new equipment
-        And I set its name to "Test Equipment"
-        And I set its description to "Test description"
-        And I cancel the card
-        Then my character carries 2 equipment
 
     Scenario: Create equipment, then edit it, verify persistence
         Given my character has 2 equipment

@@ -7,19 +7,6 @@ Feature: Card Creation: Abilities
         Given my character has 2 abilities
         Then the add ability button has a themed background colour
 
-    Scenario: Starting a new ability opens the editor with empty fields
-        Given my character has 2 abilities
-        When I start a new ability
-        Then the card editor opens with empty ability fields
-
-    Scenario: Canceling ability creation does not add a card
-        Given my character has 2 abilities
-        When I start a new ability
-        And I set its name to "Test Ability"
-        And I set its description to "Test description"
-        And I cancel the card
-        Then my character carries 2 abilities
-
     Scenario: Create ability, then edit it, verify persistence
         Given my character has 2 abilities
         When I start a new ability
@@ -43,20 +30,6 @@ Feature: Card Creation: Abilities
     Scenario: Add special ability button has its themed background color
         Given my character has 2 special abilities
         Then the add special ability button has a themed background colour
-
-    Scenario: Starting a new special ability opens the editor with empty fields
-        Given my character has 2 special abilities
-        When I start a new special ability
-        Then the card editor opens with empty special ability fields
-
-    Scenario: Canceling special ability creation does not add a card
-        Given my character has 2 special abilities
-        When I start a new special ability
-        And I set its name to "Test Special"
-        And I set its source to "Test Type"
-        And I set its description to "Test description"
-        And I cancel the card
-        Then my character carries 2 special abilities
 
     Scenario: Create special ability, then edit it, verify persistence
         Given my character has 2 special abilities

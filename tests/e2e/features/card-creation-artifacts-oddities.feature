@@ -7,20 +7,6 @@ Feature: Card Creation: Artifacts and Oddities
         Given my character has 2 artifacts
         Then the add artifact button has a themed background colour
 
-    Scenario: Starting a new artifact opens the editor with empty fields
-        Given my character has 2 artifacts
-        When I start a new artifact
-        Then the card editor opens with empty artifact fields
-
-    Scenario: Canceling artifact creation does not add a card
-        Given my character has 2 artifacts
-        When I start a new artifact
-        And I set its name to "Test Artifact"
-        And I set its level to "1d6"
-        And I set its effect to "Test effect"
-        And I cancel the card
-        Then my character carries 2 artifacts
-
     Scenario: Create artifact, then edit it, verify persistence
         Given my character has 2 artifacts
         When I start a new artifact
@@ -42,18 +28,6 @@ Feature: Card Creation: Artifacts and Oddities
     Scenario: Add oddity button has its themed background color
         Given my character has 2 oddities
         Then the add oddity button has a themed background colour
-
-    Scenario: Starting a new oddity opens the editor with empty fields
-        Given my character has 2 oddities
-        When I start a new oddity
-        Then the card editor opens with empty oddity fields
-
-    Scenario: Canceling oddity creation does not add a card
-        Given my character has 2 oddities
-        When I start a new oddity
-        And I set its text to "Test Oddity"
-        And I cancel the card
-        Then my character carries 2 oddities
 
     Scenario: Create oddity, then edit it, verify persistence
         Given my character has 2 oddities
