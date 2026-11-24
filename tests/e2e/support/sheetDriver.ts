@@ -18,10 +18,7 @@ interface Box {
   height: number;
 }
 
-export type CardTheme = "red" | "teal";
-
 // Tailwind gradient class that carries each theme's colour on a card.
-const THEME_CLASS: Record<CardTheme, RegExp> = { red: /from-red-50/, teal: /from-cyan-50/ };
 
 // A card kind's section is "<kebab-case collection>-section" in the page,
 // its empty state "empty-<kebab-case collection>".
@@ -43,10 +40,7 @@ export interface SheetDriver {
   expectNoConfirmationAsked(): Promise<void>;
   expectDiscardControlInTopLeftCorner(name: string): Promise<void>;
   expectEntryField(kind: string, name: string, field: string, value: string): Promise<void>;
-  expectEntryWithoutField(kind: string, name: string, field: string): Promise<void>;
-  expectEntryThemed(kind: string, name: string, theme: CardTheme): Promise<void>;
   expectEmptyState(kind: string): Promise<void>;
-  expectArmorInAttacksSection(armor: number): Promise<void>;
   expectSectionLeftOf(kind: string, other: string): Promise<void>;
   expectSectionAbove(kind: string, other: string): Promise<void>;
   expectFirstEntryBadgesAtRightEdge(kind: string): Promise<void>;
@@ -201,25 +195,11 @@ export class PlaywrightSheetDriver implements SheetDriver {
     await expect(shown).toContainText(value);
   }
 
-  async expectEntryWithoutField(kind: string, name: string, field: string): Promise<void> {
-    await expect(this.kindEntry(kind, name)).toBeVisible();
-    await expect(this.field(kind, name, field)).toBeHidden();
-  }
-
-  async expectEntryThemed(kind: string, name: string, theme: CardTheme): Promise<void> {
-    await expect(this.kindEntry(kind, name).first()).toHaveClass(THEME_CLASS[theme]);
-  }
-
   async expectEmptyState(kind: string): Promise<void> {
     const collection = CARD_TYPE_TO_PROPERTY[kind];
     await expect(this.page.getByTestId(`empty-${kebab(collection)}`)).toHaveText(
       englishText(`${collection}.empty`)
     );
-  }
-
-  async expectArmorInAttacksSection(armor: number): Promise<void> {
-    const armorValue = this.section("attack").getByTestId("armor-badge").getByTestId("armor-value");
-    await expect(armorValue).toHaveText(String(armor));
   }
 
   async expectSectionLeftOf(kind: string, other: string): Promise<void> {

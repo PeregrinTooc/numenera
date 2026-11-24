@@ -1,14 +1,5 @@
-import { Given, Then, type DataTable } from "@cucumber/cucumber";
+import { Given, Then } from "@cucumber/cucumber";
 import type { CustomWorld } from "../support/world.js";
-import type { CardTheme } from "../support/sheetDriver.js";
-import { propertyTable } from "../support/tableRows.js";
-
-Given(
-  "my character has the {cardType} {string} with:",
-  async function (this: CustomWorld, kind: string, name: string, table: DataTable) {
-    await this.character.hasEntry(kind, name, propertyTable(table));
-  }
-);
 
 Given(
   "my character has the {cardType} {string}",
@@ -40,30 +31,9 @@ Then(
 );
 
 Then(
-  "the {cardType} {string} shows no {word}",
-  async function (this: CustomWorld, kind: string, name: string, field: string) {
-    await this.character.expectEntryWithoutField(kind, name, field);
-  }
-);
-
-Then(
-  "the {cardType} {string} is themed {word}",
-  async function (this: CustomWorld, kind: string, name: string, theme: string) {
-    await this.character.expectEntryThemed(kind, name, theme as CardTheme);
-  }
-);
-
-Then(
   "my character's {cardKind} section says it is empty",
   async function (this: CustomWorld, kind: string) {
     await this.character.expectEmptySection(kind);
-  }
-);
-
-Then(
-  "the attacks section shows my character's armor of {int}",
-  async function (this: CustomWorld, armor: number) {
-    await this.character.expectArmorBesideAttacks(armor);
   }
 );
 

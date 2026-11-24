@@ -26,8 +26,8 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 
 ## Summary
 
-- Step definitions: **418** in 41 files
-- Feature step lines: **1517**
+- Step definitions: **414** in 41 files
+- Feature step lines: **1491**
 - Definitions with no feature usage: **0**
 - Feature lines matching no definition: **1**
 
@@ -49,7 +49,7 @@ step in a `.feature` file** — if a phrase already exists, reuse it exactly.
 | [character-storage.steps.ts](#characterstoragestepsts) | 10 | 0 |
 | [clock.steps.ts](#clockstepsts) | 1 | 0 |
 | [collection-reordering.steps.ts](#collectionreorderingstepsts) | 4 | 0 |
-| [combat.steps.ts](#combatstepsts) | 13 | 0 |
+| [combat.steps.ts](#combatstepsts) | 9 | 0 |
 | [common-steps.ts](#commonstepsts) | 3 | 0 |
 | [export-enhancement.steps.ts](#exportenhancementstepsts) | 16 | 0 |
 | [grid-merge-split.steps.ts](#gridmergesplitstepsts) | 7 | 0 |
@@ -183,8 +183,8 @@ pattern this script does not understand):
 | When | `I start a new {cardType}` | 23 | 10 |
 | When | `I start editing the {cardType} {string}` | 7 | 14 |
 | Then | `my character carries {int} {cardKind}` | 19 | 47 |
-| Then | `my character carries the {cardType} {string}` | 15 | 54 |
-| Given | `my character has {int} {cardKind}` | 21 | 3 |
+| Then | `my character carries the {cardType} {string}` | 12 | 54 |
+| Given | `my character has {int} {cardKind}` | 19 | 3 |
 | Then | `the {cardType} {string} shows {string}` | 10 | 61 |
 | Then | `the add {cardType} button has a themed background colour` | 7 | 40 |
 
@@ -296,19 +296,15 @@ pattern this script does not understand):
 
 | Keyword | Phrase | Uses | Line |
 | --- | --- | ---: | ---: |
-| Given | `I view my character on a phone` | 1 | 30 |
-| Given | `I view my character on a wide screen` | 1 | 26 |
-| Given | `my character has an attack whose name is {int} characters long without spaces` | 1 | 19 |
-| Given | `my character has the {cardType} {string}` | 3 | 12 |
-| Given | `my character has the {cardType} {string} with:` | 3 | 5 |
-| Then | `my character's {cardKind} section says it is empty` | 8 | 55 |
-| Then | `my character's attack keeps its badges at the right edge of its card` | 1 | 83 |
-| Then | `the {cardKind} section sits above the {cardKind} section` | 1 | 76 |
-| Then | `the {cardKind} section sits left of the {cardKind} section` | 1 | 69 |
-| Then | `the {cardType} {string} is themed {word}` | 2 | 48 |
-| Then | `the {cardType} {string} shows {word} {string}` | 12 | 34 |
-| Then | `the {cardType} {string} shows no {word}` | 1 | 41 |
-| Then | `the attacks section shows my character's armor of {int}` | 1 | 62 |
+| Given | `I view my character on a phone` | 1 | 21 |
+| Given | `I view my character on a wide screen` | 1 | 17 |
+| Given | `my character has an attack whose name is {int} characters long without spaces` | 1 | 10 |
+| Given | `my character has the {cardType} {string}` | 1 | 3 |
+| Then | `my character's {cardKind} section says it is empty` | 6 | 32 |
+| Then | `my character's attack keeps its badges at the right edge of its card` | 1 | 53 |
+| Then | `the {cardKind} section sits above the {cardKind} section` | 1 | 46 |
+| Then | `the {cardKind} section sits left of the {cardKind} section` | 1 | 39 |
+| Then | `the {cardType} {string} shows {word} {string}` | 3 | 25 |
 
 ## common-steps.ts
 
@@ -450,7 +446,7 @@ pattern this script does not understand):
 | Given | `my character has {int} current XP and {int} total XP` | 3 | 3 |
 | Then | `my character sheet shows my {resourceName} as {int}` | 12 | 38 |
 | Given | `my character was saved with a single legacy XP value of {int}` | 1 | 10 |
-| Given | `my character's {resourceName} is {int}` | 7 | 17 |
+| Given | `my character's {resourceName} is {int}` | 6 | 17 |
 
 ## section-columns.steps.ts
 

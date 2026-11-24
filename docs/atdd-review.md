@@ -163,12 +163,12 @@ browser (layout and geometry, drag and touch, focus, computed CSS, reloads,
 files, network, timing between services) or only proves a rule one component
 or function could prove alone. Of 397 scenarios:
 
-| Group                                                           | Scenarios | Action                                              |
-| --------------------------------------------------------------- | --------- | --------------------------------------------------- |
-| **A. Redundant within e2e:** another scenario already proves it | 17        | Deleted                                             |
-| **B. Already proven by unit tests,** nothing browser-only       | 12        | Deleted                                             |
-| **C. Unit-provable, but no unit test yet**                      | about 45  | Open: write the unit test, then delete the scenario |
-| **D. Needs a browser, or is the one journey for its rule**      | the rest  | Kept                                                |
+| Group                                                           | Scenarios | Action                                             |
+| --------------------------------------------------------------- | --------- | -------------------------------------------------- |
+| **A. Redundant within e2e:** another scenario already proves it | 17        | Deleted                                            |
+| **B. Already proven by unit tests,** nothing browser-only       | 12        | Deleted                                            |
+| **C. Unit-provable, but no unit test yet**                      | about 45  | In progress: 21 moved to unit tests, about 24 open |
+| **D. Needs a browser, or is the one journey for its rule**      | the rest  | Kept                                               |
 
 - **A.** `data-validation.feature` is gone. Its first two scenarios repeated
   `character-file-import`. Its oddity scenario was covered by the import
@@ -189,10 +189,12 @@ or function could prove alone. Of 397 scenarios:
 - **C, in progress.** Done: the card editor opening with empty fields and
   cancelling without adding a card, once per card kind. `newCard.test.ts`
   proves both for all seven kinds, and the attack cancel scenario stays as the
-  journey (13 scenarios removed). Open: the
-  display, empty-state and theme-class scenarios in `combat`,
-  `ability-enhancements`, `recovery-damage-track` and `character-display`'s
-  item views; and right-pane navigation in the comparison view, which has no
+  journey (13 scenarios removed). `combat`'s attack, special-ability, armor,
+  empty-state and theme-class scenarios are proven by
+  `combatSections.test.ts`; the side-by-side, stacked and long-name scenarios
+  stay, because they need real layout (8 removed). Open: the display,
+  empty-state and theme-class scenarios in `ability-enhancements`,
+  `recovery-damage-track` and `character-display`'s item views; and right-pane navigation in the comparison view, which has no
   mirror of the left-pane unit test. The item components' unit tests cover
   edit and delete but not what a card shows, so each needs its unit test
   written first.

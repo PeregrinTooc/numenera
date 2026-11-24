@@ -13,7 +13,7 @@ import type { SetupDsl } from "./setup.js";
 import { englishText } from "./i18nKeys.js";
 import { statLabel } from "./valueEditor.js";
 import type { ValueEditorDriver } from "./valueEditorDriver.js";
-import type { CardTheme, SheetDriver } from "./sheetDriver.js";
+import type { SheetDriver } from "./sheetDriver.js";
 
 const NUMERIC_PROPERTIES = ["damage", "modifier", "cost"];
 
@@ -321,20 +321,8 @@ export class CharacterDsl {
     await this.sheet.expectEntryField(kind, name, field, value);
   }
 
-  async expectEntryWithoutField(kind: string, name: string, field: string): Promise<void> {
-    await this.sheet.expectEntryWithoutField(kind, name, field);
-  }
-
-  async expectEntryThemed(kind: string, name: string, theme: CardTheme): Promise<void> {
-    await this.sheet.expectEntryThemed(kind, name, theme);
-  }
-
   async expectEmptySection(kind: string): Promise<void> {
     await this.sheet.expectEmptyState(kind);
-  }
-
-  async expectArmorBesideAttacks(armor: number): Promise<void> {
-    await this.sheet.expectArmorInAttacksSection(armor);
   }
 
   async expectSectionLeftOf(kind: string, other: string): Promise<void> {
